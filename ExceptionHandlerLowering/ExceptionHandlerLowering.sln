@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionHandlerLowering", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{15147125-D027-4267-9A01-07C8BCB45F17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{6B6E3DB7-7689-4CC5-8409-FFDA1F340282}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{15147125-D027-4267-9A01-07C8BCB45F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15147125-D027-4267-9A01-07C8BCB45F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15147125-D027-4267-9A01-07C8BCB45F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B6E3DB7-7689-4CC5-8409-FFDA1F340282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6E3DB7-7689-4CC5-8409-FFDA1F340282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6E3DB7-7689-4CC5-8409-FFDA1F340282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6E3DB7-7689-4CC5-8409-FFDA1F340282}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
