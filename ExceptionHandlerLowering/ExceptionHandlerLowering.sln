@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionHandlerLowering", "ExceptionHandlerLowering\ExceptionHandlerLowering.csproj", "{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{15147125-D027-4267-9A01-07C8BCB45F17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15147125-D027-4267-9A01-07C8BCB45F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15147125-D027-4267-9A01-07C8BCB45F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15147125-D027-4267-9A01-07C8BCB45F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15147125-D027-4267-9A01-07C8BCB45F17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
