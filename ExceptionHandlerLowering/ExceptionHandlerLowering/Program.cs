@@ -221,9 +221,34 @@ namespace System.Linq.Expressions
         {
             var res = expression.Body;
 
+            var handlers = default(List<CatchBlock>);
+
             foreach (var handler in expression.Handlers)
             {
-                res = Expression.TryCatch(res, handler);
+                if (handler.Filter != null)
+                {
+                    if (handlers != null)
+                    {
+                        res = Expression.TryCatch(res, handlers.ToArray());
+                        handlers = null;
+                    }
+
+                    res = Expression.TryCatch(res, handler);
+                }
+                else
+                {
+                    if (handlers != null)
+                    {
+                        handlers = new List<CatchBlock>();
+                    }
+
+                    handlers.Add(handler);
+                }
+            }
+
+            if (handlers != null)
+            {
+                res = Expression.TryCatch(res, handlers.ToArray());
             }
 
             if (expression.Finally != null)
