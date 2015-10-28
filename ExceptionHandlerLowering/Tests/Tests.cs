@@ -150,6 +150,67 @@ namespace Tests
         }
 
         [TestMethod]
+        public void LambdaExpressionExtensions_TryFault_Goto_Many()
+        {
+            var lbl1 = Expression.Label(typeof(void), "lbl1");
+            var lbl2 = Expression.Label(typeof(void), "lbl2");
+            var lbl3 = Expression.Label(typeof(void), "lbl3");
+            var lblRet = Expression.Label(typeof(void), "lblRet");
+
+            var create = new Func<Func<string, Expression>, int, Expression>((addLog, value) =>
+                Expression.Block(
+                    Expression.TryFault(
+                        Expression.Block(
+                            addLog("TB"),
+                            Expression.Switch(Expression.Constant(value),
+                                Expression.SwitchCase(Expression.Goto(lbl1), Expression.Constant(0)),
+                                Expression.SwitchCase(Expression.Goto(lbl2), Expression.Constant(1)),
+                                Expression.SwitchCase(Expression.Goto(lbl3), Expression.Constant(2))
+                            ),
+                            addLog("TE")
+                        ),
+                        Expression.Block(
+                            addLog("F")
+                        )
+                    ),
+                    addLog("E"),
+                    Expression.Goto(lblRet),
+                    Expression.Label(lbl1),
+                    addLog("L1"),
+                    Expression.Goto(lblRet),
+                    Expression.Label(lbl2),
+                    addLog("L2"),
+                    Expression.Goto(lblRet),
+                    Expression.Label(lbl3),
+                    addLog("L3"),
+                    Expression.Goto(lblRet),
+                    Expression.Label(lblRet),
+                    addLog("R"),
+                    Expression.Constant(null)
+                ));
+
+            Verify(
+                new LogAndResult<object> { Log = { "TB", "L1", "R" } },
+                addLog => create(addLog, 0)
+            );
+
+            Verify(
+                new LogAndResult<object> { Log = { "TB", "L2", "R" } },
+                addLog => create(addLog, 1)
+            );
+
+            Verify(
+                new LogAndResult<object> { Log = { "TB", "L3", "R" } },
+                addLog => create(addLog, 2)
+            );
+
+            Verify(
+                new LogAndResult<object> { Log = { "TB", "TE", "E", "R" } },
+                addLog => create(addLog, 4)
+            );
+        }
+
+        [TestMethod]
         public void LambdaExpressionExtensions_TryFilter_Simple_Success()
         {
             var ex = Expression.Parameter(typeof(InvalidOperationException));
