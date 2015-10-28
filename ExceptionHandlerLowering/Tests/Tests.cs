@@ -78,9 +78,6 @@ namespace Tests
         [TestMethod]
         public void LambdaExpressionExtensions_TryFault_Goto_Success()
         {
-            var lbl1 = Expression.Label(typeof(int), "lbl1");
-            var lbl2 = Expression.Label(typeof(string), "lbl2");
-            var lbl3 = Expression.Label(typeof(bool), "lbl3");
             var lblRet = Expression.Label(typeof(int), "lblRet");
 
             Verify(
@@ -98,6 +95,48 @@ namespace Tests
                         Expression.TryFault(
                             Expression.Block(
                                 addLog("TB"),
+                                Expression.Goto(lblRet, Expression.Constant(42)),
+                                addLog("TE")
+                            ),
+                            Expression.Block(
+                                addLog("F")
+                            )
+                        ),
+                        Expression.Label(lblRet, Expression.Constant(-1))
+                    )
+            );
+        }
+
+        [TestMethod]
+        public void LambdaExpressionExtensions_TryFault_GotoScoping()
+        {
+            var lbl = Expression.Label(typeof(void));
+            var lblCont = Expression.Label(typeof(void));
+            var lblBreak = Expression.Label(typeof(void));
+            var lblRet = Expression.Label(typeof(int), "lblRet");
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 42,
+                    Error = null,
+                    Log =
+                    {
+                        "TB"
+                    }
+                },
+                addLog =>
+                    Expression.Block(
+                        Expression.TryFault(
+                            Expression.Block(
+                                addLog("TB"),
+                                Expression.Goto(lbl),
+                                addLog("TX"),
+                                Expression.Label(lbl),
+                                Expression.Loop(
+                                    Expression.Break(lblBreak),
+                                    lblBreak, lblCont
+                                ),
                                 Expression.Goto(lblRet, Expression.Constant(42)),
                                 addLog("TE")
                             ),
