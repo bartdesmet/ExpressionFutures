@@ -65,8 +65,7 @@ namespace System.Linq.Expressions
                 var mtd = typ.DefineMethod("M" + i, MethodAttributes.Public | MethodAttributes.Static, typeof(int), new Type[0]);
                 Expression.Lambda<Func<int>>(expression).CompileToMethod(mtd);
 
-                var rewritten = new ExceptionHandlingLowering().Visit(expression);
-                var cw = Expression.Lambda<Func<int>>(rewritten).Compile();
+                var cw = Expression.Lambda<Func<int>>(expression).CompileWithExceptionHandling();
                 cw();
 
                 i++;

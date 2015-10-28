@@ -11,10 +11,19 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Expression rewriter for TryExpression nodes with fault handlers or exception filters.
     /// </summary>
-    public sealed class ExceptionHandlingLowering : ExpressionVisitor
+    internal sealed class ExceptionHandlingLowering : ExpressionVisitor
     {
+        /// <summary>
+        /// Gets the singleton instance of this rewriter.
+        /// </summary>
+        public static readonly ExceptionHandlingLowering Instance = new ExceptionHandlingLowering();
+
         private static MethodInfo s_tryFault = typeof(ExceptionHandling).GetMethod("TryFault");
         private static MethodInfo s_tryFilter = typeof(ExceptionHandling).GetMethod("TryFilter");
+
+        private ExceptionHandlingLowering()
+        {
+        }
 
         /// <summary>
         /// Visits a TryExpression to rewrite it to eliminate fault handlers and exception filters.
