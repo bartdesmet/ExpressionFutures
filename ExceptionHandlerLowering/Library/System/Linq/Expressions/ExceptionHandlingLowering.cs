@@ -8,6 +8,9 @@ using System.Runtime.CompilerServices;
 
 namespace System.Linq.Expressions
 {
+    /// <summary>
+    /// Expression rewriter for TryExpression nodes with fault handlers or exception filters.
+    /// </summary>
     public sealed class ExceptionHandlingLowering : ExpressionVisitor
     {
         private static MethodInfo s_tryFault = typeof(ExceptionHandling).GetMethod("TryFault");
