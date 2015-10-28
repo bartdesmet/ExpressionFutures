@@ -296,8 +296,8 @@ namespace System.Linq.Expressions
                 // 3. Rewrite body.
                 //
                 var leaveLabel = Expression.Label(typeof(LeaveHandlerData));
-                var faultRewriter = new FaultRewriter(leaveLabel, gotoScanner.LeaveLabels);
-                var newBody = faultRewriter.Rewrite(body);
+                var rewriter = new Rewriter(leaveLabel, gotoScanner.LeaveLabels);
+                var newBody = rewriter.Rewrite(body);
 
                 //
                 // 4. Create dispatch table.
@@ -368,14 +368,14 @@ namespace System.Linq.Expressions
                 }
             }
 
-            class FaultRewriter : ExpressionVisitor
+            class Rewriter : ExpressionVisitor
             {
                 private static readonly ConstructorInfo s_leaveCtor = typeof(LeaveHandlerData).GetConstructor(new[] { typeof(int), typeof(object) });
 
                 private readonly LabelTarget _leaveLabel;
                 private readonly IDictionary<LabelTarget, int> _leaveLabels;
 
-                public FaultRewriter(LabelTarget leaveLabel, IDictionary<LabelTarget, int> leaveLabels)
+                public Rewriter(LabelTarget leaveLabel, IDictionary<LabelTarget, int> leaveLabels)
                 {
                     _leaveLabel = leaveLabel;
                     _leaveLabels = leaveLabels;
