@@ -149,6 +149,156 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void LambdaExpressionExtensions_TryFilter_Simple_Success()
+        {
+            var ex = Expression.Parameter(typeof(InvalidOperationException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 42,
+                    Error = null,
+                    Log =
+                    {
+                        "T"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatch(
+                        Expression.Block(
+                            addLog("T"),
+                            Expression.Constant(42)
+                        ),
+                        Expression.Catch(
+                            ex,
+                            Expression.Block(
+                                addLog("C"),
+                                Expression.Constant(42)
+                            ),
+                            Expression.Block(
+                                addLog("F"),
+                                Expression.Constant(true)
+                            )
+                        )
+                    )
+            );
+        }
+
+        [TestMethod]
+        public void LambdaExpressionExtensions_TryFilter_Simple_Error_Handled()
+        {
+            var err = new InvalidOperationException("Oops!");
+            var ex = Expression.Parameter(typeof(InvalidOperationException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 42,
+                    Error = null,
+                    Log =
+                    {
+                        "T",
+                        "F",
+                        "C"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatch(
+                        Expression.Block(
+                            addLog("T"),
+                            Expression.Throw(Expression.Constant(err), typeof(int))
+                        ),
+                        Expression.Catch(
+                            ex,
+                            Expression.Block(
+                                addLog("C"),
+                                Expression.Constant(42)
+                            ),
+                            Expression.Block(
+                                addLog("F"),
+                                Expression.Constant(true)
+                            )
+                        )
+                    )
+            );
+        }
+
+        [TestMethod]
+        public void LambdaExpressionExtensions_TryFilter_Simple_Error_Unhandled()
+        {
+            var err = new InvalidOperationException("Oops!");
+            var ex = Expression.Parameter(typeof(InvalidOperationException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 0,
+                    Error = err,
+                    Log =
+                    {
+                        "T",
+                        "F"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatch(
+                        Expression.Block(
+                            addLog("T"),
+                            Expression.Throw(Expression.Constant(err), typeof(int))
+                        ),
+                        Expression.Catch(
+                            ex,
+                            Expression.Block(
+                                addLog("C"),
+                                Expression.Constant(42)
+                            ),
+                            Expression.Block(
+                                addLog("F"),
+                                Expression.Constant(false)
+                            )
+                        )
+                    )
+            );
+        }
+
+        [TestMethod]
+        public void LambdaExpressionExtensions_TryFilter_Simple_Error_Incompatible()
+        {
+            var err = new DivideByZeroException("Oops!");
+            var ex = Expression.Parameter(typeof(InvalidOperationException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 0,
+                    Error = err,
+                    Log =
+                    {
+                        "T"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatch(
+                        Expression.Block(
+                            addLog("T"),
+                            Expression.Throw(Expression.Constant(err), typeof(int))
+                        ),
+                        Expression.Catch(
+                            ex,
+                            Expression.Block(
+                                addLog("C"),
+                                Expression.Constant(42)
+                            ),
+                            Expression.Block(
+                                addLog("F"),
+                                Expression.Constant(true)
+                            )
+                        )
+                    )
+            );
+        }
+
         private static void Verify<T>(LogAndResult<T> expected, Func<Func<string, Expression>, Expression> createExpression)
         {
             var res = WithLog<T>(createExpression).CompileWithExceptionHandling();

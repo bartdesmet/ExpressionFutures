@@ -72,7 +72,7 @@ namespace System.Linq.Expressions
                 var rewrittenTry = bodyRewriter();
                 var rewrittenTryHandler = Expression.Lambda<Func<LeaveHandlerData>>(rewrittenTry);
                 var rewrittenCatch = catchRewriter();
-                var rewrittenCatchHandler = Expression.Lambda(rewrittenTry, handler.Variable);
+                var rewrittenCatchHandler = Expression.Lambda(rewrittenCatch, handler.Variable);
                 var rewrittenFilterHandler = Expression.Lambda(handler.Filter, handler.Variable);
 
                 //
