@@ -18,6 +18,7 @@ namespace System.Runtime.CompilerServices
         /// <param name="filter">Function to determine whether an exception of the specified type can be handled.</param>
         /// <param name="handler">Function to execute upon handling the exception.</param>
         /// <returns>Control flow transfer descriptor.</returns>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Infrastructure only. Compiled code won't pass null references.")]
         public static LeaveHandlerData TryFilter<TException>(Func<LeaveHandlerData> body, Func<TException, bool> filter, Func<TException, LeaveHandlerData> handler)
             where TException : Exception
         {
@@ -37,6 +38,7 @@ namespace System.Runtime.CompilerServices
         /// <param name="body">Function to execute the body of the protected region.</param>
         /// <param name="handler">Function to execute when an exception has occurred.</param>
         /// <returns>Control flow transfer descriptor.</returns>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Infrastructure only. Compiled code won't pass null references.")]
         public static LeaveHandlerData TryFault(Func<LeaveHandlerData> body, Action handler)
         {
             var result = default(LeaveHandlerData);

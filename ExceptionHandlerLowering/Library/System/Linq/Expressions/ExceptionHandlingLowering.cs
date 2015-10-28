@@ -16,6 +16,12 @@ namespace System.Linq.Expressions
         private static MethodInfo s_tryFault = typeof(ExceptionHandling).GetMethod("TryFault");
         private static MethodInfo s_tryFilter = typeof(ExceptionHandling).GetMethod("TryFilter");
 
+        /// <summary>
+        /// Visits a TryExpression to rewrite it to eliminate fault handlers and exception filters.
+        /// </summary>
+        /// <param name="node">The expression to rewrite.</param>
+        /// <returns>The result of rewriting the expression.</returns>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitTry(TryExpression node)
         {
             if (node.Fault != null)
@@ -107,7 +113,7 @@ namespace System.Linq.Expressions
             return CreateRewrittenTry(node, rewriter, tryFault);
         }
 
-        private Expression CreateRewrittenTry(TryExpression node, HandlerRewriter rewriter, Expression call)
+        private static Expression CreateRewrittenTry(TryExpression node, HandlerRewriter rewriter, Expression call)
         {
             var assignLeaveResult = Expression.Assign(rewriter.LeaveResult, call);
             var leaveResultValue = Expression.PropertyOrField(rewriter.LeaveResult, "Value");
@@ -152,7 +158,7 @@ namespace System.Linq.Expressions
             return res;
         }
 
-        private Expression Expand(TryExpression expression)
+        private static Expression Expand(TryExpression expression)
         {
             var res = expression.Body;
 
@@ -281,6 +287,7 @@ namespace System.Linq.Expressions
             {
                 public readonly HashSet<LabelTarget> Labels = new HashSet<LabelTarget>();
 
+                [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
                 protected override Expression VisitLabel(LabelExpression node)
                 {
                     Labels.Add(node.Target);
@@ -288,6 +295,7 @@ namespace System.Linq.Expressions
                     return base.VisitLabel(node);
                 }
 
+                [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
                 protected override Expression VisitLoop(LoopExpression node)
                 {
                     if (node.BreakLabel != null)
@@ -314,6 +322,7 @@ namespace System.Linq.Expressions
                     _labels = labels;
                 }
 
+                [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
                 protected override Expression VisitGoto(GotoExpression node)
                 {
                     if (!_labels.Contains(node.Target))
@@ -366,6 +375,7 @@ namespace System.Linq.Expressions
                     }
                 }
 
+                [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
                 protected override Expression VisitGoto(GotoExpression node)
                 {
                     var value = Visit(node.Value);
