@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -118,6 +119,8 @@ namespace Microsoft.CSharp.Expressions
         ///<returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="P:Microsoft.CSharp.Expressions.CSharpExpression.CSharpNodeType" /> property equal to <see cref="F:Microsoft.CSharp.Expressions.CSharpExpressionType.Call" /> and the <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Object" />, <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Method" />, and <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static MethodCallCSharpExpression Call(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
         {
+            ContractUtils.RequiresNotNull(method, nameof(method));
+
             throw new NotImplementedException();
         }
     }

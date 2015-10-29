@@ -3,6 +3,7 @@
 // bartde - October 2015
 
 using System;
+using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -55,6 +56,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
         public static ParameterAssignment Bind(ParameterInfo parameter, Expression expression)
         {
+            ContractUtils.RequiresNotNull(parameter, nameof(parameter));
+
             throw new NotImplementedException();
         }
 
@@ -67,6 +70,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
         public static ParameterAssignment Bind(MethodInfo method, string parameter, Expression expression)
         {
+            ContractUtils.RequiresNotNull(method, nameof(method));
+            ContractUtils.RequiresNotNull(parameter, nameof(parameter));
+
             // NB: Needed for the compiler to emit factory calls; no ldtoken to get ParameterInfo.
             throw new NotImplementedException();
         }

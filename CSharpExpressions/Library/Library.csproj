@@ -45,6 +45,20 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stubs.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Stubs.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Stubs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Stubs.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
