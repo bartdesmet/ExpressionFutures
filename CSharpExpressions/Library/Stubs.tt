@@ -51,7 +51,12 @@ toCSharp = t =>
     return t.FullName;
 };
 
-var types = new[] { new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.ContractUtils" } };
+var types = new[]
+{
+	new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.ContractUtils" },
+	new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.TypeExtensions" },
+	new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.CollectionExtensions" },
+};
 
 foreach (var t in types)
 {
@@ -160,6 +165,16 @@ if (prop.SetMethod != null)
                 obj = "null";
                 if (mtd.IsDefined(typeof(System.Runtime.CompilerServices.ExtensionAttribute)))
                 {
+					var pt0 = mtd.GetParameters()[0].ParameterType;
+					if (pt0.IsGenericType && pt0.GetGenericTypeDefinition() == typeof(IEnumerable<>) && typeof(Enumerable).GetMethods().Any(mo => mo.Name == mtd.Name))
+					{
+#>
+        // Omitted LINQ method <#=mtd#>
+
+<#
+						continue;
+					}
+
                     pars = "this ";
                 }
 
@@ -193,9 +208,11 @@ if (prop.SetMethod != null)
             var args = string.Join(", ", mtd.GetParameters().Select(p => p.Name));
 
             var genArgs = "";
+			var closeGen = "";
             if (mtd.IsGenericMethodDefinition)
             {
                 genArgs = "<" + string.Join(", ", mtd.GetGenericArguments().Select(toCSharp)) + ">";
+				closeGen = ".MakeGenericMethod(" + string.Join(", ", mtd.GetGenericArguments().Select(a => "typeof(" + toCSharp(a) + ")")) + ")";
             }
 #>
         private static readonly MethodInfo <#=mtdInfoName#> = <#=mtdInfoGet#>;
@@ -204,7 +221,7 @@ if (prop.SetMethod != null)
         {
             try
             {
-                <#=mtd.ReturnType == typeof(void) ? "" : "return (" + ret + ")"#><#=mtdInfoName#>.Invoke(<#=obj#>, new object[] { <#=args#> });
+                <#=mtd.ReturnType == typeof(void) ? "" : "return (" + ret + ")"#><#=mtdInfoName#><#=closeGen#>.Invoke(<#=obj#>, new object[] { <#=args#> });
             }
             catch (TargetInvocationException ex)
             {
