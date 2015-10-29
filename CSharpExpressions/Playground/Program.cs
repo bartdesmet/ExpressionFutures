@@ -18,6 +18,7 @@ namespace Playground
         {
             Call();
             Invoke();
+            New();
         }
 
         static void Call()
@@ -133,9 +134,9 @@ namespace Playground
             var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
             var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
 
-            var call = CSharpExpression.Invoke(Expression.Constant(f), arg1, arg0);
+            var invoke = CSharpExpression.Invoke(Expression.Constant(f), arg1, arg0);
 
-            var res = Expression.Lambda<Func<int>>(call).Compile()();
+            var res = Expression.Lambda<Func<int>>(invoke).Compile()();
 
             Console.WriteLine(res);
         }
@@ -151,9 +152,53 @@ namespace Playground
             var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
             var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
 
-            var call = CSharpExpression.Invoke(Expression.Constant(f), arg0, arg1);
+            var invoke = CSharpExpression.Invoke(Expression.Constant(f), arg0, arg1);
 
-            var res = Expression.Lambda<Func<int>>(call).Compile()();
+            var res = Expression.Lambda<Func<int>>(invoke).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void New()
+        {
+            New1();
+            New2();
+        }
+
+        static void New1()
+        {
+            var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
+
+            var val1 = ctor.GetParameters()[0];
+            var val2 = ctor.GetParameters()[1];
+            var val3 = ctor.GetParameters()[2];
+
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+            var arg2 = CSharpExpression.Bind(val3, Log(Expression.Constant(3), "C"));
+
+            var @new = CSharpExpression.New(ctor, arg2, arg0, arg1);
+
+            var res = Expression.Lambda<Func<TimeSpan>>(@new).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void New2()
+        {
+            var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
+
+            var val1 = ctor.GetParameters()[0];
+            var val2 = ctor.GetParameters()[1];
+            var val3 = ctor.GetParameters()[2];
+
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+            var arg2 = CSharpExpression.Bind(val3, Log(Expression.Constant(3), "C"));
+
+            var @new = CSharpExpression.New(ctor, arg0, arg1, arg2);
+
+            var res = Expression.Lambda<Func<TimeSpan>>(@new).Compile()();
 
             Console.WriteLine(res);
         }
