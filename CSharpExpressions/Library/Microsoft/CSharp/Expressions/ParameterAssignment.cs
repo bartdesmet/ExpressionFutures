@@ -70,6 +70,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="parameter">The name of the parameter on <paramref name="method"/> which is being assigned to.</param>
         /// <param name="expression">The value to be assigned to <paramref name="parameter"/>.</param>
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ParameterAssignment Bind(MethodInfo method, string parameter, Expression expression)
         {
             // NB: This overload is needed for the compiler to emit factory calls;
@@ -129,6 +130,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected virtual ParameterAssignment VisitParameterAssignment(ParameterAssignment node)
         {
             return node.Update(Visit(node.Expression));

@@ -59,6 +59,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal override Expression Accept(CSharpExpressionVisitor visitor)
         {
             return visitor.VisitMethodCall(this);
@@ -212,6 +213,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Arguments" /> collection.</param>
         ///<returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="P:Microsoft.CSharp.Expressions.CSharpExpression.CSharpNodeType" /> property equal to <see cref="F:Microsoft.CSharp.Expressions.CSharpExpressionType.Call" /> and the <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Object" />, <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Method" />, and <see cref="P:Microsoft.CSharp.Expressions.MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static MethodCallCSharpExpression Call(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
         {
             ContractUtils.RequiresNotNull(method, nameof(method));
@@ -259,6 +261,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitMethodCall(MethodCallCSharpExpression node)
         {
             return node.Update(Visit(node.Object), Visit(node.Arguments, VisitParameterAssignment));

@@ -7,6 +7,7 @@ namespace System
     // NOTE: A similar file exists in System. This minimal copy of the functionality should be removed.
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     static partial class SR
     {
         internal static string Format(string resourceFormat, object p1)
