@@ -42,5 +42,13 @@ namespace Microsoft.CSharp.Expressions
         {
             return new ArgumentException(Strings.UnboundParameter(p0));
         }
+
+        /// <summary>
+        /// ArgumentException with message like "A non-static constructor is required"
+        /// </summary>
+        internal static Exception NonStaticConstructorRequired()
+        {
+            return new ArgumentException(Strings.NonStaticConstructorRequired);
+        }
     }
 }

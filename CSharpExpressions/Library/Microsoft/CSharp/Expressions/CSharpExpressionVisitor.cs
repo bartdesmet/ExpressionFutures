@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions

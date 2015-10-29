@@ -12,5 +12,6 @@ namespace System
         public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
         public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
         public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
+        public const string NonStaticConstructorRequired = "A non-static constructor is required";
     }
 }

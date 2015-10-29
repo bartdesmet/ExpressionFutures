@@ -9,6 +9,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using static System.Linq.Expressions.ExpressionStubs;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -84,23 +85,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var inOrder = true;
-            var lastPosition = -1;
-
-            foreach (var argument in Arguments)
-            {
-                if (argument.Parameter.Position < lastPosition)
-                {
-                    inOrder = false;
-                    break;
-                }
-
-                lastPosition = argument.Parameter.Position;
-            }
-
             var parameters = Method.GetParametersCached();
 
-            if (inOrder)
+            if (CheckArgumentsInOrder(Arguments))
             {
                 var args = new Expression[parameters.Length];
 
@@ -151,18 +138,6 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i] = Expression.Call(obj, Method, args);
 
                 return Expression.Block(vars, exprs);
-            }
-        }
-
-        private static void FillOptionalParameters(ParameterInfo[] parameters, Expression[] args)
-        {
-            for (var i = 0; i < args.Length; i++)
-            {
-                if (args[i] == null)
-                {
-                    var parameter = parameters[i];
-                    args[i] = Expression.Constant(parameter.DefaultValue, parameter.ParameterType);
-                }
             }
         }
     }

@@ -42,5 +42,16 @@ namespace Microsoft.CSharp.Expressions
         {
             return SR.Format(SR.UnboundParameter, p0);
         }
+
+        /// <summary>
+        /// A string like "A non-static constructor is required"
+        /// </summary>
+        internal static string NonStaticConstructorRequired
+        {
+            get
+            {
+                return SR.NonStaticConstructorRequired;
+            }
+        }
     }
 }

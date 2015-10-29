@@ -13,5 +13,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents represents a method call.
         /// </summary>
         Call,
+        /// <summary>
+        /// A node that represents calling a constructor to create a new object.
+        /// </summary>
+        New,
     }
 }
