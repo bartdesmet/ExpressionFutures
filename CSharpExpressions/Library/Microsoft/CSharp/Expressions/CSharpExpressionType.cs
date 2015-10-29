@@ -21,5 +21,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents applying a delegate or lambda expression to a list of argument expressions.
         /// </summary>
         Invoke,
+        /// <summary>
+        /// A node that represents an index operation.
+        /// </summary>
+        Index,
     }
 }

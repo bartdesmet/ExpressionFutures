@@ -19,6 +19,7 @@ namespace Playground
             Call();
             Invoke();
             New();
+            Index();
         }
 
         static void Call()
@@ -28,6 +29,7 @@ namespace Playground
             Call3();
             Call4();
             Call5();
+            Call6();
         }
 
         static void Call1()
@@ -117,6 +119,26 @@ namespace Playground
             Console.WriteLine(res);
         }
 
+        static void Call6()
+        {
+            var mtd = MethodInfoOf((Bar b) => b.F(default(int), default(int), default(int)));
+
+            var val1 = mtd.GetParameters()[0];
+            var val2 = mtd.GetParameters()[1];
+            var val3 = mtd.GetParameters()[2];
+
+            var obj = Log(Expression.Constant(new Bar()), "O");
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+            var arg2 = CSharpExpression.Bind(val3, Log(Expression.Constant(3), "C"));
+
+            var call = CSharpExpression.Call(obj, mtd, arg2, arg0, arg1);
+
+            var res = Expression.Lambda<Func<int>>(call).Compile()();
+
+            Console.WriteLine(res);
+        }
+
         static void Invoke()
         {
             Invoke1();
@@ -131,10 +153,11 @@ namespace Playground
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
 
+            var obj = Log(Expression.Constant(f), "O");
             var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
             var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
 
-            var invoke = CSharpExpression.Invoke(Expression.Constant(f), arg1, arg0);
+            var invoke = CSharpExpression.Invoke(obj, arg1, arg0);
 
             var res = Expression.Lambda<Func<int>>(invoke).Compile()();
 
@@ -149,10 +172,11 @@ namespace Playground
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
 
+            var obj = Log(Expression.Constant(f), "O");
             var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
             var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
 
-            var invoke = CSharpExpression.Invoke(Expression.Constant(f), arg0, arg1);
+            var invoke = CSharpExpression.Invoke(obj, arg0, arg1);
 
             var res = Expression.Lambda<Func<int>>(invoke).Compile()();
 
@@ -203,6 +227,54 @@ namespace Playground
             Console.WriteLine(res);
         }
 
+        static void Index()
+        {
+            Index1();
+            Index2();
+        }
+
+        static void Index1()
+        {
+            var get = MethodInfoOf((Field f) => f[default(int), default(int), default(int)]);
+            var idx = get.DeclaringType.GetProperty(get.Name.Substring("get_".Length));
+
+            var val1 = get.GetParameters()[0];
+            var val2 = get.GetParameters()[1];
+            var val3 = get.GetParameters()[2];
+
+            var obj = Log(Expression.Constant(new Field()), "O");
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+            var arg2 = CSharpExpression.Bind(val3, Log(Expression.Constant(3), "C"));
+
+            var index = CSharpExpression.Index(obj, idx, arg2, arg0, arg1);
+
+            var res = Expression.Lambda<Func<int>>(index).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void Index2()
+        {
+            var get = MethodInfoOf((Field f) => f[default(int), default(int), default(int)]);
+            var idx = get.DeclaringType.GetProperty(get.Name.Substring("get_".Length));
+
+            var val1 = get.GetParameters()[0];
+            var val2 = get.GetParameters()[1];
+            var val3 = get.GetParameters()[2];
+
+            var obj = Log(Expression.Constant(new Field()), "O");
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+            var arg2 = CSharpExpression.Bind(val3, Log(Expression.Constant(3), "C"));
+
+            var index = CSharpExpression.Index(obj, idx, arg0, arg1, arg2);
+
+            var res = Expression.Lambda<Func<int>>(index).Compile()();
+
+            Console.WriteLine(res);
+        }
+
         static int F(int x, int y, int z = 42)
         {
             return x * y - z;
@@ -211,6 +283,25 @@ namespace Playground
         static Expression Log(Expression expression, string log)
         {
             return Expression.Block(Expression.Call(s_writeLine, Expression.Constant(log, typeof(string))), expression);
+        }
+    }
+
+    class Bar
+    {
+        public int F(int x, int y, int z = 42)
+        {
+            return x * y - z;
+        }
+    }
+
+    class Field
+    {
+        public int this[int x, int y, int z]
+        {
+            get
+            {
+                return x + y + z;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
 // bartde - October 2015
 
 using System;
+using System.Reflection;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -49,6 +50,22 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception NonStaticConstructorRequired()
         {
             return new ArgumentException(Strings.NonStaticConstructorRequired);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The property '{0}' has no 'get' accessor"
+        /// </summary>
+        internal static Exception PropertyDoesNotHaveGetAccessor(object p0)
+        {
+            return new ArgumentException(Strings.PropertyDoesNotHaveGetAccessor(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A non-static 'get' accessor is required for property '{0}'"
+        /// </summary>
+        internal static Exception AccessorCannotBeStatic(object p0)
+        {
+            return new ArgumentException(Strings.AccessorCannotBeStatic(p0));
         }
     }
 }

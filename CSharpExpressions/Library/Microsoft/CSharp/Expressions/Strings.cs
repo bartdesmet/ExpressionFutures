@@ -53,5 +53,21 @@ namespace Microsoft.CSharp.Expressions
                 return SR.NonStaticConstructorRequired;
             }
         }
+
+        /// <summary>
+        /// A string like "The property '{0}' has no 'get' accessor"
+        /// </summary>
+        internal static string PropertyDoesNotHaveGetAccessor(object p0)
+        {
+            return SR.Format(SR.PropertyDoesNotHaveGetAccessor, p0);
+        }
+
+        /// <summary>
+        /// A string like "A non-static 'get' accessor is required for property '{0}'"
+        /// </summary>
+        internal static string AccessorCannotBeStatic(object p0)
+        {
+            return SR.Format(SR.AccessorCannotBeStatic, p0);
+        }
     }
 }
