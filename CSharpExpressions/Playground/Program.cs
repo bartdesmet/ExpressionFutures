@@ -22,6 +22,11 @@ namespace Playground
             Index();
         }
 
+        static void X(__arglist)
+        {
+            var x = __arglist;
+        }
+
         static void Call()
         {
             Call1();

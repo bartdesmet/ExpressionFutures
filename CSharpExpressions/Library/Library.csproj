@@ -60,6 +60,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="gaps.txt" />
     <Content Include="notes.txt" />
     <Content Include="Stubs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
