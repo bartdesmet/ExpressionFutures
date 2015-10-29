@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
