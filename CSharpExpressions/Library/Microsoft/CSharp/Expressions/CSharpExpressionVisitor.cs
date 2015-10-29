@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -14,7 +15,7 @@ namespace Microsoft.CSharp.Expressions
     /// classes whose functionality requires traversing, examining or copying
     /// an expression tree.
     /// </remarks>
-    public abstract class CSharpExpressionVisitor : ExpressionVisitor
+    public abstract partial class CSharpExpressionVisitor : ExpressionVisitor
     {
         /// <summary>
         /// Visits the children of the extension expression.
