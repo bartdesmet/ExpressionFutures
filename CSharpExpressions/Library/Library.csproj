@@ -59,6 +59,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="notes.txt" />
     <Content Include="Stubs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Stubs.cs</LastGenOutput>
