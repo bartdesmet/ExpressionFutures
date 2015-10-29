@@ -8,7 +8,7 @@ namespace Microsoft.CSharp.Expressions
 {
     /// <summary>
     /// Strongly-typed and parameterized string resources.
-    /// </summary
+    /// </summary>
     internal static class Strings
     {
         /// <summary>

@@ -12,6 +12,7 @@ using System.Reflection;
 namespace System.Dynamic.Utils
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     static class ContractUtils
     {
         private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
@@ -123,6 +124,7 @@ namespace System.Dynamic.Utils
 namespace System.Dynamic.Utils
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     static class TypeExtensions
     {
         private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
@@ -218,6 +220,7 @@ namespace System.Dynamic.Utils
 namespace System.Dynamic.Utils
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     static class CollectionExtensions
     {
         private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
@@ -379,6 +382,7 @@ namespace System.Dynamic.Utils
 namespace System.Dynamic.Utils
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     static class TypeUtils
     {
         private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
@@ -908,6 +912,7 @@ namespace System.Dynamic.Utils
 namespace System.Linq.Expressions
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     class ExpressionStubs
     {
         private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");

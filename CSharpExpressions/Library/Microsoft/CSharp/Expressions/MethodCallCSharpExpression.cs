@@ -156,7 +156,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private void FillOptionalParameters(ParameterInfo[] parameters, Expression[] args)
+        private static void FillOptionalParameters(ParameterInfo[] parameters, Expression[] args)
         {
             for (var i = 0; i < args.Length; i++)
             {

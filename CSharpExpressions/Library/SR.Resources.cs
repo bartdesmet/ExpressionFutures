@@ -8,9 +8,9 @@ namespace System
 
     partial class SR
     {
-        public static readonly string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
-        public static readonly string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
-        public static readonly string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
-        public static readonly string UnboundParameter = "Non-optional parameter '{0}' has no binding";
+        public const string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
+        public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
+        public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
+        public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
     }
 }

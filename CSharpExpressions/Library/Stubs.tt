@@ -77,6 +77,7 @@ foreach (var t in types)
 namespace <#=type.Namespace#>
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
     <#=typeMods#> <#=type.Name + t.Suffix#>
     {
         private static Assembly s_asm = Assembly.Load("<#=t.Assembly#>");
