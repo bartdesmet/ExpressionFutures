@@ -15,6 +15,7 @@ namespace Microsoft.CSharp.Expressions
         static void Main()
         {
             Call();
+            Invoke();
         }
 
         static void Call()
@@ -113,6 +114,48 @@ namespace Microsoft.CSharp.Expressions
             Console.WriteLine(res);
         }
 
+        static void Invoke()
+        {
+            Invoke1();
+            Invoke2();
+        }
+
+        static void Invoke1()
+        {
+            var f = new Func<int, int, int>((a, b) => a + b);
+            var mtd = InfoOf(() => f.Invoke(default(int), default(int)));
+
+            var val1 = mtd.GetParameters()[0];
+            var val2 = mtd.GetParameters()[1];
+
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+
+            var call = CSharpExpression.Invoke(Expression.Constant(f), arg1, arg0);
+
+            var res = Expression.Lambda<Func<int>>(call).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void Invoke2()
+        {
+            var f = new Func<int, int, int>((a, b) => a + b);
+            var mtd = InfoOf(() => f.Invoke(default(int), default(int)));
+
+            var val1 = mtd.GetParameters()[0];
+            var val2 = mtd.GetParameters()[1];
+
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(Expression.Constant(2), "B"));
+
+            var call = CSharpExpression.Invoke(Expression.Constant(f), arg0, arg1);
+
+            var res = Expression.Lambda<Func<int>>(call).Compile()();
+
+            Console.WriteLine(res);
+        }
+
         static int F(int x, int y, int z = 42)
         {
             return x * y - z;
@@ -129,6 +172,16 @@ namespace Microsoft.CSharp.Expressions
         }
 
         internal static MethodInfo InfoOf(Expression<Action> f)
+        {
+            return ((MethodCallExpression)f.Body).Method;
+        }
+
+        internal static MethodInfo InfoOf<T, R>(Expression<Func<T, R>> f)
+        {
+            return ((MethodCallExpression)f.Body).Method;
+        }
+
+        internal static MethodInfo InfoOf<T>(Expression<Action<T>> f)
         {
             return ((MethodCallExpression)f.Body).Method;
         }
