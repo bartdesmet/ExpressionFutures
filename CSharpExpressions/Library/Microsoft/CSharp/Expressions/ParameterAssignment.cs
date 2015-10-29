@@ -71,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The value to be assigned to <paramref name="parameter"/>.</param>
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static ParameterAssignment Bind(MethodInfo method, string parameter, Expression expression)
+        public static ParameterAssignment Bind(MethodBase method, string parameter, Expression expression)
         {
             // NB: This overload is needed for the compiler to emit factory calls;
             //     we can't emit a `ldtoken` instruction to obtain a ParameterInfo.
