@@ -18,5 +18,13 @@ namespace Microsoft.CSharp.Expressions
         {
             return new ArgumentException(Strings.ParameterNotDefinedForMethod(p0, p1));
         }
+
+        /// <summary>
+        /// ArgumentException with message like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
+        /// </summary>
+        internal static Exception ExpressionTypeDoesNotMatchParameter(object p0, object p1)
+        {
+            return new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1));
+        }
     }
 }

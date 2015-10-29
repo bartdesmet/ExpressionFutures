@@ -9,5 +9,6 @@ namespace System
     partial class SR
     {
         public static readonly string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
+        public static readonly string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
     }
 }

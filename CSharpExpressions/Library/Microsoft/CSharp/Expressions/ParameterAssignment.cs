@@ -6,6 +6,7 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -58,7 +59,9 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(parameter, nameof(parameter));
 
-            throw new NotImplementedException();
+            expression = ValidateOneArgument(parameter, expression);
+
+            return new ParameterAssignment(parameter, expression);
         }
 
         /// <summary>
@@ -93,6 +96,30 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Bind(parameterInfo, expression);
+        }
+
+        private static Expression ValidateOneArgument(ParameterInfo parameter, Expression expression)
+        {
+            RequiresCanRead(expression, nameof(expression));
+
+            var pType = parameter.ParameterType;
+
+            if (pType.IsByRef)
+            {
+                pType = pType.GetElementType();
+            }
+
+            TypeUtils.ValidateType(pType);
+
+            if (!TypeUtils.AreReferenceAssignable(pType, expression.Type))
+            {
+                if (!TryQuote(pType, ref expression))
+                {
+                    throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType);
+                }
+            }
+
+            return expression;
         }
     }
 

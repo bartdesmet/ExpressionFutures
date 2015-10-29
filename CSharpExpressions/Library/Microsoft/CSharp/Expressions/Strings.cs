@@ -18,5 +18,13 @@ namespace Microsoft.CSharp.Expressions
         {
             return SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
         }
+
+        /// <summary>
+        /// A string like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
+        /// </summary>
+        internal static string ExpressionTypeDoesNotMatchParameter(object p0, object p1)
+        {
+            return SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
+        }
     }
 }

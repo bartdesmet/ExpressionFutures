@@ -1,9 +1,10 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
 <#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
 <#@ output extension=".cs" #>
 // Prototyping extended expression trees for C#.
 //
@@ -47,15 +48,21 @@ toCSharp = t =>
             return gtd + "<" + string.Join(", ", t.GetGenericArguments().Select(toCSharp)) + ">";
         }
     }
+    else if (t.IsByRef)
+    {
+        return toCSharp(t.GetElementType());
+    }
 
     return t.FullName;
 };
 
 var types = new[]
 {
-	new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.ContractUtils" },
-	new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.TypeExtensions" },
-	new { Assembly = typeof(Enumerable).Assembly, Type = "System.Dynamic.Utils.CollectionExtensions" },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.ContractUtils", Members = default(string[]), Suffix = default(string) },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeExtensions", Members = default(string[]), Suffix = default(string) },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.CollectionExtensions", Members = default(string[]), Suffix = default(string) },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeUtils", Members = default(string[]), Suffix = default(string) },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Expression", Members = new string[] { "RequiresCanRead", "ValidateOneArgument", "TryQuote" }, Suffix = "Stubs" },
 };
 
 foreach (var t in types)
@@ -70,7 +77,7 @@ foreach (var t in types)
 namespace <#=type.Namespace#>
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    <#=typeMods#> <#=type.Name#>
+    <#=typeMods#> <#=type.Name + t.Suffix#>
     {
         private static Assembly s_asm = Assembly.Load("<#=t.Assembly#>");
         private static Type s_typ = s_asm.GetType("<#=type.FullName#>");
@@ -78,7 +85,15 @@ namespace <#=type.Namespace#>
 
 <#
     var i = 0;
-    foreach (var m in type.GetTypeInfo().DeclaredMembers)
+    
+    var members = type.GetTypeInfo().DeclaredMembers;
+
+    if (t.Members != null)
+    {
+        members = members.Where(m => t.Members.Contains(m.Name));
+    }
+
+    foreach (var m in members)
     {
         if (m.Name.StartsWith("get_") || m.Name.StartsWith("set_")) // NB: quick-n-dirty; not dealing with events etc.
             continue;
@@ -165,15 +180,15 @@ if (prop.SetMethod != null)
                 obj = "null";
                 if (mtd.IsDefined(typeof(System.Runtime.CompilerServices.ExtensionAttribute)))
                 {
-					var pt0 = mtd.GetParameters()[0].ParameterType;
-					if (pt0.IsGenericType && pt0.GetGenericTypeDefinition() == typeof(IEnumerable<>) && typeof(Enumerable).GetMethods().Any(mo => mo.Name == mtd.Name))
-					{
+                    var pt0 = mtd.GetParameters()[0].ParameterType;
+                    if (pt0.IsGenericType && pt0.GetGenericTypeDefinition() == typeof(IEnumerable<>) && typeof(Enumerable).GetMethods().Any(mo => mo.Name == mtd.Name))
+                    {
 #>
         // Omitted LINQ method <#=mtd#>
 
 <#
-						continue;
-					}
+                        continue;
+                    }
 
                     pars = "this ";
                 }
@@ -197,22 +212,22 @@ if (prop.SetMethod != null)
             }
             else
             {
-                var parTypes = string.Join(", ", mtd.GetParameters().Select(p => "typeof(" + toCSharp(p.ParameterType) + ")"));
+                var parTypes = string.Join(", ", mtd.GetParameters().Select(p => "typeof(" + toCSharp(p.ParameterType) + ")" + (p.ParameterType.IsByRef ? ".MakeByRefType()" : "")));
                 filters.Add("m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { " + parTypes + " })");
             }
 
             var filter = string.Join(" && ", filters);
             var mtdInfoGet = "s_mtds[\"" + mtd.Name + "\"].Single(m => " + filter + ")";
 
-            pars += string.Join(", ", mtd.GetParameters().Select(p => toCSharp(p.ParameterType) + " " + p.Name)); // NB: no support for ref, out, params
+            pars += string.Join(", ", mtd.GetParameters().Select(p => (p.IsOut ? "out " : (p.ParameterType.IsByRef ? "ref " : "")) + toCSharp(p.ParameterType) + " " + p.Name)); // NB: no support for params
             var args = string.Join(", ", mtd.GetParameters().Select(p => p.Name));
 
             var genArgs = "";
-			var closeGen = "";
+            var closeGen = "";
             if (mtd.IsGenericMethodDefinition)
             {
                 genArgs = "<" + string.Join(", ", mtd.GetGenericArguments().Select(toCSharp)) + ">";
-				closeGen = ".MakeGenericMethod(" + string.Join(", ", mtd.GetGenericArguments().Select(a => "typeof(" + toCSharp(a) + ")")) + ")";
+                closeGen = ".MakeGenericMethod(" + string.Join(", ", mtd.GetGenericArguments().Select(a => "typeof(" + toCSharp(a) + ")")) + ")";
             }
 #>
         private static readonly MethodInfo <#=mtdInfoName#> = <#=mtdInfoGet#>;
