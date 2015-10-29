@@ -29,7 +29,7 @@ namespace Microsoft.CSharp.Expressions
 
         static void Call1()
         {
-            var mtd = InfoOf(() => Math.Min(default(int), default(int)));
+            var mtd = MethodInfoOf(() => Math.Min(default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -46,7 +46,7 @@ namespace Microsoft.CSharp.Expressions
 
         static void Call2()
         {
-            var mtd = InfoOf(() => Math.Min(default(int), default(int)));
+            var mtd = MethodInfoOf(() => Math.Min(default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -63,7 +63,7 @@ namespace Microsoft.CSharp.Expressions
 
         static void Call3()
         {
-            var mtd = InfoOf(() => F(default(int), default(int), default(int)));
+            var mtd = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -80,7 +80,7 @@ namespace Microsoft.CSharp.Expressions
 
         static void Call4()
         {
-            var mtd = InfoOf(() => F(default(int), default(int), default(int)));
+            var mtd = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -97,7 +97,7 @@ namespace Microsoft.CSharp.Expressions
 
         static void Call5()
         {
-            var mtd = InfoOf(() => F(default(int), default(int), default(int)));
+            var mtd = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -123,7 +123,7 @@ namespace Microsoft.CSharp.Expressions
         static void Invoke1()
         {
             var f = new Func<int, int, int>((a, b) => a + b);
-            var mtd = InfoOf(() => f.Invoke(default(int), default(int)));
+            var mtd = MethodInfoOf(() => f.Invoke(default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -141,7 +141,7 @@ namespace Microsoft.CSharp.Expressions
         static void Invoke2()
         {
             var f = new Func<int, int, int>((a, b) => a + b);
-            var mtd = InfoOf(() => f.Invoke(default(int), default(int)));
+            var mtd = MethodInfoOf(() => f.Invoke(default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
             var val2 = mtd.GetParameters()[1];
@@ -166,24 +166,142 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Block(Expression.Call(s_writeLine, Expression.Constant(log, typeof(string))), expression);
         }
 
-        internal static MethodInfo InfoOf<R>(Expression<Func<R>> f)
+        internal static MethodInfo MethodInfoOf<R>(Expression<Func<R>> f)
         {
-            return ((MethodCallExpression)f.Body).Method;
+            return (MethodInfo)InfoOf(f);
         }
 
-        internal static MethodInfo InfoOf(Expression<Action> f)
+        internal static MethodInfo MethodInfoOf(Expression<Action> f)
         {
-            return ((MethodCallExpression)f.Body).Method;
+            return (MethodInfo)InfoOf(f);
         }
 
-        internal static MethodInfo InfoOf<T, R>(Expression<Func<T, R>> f)
+        internal static MethodInfo MethodInfoOf<T, R>(Expression<Func<T, R>> f)
         {
-            return ((MethodCallExpression)f.Body).Method;
+            return (MethodInfo)InfoOf(f);
         }
 
-        internal static MethodInfo InfoOf<T>(Expression<Action<T>> f)
+        internal static MethodInfo MethodInfoOf<T>(Expression<Action<T>> f)
         {
-            return ((MethodCallExpression)f.Body).Method;
+            return (MethodInfo)InfoOf(f);
+        }
+
+        internal static ConstructorInfo ConstructorInfoOf<R>(Expression<Func<R>> f)
+        {
+            return (ConstructorInfo)InfoOf(f);
+        }
+
+        internal static ConstructorInfo ConstructorInfoOf(Expression<Action> f)
+        {
+            return (ConstructorInfo)InfoOf(f);
+        }
+
+        internal static ConstructorInfo ConstructorInfoOf<T, R>(Expression<Func<T, R>> f)
+        {
+            return (ConstructorInfo)InfoOf(f);
+        }
+
+        internal static ConstructorInfo ConstructorInfoOf<T>(Expression<Action<T>> f)
+        {
+            return (ConstructorInfo)InfoOf(f);
+        }
+
+        internal static PropertyInfo PropertyInfoOf<R>(Expression<Func<R>> f)
+        {
+            return (PropertyInfo)InfoOf(f);
+        }
+
+        internal static PropertyInfo PropertyInfoOf(Expression<Action> f)
+        {
+            return (PropertyInfo)InfoOf(f);
+        }
+
+        internal static PropertyInfo PropertyInfoOf<T, R>(Expression<Func<T, R>> f)
+        {
+            return (PropertyInfo)InfoOf(f);
+        }
+
+        internal static PropertyInfo PropertyInfoOf<T>(Expression<Action<T>> f)
+        {
+            return (PropertyInfo)InfoOf(f);
+        }
+
+        internal static FieldInfo FieldInfoOf<R>(Expression<Func<R>> f)
+        {
+            return (FieldInfo)InfoOf(f);
+        }
+
+        internal static FieldInfo FieldInfoOf(Expression<Action> f)
+        {
+            return (FieldInfo)InfoOf(f);
+        }
+
+        internal static FieldInfo FieldInfoOf<T, R>(Expression<Func<T, R>> f)
+        {
+            return (FieldInfo)InfoOf(f);
+        }
+
+        internal static FieldInfo FieldInfoOf<T>(Expression<Action<T>> f)
+        {
+            return (FieldInfo)InfoOf(f);
+        }
+
+        internal static MemberInfo InfoOf<R>(Expression<Func<R>> f)
+        {
+            return InfoOf((LambdaExpression)f);
+        }
+
+        internal static MemberInfo InfoOf(Expression<Action> f)
+        {
+            return InfoOf((LambdaExpression)f);
+        }
+
+        internal static MemberInfo InfoOf<T, R>(Expression<Func<T, R>> f)
+        {
+            return InfoOf((LambdaExpression)f);
+        }
+
+        internal static MemberInfo InfoOf<T>(Expression<Action<T>> f)
+        {
+            return InfoOf((LambdaExpression)f);
+        }
+
+        private static MemberInfo InfoOf(LambdaExpression f)
+        {
+            var body = f.Body;
+
+            var mce = default(MethodCallExpression);
+            var be = default(BinaryExpression);
+            var ue = default(UnaryExpression);
+            var ne = default(NewExpression);
+            var me = default(MemberExpression);
+            var ie = default(IndexExpression);
+            if ((mce = body as MethodCallExpression) != null)
+            {
+                return mce.Method;
+            }
+            else if ((be = body as BinaryExpression) != null)
+            {
+                return be.Method;
+            }
+            else if ((ue = body as UnaryExpression) != null)
+            {
+                return ue.Method;
+            }
+            else if ((ne = body as NewExpression) != null)
+            {
+                return ne.Constructor;
+            }
+            else if ((me = body as MemberExpression) != null)
+            {
+                return me.Member;
+            }
+            else if ((ie = body as IndexExpression) != null)
+            {
+                return ie.Indexer;
+            }
+
+            return null;
         }
     }
 }
