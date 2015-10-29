@@ -129,7 +129,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="P:Constructor"/> property equal to.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the call arguments.</param>
-        ///<returns>A <see cref="NewCSharpExpression" /> that has the <see cref="P:Microsoft.CSharp.Expressions.CSharpExpression.CSharpNodeType" /> property equal to <see cref="F:Microsoft.CSharp.Expressions.CSharpExpressionType.New" /> and <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Constructor" /> and <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="P:Microsoft.CSharp.Expressions.CSharpExpression.CSharpNodeType" /> property equal to <see cref="F:Microsoft.CSharp.Expressions.CSharpExpressionType.New" /> and <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Constructor" /> and <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static NewCSharpExpression New(ConstructorInfo constructor, params ParameterAssignment[] arguments)
         {
             return New(constructor, (IEnumerable<ParameterAssignment>)arguments);
@@ -140,7 +140,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="P:Constructor"/> property equal to.</param>
         /// <param name="arguments">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Arguments" /> collection.</param>
-        ///<returns>A <see cref="NewCSharpExpression" /> that has the <see cref="P:Microsoft.CSharp.Expressions.CSharpExpression.CSharpNodeType" /> property equal to <see cref="F:Microsoft.CSharp.Expressions.CSharpExpressionType.New" /> and the <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Constructor" /> and <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="P:Microsoft.CSharp.Expressions.CSharpExpression.CSharpNodeType" /> property equal to <see cref="F:Microsoft.CSharp.Expressions.CSharpExpressionType.New" /> and the <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Constructor" /> and <see cref="P:Microsoft.CSharp.Expressions.NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<ParameterAssignment> arguments)
         {
             ContractUtils.RequiresNotNull(constructor, nameof(constructor));
