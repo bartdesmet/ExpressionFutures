@@ -26,5 +26,21 @@ namespace Microsoft.CSharp.Expressions
         {
             return SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
         }
+
+        /// <summary>
+        /// A string like "Parameter '{0}' has multiple bindings"
+        /// </summary>
+        internal static string DuplicateParameterBinding(object p0)
+        {
+            return SR.Format(SR.DuplicateParameterBinding, p0);
+        }
+
+        /// <summary>
+        /// A string like "Non-optional parameter '{0}' has no binding"
+        /// </summary>
+        internal static string UnboundParameter(object p0)
+        {
+            return SR.Format(SR.UnboundParameter, p0);
+        }
     }
 }

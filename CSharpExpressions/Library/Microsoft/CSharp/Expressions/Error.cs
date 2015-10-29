@@ -26,5 +26,21 @@ namespace Microsoft.CSharp.Expressions
         {
             return new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1));
         }
+
+        /// <summary>
+        /// ArgumentException with message like "Parameter '{0}' has multiple bindings"
+        /// </summary>
+        internal static Exception DuplicateParameterBinding(object p0)
+        {
+            return new ArgumentException(Strings.DuplicateParameterBinding(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Non-optional parameter '{0}' has no binding"
+        /// </summary>
+        internal static Exception UnboundParameter(object p0)
+        {
+            return new ArgumentException(Strings.UnboundParameter(p0));
+        }
     }
 }

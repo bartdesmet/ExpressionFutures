@@ -2,12 +2,12 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -121,9 +121,39 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(method, nameof(method));
 
+            ValidateMethodInfo(method);
+            ValidateStaticOrInstanceMethod(instance, method);
+
             var argList = arguments.ToReadOnly();
 
-            throw new NotImplementedException();
+            var boundParameters = new HashSet<ParameterInfo>();
+
+            foreach (var arg in argList)
+            {
+                var parameter = arg.Parameter;
+
+                if (parameter.Member != method)
+                {
+                    throw Error.ParameterNotDefinedForMethod(parameter.Name, method.Name);
+                }
+
+                if (!boundParameters.Add(parameter))
+                {
+                    throw Error.DuplicateParameterBinding(parameter.Name);
+                }
+            }
+
+            var parameters = method.GetParametersCached();
+
+            foreach (var parameter in parameters)
+            {
+                if (!boundParameters.Contains(parameter) && (!parameter.IsOptional || !parameter.HasDefaultValue))
+                {
+                    throw Error.UnboundParameter(parameter.Name);
+                }
+            }
+
+            return new MethodCallCSharpExpression(instance, method, argList);
         }
     }
 
