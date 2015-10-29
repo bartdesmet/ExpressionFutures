@@ -222,7 +222,13 @@ namespace Microsoft.CSharp.Expressions
             ValidateStaticOrInstanceMethod(instance, method);
 
             var argList = arguments.ToReadOnly();
+            ValidateParameterBindings(method, argList);
 
+            return new MethodCallCSharpExpression(instance, method, argList);
+        }
+
+        private static void ValidateParameterBindings(MethodBase method, ReadOnlyCollection<ParameterAssignment> argList)
+        {
             var boundParameters = new HashSet<ParameterInfo>();
 
             foreach (var arg in argList)
@@ -249,8 +255,6 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.UnboundParameter(parameter.Name);
                 }
             }
-
-            return new MethodCallCSharpExpression(instance, method, argList);
         }
     }
 
