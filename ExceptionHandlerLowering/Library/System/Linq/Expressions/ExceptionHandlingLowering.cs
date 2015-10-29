@@ -187,7 +187,7 @@ namespace System.Linq.Expressions
                 }
                 else
                 {
-                    if (handlers != null)
+                    if (handlers == null)
                     {
                         handlers = new List<CatchBlock>();
                     }

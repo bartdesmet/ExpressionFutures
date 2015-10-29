@@ -360,6 +360,311 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void LambdaExpressionExtensions_ManOrBoy1()
+        {
+            var err = new DivideByZeroException("Oops!");
+            var ex1 = Expression.Parameter(typeof(InvalidOperationException));
+            var ex2 = Expression.Parameter(typeof(NullReferenceException));
+            var ex3 = Expression.Parameter(typeof(OverflowException));
+            var ex4 = Expression.Parameter(typeof(DivideByZeroException));
+            var ex5 = Expression.Parameter(typeof(ArgumentOutOfRangeException));
+            var ex6 = Expression.Parameter(typeof(DivideByZeroException));
+            var ex7 = Expression.Parameter(typeof(DivideByZeroException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 6,
+                    Error = null,
+                    Log =
+                    {
+                        "T",
+                        "F4",
+                        "F6",
+                        "FI",
+                        "FA",
+                        "C6"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatch(
+                        Expression.TryFault(
+                            Expression.TryFinally(
+                                Expression.Block(
+                                    addLog("T"),
+                                    Expression.Throw(Expression.Constant(err), typeof(int))
+                                ),
+                                addLog("FI")
+                            ),
+                            addLog("FA")
+                        ),
+                        Expression.Catch(
+                            ex1,
+                            Expression.Block(
+                                addLog("C1"),
+                                Expression.Constant(1)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex2,
+                            Expression.Block(
+                                addLog("C2"),
+                                Expression.Constant(2)
+                            ),
+                            Expression.Block(
+                                addLog("F2"),
+                                Expression.Constant(true)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex3,
+                            Expression.Block(
+                                addLog("C3"),
+                                Expression.Constant(3)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex4,
+                            Expression.Block(
+                                addLog("C4"),
+                                Expression.Constant(4)
+                            ),
+                            Expression.Block(
+                                addLog("F4"),
+                                Expression.Equal(Expression.Property(ex4, "Message"), Expression.Constant("!psoO"))
+                            )
+                        ),
+                        Expression.Catch(
+                            ex5,
+                            Expression.Block(
+                                addLog("C5"),
+                                Expression.Constant(5)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex6,
+                            Expression.Block(
+                                addLog("C6"),
+                                Expression.Constant(6)
+                            ),
+                            Expression.Block(
+                                addLog("F6"),
+                                Expression.Equal(Expression.Property(ex6, "Message"), Expression.Constant("Oops!"))
+                            )
+                        ),
+                        Expression.Catch(
+                            ex7,
+                            Expression.Block(
+                                addLog("C7"),
+                                Expression.Constant(7)
+                            )
+                        )
+                    )
+            );
+        }
+
+        [TestMethod]
+        public void LambdaExpressionExtensions_ManOrBoy2()
+        {
+            var err = new DivideByZeroException("Oops!");
+            var ex1 = Expression.Parameter(typeof(InvalidOperationException));
+            var ex2 = Expression.Parameter(typeof(NullReferenceException));
+            var ex3 = Expression.Parameter(typeof(OverflowException));
+            var ex4 = Expression.Parameter(typeof(DivideByZeroException));
+            var ex5 = Expression.Parameter(typeof(ArgumentOutOfRangeException));
+            var ex6 = Expression.Parameter(typeof(DivideByZeroException));
+            var ex7 = Expression.Parameter(typeof(DivideByZeroException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 7,
+                    Error = null,
+                    Log =
+                    {
+                        "T",
+                        "F4",
+                        "F6",
+                        "FI",
+                        "FA",
+                        "C7"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatch(
+                        Expression.TryFault(
+                            Expression.TryFinally(
+                                Expression.Block(
+                                    addLog("T"),
+                                    Expression.Throw(Expression.Constant(err), typeof(int))
+                                ),
+                                addLog("FI")
+                            ),
+                            addLog("FA")
+                        ),
+                        Expression.Catch(
+                            ex1,
+                            Expression.Block(
+                                addLog("C1"),
+                                Expression.Constant(1)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex2,
+                            Expression.Block(
+                                addLog("C2"),
+                                Expression.Constant(2)
+                            ),
+                            Expression.Block(
+                                addLog("F2"),
+                                Expression.Constant(true)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex3,
+                            Expression.Block(
+                                addLog("C3"),
+                                Expression.Constant(3)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex4,
+                            Expression.Block(
+                                addLog("C4"),
+                                Expression.Constant(4)
+                            ),
+                            Expression.Block(
+                                addLog("F4"),
+                                Expression.Equal(Expression.Property(ex4, "Message"), Expression.Constant("!psoO"))
+                            )
+                        ),
+                        Expression.Catch(
+                            ex5,
+                            Expression.Block(
+                                addLog("C5"),
+                                Expression.Constant(5)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex6,
+                            Expression.Block(
+                                addLog("C6"),
+                                Expression.Constant(6)
+                            ),
+                            Expression.Block(
+                                addLog("F6"),
+                                Expression.Equal(Expression.Property(ex6, "Message"), Expression.Constant("Nope!"))
+                            )
+                        ),
+                        Expression.Catch(
+                            ex7,
+                            Expression.Block(
+                                addLog("C7"),
+                                Expression.Constant(7)
+                            )
+                        )
+                    )
+            );
+        }
+
+        [TestMethod]
+        public void LambdaExpressionExtensions_ManOrBoy3()
+        {
+            var err = new DivideByZeroException("Oops!");
+            var ex1 = Expression.Parameter(typeof(InvalidOperationException));
+            var ex2 = Expression.Parameter(typeof(NullReferenceException));
+            var ex3 = Expression.Parameter(typeof(OverflowException));
+            var ex4 = Expression.Parameter(typeof(DivideByZeroException));
+            var ex5 = Expression.Parameter(typeof(ArgumentOutOfRangeException));
+            var ex6 = Expression.Parameter(typeof(DivideByZeroException));
+
+            Verify(
+                new LogAndResult<int>
+                {
+                    Value = 0,
+                    Error = err,
+                    Log =
+                    {
+                        "T",
+                        "F4",
+                        "F6",
+                        "FI1",
+                        "FA",
+                        "FI2"
+                    }
+                },
+                addLog =>
+                    Expression.TryCatchFinally(
+                        Expression.TryFault(
+                            Expression.TryFinally(
+                                Expression.Block(
+                                    addLog("T"),
+                                    Expression.Throw(Expression.Constant(err), typeof(int))
+                                ),
+                                addLog("FI1")
+                            ),
+                            addLog("FA")
+                        ),
+                        addLog("FI2"),
+                        Expression.Catch(
+                            ex1,
+                            Expression.Block(
+                                addLog("C1"),
+                                Expression.Constant(1)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex2,
+                            Expression.Block(
+                                addLog("C2"),
+                                Expression.Constant(2)
+                            ),
+                            Expression.Block(
+                                addLog("F2"),
+                                Expression.Constant(true)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex3,
+                            Expression.Block(
+                                addLog("C3"),
+                                Expression.Constant(3)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex4,
+                            Expression.Block(
+                                addLog("C4"),
+                                Expression.Constant(4)
+                            ),
+                            Expression.Block(
+                                addLog("F4"),
+                                Expression.Equal(Expression.Property(ex4, "Message"), Expression.Constant("!psoO"))
+                            )
+                        ),
+                        Expression.Catch(
+                            ex5,
+                            Expression.Block(
+                                addLog("C5"),
+                                Expression.Constant(5)
+                            )
+                        ),
+                        Expression.Catch(
+                            ex6,
+                            Expression.Block(
+                                addLog("C6"),
+                                Expression.Constant(6)
+                            ),
+                            Expression.Block(
+                                addLog("F6"),
+                                Expression.Equal(Expression.Property(ex6, "Message"), Expression.Constant("Nope!"))
+                            )
+                        )
+                    )
+            );
+        }
+
         private static void Verify<T>(LogAndResult<T> expected, Func<Func<string, Expression>, Expression> createExpression)
         {
             var res = WithLog<T>(createExpression).CompileWithExceptionHandling();
