@@ -79,6 +79,94 @@ namespace Microsoft.CSharp.Expressions
 
             return CSharpExpression.Call(@object, Method, arguments);
         }
+
+        /// <summary>
+        /// Reduces the call expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public override Expression Reduce()
+        {
+            var inOrder = true;
+            var lastPosition = -1;
+
+            foreach (var argument in Arguments)
+            {
+                if (argument.Parameter.Position < lastPosition)
+                {
+                    inOrder = false;
+                    break;
+                }
+
+                lastPosition = argument.Parameter.Position;
+            }
+
+            var parameters = Method.GetParametersCached();
+
+            if (inOrder)
+            {
+                var args = new Expression[parameters.Length];
+
+                foreach (var argument in Arguments)
+                {
+                    args[argument.Parameter.Position] = argument.Expression;
+                }
+
+                FillOptionalParameters(parameters, args);
+
+                return Expression.Call(Object, Method, args);
+            }
+            else
+            {
+                var isStatic = Method.IsStatic;
+
+                var vars = new ParameterExpression[(isStatic ? 0 : 1) + Arguments.Count];
+                var exprs = new Expression[vars.Length + 1];
+                var args = new Expression[parameters.Length];
+
+                var obj = default(ParameterExpression);
+                var i = 0;
+                if (!isStatic)
+                {
+                    obj = Expression.Parameter(Object.Type, "obj");
+                    vars[i] = obj;
+                    exprs[i] = Expression.Assign(obj, Object);
+
+                    i++;
+                }
+
+                foreach (var argument in Arguments)
+                {
+                    var parameter = argument.Parameter;
+                    var expression = argument.Expression;
+
+                    var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
+                    vars[i] = var;
+                    exprs[i] = Expression.Assign(var, expression);
+
+                    args[parameter.Position] = var;
+
+                    i++;
+                }
+
+                FillOptionalParameters(parameters, args);
+
+                exprs[i] = Expression.Call(obj, Method, args);
+
+                return Expression.Block(vars, exprs);
+            }
+        }
+
+        private void FillOptionalParameters(ParameterInfo[] parameters, Expression[] args)
+        {
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (args[i] == null)
+                {
+                    var parameter = parameters[i];
+                    args[i] = Expression.Constant(parameter.DefaultValue, parameter.ParameterType);
+                }
+            }
+        }
     }
 
     partial class CSharpExpression
