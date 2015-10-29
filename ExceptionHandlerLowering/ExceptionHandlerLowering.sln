@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionHandlerLowering", "ExceptionHandlerLowering\ExceptionHandlerLowering.csproj", "{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{15147125-D027-4267-9A01-07C8BCB45F17}"
 EndProject

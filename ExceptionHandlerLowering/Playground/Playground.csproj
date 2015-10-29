@@ -7,8 +7,8 @@
     <ProjectGuid>{CDBAA725-9AD7-4276-BD5B-6F0CBF7EEECB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExceptionHandlerLowering</RootNamespace>
-    <AssemblyName>ExceptionHandlerLowering</AssemblyName>
+    <RootNamespace>Playground</RootNamespace>
+    <AssemblyName>Playground</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
