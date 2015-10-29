@@ -121,6 +121,8 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(method, nameof(method));
 
+            var argList = arguments.ToReadOnly();
+
             throw new NotImplementedException();
         }
     }

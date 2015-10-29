@@ -70,11 +70,29 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
         public static ParameterAssignment Bind(MethodInfo method, string parameter, Expression expression)
         {
+            // NB: This overload is needed for the compiler to emit factory calls;
+            //     we can't emit a `ldtoken` instruction to obtain a ParameterInfo.
+
             ContractUtils.RequiresNotNull(method, nameof(method));
             ContractUtils.RequiresNotNull(parameter, nameof(parameter));
 
-            // NB: Needed for the compiler to emit factory calls; no ldtoken to get ParameterInfo.
-            throw new NotImplementedException();
+            var parameterInfo = default(ParameterInfo);
+
+            foreach (var candidate in method.GetParametersCached())
+            {
+                if (candidate.Name == parameter)
+                {
+                    parameterInfo = candidate;
+                    break;
+                }
+            }
+
+            if (parameterInfo == null)
+            {
+                throw Error.ParameterNotDefinedForMethod(parameter, method.Name);
+            }
+
+            return Bind(parameterInfo, expression);
         }
     }
 

@@ -39,12 +39,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Error.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ParameterAssignment.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Strings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SR.cs" />
+    <Compile Include="SR.Resources.cs" />
     <Compile Include="Stubs.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
