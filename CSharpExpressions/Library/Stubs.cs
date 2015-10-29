@@ -989,13 +989,27 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_5 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+        private static readonly MethodInfo s_5 = s_mtds["GetInvokeMethod"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression) }));
+
+        public static System.Reflection.MethodInfo GetInvokeMethod(System.Linq.Expressions.Expression expression)
+        {
+            try
+            {
+                return (System.Reflection.MethodInfo)s_5.Invoke(null, new object[] { expression });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_6 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
 
         public static void ValidateMethodInfo(System.Reflection.MethodInfo method)
         {
             try
             {
-                s_5.Invoke(null, new object[] { method });
+                s_6.Invoke(null, new object[] { method });
             }
             catch (TargetInvocationException ex)
             {

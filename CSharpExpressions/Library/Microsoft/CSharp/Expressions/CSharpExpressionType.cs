@@ -17,5 +17,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents calling a constructor to create a new object.
         /// </summary>
         New,
+        /// <summary>
+        /// A node that represents applying a delegate or lambda expression to a list of argument expressions.
+        /// </summary>
+        Invoke,
     }
 }
