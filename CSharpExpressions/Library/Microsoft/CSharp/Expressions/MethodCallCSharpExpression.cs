@@ -198,36 +198,6 @@ namespace Microsoft.CSharp.Expressions
 
             return new MethodCallCSharpExpression(instance, method, argList);
         }
-
-        private static void ValidateParameterBindings(MethodBase method, ReadOnlyCollection<ParameterAssignment> argList)
-        {
-            var boundParameters = new HashSet<ParameterInfo>();
-
-            foreach (var arg in argList)
-            {
-                var parameter = arg.Parameter;
-
-                if (parameter.Member != method)
-                {
-                    throw Error.ParameterNotDefinedForMethod(parameter.Name, method.Name);
-                }
-
-                if (!boundParameters.Add(parameter))
-                {
-                    throw Error.DuplicateParameterBinding(parameter.Name);
-                }
-            }
-
-            var parameters = method.GetParametersCached();
-
-            foreach (var parameter in parameters)
-            {
-                if (!boundParameters.Contains(parameter) && (!parameter.IsOptional || !parameter.HasDefaultValue))
-                {
-                    throw Error.UnboundParameter(parameter.Name);
-                }
-            }
-        }
     }
 
     partial class CSharpExpressionVisitor
