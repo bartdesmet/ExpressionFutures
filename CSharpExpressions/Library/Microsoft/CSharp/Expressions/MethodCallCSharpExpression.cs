@@ -28,10 +28,7 @@ namespace Microsoft.CSharp.Expressions
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
         /// </summary>
         /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public sealed override CSharpExpressionType CSharpNodeType
-        {
-            get { return CSharpExpressionType.Call; }
-        }
+        public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.Call;
 
         /// <summary>
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
