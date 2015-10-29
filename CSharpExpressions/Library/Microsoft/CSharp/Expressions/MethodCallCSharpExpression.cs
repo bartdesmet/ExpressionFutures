@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -31,6 +32,12 @@ namespace Microsoft.CSharp.Expressions
         {
             get { return CSharpExpressionType.Call; }
         }
+
+        /// <summary>
+        /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
+        /// </summary>
+        /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
+        public override Type Type => Method.ReturnType;
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the instance for instance method calls or null for static method calls.
