@@ -16,20 +16,6 @@ namespace Playground
 
         static void Main()
         {
-            var xs = new int[2, 2, 2] { { { 0, 1 }, { 2, 3 } }, { { 4, 5 }, { 6, 7 } } };
-            Console.WriteLine(xs.Length);
-            return;
-
-            for (var i = 0; i < xs.Rank; i++)
-                Console.WriteLine(xs.GetLength(0));
-
-            for (var i = 0; i < 2; i++)
-                for (var j = 0; j < 2; j++)
-                    for (var k = 0; k < 2; k++)
-                        Console.WriteLine(xs.GetValue(i, j, k));
-
-            return;
-
             Call();
             Invoke();
             New();
