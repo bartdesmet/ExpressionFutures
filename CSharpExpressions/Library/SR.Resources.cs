@@ -15,5 +15,7 @@ namespace System
         public const string NonStaticConstructorRequired = "A non-static constructor is required";
         public const string PropertyDoesNotHaveGetAccessor = "The property '{0}' has no 'get' accessor";
         public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'";
+        public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0";
+        public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
     }
 }

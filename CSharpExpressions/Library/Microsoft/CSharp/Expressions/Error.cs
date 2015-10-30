@@ -67,5 +67,21 @@ namespace Microsoft.CSharp.Expressions
         {
             return new ArgumentException(Strings.AccessorCannotBeStatic(p0));
         }
+
+        /// <summary>
+        /// ArgumentException with message like "An array dimension cannot be less than 0"
+        /// </summary>
+        internal static Exception BoundCannotBeLessThanZero()
+        {
+            return new ArgumentException(Strings.BoundCannotBeLessThanZero);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The number of elements does not match the length of the array"
+        /// </summary>
+        internal static Exception ArrayBoundsElementCountMismatch()
+        {
+            return new ArgumentException(Strings.ArrayBoundsElementCountMismatch);
+        }
     }
 }

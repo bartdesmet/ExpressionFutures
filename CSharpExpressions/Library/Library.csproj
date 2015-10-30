@@ -44,6 +44,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\IndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\NewCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\NewMultidimensionalArrayInitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ParameterAssignment.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
@@ -58,6 +59,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Stubs.tt</DependentUpon>
     </Compile>
+    <Compile Include="Stubs.Manual.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gaps.txt" />

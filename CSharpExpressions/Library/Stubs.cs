@@ -1043,9 +1043,9 @@ namespace System.Linq.Expressions
         private static Type s_typ = s_asm.GetType("System.Linq.Expressions.Error");
         private static ILookup<string, MethodInfo> s_mtds = s_typ.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).ToLookup(m => m.Name);
 
-        private static readonly MethodInfo s_0 = s_mtds["PropertyCannotHaveRefType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_0 = s_mtds["ArgumentCannotBeOfTypeVoid"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception PropertyCannotHaveRefType()
+        public static System.Exception ArgumentCannotBeOfTypeVoid()
         {
             try
             {
@@ -1057,9 +1057,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_1 = s_mtds["AccessorsCannotHaveByRefArgs"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_1 = s_mtds["PropertyCannotHaveRefType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception AccessorsCannotHaveByRefArgs()
+        public static System.Exception PropertyCannotHaveRefType()
         {
             try
             {
@@ -1071,13 +1071,69 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_2 = s_mtds["PropertyTypeCannotBeVoid"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_2 = s_mtds["AccessorsCannotHaveByRefArgs"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+
+        public static System.Exception AccessorsCannotHaveByRefArgs()
+        {
+            try
+            {
+                return (System.Exception)s_2.Invoke(null, new object[] {  });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_3 = s_mtds["BoundsCannotBeLessThanOne"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+
+        public static System.Exception BoundsCannotBeLessThanOne()
+        {
+            try
+            {
+                return (System.Exception)s_3.Invoke(null, new object[] {  });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_4 = s_mtds["PropertyTypeCannotBeVoid"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
         public static System.Exception PropertyTypeCannotBeVoid()
         {
             try
             {
-                return (System.Exception)s_2.Invoke(null, new object[] {  });
+                return (System.Exception)s_4.Invoke(null, new object[] {  });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_5 = s_mtds["ArgumentMustBeInteger"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+
+        public static System.Exception ArgumentMustBeInteger()
+        {
+            try
+            {
+                return (System.Exception)s_5.Invoke(null, new object[] {  });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_6 = s_mtds["ExpressionTypeCannotInitializeArrayType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+
+        public static System.Exception ExpressionTypeCannotInitializeArrayType(System.Object p0, System.Object p1)
+        {
+            try
+            {
+                return (System.Exception)s_6.Invoke(null, new object[] { p0, p1 });
             }
             catch (TargetInvocationException ex)
             {

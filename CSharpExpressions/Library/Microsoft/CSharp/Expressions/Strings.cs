@@ -55,6 +55,28 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// A string like "An array dimension cannot be less than 0"
+        /// </summary>
+        public static string BoundCannotBeLessThanZero
+        {
+            get
+            {
+                return SR.BoundCannotBeLessThanZero;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The number of elements does not match the length of the array"
+        /// </summary>
+        public static string ArrayBoundsElementCountMismatch
+        {
+            get
+            {
+                return SR.ArrayBoundsElementCountMismatch;
+            }
+        }
+
+        /// <summary>
         /// A string like "The property '{0}' has no 'get' accessor"
         /// </summary>
         internal static string PropertyDoesNotHaveGetAccessor(object p0)
