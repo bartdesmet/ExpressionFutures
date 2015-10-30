@@ -69,6 +69,23 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// ArgumentException with message like "The number of indices specified does not match the array rank"
+        /// </summary>
+        internal static Exception RankMismatch()
+        {
+            return new ArgumentException(Strings.RankMismatch);
+        }
+
+        /// <summary>
+        /// ArgumentOutOfRangeException with message like "The specified index is out of range"
+        /// </summary>
+        /// <returns></returns>
+        internal static Exception IndexOutOfRange()
+        {
+            return new ArgumentOutOfRangeException(Strings.IndexOutOfRange);
+        }
+
+        /// <summary>
         /// ArgumentException with message like "An array dimension cannot be less than 0"
         /// </summary>
         internal static Exception BoundCannotBeLessThanZero()

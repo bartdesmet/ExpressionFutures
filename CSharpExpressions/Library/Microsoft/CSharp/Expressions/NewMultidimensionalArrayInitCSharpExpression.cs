@@ -50,9 +50,31 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="indices">The indices of the element to retrieve.</param>
         /// <returns>An <see cref="Expression" /> representing the element of the array the specified <paramref name="indices"/>.</returns>
-        public Expression GetExpression(int[] indices)
+        public Expression GetExpression(params int[] indices)
         {
-            throw new NotImplementedException();
+            ContractUtils.RequiresNotNull(indices, nameof(indices));
+
+            if (indices.Length != _bounds.Length)
+            {
+                throw Error.RankMismatch();
+            }
+
+            var index = 0;
+            for (var i = 0; i < indices.Length; i++)
+            {
+                var idx = indices[i];
+                var bound = _bounds[i];
+
+                if (idx < 0 || idx >= bound)
+                {
+                    throw Error.IndexOutOfRange();
+                }
+
+                index *= _bounds[i];
+                index += idx;
+            }
+
+            return Expressions[index];
         }
 
         /// <summary>

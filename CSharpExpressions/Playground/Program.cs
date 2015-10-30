@@ -4,6 +4,7 @@
 
 using Microsoft.CSharp.Expressions;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using static Playground.ReflectionUtils;
@@ -20,6 +21,7 @@ namespace Playground
             Invoke();
             New();
             Index();
+            NewMultidimensionalArrayInit();
         }
 
         static void Call()
@@ -273,6 +275,22 @@ namespace Playground
             var res = Expression.Lambda<Func<int>>(index).Compile()();
 
             Console.WriteLine(res);
+        }
+
+        static void NewMultidimensionalArrayInit()
+        {
+            var expr = CSharpExpression.NewMultiDimensionalArrayInit(typeof(int), new[] { 2, 3, 5 }, Enumerable.Range(0, 30).Select(i => Expression.Constant(i)));
+
+            for (var i = 0; i < 2; i++)
+            {
+                for (var j = 0; j < 3; j++)
+                {
+                    for (var k = 0; k < 5; k++)
+                    {
+                        Console.WriteLine(expr.GetExpression(i, j, k));
+                    }
+                }
+            }
         }
 
         static int F(int x, int y, int z = 42)

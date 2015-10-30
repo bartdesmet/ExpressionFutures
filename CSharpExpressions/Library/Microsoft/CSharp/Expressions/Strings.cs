@@ -77,6 +77,28 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// A string like "The number of indices specified does not match the array rank"
+        /// </summary>
+        public static string RankMismatch
+        {
+            get
+            {
+                return SR.RankMismatch;
+            }
+        }
+
+        /// <summary>
+        /// A string like like "The specified index is out of range"
+        /// </summary>
+        public static string IndexOutOfRange
+        {
+            get
+            {
+                return SR.IndexOutOfRange;
+            }
+        }
+
+        /// <summary>
         /// A string like "The property '{0}' has no 'get' accessor"
         /// </summary>
         internal static string PropertyDoesNotHaveGetAccessor(object p0)
