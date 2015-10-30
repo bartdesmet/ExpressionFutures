@@ -70,8 +70,7 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.IndexOutOfRange();
                 }
 
-                index *= _bounds[i];
-                index += idx;
+                index = index * bound + idx;
             }
 
             return Expressions[index];
