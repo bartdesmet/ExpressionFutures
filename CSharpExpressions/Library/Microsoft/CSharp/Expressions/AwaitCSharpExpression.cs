@@ -5,14 +5,19 @@
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Microsoft.CSharp.Expressions
 {
+    /// <summary>
+    /// Represents an expression that awaits an asynchronous operation.
+    /// </summary>
     public sealed class AwaitCSharpExpression : UnaryCSharpExpression
     {
-        internal AwaitCSharpExpression(Expression operand)
-            :base(operand)
+        internal AwaitCSharpExpression(Expression operand, MethodInfo getAwaiterMethod)
+            : base(operand)
         {
+            GetAwaiterMethod = getAwaiterMethod;
         }
 
         /// <summary>
@@ -20,6 +25,12 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
         public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.Await;
+
+        /// <summary>
+        /// Gets the GetAwaiter method used to await the asynchronous operation.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter", Justification = "Get a waiter :-)")]
+        public MethodInfo GetAwaiterMethod { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -35,7 +46,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="operand">The <see cref="Operand" /> property of the result.</param>
+        /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AwaitCSharpExpression Update(Expression operand)
         {
@@ -44,7 +55,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.Await(operand);
+            return CSharpExpression.Await(operand, GetAwaiterMethod);
         }
     }
 
@@ -57,11 +68,23 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression Await(Expression operand)
         {
+            return Await(operand, null);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="AwaitCSharpExpression"/> that represents awaiting an asynchronous operation.
+        /// </summary>
+        /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
+        /// <param name="getAwaiterMethod">The GetAwaiter method used to await the asynchronous operation.</param>
+        /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter", Justification = "Get a waiter :-)")]
+        public static AwaitCSharpExpression Await(Expression operand, MethodInfo getAwaiterMethod)
+        {
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
-            // TODO: Overloads that specify the awaiter to use, validation of await pattern, etc.
+            // TODO: Infer GetAwaiter if missing, validation of await pattern, etc.
 
-            return new AwaitCSharpExpression(operand);
+            return new AwaitCSharpExpression(operand, getAwaiterMethod);
         }
     }
 
