@@ -120,6 +120,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="getAwaiterMethod">The GetAwaiter method used to await the asynchronous operation.</param>
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter", Justification = "Get a waiter :-)")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AwaitCSharpExpression Await(Expression operand, MethodInfo getAwaiterMethod)
         {
             ContractUtils.RequiresNotNull(operand, nameof(operand));
