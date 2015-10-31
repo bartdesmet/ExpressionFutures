@@ -82,12 +82,12 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
-            VerifyAwaitPattern(operand.Type, ref getAwaiterMethod);
+            ValidateAwaitPattern(operand.Type, ref getAwaiterMethod);
 
             return new AwaitCSharpExpression(operand, getAwaiterMethod);
         }
 
-        private static void VerifyAwaitPattern(Type operandType, ref MethodInfo getAwaiterMethod)
+        private static void ValidateAwaitPattern(Type operandType, ref MethodInfo getAwaiterMethod)
         {
             if (getAwaiterMethod == null)
             {
@@ -96,9 +96,54 @@ namespace Microsoft.CSharp.Expressions
                 ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
             }
 
+            ValidateGetAwaiterMethod(operandType, getAwaiterMethod);
+
             // TODO: Validation of await pattern, etc.
 
             throw new NotImplementedException();
+        }
+
+        private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
+        {
+            if (getAwaiterMethod.IsGenericMethodDefinition)
+            {
+                throw new NotImplementedException();
+            }
+
+            var getAwaiterParams = getAwaiterMethod.GetParametersCached();
+
+            if (getAwaiterMethod.IsStatic)
+            {
+                if (getAwaiterParams.Length != 1)
+                {
+                    throw new NotImplementedException(); // TODO
+                }
+
+                var firstParam = getAwaiterParams[0];
+                if (!TypeUtils.AreReferenceAssignable(firstParam.ParameterType, operandType))
+                {
+                    throw new NotImplementedException(); // TODO
+                }
+            }
+            else
+            {
+                if (getAwaiterParams.Length != 0)
+                {
+                    throw new NotImplementedException(); // TODO
+                }
+                
+                if (getAwaiterMethod.IsGenericMethod)
+                {
+                    throw new NotImplementedException(); // TODO
+                }
+            }
+
+            var returnType = getAwaiterMethod.ReturnType;
+
+            if (returnType == typeof(void) || returnType.IsByRef || returnType.IsPointer)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 
