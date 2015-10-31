@@ -300,16 +300,27 @@ namespace Playground
             }
         }
 
-        private static void Await()
+        static void Await()
         {
             var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
             var res = Expression.Lambda<Func<int>>(await).Compile()();
             Console.WriteLine(res);
         }
 
-        private static void AsyncLambda()
+        static void AsyncLambda()
+        {
+            AsyncLambda1();
+            AsyncLambda2();
+        }
+
+        static void AsyncLambda1()
         {
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Constant(42));
+        }
+
+        static void AsyncLambda2()
+        {
+            var async = CSharpExpression.AsyncLambda(Expression.Constant(42));
         }
 
         static int F(int x, int y, int z = 42)

@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
+using System.Reflection;
 using System.Threading.Tasks;
 using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
@@ -53,6 +54,11 @@ namespace Microsoft.CSharp.Expressions
         internal AsyncCSharpExpression(Expression body, ReadOnlyCollection<ParameterExpression> parameters)
             : base(body, parameters)
         {
+        }
+
+        internal static AsyncCSharpExpression<TDelegate> Create(Expression body, ReadOnlyCollection<ParameterExpression> parameters)
+        {
+            return new AsyncCSharpExpression<TDelegate>(body, parameters);
         }
 
         /// <summary>
@@ -267,7 +273,9 @@ namespace Microsoft.CSharp.Expressions
 
         private static AsyncLambdaCSharpExpression CreateAsyncLambda(Type delegateType, Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
-            throw new NotImplementedException();
+            // TODO: use cache and lambda factory functionality from LINQ
+            var create = typeof(AsyncCSharpExpression<>).MakeGenericType(delegateType).GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic);
+            return (AsyncLambdaCSharpExpression)create.Invoke(null, new object[] { body, parameters });
         }
 
         private static void ValidateAsyncParameter(ParameterExpression parameter)
