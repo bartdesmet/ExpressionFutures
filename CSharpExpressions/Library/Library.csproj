@@ -57,6 +57,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\ShadowEliminator.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Spiller.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

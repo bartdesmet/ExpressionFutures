@@ -19,6 +19,11 @@ namespace Playground
             StackSpilling4();
         }
 
+        public static void Shadowing()
+        {
+            Shadowing1();
+        }
+
         static void StackSpilling1()
         {
             var t = CSharpExpression.Await(Expression.Constant(Task.FromResult(42)));
@@ -45,6 +50,16 @@ namespace Playground
             var e = (Expression<Func<int>>)(() => F(Math.Abs(-1), Task.FromResult(2).Result, Math.Abs(-3)));
             var r = new TaskRewriter().Visit(e.Body);
             var x = Spiller.Spill(r);
+        }
+
+        static void Shadowing1()
+        {
+            var p0 = Expression.Parameter(typeof(int));
+            var p1 = Expression.Parameter(typeof(int));
+            var p2 = Expression.Parameter(typeof(int));
+            var p3 = Expression.Parameter(typeof(int));
+            var e = Expression.Block(new[] { p0, p1 }, Expression.Block(new[] { p1, p2 }, Expression.Block(new[] { p2, p3 }, Expression.Block(new[] { p3, p1 }, Expression.Add(p0, Expression.Multiply(p1, Expression.Subtract(p2, p3)))))));
+            var r = new ShadowEliminator().Visit(e);
         }
 
         static int F(int x,int y, int z)

@@ -238,7 +238,8 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var spilled = Spiller.Spill(Body);
+            var bright = new ShadowEliminator().Visit(Body);
+            var spilled = Spiller.Spill(bright);
 
             var awaitRewriter = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory, exit);
             var rewrittenBody = awaitRewriter.Visit(spilled);
@@ -362,14 +363,14 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (node.Variables.Count > 0)
                     {
-                        // TODO: We could have shadowing of variables. If we hoist them all up, their scoped meaning
-                        //       is lost. To solve this, we can detect shadowing first and rewrite the expression to
-                        //       get rid of it.
                         foreach (var p in node.Variables)
                         {
+                            // NB: We eliminated shadowed variables higher up. If we'd hoist shadowed variables up as-is,
+                            //     their scoped meaning would get lost. To solve this, we detect shadowing first and
+                            //     rewrite the expression to get rid of it.
                             if (!HoistedVariables.Add(p))
                             {
-                                throw ContractUtils.Unreachable; // TODO: shadowing elimination (see above)
+                                throw ContractUtils.Unreachable;
                             }
                         }
 
