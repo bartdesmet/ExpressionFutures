@@ -37,5 +37,13 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents an asynchronous lambda.
         /// </summary>
         AsyncLambda,
+        /// <summary>
+        /// A node that represents a while loop.
+        /// </summary>
+        While,
+        /// <summary>
+        /// A node that represents a do...while loop.
+        /// </summary>
+        DoWhile,
     }
 }

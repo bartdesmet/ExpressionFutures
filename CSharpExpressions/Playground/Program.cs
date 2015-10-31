@@ -25,6 +25,8 @@ namespace Playground
             NewMultidimensionalArrayInit();
             Await();
             AsyncLambda();
+            While();
+            DoWhile();
         }
 
         static void Call()
@@ -309,9 +311,9 @@ namespace Playground
 
         static void AsyncLambda()
         {
-            //AsyncLambda1();
-            //AsyncLambda2();
-            //AsyncLambda3();
+            AsyncLambda1();
+            AsyncLambda2();
+            AsyncLambda3();
             AsyncLambda4();
             AsyncLambda5();
         }
@@ -374,6 +376,46 @@ namespace Playground
             );
             var res = async.Compile()();
             res.Wait();
+        }
+
+        static void While()
+        {
+            var i = Expression.Parameter(typeof(int));
+            var cout = ReflectionUtils.MethodInfoOf(() => Console.WriteLine(default(int)));
+            var loop = Expression.Lambda<Action>(
+                Expression.Block(
+                    new[] { i },
+                    Expression.Assign(i, Expression.Constant(0)),
+                    CSharpExpression.While(
+                        Expression.LessThan(i, Expression.Constant(10)),
+                        Expression.Block(
+                            Expression.Call(cout, i),
+                            Expression.PostIncrementAssign(i)
+                        )
+                    )
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void DoWhile()
+        {
+            var i = Expression.Parameter(typeof(int));
+            var cout = ReflectionUtils.MethodInfoOf(() => Console.WriteLine(default(int)));
+            var loop = Expression.Lambda<Action>(
+                Expression.Block(
+                    new[] { i },
+                    Expression.Assign(i, Expression.Constant(0)),
+                    CSharpExpression.DoWhile(
+                        Expression.Block(
+                            Expression.Call(cout, i),
+                            Expression.PostIncrementAssign(i)
+                        ),
+                        Expression.LessThan(i, Expression.Constant(10))
+                    )
+                )
+            );
+            loop.Compile()();
         }
 
         static int F(int x, int y, int z = 42)
