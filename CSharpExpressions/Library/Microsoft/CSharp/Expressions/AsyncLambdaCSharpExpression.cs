@@ -157,7 +157,8 @@ namespace Microsoft.CSharp.Expressions
             var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
             exprs[i++] = createBuilder;
 
-            var body = RewriteBody(stateVar, builderVar, stateMachineVar);
+            var variables = default(IEnumerable<ParameterExpression>);
+            var body = RewriteBody(stateVar, builderVar, stateMachineVar, out variables);
 
             var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
             var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
@@ -173,13 +174,13 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i] = Expression.Property(builderVar, "Task");
             }
 
-            var rewritten = Expression.Block(new[] { builderVar, stateMachineVar, stateVar }, exprs);
+            var rewritten = Expression.Block(new[] { builderVar, stateMachineVar, stateVar }.Concat(variables), exprs);
 
             var res = Expression.Lambda<TDelegate>(rewritten, Parameters);
             return res;
         }
 
-        private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar)
+        private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
         {
             // TODO: Enter/leave sequences for Try blocks
             //       Timing for finally handlers; prevent premature execution
@@ -188,7 +189,7 @@ namespace Microsoft.CSharp.Expressions
 
             const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
 
-            var vars = Array.Empty<ParameterExpression>();
+            var locals = Array.Empty<ParameterExpression>();
             var exprs = default(Expression[]);
 
             var result = default(ParameterExpression);
@@ -244,12 +245,12 @@ namespace Microsoft.CSharp.Expressions
             {
                 result = Expression.Parameter(Body.Type);
                 newBody = Expression.Assign(result, rewrittenBody);
-                vars = new[] { result };
+                locals = new[] { result };
                 exprs = new Expression[ExprCount + 1];
             }
             else
             {
-                vars = Array.Empty<ParameterExpression>();
+                locals = Array.Empty<ParameterExpression>();
                 exprs = new Expression[ExprCount];
             }
 
@@ -287,8 +288,10 @@ namespace Microsoft.CSharp.Expressions
 
             exprs[i++] = Expression.Label(exit);
 
-            var body = Expression.Block(vars.Concat(hoistedVars.Values), exprs);
+            var body = Expression.Block(locals, exprs);
             var res = Expression.Lambda<Action>(body);
+
+            variables = hoistedVars.Values;
             return res;
         }
 
@@ -567,7 +570,7 @@ namespace Microsoft.CSharp.Expressions
                     throw LinqError.ExpressionTypeDoesNotMatchReturn(body.Type, method.ReturnType);
                 }
             }
-            else if (returnType != typeof(void) && returnType == typeof(Task))
+            else if (returnType != typeof(void) && returnType != typeof(Task))
             {
                 throw Error.AsyncLambdaInvalidReturnType(returnType);
             }
