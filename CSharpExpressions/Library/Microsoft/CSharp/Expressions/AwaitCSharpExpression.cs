@@ -17,10 +17,11 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class AwaitCSharpExpression : UnaryCSharpExpression
     {
-        internal AwaitCSharpExpression(Expression operand, MethodInfo getAwaiterMethod)
+        internal AwaitCSharpExpression(Expression operand, MethodInfo getAwaiterMethod, Type type)
             : base(operand)
         {
             GetAwaiterMethod = getAwaiterMethod;
+            Type = type;
         }
 
         /// <summary>
@@ -28,6 +29,12 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
         public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.Await;
+
+        /// <summary>
+        /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
+        /// </summary>
+        /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
+        public override Type Type { get; }
 
         /// <summary>
         /// Gets the GetAwaiter method used to await the asynchronous operation.
@@ -87,12 +94,13 @@ namespace Microsoft.CSharp.Expressions
 
             RequiresCanRead(operand, nameof(operand));
 
-            ValidateAwaitPattern(operand.Type, ref getAwaiterMethod);
+            var resultType = typeof(Type);
+            ValidateAwaitPattern(operand.Type, ref getAwaiterMethod, out resultType);
 
-            return new AwaitCSharpExpression(operand, getAwaiterMethod);
+            return new AwaitCSharpExpression(operand, getAwaiterMethod, resultType);
         }
 
-        private static void ValidateAwaitPattern(Type operandType, ref MethodInfo getAwaiterMethod)
+        private static void ValidateAwaitPattern(Type operandType, ref MethodInfo getAwaiterMethod, out Type resultType)
         {
             if (getAwaiterMethod == null)
             {
@@ -102,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
 
             ValidateGetAwaiterMethod(operandType, getAwaiterMethod);
-            ValidateAwaiterType(getAwaiterMethod.ReturnType);
+            ValidateAwaiterType(getAwaiterMethod.ReturnType, out resultType);
         }
 
         private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
@@ -145,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static void ValidateAwaiterType(Type awaiterType)
+        private static void ValidateAwaiterType(Type awaiterType, out Type resultType)
         {
             if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
             {
@@ -180,6 +188,8 @@ namespace Microsoft.CSharp.Expressions
             {
                 throw Error.AwaiterGetResultTypeInvalid(awaiterType);
             }
+
+            resultType = returnType;
         }
     }
 
