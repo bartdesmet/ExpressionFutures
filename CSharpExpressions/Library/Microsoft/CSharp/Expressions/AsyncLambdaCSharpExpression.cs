@@ -57,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="T:System.Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
         public Delegate Compile()
         {
-            throw new NotImplementedException();
+            return ((LambdaExpression)Reduce()).Compile();
         }
     }
 
@@ -109,6 +109,15 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>A delegate of type <paramref name="TDelegate" /> that represents the compiled asynchronous lambda expression described by the <see cref="T:Microsoft.CSharp.Expressions.AsyncCSharpExpression`1" />.</returns>
         public new TDelegate Compile()
+        {
+            return ((Expression<TDelegate>)Reduce()).Compile();
+        }
+
+        /// <summary>
+        /// Reduces the call expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public override Expression Reduce()
         {
             throw new NotImplementedException();
         }
