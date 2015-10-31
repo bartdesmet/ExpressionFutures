@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using static System.Linq.Expressions.ExpressionStubs;
 using static Microsoft.CSharp.Expressions.Helpers;
 using LinqError = System.Linq.Expressions.Error;
+using System.Linq;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -108,7 +109,40 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            throw new NotImplementedException();
+            var n = Expressions.Count;
+            var rank = _bounds.Length;
+
+            var res = Expression.Parameter(Type);
+            var exprs = new Expression[n + 2];
+
+            // NB: We need the bounds to NewArrayBounds and all values from 0 to each bound for ArrayAccess.
+            var consts = Enumerable.Range(0, _bounds.Max() + 1).Select(i => Expression.Constant(i)).ToArray();
+
+            exprs[0] = Expression.Assign(res, Expression.NewArrayBounds(Type.GetElementType(), _bounds.Map(i => consts[i])));
+
+            var indexValues = new int[rank];
+
+            for (var i = 1; i <= n; i++)
+            {
+                var idx = i - 1;
+                var value = Expressions[idx];
+
+                for (var j = rank - 1; j >= 0; j--)
+                {
+                    var bound = _bounds[j];
+                    indexValues[j] = idx % bound;
+                    idx /= bound;
+                }
+
+                var indices = new TrueReadOnlyCollection<Expression>(indexValues.Map(j => consts[j]));
+                var element = Expression.ArrayAccess(res, indices);
+
+                exprs[i] = Expression.Assign(element, value);
+            }
+
+            exprs[n + 1] = res;
+
+            return Expression.Block(new[] { res }, exprs);
         }
     }
 

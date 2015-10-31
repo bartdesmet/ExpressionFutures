@@ -281,13 +281,17 @@ namespace Playground
         {
             var expr = CSharpExpression.NewMultiDimensionalArrayInit(typeof(int), new[] { 2, 3, 5 }, Enumerable.Range(0, 30).Select(i => Expression.Constant(i)));
 
+            var res = Expression.Lambda<Func<int[,,]>>(expr).Compile()();
+
             for (var i = 0; i < 2; i++)
             {
                 for (var j = 0; j < 3; j++)
                 {
                     for (var k = 0; k < 5; k++)
                     {
-                        Console.WriteLine(expr.GetExpression(i, j, k));
+                        var e = expr.GetExpression(i, j, k);
+                        var v = res.GetValue(i, j, k);
+                        Console.WriteLine(e + " = " + v);
                     }
                 }
             }
