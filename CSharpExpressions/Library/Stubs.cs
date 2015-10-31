@@ -1113,13 +1113,27 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_5 = s_mtds["ArgumentMustBeInteger"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_5 = s_mtds["DuplicateVariable"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+
+        public static System.Exception DuplicateVariable(System.Object p0)
+        {
+            try
+            {
+                return (System.Exception)s_5.Invoke(null, new object[] { p0 });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_6 = s_mtds["ArgumentMustBeInteger"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
         public static System.Exception ArgumentMustBeInteger()
         {
             try
             {
-                return (System.Exception)s_5.Invoke(null, new object[] {  });
+                return (System.Exception)s_6.Invoke(null, new object[] {  });
             }
             catch (TargetInvocationException ex)
             {
@@ -1127,13 +1141,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_6 = s_mtds["ExpressionTypeCannotInitializeArrayType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_7 = s_mtds["ExpressionTypeCannotInitializeArrayType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
         public static System.Exception ExpressionTypeCannotInitializeArrayType(System.Object p0, System.Object p1)
         {
             try
             {
-                return (System.Exception)s_6.Invoke(null, new object[] { p0, p1 });
+                return (System.Exception)s_7.Invoke(null, new object[] { p0, p1 });
             }
             catch (TargetInvocationException ex)
             {
@@ -1141,13 +1155,39 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_7 = s_mtds["ExpressionTypeDoesNotMatchParameter"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_8 = s_mtds["ExpressionTypeDoesNotMatchParameter"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
         public static System.Exception ExpressionTypeDoesNotMatchParameter(System.Object p0, System.Object p1)
         {
             try
             {
-                return (System.Exception)s_7.Invoke(null, new object[] { p0, p1 });
+                return (System.Exception)s_8.Invoke(null, new object[] { p0, p1 });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+    }
+}
+namespace System.Linq.Expressions.Compiler
+{
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
+    static partial class DelegateHelpers
+    {
+        private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+        private static Type s_typ = s_asm.GetType("System.Linq.Expressions.Compiler.DelegateHelpers");
+        private static ILookup<string, MethodInfo> s_mtds = s_typ.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).ToLookup(m => m.Name);
+
+        private static readonly MethodInfo s_0 = s_mtds["MakeDelegateType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Type[]) }));
+
+        public static System.Type MakeDelegateType(System.Type[] types)
+        {
+            try
+            {
+                return (System.Type)s_0.Invoke(null, new object[] { types });
             }
             catch (TargetInvocationException ex)
             {

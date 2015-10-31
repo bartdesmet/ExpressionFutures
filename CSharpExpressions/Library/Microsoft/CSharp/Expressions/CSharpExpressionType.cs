@@ -33,5 +33,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents an await operation.
         /// </summary>
         Await,
+        /// <summary>
+        /// A node that represents an asynchronous lambda.
+        /// </summary>
+        AsyncLambda,
     }
 }

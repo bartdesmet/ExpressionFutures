@@ -171,6 +171,14 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions"
+        /// </summary>
+        internal static Exception AsyncLambdaCantHaveByRefParameter(object p0)
+        {
+            return new ArgumentException(Strings.AsyncLambdaCantHaveByRefParameter(p0));
+        }
+
     }
 
     /// <summary>
@@ -362,6 +370,14 @@ namespace Microsoft.CSharp.Expressions
 			return SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
         }
 
+        /// <summary>
+        /// A string like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions"
+        /// </summary>
+        internal static string AsyncLambdaCantHaveByRefParameter(object p0)
+        {
+			return SR.Format(SR.AsyncLambdaCantHaveByRefParameter, p0);
+        }
+
     }
 }
 
@@ -389,5 +405,6 @@ namespace System
 		public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters";
 		public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method";
 		public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type";
+		public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions";
 	}
 }
