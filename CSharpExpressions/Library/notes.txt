@@ -8,3 +8,8 @@
   - Don't do anything, see last remark above.
   - Push down those node types to System.Linq.Expressions (can VB use them too? same semantics?) so the compiler knows their intent.
   - Make the compiler smarter and let it peek into a Block to check the last expression in the body (hacky).
+
+
+  Up for grabs:
+
+  - Create compact representations of nodes, e.g. MethodCall for static/instance with 0..N arguments, Await without GetAwaiterMethod, etc.
