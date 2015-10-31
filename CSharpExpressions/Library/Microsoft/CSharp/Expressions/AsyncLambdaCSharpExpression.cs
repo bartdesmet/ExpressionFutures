@@ -238,8 +238,10 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
+            var spilled = Spiller.Spill(Body);
+
             var awaitRewriter = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory, exit);
-            var rewrittenBody = awaitRewriter.Visit(Body);
+            var rewrittenBody = awaitRewriter.Visit(spilled);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
@@ -254,8 +256,6 @@ namespace Microsoft.CSharp.Expressions
             }
 
             exprs = new Expression[ExprCount];
-
-            newBody = Spiller.Spill(newBody);
 
             if (result != null)
             {
