@@ -3,7 +3,6 @@
 // bartde - October 2015
 
 using System;
-using System.Reflection;
 
 namespace Microsoft.CSharp.Expressions
 {
