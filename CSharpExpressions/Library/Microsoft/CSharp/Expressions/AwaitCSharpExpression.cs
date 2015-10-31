@@ -82,9 +82,23 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
-            // TODO: Infer GetAwaiter if missing, validation of await pattern, etc.
+            VerifyAwaitPattern(operand.Type, ref getAwaiterMethod);
 
             return new AwaitCSharpExpression(operand, getAwaiterMethod);
+        }
+
+        private static void VerifyAwaitPattern(Type operandType, ref MethodInfo getAwaiterMethod)
+        {
+            if (getAwaiterMethod == null)
+            {
+                getAwaiterMethod = operandType.GetMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+
+                ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
+            }
+
+            // TODO: Validation of await pattern, etc.
+
+            throw new NotImplementedException();
         }
     }
 

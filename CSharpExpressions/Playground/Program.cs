@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using static Playground.ReflectionUtils;
 
 namespace Playground
@@ -22,6 +23,7 @@ namespace Playground
             New();
             Index();
             NewMultidimensionalArrayInit();
+            Await();
         }
 
         static void Call()
@@ -295,6 +297,11 @@ namespace Playground
                     }
                 }
             }
+        }
+
+        private static void Await()
+        {
+            CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
         }
 
         static int F(int x, int y, int z = 42)
