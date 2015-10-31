@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Error.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Strings.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR.cs" />
     <Compile Include="SR.Resources.cs" />

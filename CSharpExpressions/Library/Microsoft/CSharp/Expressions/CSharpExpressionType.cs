@@ -29,5 +29,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents creating a new multi-dimensional array and initializing it from a list of elements.
         /// </summary>
         NewMultidimensionalArrayInit,
+        /// <summary>
+        /// A node that represents an await operation.
+        /// </summary>
+        Await,
     }
 }
