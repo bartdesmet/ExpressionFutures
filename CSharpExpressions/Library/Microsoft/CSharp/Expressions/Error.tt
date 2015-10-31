@@ -1,0 +1,114 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var errors = new[]
+{
+    new { Name = "ParameterNotDefinedForMethod", ExceptionType = "ArgumentException", Args = 2, Message = "Parameter '{0}' is not defined for method '{1}'" },
+    new { Name = "ExpressionTypeDoesNotMatchParameter", ExceptionType = "ArgumentException", Args = 2, Message = "Expression of type '{0}' cannot be used for parameter of type '{1}'" },
+    new { Name = "DuplicateParameterBinding", ExceptionType = "ArgumentException", Args = 1, Message = "Parameter '{0}' has multiple bindings" },
+    new { Name = "UnboundParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Non-optional parameter '{0}' has no binding" },
+    new { Name = "NonStaticConstructorRequired", ExceptionType = "ArgumentException", Args = 0, Message = "A non-static constructor is required" },
+    new { Name = "PropertyDoesNotHaveGetAccessor", ExceptionType = "ArgumentException", Args = 1, Message = "The property '{0}' has no 'get' accessor" },
+    new { Name = "AccessorCannotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "A non-static 'get' accessor is required for property '{0}'" },
+    new { Name = "RankMismatch", ExceptionType = "ArgumentException", Args = 0, Message = "The number of indexes specified does not match the array rank" },
+    new { Name = "IndexOutOfRange", ExceptionType = "ArgumentOutOfRangeException", Args = 0, Message = "The specified index is out of range" },
+    new { Name = "BoundCannotBeLessThanZero", ExceptionType = "ArgumentException", Args = 0, Message = "An array dimension cannot be less than 0" },
+    new { Name = "ArrayBoundsElementCountMismatch", ExceptionType = "ArgumentException", Args = 0, Message = "The number of elements does not match the length of the array" },
+};
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - October 2015
+
+using System;
+
+namespace Microsoft.CSharp.Expressions
+{
+    /// <summary>
+    /// Strongly-typed and parameterized exception factory.
+    /// </summary>
+    internal static partial class Error
+    {
+<#
+foreach (var error in errors)
+{
+    var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object p" + i));
+    var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
+    var strArgs = error.Args > 0 ? "(" + args + ")" : "";
+#>
+        /// <summary>
+        /// <#=error.ExceptionType#> with message like "<#=error.Message#>"
+        /// </summary>
+        internal static Exception <#=error.Name#>(<#=pars#>)
+        {
+            return new <#=error.ExceptionType#>(Strings.<#=error.Name#><#=strArgs#>);
+        }
+
+<#
+}
+#>
+    }
+
+    /// <summary>
+    /// Strongly-typed and parameterized string resources.
+    /// </summary>
+    internal static partial class Strings
+    {
+<#
+foreach (var error in errors)
+{
+    var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object p" + i));
+    var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
+	if (error.Args > 0)
+	{
+		pars = "(" + pars + ")";
+	}
+#>
+        /// <summary>
+        /// A string like "<#=error.Message#>"
+        /// </summary>
+        internal static string <#=error.Name#><#=pars#>
+        {
+<#
+	if (error.Args == 0)
+	{
+#>
+			get
+			{
+				return SR.<#=error.Name#>;
+			}
+<#
+	}
+	else
+	{
+#>
+			return SR.Format(SR.<#=error.Name#>, <#=args#>);
+<#
+	}
+#>
+        }
+
+<#
+}
+#>
+    }
+}
+
+namespace System
+{
+	internal static partial class SR
+	{
+<#
+foreach (var error in errors)
+{
+#>
+		public const string <#=error.Name#> = "<#=error.Message#>";
+<#
+}
+#>
+	}
+}

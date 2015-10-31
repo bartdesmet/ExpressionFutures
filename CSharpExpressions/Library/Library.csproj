@@ -40,7 +40,11 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Error.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Error.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Error.tt</DependentUpon>
+    </Compile>
     <Compile Include="Microsoft\CSharp\Expressions\Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\IndexCSharpExpression.cs" />
@@ -51,11 +55,9 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Strings.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR.cs" />
-    <Compile Include="SR.Resources.cs" />
     <Compile Include="Stubs.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -65,6 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="gaps.txt" />
+    <Content Include="Microsoft\CSharp\Expressions\Error.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Error.cs</LastGenOutput>
+    </Content>
     <Content Include="notes.txt" />
     <Content Include="Stubs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
