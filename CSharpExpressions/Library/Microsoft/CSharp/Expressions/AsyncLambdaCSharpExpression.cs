@@ -157,7 +157,7 @@ namespace Microsoft.CSharp.Expressions
             var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
             exprs[i++] = createBuilder;
 
-            var body = RewriteBody(stateVar, builderVar);
+            var body = RewriteBody(stateVar, builderVar, stateMachineVar);
 
             var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
             var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
@@ -179,7 +179,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar)
+        private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar)
         {
             // TODO: Enter/leave sequences for Try blocks
             //       Timing for finally handlers; prevent premature execution
@@ -227,7 +227,17 @@ namespace Microsoft.CSharp.Expressions
                 };
             });
 
-            var rewrittenBody = new AwaitRewriter(stateVar, getLabel, getVariable).Visit(Body);
+            var awaitOnCompletedMethod = builderVar.Type.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
+            var awaitOnCompletedArgs = new Type[] { default(Type), typeof(RuntimeAsyncStateMachine) };
+
+            var onCompletedFactory = new Func<Expression, Expression>(awaiter =>
+            {
+                awaitOnCompletedArgs[0] = awaiter.Type;
+                var awaitOnCompletedMethodClosed = awaitOnCompletedMethod.MakeGenericMethod(awaitOnCompletedArgs);
+                return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
+            });
+
+            var rewrittenBody = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory).Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
@@ -316,12 +326,14 @@ namespace Microsoft.CSharp.Expressions
             private readonly Func<StateMachineState> _labelFactory;
             private readonly Func<Type, ParameterExpression> _variableFactory;
             private readonly ParameterExpression _stateVariable;
+            private readonly Func<Expression, Expression> _onCompletedFactory;
 
-            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory)
+            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory)
             {
                 _labelFactory = labelFactory;
                 _variableFactory = variableFactory;
                 _stateVariable = stateVariable;
+                _onCompletedFactory = onCompletedFactory;
             }
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
@@ -339,8 +351,7 @@ namespace Microsoft.CSharp.Expressions
                         Expression.IfThen(Expression.Not(isCompleted),
                             Expression.Block(
                                 Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
-                                Expression.Throw(Expression.Constant(new NotImplementedException())) // TODO: AwaitOnCompleted call
-                                // Expression.Call(builder, awaitOnCompletedMethod, awaiterVar, stateMachineVar)
+                                _onCompletedFactory(awaiterVar)
                             )
                         ),
                         Expression.Label(continueLabel.Label),
