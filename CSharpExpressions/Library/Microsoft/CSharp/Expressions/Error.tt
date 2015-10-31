@@ -28,6 +28,7 @@ var errors = new[]
 	new { Name = "AwaiterTypeShouldHaveGetResultMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should have a 'GetResult' method" },
 	new { Name = "AwaiterGetResultTypeInvalid", ExceptionType = "ArgumentException", Args = 1, Message = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type" },
 	new { Name = "AsyncLambdaCantHaveByRefParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions" },
+	new { Name = "AsyncLambdaInvalidReturnType", ExceptionType = "ArgumentException", Args = 1, Message = "Return type '{0}' is not valid for an asynchronous lambda expression" },
 };
 #>
 // Prototyping extended expression trees for C#.

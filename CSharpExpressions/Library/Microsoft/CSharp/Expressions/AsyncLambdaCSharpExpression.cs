@@ -120,8 +120,6 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var parameter = parameterList[i];
 
-                    ContractUtils.RequiresNotNull(parameter, "parameter");
-
                     ValidateAsyncParameter(parameter);
 
                     types[i] = parameter.Type;
@@ -201,9 +199,70 @@ namespace Microsoft.CSharp.Expressions
             return new AsyncCSharpExpression<TDelegate>(body, parameterList);
         }
 
-        private static void ValidAsyncLambdaArgs(Type type, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
+        private static void ValidAsyncLambdaArgs(Type delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
-            throw new NotImplementedException();
+            ContractUtils.RequiresNotNull(delegateType, nameof(delegateType));
+            RequiresCanRead(body, "body");
+
+            if (!typeof(MulticastDelegate).IsAssignableFrom(delegateType) || delegateType == typeof(MulticastDelegate))
+            {
+                throw LinqError.LambdaTypeMustBeDerivedFromSystemDelegate();
+            }
+
+            var count = parameters.Count;
+
+            var method = delegateType.GetMethod("Invoke"); // TODO: use cache from LINQ
+            var parametersCached = method.GetParametersCached();
+
+            if (parametersCached.Length != 0)
+            {
+                if (parametersCached.Length != count)
+                {
+                    throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
+                }
+
+                var set = new Set<ParameterExpression>(count);
+
+                for (var i = 0; i < count; i++)
+                {
+                    var parameter = parameters[i];
+                    ValidateAsyncParameter(parameter);
+
+                    var parameterType = parametersCached[i].ParameterType;
+
+                    if (!TypeUtils.AreReferenceAssignable(parameter.Type, parameterType))
+                    {
+                        throw LinqError.ParameterExpressionNotValidAsDelegate(parameter.Type, parameterType);
+                    }
+
+                    if (set.Contains(parameter))
+                    {
+                        throw LinqError.DuplicateVariable(parameter);
+                    }
+
+                    set.Add(parameter);
+                }
+            }
+            else if (count > 0)
+            {
+                throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
+            }
+
+            var returnType = method.ReturnType;
+
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                var resultType = returnType.GetGenericArguments()[0];
+
+                if (!TypeUtils.AreReferenceAssignable(resultType, body.Type) && !TryQuote(resultType, ref body))
+                {
+                    throw LinqError.ExpressionTypeDoesNotMatchReturn(body.Type, method.ReturnType);
+                }
+            }
+            else if (returnType != typeof(void) && returnType == typeof(Task))
+            {
+                throw Error.AsyncLambdaInvalidReturnType(returnType);
+            }
         }
 
         private static AsyncLambdaCSharpExpression CreateAsyncLambda(Type delegateType, Expression body, ReadOnlyCollection<ParameterExpression> parameters)
@@ -213,6 +272,8 @@ namespace Microsoft.CSharp.Expressions
 
         private static void ValidateAsyncParameter(ParameterExpression parameter)
         {
+            RequiresCanRead(parameter, "parameters");
+
             if (parameter.IsByRef)
             {
                 throw Error.AsyncLambdaCantHaveByRefParameter(parameter);

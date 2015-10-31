@@ -24,6 +24,7 @@ namespace Playground
             Index();
             NewMultidimensionalArrayInit();
             Await();
+            AsyncLambda();
         }
 
         static void Call()
@@ -304,6 +305,11 @@ namespace Playground
             var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
             var res = Expression.Lambda<Func<int>>(await).Compile()();
             Console.WriteLine(res);
+        }
+
+        private static void AsyncLambda()
+        {
+            var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Constant(42));
         }
 
         static int F(int x, int y, int z = 42)
