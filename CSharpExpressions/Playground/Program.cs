@@ -311,6 +311,7 @@ namespace Playground
         {
             AsyncLambda1();
             AsyncLambda2();
+            AsyncLambda3();
         }
 
         static void AsyncLambda1()
@@ -323,6 +324,14 @@ namespace Playground
         static void AsyncLambda2()
         {
             var async = CSharpExpression.AsyncLambda(Expression.Constant(42));
+            var res = (Task<int>)async.Compile().DynamicInvoke();
+            Console.WriteLine(res.Result);
+        }
+
+        static void AsyncLambda3()
+        {
+            var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
+            var async = CSharpExpression.AsyncLambda(await);
             var res = (Task<int>)async.Compile().DynamicInvoke();
             Console.WriteLine(res.Result);
         }

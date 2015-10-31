@@ -189,11 +189,16 @@ namespace Microsoft.CSharp.Expressions
 
             var exit = Expression.Label();
 
-            var newBody = Body;
+            // TODO: parameterize await rewriter with proper allocators
+            //       - labels end up in the switch table using async state machine state numbers
+            //       - parameters get resolved based on type
+            var rewrittenBody = new AwaitRewriter(Expression.Label, Expression.Parameter).Visit(Body);
+
+            var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
             {
                 result = Expression.Parameter(Body.Type);
-                newBody = Expression.Assign(result, Body);
+                newBody = Expression.Assign(result, rewrittenBody);
                 vars = new[] { result };
                 exprs = new Expression[ExprCount + 1];
             }
@@ -228,6 +233,62 @@ namespace Microsoft.CSharp.Expressions
             var body = Expression.Block(vars, exprs);
             var res = Expression.Lambda<Action>(body);
             return res;
+        }
+
+        class AwaitRewriter : CSharpExpressionVisitor
+        {
+            private readonly Func<LabelTarget> _labelFactory;
+            private readonly Func<Type, ParameterExpression> _variableFactory;
+
+            public AwaitRewriter(Func<LabelTarget> labelFactory, Func<Type, ParameterExpression> variableFactory)
+            {
+                _labelFactory = labelFactory;
+                _variableFactory = variableFactory;
+            }
+
+            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
+            {
+                var getAwaiter = node.ReduceGetAwaiter();
+                var awaiterVar = _variableFactory(getAwaiter.Type);
+                var getResult = node.ReduceGetResult(awaiterVar);
+
+                var continueLabel = _labelFactory();
+
+                var res =
+                    Expression.Block(
+                        new[] { awaiterVar }, // TODO: should be removed once it's hoisted up
+                        Expression.Assign(awaiterVar, getAwaiter),
+                        Expression.Label(continueLabel),
+                        getResult
+                    );
+
+                return res;
+
+                // TODO:
+                //
+                // - get new state machine index + label
+                // - set state to -1
+                // - emit GetAwaiter and store in hoisted variable; try to reuse variables of same type
+                // - check IsCompleted
+                //   - if not completed:
+                //     - set state
+                //     - spill stack (separate pass; can reuse LINQ's stack spiller?)
+                //     - call [Unsafe]AwaitOnCompleted
+                //   - else
+                //     - fall through
+            }
+
+            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
+            {
+                // NB: Keep hands off nested lambdas
+                return node;
+            }
+
+            protected override Expression VisitLambda<T>(Expression<T> node)
+            {
+                // NB: Keep hands off nested lambdas
+                return node;
+            }
         }
     }
 

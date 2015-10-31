@@ -83,6 +83,15 @@ namespace Microsoft.CSharp.Expressions
             // NB: In order to unblock initial experimentation, the Reduce method will emit a blocking
             //     invocation of GetAwaiter and GetResult.
 
+            var awaiter = ReduceGetAwaiter();
+            var result = ReduceGetResult(awaiter);
+
+            return result;
+#endif
+        }
+
+        internal Expression ReduceGetAwaiter()
+        {
             var getAwaiterCall = default(Expression);
             if (GetAwaiterMethod.IsStatic)
             {
@@ -93,11 +102,14 @@ namespace Microsoft.CSharp.Expressions
                 getAwaiterCall = Expression.Call(Operand, GetAwaiterMethod);
             }
 
-            var getResultMethod = getAwaiterCall.Type.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
-            var getResultCall = Expression.Call(getAwaiterCall, getResultMethod);
+            return getAwaiterCall;
+        }
 
+        internal Expression ReduceGetResult(Expression awaiter)
+        {
+            var getResultMethod = awaiter.Type.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            var getResultCall = Expression.Call(awaiter, getResultMethod);
             return getResultCall;
-#endif
         }
     }
 
