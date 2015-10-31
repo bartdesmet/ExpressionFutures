@@ -316,11 +316,15 @@ namespace Playground
         static void AsyncLambda1()
         {
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Constant(42));
+            var res = async.Compile()();
+            Console.WriteLine(res.Result);
         }
 
         static void AsyncLambda2()
         {
             var async = CSharpExpression.AsyncLambda(Expression.Constant(42));
+            var res = (Task<int>)async.Compile().DynamicInvoke();
+            Console.WriteLine(res.Result);
         }
 
         static int F(int x, int y, int z = 42)

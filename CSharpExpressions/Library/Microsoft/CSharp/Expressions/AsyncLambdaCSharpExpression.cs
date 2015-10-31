@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
@@ -119,7 +121,111 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            throw new NotImplementedException();
+            const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* start state machine */;
+
+            var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
+            var returnType = invokeMethod.ReturnType;
+
+            var builderType = default(Type);
+            var exprs = default(Expression[]);
+
+            if (returnType == typeof(void))
+            {
+                builderType = typeof(AsyncVoidMethodBuilder);
+                exprs = new Expression[ExprCount];
+            }
+            else if (returnType == typeof(Task))
+            {
+                builderType = typeof(AsyncTaskMethodBuilder);
+                exprs = new Expression[ExprCount + 1];
+            }
+            else
+            {
+                Debug.Assert(returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>));
+                builderType = typeof(AsyncTaskMethodBuilder<>).MakeGenericType(returnType.GetGenericArguments()[0]);
+                exprs = new Expression[ExprCount + 1];
+            }
+
+            var i = 0;
+
+            var builderVar = Expression.Parameter(builderType);
+            var stateMachineVar = Expression.Parameter(typeof(RuntimeAsyncStateMachine));
+
+            var builderCreateMethod = builderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
+            var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
+            exprs[i++] = createBuilder;
+
+            var body = HoistBody(builderVar);
+
+            var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
+            var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
+            exprs[i++] = createStateMachine;
+
+            var startMethod = builderType.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
+            exprs[i++] = Expression.Call(builderVar, startMethod.MakeGenericMethod(typeof(RuntimeAsyncStateMachine)), stateMachineVar);
+
+            if (returnType != typeof(void))
+            {
+                exprs[i] = Expression.Property(builderVar, "Task");
+            }
+
+            var rewritten = Expression.Block(new[] { builderVar, stateMachineVar }, exprs);
+
+            var res = Expression.Lambda<TDelegate>(rewritten, Parameters);
+            return res;
+        }
+
+        private Expression HoistBody(ParameterExpression builderVar)
+        {
+            const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
+
+            var vars = Array.Empty<ParameterExpression>();
+            var exprs = default(Expression[]);
+
+            var result = default(ParameterExpression);
+            var ex = Expression.Parameter(typeof(Exception));
+
+            var exit = Expression.Label();
+
+            var newBody = Body;
+            if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
+            {
+                result = Expression.Parameter(Body.Type);
+                newBody = Expression.Assign(result, Body);
+                vars = new[] { result };
+                exprs = new Expression[ExprCount + 1];
+            }
+            else
+            {
+                exprs = new Expression[ExprCount];
+            }
+
+            var i = 0;
+
+            exprs[i++] =
+                Expression.TryCatch(
+                    Expression.Block(
+                        newBody,
+                        Expression.Empty()
+                    ),
+                    Expression.Catch(ex,
+                        Expression.Block(
+                            Expression.Call(builderVar, builderVar.Type.GetMethod("SetException"), ex),
+                            Expression.Return(exit)
+                        )
+                    )
+                );
+
+            if (result != null)
+            {
+                exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"), result);
+            }
+
+            exprs[i++] = Expression.Label(exit);
+
+            var body = Expression.Block(vars, exprs);
+            var res = Expression.Lambda<Action>(body);
+            return res;
         }
     }
 
