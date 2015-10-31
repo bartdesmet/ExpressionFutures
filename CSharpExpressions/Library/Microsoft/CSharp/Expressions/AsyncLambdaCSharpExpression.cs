@@ -187,7 +187,7 @@ namespace Microsoft.CSharp.Expressions
             //       C# 6.0 features - await in catch and finally
             //       Reject await in filters
 
-            const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
+            const int ExprCount = 1 /* TryCatch */ + 1 /* SetResult */ + 1 /* Label */;
 
             var locals = Array.Empty<ParameterExpression>();
             var exprs = default(Expression[]);
@@ -247,13 +247,13 @@ namespace Microsoft.CSharp.Expressions
                 result = Expression.Parameter(Body.Type);
                 newBody = Expression.Assign(result, rewrittenBody);
                 locals = new[] { result };
-                exprs = new Expression[ExprCount + 1];
             }
             else
             {
                 locals = Array.Empty<ParameterExpression>();
-                exprs = new Expression[ExprCount];
             }
+
+            exprs = new Expression[ExprCount];
 
             newBody = Spiller.Spill(newBody);
 
@@ -285,6 +285,10 @@ namespace Microsoft.CSharp.Expressions
             if (result != null)
             {
                 exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"), result);
+            }
+            else
+            {
+                exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"));
             }
 
             exprs[i++] = Expression.Label(exit);
