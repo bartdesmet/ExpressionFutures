@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Reflection;
@@ -189,10 +190,23 @@ namespace Microsoft.CSharp.Expressions
 
             var exit = Expression.Label();
 
+            var hoistedVars = new Dictionary<Type, ParameterExpression>();
+
+            var getVariable = new Func<Type, ParameterExpression>(t =>
+            {
+                var p = default(ParameterExpression);
+                if (!hoistedVars.TryGetValue(t, out p))
+                {
+                    p = Expression.Parameter(t);
+                    hoistedVars.Add(t, p);
+                }
+
+                return p;
+            });
+
             // TODO: parameterize await rewriter with proper allocators
             //       - labels end up in the switch table using async state machine state numbers
-            //       - parameters get resolved based on type
-            var rewrittenBody = new AwaitRewriter(Expression.Label, Expression.Parameter).Visit(Body);
+            var rewrittenBody = new AwaitRewriter(Expression.Label, getVariable).Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
@@ -230,7 +244,7 @@ namespace Microsoft.CSharp.Expressions
 
             exprs[i++] = Expression.Label(exit);
 
-            var body = Expression.Block(vars, exprs);
+            var body = Expression.Block(vars.Concat(hoistedVars.Values), exprs);
             var res = Expression.Lambda<Action>(body);
             return res;
         }
@@ -256,7 +270,6 @@ namespace Microsoft.CSharp.Expressions
 
                 var res =
                     Expression.Block(
-                        new[] { awaiterVar }, // TODO: should be removed once it's hoisted up
                         Expression.Assign(awaiterVar, getAwaiter),
                         Expression.Label(continueLabel),
                         getResult

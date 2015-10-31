@@ -302,7 +302,7 @@ namespace Playground
 
         static void Await()
         {
-            var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
+            var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(42)));
             var res = Expression.Lambda<Func<int>>(await).Compile()();
             Console.WriteLine(res);
         }
@@ -330,7 +330,7 @@ namespace Playground
 
         static void AsyncLambda3()
         {
-            var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
+            var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(42)));
             var async = CSharpExpression.AsyncLambda(await);
             var res = (Task<int>)async.Compile().DynamicInvoke();
             Console.WriteLine(res.Result);
