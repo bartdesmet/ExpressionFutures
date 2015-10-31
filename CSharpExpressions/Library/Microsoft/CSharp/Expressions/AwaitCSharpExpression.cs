@@ -6,6 +6,8 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+using static System.Linq.Expressions.ExpressionStubs;
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -82,6 +84,8 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
+            RequiresCanRead(operand, nameof(operand));
+
             ValidateAwaitPattern(operand.Type, ref getAwaiterMethod);
 
             return new AwaitCSharpExpression(operand, getAwaiterMethod);
@@ -105,10 +109,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
         {
-            if (getAwaiterMethod.IsGenericMethodDefinition)
-            {
-                throw new NotImplementedException();
-            }
+            ValidateMethodInfo(getAwaiterMethod);
 
             var getAwaiterParams = getAwaiterMethod.GetParametersCached();
 
@@ -116,25 +117,25 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (getAwaiterParams.Length != 1)
                 {
-                    throw new NotImplementedException(); // TODO
+                    throw Error.GetAwaiterShouldTakeZeroParameters();
                 }
 
                 var firstParam = getAwaiterParams[0];
                 if (!TypeUtils.AreReferenceAssignable(firstParam.ParameterType, operandType))
                 {
-                    throw new NotImplementedException(); // TODO
+                    throw LinqError.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType);
                 }
             }
             else
             {
                 if (getAwaiterParams.Length != 0)
                 {
-                    throw new NotImplementedException(); // TODO
+                    throw Error.GetAwaiterShouldTakeZeroParameters();
                 }
                 
                 if (getAwaiterMethod.IsGenericMethod)
                 {
-                    throw new NotImplementedException(); // TODO
+                    throw Error.GetAwaiterShouldNotBeGeneric();
                 }
             }
 
@@ -142,7 +143,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (returnType == typeof(void) || returnType.IsByRef || returnType.IsPointer)
             {
-                throw new NotImplementedException();
+                throw Error.GetAwaiterShouldNotReturnAwaiterType();
             }
         }
     }

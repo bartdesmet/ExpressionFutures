@@ -63,7 +63,7 @@ var types = new[]
     new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.CollectionExtensions", Members = default(string[]), Suffix = default(string), Partial = false },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeUtils", Members = default(string[]), Suffix = default(string), Partial = false },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Expression", Members = new string[] { "RequiresCanRead", "ValidateOneArgument", "TryQuote", "ValidateMethodInfo", "ValidateStaticOrInstanceMethod", "GetInvokeMethod", "ValidateCallInstanceType" }, Suffix = "Stubs", Partial = false },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Error", Members = new string[] { "PropertyCannotHaveRefType", "PropertyTypeCannotBeVoid", "AccessorsCannotHaveByRefArgs", "ArgumentCannotBeOfTypeVoid", "BoundsCannotBeLessThanOne", "ArgumentMustBeInteger", "ExpressionTypeCannotInitializeArrayType" }, Suffix = default(string), Partial = true },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Error", Members = new string[] { "PropertyCannotHaveRefType", "PropertyTypeCannotBeVoid", "AccessorsCannotHaveByRefArgs", "ArgumentCannotBeOfTypeVoid", "BoundsCannotBeLessThanOne", "ArgumentMustBeInteger", "ExpressionTypeCannotInitializeArrayType", "ExpressionTypeDoesNotMatchParameter" }, Suffix = default(string), Partial = true },
 };
 
 foreach (var t in types)

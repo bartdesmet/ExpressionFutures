@@ -1141,5 +1141,19 @@ namespace System.Linq.Expressions
             }
         }
 
+        private static readonly MethodInfo s_7 = s_mtds["ExpressionTypeDoesNotMatchParameter"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+
+        public static System.Exception ExpressionTypeDoesNotMatchParameter(System.Object p0, System.Object p1)
+        {
+            try
+            {
+                return (System.Exception)s_7.Invoke(null, new object[] { p0, p1 });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
     }
 }

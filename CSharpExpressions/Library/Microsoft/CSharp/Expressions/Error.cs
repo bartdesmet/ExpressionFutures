@@ -99,6 +99,30 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.ArrayBoundsElementCountMismatch);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The 'GetAwaiter' method should take zero parameters"
+        /// </summary>
+        internal static Exception GetAwaiterShouldTakeZeroParameters()
+        {
+            return new ArgumentException(Strings.GetAwaiterShouldTakeZeroParameters);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'GetAwaiter' method should not be generic"
+        /// </summary>
+        internal static Exception GetAwaiterShouldNotBeGeneric()
+        {
+            return new ArgumentException(Strings.GetAwaiterShouldNotBeGeneric);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'GetAwaiter' method has an unsupported return type"
+        /// </summary>
+        internal static Exception GetAwaiterShouldNotReturnAwaiterType()
+        {
+            return new ArgumentException(Strings.GetAwaiterShouldNotReturnAwaiterType);
+        }
+
     }
 
     /// <summary>
@@ -209,6 +233,39 @@ namespace Microsoft.CSharp.Expressions
 			}
         }
 
+        /// <summary>
+        /// A string like "The 'GetAwaiter' method should take zero parameters"
+        /// </summary>
+        internal static string GetAwaiterShouldTakeZeroParameters
+        {
+			get
+			{
+				return SR.GetAwaiterShouldTakeZeroParameters;
+			}
+        }
+
+        /// <summary>
+        /// A string like "The 'GetAwaiter' method should not be generic"
+        /// </summary>
+        internal static string GetAwaiterShouldNotBeGeneric
+        {
+			get
+			{
+				return SR.GetAwaiterShouldNotBeGeneric;
+			}
+        }
+
+        /// <summary>
+        /// A string like "The 'GetAwaiter' method has an unsupported return type"
+        /// </summary>
+        internal static string GetAwaiterShouldNotReturnAwaiterType
+        {
+			get
+			{
+				return SR.GetAwaiterShouldNotReturnAwaiterType;
+			}
+        }
+
     }
 }
 
@@ -227,5 +284,8 @@ namespace System
 		public const string IndexOutOfRange = "The specified index is out of range";
 		public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0";
 		public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
+		public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters";
+		public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic";
+		public const string GetAwaiterShouldNotReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
 	}
 }

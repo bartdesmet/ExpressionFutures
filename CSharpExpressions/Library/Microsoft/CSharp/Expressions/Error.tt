@@ -18,6 +18,9 @@ var errors = new[]
     new { Name = "IndexOutOfRange", ExceptionType = "ArgumentOutOfRangeException", Args = 0, Message = "The specified index is out of range" },
     new { Name = "BoundCannotBeLessThanZero", ExceptionType = "ArgumentException", Args = 0, Message = "An array dimension cannot be less than 0" },
     new { Name = "ArrayBoundsElementCountMismatch", ExceptionType = "ArgumentException", Args = 0, Message = "The number of elements does not match the length of the array" },
+	new { Name = "GetAwaiterShouldTakeZeroParameters", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method should take zero parameters" },
+	new { Name = "GetAwaiterShouldNotBeGeneric", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method should not be generic" },
+	new { Name = "GetAwaiterShouldNotReturnAwaiterType", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method has an unsupported return type" },
 };
 #>
 // Prototyping extended expression trees for C#.
