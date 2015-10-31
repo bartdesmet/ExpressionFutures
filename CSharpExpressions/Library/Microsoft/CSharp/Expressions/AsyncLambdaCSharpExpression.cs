@@ -20,8 +20,9 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract class AsyncLambdaCSharpExpression : CSharpExpression
     {
-        internal AsyncLambdaCSharpExpression(Expression body, ReadOnlyCollection<ParameterExpression> parameters)
+        internal AsyncLambdaCSharpExpression(Type delegateType, Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
+            Type = delegateType;
             Body = body;
             Parameters = parameters;
         }
@@ -31,6 +32,12 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
         public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.AsyncLambda;
+
+        /// <summary>
+        /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
+        /// </summary>
+        /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
+        public override Type Type { get; }
 
         /// <summary>
         /// Gets the body of the lambda expression.
@@ -61,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
     public sealed class AsyncCSharpExpression<TDelegate> : AsyncLambdaCSharpExpression
     {
         internal AsyncCSharpExpression(Expression body, ReadOnlyCollection<ParameterExpression> parameters)
-            : base(body, parameters)
+            : base(typeof(TDelegate), body, parameters)
         {
         }
 
