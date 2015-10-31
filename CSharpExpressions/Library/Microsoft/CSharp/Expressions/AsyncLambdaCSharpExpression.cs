@@ -227,7 +227,7 @@ namespace Microsoft.CSharp.Expressions
                 };
             });
 
-            var rewrittenBody = new AwaitRewriter(getLabel, getVariable, stateVar).Visit(Body);
+            var rewrittenBody = new AwaitRewriter(stateVar, getLabel, getVariable).Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
@@ -317,7 +317,7 @@ namespace Microsoft.CSharp.Expressions
             private readonly Func<Type, ParameterExpression> _variableFactory;
             private readonly ParameterExpression _stateVariable;
 
-            public AwaitRewriter(Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, ParameterExpression stateVariable)
+            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory)
             {
                 _labelFactory = labelFactory;
                 _variableFactory = variableFactory;
@@ -332,7 +332,7 @@ namespace Microsoft.CSharp.Expressions
                 var getResult = node.ReduceGetResult(awaiterVar);
 
                 var continueLabel = _labelFactory();
-
+                
                 var res =
                     Expression.Block(
                         Expression.Assign(awaiterVar, getAwaiter),
@@ -340,6 +340,7 @@ namespace Microsoft.CSharp.Expressions
                             Expression.Block(
                                 Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
                                 Expression.Throw(Expression.Constant(new NotImplementedException())) // TODO: AwaitOnCompleted call
+                                // Expression.Call(builder, awaitOnCompletedMethod, awaiterVar, stateMachineVar)
                             )
                         ),
                         Expression.Label(continueLabel.Label),
