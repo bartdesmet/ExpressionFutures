@@ -54,17 +54,19 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            var continueLabel = ContinueLabel ?? Expression.Label();
+            var beginLabel = Expression.Label();
+
             var loop =
-                Expression.Loop(
-                    Expression.Block(
-                        Body,
-                        Expression.IfThen(
-                            Expression.Not(Test),
-                            Expression.Break(BreakLabel)
-                        )
+                Expression.Block(
+                    Expression.Label(beginLabel),
+                    Body,
+                    Expression.Label(continueLabel),
+                    Expression.IfThen(
+                        Test,
+                        Expression.Goto(beginLabel)
                     ),
-                    BreakLabel,
-                    ContinueLabel
+                    Expression.Label(BreakLabel)
                 );
 
             return loop;
