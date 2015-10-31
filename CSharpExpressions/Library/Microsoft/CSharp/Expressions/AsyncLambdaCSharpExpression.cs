@@ -155,7 +155,7 @@ namespace Microsoft.CSharp.Expressions
             var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
             exprs[i++] = createBuilder;
 
-            var body = HoistBody(builderVar);
+            var body = RewriteBody(builderVar);
 
             var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
             var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
@@ -175,8 +175,10 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private Expression HoistBody(ParameterExpression builderVar)
+        private Expression RewriteBody(ParameterExpression builderVar)
         {
+            // TODO: split body into blocks based on await boundaries, spill stack, and generate state machine
+
             const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
 
             var vars = Array.Empty<ParameterExpression>();
