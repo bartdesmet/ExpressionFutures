@@ -107,9 +107,16 @@ namespace Microsoft.CSharp.Expressions
 
         internal Expression ReduceGetResult(Expression awaiter)
         {
+            // TODO: Make static and share lookup logic with validation code
             var getResultMethod = awaiter.Type.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
             var getResultCall = Expression.Call(awaiter, getResultMethod);
             return getResultCall;
+        }
+
+        internal Expression ReduceIsCompleted(Expression awaiter)
+        {
+            // TODO: Make static and share lookup logic with validation code
+            return Expression.Property(awaiter, "IsCompleted");
         }
     }
 

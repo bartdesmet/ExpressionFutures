@@ -264,6 +264,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var getAwaiter = node.ReduceGetAwaiter();
                 var awaiterVar = _variableFactory(getAwaiter.Type);
+                var isCompleted = node.ReduceIsCompleted(awaiterVar);
                 var getResult = node.ReduceGetResult(awaiterVar);
 
                 var continueLabel = _labelFactory();
@@ -271,6 +272,9 @@ namespace Microsoft.CSharp.Expressions
                 var res =
                     Expression.Block(
                         Expression.Assign(awaiterVar, getAwaiter),
+                        Expression.IfThen(Expression.Not(isCompleted),
+                            Expression.Throw(Expression.Constant(new NotImplementedException())) // TODO: AwaitOnCompleted call
+                        ),
                         Expression.Label(continueLabel),
                         getResult
                     );
