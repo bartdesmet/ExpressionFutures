@@ -118,9 +118,57 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method has an unsupported return type"
         /// </summary>
-        internal static Exception GetAwaiterShouldNotReturnAwaiterType()
+        internal static Exception GetAwaiterShouldReturnAwaiterType()
         {
-            return new ArgumentException(Strings.GetAwaiterShouldNotReturnAwaiterType);
+            return new ArgumentException(Strings.GetAwaiterShouldReturnAwaiterType);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Awaiter type '{0}' should implement 'INotifyCompletion'"
+        /// </summary>
+        internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object p0)
+        {
+            return new ArgumentException(Strings.AwaiterTypeShouldImplementINotifyCompletion(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor"
+        /// </summary>
+        internal static Exception AwaiterTypeShouldHaveIsCompletedProperty(object p0)
+        {
+            return new ArgumentException(Strings.AwaiterTypeShouldHaveIsCompletedProperty(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'"
+        /// </summary>
+        internal static Exception AwaiterIsCompletedShouldReturnBool(object p0)
+        {
+            return new ArgumentException(Strings.AwaiterIsCompletedShouldReturnBool(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters"
+        /// </summary>
+        internal static Exception AwaiterIsCompletedShouldNotBeIndexer(object p0)
+        {
+            return new ArgumentException(Strings.AwaiterIsCompletedShouldNotBeIndexer(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Awaiter type '{0}' should have a 'GetResult' method"
+        /// </summary>
+        internal static Exception AwaiterTypeShouldHaveGetResultMethod(object p0)
+        {
+            return new ArgumentException(Strings.AwaiterTypeShouldHaveGetResultMethod(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type"
+        /// </summary>
+        internal static Exception AwaiterGetResultTypeInvalid(object p0)
+        {
+            return new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
         }
 
     }
@@ -258,12 +306,60 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// A string like "The 'GetAwaiter' method has an unsupported return type"
         /// </summary>
-        internal static string GetAwaiterShouldNotReturnAwaiterType
+        internal static string GetAwaiterShouldReturnAwaiterType
         {
 			get
 			{
-				return SR.GetAwaiterShouldNotReturnAwaiterType;
+				return SR.GetAwaiterShouldReturnAwaiterType;
 			}
+        }
+
+        /// <summary>
+        /// A string like "Awaiter type '{0}' should implement 'INotifyCompletion'"
+        /// </summary>
+        internal static string AwaiterTypeShouldImplementINotifyCompletion(object p0)
+        {
+			return SR.Format(SR.AwaiterTypeShouldImplementINotifyCompletion, p0);
+        }
+
+        /// <summary>
+        /// A string like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor"
+        /// </summary>
+        internal static string AwaiterTypeShouldHaveIsCompletedProperty(object p0)
+        {
+			return SR.Format(SR.AwaiterTypeShouldHaveIsCompletedProperty, p0);
+        }
+
+        /// <summary>
+        /// A string like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'"
+        /// </summary>
+        internal static string AwaiterIsCompletedShouldReturnBool(object p0)
+        {
+			return SR.Format(SR.AwaiterIsCompletedShouldReturnBool, p0);
+        }
+
+        /// <summary>
+        /// A string like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters"
+        /// </summary>
+        internal static string AwaiterIsCompletedShouldNotBeIndexer(object p0)
+        {
+			return SR.Format(SR.AwaiterIsCompletedShouldNotBeIndexer, p0);
+        }
+
+        /// <summary>
+        /// A string like "Awaiter type '{0}' should have a 'GetResult' method"
+        /// </summary>
+        internal static string AwaiterTypeShouldHaveGetResultMethod(object p0)
+        {
+			return SR.Format(SR.AwaiterTypeShouldHaveGetResultMethod, p0);
+        }
+
+        /// <summary>
+        /// A string like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type"
+        /// </summary>
+        internal static string AwaiterGetResultTypeInvalid(object p0)
+        {
+			return SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
         }
 
     }
@@ -286,6 +382,12 @@ namespace System
 		public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
 		public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters";
 		public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic";
-		public const string GetAwaiterShouldNotReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
+		public const string GetAwaiterShouldReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
+		public const string AwaiterTypeShouldImplementINotifyCompletion = "Awaiter type '{0}' should implement 'INotifyCompletion'";
+		public const string AwaiterTypeShouldHaveIsCompletedProperty = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor";
+		public const string AwaiterIsCompletedShouldReturnBool = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'";
+		public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters";
+		public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method";
+		public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type";
 	}
 }

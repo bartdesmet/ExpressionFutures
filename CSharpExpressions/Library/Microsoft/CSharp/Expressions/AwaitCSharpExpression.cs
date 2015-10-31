@@ -6,6 +6,7 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
 
@@ -96,15 +97,12 @@ namespace Microsoft.CSharp.Expressions
             if (getAwaiterMethod == null)
             {
                 getAwaiterMethod = operandType.GetMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
-
-                ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
             }
 
+            ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
+
             ValidateGetAwaiterMethod(operandType, getAwaiterMethod);
-
-            // TODO: Validation of await pattern, etc.
-
-            throw new NotImplementedException();
+            ValidateAwaiterType(getAwaiterMethod.ReturnType);
         }
 
         private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
@@ -143,7 +141,44 @@ namespace Microsoft.CSharp.Expressions
 
             if (returnType == typeof(void) || returnType.IsByRef || returnType.IsPointer)
             {
-                throw Error.GetAwaiterShouldNotReturnAwaiterType();
+                throw Error.GetAwaiterShouldReturnAwaiterType();
+            }
+        }
+
+        private static void ValidateAwaiterType(Type awaiterType)
+        {
+            if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
+            {
+                throw Error.AwaiterTypeShouldImplementINotifyCompletion(awaiterType);
+            }
+
+            var isCompleted = awaiterType.GetProperty("IsCompleted", BindingFlags.Public | BindingFlags.Instance);
+            if (isCompleted == null || isCompleted.GetMethod == null)
+            {
+                throw Error.AwaiterTypeShouldHaveIsCompletedProperty(awaiterType);
+            }
+
+            if (isCompleted.PropertyType != typeof(bool))
+            {
+                throw Error.AwaiterIsCompletedShouldReturnBool(awaiterType);
+            }
+
+            if (isCompleted.GetIndexParameters().Length != 0)
+            {
+                throw Error.AwaiterIsCompletedShouldNotBeIndexer(awaiterType);
+            }
+
+            var getResult = awaiterType.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            if (getResult == null || getResult.IsGenericMethodDefinition)
+            {
+                throw Error.AwaiterTypeShouldHaveGetResultMethod(awaiterType);
+            }
+
+            var returnType = getResult.ReturnType;
+
+            if (returnType.IsByRef || returnType.IsPointer)
+            {
+                throw Error.AwaiterGetResultTypeInvalid(awaiterType);
             }
         }
     }
