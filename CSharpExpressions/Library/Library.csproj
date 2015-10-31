@@ -65,6 +65,7 @@
       <DependentUpon>Stubs.tt</DependentUpon>
     </Compile>
     <Compile Include="Stubs.Manual.cs" />
+    <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gaps.txt" />
