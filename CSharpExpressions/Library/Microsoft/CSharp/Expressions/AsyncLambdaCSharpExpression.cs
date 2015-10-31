@@ -180,7 +180,7 @@ namespace Microsoft.CSharp.Expressions
         {
             // TODO: split body into blocks based on await boundaries, spill stack, and generate state machine
 
-            const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
+            const int ExprCount = 1 /* Switch */ + 1 /* TryCatch */ + 1 /* Label */;
 
             var vars = Array.Empty<ParameterExpression>();
             var exprs = default(Expression[]);
@@ -204,24 +204,54 @@ namespace Microsoft.CSharp.Expressions
                 return p;
             });
 
+            var labelIndex = 0;
+            var resumeList = new List<SwitchCase>();
+
+            var getLabel = new Func<StateMachineState>(() =>
+            {
+                var label = Expression.Label();
+                var index = labelIndex++;
+
+                resumeList.Add(Expression.SwitchCase(Expression.Goto(label), Helpers.CreateConstantInt32(index)));
+
+                return new StateMachineState
+                {
+                    Label = label,
+                    Index = index
+                };
+            });
+
+            var state = Expression.Parameter(typeof(int));
+
             // TODO: parameterize await rewriter with proper allocators
             //       - labels end up in the switch table using async state machine state numbers
-            var rewrittenBody = new AwaitRewriter(Expression.Label, getVariable).Visit(Body);
+            var rewrittenBody = new AwaitRewriter(getLabel, getVariable, state).Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
             {
                 result = Expression.Parameter(Body.Type);
                 newBody = Expression.Assign(result, rewrittenBody);
-                vars = new[] { result };
+                vars = new[] { state, result };
                 exprs = new Expression[ExprCount + 1];
             }
             else
             {
+                vars = new[] { state };
                 exprs = new Expression[ExprCount];
             }
 
             var i = 0;
+
+            exprs[i++] =
+                Expression.Empty();
+
+            //
+            // TODO: The following fails with "Control cannot enter an expression--only statements can be jumped into".
+            //       We need to spill the stack so we enter the label on an empty stack.
+            //
+            //exprs[i++] =
+            //    resumeList.Count > 0 ? Expression.Switch(state, resumeList.ToArray()) : (Expression)Expression.Empty();
 
             exprs[i++] =
                 Expression.TryCatch(
@@ -249,15 +279,23 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        struct StateMachineState
+        {
+            public LabelTarget Label;
+            public int Index;
+        }
+
         class AwaitRewriter : CSharpExpressionVisitor
         {
-            private readonly Func<LabelTarget> _labelFactory;
+            private readonly Func<StateMachineState> _labelFactory;
             private readonly Func<Type, ParameterExpression> _variableFactory;
+            private readonly ParameterExpression _stateVariable;
 
-            public AwaitRewriter(Func<LabelTarget> labelFactory, Func<Type, ParameterExpression> variableFactory)
+            public AwaitRewriter(Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, ParameterExpression stateVariable)
             {
                 _labelFactory = labelFactory;
                 _variableFactory = variableFactory;
+                _stateVariable = stateVariable;
             }
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
@@ -273,9 +311,12 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Block(
                         Expression.Assign(awaiterVar, getAwaiter),
                         Expression.IfThen(Expression.Not(isCompleted),
-                            Expression.Throw(Expression.Constant(new NotImplementedException())) // TODO: AwaitOnCompleted call
+                            Expression.Block(
+                                Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
+                                Expression.Throw(Expression.Constant(new NotImplementedException())) // TODO: AwaitOnCompleted call
+                            )
                         ),
-                        Expression.Label(continueLabel),
+                        Expression.Label(continueLabel.Label),
                         getResult
                     );
 
