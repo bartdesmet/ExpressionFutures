@@ -309,10 +309,11 @@ namespace Playground
 
         static void AsyncLambda()
         {
-            AsyncLambda1();
-            AsyncLambda2();
-            AsyncLambda3();
+            //AsyncLambda1();
+            //AsyncLambda2();
+            //AsyncLambda3();
             AsyncLambda4();
+            AsyncLambda5();
         }
 
         static void AsyncLambda1()
@@ -348,6 +349,31 @@ namespace Playground
             );
             var res = async.Compile()();
             Console.WriteLine(res.Result);
+        }
+
+        static void AsyncLambda5()
+        {
+            var i = Expression.Parameter(typeof(int));
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = ReflectionUtils.MethodInfoOf(() => Console.WriteLine(default(int)));
+            var brk = Expression.Label();
+            var cnt = Expression.Label();
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.Block(
+                    new[] { i },
+                    Expression.Assign(i, Expression.Constant(0)),
+                    Expression.Loop(
+                        Expression.Block(
+                            Expression.IfThen(Expression.Equal(i, Expression.Constant(10)), Expression.Break(brk)),
+                            CSharpExpression.Await(delay.Body),
+                            Expression.Call(cout, i),
+                            Expression.PostIncrementAssign(i)
+                        ), brk, cnt
+                    )
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
         }
 
         static int F(int x, int y, int z = 42)

@@ -238,7 +238,8 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var rewrittenBody = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory, exit).Visit(Body);
+            var awaitRewriter = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory, exit);
+            var rewrittenBody = awaitRewriter.Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
@@ -291,7 +292,7 @@ namespace Microsoft.CSharp.Expressions
             var body = Expression.Block(locals, exprs);
             var res = Expression.Lambda<Action>(body);
 
-            variables = hoistedVars.Values;
+            variables = hoistedVars.Values.Concat(awaitRewriter.HoistedVariables);
             return res;
         }
 
@@ -331,6 +332,7 @@ namespace Microsoft.CSharp.Expressions
             private readonly ParameterExpression _stateVariable;
             private readonly Func<Expression, Expression> _onCompletedFactory;
             private readonly LabelTarget _exit;
+            private readonly Stack<StrongBox<bool>> _awaitInBlock = new Stack<StrongBox<bool>>();
 
             public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
             {
@@ -341,8 +343,51 @@ namespace Microsoft.CSharp.Expressions
                 _exit = exit;
             }
 
+            public HashSet<ParameterExpression> HoistedVariables { get; } = new HashSet<ParameterExpression>();
+
+            // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
+
+            protected override Expression VisitBlock(BlockExpression node)
+            {
+                _awaitInBlock.Push(new StrongBox<bool>());
+
+                var res = (BlockExpression)base.VisitBlock(node);
+
+                var b = _awaitInBlock.Pop();
+                if (b.Value)
+                {
+                    if (node.Variables.Count > 0)
+                    {
+                        // TODO: We could have shadowing of variables. If we hoist them all up, their scoped meaning
+                        //       is lost. To solve this, we can detect shadowing first and rewrite the expression to
+                        //       get rid of it.
+                        foreach (var p in node.Variables)
+                        {
+                            if (!HoistedVariables.Add(p))
+                            {
+                                throw ContractUtils.Unreachable; // TODO: shadowing elimination (see above)
+                            }
+                        }
+
+                        res = res.Update(Array.Empty<ParameterExpression>(), res.Expressions);
+                    }
+
+                    if (_awaitInBlock.Count > 0)
+                    {
+                        _awaitInBlock.Peek().Value = true;
+                    }
+                }
+
+                return res;
+            }
+
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
+                if (_awaitInBlock.Count > 0)
+                {
+                    _awaitInBlock.Peek().Value = true;
+                }
+
                 var getAwaiter = node.ReduceGetAwaiter();
                 var awaiterVar = _variableFactory(getAwaiter.Type);
                 var isCompleted = node.ReduceIsCompleted(awaiterVar);
