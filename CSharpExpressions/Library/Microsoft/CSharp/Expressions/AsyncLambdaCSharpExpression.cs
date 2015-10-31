@@ -237,7 +237,7 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var rewrittenBody = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory).Visit(Body);
+            var rewrittenBody = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory, exit).Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
@@ -327,13 +327,15 @@ namespace Microsoft.CSharp.Expressions
             private readonly Func<Type, ParameterExpression> _variableFactory;
             private readonly ParameterExpression _stateVariable;
             private readonly Func<Expression, Expression> _onCompletedFactory;
+            private readonly LabelTarget _exit;
 
-            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory)
+            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
             {
                 _labelFactory = labelFactory;
                 _variableFactory = variableFactory;
                 _stateVariable = stateVariable;
                 _onCompletedFactory = onCompletedFactory;
+                _exit = exit;
             }
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
@@ -351,7 +353,8 @@ namespace Microsoft.CSharp.Expressions
                         Expression.IfThen(Expression.Not(isCompleted),
                             Expression.Block(
                                 Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
-                                _onCompletedFactory(awaiterVar)
+                                _onCompletedFactory(awaiterVar),
+                                Expression.Return(_exit)
                             )
                         ),
                         Expression.Label(continueLabel.Label),
