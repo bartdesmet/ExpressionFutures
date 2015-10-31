@@ -17,7 +17,7 @@ namespace System
         public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'";
         public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0";
         public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
-        public const string RankMismatch = "The number of indices specified does not match the array rank";
+        public const string RankMismatch = "The number of indexes specified does not match the array rank";
         public const string IndexOutOfRange = "The specified index is out of range";
     }
 }

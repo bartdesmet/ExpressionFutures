@@ -69,7 +69,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// ArgumentException with message like "The number of indices specified does not match the array rank"
+        /// ArgumentException with message like "The number of indexes specified does not match the array rank"
         /// </summary>
         internal static Exception RankMismatch()
         {

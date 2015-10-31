@@ -77,7 +77,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// A string like "The number of indices specified does not match the array rank"
+        /// A string like "The number of indexes specified does not match the array rank"
         /// </summary>
         public static string RankMismatch
         {

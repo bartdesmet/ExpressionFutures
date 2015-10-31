@@ -279,7 +279,7 @@ namespace Playground
 
         static void NewMultidimensionalArrayInit()
         {
-            var expr = CSharpExpression.NewMultiDimensionalArrayInit(typeof(int), new[] { 2, 3, 5 }, Enumerable.Range(0, 30).Select(i => Expression.Constant(i)));
+            var expr = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3, 5 }, Enumerable.Range(0, 30).Select(i => Expression.Constant(i)));
 
             var res = Expression.Lambda<Func<int[,,]>>(expr).Compile()();
 

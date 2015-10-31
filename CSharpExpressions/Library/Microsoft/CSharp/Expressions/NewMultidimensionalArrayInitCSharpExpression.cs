@@ -47,23 +47,24 @@ namespace Microsoft.CSharp.Expressions
         public ReadOnlyCollection<Expression> Expressions { get; }
 
         /// <summary>
-        /// Gets the <see cref="Expression" /> representing the element of the array the specified <paramref name="indices"/>.
+        /// Gets the <see cref="Expression" /> representing the element of the array the specified <paramref name="indexes"/>.
         /// </summary>
-        /// <param name="indices">The indices of the element to retrieve.</param>
-        /// <returns>An <see cref="Expression" /> representing the element of the array the specified <paramref name="indices"/>.</returns>
-        public Expression GetExpression(params int[] indices)
+        /// <param name="indexes">The indexes of the element to retrieve.</param>
+        /// <returns>An <see cref="Expression" /> representing the element of the array the specified <paramref name="indexes"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public Expression GetExpression(params int[] indexes)
         {
-            ContractUtils.RequiresNotNull(indices, nameof(indices));
+            ContractUtils.RequiresNotNull(indexes, nameof(indexes));
 
-            if (indices.Length != _bounds.Length)
+            if (indexes.Length != _bounds.Length)
             {
                 throw Error.RankMismatch();
             }
 
             var index = 0;
-            for (var i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indexes.Length; i++)
             {
-                var idx = indices[i];
+                var idx = indexes[i];
                 var bound = _bounds[i];
 
                 if (idx < 0 || idx >= bound)
@@ -100,7 +101,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.NewMultiDimensionalArrayInit(Type.GetElementType(), _bounds, expressions);
+            return CSharpExpression.NewMultidimensionalArrayInit(Type.GetElementType(), _bounds, expressions);
         }
 
         /// <summary>
@@ -134,8 +135,8 @@ namespace Microsoft.CSharp.Expressions
                     idx /= bound;
                 }
 
-                var indices = new TrueReadOnlyCollection<Expression>(indexValues.Map(j => consts[j]));
-                var element = Expression.ArrayAccess(res, indices);
+                var indexes = new TrueReadOnlyCollection<Expression>(indexValues.Map(j => consts[j]));
+                var element = Expression.ArrayAccess(res, indexes);
 
                 exprs[i] = Expression.Assign(element, value);
             }
@@ -155,7 +156,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="bounds">The bounds of the array.</param>
         /// <param name="initializers">An IEnumerable{T} that contains Expression objects that represent the elements in the array.</param>
         /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
-        public static NewMultidimensionalArrayInitCSharpExpression NewMultiDimensionalArrayInit(Type type, int[] bounds, IEnumerable<Expression> initializers)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, IEnumerable<Expression> initializers)
         {
             ContractUtils.RequiresNotNull(type, nameof(type));
             ContractUtils.RequiresNotNull(bounds, nameof(bounds));
