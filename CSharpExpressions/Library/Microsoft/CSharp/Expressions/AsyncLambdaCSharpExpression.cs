@@ -181,6 +181,11 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar)
         {
+            // TODO: Enter/leave sequences for Try blocks
+            //       Timing for finally handlers; prevent premature execution
+            //       C# 6.0 features - await in catch and finally
+            //       Reject await in filters
+
             const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
 
             var vars = Array.Empty<ParameterExpression>();
