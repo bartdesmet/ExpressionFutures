@@ -122,7 +122,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* start state machine */;
+            const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* initial state */ + 1 /* start state machine */;
 
             var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
             var returnType = invokeMethod.ReturnType;
@@ -151,16 +151,19 @@ namespace Microsoft.CSharp.Expressions
 
             var builderVar = Expression.Parameter(builderType);
             var stateMachineVar = Expression.Parameter(typeof(RuntimeAsyncStateMachine));
+            var stateVar = Expression.Parameter(typeof(int), "__state");
 
             var builderCreateMethod = builderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
             var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
             exprs[i++] = createBuilder;
 
-            var body = RewriteBody(builderVar);
+            var body = RewriteBody(stateVar, builderVar);
 
             var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
             var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
             exprs[i++] = createStateMachine;
+
+            exprs[i++] = Expression.Assign(stateVar, Helpers.CreateConstantInt32(-1));
 
             var startMethod = builderType.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
             exprs[i++] = Expression.Call(builderVar, startMethod.MakeGenericMethod(typeof(RuntimeAsyncStateMachine)), stateMachineVar);
@@ -170,17 +173,15 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i] = Expression.Property(builderVar, "Task");
             }
 
-            var rewritten = Expression.Block(new[] { builderVar, stateMachineVar }, exprs);
+            var rewritten = Expression.Block(new[] { builderVar, stateMachineVar, stateVar }, exprs);
 
             var res = Expression.Lambda<TDelegate>(rewritten, Parameters);
             return res;
         }
 
-        private Expression RewriteBody(ParameterExpression builderVar)
+        private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar)
         {
-            // TODO: split body into blocks based on await boundaries, spill stack, and generate state machine
-
-            const int ExprCount = 1 /* Switch */ + 1 /* TryCatch */ + 1 /* Label */;
+            const int ExprCount = 1 /* TryCatch */ + 1 /* Label */;
 
             var vars = Array.Empty<ParameterExpression>();
             var exprs = default(Expression[]);
@@ -221,41 +222,38 @@ namespace Microsoft.CSharp.Expressions
                 };
             });
 
-            var state = Expression.Parameter(typeof(int));
-
-            // TODO: parameterize await rewriter with proper allocators
-            //       - labels end up in the switch table using async state machine state numbers
-            var rewrittenBody = new AwaitRewriter(getLabel, getVariable, state).Visit(Body);
+            var rewrittenBody = new AwaitRewriter(getLabel, getVariable, stateVar).Visit(Body);
 
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
             {
                 result = Expression.Parameter(Body.Type);
                 newBody = Expression.Assign(result, rewrittenBody);
-                vars = new[] { state, result };
+                vars = new[] { result };
                 exprs = new Expression[ExprCount + 1];
             }
             else
             {
-                vars = new[] { state };
+                vars = Array.Empty<ParameterExpression>();
                 exprs = new Expression[ExprCount];
+            }
+
+            newBody = Spiller.Spill(newBody);
+
+            if (result != null)
+            {
+                newBody = PercolateAssignment(newBody);
             }
 
             var i = 0;
 
-            exprs[i++] =
-                Expression.Empty();
-
-            //
-            // TODO: The following fails with "Control cannot enter an expression--only statements can be jumped into".
-            //       We need to spill the stack so we enter the label on an empty stack.
-            //
-            //exprs[i++] =
-            //    resumeList.Count > 0 ? Expression.Switch(state, resumeList.ToArray()) : (Expression)Expression.Empty();
+            var jumpTable =
+                resumeList.Count > 0 ? Expression.Switch(stateVar, resumeList.ToArray()) : (Expression)Expression.Empty();
 
             exprs[i++] =
                 Expression.TryCatch(
                     Expression.Block(
+                        jumpTable,
                         newBody,
                         Expression.Empty()
                     ),
@@ -277,6 +275,29 @@ namespace Microsoft.CSharp.Expressions
             var body = Expression.Block(vars.Concat(hoistedVars.Values), exprs);
             var res = Expression.Lambda<Action>(body);
             return res;
+        }
+
+        private Expression PercolateAssignment(Expression body)
+        {
+            var assign = (BinaryExpression)body;
+            var result = (ParameterExpression)assign.Left;
+            var res = PercolateAssignmentCore(result, assign.Right);
+            return res;
+        }
+
+        private Expression PercolateAssignmentCore(ParameterExpression result, Expression expr)
+        {
+            if (expr.NodeType == ExpressionType.Block)
+            {
+                var block = (BlockExpression)expr;
+                var n = block.Expressions.Count;
+                var res = PercolateAssignmentCore(result, block.Expressions[n - 1]);
+                return block.Update(block.Variables, block.Expressions.Take(n - 1).Concat(new[] { res }));
+            }
+            else
+            {
+                return Expression.Assign(result, expr);
+            }
         }
 
         struct StateMachineState
