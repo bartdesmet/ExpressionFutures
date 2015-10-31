@@ -43,6 +43,15 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
 		/// <returns>A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> of <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects that represent the parameters of the lambda expression.</returns>
         public ReadOnlyCollection<ParameterExpression> Parameters { get; }
+
+        /// <summary>
+        /// Produces a delegate that represents the asynchronous lambda expression.
+        /// </summary>
+        /// <returns>A <see cref="T:System.Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
+        public Delegate Compile()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -86,6 +95,15 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return CSharpExpression.AsyncLambda<TDelegate>(body, parameters);
+        }
+
+        /// <summary>
+        /// Compiles the asynchronous lambda expression described by the expression tree into executable code and produces a delegate that represents the lambda expression.
+        /// </summary>
+        /// <returns>A delegate of type <paramref name="TDelegate" /> that represents the compiled asynchronous lambda expression described by the <see cref="T:Microsoft.CSharp.Expressions.AsyncCSharpExpression`1" />.</returns>
+        public new TDelegate Compile()
+        {
+            throw new NotImplementedException();
         }
     }
 
