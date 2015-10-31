@@ -17,6 +17,10 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract class CSharpStatement : CSharpExpression
     {
+        internal CSharpStatement()
+        {
+        }
+
         /// <summary>
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
         /// </summary>

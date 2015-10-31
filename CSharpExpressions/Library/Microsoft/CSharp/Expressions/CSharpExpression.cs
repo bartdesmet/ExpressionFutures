@@ -11,6 +11,10 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class CSharpExpression : Expression
     {
+        internal CSharpExpression()
+        {
+        }
+
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />.
         /// </summary>
