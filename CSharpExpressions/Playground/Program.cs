@@ -302,7 +302,8 @@ namespace Playground
         private static void Await()
         {
             var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(1)));
-            Console.WriteLine(await.Type);
+            var res = Expression.Lambda<Func<int>>(await).Compile()();
+            Console.WriteLine(res);
         }
 
         static int F(int x, int y, int z = 42)

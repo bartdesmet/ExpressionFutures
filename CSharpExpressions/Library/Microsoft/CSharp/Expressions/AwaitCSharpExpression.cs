@@ -67,6 +67,38 @@ namespace Microsoft.CSharp.Expressions
 
             return CSharpExpression.Await(operand, GetAwaiterMethod);
         }
+
+        /// <summary>
+        /// Reduces the call expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public override Expression Reduce()
+        {
+#if DONE
+            // NB: Await nodes can only occur in AsyncLambda expressions and should not get compiled
+            //     via the normal expression compiler path of reducing extension nodes. The closest
+            //     enclosing AsyncLambda node is responsible for rewriting those.
+            throw new NotSupportedException();
+#else
+            // NB: In order to unblock initial experimentation, the Reduce method will emit a blocking
+            //     invocation of GetAwaiter and GetResult.
+
+            var getAwaiterCall = default(Expression);
+            if (GetAwaiterMethod.IsStatic)
+            {
+                getAwaiterCall = Expression.Call(GetAwaiterMethod, Operand);
+            }
+            else
+            {
+                getAwaiterCall = Expression.Call(Operand, GetAwaiterMethod);
+            }
+
+            var getResultMethod = getAwaiterCall.Type.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            var getResultCall = Expression.Call(getAwaiterCall, getResultMethod);
+
+            return getResultCall;
+#endif
+        }
     }
 
     partial class CSharpExpression
@@ -138,7 +170,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     throw Error.GetAwaiterShouldTakeZeroParameters();
                 }
-                
+
                 if (getAwaiterMethod.IsGenericMethod)
                 {
                     throw Error.GetAwaiterShouldNotBeGeneric();
