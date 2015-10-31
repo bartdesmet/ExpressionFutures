@@ -38,6 +38,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Friends.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AsyncLambdaCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Spiller.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR.cs" />
