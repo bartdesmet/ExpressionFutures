@@ -406,7 +406,7 @@ namespace Playground
                 Expression.Block(
                     new[] { i },
                     Expression.Assign(i, Expression.Constant(0)),
-                    CSharpExpression.DoWhile(
+                    CSharpExpression.Do(
                         Expression.Block(
                             Expression.Call(cout, i),
                             Expression.PostIncrementAssign(i)

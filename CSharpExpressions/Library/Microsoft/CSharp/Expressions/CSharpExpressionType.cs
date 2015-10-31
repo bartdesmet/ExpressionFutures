@@ -44,6 +44,6 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// A node that represents a do...while loop.
         /// </summary>
-        DoWhile,
+        Do,
     }
 }
