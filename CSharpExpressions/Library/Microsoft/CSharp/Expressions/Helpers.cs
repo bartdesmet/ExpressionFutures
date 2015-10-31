@@ -72,5 +72,21 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
         }
+
+        private const int MinConstInt32 = 0;
+        private const int MaxConstInt32 = 7;
+        private static ConstantExpression[] s_constInt32;
+
+        public static ConstantExpression CreateConstantInt32(int value)
+        {
+            if (value >= MinConstInt32 && value <= MaxConstInt32)
+            {
+                var index = value - MinConstInt32;
+                var consts = s_constInt32 ?? (s_constInt32 = new ConstantExpression[MaxConstInt32 - MinConstInt32 + 1]);
+                return consts[index] ?? (consts[index] = Expression.Constant(value));
+            }
+
+            return Expression.Constant(value);
+        }
     }
 }

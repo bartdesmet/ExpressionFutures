@@ -116,7 +116,7 @@ namespace Microsoft.CSharp.Expressions
             var exprs = new Expression[n + 2];
 
             // NB: We need the bounds to NewArrayBounds and all values from 0 to each bound for ArrayAccess.
-            var consts = Enumerable.Range(0, _bounds.Max() + 1).Select(i => Expression.Constant(i)).ToArray();
+            var consts = Enumerable.Range(0, _bounds.Max() + 1).Select(CreateConstantInt32).ToArray();
 
             exprs[0] = Expression.Assign(res, Expression.NewArrayBounds(Type.GetElementType(), _bounds.Map(i => consts[i])));
 
