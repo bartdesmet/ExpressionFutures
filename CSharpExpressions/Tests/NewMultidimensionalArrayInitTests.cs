@@ -99,7 +99,6 @@ namespace Tests
             Assert.AreSame(inits[5], res.GetExpression(1, 2));
         }
 
-
         [TestMethod]
         public void NewMultidimensionalArrayInit_Update()
         {
