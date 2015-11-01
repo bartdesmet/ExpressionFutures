@@ -3,10 +3,12 @@
 // bartde - October 2015
 
 using System;
+using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using static System.Linq.Expressions.ExpressionStubs;
 using static System.Dynamic.Utils.TypeUtils;
 using LinqError = System.Linq.Expressions.Error;
+using System.Reflection;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -72,9 +74,76 @@ namespace Microsoft.CSharp.Expressions
         /// Reduces the call expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
-        public override Expression Reduce()
+        protected override Expression ReduceCore()
         {
-            throw new NotImplementedException();
+            var variable = default(ParameterExpression);
+            var cleanup = default(Expression);
+            var checkNull = false;
+
+            if (Resource.Type.IsValueType)
+            {
+                var variableValue = default(Expression);
+
+                if (Resource.Type.IsNullableType())
+                {
+                    variable = Variable ?? Expression.Parameter(Resource.Type);
+                    variableValue = Expression.Property(variable, "Value");
+                    checkNull = true;
+                }
+                else
+                {
+                    variable = Variable ?? Expression.Parameter(Resource.Type);
+                    variableValue = variable;
+                }
+
+                var disposeMethod = FindDisposeMethod(variableValue.Type);
+                cleanup = Expression.Call(variableValue, disposeMethod);
+            }
+            else
+            {
+                variable = Variable ?? Expression.Parameter(typeof(IDisposable));
+                cleanup = Expression.Call(variable, typeof(IDisposable).GetMethod("Dispose"));
+                checkNull = true;
+            }
+
+            if (checkNull)
+            {
+                cleanup =
+                    Expression.IfThen(
+                        Expression.NotEqual(variable, Expression.Constant(null, variable.Type)),
+                        cleanup
+                    );
+            }
+
+            var res =
+                Expression.Block(
+                    new[] { variable },
+                    Expression.Assign(variable, Resource),
+                    Expression.TryFinally(
+                        Body,
+                        cleanup
+                    )
+                );
+
+            return res;
+        }
+
+        private static MethodInfo FindDisposeMethod(Type type)
+        {
+            var map = type.GetInterfaceMap(typeof(IDisposable));
+
+            var ifMethods = map.InterfaceMethods;
+            var tgMethods = map.TargetMethods;
+
+            for (var i = 0; i < ifMethods.Length; i++)
+            {
+                if (ifMethods[i].Name == "Dispose")
+                {
+                    return tgMethods[i];
+                }
+            }
+
+            throw ContractUtils.Unreachable;
         }
     }
 
@@ -103,25 +172,30 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(resource, nameof(resource));
             RequiresCanRead(body, nameof(body));
 
+            var resourceType = resource.Type;
+
             if (variable != null)
             {
                 var variableType = variable.Type;
-                var resourceType = resource.Type;
 
                 ValidateType(variableType);
                 ValidateType(resourceType);
 
+                // NB: No non-null value to nullable value assignment allowed here. This is consistent with Assign,
+                //     and the C# compiler should insert the Convert node.
                 if (!AreReferenceAssignable(variableType, resourceType))
                 {
                     throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceType, variableType);
                 }
             }
 
+            var resourceTypeNonNull = resourceType.GetNonNullableType();
+
             // NB: We don't handle implicit conversions here; the C# compiler can emit a Convert node,
             //     just like it does for those type of conversions in various other places.
-            if (!typeof(IDisposable).IsAssignableFrom(resource.Type))
+            if (!typeof(IDisposable).IsAssignableFrom(resourceTypeNonNull))
             {
-                throw LinqError.ExpressionTypeDoesNotMatchAssignment(resource.Type, typeof(IDisposable));
+                throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, typeof(IDisposable));
             }
 
             return new UsingCSharpStatement(variable, resource, body);

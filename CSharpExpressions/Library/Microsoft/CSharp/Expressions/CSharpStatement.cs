@@ -3,6 +3,7 @@
 // bartde - October 2015
 
 using System;
+using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -26,5 +27,35 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
         public override Type Type { get; } = typeof(void);
+
+        /// <summary>
+        /// Reduces the call expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public sealed override Expression Reduce()
+        {
+            var res = ReduceCore();
+
+            if (res.Type != typeof(void))
+            {
+                var block = res as BlockExpression;
+                if (block != null)
+                {
+                    res = Expression.Block(typeof(void), block.Variables, block.Expressions);
+                }
+                else
+                {
+                    res = Expression.Block(res, Expression.Empty());
+                }
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Reduces the call expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        protected abstract Expression ReduceCore();
     }
 }

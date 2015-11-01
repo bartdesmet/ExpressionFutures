@@ -27,6 +27,7 @@ namespace Playground
             AsyncLambda();
             While();
             DoWhile();
+            Using();
         }
 
         static void Call()
@@ -357,7 +358,7 @@ namespace Playground
         {
             var i = Expression.Parameter(typeof(int));
             var delay = (Expression<Action>)(() => Task.Delay(1000));
-            var cout = ReflectionUtils.MethodInfoOf(() => Console.WriteLine(default(int)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
             var brk = Expression.Label();
             var cnt = Expression.Label();
             var async = CSharpExpression.AsyncLambda<Func<Task>>(
@@ -381,7 +382,7 @@ namespace Playground
         static void While()
         {
             var i = Expression.Parameter(typeof(int));
-            var cout = ReflectionUtils.MethodInfoOf(() => Console.WriteLine(default(int)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
             var loop = Expression.Lambda<Action>(
                 Expression.Block(
                     new[] { i },
@@ -401,7 +402,7 @@ namespace Playground
         static void DoWhile()
         {
             var i = Expression.Parameter(typeof(int));
-            var cout = ReflectionUtils.MethodInfoOf(() => Console.WriteLine(default(int)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
             var loop = Expression.Lambda<Action>(
                 Expression.Block(
                     new[] { i },
@@ -416,6 +417,121 @@ namespace Playground
                 )
             );
             loop.Compile()();
+        }
+
+        static void Using()
+        {
+            Using1();
+            Using2();
+            Using3();
+            Using4();
+            Using5();
+            Using6();
+            Using7();
+        }
+
+        static void Using1()
+        {
+            var ctor = ConstructorInfoOf(() => new RC(default(string)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    Expression.New(ctor, Expression.Constant("X")),
+                    Expression.Call(cout, Expression.Constant("B"))
+                )
+            );
+            @using.Compile()();
+        }
+
+        static void Using2()
+        {
+            var ctor = ConstructorInfoOf(() => new RC(default(string)));
+            var prnt = MethodInfoOf((RC r) => r.Print());
+            var resv = Expression.Parameter(typeof(RC));
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    resv,
+                    Expression.New(ctor, Expression.Constant("B")),
+                    Expression.Call(resv, prnt)
+                )
+            );
+            @using.Compile()();
+        }
+
+        static void Using3()
+        {
+            var ctor = ConstructorInfoOf(() => new RC(default(string)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var resv = Expression.Parameter(typeof(IDisposable));
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    resv,
+                    Expression.New(ctor, Expression.Constant("X")),
+                    Expression.Call(cout, Expression.Constant("B"))
+                )
+            );
+            @using.Compile()();
+        }
+
+        static void Using4()
+        {
+            var ctor = ConstructorInfoOf(() => new RC(default(string)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var resv = Expression.Parameter(typeof(IDisposable));
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    resv,
+                    Expression.New(ctor, Expression.Constant("X")),
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("N")),
+                        Expression.Assign(resv, Expression.Constant(null, resv.Type))
+                    )
+                )
+            );
+            @using.Compile()();
+        }
+
+        static void Using5()
+        {
+            var ctor = ConstructorInfoOf(() => new RV(default(string)));
+            var prnt = MethodInfoOf((RV r) => r.Print());
+            var resv = Expression.Parameter(typeof(RV));
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    resv,
+                    Expression.New(ctor, Expression.Constant("B")),
+                    Expression.Call(resv, prnt)
+                )
+            );
+            @using.Compile()();
+        }
+
+        static void Using6()
+        {
+            var ctor = ConstructorInfoOf(() => new RV(default(string)));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string))); ;
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    Expression.New(ctor, Expression.Constant("X")),
+                    Expression.Call(cout, Expression.Constant("B"))
+                )
+            );
+            @using.Compile()();
+        }
+
+        static void Using7()
+        {
+            var ctor = ConstructorInfoOf(() => new RV(default(string)));
+            var prnt = MethodInfoOf((RV r) => r.Print());
+            var resv = Expression.Parameter(typeof(RV?));
+            var @using = Expression.Lambda<Action>(
+                CSharpExpression.Using(
+                    resv,
+                    Expression.Convert(Expression.New(ctor, Expression.Constant("B")), typeof(RV?)),
+                    Expression.Call(Expression.Property(resv, "Value"), prnt)
+                )
+            );
+            @using.Compile()();
         }
 
         static int F(int x, int y, int z = 42)
@@ -445,6 +561,46 @@ namespace Playground
             {
                 return x + y + z;
             }
+        }
+    }
+
+    class RC : IDisposable
+    {
+        private readonly string _message;
+
+        public RC(string message)
+        {
+            _message = message;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine(_message);
+        }
+
+        public void Dispose()
+        {
+            Console.WriteLine("D");
+        }
+    }
+
+    struct RV : IDisposable
+    {
+        private readonly string _message;
+
+        public RV(string message)
+        {
+            _message = message;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine(_message);
+        }
+
+        public void Dispose()
+        {
+            Console.WriteLine("D");
         }
     }
 }
