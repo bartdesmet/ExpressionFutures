@@ -14,6 +14,7 @@ namespace Microsoft.CSharp.Expressions
         private readonly Stack<HashSet<ParameterExpression>> _env = new Stack<HashSet<ParameterExpression>>();
         private readonly Stack<IDictionary<ParameterExpression, ParameterExpression>> _subst = new Stack<IDictionary<ParameterExpression, ParameterExpression>>();
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
             Push(node.Variables);
@@ -25,6 +26,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override CatchBlock VisitCatchBlock(CatchBlock node)
         {
             Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
@@ -36,6 +38,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
             Push(node.Parameters);
@@ -47,6 +50,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
             Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());

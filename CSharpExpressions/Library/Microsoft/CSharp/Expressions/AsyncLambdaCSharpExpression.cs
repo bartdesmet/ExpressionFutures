@@ -376,6 +376,7 @@ namespace Microsoft.CSharp.Expressions
             // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
             // TODO: Deal with Using blocks as well.
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitBlock(BlockExpression node)
             {
                 _awaitInBlock.Push(new StrongBox<bool>());
@@ -410,6 +411,7 @@ namespace Microsoft.CSharp.Expressions
                 return res;
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
                 if (_awaitInBlock.Count > 0)
@@ -419,8 +421,8 @@ namespace Microsoft.CSharp.Expressions
 
                 var getAwaiter = node.ReduceGetAwaiter();
                 var awaiterVar = _variableFactory(getAwaiter.Type, "__awaiter");
-                var isCompleted = node.ReduceIsCompleted(awaiterVar);
-                var getResult = node.ReduceGetResult(awaiterVar);
+                var isCompleted = AwaitCSharpExpression.ReduceIsCompleted(awaiterVar);
+                var getResult = AwaitCSharpExpression.ReduceGetResult(awaiterVar);
 
                 var continueLabel = _labelFactory();
                 

@@ -105,18 +105,21 @@ namespace Microsoft.CSharp.Expressions
             return getAwaiterCall;
         }
 
-        internal Expression ReduceGetResult(Expression awaiter)
+        internal static Expression ReduceGetResult(Expression awaiter)
         {
-            // TODO: Make static and share lookup logic with validation code
-            var getResultMethod = awaiter.Type.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            var getResultMethod = GetGetResult(awaiter.Type);
             var getResultCall = Expression.Call(awaiter, getResultMethod);
             return getResultCall;
         }
 
-        internal Expression ReduceIsCompleted(Expression awaiter)
+        internal static Expression ReduceIsCompleted(Expression awaiter)
         {
-            // TODO: Make static and share lookup logic with validation code
             return Expression.Property(awaiter, "IsCompleted");
+        }
+
+        internal static MethodInfo GetGetResult(Type awaiterType)
+        {
+            return awaiterType.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
         }
     }
 
@@ -156,7 +159,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (getAwaiterMethod == null)
             {
-                getAwaiterMethod = operandType.GetMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+                getAwaiterMethod = AwaitCSharpExpression.GetGetResult(operandType);
             }
 
             ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
