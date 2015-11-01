@@ -187,7 +187,7 @@ namespace Microsoft.CSharp.Expressions
             //       C# 6.0 features - await in catch and finally
             //       Reject await in filters
 
-            const int ExprCount = 1 /* TryCatch */ + 1 /* SetResult */ + 1 /* Label */;
+            const int ExprCount = 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
             var locals = Array.Empty<ParameterExpression>();
             var exprs = default(Expression[]);
@@ -219,7 +219,11 @@ namespace Microsoft.CSharp.Expressions
                 var label = Expression.Label();
                 var index = labelIndex++;
 
-                resumeList.Add(Expression.SwitchCase(Expression.Goto(label), Helpers.CreateConstantInt32(index)));
+                var jump = Expression.Block(
+                    Expression.Assign(stateVar, Helpers.CreateConstantInt32(-1)),
+                    Expression.Goto(label)
+                );
+                resumeList.Add(Expression.SwitchCase(jump, Helpers.CreateConstantInt32(index)));
 
                 return new StateMachineState
                 {
@@ -277,11 +281,14 @@ namespace Microsoft.CSharp.Expressions
                     ),
                     Expression.Catch(ex,
                         Expression.Block(
+                            Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2)),
                             Expression.Call(builderVar, builderVar.Type.GetMethod("SetException"), ex),
                             Expression.Return(exit)
                         )
                     )
                 );
+
+            exprs[i++] = Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2));
 
             if (result != null)
             {
@@ -429,19 +436,6 @@ namespace Microsoft.CSharp.Expressions
                     );
 
                 return res;
-
-                // TODO:
-                //
-                // - get new state machine index + label
-                // - set state to -1
-                // - emit GetAwaiter and store in hoisted variable; try to reuse variables of same type
-                // - check IsCompleted
-                //   - if not completed:
-                //     - set state
-                //     - spill stack (separate pass; can reuse LINQ's stack spiller?)
-                //     - call [Unsafe]AwaitOnCompleted
-                //   - else
-                //     - fall through
             }
 
             protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)

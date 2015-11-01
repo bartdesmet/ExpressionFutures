@@ -73,7 +73,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private const int MinConstInt32 = 0;
+        private const int MinConstInt32 = -2;
         private const int MaxConstInt32 = 7;
         private static ConstantExpression[] s_constInt32;
 
