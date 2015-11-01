@@ -186,7 +186,6 @@ namespace Microsoft.CSharp.Expressions
         {
             // TODO: C# 6.0 features - await in catch and finally
             //       Reject await in filters
-            //       Reduction of nested C# expressions, e.g. Using results in TryFinally
 
             const int ExprCount = 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
@@ -222,7 +221,9 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var bright = new ShadowEliminator().Visit(Body);
+            var reduced = Reducer.Instance.Visit(Body);
+
+            var bright = new ShadowEliminator().Visit(reduced);
             var spilled = Spiller.Spill(bright);
 
             var awaitRewriter = new AwaitRewriter(stateVar, getVariable, onCompletedFactory, exit);
@@ -287,6 +288,27 @@ namespace Microsoft.CSharp.Expressions
 
             variables = hoistedVars.Values.Concat(awaitRewriter.HoistedVariables);
             return res;
+        }
+
+        class Reducer : ExpressionVisitor
+        {
+            public static readonly ExpressionVisitor Instance = new Reducer();
+
+            private Reducer()
+            {
+            }
+
+            protected override Expression VisitExtension(Expression node)
+            {
+                var csharp = node as CSharpExpression;
+                if (csharp != null && csharp.CSharpNodeType == CSharpExpressionType.Await)
+                {
+                    var await = (AwaitCSharpExpression)csharp;
+                    return await.Update(Visit(await.Operand));
+                }
+
+                return base.VisitExtension(node);
+            }
         }
 
         class AssignmentPercolator : CSharpExpressionVisitor
