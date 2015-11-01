@@ -49,5 +49,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a using statement.
         /// </summary>
         Using,
+        /// <summary>
+        /// A node that represents a lock statement.
+        /// </summary>
+        Lock,
     }
 }

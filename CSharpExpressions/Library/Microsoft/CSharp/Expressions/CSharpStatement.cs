@@ -45,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
-                    res = Expression.Block(res, Expression.Empty());
+                    res = Expression.Block(typeof(void), res);
                 }
             }
 

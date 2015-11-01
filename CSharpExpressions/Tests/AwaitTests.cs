@@ -95,6 +95,28 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => f.Compile());
         }
 
+        [TestMethod]
+        public void Await_Visitor()
+        {
+            var res = CSharpExpression.Await(Expression.Default(typeof(Task<int>)));
+
+            var v = new V();
+            Assert.AreSame(res, v.Visit(res));
+            Assert.IsTrue(v.Visited);
+        }
+
+        class V : CSharpExpressionVisitor
+        {
+            public bool Visited = false;
+
+            protected override Expression VisitAwait(AwaitCSharpExpression node)
+            {
+                Visited = true;
+
+                return base.VisitAwait(node);
+            }
+        }
+
         class A1
         {
             public void GetAwaiter() { }

@@ -195,6 +195,14 @@ namespace Microsoft.CSharp.Expressions
             return new InvalidOperationException(Strings.AwaitForbiddenHere(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "An expression of type '{0}' can't be used as a lock"
+        /// </summary>
+        internal static Exception LockNeedsReferenceType(object p0)
+        {
+            return new ArgumentException(Strings.LockNeedsReferenceType(p0));
+        }
+
     }
 
     /// <summary>
@@ -410,6 +418,14 @@ namespace Microsoft.CSharp.Expressions
 			return SR.Format(SR.AwaitForbiddenHere, p0);
         }
 
+        /// <summary>
+        /// A string like "An expression of type '{0}' can't be used as a lock"
+        /// </summary>
+        internal static string LockNeedsReferenceType(object p0)
+        {
+			return SR.Format(SR.LockNeedsReferenceType, p0);
+        }
+
     }
 }
 
@@ -440,5 +456,6 @@ namespace System
 		public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions";
 		public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression";
 		public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'";
+		public const string LockNeedsReferenceType = "An expression of type '{0}' can't be used as a lock";
 	}
 }

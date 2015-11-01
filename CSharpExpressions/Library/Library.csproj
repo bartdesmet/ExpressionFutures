@@ -66,6 +66,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DoCSharpStatement.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\LockCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UsingCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\WhileCSharpStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

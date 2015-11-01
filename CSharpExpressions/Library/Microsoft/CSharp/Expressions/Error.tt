@@ -30,6 +30,7 @@ var errors = new[]
 	new { Name = "AsyncLambdaCantHaveByRefParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions" },
 	new { Name = "AsyncLambdaInvalidReturnType", ExceptionType = "ArgumentException", Args = 1, Message = "Return type '{0}' is not valid for an asynchronous lambda expression" },
 	new { Name = "AwaitForbiddenHere", ExceptionType = "InvalidOperationException", Args = 1, Message = "Await expression cannot occur in '{0}'" },
+	new { Name = "LockNeedsReferenceType", ExceptionType = "ArgumentException", Args = 1, Message = "An expression of type '{0}' can't be used as a lock" },
 };
 #>
 // Prototyping extended expression trees for C#.
