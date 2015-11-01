@@ -45,5 +45,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a do...while loop.
         /// </summary>
         Do,
+        /// <summary>
+        /// A node that represents a using statement.
+        /// </summary>
+        Using,
     }
 }
