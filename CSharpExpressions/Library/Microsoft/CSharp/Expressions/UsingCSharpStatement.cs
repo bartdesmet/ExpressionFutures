@@ -4,6 +4,9 @@
 
 using System;
 using System.Linq.Expressions;
+using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.TypeUtils;
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -97,7 +100,31 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
         public static UsingCSharpStatement Using(ParameterExpression variable, Expression resource, Expression body)
         {
-            throw new NotImplementedException();
+            RequiresCanRead(resource, nameof(resource));
+            RequiresCanRead(body, nameof(body));
+
+            if (variable != null)
+            {
+                var variableType = variable.Type;
+                var resourceType = resource.Type;
+
+                ValidateType(variableType);
+                ValidateType(resourceType);
+
+                if (!AreReferenceAssignable(variableType, resourceType))
+                {
+                    throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceType, variableType);
+                }
+            }
+
+            // NB: We don't handle implicit conversions here; the C# compiler can emit a Convert node,
+            //     just like it does for those type of conversions in various other places.
+            if (!typeof(IDisposable).IsAssignableFrom(resource.Type))
+            {
+                throw LinqError.ExpressionTypeDoesNotMatchAssignment(resource.Type, typeof(IDisposable));
+            }
+
+            return new UsingCSharpStatement(variable, resource, body);
         }
     }
 

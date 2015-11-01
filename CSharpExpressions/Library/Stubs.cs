@@ -1225,13 +1225,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_13 = s_mtds["IncorrectNumberOfLambdaDeclarationParameters"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_13 = s_mtds["ExpressionTypeDoesNotMatchAssignment"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception IncorrectNumberOfLambdaDeclarationParameters()
+        public static System.Exception ExpressionTypeDoesNotMatchAssignment(System.Object p0, System.Object p1)
         {
             try
             {
-                return (System.Exception)s_13.Invoke(null, new object[] {  });
+                return (System.Exception)s_13.Invoke(null, new object[] { p0, p1 });
             }
             catch (TargetInvocationException ex)
             {
@@ -1239,13 +1239,27 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_14 = s_mtds["LambdaTypeMustBeDerivedFromSystemDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_14 = s_mtds["IncorrectNumberOfLambdaDeclarationParameters"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+
+        public static System.Exception IncorrectNumberOfLambdaDeclarationParameters()
+        {
+            try
+            {
+                return (System.Exception)s_14.Invoke(null, new object[] {  });
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_15 = s_mtds["LambdaTypeMustBeDerivedFromSystemDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
         public static System.Exception LambdaTypeMustBeDerivedFromSystemDelegate()
         {
             try
             {
-                return (System.Exception)s_14.Invoke(null, new object[] {  });
+                return (System.Exception)s_15.Invoke(null, new object[] {  });
             }
             catch (TargetInvocationException ex)
             {
