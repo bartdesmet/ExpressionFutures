@@ -537,7 +537,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var parameterList = parameters.ToReadOnly();
 
-            ValidAsyncLambdaArgs(delegateType, ref body, parameterList);
+            ValidateAsyncLambdaArgs(delegateType, ref body, parameterList);
 
             return CreateAsyncLambda(delegateType, body, parameterList);
         }
@@ -563,12 +563,12 @@ namespace Microsoft.CSharp.Expressions
         {
             var parameterList = parameters.ToReadOnly();
 
-            ValidAsyncLambdaArgs(typeof(TDelegate), ref body, parameterList);
+            ValidateAsyncLambdaArgs(typeof(TDelegate), ref body, parameterList);
 
             return new AsyncCSharpExpression<TDelegate>(body, parameterList);
         }
 
-        private static void ValidAsyncLambdaArgs(Type delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
+        private static void ValidateAsyncLambdaArgs(Type delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
             ContractUtils.RequiresNotNull(delegateType, nameof(delegateType));
             RequiresCanRead(body, "body");
