@@ -200,5 +200,48 @@ namespace Tests
             var r = t.Result;
             Assert.AreEqual(-1, r);
         }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_ResumeInTry3()
+        {
+            var p = Expression.Parameter(typeof(D));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<D, Task<int>>>(
+                Expression.Block(
+                    Expression.TryFinally(
+                        Expression.Block(
+                            CSharpExpression.Await(yield),
+                            Expression.Call(p, typeof(D).GetMethod("Do"))
+                        ),
+                        Expression.Call(p, typeof(D).GetMethod("Dispose"))
+                    )
+                ),
+                p
+            );
+            var d = new D();
+            var f = e.Compile();
+            var t = f(d);
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+            Assert.IsTrue(d.IsDisposed);
+        }
+
+        class D : IDisposable
+        {
+            public bool IsDisposed;
+
+            public int Do()
+            {
+                if (IsDisposed)
+                    throw new ObjectDisposedException("this");
+
+                return 42;
+            }
+
+            public void Dispose()
+            {
+                IsDisposed = true;
+            }
+        }
     }
 }

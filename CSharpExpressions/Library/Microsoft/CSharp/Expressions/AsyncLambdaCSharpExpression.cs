@@ -486,8 +486,8 @@ namespace Microsoft.CSharp.Expressions
                             originalTry.Body
                         ),
                         originalTry.Handlers,
-                        originalTry.Finally,
-                        originalTry.Fault
+                        RewriteHandler(originalTry.Finally),
+                        RewriteHandler(originalTry.Fault)
                     );
 
                     var beforeTry = Expression.Label();
@@ -504,6 +504,22 @@ namespace Microsoft.CSharp.Expressions
                         Expression.Label(beforeTry),
                         newTry
                     );
+                }
+
+                return res;
+            }
+
+            private Expression RewriteHandler(Expression original)
+            {
+                var res = original;
+
+                if (original != null)
+                {
+                    res =
+                        Expression.IfThen(
+                            Expression.LessThan(_stateVariable, Helpers.CreateConstantInt32(0)),
+                            original
+                        );
                 }
 
                 return res;
