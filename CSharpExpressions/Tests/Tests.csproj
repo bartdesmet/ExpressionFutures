@@ -53,6 +53,7 @@
     <Compile Include="AssertEx.cs" />
     <Compile Include="AsyncLambdaTests.cs" />
     <Compile Include="AsyncLambdaTests.Compilation.cs" />
+    <Compile Include="NewTests.cs" />
     <Compile Include="MethodCallTests.cs" />
     <Compile Include="ParameterAssignmentTests.cs" />
     <Compile Include="NewMultidimensionalArrayInitTests.cs" />

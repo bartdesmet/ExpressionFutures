@@ -23,8 +23,10 @@ namespace Tests
 
             var substring = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
 
-            var startIndexParameter = substring.GetParameters()[0];
-            var lengthParameter = substring.GetParameters()[1];
+            var parameters = substring.GetParameters();
+
+            var startIndexParameter = parameters[0];
+            var lengthParameter = parameters[1];
 
             var obj = Expression.Constant("bar");
             var startIndex = Expression.Constant(0);
@@ -62,8 +64,10 @@ namespace Tests
         {
             var substring = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
 
-            var startIndexParameter = substring.GetParameters()[0];
-            var lengthParameter = substring.GetParameters()[1];
+            var parameters = substring.GetParameters();
+
+            var startIndexParameter = parameters[0];
+            var lengthParameter = parameters[1];
 
             var obj = Expression.Constant("bar");
             var startIndex = Expression.Constant(0);
@@ -98,8 +102,10 @@ namespace Tests
         {
             var min = MethodInfoOf(() => Math.Min(default(int), default(int)));
 
-            var val1Parameter = min.GetParameters()[0];
-            var val2Parameter = min.GetParameters()[1];
+            var parameters = min.GetParameters();
+
+            var val1Parameter = parameters[0];
+            var val2Parameter = parameters[1];
 
             var val1 = Expression.Constant(0);
             var val2 = Expression.Constant(1);
@@ -133,8 +139,10 @@ namespace Tests
         {
             var substring = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
 
-            var startIndexParameter = substring.GetParameters()[0];
-            var lengthParameter = substring.GetParameters()[1];
+            var parameters = substring.GetParameters();
+
+            var startIndexParameter = parameters[0];
+            var lengthParameter = parameters[1];
 
             var obj = Expression.Constant("bar");
             var startIndex = Expression.Constant(0);
@@ -165,6 +173,7 @@ namespace Tests
             var method = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var parameters = method.GetParameters();
+
             var parameterX = parameters[0];
             var parameterY = parameters[1];
             var parameterZ = parameters[2];
@@ -214,6 +223,7 @@ namespace Tests
             var method = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
 
             var parameters = method.GetParameters();
+
             var parameterStartIndex = parameters[0];
             var parameterLength = parameters[1];
 
