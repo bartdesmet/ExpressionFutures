@@ -8,6 +8,8 @@ using System.Reflection;
 
 namespace Tests
 {
+    // TODO: keep at central location
+
     static class ReflectionUtils
     {
         internal static MethodInfo MethodInfoOf<R>(Expression<Func<R>> f)
@@ -52,22 +54,22 @@ namespace Tests
 
         internal static PropertyInfo PropertyInfoOf<R>(Expression<Func<R>> f)
         {
-            return (PropertyInfo)InfoOf(f);
+            return GetProperty(InfoOf(f));
         }
 
         internal static PropertyInfo PropertyInfoOf(Expression<Action> f)
         {
-            return (PropertyInfo)InfoOf(f);
+            return GetProperty(InfoOf(f));
         }
 
         internal static PropertyInfo PropertyInfoOf<T, R>(Expression<Func<T, R>> f)
         {
-            return (PropertyInfo)InfoOf(f);
+            return GetProperty(InfoOf(f));
         }
 
         internal static PropertyInfo PropertyInfoOf<T>(Expression<Action<T>> f)
         {
-            return (PropertyInfo)InfoOf(f);
+            return GetProperty(InfoOf(f));
         }
 
         internal static FieldInfo FieldInfoOf<R>(Expression<Func<R>> f)
@@ -146,6 +148,23 @@ namespace Tests
             }
 
             return null;
+        }
+
+        private static PropertyInfo GetProperty(MemberInfo member)
+        {
+            var method = member as MethodInfo;
+            if (method != null)
+            {
+                foreach (var property in member.DeclaringType.GetProperties())
+                {
+                    if (property.GetGetMethod(true) == method || property.GetSetMethod(true) == method)
+                    {
+                        return property;
+                    }
+                }
+            }
+
+            return (PropertyInfo)member;
         }
     }
 }
