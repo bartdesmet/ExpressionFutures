@@ -4,88 +4,88 @@
 Obtained by `findstr ExpressionTree` in Compilers\CSharp\Portable\CSharpResources.resx
 See Compilers\CSharp\Portable\Lowering\DiagnosticsPass_ExpressionTrees.cs for usages of these
 
-ERR_PartialMethodInExpressionTree
- - () => PartialMethod()
- - Valid restriction
+[IGNR] ERR_PartialMethodInExpressionTree
+       - () => PartialMethod()
+       - Valid restriction
 
-ERR_ExpressionTreeContainsBaseAccess
- - () => base.Foo()
- - Valid restriction
+[IGNR] ERR_ExpressionTreeContainsBaseAccess
+       - () => base.Foo()
+       - Valid restriction
 
-ERR_ExpressionTreeContainsAssignment
- - () => a = 42
- - To be revisited if/when we add statement support
+[OPEN] ERR_ExpressionTreeContainsAssignment
+       - () => a = 42
+       - To be revisited if/when we add statement support
 
-ERR_StatementLambdaToExpressionTree
- - () => { ... }
- - To be revisited if/when we add statement support
+[OPEN] ERR_StatementLambdaToExpressionTree
+       - () => { ... }
+       - To be revisited if/when we add statement support
 
-ERR_ExpressionTreeMustHaveDelegate
- - Expression<int> f = ...
- - Valid restriction
+[IGNR] ERR_ExpressionTreeMustHaveDelegate
+       - Expression<int> f = ...
+       - Valid restriction
 
-ERR_ExpressionTreeContainsMultiDimensionalArrayInitializer
- - () => new int[2, 2] { { 1, 2 }, { 3, 4 } }
- - Can be lifted by adding a new ArrayInit node
+[DONE] ERR_ExpressionTreeContainsMultiDimensionalArrayInitializer
+       - () => new int[2, 2] { { 1, 2 }, { 3, 4 } }
+       - Can be lifted by adding a new ArrayInit node
 
-ERR_ExpressionTreeContainsBadCoalesce
- - () => null ?? "bar"
- - Strange restriction, to be investigated
+[OPEN] ERR_ExpressionTreeContainsBadCoalesce
+       - () => null ?? "bar"
+       - Strange restriction, to be investigated
 
-ERR_ExpressionTreeContainsPointerOp
- - () => &x
- - Valid restriction
+[IGNR] ERR_ExpressionTreeContainsPointerOp
+       - () => &x
+       - Valid restriction
 
-ERR_ExpressionTreeContainsAnonymousMethod
- - () => X(delegate { ... })
- - To be revisited if/when we add statement support
+[OPEN] ERR_ExpressionTreeContainsAnonymousMethod
+       - () => X(delegate { ... })
+       - To be revisited if/when we add statement support
 
-ERR_AnonymousMethodToExpressionTree
- - Expression<F> f = delegate { ... }
- - To be revisited if/when we add statement support
+[OPEN] ERR_AnonymousMethodToExpressionTree
+       - Expression<F> f = delegate { ... }
+       - To be revisited if/when we add statement support
 
-ERR_ByRefParameterInExpressionTree
- - (ref int x) => ...
- - To be investigated where the trickiness comes from
+[OPEN] ERR_ByRefParameterInExpressionTree
+       - (ref int x) => ...
+       - To be investigated where the trickiness comes from
 
-ERR_VarArgsInExpressionTree
- - Reasonable restriction
+[IGNR] ERR_VarArgsInExpressionTree
+       - Reasonable restriction
 
-ERR_MemGroupInExpressionTree
- - () => Console.WriteLine
- - Reasonable restriction; has no type of its own
+[IGNR] ERR_MemGroupInExpressionTree
+       - () => Console.WriteLine
+       - Reasonable restriction; has no type of its own
 
-ERR_ComRefCallInExpressionTree
- - Resonable restriction
+[IGNR] ERR_ComRefCallInExpressionTree
+       - Resonable restriction
 
-ERR_ExpressionTreeContainsDynamicOperation
- - (dynamic d) => d.Foo()
- - To be revisited if/when we add dynamic support
+[OPEN] ERR_ExpressionTreeContainsDynamicOperation
+       - (dynamic d) => d.Foo()
+       - To be revisited if/when we add dynamic support
 
-ERR_BadAsyncExpressionTree
- - async () => await x
- - To be revisited if/when we async/await support
+[DONE] ERR_BadAsyncExpressionTree
+       - async () => await x
+       - To be revisited if/when we async/await support
 
-ERR_ExpressionTreeContainsNamedArgument
- - () => Bar(x: 1)
- - Can be lifted by adding new nodes
+[DONE] ERR_ExpressionTreeContainsNamedArgument
+       - () => Bar(x: 1)
+       - Can be lifted by adding new nodes
 
-ERR_ExpressionTreeContainsOptionalArgument
- - () => Bar(/*omitted argument*/)
- - Can be lifted by adding new nodes; design question whether to resolve the default value at compile time or at runtime
+[DONE] ERR_ExpressionTreeContainsOptionalArgument
+       - () => Bar(/*omitted argument*/)
+       - Can be lifted by adding new nodes; design question whether to resolve the default value at compile time or at runtime
 
-ERR_ExpressionTreeContainsIndexedProperty
- - Reasonable restriction; applies to COM interop only?
+[OPEN] ERR_ExpressionTreeContainsIndexedProperty
+       - Reasonable restriction; applies to COM interop only?
 
-ERR_FeatureNotValidInExpressionTree
- - Applies for any of those: __reftype, __refvalue, __makeref
- - Reasonable restriction
+[IGNR] ERR_FeatureNotValidInExpressionTree
+       - Applies for any of those: __reftype, __refvalue, __makeref
+       - Reasonable restriction
 
-ERR_NullPropagatingOpInExpressionTree
- - Can be lifted by adding new nodes
+[OPEN] ERR_NullPropagatingOpInExpressionTree
+       - Can be lifted by adding new nodes
 
-ERR_DictionaryInitializerInExpressionTree
- - Can be lifted by adding new nodes; trickiness with MemberInit / MemberBinding not being extensible
+[OPEN] ERR_DictionaryInitializerInExpressionTree
+       - Can be lifted by adding new nodes; trickiness with MemberInit / MemberBinding not being extensible
 
-ERR_ExtensionCollectionElementInitializerInExpressionTree
- - Can be lifted by adding new nodes; trickiness with ListInt / ElementInit not being extensible
+[OPEN] ERR_ExtensionCollectionElementInitializerInExpressionTree
+       - Can be lifted by adding new nodes; trickiness with ListInt / ElementInit not being extensible
