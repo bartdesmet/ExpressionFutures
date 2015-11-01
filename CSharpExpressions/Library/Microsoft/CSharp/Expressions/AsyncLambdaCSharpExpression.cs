@@ -260,7 +260,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (result != null)
             {
-                newBody = PercolateAssignment(newBody);
+                newBody = AssignmentPercolator.Instance.Visit(newBody);
             }
 
             var i = 0;
@@ -301,26 +301,39 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private Expression PercolateAssignment(Expression body)
+        class AssignmentPercolator : CSharpExpressionVisitor
         {
-            var assign = (BinaryExpression)body;
-            var result = (ParameterExpression)assign.Left;
-            var res = PercolateAssignmentCore(result, assign.Right);
-            return res;
-        }
+            public static readonly ExpressionVisitor Instance = new AssignmentPercolator();
 
-        private Expression PercolateAssignmentCore(ParameterExpression result, Expression expr)
-        {
-            if (expr.NodeType == ExpressionType.Block)
+            protected override Expression VisitBinary(BinaryExpression node)
             {
-                var block = (BlockExpression)expr;
-                var n = block.Expressions.Count;
-                var res = PercolateAssignmentCore(result, block.Expressions[n - 1]);
-                return block.Update(block.Variables, block.Expressions.Take(n - 1).Concat(new[] { res }));
+                var res = base.VisitBinary(node);
+
+                if (res.NodeType == ExpressionType.Assign)
+                {
+                    var b = (BinaryExpression)res;
+                    if (b.Right.NodeType == ExpressionType.Block && b.Conversion == null)
+                    {
+                        res = Percolate(b.Left, b.Right);
+                    }
+                }
+
+                return res;
             }
-            else
+
+            private static Expression Percolate(Expression result, Expression expr)
             {
-                return Expression.Assign(result, expr);
+                if (expr.NodeType == ExpressionType.Block)
+                {
+                    var block = (BlockExpression)expr;
+                    var n = block.Expressions.Count;
+                    var res = Percolate(result, block.Expressions[n - 1]);
+                    return block.Update(block.Variables, block.Expressions.Take(n - 1).Concat(new[] { res }));
+                }
+                else
+                {
+                    return Expression.Assign(result, expr);
+                }
             }
         }
 
