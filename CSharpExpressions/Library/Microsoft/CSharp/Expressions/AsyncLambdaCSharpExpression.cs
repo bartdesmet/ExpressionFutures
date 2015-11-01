@@ -122,6 +122,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            new Checker().Visit(Body);
+
             const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* initial state */ + 1 /* start state machine */;
 
             var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
@@ -185,7 +187,6 @@ namespace Microsoft.CSharp.Expressions
         private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
         {
             // TODO: C# 6.0 features - await in catch and finally
-            //       Reject await in filters
 
             const int ExprCount = 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
@@ -259,7 +260,7 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Block(
                         jumpTable,
                         newBody,
-                        Expression.Empty()
+                        Expression.Empty() // TODO: remove spurious node if not needed
                     ),
                     Expression.Catch(ex,
                         Expression.Block(
@@ -308,6 +309,39 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 return base.VisitExtension(node);
+            }
+        }
+
+        class Checker : CSharpExpressionVisitor
+        {
+            private readonly Stack<string> _forbidden = new Stack<string>();
+
+            protected override CatchBlock VisitCatchBlock(CatchBlock node)
+            {
+                if (node.Filter != null)
+                {
+                    Visit(node.Body);
+
+                    _forbidden.Push(nameof(CatchBlock));
+                    {
+                        Visit(node.Filter);
+                    }
+                    _forbidden.Pop();
+                }
+
+                return base.VisitCatchBlock(node);
+            }
+
+            // TODO: add Lock when we have it
+
+            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
+            {
+                if (_forbidden.Count > 0)
+                {
+                    throw Error.AwaitForbiddenHere(_forbidden.Peek());
+                }
+
+                return base.VisitAwait(node);
             }
         }
 

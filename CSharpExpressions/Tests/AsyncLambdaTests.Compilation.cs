@@ -17,6 +17,24 @@ namespace Tests
     partial class AsyncLambdaTests
     {
         [TestMethod]
+        public void AsyncLambda_Compilation_NotInFilter()
+        {
+            var p = Expression.Parameter(typeof(Exception));
+
+            var expr = Expression.TryCatch(
+                Expression.Empty(),
+                Expression.Catch(
+                    p,
+                    Expression.Empty(),
+                    CSharpExpression.Await(Expression.Constant(Task.FromResult(true)))
+                )
+            );
+
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
+            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Simple0()
         {
             var p = Expression.Parameter(typeof(int));
