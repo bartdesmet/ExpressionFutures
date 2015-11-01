@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static Tests.ReflectionUtils;
 
@@ -134,6 +135,24 @@ namespace Tests
             var t = f();
             var r = t.Result;
             Assert.AreEqual(Enumerable.Range(0, 10).Sum(), r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_HoistingParameters()
+        {
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var x = Expression.Parameter(typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<int, Task<int>>>(
+                Expression.Block(
+                    CSharpExpression.Await(yield),
+                    x
+                ),
+                x
+            );
+            var f = e.Compile();
+            var t = f(42);
+            var r = t.Result;
+            Assert.AreEqual(42, r);
         }
     }
 }
