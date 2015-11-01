@@ -246,9 +246,9 @@ namespace Playground
             var get = MethodInfoOf((Field f) => f[default(int), default(int), default(int)]);
             var idx = get.DeclaringType.GetProperty(get.Name.Substring("get_".Length));
 
-            var val1 = get.GetParameters()[0];
-            var val2 = get.GetParameters()[1];
-            var val3 = get.GetParameters()[2];
+            var val1 = idx.GetIndexParameters()[0];
+            var val2 = idx.GetIndexParameters()[1];
+            var val3 = idx.GetIndexParameters()[2];
 
             var obj = Log(Expression.Constant(new Field()), "O");
             var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
@@ -267,9 +267,9 @@ namespace Playground
             var get = MethodInfoOf((Field f) => f[default(int), default(int), default(int)]);
             var idx = get.DeclaringType.GetProperty(get.Name.Substring("get_".Length));
 
-            var val1 = get.GetParameters()[0];
-            var val2 = get.GetParameters()[1];
-            var val3 = get.GetParameters()[2];
+            var val1 = idx.GetIndexParameters()[0];
+            var val2 = idx.GetIndexParameters()[1];
+            var val3 = idx.GetIndexParameters()[2];
 
             var obj = Log(Expression.Constant(new Field()), "O");
             var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant(1), "A"));
