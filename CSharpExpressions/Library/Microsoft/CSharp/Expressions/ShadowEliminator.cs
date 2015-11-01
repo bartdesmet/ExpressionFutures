@@ -47,6 +47,17 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        protected internal override Expression VisitUsing(UsingCSharpStatement node)
+        {
+            Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
+
+            var res = base.VisitUsing(node);
+
+            Pop();
+
+            return res;
+        }
+
         protected override Expression VisitParameter(ParameterExpression node)
         {
             foreach (var subst in _subst)

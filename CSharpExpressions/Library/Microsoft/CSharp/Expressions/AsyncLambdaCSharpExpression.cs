@@ -351,6 +351,7 @@ namespace Microsoft.CSharp.Expressions
             public HashSet<ParameterExpression> HoistedVariables { get; } = new HashSet<ParameterExpression>();
 
             // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
+            // TODO: Deal with Using blocks as well.
 
             protected override Expression VisitBlock(BlockExpression node)
             {
