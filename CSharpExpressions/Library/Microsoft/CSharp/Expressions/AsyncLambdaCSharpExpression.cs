@@ -184,9 +184,7 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
         {
-            // TODO: Enter/leave sequences for Try blocks
-            //       Timing for finally handlers; prevent premature execution
-            //       C# 6.0 features - await in catch and finally
+            // TODO: C# 6.0 features - await in catch and finally
             //       Reject await in filters
             //       Reduction of nested C# expressions, e.g. Using results in TryFinally
 
