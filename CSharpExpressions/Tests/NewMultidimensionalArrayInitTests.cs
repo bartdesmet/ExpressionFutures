@@ -39,7 +39,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Take(29)));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Concat(inits).Take(31)));
 
-            // element mismatch
+            // element mismatch (NB: exception type comes from LINQ)
             AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(long), bounds, inits));
         }
 
@@ -48,7 +48,10 @@ namespace Tests
         {
             var e2 = (Expression<Func<int>>)(() => 42);
             var e1 = Expression.Constant(e2);
-            CSharpExpression.NewMultidimensionalArrayInit(typeof(Expression<Func<int>>), new[] { 1, 2 }, e1, e2);
+            var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(Expression<Func<int>>), new[] { 1, 2 }, e1, e2);
+
+            Assert.AreEqual(ExpressionType.Quote, res.Expressions[1].NodeType);
+            Assert.AreSame(e2, ((UnaryExpression)res.Expressions[1]).Operand);
         }
 
         [TestMethod]
