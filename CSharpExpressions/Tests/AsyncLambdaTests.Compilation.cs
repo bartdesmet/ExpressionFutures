@@ -154,5 +154,51 @@ namespace Tests
             var r = t.Result;
             Assert.AreEqual(42, r);
         }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_ResumeInTry1()
+        {
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.Block(
+                    Expression.TryCatch(
+                        Expression.Block(
+                            CSharpExpression.Await(yield),
+                            Expression.Constant(42)
+                        ),
+                        Expression.Catch(Expression.Parameter(typeof(Exception)),
+                            Expression.Constant(-1)
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_ResumeInTry2()
+        {
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.Block(
+                    Expression.TryCatch(
+                        Expression.Block(
+                            CSharpExpression.Await(yield),
+                            Expression.Divide(Expression.Constant(1), Expression.Constant(0))
+                        ),
+                        Expression.Catch(Expression.Parameter(typeof(DivideByZeroException)),
+                            Expression.Constant(-1)
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(-1, r);
+        }
     }
 }

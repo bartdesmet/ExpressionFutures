@@ -340,6 +340,8 @@ namespace Microsoft.CSharp.Expressions
             private readonly Func<Expression, Expression> _onCompletedFactory;
             private readonly LabelTarget _exit;
             private readonly Stack<StrongBox<bool>> _awaitInBlock = new Stack<StrongBox<bool>>();
+            private readonly Stack<IList<SwitchCase>> _jumpTables = new Stack<IList<SwitchCase>>();
+            private int _labelIndex;
 
             public AwaitRewriter(ParameterExpression stateVariable, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
             {
@@ -347,10 +349,18 @@ namespace Microsoft.CSharp.Expressions
                 _stateVariable = stateVariable;
                 _onCompletedFactory = onCompletedFactory;
                 _exit = exit;
+                _jumpTables.Push(new List<SwitchCase>());
             }
 
             public HashSet<ParameterExpression> HoistedVariables { get; } = new HashSet<ParameterExpression>();
-            public IList<SwitchCase> ResumeList { get; } = new List<SwitchCase>();
+
+            public IList<SwitchCase> ResumeList
+            {
+                get
+                {
+                    return _jumpTables.Peek();
+                }
+            }
 
             // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
             // TODO: Deal with Using blocks as well.
@@ -404,7 +414,7 @@ namespace Microsoft.CSharp.Expressions
                 var getResult = AwaitCSharpExpression.ReduceGetResult(awaiterVar);
 
                 var continueLabel = GetLabel();
-                
+
                 var res =
                     Expression.Block(
                         Expression.Assign(awaiterVar, getAwaiter),
@@ -434,15 +444,58 @@ namespace Microsoft.CSharp.Expressions
                 return node;
             }
 
+            protected override Expression VisitTry(TryExpression node)
+            {
+                _jumpTables.Push(new List<SwitchCase>());
+
+                var res = base.VisitTry(node);
+
+                var table = _jumpTables.Pop();
+
+                if (table.Count > 0)
+                {
+                    var dispatch = Expression.Switch(_stateVariable, table.ToArray());
+
+                    var originalTry = (TryExpression)res;
+                    var newTry = originalTry.Update(
+                        Expression.Block(
+                            dispatch,
+                            originalTry.Body
+                        ),
+                        originalTry.Handlers,
+                        originalTry.Finally,
+                        originalTry.Fault
+                    );
+
+                    var beforeTry = Expression.Label();
+                    var enterTry = Expression.Goto(beforeTry);
+
+                    var previousTable = _jumpTables.Peek();
+                    foreach (var jump in table)
+                    {
+                        var index = (int)((ConstantExpression)jump.TestValues.Single()).Value; // TODO: keep different data structure to avoid casts?
+                        previousTable.Add(Expression.SwitchCase(enterTry, Helpers.CreateConstantInt32(index)));
+                    }
+
+                    res = Expression.Block(
+                        Expression.Label(beforeTry),
+                        newTry
+                    );
+                }
+
+                return res;
+            }
+
             private StateMachineState GetLabel()
             {
                 var label = Expression.Label();
-                var index = ResumeList.Count;
+                var index = _labelIndex++;
 
                 var jump = Expression.Block(
                     Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(-1)),
                     Expression.Goto(label)
                 );
+
                 ResumeList.Add(Expression.SwitchCase(jump, Helpers.CreateConstantInt32(index)));
 
                 return new StateMachineState

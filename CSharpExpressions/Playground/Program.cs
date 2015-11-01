@@ -317,6 +317,7 @@ namespace Playground
             AsyncLambda3();
             AsyncLambda4();
             AsyncLambda5();
+            AsyncLambda6();
         }
 
         static void AsyncLambda1()
@@ -343,7 +344,7 @@ namespace Playground
 
         static void AsyncLambda4()
         {
-            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var delay = (Expression<Action>)(() => Task.Delay(100));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
                 Expression.Block(
                     CSharpExpression.Await(delay.Body),
@@ -357,7 +358,7 @@ namespace Playground
         static void AsyncLambda5()
         {
             var i = Expression.Parameter(typeof(int));
-            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var delay = (Expression<Action>)(() => Task.Delay(100));
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
             var brk = Expression.Label();
             var cnt = Expression.Label();
@@ -377,6 +378,25 @@ namespace Playground
             );
             var res = async.Compile()();
             res.Wait();
+        }
+
+        static void AsyncLambda6()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.Block(
+                    Expression.TryCatch(
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Catch(
+                            Expression.Parameter(typeof(Exception)),
+                            Expression.Empty()
+                        )
+                    ),
+                    CSharpExpression.Await(Expression.Constant(Task.FromResult(42)))
+                )
+            );
+            var res = async.Compile()();
+            Console.WriteLine(res.Result);
         }
 
         static void While()
