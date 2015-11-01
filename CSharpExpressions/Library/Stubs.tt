@@ -245,7 +245,20 @@ if (prop.SetMethod != null)
         {
             try
             {
-                <#=mtd.ReturnType == typeof(void) ? "" : "return (" + ret + ")"#><#=mtdInfoName#><#=closeGen#>.Invoke(<#=obj#>, new object[] { <#=args#> });
+				var args = new object[] { <#=args#> };
+                var res = <#=mtdInfoName#><#=closeGen#>.Invoke(<#=obj#>, args);
+<#
+foreach (var p in mtd.GetParameters())
+{
+	if (p.IsOut || p.ParameterType.IsByRef)
+	{
+#>
+				<#=p.Name#> = (<#=toCSharp(p.ParameterType)#>)args[<#=p.Position#>];
+<#
+	}
+}
+#>
+				<#=mtd.ReturnType == typeof(void) ? "" : "return (" + ret + ")res;"#>
             }
             catch (TargetInvocationException ex)
             {
