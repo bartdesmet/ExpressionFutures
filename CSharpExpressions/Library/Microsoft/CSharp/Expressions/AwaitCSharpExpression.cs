@@ -121,6 +121,11 @@ namespace Microsoft.CSharp.Expressions
         {
             return awaiterType.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
         }
+
+        internal static MethodInfo GetGetAwaiter(Type awaiterType)
+        {
+            return awaiterType.GetMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+        }
     }
 
     partial class CSharpExpression
@@ -159,7 +164,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (getAwaiterMethod == null)
             {
-                getAwaiterMethod = AwaitCSharpExpression.GetGetResult(operandType);
+                getAwaiterMethod = AwaitCSharpExpression.GetGetAwaiter(operandType);
             }
 
             ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
@@ -231,7 +236,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.AwaiterIsCompletedShouldNotBeIndexer(awaiterType);
             }
 
-            var getResult = awaiterType.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            var getResult = AwaitCSharpExpression.GetGetResult(awaiterType);
             if (getResult == null || getResult.IsGenericMethodDefinition)
             {
                 throw Error.AwaiterTypeShouldHaveGetResultMethod(awaiterType);
