@@ -186,6 +186,7 @@ namespace Microsoft.CSharp.Expressions
             //       Timing for finally handlers; prevent premature execution
             //       C# 6.0 features - await in catch and finally
             //       Reject await in filters
+            //       Reduction of nested C# expressions, e.g. Using results in TryFinally
 
             const int ExprCount = 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
@@ -571,7 +572,7 @@ namespace Microsoft.CSharp.Expressions
         private static void ValidateAsyncLambdaArgs(Type delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
             ContractUtils.RequiresNotNull(delegateType, nameof(delegateType));
-            RequiresCanRead(body, "body");
+            RequiresCanRead(body, nameof(body));
 
             if (!typeof(MulticastDelegate).IsAssignableFrom(delegateType) || delegateType == typeof(MulticastDelegate))
             {

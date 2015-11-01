@@ -16,6 +16,21 @@ namespace Tests
     partial class AsyncLambdaTests
     {
         [TestMethod]
+        public void AsyncLambda_Compilation_Simple0()
+        {
+            var p = Expression.Parameter(typeof(int));
+
+            var e1 = CSharpExpression.AsyncLambda<Func<int, Task<int>>>(p, p);
+            var e2 = CSharpExpression.AsyncLambda(typeof(Func<int, Task<int>>), p, p);
+            var e3 = CSharpExpression.AsyncLambda<Func<int, Task<int>>>(p, p);
+
+            foreach (AsyncCSharpExpression<Func<int, Task<int>>> e in new[] { e1, e2, e3 })
+            {
+                Assert.AreEqual(42, e.Compile()(42).Result);
+            }
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Simple1()
         {
             var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Constant(42));
