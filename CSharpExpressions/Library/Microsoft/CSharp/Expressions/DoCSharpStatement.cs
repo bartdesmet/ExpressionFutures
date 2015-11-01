@@ -6,6 +6,9 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
+    /// <summary>
+    /// Represents a do...while loop.
+    /// </summary>
     public sealed class DoCSharpStatement : ConditionalLoopCSharpStatement
     {
         internal DoCSharpStatement(Expression body, Expression test, LabelTarget breakLabel, LabelTarget continueLabel)
@@ -33,10 +36,10 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="breakLabel">The <see cref="DoCSharpStatement.BreakLabel" /> property of the result.</param>
-        /// <param name="continueLabel">The <see cref="DoCSharpStatement.ContinueLabel" /> property of the result.</param>
-        /// <param name="body">The <see cref="DoCSharpStatement.Body" /> property of the result.</param>
-        /// <param name="test">The <see cref="DoCSharpStatement.Test" /> property of the result.</param>
+        /// <param name="breakLabel">The <see cref="LoopCSharpStatement.BreakLabel" /> property of the result.</param>
+        /// <param name="continueLabel">The <see cref="LoopCSharpStatement.ContinueLabel" /> property of the result.</param>
+        /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
+        /// <param name="test">The <see cref="ConditionalLoopCSharpStatement.Test" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public DoCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression body, Expression test)
         {

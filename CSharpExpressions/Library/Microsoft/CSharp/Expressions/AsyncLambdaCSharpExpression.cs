@@ -110,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Compiles the asynchronous lambda expression described by the expression tree into executable code and produces a delegate that represents the lambda expression.
         /// </summary>
-        /// <returns>A delegate of type <paramref name="TDelegate" /> that represents the compiled asynchronous lambda expression described by the <see cref="T:Microsoft.CSharp.Expressions.AsyncCSharpExpression`1" />.</returns>
+        /// <returns>A delegate of type <typeparamref name="TDelegate" /> that represents the compiled asynchronous lambda expression described by the <see cref="T:Microsoft.CSharp.Expressions.AsyncCSharpExpression`1" />.</returns>
         public new TDelegate Compile()
         {
             return ((Expression<TDelegate>)Reduce()).Compile();

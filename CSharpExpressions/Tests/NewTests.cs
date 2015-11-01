@@ -246,11 +246,8 @@ namespace Tests
 
         class S
         {
-            static int x;
-
             static S()
             {
-                x = 0;
             }
         }
     }

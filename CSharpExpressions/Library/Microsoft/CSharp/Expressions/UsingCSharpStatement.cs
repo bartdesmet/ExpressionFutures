@@ -5,13 +5,16 @@
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using static System.Linq.Expressions.ExpressionStubs;
-using static System.Dynamic.Utils.TypeUtils;
-using LinqError = System.Linq.Expressions.Error;
 using System.Reflection;
+using static System.Dynamic.Utils.TypeUtils;
+using static System.Linq.Expressions.ExpressionStubs;
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    /// <summary>
+    /// Represents a using statement.
+    /// </summary>
     public sealed class UsingCSharpStatement : CSharpStatement
     {
         internal UsingCSharpStatement(ParameterExpression variable, Expression resource, Expression body)
