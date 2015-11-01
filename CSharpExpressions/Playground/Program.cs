@@ -23,7 +23,6 @@ namespace Playground
             New();
             Index();
             NewMultidimensionalArrayInit();
-            Await();
             AsyncLambda();
             While();
             DoWhile();
@@ -301,13 +300,6 @@ namespace Playground
                     }
                 }
             }
-        }
-
-        static void Await()
-        {
-            var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(42)));
-            var res = Expression.Lambda<Func<int>>(await).Compile()();
-            Console.WriteLine(res);
         }
 
         static void AsyncLambda()
