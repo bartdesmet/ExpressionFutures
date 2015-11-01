@@ -149,8 +149,8 @@ namespace Microsoft.CSharp.Expressions
 
             var i = 0;
 
-            var builderVar = Expression.Parameter(builderType);
-            var stateMachineVar = Expression.Parameter(typeof(RuntimeAsyncStateMachine));
+            var builderVar = Expression.Parameter(builderType, "__builder");
+            var stateMachineVar = Expression.Parameter(typeof(RuntimeAsyncStateMachine), "__statemachine");
             var stateVar = Expression.Parameter(typeof(int), "__state");
 
             var builderCreateMethod = builderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
@@ -194,18 +194,18 @@ namespace Microsoft.CSharp.Expressions
             var exprs = default(Expression[]);
 
             var result = default(ParameterExpression);
-            var ex = Expression.Parameter(typeof(Exception));
+            var ex = Expression.Parameter(typeof(Exception), "exception");
 
             var exit = Expression.Label();
 
             var hoistedVars = new Dictionary<Type, ParameterExpression>();
 
-            var getVariable = new Func<Type, ParameterExpression>(t =>
+            var getVariable = new Func<Type, string, ParameterExpression>((t, s) =>
             {
                 var p = default(ParameterExpression);
                 if (!hoistedVars.TryGetValue(t, out p))
                 {
-                    p = Expression.Parameter(t);
+                    p = Expression.Parameter(t, s + hoistedVars.Count);
                     hoistedVars.Add(t, p);
                 }
 
@@ -252,7 +252,7 @@ namespace Microsoft.CSharp.Expressions
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
             {
-                result = Expression.Parameter(Body.Type);
+                result = Expression.Parameter(Body.Type, "__result");
                 newBody = Expression.Assign(result, rewrittenBody);
                 locals = new[] { result };
             }
@@ -354,13 +354,13 @@ namespace Microsoft.CSharp.Expressions
         class AwaitRewriter : CSharpExpressionVisitor
         {
             private readonly Func<StateMachineState> _labelFactory;
-            private readonly Func<Type, ParameterExpression> _variableFactory;
+            private readonly Func<Type, string, ParameterExpression> _variableFactory;
             private readonly ParameterExpression _stateVariable;
             private readonly Func<Expression, Expression> _onCompletedFactory;
             private readonly LabelTarget _exit;
             private readonly Stack<StrongBox<bool>> _awaitInBlock = new Stack<StrongBox<bool>>();
 
-            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
+            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
             {
                 _labelFactory = labelFactory;
                 _variableFactory = variableFactory;
@@ -416,7 +416,7 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 var getAwaiter = node.ReduceGetAwaiter();
-                var awaiterVar = _variableFactory(getAwaiter.Type);
+                var awaiterVar = _variableFactory(getAwaiter.Type, "__awaiter");
                 var isCompleted = node.ReduceIsCompleted(awaiterVar);
                 var getResult = node.ReduceGetResult(awaiterVar);
 
