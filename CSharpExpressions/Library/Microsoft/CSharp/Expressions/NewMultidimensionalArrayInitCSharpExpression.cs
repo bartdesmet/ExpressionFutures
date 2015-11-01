@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using static System.Linq.Expressions.ExpressionStubs;
 using static Microsoft.CSharp.Expressions.Helpers;
+using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
-using System.Linq;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -149,6 +149,19 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        /// <summary>
+        /// Creates a <see cref="NewMultidimensionalArrayInitCSharpExpression"/> that represents creating a multi-dimensional array that has the specified bounds and elements. 
+        /// </summary>
+        /// <param name="type">A Type that represents the element type of the array.</param>
+        /// <param name="bounds">The bounds of the array.</param>
+        /// <param name="initializers">An array that contains Expression objects that represent the elements in the array.</param>
+        /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, params Expression[] initializers)
+        {
+            return NewMultidimensionalArrayInit(type, bounds, (IEnumerable<Expression>)initializers);
+        }
+
         /// <summary>
         /// Creates a <see cref="NewMultidimensionalArrayInitCSharpExpression"/> that represents creating a multi-dimensional array that has the specified bounds and elements. 
         /// </summary>
