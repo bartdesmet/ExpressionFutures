@@ -403,6 +403,8 @@ namespace Microsoft.CSharp.Expressions
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
+                const int ExprCount = 1 /* GetAwaiter */ + 1 /* IsCompleted */ + 1 /* Label */ + 1 /* GetResult */ + 1 /* Cleanup */ + 1 /* Result */;
+
                 if (_awaitInBlock.Count > 0)
                 {
                     _awaitInBlock.Peek().Value = true;
@@ -413,22 +415,43 @@ namespace Microsoft.CSharp.Expressions
                 var isCompleted = AwaitCSharpExpression.ReduceIsCompleted(awaiterVar);
                 var getResult = AwaitCSharpExpression.ReduceGetResult(awaiterVar);
 
+                var vars = Array.Empty<ParameterExpression>();
+                var exprs = new Expression[ExprCount];
+
+                if (getResult.Type != typeof(void))
+                {
+                    var resultVar = Expression.Parameter(getResult.Type, "__result");
+                    getResult = Expression.Assign(resultVar, getResult);
+                    vars = new[] { resultVar };
+                    exprs[exprs.Length - 1] = resultVar;
+                }
+                else
+                {
+                    exprs[exprs.Length - 1] = Expression.Empty();
+                }
+
                 var continueLabel = GetLabel();
 
-                var res =
-                    Expression.Block(
-                        Expression.Assign(awaiterVar, getAwaiter),
-                        Expression.IfThen(Expression.Not(isCompleted),
-                            Expression.Block(
-                                Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
-                                _onCompletedFactory(awaiterVar),
-                                Expression.Return(_exit)
-                            )
-                        ),
-                        Expression.Label(continueLabel.Label),
-                        getResult
-                    );
+                var i = 0;
 
+                exprs[i++] =
+                    Expression.Assign(awaiterVar, getAwaiter);
+                exprs[i++] =
+                    Expression.IfThen(Expression.Not(isCompleted),
+                        Expression.Block(
+                            Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
+                            _onCompletedFactory(awaiterVar),
+                            Expression.Return(_exit)
+                        )
+                    );
+                exprs[i++] =
+                    Expression.Label(continueLabel.Label);
+                exprs[i++] =
+                    getResult;
+                exprs[i++] =
+                    Expression.Assign(awaiterVar, Expression.Default(awaiterVar.Type));
+
+                var res = Expression.Block(vars, exprs);
                 return res;
             }
 
