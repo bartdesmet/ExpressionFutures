@@ -13,9 +13,9 @@ namespace System.Runtime.CompilerServices
         private readonly Action _moveNext;
 
         /// <summary>
-        /// Creates a new runtime async state machine using the specified MoveNext implementation delagate.
+        /// Creates a new runtime async state machine using the specified MoveNext implementation delegate.
         /// </summary>
-        /// <param name="moveNext">Delegte to implement the MoveNext method.</param>
+        /// <param name="moveNext">Delegate to implement the MoveNext method.</param>
         public RuntimeAsyncStateMachine(Action moveNext)
         {
             _moveNext = moveNext;
