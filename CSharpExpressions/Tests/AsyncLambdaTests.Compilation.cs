@@ -35,6 +35,20 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_NotInLock()
+        {
+            var p = Expression.Parameter(typeof(Exception));
+
+            var expr = CSharpExpression.Lock(
+                Expression.Default(typeof(object)),
+                CSharpExpression.Await(Expression.Constant(Task.FromResult(42)))
+            );
+
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
+            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Simple0()
         {
             var p = Expression.Parameter(typeof(int));

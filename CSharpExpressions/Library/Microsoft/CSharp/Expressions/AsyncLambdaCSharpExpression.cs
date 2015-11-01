@@ -327,12 +327,25 @@ namespace Microsoft.CSharp.Expressions
                         Visit(node.Filter);
                     }
                     _forbidden.Pop();
+
+                    return node;
                 }
 
                 return base.VisitCatchBlock(node);
             }
 
-            // TODO: add Lock when we have it
+            protected internal override Expression VisitLock(LockCSharpStatement node)
+            {
+                Visit(node.Expression);
+
+                _forbidden.Push(nameof(LockCSharpStatement));
+                {
+                    Visit(node.Body);
+                }
+                _forbidden.Pop();
+
+                return node;
+            }
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
