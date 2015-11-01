@@ -104,6 +104,9 @@ namespace Microsoft.CSharp.Expressions
 
             var pType = parameter.ParameterType;
 
+            // NB: No writeability check is performed; LINQ doesn't either, so you can pass e.g.
+            //     a constant by ref, causing the write-back to be discarded. We're just being
+            //     consistent here.
             if (pType.IsByRef)
             {
                 pType = pType.GetElementType();

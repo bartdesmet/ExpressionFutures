@@ -51,8 +51,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AssertEx.cs" />
+    <Compile Include="ParameterAssignmentTests.cs" />
     <Compile Include="NewMultidimensionalArrayInitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Library\Library.csproj">
