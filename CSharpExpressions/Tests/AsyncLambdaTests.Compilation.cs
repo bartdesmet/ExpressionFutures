@@ -49,6 +49,39 @@ namespace Tests
         }
 
         [TestMethod]
+        [Ignore] // DynamicMethod does not support BeginExceptFilterBlock (see https://github.com/dotnet/coreclr/issues/1764)
+        public void AsyncLambda_Compilation_NotInFilter_NoFalsePositive()
+        {
+            var p = Expression.Parameter(typeof(Exception));
+
+            var expr = Expression.TryCatch(
+                Expression.Empty(),
+                Expression.Catch(
+                    p,
+                    CSharpExpression.Await(Expression.Constant(Task.FromResult(true), typeof(Task))),
+                    Expression.Constant(true)
+                )
+            );
+
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
+            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_NotInLock_NoFalsePositive()
+        {
+            var p = Expression.Parameter(typeof(Exception));
+
+            var expr = CSharpExpression.Lock(
+                CSharpExpression.Await(Expression.Constant(Task.FromResult(default(object)))),
+                Expression.Empty()
+            );
+
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
+            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Simple0()
         {
             var p = Expression.Parameter(typeof(int));
