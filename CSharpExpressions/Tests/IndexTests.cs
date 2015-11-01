@@ -61,6 +61,33 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Index_Factory_CanUseMethod()
+        {
+            var substringMethod = MethodInfoOf((S s) => s[default(int), default(int)]);
+            var substringProperty = PropertyInfoOf((S s) => s[default(int), default(int)]);
+
+            var parameters = substringMethod.GetParameters();
+
+            var startIndexParameter = parameters[0];
+            var lengthParameter = parameters[1];
+
+            var obj = Expression.Constant(new S("foobar"));
+            var startIndex = Expression.Constant(1);
+            var length = Expression.Constant(2);
+
+            var argStartIndex = CSharpExpression.Bind(startIndexParameter, startIndex);
+            var argLength = CSharpExpression.Bind(lengthParameter, length);
+
+            var expr1 = CSharpExpression.Index(obj, substringMethod, argStartIndex, argLength);
+            Assert.AreEqual(substringProperty, expr1.Indexer);
+            AssertCompile<string>(_ => expr1, new LogAndResult<string> { Value = "foobar".Substring(1, 2) });
+
+            var expr2 = CSharpExpression.Index(obj, substringMethod, new[] { argStartIndex, argLength }.AsEnumerable());
+            Assert.AreEqual(substringProperty, expr2.Indexer);
+            AssertCompile<string>(_ => expr2, new LogAndResult<string> { Value = "foobar".Substring(1, 2) });
+        }
+
+        [TestMethod]
         public void Index_Properties()
         {
             var substring = PropertyInfoOf((S s) => s[default(int), default(int)]);
@@ -199,6 +226,20 @@ namespace Tests
 
                 return base.VisitIndex(node);
             }
+        }
+
+        [TestMethod]
+        public void Index_ReflectionFacts()
+        {
+            var indexer = PropertyInfoOf((S s) => s[default(int), default(int)]);
+            var getter = MethodInfoOf((S s) => s[default(int), default(int)]);
+
+            var indexerParameterOpt = indexer.GetIndexParameters()[1];
+            var getterParameterOpt = getter.GetParameters()[1];
+
+            // NB: The Reduce method relies on both of these to have the default value available.
+            Assert.IsTrue(indexerParameterOpt.HasDefaultValue);
+            Assert.IsTrue(getterParameterOpt.HasDefaultValue);
         }
 
         class S
