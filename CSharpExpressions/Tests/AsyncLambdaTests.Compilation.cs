@@ -244,6 +244,35 @@ namespace Tests
             Assert.IsTrue(d.IsDisposed);
         }
 
+        [TestMethod]
+        public void AsyncLambda_Compilation_ReducibleNodes()
+        {
+            var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
+            var i = Expression.Parameter(typeof(int));
+            var res = Expression.Parameter(typeof(int));
+            var brk = Expression.Label();
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.Block(
+                    new[] { i, res },
+                    Expression.Assign(i, Expression.Constant(0)),
+                    CSharpExpression.While(Expression.LessThan(i, Expression.Constant(10)),
+                        Expression.Block(
+                            Expression.AddAssign(
+                                res,
+                                CSharpExpression.Await(Expression.Call(fromResultMethod, i))
+                            ),
+                            Expression.PostIncrementAssign(i)
+                        ), brk
+                    ),
+                    res
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(Enumerable.Range(0, 10).Sum(), r);
+        }
+
         class D : IDisposable
         {
             public bool IsDisposed;
