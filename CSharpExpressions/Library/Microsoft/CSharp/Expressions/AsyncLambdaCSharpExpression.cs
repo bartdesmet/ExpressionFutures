@@ -176,7 +176,9 @@ namespace Microsoft.CSharp.Expressions
 
             var rewritten = Expression.Block(new[] { builderVar, stateMachineVar, stateVar }.Concat(variables), exprs);
 
-            var res = Expression.Lambda<TDelegate>(rewritten, Parameters);
+            var optimized = Optimizer.Optimize(rewritten);
+
+            var res = Expression.Lambda<TDelegate>(optimized, Parameters);
             return res;
         }
 

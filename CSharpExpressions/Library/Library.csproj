@@ -55,6 +55,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalLoopCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\NewCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\NewMultidimensionalArrayInitCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Optimizer.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ParameterAssignment.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
