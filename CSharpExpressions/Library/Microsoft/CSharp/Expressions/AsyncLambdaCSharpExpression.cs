@@ -214,27 +214,6 @@ namespace Microsoft.CSharp.Expressions
                 return p;
             });
 
-            var labelIndex = 0;
-            var resumeList = new List<SwitchCase>();
-
-            var getLabel = new Func<StateMachineState>(() =>
-            {
-                var label = Expression.Label();
-                var index = labelIndex++;
-
-                var jump = Expression.Block(
-                    Expression.Assign(stateVar, Helpers.CreateConstantInt32(-1)),
-                    Expression.Goto(label)
-                );
-                resumeList.Add(Expression.SwitchCase(jump, Helpers.CreateConstantInt32(index)));
-
-                return new StateMachineState
-                {
-                    Label = label,
-                    Index = index
-                };
-            });
-
             var awaitOnCompletedMethod = builderVar.Type.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
             var awaitOnCompletedArgs = new Type[] { default(Type), typeof(RuntimeAsyncStateMachine) };
 
@@ -248,7 +227,7 @@ namespace Microsoft.CSharp.Expressions
             var bright = new ShadowEliminator().Visit(Body);
             var spilled = Spiller.Spill(bright);
 
-            var awaitRewriter = new AwaitRewriter(stateVar, getLabel, getVariable, onCompletedFactory, exit);
+            var awaitRewriter = new AwaitRewriter(stateVar, getVariable, onCompletedFactory, exit);
             var rewrittenBody = awaitRewriter.Visit(spilled);
 
             var newBody = rewrittenBody;
@@ -272,6 +251,7 @@ namespace Microsoft.CSharp.Expressions
 
             var i = 0;
 
+            var resumeList = awaitRewriter.ResumeList;
             var jumpTable =
                 resumeList.Count > 0 ? Expression.Switch(stateVar, resumeList.ToArray()) : (Expression)Expression.Empty();
 
@@ -355,16 +335,14 @@ namespace Microsoft.CSharp.Expressions
 
         class AwaitRewriter : CSharpExpressionVisitor
         {
-            private readonly Func<StateMachineState> _labelFactory;
             private readonly Func<Type, string, ParameterExpression> _variableFactory;
             private readonly ParameterExpression _stateVariable;
             private readonly Func<Expression, Expression> _onCompletedFactory;
             private readonly LabelTarget _exit;
             private readonly Stack<StrongBox<bool>> _awaitInBlock = new Stack<StrongBox<bool>>();
 
-            public AwaitRewriter(ParameterExpression stateVariable, Func<StateMachineState> labelFactory, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
+            public AwaitRewriter(ParameterExpression stateVariable, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
             {
-                _labelFactory = labelFactory;
                 _variableFactory = variableFactory;
                 _stateVariable = stateVariable;
                 _onCompletedFactory = onCompletedFactory;
@@ -372,6 +350,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             public HashSet<ParameterExpression> HoistedVariables { get; } = new HashSet<ParameterExpression>();
+            public IList<SwitchCase> ResumeList { get; } = new List<SwitchCase>();
 
             // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
             // TODO: Deal with Using blocks as well.
@@ -424,7 +403,7 @@ namespace Microsoft.CSharp.Expressions
                 var isCompleted = AwaitCSharpExpression.ReduceIsCompleted(awaiterVar);
                 var getResult = AwaitCSharpExpression.ReduceGetResult(awaiterVar);
 
-                var continueLabel = _labelFactory();
+                var continueLabel = GetLabel();
                 
                 var res =
                     Expression.Block(
@@ -453,6 +432,24 @@ namespace Microsoft.CSharp.Expressions
             {
                 // NB: Keep hands off nested lambdas
                 return node;
+            }
+
+            private StateMachineState GetLabel()
+            {
+                var label = Expression.Label();
+                var index = ResumeList.Count;
+
+                var jump = Expression.Block(
+                    Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(-1)),
+                    Expression.Goto(label)
+                );
+                ResumeList.Add(Expression.SwitchCase(jump, Helpers.CreateConstantInt32(index)));
+
+                return new StateMachineState
+                {
+                    Label = label,
+                    Index = index
+                };
             }
         }
     }
