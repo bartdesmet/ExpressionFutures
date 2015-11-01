@@ -2,7 +2,7 @@
 
 - Write-back behavior to indexing expressions passed by ref, because Reduce runs before the compiler can inspect the real node underneath.
   Note it will happen to work when reduction returns a plain IndexExpression in case the arguments are ordered correctly.
-  Could be consider a non-issue for Microsoft.CSharp.* expressions, given that C# doesn't have by-ref indexers.
+  Could be considered a non-issue for Microsoft.CSharp.* expressions, given that C# doesn't have by-ref indexers.
 
   Solutions:
   - Don't do anything, see last remark above.
