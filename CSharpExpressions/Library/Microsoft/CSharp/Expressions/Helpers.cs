@@ -45,13 +45,27 @@ namespace Microsoft.CSharp.Expressions
 
         public static void ValidateParameterBindings(MethodBase method, ReadOnlyCollection<ParameterAssignment> argList)
         {
+            ValidateParameterBindings(method, method.GetParametersCached(), argList);
+        }
+
+        public static void ValidateParameterBindings(MethodBase method, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
+        {
             var boundParameters = new HashSet<ParameterInfo>();
 
             foreach (var arg in argList)
             {
                 var parameter = arg.Parameter;
 
-                if (parameter.Member != method)
+                var member = parameter.Member;
+
+                var property = member as PropertyInfo;
+                if (property != null)
+                {
+                    // NB: This supports get access via indexers.
+                    member = property.GetGetMethod(true);
+                }
+
+                if (member != method)
                 {
                     throw Error.ParameterNotDefinedForMethod(parameter.Name, method.Name);
                 }
@@ -61,8 +75,6 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.DuplicateParameterBinding(parameter.Name);
                 }
             }
-
-            var parameters = method.GetParametersCached();
 
             foreach (var parameter in parameters)
             {

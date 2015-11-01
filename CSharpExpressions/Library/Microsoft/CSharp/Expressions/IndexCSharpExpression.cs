@@ -198,10 +198,12 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            ValidateParameterBindings(getter, argList);
+            ValidateParameterBindings(getter, indexer.GetIndexParameters(), argList);
 
             return new IndexCSharpExpression(instance, indexer, argList);
         }
+
+        // TODO: Add overload with MethodInfo for the C# compiler to emit a call to using `ldtoken` for the getter method.
     }
 
     partial class CSharpExpressionVisitor
