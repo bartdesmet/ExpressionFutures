@@ -27,7 +27,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value that indicates whether the expression tree node can be reduced. 
         /// </summary>
-        public sealed override bool CanReduce
+        public override bool CanReduce
         {
             get
             {

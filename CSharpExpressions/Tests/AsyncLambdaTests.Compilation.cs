@@ -110,6 +110,23 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_CustomGetAwaiter()
+        {
+            var m = MethodInfoOf(() => GetAwaiter<int>(default(Task<int>)));
+            var v = Expression.Constant(Task.FromResult(42));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(v, m));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
+        private static TaskAwaiter<T> GetAwaiter<T>(Task<T> task)
+        {
+            return task.GetAwaiter();
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Spilling()
         {
             var v1 = Expression.Constant(Task.FromResult(1));

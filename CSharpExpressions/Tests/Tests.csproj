@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -53,6 +55,7 @@
     <Compile Include="AssertEx.cs" />
     <Compile Include="AsyncLambdaTests.cs" />
     <Compile Include="AsyncLambdaTests.Compilation.cs" />
+    <Compile Include="AwaitTests.cs" />
     <Compile Include="InvocationTests.cs" />
     <Compile Include="IndexTests.cs" />
     <Compile Include="NewTests.cs" />
