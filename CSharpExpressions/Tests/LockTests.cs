@@ -111,7 +111,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitLock(LockCSharpStatement node)
+            protected internal override Expression VisitLock(LockCSharpStatement node)
             {
                 Visited = true;
 

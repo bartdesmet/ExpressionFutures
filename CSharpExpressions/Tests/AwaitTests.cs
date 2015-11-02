@@ -109,7 +109,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitAwait(AwaitCSharpExpression node)
+            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
                 Visited = true;
 

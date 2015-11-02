@@ -144,7 +144,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
+            protected internal override Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
             {
                 Visited = true;
 

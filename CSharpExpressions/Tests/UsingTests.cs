@@ -229,7 +229,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitUsing(UsingCSharpStatement node)
+            protected internal override Expression VisitUsing(UsingCSharpStatement node)
             {
                 Visited = true;
 

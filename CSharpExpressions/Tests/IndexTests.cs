@@ -220,7 +220,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitIndex(IndexCSharpExpression node)
+            protected internal override Expression VisitIndex(IndexCSharpExpression node)
             {
                 Visited = true;
 

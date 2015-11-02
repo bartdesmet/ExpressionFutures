@@ -224,7 +224,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitInvocation(InvocationCSharpExpression node)
+            protected internal override Expression VisitInvocation(InvocationCSharpExpression node)
             {
                 Visited = true;
 

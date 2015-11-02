@@ -226,7 +226,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitNew(NewCSharpExpression node)
+            protected internal override Expression VisitNew(NewCSharpExpression node)
             {
                 Visited = true;
 

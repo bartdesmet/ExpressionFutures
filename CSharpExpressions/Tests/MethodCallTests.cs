@@ -276,7 +276,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitMethodCall(MethodCallCSharpExpression node)
+            protected internal override Expression VisitMethodCall(MethodCallCSharpExpression node)
             {
                 Visited = true;
 

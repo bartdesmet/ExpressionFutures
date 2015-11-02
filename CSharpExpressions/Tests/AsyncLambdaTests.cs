@@ -182,7 +182,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
+            protected internal override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
             {
                 Visited = true;
 

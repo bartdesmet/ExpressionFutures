@@ -176,7 +176,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitDo(DoCSharpStatement node)
+            protected internal override Expression VisitDo(DoCSharpStatement node)
             {
                 Visited = true;
 

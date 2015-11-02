@@ -176,7 +176,7 @@ namespace Tests
         {
             public bool Visited = false;
 
-            protected override Expression VisitWhile(WhileCSharpStatement node)
+            protected internal override Expression VisitWhile(WhileCSharpStatement node)
             {
                 Visited = true;
 
