@@ -64,6 +64,13 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    // NB: Expression<TDelegate> is sealed, so we can't achieve compatibility with that type here.
+    //     As a result, top-leve lasync lambdas won't be assignable to Expression<TDelegate> and
+    //     we would have to educate the C# compiler about AsyncCSharpExpression<TDelegate>. This
+    //     would also be a spec addition. Alternatively, we have to unseal Expression<TDelegate>
+    //     in order for a conversion of an async lambda to the base type to work. The base type
+    //     then needs a virtual for the Compile method.
+
     /// <summary>
     /// Represents an asynchronous lambda expression.
     /// </summary>
