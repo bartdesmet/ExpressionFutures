@@ -58,6 +58,7 @@
     <Compile Include="AwaitTests.cs" />
     <Compile Include="InvocationTests.cs" />
     <Compile Include="IndexTests.cs" />
+    <Compile Include="DoTests.cs" />
     <Compile Include="UsingTests.cs" />
     <Compile Include="LockTests.cs" />
     <Compile Include="NewTests.cs" />

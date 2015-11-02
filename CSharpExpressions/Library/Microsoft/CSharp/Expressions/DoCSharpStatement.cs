@@ -43,7 +43,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public DoCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression body, Expression test)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && test == this.Test && body == this.Body)
+            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && body == this.Body && test == this.Test)
             {
                 return this;
             }
