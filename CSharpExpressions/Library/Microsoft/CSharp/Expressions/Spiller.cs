@@ -3,6 +3,7 @@
 // bartde - October 2015
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Reflection;
@@ -28,7 +29,7 @@ namespace Microsoft.CSharp.Expressions
 
         class SpillSiteDecorator : CSharpExpressionVisitor
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+            [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
                 var operand = Spiller.Spill(node.Operand);
@@ -52,14 +53,14 @@ namespace Microsoft.CSharp.Expressions
 
         class SpillSiteJanitor : CSharpExpressionVisitor
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+            [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitBlock(BlockExpression node)
             {
                 // NB: This gets rrid of SpilledExpressionBlock nodes
                 return Expression.Block(node.Type, node.Variables, Visit(node.Expressions));
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+            [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitTry(TryExpression node)
             {
                 if (node.Handlers.Count == 0 && node.Finally != null)
@@ -119,13 +120,15 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression", Justification = "Used as marker method.")]
+        [ExcludeFromCodeCoverage]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression", Justification = "Used as marker method.")]
         public static T QuoteT<T>(Expression expression)
         {
             throw new NotImplementedException();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression", Justification = "Used as marker method.")]
+        [ExcludeFromCodeCoverage]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "expression", Justification = "Used as marker method.")]
         public static void QuoteVoid(Expression expression)
         {
             throw new NotImplementedException();
