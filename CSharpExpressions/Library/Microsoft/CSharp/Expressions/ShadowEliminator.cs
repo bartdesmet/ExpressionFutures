@@ -50,6 +50,11 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        // NB: Strictly speaking, we don't need to handle C# nodes here (other than keeping Await unreduced),
+        //     because the shadow eliminator runs after the reducer. However, we keep those here for general
+        //     utility and also to deal with the case where we may reshuffle rewrite steps. We could #if them
+        //     out if we want to reduce code size.
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
@@ -61,6 +66,8 @@ namespace Microsoft.CSharp.Expressions
 
             return res;
         }
+
+        // TODO: Add ForEach when we have it.
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
@@ -87,7 +94,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     foreach (var p in newEnv.Intersect(env))
                     {
-                        subst[p] = Expression.Parameter(p.Type,p.Name);
+                        subst[p] = Expression.Parameter(p.Type, p.Name);
                     }
                 }
             }
