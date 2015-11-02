@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Reduces the call expression node to a simpler expression.
+        /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()

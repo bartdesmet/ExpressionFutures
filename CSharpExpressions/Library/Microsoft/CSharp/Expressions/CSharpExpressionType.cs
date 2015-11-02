@@ -53,5 +53,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a lock statement.
         /// </summary>
         Lock,
+        /// <summary>
+        /// A node that represents a foreach statement.
+        /// </summary>
+        ForEach,
     }
 }

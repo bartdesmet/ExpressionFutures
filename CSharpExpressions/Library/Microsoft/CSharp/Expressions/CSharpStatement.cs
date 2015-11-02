@@ -29,7 +29,7 @@ namespace Microsoft.CSharp.Expressions
         public override Type Type { get; } = typeof(void);
 
         /// <summary>
-        /// Reduces the call expression node to a simpler expression.
+        /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
         public sealed override Expression Reduce()
@@ -53,7 +53,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Reduces the call expression node to a simpler expression.
+        /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
         protected abstract Expression ReduceCore();
