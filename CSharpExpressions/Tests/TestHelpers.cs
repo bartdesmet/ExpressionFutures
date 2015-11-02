@@ -11,12 +11,42 @@ namespace Tests
 {
     static class TestHelpers
     {
+        public static Expression<Func<LogAndResult<object>>> WithLog(Func<Func<string, Expression>, Expression, Expression> createExpression)
+        {
+            return WithLog<object>((log, append) => Expression.Block(createExpression(log, append), Expression.Default(typeof(object))));
+        }
+
+        public static Expression<Func<LogAndResult<object>>> WithLog(Func<Func<string, Expression>, Expression> createExpression)
+        {
+            return WithLog<object>(log => Expression.Block(createExpression(log), Expression.Default(typeof(object))));
+        }
+
+        public static Expression<Func<LogAndResult<T>>> WithLog<T>(Func<Func<string, Expression>, Expression, Expression> createExpression)
+        {
+            return WithLogValue<T>((log, append) => createExpression(s => log(Expression.Empty(), s), append));
+        }
+
         public static Expression<Func<LogAndResult<T>>> WithLog<T>(Func<Func<string, Expression>, Expression> createExpression)
         {
             return WithLogValue<T>(log => createExpression(s => log(Expression.Empty(), s)));
         }
 
+        public static Expression<Func<LogAndResult<object>>> WithLogValue(Func<Func<Expression, string, Expression>, Expression, Expression> createExpression)
+        {
+            return WithLogValue<object>((log, append) => Expression.Block(createExpression(log, append), Expression.Default(typeof(object)), append));
+        }
+
+        public static Expression<Func<LogAndResult<object>>> WithLogValue(Func<Func<Expression, string, Expression>, Expression> createExpression)
+        {
+            return WithLogValue<object>(log => Expression.Block(createExpression(log), Expression.Default(typeof(object))));
+        }
+
         public static Expression<Func<LogAndResult<T>>> WithLogValue<T>(Func<Func<Expression, string, Expression>, Expression> createExpression)
+        {
+            return WithLogValue<T>((log, append) => createExpression(log));
+        }
+
+        public static Expression<Func<LogAndResult<T>>> WithLogValue<T>(Func<Func<Expression, string, Expression>, Expression, Expression> createExpression)
         {
             var logParam = Expression.Parameter(typeof(List<string>), "log");
             var valueParam = Expression.Parameter(typeof(T), "result");
@@ -26,7 +56,9 @@ namespace Tests
             var logAndResultCtor = typeof(LogAndResult<T>).GetConstructor(new[] { typeof(List<string>), typeof(T), typeof(Exception) });
 
             var getLogEntry = new Func<Expression, string, Expression>((e, s) => Expression.Block(Expression.Call(logParam, addMethod, Expression.Constant(s, typeof(string))), e));
-            var body = createExpression(getLogEntry);
+            var entryParam = Expression.Parameter(typeof(string));
+            var append = Expression.Lambda<Action<string>>(Expression.Call(logParam, logParam.Type.GetMethod("Add"), entryParam), entryParam);
+            var body = createExpression(getLogEntry, append);
 
             return
                 Expression.Lambda<Func<LogAndResult<T>>>(

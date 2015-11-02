@@ -4,6 +4,7 @@
 
 using System;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using static System.Dynamic.Utils.TypeUtils;
@@ -133,20 +134,9 @@ namespace Microsoft.CSharp.Expressions
 
         private static MethodInfo FindDisposeMethod(Type type)
         {
+            // REVIEW: This may pose challenges on .NET Native
             var map = type.GetInterfaceMap(typeof(IDisposable));
-
-            var ifMethods = map.InterfaceMethods;
-            var tgMethods = map.TargetMethods;
-
-            for (var i = 0; i < ifMethods.Length; i++)
-            {
-                if (ifMethods[i].Name == "Dispose")
-                {
-                    return tgMethods[i];
-                }
-            }
-
-            throw ContractUtils.Unreachable;
+            return map.TargetMethods.Single(); // NB: IDisposable has only one method
         }
     }
 
