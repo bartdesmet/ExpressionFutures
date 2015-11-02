@@ -316,6 +316,7 @@ namespace Microsoft.CSharp.Expressions
         {
             private readonly Stack<string> _forbidden = new Stack<string>();
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override CatchBlock VisitCatchBlock(CatchBlock node)
             {
                 if (node.Filter != null)
@@ -334,6 +335,7 @@ namespace Microsoft.CSharp.Expressions
                 return base.VisitCatchBlock(node);
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitLock(LockCSharpStatement node)
             {
                 Visit(node.Expression);

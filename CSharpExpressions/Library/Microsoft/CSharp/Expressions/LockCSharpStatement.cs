@@ -103,6 +103,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The object to lock on.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="LockCSharpStatement"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static LockCSharpStatement Lock(Expression expression, Expression body)
         {
             RequiresCanRead(expression, nameof(expression));
