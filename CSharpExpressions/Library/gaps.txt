@@ -38,7 +38,7 @@ ERR_ExpressionTreeContainsBadCoalesce
 
 ERR_ByRefParameterInExpressionTree
 - (ref int x) => ...
-- To be investigated where the trickiness comes from
+- Likely exists because the ByRef support was only added in DLR
 
 ERR_ExpressionTreeContainsIndexedProperty
 - Reasonable restriction; applies to COM interop only?
