@@ -337,6 +337,16 @@ namespace Tests
             Assert.AreEqual(Enumerable.Range(0, 10).Sum(), r);
         }
 
+        [TestMethod]
+        public void AsyncLambda_Compilation_NoStaticType()
+        {
+            var e = CSharpExpression.AsyncLambda(Expression.Constant(42));
+            var f = (Func<Task<int>>)e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
         class D : IDisposable
         {
             public bool IsDisposed;

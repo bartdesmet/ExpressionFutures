@@ -133,6 +133,61 @@ namespace Tests
             Assert.AreSame(e, ((UnaryExpression)res.Body).Operand);
         }
 
+        [TestMethod]
+        public void AsyncLambda_Properties()
+        {
+            var body = Expression.Constant(42);
+            var parameters = new[] { Expression.Parameter(typeof(int)) };
+            var res = CSharpExpression.AsyncLambda(body, parameters);
+            Assert.AreEqual(CSharpExpressionType.AsyncLambda, res.CSharpNodeType);
+            Assert.AreSame(body, res.Body);
+            Assert.IsTrue(parameters.SequenceEqual(res.Parameters));
+            Assert.AreEqual(typeof(Func<int, Task<int>>), res.Type);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Update()
+        {
+            var body = Expression.Constant(42);
+            var parameters = new[] { Expression.Parameter(typeof(int)) };
+            var res = CSharpExpression.AsyncLambda<Func<int, Task<int>>>(body, parameters);
+
+            Assert.AreSame(res, res.Update(res.Body, res.Parameters));
+
+            var newBody = Expression.Constant(42);
+            var newParameters = new[] { Expression.Parameter(typeof(int)) };
+
+            var upd1 = res.Update(newBody, res.Parameters);
+            Assert.AreSame(newBody, upd1.Body);
+            Assert.AreSame(res.Parameters, upd1.Parameters);
+
+            var upd2 = res.Update(res.Body, newParameters);
+            Assert.AreSame(res.Body, upd2.Body);
+            Assert.IsTrue(newParameters.SequenceEqual(upd2.Parameters));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Visitor()
+        {
+            var res = CSharpExpression.AsyncLambda(Expression.Empty());
+
+            var v = new V();
+            Assert.AreSame(res, v.Visit(res));
+            Assert.IsTrue(v.Visited);
+        }
+
         delegate void ByRef(ref int x);
+
+        class V : CSharpExpressionVisitor
+        {
+            public bool Visited = false;
+
+            protected override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
+            {
+                Visited = true;
+
+                return base.VisitAsyncLambda(node);
+            }
+        }
     }
 }
