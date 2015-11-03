@@ -323,6 +323,22 @@ namespace Microsoft.CSharp.Expressions
         {
             private readonly Stack<string> _forbidden = new Stack<string>();
 
+            protected override Expression VisitLambda<T>(Expression<T> node)
+            {
+                _forbidden.Push(nameof(LambdaExpression));
+                {
+                    base.VisitLambda(node);
+                }
+                _forbidden.Pop();
+
+                return node;
+            }
+
+            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
+            {
+                return node;
+            }
+
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override CatchBlock VisitCatchBlock(CatchBlock node)
             {
