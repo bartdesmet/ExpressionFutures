@@ -32,12 +32,6 @@ namespace Playground
             For();
         }
 
-        class X
-        {
-            public void Bar() { }
-            public void Bar<T>() { }
-        }
-
         static void Call()
         {
             Call1();
