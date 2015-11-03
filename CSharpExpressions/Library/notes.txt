@@ -13,3 +13,4 @@
   Up for grabs:
 
   - Create compact representations of nodes, e.g. MethodCall for static/instance with 0..N arguments, Await without GetAwaiterMethod, etc.
+  - Substitute all calls to Expression.Block with a custom factory that wraps arrays in TrueReadOnlyCollection<T> to avoid a copy by the factory.
