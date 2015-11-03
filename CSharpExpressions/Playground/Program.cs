@@ -19,9 +19,6 @@ namespace Playground
 
         static void Main()
         {
-            CSharpExpression.AsyncLambda(Expression.Lambda(CSharpExpression.Await(Expression.Constant(Task.FromResult(42))))).Compile();
-            return;
-
             Call();
             Invoke();
             New();
