@@ -123,8 +123,6 @@ namespace Tests
             Assert.AreSame(newTest, upd4.Test);
         }
 
-        // TODO: tests for continue and break behavior
-
         [TestMethod]
         public void Do_Compile()
         {
@@ -156,7 +154,45 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void Do_Compile_BreakContinue()
+        {
+            var i = Expression.Parameter(typeof(int));
+            var brk = Expression.Label();
+            var cnt = Expression.Label();
+
+            AssertCompile((log, append) =>
+                Expression.Block(
+                    new[] { i },
+                    CSharpExpression.Do(
+                        Expression.Block(
+                            Expression.PostIncrementAssign(i),
+                            Expression.IfThen(
+                                Expression.Equal(Expression.Modulo(i, Expression.Constant(2)), Expression.Constant(0)),
+                                Expression.Continue(cnt)
+                            ),
+                            Expression.IfThen(
+                                Expression.GreaterThan(i, Expression.Constant(5)),
+                                Expression.Break(brk)
+                            ),
+                            Expression.Invoke(append, Expression.Call(i, typeof(int).GetMethod("ToString", Array.Empty<Type>())))
+                        ),
+                        Expression.LessThan(i, Expression.Constant(10)),
+                        brk,
+                        cnt
+                    )
+                ),
+                new LogAndResult<object> { Log = { "1", "3", "5" } }
+            );
+        }
+
         private void AssertCompile(Func<Func<string, Expression>, Expression> createExpression, LogAndResult<object> expected)
+        {
+            var res = WithLog(createExpression).Compile()();
+            Assert.AreEqual(expected, res);
+        }
+
+        private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
             Assert.AreEqual(expected, res);
