@@ -15,8 +15,6 @@ namespace Playground
 {
     class Program
     {
-        private static readonly MethodInfo s_writeLine = typeof(Console).GetMethod("WriteLine", new[] { typeof(string) });
-
         static void Main()
         {
             Call();
@@ -651,7 +649,8 @@ namespace Playground
 
         static Expression Log(Expression expression, string log)
         {
-            return Expression.Block(Expression.Call(s_writeLine, Expression.Constant(log, typeof(string))), expression);
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            return Expression.Block(Expression.Call(cout, Expression.Constant(log, typeof(string))), expression);
         }
     }
 
