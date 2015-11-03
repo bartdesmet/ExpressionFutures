@@ -10,8 +10,13 @@ namespace Microsoft.CSharp.Expressions
 {
     partial class CSharpExpression
     {
-        private static void ValidateCondition(Expression test)
+        private static void ValidateCondition(Expression test, bool optionalTest = false)
         {
+            if (optionalTest && test == null)
+            {
+                return;
+            }
+
             RequiresCanRead(test, nameof(test));
 
             // TODO: We can be more flexible and allow the rules in C# spec 7.20.

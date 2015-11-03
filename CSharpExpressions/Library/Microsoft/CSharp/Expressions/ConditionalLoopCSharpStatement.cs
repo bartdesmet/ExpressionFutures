@@ -25,9 +25,9 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
-        private static void ValidateLoop(Expression test, Expression body, LabelTarget @break, LabelTarget @continue)
+        private static void ValidateLoop(Expression test, Expression body, LabelTarget @break, LabelTarget @continue, bool optionalTest = false)
         {
-            ValidateCondition(test);
+            ValidateCondition(test, optionalTest);
 
             ValidateLoop(body, @break, @continue);
         }
