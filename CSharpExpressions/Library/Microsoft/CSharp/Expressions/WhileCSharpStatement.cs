@@ -57,17 +57,20 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
+            var @break = BreakLabel ?? Expression.Label();
+            var @continue = ContinueLabel;
+
             var loop =
                 Expression.Loop(
                     Expression.Block(
                         Expression.IfThen(
                             Expression.Not(Test),
-                            Expression.Break(BreakLabel)
+                            Expression.Break(@break)
                         ),
                         Body
                     ),
-                    BreakLabel,
-                    ContinueLabel
+                    @break,
+                    @continue
                 );
 
             return loop;
@@ -109,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
         public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break, LabelTarget @continue)
         {
-            ValidateLoop(test, body, ref @break, @continue);
+            ValidateLoop(test, body, @break, @continue);
 
             return new WhileCSharpStatement(test, body, @break, @continue);
         }

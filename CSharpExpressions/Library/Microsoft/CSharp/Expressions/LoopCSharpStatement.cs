@@ -39,15 +39,11 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
-        private static void ValidateLoop(Expression body, ref LabelTarget @break, LabelTarget @continue)
+        internal static void ValidateLoop(Expression body, LabelTarget @break, LabelTarget @continue)
         {
             RequiresCanRead(body, nameof(body));
             
-            if (@break == null)
-            {
-                @break = Expression.Label();
-            }
-            else if (@break.Type != typeof(void))
+            if (@break != null && @break.Type != typeof(void))
             {
                 // DESIGN: C# statement behavior; can be revisited.
                 throw LinqError.LabelTypeMustBeVoid();

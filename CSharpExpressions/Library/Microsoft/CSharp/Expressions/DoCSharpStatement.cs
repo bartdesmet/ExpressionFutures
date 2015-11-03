@@ -57,19 +57,20 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
-            var continueLabel = ContinueLabel ?? Expression.Label();
-            var beginLabel = Expression.Label();
+            var @break = BreakLabel ?? Expression.Label();
+            var @continue = ContinueLabel ?? Expression.Label();
+            var begin = Expression.Label();
 
             var loop =
                 Expression.Block(
-                    Expression.Label(beginLabel),
+                    Expression.Label(begin),
                     Body,
-                    Expression.Label(continueLabel),
+                    Expression.Label(@continue),
                     Expression.IfThen(
                         Test,
-                        Expression.Goto(beginLabel)
+                        Expression.Goto(begin)
                     ),
-                    Expression.Label(BreakLabel)
+                    Expression.Label(@break)
                 );
 
             return loop;
@@ -111,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
         public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break, LabelTarget @continue)
         {
-            ValidateLoop(test, body, ref @break, @continue);
+            ValidateLoop(test, body, @break, @continue);
 
             return new DoCSharpStatement(body, test, @break, @continue);
         }
