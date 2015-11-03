@@ -105,8 +105,8 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="DoCSharpStatement"/> that represents a do...while loop.
         /// </summary>
-        /// <param name="test">The condition of the loop.</param>
         /// <param name="body">The body of the loop.</param>
+        /// <param name="test">The condition of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
