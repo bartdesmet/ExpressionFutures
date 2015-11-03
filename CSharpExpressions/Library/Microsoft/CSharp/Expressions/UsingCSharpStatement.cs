@@ -105,7 +105,7 @@ namespace Microsoft.CSharp.Expressions
                     variableValue = variable;
                 }
 
-                var disposeMethod = FindDisposeMethod(variableValue.Type);
+                var disposeMethod = variableValue.Type.FindDisposeMethod();
                 cleanup = Expression.Call(variableValue, disposeMethod);
             }
             else
@@ -135,13 +135,6 @@ namespace Microsoft.CSharp.Expressions
                 );
 
             return res;
-        }
-
-        private static MethodInfo FindDisposeMethod(Type type)
-        {
-            // REVIEW: This may pose challenges on .NET Native
-            var map = type.GetInterfaceMap(typeof(IDisposable));
-            return map.TargetMethods.Single(); // NB: IDisposable has only one method
         }
     }
 

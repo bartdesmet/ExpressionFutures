@@ -131,5 +131,12 @@ namespace Microsoft.CSharp.Expressions
 
             return res;
         }
+
+        public static MethodInfo FindDisposeMethod(this Type type)
+        {
+            // REVIEW: This may pose challenges on .NET Native
+            var map = type.GetInterfaceMap(typeof(IDisposable));
+            return map.TargetMethods.Single(); // NB: IDisposable has only one method
+        }
     }
 }
