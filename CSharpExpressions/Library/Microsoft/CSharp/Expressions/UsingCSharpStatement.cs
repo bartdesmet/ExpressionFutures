@@ -13,6 +13,11 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    // TODO: The C# language allows for multiple resources to be declared. Our node doesn't support that yet.
+    //       We should revisit this when we enable statement trees and consider introducing nodes for e.g.
+    //       local variable declaration. Alternatively, we could expand the construct into nested using nodes
+    //       as the language specification describes (at the cost of a true homo-iconic representation).
+
     /// <summary>
     /// Represents a using statement.
     /// </summary>
