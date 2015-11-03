@@ -31,6 +31,13 @@ var errors = new[]
 	new { Name = "AsyncLambdaInvalidReturnType", ExceptionType = "ArgumentException", Args = 1, Message = "Return type '{0}' is not valid for an asynchronous lambda expression" },
 	new { Name = "AwaitForbiddenHere", ExceptionType = "InvalidOperationException", Args = 1, Message = "Await expression cannot occur in '{0}'" },
 	new { Name = "LockNeedsReferenceType", ExceptionType = "ArgumentException", Args = 1, Message = "An expression of type '{0}' can't be used as a lock" },
+	new { Name = "ConversionNeedsOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "The conversion lambda should have one parameter" },
+	new { Name = "ConversionInvalidArgument", ExceptionType = "ArgumentException", Args = 2, Message = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'" },
+	new { Name = "ConversionInvalidResult", ExceptionType = "ArgumentException", Args = 2, Message = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'" },
+	new { Name = "EnumeratorShouldHaveCurrentProperty", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor" },
+	new { Name = "EnumeratorShouldHaveMoveNextMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type" },
+	new { Name = "MoreThanOneIEnumerableFound", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'" },
+	new { Name = "NoEnumerablePattern", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has no valid enumerable pattern" },
 };
 #>
 // Prototyping extended expression trees for C#.

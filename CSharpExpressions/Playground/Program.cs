@@ -4,6 +4,7 @@
 
 using Microsoft.CSharp.Expressions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -27,6 +28,13 @@ namespace Playground
             While();
             DoWhile();
             Using();
+            ForEach();
+        }
+
+        class X
+        {
+            public void Bar() { }
+            public void Bar<T>() { }
         }
 
         static void Call()
@@ -544,6 +552,80 @@ namespace Playground
                 )
             );
             @using.Compile()();
+        }
+
+        static void ForEach()
+        {
+            ForEach1();
+            ForEach2();
+            ForEach3();
+            ForEach4();
+            ForEach5();
+        }
+
+        static void ForEach1()
+        {
+            var x = Expression.Parameter(typeof(int));
+            var xs = Expression.Constant(new[] { 2, 3, 5 });
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void ForEach2()
+        {
+            var x = Expression.Parameter(typeof(int?));
+            var xs = Expression.Constant(new[] { 2, 3, 5 });
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, Expression.Property(x, "Value"))
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void ForEach3()
+        {
+            var x = Expression.Parameter(typeof(int));
+            var xs = Expression.Constant(new int?[] { 2, 3, 5 });
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void ForEach4()
+        {
+            var x = Expression.Parameter(typeof(string));
+            var xs = Expression.Constant(new object[] { "bar", "foo", "qux" });
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void ForEach5()
+        {
+            var x = Expression.Parameter(typeof(string));
+            var xs = Expression.Constant(new List<string> { "bar", "foo", "qux" });
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
         }
 
         static int F(int x, int y, int z = 42)

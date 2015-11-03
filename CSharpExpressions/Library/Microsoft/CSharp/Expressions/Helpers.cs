@@ -134,9 +134,22 @@ namespace Microsoft.CSharp.Expressions
 
         public static MethodInfo FindDisposeMethod(this Type type)
         {
+            if (type.IsInterface)
+            {
+                if (typeof(IDisposable).IsAssignableFrom(type))
+                {
+                    return typeof(IDisposable).GetMethod("Dispose");
+                }
+            }
+
             // REVIEW: This may pose challenges on .NET Native
             var map = type.GetInterfaceMap(typeof(IDisposable));
             return map.TargetMethods.Single(); // NB: IDisposable has only one method
+        }
+
+        public static bool IsVector(this Type type)
+        {
+            return type.IsArray && type.GetElementType().MakeArrayType() == type;
         }
     }
 }

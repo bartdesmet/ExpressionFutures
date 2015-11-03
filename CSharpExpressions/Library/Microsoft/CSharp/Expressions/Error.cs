@@ -203,6 +203,62 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.LockNeedsReferenceType(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The conversion lambda should have one parameter"
+        /// </summary>
+        internal static Exception ConversionNeedsOneParameter()
+        {
+            return new ArgumentException(Strings.ConversionNeedsOneParameter);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'"
+        /// </summary>
+        internal static Exception ConversionInvalidArgument(object p0, object p1)
+        {
+            return new ArgumentException(Strings.ConversionInvalidArgument(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'"
+        /// </summary>
+        internal static Exception ConversionInvalidResult(object p0, object p1)
+        {
+            return new ArgumentException(Strings.ConversionInvalidResult(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor"
+        /// </summary>
+        internal static Exception EnumeratorShouldHaveCurrentProperty(object p0)
+        {
+            return new ArgumentException(Strings.EnumeratorShouldHaveCurrentProperty(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type"
+        /// </summary>
+        internal static Exception EnumeratorShouldHaveMoveNextMethod(object p0)
+        {
+            return new ArgumentException(Strings.EnumeratorShouldHaveMoveNextMethod(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'"
+        /// </summary>
+        internal static Exception MoreThanOneIEnumerableFound(object p0)
+        {
+            return new ArgumentException(Strings.MoreThanOneIEnumerableFound(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Collection type '{0}' has no valid enumerable pattern"
+        /// </summary>
+        internal static Exception NoEnumerablePattern(object p0)
+        {
+            return new ArgumentException(Strings.NoEnumerablePattern(p0));
+        }
+
     }
 
     /// <summary>
@@ -426,6 +482,65 @@ namespace Microsoft.CSharp.Expressions
 			return SR.Format(SR.LockNeedsReferenceType, p0);
         }
 
+        /// <summary>
+        /// A string like "The conversion lambda should have one parameter"
+        /// </summary>
+        internal static string ConversionNeedsOneParameter
+        {
+			get
+			{
+				return SR.ConversionNeedsOneParameter;
+			}
+        }
+
+        /// <summary>
+        /// A string like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'"
+        /// </summary>
+        internal static string ConversionInvalidArgument(object p0, object p1)
+        {
+			return SR.Format(SR.ConversionInvalidArgument, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'"
+        /// </summary>
+        internal static string ConversionInvalidResult(object p0, object p1)
+        {
+			return SR.Format(SR.ConversionInvalidResult, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor"
+        /// </summary>
+        internal static string EnumeratorShouldHaveCurrentProperty(object p0)
+        {
+			return SR.Format(SR.EnumeratorShouldHaveCurrentProperty, p0);
+        }
+
+        /// <summary>
+        /// A string like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type"
+        /// </summary>
+        internal static string EnumeratorShouldHaveMoveNextMethod(object p0)
+        {
+			return SR.Format(SR.EnumeratorShouldHaveMoveNextMethod, p0);
+        }
+
+        /// <summary>
+        /// A string like "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'"
+        /// </summary>
+        internal static string MoreThanOneIEnumerableFound(object p0)
+        {
+			return SR.Format(SR.MoreThanOneIEnumerableFound, p0);
+        }
+
+        /// <summary>
+        /// A string like "Collection type '{0}' has no valid enumerable pattern"
+        /// </summary>
+        internal static string NoEnumerablePattern(object p0)
+        {
+			return SR.Format(SR.NoEnumerablePattern, p0);
+        }
+
     }
 }
 
@@ -457,5 +572,12 @@ namespace System
 		public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression";
 		public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'";
 		public const string LockNeedsReferenceType = "An expression of type '{0}' can't be used as a lock";
+		public const string ConversionNeedsOneParameter = "The conversion lambda should have one parameter";
+		public const string ConversionInvalidArgument = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'";
+		public const string ConversionInvalidResult = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'";
+		public const string EnumeratorShouldHaveCurrentProperty = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor";
+		public const string EnumeratorShouldHaveMoveNextMethod = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type";
+		public const string MoreThanOneIEnumerableFound = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'";
+		public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
 	}
 }
