@@ -58,6 +58,17 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(default(Expression), substring, bindings.AsEnumerable()));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(obj, default(PropertyInfo), bindings));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(obj, default(PropertyInfo), bindings.AsEnumerable()));
+
+            // only setter
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(Expression.Default(typeof(X)), typeof(X).GetProperty("Item")));
+        }
+
+        class X
+        {
+            public object this[int x]
+            {
+                set { }
+            }
         }
 
         [TestMethod]

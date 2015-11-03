@@ -27,7 +27,7 @@ namespace Microsoft.CSharp.Expressions
             return cleaned;
         }
 
-        class SpillSiteDecorator : CSharpExpressionVisitor
+        class SpillSiteDecorator : ShallowVisitor
         {
             [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
@@ -37,21 +37,9 @@ namespace Microsoft.CSharp.Expressions
                 var quoted = SpillHelpers.Quote(updated);
                 return Expression.TryFinally(quoted, Expression.Empty());
             }
-
-            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
-            {
-                // NB: Keep hands off nested lambdas
-                return node;
-            }
-
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                // NB: Keep hands off nested lambdas
-                return node;
-            }
         }
 
-        class SpillSiteJanitor : CSharpExpressionVisitor
+        class SpillSiteJanitor : ShallowVisitor
         {
             [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitBlock(BlockExpression node)
@@ -79,18 +67,6 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 return base.VisitTry(node);
-            }
-
-            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
-            {
-                // NB: Keep hands off nested lambdas
-                return node;
-            }
-
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                // NB: Keep hands off nested lambdas
-                return node;
             }
         }
     }

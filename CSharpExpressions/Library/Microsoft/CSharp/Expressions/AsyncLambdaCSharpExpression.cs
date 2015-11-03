@@ -409,7 +409,7 @@ namespace Microsoft.CSharp.Expressions
             public int Index;
         }
 
-        class AwaitRewriter : CSharpExpressionVisitor
+        class AwaitRewriter : ShallowVisitor
         {
             private readonly Func<Type, string, ParameterExpression> _variableFactory;
             private readonly ParameterExpression _stateVariable;
@@ -529,18 +529,6 @@ namespace Microsoft.CSharp.Expressions
 
                 var res = Expression.Block(vars, exprs);
                 return res;
-            }
-
-            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
-            {
-                // NB: Keep hands off nested lambdas
-                return node;
-            }
-
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                // NB: Keep hands off nested lambdas
-                return node;
             }
 
             protected override Expression VisitTry(TryExpression node)

@@ -57,6 +57,7 @@
     <Compile Include="AsyncLambdaTests.Compilation.cs" />
     <Compile Include="AwaitTests.cs" />
     <Compile Include="ShadowEliminatorTests.cs" />
+    <Compile Include="ShallowVisitorTests.cs" />
     <Compile Include="SpillerTests.cs" />
     <Compile Include="ForEachTests.cs" />
     <Compile Include="ForTests.cs" />
