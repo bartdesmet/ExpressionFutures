@@ -2,9 +2,11 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -99,6 +101,35 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Expression.Constant(value);
+        }
+
+        public static MethodInfo GetNonGenericMethod(this Type type, string name, BindingFlags flags, Type[] types)
+        {
+            var candidates = type.GetMethods(flags).Where(m => !m.IsGenericMethod && m.Name == name && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(types)).ToArray();
+
+            var res = default(MethodInfo);
+
+            if (candidates.Length > 1)
+            {
+                // TODO: This deals with `new` hiding in a quick-n-dirty way.
+
+                for (var t = type; t != null; t = t.BaseType)
+                {
+                    foreach (var candidate in candidates)
+                    {
+                        if (candidate.DeclaringType == t)
+                        {
+                            return candidate;
+                        }
+                    }
+                }
+            }
+            else if (candidates.Length == 1)
+            {
+                res = candidates[0];
+            }
+
+            return res;
         }
     }
 }

@@ -119,12 +119,12 @@ namespace Microsoft.CSharp.Expressions
 
         internal static MethodInfo GetGetResult(Type awaiterType)
         {
-            return awaiterType.GetMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            return awaiterType.GetNonGenericMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
         }
 
         internal static MethodInfo GetGetAwaiter(Type awaiterType)
         {
-            return awaiterType.GetMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+            return awaiterType.GetNonGenericMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
         }
     }
 
@@ -150,6 +150,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AwaitCSharpExpression Await(Expression operand, MethodInfo getAwaiterMethod)
         {
+            // NB: This is the overload the C# compiler can bind to. Note, however, that a bound await node in Roslyn has
+            //     information about IsCompleted and GetResult as well. We can infer the same information at runtime, but
+            //     could also add an overload that has all of these.
+
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
             RequiresCanRead(operand, nameof(operand));
