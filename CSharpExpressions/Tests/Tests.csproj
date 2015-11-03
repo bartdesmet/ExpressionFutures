@@ -59,6 +59,7 @@
     <Compile Include="ShadowEliminatorTests.cs" />
     <Compile Include="SpillerTests.cs" />
     <Compile Include="ForEachTests.cs" />
+    <Compile Include="ForTests.cs" />
     <Compile Include="WhileTests.cs" />
     <Compile Include="InvocationTests.cs" />
     <Compile Include="IndexTests.cs" />

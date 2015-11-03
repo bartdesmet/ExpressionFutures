@@ -29,6 +29,7 @@ namespace Playground
             DoWhile();
             Using();
             ForEach();
+            For();
         }
 
         class X
@@ -623,6 +624,27 @@ namespace Playground
             var loop = Expression.Lambda<Action>(
                 CSharpExpression.ForEach(x, xs,
                     Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void For()
+        {
+            For1();
+        }
+
+        static void For1()
+        {
+            var i = Expression.Parameter(typeof(int));
+            var init = Expression.Assign(i, Expression.Constant(0));
+            var test = Expression.LessThan(i, Expression.Constant(5));
+            var iterate = Expression.PostIncrementAssign(i);
+            var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
+            var body = Expression.Call(cout, i);
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.For(new[] { init }, test, new[] { iterate },
+                    body
                 )
             );
             loop.Compile()();

@@ -49,6 +49,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Error.tt</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\ForCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ForEachCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />

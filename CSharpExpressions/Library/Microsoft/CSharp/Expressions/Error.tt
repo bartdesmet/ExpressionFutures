@@ -38,6 +38,8 @@ var errors = new[]
 	new { Name = "EnumeratorShouldHaveMoveNextMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type" },
 	new { Name = "MoreThanOneIEnumerableFound", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'" },
 	new { Name = "NoEnumerablePattern", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has no valid enumerable pattern" },
+	new { Name = "InvalidInitializer", ExceptionType = "ArgumentException", Args = 0, Message = "Initializers should be assignments to variables" },
+	new { Name = "DuplicateLabels", ExceptionType = "ArgumentException", Args = 0, Message = "Break and continue lables should be different" },
 };
 #>
 // Prototyping extended expression trees for C#.

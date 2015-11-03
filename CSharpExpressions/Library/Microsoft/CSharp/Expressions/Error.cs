@@ -259,6 +259,22 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.NoEnumerablePattern(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Initializers should be assignments to variables"
+        /// </summary>
+        internal static Exception InvalidInitializer()
+        {
+            return new ArgumentException(Strings.InvalidInitializer);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Break and continue lables should be different"
+        /// </summary>
+        internal static Exception DuplicateLabels()
+        {
+            return new ArgumentException(Strings.DuplicateLabels);
+        }
+
     }
 
     /// <summary>
@@ -541,6 +557,28 @@ namespace Microsoft.CSharp.Expressions
 			return SR.Format(SR.NoEnumerablePattern, p0);
         }
 
+        /// <summary>
+        /// A string like "Initializers should be assignments to variables"
+        /// </summary>
+        internal static string InvalidInitializer
+        {
+			get
+			{
+				return SR.InvalidInitializer;
+			}
+        }
+
+        /// <summary>
+        /// A string like "Break and continue lables should be different"
+        /// </summary>
+        internal static string DuplicateLabels
+        {
+			get
+			{
+				return SR.DuplicateLabels;
+			}
+        }
+
     }
 }
 
@@ -579,5 +617,7 @@ namespace System
 		public const string EnumeratorShouldHaveMoveNextMethod = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type";
 		public const string MoreThanOneIEnumerableFound = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'";
 		public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
+		public const string InvalidInitializer = "Initializers should be assignments to variables";
+		public const string DuplicateLabels = "Break and continue lables should be different";
 	}
 }

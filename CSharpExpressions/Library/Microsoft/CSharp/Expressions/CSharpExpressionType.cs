@@ -57,5 +57,9 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a foreach statement.
         /// </summary>
         ForEach,
+        /// <summary>
+        /// A node that represents a for statement.
+        /// </summary>
+        For,
     }
 }
