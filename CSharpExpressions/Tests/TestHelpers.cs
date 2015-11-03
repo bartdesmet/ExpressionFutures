@@ -98,10 +98,41 @@ namespace Tests
         public List<string> Log { get; set; }
         public T Value { get; set; }
         public Exception Error { get; set; }
+        public Func<Exception, bool> ErrorCheck { get; set; }
 
         public bool Equals(LogAndResult<T> other)
         {
-            return Log.SequenceEqual(other.Log) && EqualityComparer<T>.Default.Equals(Value, other.Value) && object.ReferenceEquals(Error, other.Error);
+            var err = false;
+
+            if (this.ErrorCheck != null || other.ErrorCheck != null)
+            {
+                if (this.ErrorCheck != null && other.ErrorCheck != null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                var check = default(Func<Exception, bool>);
+                var error = default(Exception);
+
+                if (this.ErrorCheck != null)
+                {
+                    check = this.ErrorCheck;
+                    error = other.Error;
+                }
+                else
+                {
+                    check = other.ErrorCheck;
+                    error = this.Error;
+                }
+
+                err = check(error);
+            }
+            else
+            {
+                err = object.ReferenceEquals(Error, other.Error);
+            }
+
+            return Log.SequenceEqual(other.Log) && EqualityComparer<T>.Default.Equals(Value, other.Value) && err;
         }
 
         public override bool Equals(object obj)
