@@ -63,6 +63,7 @@ namespace Microsoft.CSharp.Expressions
 
             var loop =
                 Expression.Block(
+                    typeof(void),
                     Expression.Label(begin),
                     Body,
                     Expression.Label(@continue),
