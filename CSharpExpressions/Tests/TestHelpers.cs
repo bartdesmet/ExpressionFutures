@@ -58,12 +58,30 @@ namespace Tests
             var getLogEntry = new Func<Expression, string, Expression>((e, s) => Expression.Block(Expression.Call(logParam, addMethod, Expression.Constant(s, typeof(string))), e));
             var entryParam = Expression.Parameter(typeof(string));
             var append = Expression.Lambda<Action<string>>(Expression.Call(logParam, logParam.Type.GetMethod("Add"), entryParam), entryParam);
+
+            // NB: InvalidProgramException when we expose the Lambda directly to the caller; e.g. repro on ForEach_Compile_Pattern1.
+            //     This is likely due to the Invoke(Lambda) optimization. VSadov may already have solved (cf. recursive lambdas) but
+            //     needs to be double-checked for this particular case. Simply #define REPRO to see it.
+#if REPRO
             var body = createExpression(getLogEntry, append);
+#else
+            var appendVar = Expression.Parameter(append.Type);
+            var body = createExpression(getLogEntry, appendVar);
+#endif
 
             return
                 Expression.Lambda<Func<LogAndResult<T>>>(
                     Expression.Block(
-                        new[] { logParam, valueParam, errorParam },
+                        new[]
+                        {
+                            logParam, valueParam, errorParam,
+#if !REPRO
+                            appendVar
+#endif
+                        },
+#if !REPRO
+                        Expression.Assign(appendVar, append),
+#endif
                         Expression.Assign(logParam, Expression.New(typeof(List<string>))),
                         Expression.TryCatch(
                             Expression.Block(typeof(void),
