@@ -70,9 +70,30 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
-            Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
+            Push(new[] { node.Variable });
 
             var res = base.VisitForEach(node);
+
+            Pop();
+
+            return res;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitFor(ForCSharpStatement node)
+        {
+            var n = node.Initializers.Count;
+
+            var variables = new ParameterExpression[n];
+
+            for (var i = 0; i < n; i++)
+            {
+                variables[i] = (ParameterExpression)node.Initializers[i].Left;
+            }
+
+            Push(variables);
+
+            var res = base.VisitFor(node);
 
             Pop();
 
