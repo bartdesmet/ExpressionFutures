@@ -67,7 +67,17 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        // TODO: Add ForEach when we have it.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitForEach(ForEachCSharpStatement node)
+        {
+            Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
+
+            var res = base.VisitForEach(node);
+
+            Pop();
+
+            return res;
+        }
 
         protected override Expression VisitParameter(ParameterExpression node)
         {

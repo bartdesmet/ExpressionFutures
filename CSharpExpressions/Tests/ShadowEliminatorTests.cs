@@ -23,6 +23,8 @@ namespace Tests
             var d2 = Expression.Parameter(typeof(IDisposable));
             var r1 = Expression.Default(typeof(IDisposable));
             var r2 = Expression.Default(typeof(IDisposable));
+            var c1 = Expression.Parameter(typeof(int[]));
+            var c2 = Expression.Parameter(typeof(int[]));
 
             var es = new Expression[]
             {
@@ -32,6 +34,7 @@ namespace Tests
                 Expression.TryCatch(Expression.Empty(), Expression.Catch(typeof(Exception), Expression.TryCatch(Expression.Empty(), Expression.Catch(typeof(Exception), Expression.Empty())))),
                 CSharpExpression.Using(d1, r1, CSharpExpression.Using(d2, r1, Expression.Empty())),
                 CSharpExpression.Using(r1, CSharpExpression.Using(r1, Expression.Empty())),
+                CSharpExpression.ForEach(v1, c1, CSharpExpression.ForEach(v2, c2, Expression.Empty())),
             };
 
             foreach (var e in es)
@@ -104,6 +107,24 @@ namespace Tests
 
             var v1 = r.Variable;
             var e1 = (UsingCSharpStatement)r.Body;
+            var v2 = e1.Variable;
+            var e2 = e1.Body;
+
+            Assert.AreSame(v2, e2);
+            Assert.AreNotSame(v1, v2);
+        }
+
+        [TestMethod]
+        public void ShadowEliminator_Shadow_ForEach()
+        {
+            var x = Expression.Parameter(typeof(int));
+            var xs = Expression.Default(typeof(int[]));
+
+            var e = CSharpExpression.ForEach(x, xs, CSharpExpression.ForEach(x, xs, x));
+            var r = (ForEachCSharpStatement)new ShadowEliminator().Visit(e);
+
+            var v1 = r.Variable;
+            var e1 = (ForEachCSharpStatement)r.Body;
             var v2 = e1.Variable;
             var e2 = e1.Body;
 
