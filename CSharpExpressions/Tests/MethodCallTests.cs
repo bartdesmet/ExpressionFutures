@@ -526,7 +526,96 @@ namespace Tests
             );
         }
 
-        // TODO: tests that assert no re-evaluation of writeback arguments
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_MutableStruct1()
+        {
+            var y = default(int);
+            var method = MethodInfoOf((S s) => s.F(default(int), ref y));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant(12);
+            var valueY = Expression.Parameter(typeof(int));
+
+            var value = Expression.Parameter(typeof(S));
+            var newValue = Expression.Assign(value, Expression.New(typeof(S)));
+            var valueZ = Expression.Field(value, "Z");
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { value, valueY },
+                    newValue,
+                    Expression.Assign(valueY, Expression.Constant(30)),
+                    CSharpExpression.Call(value, method,
+                        CSharpExpression.Bind(parameterX, valueX),
+                        CSharpExpression.Bind(parameterY, valueY)
+                    ),
+                    Expression.Subtract(valueZ, valueY)
+                ),
+                new LogAndResult<int> { Value = 0 }
+            );
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { value, valueY },
+                    newValue,
+                    Expression.Assign(valueY, Expression.Constant(30)),
+                    CSharpExpression.Call(value, method,
+                        CSharpExpression.Bind(parameterY, valueY),
+                        CSharpExpression.Bind(parameterX, valueX)
+                    ),
+                    Expression.Subtract(valueZ, valueY)
+                ),
+                new LogAndResult<int> { Value = 0 }
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_MutableStruct2()
+        {
+            var y = default(int);
+            var method = MethodInfoOf((S s) => s.F(default(int), ref y));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant(12);
+            var valueY = Expression.Parameter(typeof(int));
+
+            var value = Expression.Parameter(typeof(StrongBox<S>));
+            var prop = Expression.Field(value, "Value");
+            var newValue = Expression.Assign(value, Expression.New(typeof(StrongBox<S>)));
+            var valueZ = Expression.Field(prop, "Z");
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { value, valueY },
+                    newValue,
+                    Expression.Assign(valueY, Expression.Constant(30)),
+                    CSharpExpression.Call(prop, method,
+                        CSharpExpression.Bind(parameterX, valueX),
+                        CSharpExpression.Bind(parameterY, valueY)
+                    ),
+                    Expression.Subtract(valueZ, valueY)
+                ),
+                new LogAndResult<int> { Value = 0 }
+            );
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { value, valueY },
+                    newValue,
+                    Expression.Assign(valueY, Expression.Constant(30)),
+                    CSharpExpression.Call(prop, method,
+                        CSharpExpression.Bind(parameterY, valueY),
+                        CSharpExpression.Bind(parameterX, valueX)
+                    ),
+                    Expression.Subtract(valueZ, valueY)
+                ),
+                new LogAndResult<int> { Value = 0 }
+            );
+        }
 
         [TestMethod]
         public void MethodCall_Compile_ByRef_Index()
@@ -557,6 +646,8 @@ namespace Tests
                 new LogAndResult<int> { Value = 42, Log = { "S" } }
             );
         }
+
+        // TODO: tests that assert no re-evaluation of writeback arguments
 
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
@@ -597,6 +688,17 @@ namespace Tests
         class MyBox<T>
         {
             public T Value { get; set; }
+        }
+
+        struct S
+        {
+            public int Z;
+
+            public void F(int x, ref int y)
+            {
+                Z = x + y;
+                y = Z;
+            }
         }
     }
 }

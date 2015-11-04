@@ -153,8 +153,6 @@ namespace Microsoft.CSharp.Expressions
             return type.IsArray && type.GetElementType().MakeArrayType() == type;
         }
 
-        // TODO: write-back to mutable struct as targets of a Call or Index
-
         public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings)
         {
             var res = default(Expression);
@@ -177,44 +175,67 @@ namespace Microsoft.CSharp.Expressions
                 var variables = new List<ParameterExpression>();
                 var statements = new List<Expression>();
 
-                var obj = default(ParameterExpression);
-                if (instance != null)
-                {
-                    obj = Expression.Parameter(instance.Type, "obj");
-                    variables.Add(obj);
-                    statements.Add(Expression.Assign(obj, instance));
-                }
-
+                var obj = default(Expression);
                 var writebacks = default(Expression[]);
-                RewriteArguments(bindings, variables, statements, arguments, out writebacks);
+                RewriteArguments(instance, bindings, variables, statements, ref obj, arguments, out writebacks);
 
                 FillOptionalParameters(parameters, arguments);
 
                 var expr = create(obj, arguments);
 
-                if (writebacks.Length != 0 && expr.Type != typeof(void))
+                if (writebacks.Length != 0)
                 {
-                    var resultVariable = Expression.Parameter(expr.Type);
-                    variables.Add(resultVariable);
+                    if (expr.Type != typeof(void))
+                    {
+                        var resultVariable = Expression.Parameter(expr.Type);
+                        variables.Add(resultVariable);
 
-                    statements.Add(Expression.Assign(resultVariable, expr));
-                    statements.AddRange(writebacks);
-                    statements.Add(resultVariable);
+                        statements.Add(Expression.Assign(resultVariable, expr));
+                        statements.AddRange(writebacks);
+                        statements.Add(resultVariable);
+                    }
+                    else
+                    {
+                        statements.Add(expr);
+                        statements.AddRange(writebacks);
+                    }
                 }
                 else
                 {
                     statements.Add(expr);
                 }
 
-                res = Expression.Block(variables, statements);
+                res = Expression.Block(expr.Type, variables, statements);
             }
 
             return res;
         }
 
-        private static void RewriteArguments(ReadOnlyCollection<ParameterAssignment> bindings, List<ParameterExpression> variables, List<Expression> statements, Expression[] arguments, out Expression[] writebacks)
+        private static void RewriteArguments(Expression instance, ReadOnlyCollection<ParameterAssignment> bindings, List<ParameterExpression> variables, List<Expression> statements, ref Expression obj, Expression[] arguments, out Expression[] writebacks)
         {
             var writebackList = default(List<Expression>);
+
+            if (instance != null)
+            {
+                if (instance.IsPure())
+                {
+                    obj = instance;
+                }
+                else
+                {
+                    var var = Expression.Parameter(instance.Type, "obj");
+                    variables.Add(var);
+
+                    if (instance.Type.IsValueType && !instance.Type.IsPrimitive /* immutable */)
+                    {
+                        EnsureWriteback(var, ref instance, variables, statements, ref writebackList);
+                    }
+
+                    statements.Add(Expression.Assign(var, instance));
+
+                    obj = var;
+                }
+            }
 
             foreach (var argument in bindings)
             {
@@ -230,15 +251,9 @@ namespace Microsoft.CSharp.Expressions
                     var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
                     variables.Add(var);
 
-                    var writeback = default(Expression);
-                    if (parameter.IsByRefParameter() && TryGetWriteback(var, ref expression, variables, statements, out writeback))
+                    if (parameter.IsByRefParameter())
                     {
-                        if (writebackList == null)
-                        {
-                            writebackList = new List<Expression>();
-                        }
-
-                        writebackList.Add(writeback);
+                        EnsureWriteback(var, ref expression, variables, statements, ref writebackList);
                     }
 
                     statements.Add(Expression.Assign(var, expression));
@@ -248,6 +263,20 @@ namespace Microsoft.CSharp.Expressions
             }
 
             writebacks = writebackList?.ToArray() ?? Array.Empty<Expression>();
+        }
+
+        private static void EnsureWriteback(ParameterExpression variable, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
+        {
+            var writeback = default(Expression);
+            if (TryGetWriteback(variable, ref expression, variables, statements, out writeback))
+            {
+                if (writebackList == null)
+                {
+                    writebackList = new List<Expression>();
+                }
+
+                writebackList.Add(writeback);
+            }
         }
 
         private static bool IsPure(this Expression expression)
