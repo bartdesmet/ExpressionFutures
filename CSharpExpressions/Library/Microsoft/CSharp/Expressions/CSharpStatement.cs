@@ -26,7 +26,7 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public override Type Type { get; } = typeof(void);
+        public override Type Type => typeof(void);
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.
