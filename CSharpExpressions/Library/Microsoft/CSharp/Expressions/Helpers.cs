@@ -301,6 +301,10 @@ namespace Microsoft.CSharp.Expressions
             {
                 // NB: Should not encounter Parameter or Unbox; those are considered pure and will be passed straight on
 
+                // TODO: Add support for our new C# indexer node type as well? Note that C# doesn't have this type of by-ref passing anyway, 
+                //       but for equivalent VB APIs we'd need it. We could dispatch to a helper method on the node type in order to reuse
+                //       its Reduce logic in emitting the required locals and updated node that supports write-back.
+
                 case ExpressionType.Index:
                     {
                         var index = (IndexExpression)expression;
