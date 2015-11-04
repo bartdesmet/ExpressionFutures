@@ -157,41 +157,59 @@ namespace Microsoft.CSharp.Expressions
 
         public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings)
         {
-            var variables = new List<ParameterExpression>();
-            var statements = new List<Expression>();
+            var res = default(Expression);
 
             var arguments = new Expression[parameters.Length];
 
-            var obj = default(ParameterExpression);
-            if (instance != null)
+            if (CheckArgumentsInOrder(bindings))
             {
-                obj = Expression.Parameter(instance.Type, "obj");
-                variables.Add(obj);
-                statements.Add(Expression.Assign(obj, instance));
-            }
+                foreach (var binding in bindings)
+                {
+                    arguments[binding.Parameter.Position] = binding.Expression;
+                }
 
-            var writebacks = default(Expression[]);
-            RewriteArguments(bindings, variables, statements, arguments, out writebacks);
+                FillOptionalParameters(parameters, arguments);
 
-            FillOptionalParameters(parameters, arguments);
-
-            var res = create(obj, arguments);
-
-            if (writebacks.Length != 0 && res.Type != typeof(void))
-            {
-                var resultVariable = Expression.Parameter(res.Type);
-                variables.Add(resultVariable);
-
-                statements.Add(Expression.Assign(resultVariable, res));
-                statements.AddRange(writebacks);
-                statements.Add(resultVariable);
+                res = create(instance, arguments);
             }
             else
             {
-                statements.Add(res);
+                var variables = new List<ParameterExpression>();
+                var statements = new List<Expression>();
+
+                var obj = default(ParameterExpression);
+                if (instance != null)
+                {
+                    obj = Expression.Parameter(instance.Type, "obj");
+                    variables.Add(obj);
+                    statements.Add(Expression.Assign(obj, instance));
+                }
+
+                var writebacks = default(Expression[]);
+                RewriteArguments(bindings, variables, statements, arguments, out writebacks);
+
+                FillOptionalParameters(parameters, arguments);
+
+                var expr = create(obj, arguments);
+
+                if (writebacks.Length != 0 && expr.Type != typeof(void))
+                {
+                    var resultVariable = Expression.Parameter(expr.Type);
+                    variables.Add(resultVariable);
+
+                    statements.Add(Expression.Assign(resultVariable, expr));
+                    statements.AddRange(writebacks);
+                    statements.Add(resultVariable);
+                }
+                else
+                {
+                    statements.Add(expr);
+                }
+
+                res = Expression.Block(variables, statements);
             }
 
-            return Expression.Block(variables, statements);
+            return res;
         }
 
         private static void RewriteArguments(ReadOnlyCollection<ParameterAssignment> bindings, List<ParameterExpression> variables, List<Expression> statements, Expression[] arguments, out Expression[] writebacks)

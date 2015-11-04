@@ -85,27 +85,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var res = default(Expression);
-
             var parameters = Method.GetParametersCached();
 
-            if (CheckArgumentsInOrder(Arguments))
-            {
-                var args = new Expression[parameters.Length];
-
-                foreach (var argument in Arguments)
-                {
-                    args[argument.Parameter.Position] = argument.Expression;
-                }
-
-                FillOptionalParameters(parameters, args);
-
-                res = Expression.Call(Object, Method, args);
-            }
-            else
-            {
-                res = BindArguments((obj, args) => Expression.Call(obj, Method, args), Object, parameters, Arguments);
-            }
+            var res = BindArguments((obj, args) => Expression.Call(obj, Method, args), Object, parameters, Arguments);
 
             return res;
         }
