@@ -96,10 +96,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var vars = new List<ParameterExpression>();
-                var exprs = new List<Expression>();
-
-                res = BindArguments(args => Expression.New(Constructor, args), parameters, Arguments, vars, exprs);
+                res = BindArguments((_, args) => Expression.New(Constructor, args), null, parameters, Arguments);
             }
 
             return res;

@@ -104,20 +104,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var vars = new List<ParameterExpression>();
-                var exprs = new List<Expression>();
-
-                var obj = default(Expression);
-                if (!Method.IsStatic)
-                {
-                    var var = Expression.Parameter(Object.Type, "obj");
-                    vars.Add(var);
-
-                    obj = var;
-                    exprs.Add(Expression.Assign(var, Object));
-                }
-
-                res = BindArguments(args => Expression.Call(obj, Method, args), parameters, Arguments, vars, exprs);
+                res = BindArguments((obj, args) => Expression.Call(obj, Method, args), Object, parameters, Arguments);
             }
 
             return res;

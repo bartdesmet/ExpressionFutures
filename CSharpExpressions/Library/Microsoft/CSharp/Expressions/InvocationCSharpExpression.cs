@@ -101,14 +101,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var vars = new List<ParameterExpression>();
-                var exprs = new List<Expression>();
-
-                var obj = Expression.Parameter(Expression.Type, "obj");
-                vars.Add(obj);
-                exprs.Add(Expression.Assign(obj, Expression));
-
-                res = BindArguments(args => Expression.Invoke(obj, args), parameters, Arguments, vars, exprs);
+                res = BindArguments((obj, args) => Expression.Invoke(obj, args), Expression, parameters, Arguments);
             }
 
             return res;

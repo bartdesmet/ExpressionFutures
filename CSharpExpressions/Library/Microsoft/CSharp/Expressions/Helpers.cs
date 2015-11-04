@@ -155,16 +155,27 @@ namespace Microsoft.CSharp.Expressions
 
         // TODO: write-back to mutable struct as targets of a Call or Index
 
-        public static Expression BindArguments(Func<Expression[], Expression> create, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings, List<ParameterExpression> variables, List<Expression> statements)
+        public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings)
         {
+            var variables = new List<ParameterExpression>();
+            var statements = new List<Expression>();
+
             var arguments = new Expression[parameters.Length];
+
+            var obj = default(ParameterExpression);
+            if (instance != null)
+            {
+                obj = Expression.Parameter(instance.Type, "obj");
+                variables.Add(obj);
+                statements.Add(Expression.Assign(obj, instance));
+            }
 
             var writebacks = default(Expression[]);
             RewriteArguments(bindings, variables, statements, arguments, out writebacks);
 
             FillOptionalParameters(parameters, arguments);
 
-            var res = create(arguments);
+            var res = create(obj, arguments);
 
             if (writebacks.Length != 0 && res.Type != typeof(void))
             {
