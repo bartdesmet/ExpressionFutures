@@ -5,9 +5,11 @@
 using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
@@ -248,6 +250,314 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void MethodCall_Compile_NoCopyOptimization()
+        {
+            var method = MethodInfoOf(() => F(default(int), default(int), default(int)));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+            var parameterZ = parameters[2];
+
+            var valueX = Expression.Constant(1);
+            var valueY = Expression.Constant(2);
+            var valueZ = Expression.Constant(3);
+
+            AssertCompile<int>(log =>
+                CSharpExpression.Call(method,
+                    CSharpExpression.Bind(parameterX, valueX),
+                    CSharpExpression.Bind(parameterY, valueY)
+                ),
+                new LogAndResult<int> { Value = F(1, 2) }
+            );
+
+            AssertCompile<int>(log =>
+                CSharpExpression.Call(method,
+                    CSharpExpression.Bind(parameterY, valueY),
+                    CSharpExpression.Bind(parameterX, valueX)
+                ),
+                new LogAndResult<int> { Value = F(1, 2) }
+            );
+
+            AssertCompile<int>(log =>
+                CSharpExpression.Call(method,
+                    CSharpExpression.Bind(parameterY, valueY),
+                    CSharpExpression.Bind(parameterX, valueX),
+                    CSharpExpression.Bind(parameterZ, valueZ)
+                ),
+                new LogAndResult<int> { Value = F(1, 2, 3) }
+            );
+
+            AssertCompile<int>(log =>
+                CSharpExpression.Call(method,
+                    CSharpExpression.Bind(parameterX, valueX),
+                    CSharpExpression.Bind(parameterY, valueY),
+                    CSharpExpression.Bind(parameterZ, valueZ)
+                ),
+                new LogAndResult<int> { Value = F(1, 2, 3) }
+            );
+
+            AssertCompile<int>(log =>
+                CSharpExpression.Call(method,
+                    CSharpExpression.Bind(parameterY, log(valueY, "Y")),
+                    CSharpExpression.Bind(parameterX, valueX),
+                    CSharpExpression.Bind(parameterZ, log(valueZ, "Z"))
+                ),
+                new LogAndResult<int> { Value = F(1, 2, 3), Log = { "Y", "Z" } }
+            );
+
+            AssertCompile<int>(log =>
+                CSharpExpression.Call(method,
+                    CSharpExpression.Bind(parameterY, log(valueY, "Y")),
+                    CSharpExpression.Bind(parameterX, Expression.Default(typeof(int))),
+                    CSharpExpression.Bind(parameterZ, log(valueZ, "Z"))
+                ),
+                new LogAndResult<int> { Value = F(0, 2, 3), Log = { "Y", "Z" } }
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Variable()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { valueY },
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterX, log(valueX, "S")),
+                        CSharpExpression.Bind(parameterY, valueY)
+                    ),
+                    valueY
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { valueY },
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterX, log(valueX, "S")),
+                        CSharpExpression.Bind(parameterY, log(valueY, "X"))
+                    ),
+                    valueY
+                ),
+                new LogAndResult<int> { Value = 0, Log = { "S", "X" } } // log(...) is not writeable
+            );
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { valueY },
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, valueY),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    valueY
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { valueY },
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, log(valueY, "X")),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    valueY
+                ),
+                new LogAndResult<int> { Value = 0, Log = { "X", "S" } } // log(...) is not writeable
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Field()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            var box = Expression.Parameter(typeof(StrongBox<int>));
+            var newBox = Expression.Assign(box, Expression.New(box.Type));
+            var boxValue = Expression.Field(box, "Value");
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { box },
+                    newBox,
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, boxValue),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    boxValue
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Property()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            var box = Expression.Parameter(typeof(MyBox<int>));
+            var newBox = Expression.Assign(box, Expression.New(box.Type));
+            var boxValue = Expression.Property(box, "Value");
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { box },
+                    newBox,
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, boxValue),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    boxValue
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Array1()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            var array = Expression.Parameter(typeof(int[]));
+            var newArray = Expression.Assign(array, Expression.NewArrayBounds(typeof(int), Expression.Constant(1)));
+            var element = Expression.ArrayAccess(array, Expression.Constant(0));
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { array },
+                    newArray,
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, element),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    element
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Array2()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            var array = Expression.Parameter(typeof(int[]));
+            var newArray = Expression.Assign(array, Expression.NewArrayBounds(typeof(int), Expression.Constant(1)));
+            var element = Expression.ArrayIndex(array, Expression.Constant(0));
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { array },
+                    newArray,
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, element),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    element
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+        }
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Array3()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            var array = Expression.Parameter(typeof(int[,]));
+            var newArray = Expression.Assign(array, Expression.NewArrayBounds(typeof(int), Expression.Constant(1), Expression.Constant(1)));
+            var element = Expression.ArrayIndex(array, Expression.Constant(0), Expression.Constant(0));
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { array },
+                    newArray,
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, element),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    element
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+        }
+
+        // TODO: tests that assert no re-evaluation of writeback arguments
+
+        [TestMethod]
+        public void MethodCall_Compile_ByRef_Index()
+        {
+            var method = MethodInfoOf((int x) => int.TryParse("", out x));
+
+            var parameters = method.GetParameters();
+
+            var parameterX = parameters[0];
+            var parameterY = parameters[1];
+
+            var valueX = Expression.Constant("42");
+            var valueY = Expression.Parameter(typeof(int));
+
+            var list = Expression.Parameter(typeof(List<int>));
+            var newList = Expression.Assign(list, Expression.ListInit(Expression.New(typeof(List<int>)), Expression.Constant(1)));
+            var element = Expression.MakeIndex(list, typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(0) });
+
+            AssertCompile<int>(log =>
+                Expression.Block(new[] { list },
+                    newList,
+                    CSharpExpression.Call(method,
+                        CSharpExpression.Bind(parameterY, element),
+                        CSharpExpression.Bind(parameterX, log(valueX, "S"))
+                    ),
+                    element
+                ),
+                new LogAndResult<int> { Value = 42, Log = { "S" } }
+            );
+        }
+
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLogValue<T>(createExpression).Compile()();
@@ -282,6 +592,11 @@ namespace Tests
 
                 return base.VisitMethodCall(node);
             }
+        }
+
+        class MyBox<T>
+        {
+            public T Value { get; set; }
         }
     }
 }

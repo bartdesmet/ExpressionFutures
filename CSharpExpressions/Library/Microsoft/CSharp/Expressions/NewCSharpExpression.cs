@@ -77,6 +77,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            var res = default(Expression);
+
             var parameters = Constructor.GetParametersCached();
 
             if (CheckArgumentsInOrder(Arguments))
@@ -90,35 +92,17 @@ namespace Microsoft.CSharp.Expressions
 
                 FillOptionalParameters(parameters, args);
 
-                return Expression.New(Constructor, args);
+                res = Expression.New(Constructor, args);
             }
             else
             {
-                var vars = new ParameterExpression[Arguments.Count];
-                var exprs = new Expression[vars.Length + 1];
-                var args = new Expression[parameters.Length];
+                var vars = new List<ParameterExpression>();
+                var exprs = new List<Expression>();
 
-                var i = 0;
-                foreach (var argument in Arguments)
-                {
-                    var parameter = argument.Parameter;
-                    var expression = argument.Expression;
-
-                    var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                    vars[i] = var;
-                    exprs[i] = Expression.Assign(var, expression);
-
-                    args[parameter.Position] = var;
-
-                    i++;
-                }
-
-                FillOptionalParameters(parameters, args);
-
-                exprs[i] = Expression.New(Constructor, args);
-
-                return Expression.Block(vars, exprs);
+                res = BindArguments(args => Expression.New(Constructor, args), parameters, Arguments, vars, exprs);
             }
+
+            return res;
         }
     }
 

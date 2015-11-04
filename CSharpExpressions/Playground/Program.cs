@@ -37,6 +37,8 @@ namespace Playground
             Call4();
             Call5();
             Call6();
+            Call7();
+            Call8();
         }
 
         static void Call1()
@@ -142,6 +144,44 @@ namespace Playground
             var call = CSharpExpression.Call(obj, mtd, arg2, arg0, arg1);
 
             var res = Expression.Lambda<Func<int>>(call).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void Call7()
+        {
+            var x = default(int);
+            var mtd = MethodInfoOf((string s) => int.TryParse(s, out x));
+
+            var val1 = mtd.GetParameters()[0];
+            var val2 = mtd.GetParameters()[1];
+
+            var i = Expression.Parameter(typeof(int));
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant("42"), "A"));
+            var arg1 = CSharpExpression.Bind(val2, Log(i, "B"));
+
+            var call = CSharpExpression.Call(mtd, arg1, arg0);
+
+            var res = Expression.Lambda<Func<int>>(Expression.Block(new[] { i }, call, i)).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void Call8()
+        {
+            var x = default(int);
+            var mtd = MethodInfoOf((string s) => int.TryParse(s, out x));
+
+            var val1 = mtd.GetParameters()[0];
+            var val2 = mtd.GetParameters()[1];
+
+            var i = Expression.Parameter(typeof(int));
+            var arg0 = CSharpExpression.Bind(val1, Log(Expression.Constant("42"), "A"));
+            var arg1 = CSharpExpression.Bind(val2, i);
+
+            var call = CSharpExpression.Call(mtd, arg1, arg0);
+
+            var res = Expression.Lambda<Func<int>>(Expression.Block(new[] { i }, call, i)).Compile()();
 
             Console.WriteLine(res);
         }

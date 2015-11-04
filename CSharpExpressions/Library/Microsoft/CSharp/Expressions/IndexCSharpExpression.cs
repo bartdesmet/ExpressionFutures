@@ -86,6 +86,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            var res = default(Expression);
+
             var method = Indexer.GetGetMethod(true);
             var parameters = method.GetParametersCached();
 
@@ -100,40 +102,21 @@ namespace Microsoft.CSharp.Expressions
 
                 FillOptionalParameters(parameters, args);
 
-                return Expression.Property(Object, Indexer, args);
+                res = Expression.Property(Object, Indexer, args);
             }
             else
             {
-                var vars = new ParameterExpression[Arguments.Count + 1];
-                var exprs = new Expression[vars.Length + 1];
-                var args = new Expression[parameters.Length];
+                var vars = new List<ParameterExpression>();
+                var exprs = new List<Expression>();
 
                 var obj = Expression.Parameter(Object.Type, "obj");
-                vars[0] = obj;
-                exprs[0] = Expression.Assign(obj, Object);
+                vars.Add(obj);
+                exprs.Add(Expression.Assign(obj, Object));
 
-                var i = 1;
-
-                foreach (var argument in Arguments)
-                {
-                    var parameter = argument.Parameter;
-                    var expression = argument.Expression;
-
-                    var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                    vars[i] = var;
-                    exprs[i] = Expression.Assign(var, expression);
-
-                    args[parameter.Position] = var;
-
-                    i++;
-                }
-
-                FillOptionalParameters(parameters, args);
-
-                exprs[i] = Expression.Property(obj, Indexer, args);
-
-                return Expression.Block(vars, exprs);
+                res = BindArguments(args => Expression.Property(obj, Indexer, args), parameters, Arguments, vars, exprs);
             }
+
+            return res;
         }
     }
 

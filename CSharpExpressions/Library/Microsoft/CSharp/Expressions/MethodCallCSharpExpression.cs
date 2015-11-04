@@ -85,6 +85,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            var res = default(Expression);
+
             var parameters = Method.GetParametersCached();
 
             if (CheckArgumentsInOrder(Arguments))
@@ -98,47 +100,27 @@ namespace Microsoft.CSharp.Expressions
 
                 FillOptionalParameters(parameters, args);
 
-                return Expression.Call(Object, Method, args);
+                res = Expression.Call(Object, Method, args);
             }
             else
             {
-                var isStatic = Method.IsStatic;
+                var vars = new List<ParameterExpression>();
+                var exprs = new List<Expression>();
 
-                var vars = new ParameterExpression[(isStatic ? 0 : 1) + Arguments.Count];
-                var exprs = new Expression[vars.Length + 1];
-                var args = new Expression[parameters.Length];
-
-                var obj = default(ParameterExpression);
-                var i = 0;
-                if (!isStatic)
+                var obj = default(Expression);
+                if (!Method.IsStatic)
                 {
-                    obj = Expression.Parameter(Object.Type, "obj");
-                    vars[i] = obj;
-                    exprs[i] = Expression.Assign(obj, Object);
+                    var var = Expression.Parameter(Object.Type, "obj");
+                    vars.Add(var);
 
-                    i++;
+                    obj = var;
+                    exprs.Add(Expression.Assign(var, Object));
                 }
 
-                foreach (var argument in Arguments)
-                {
-                    var parameter = argument.Parameter;
-                    var expression = argument.Expression;
-
-                    var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                    vars[i] = var;
-                    exprs[i] = Expression.Assign(var, expression);
-
-                    args[parameter.Position] = var;
-
-                    i++;
-                }
-
-                FillOptionalParameters(parameters, args);
-
-                exprs[i] = Expression.Call(obj, Method, args);
-
-                return Expression.Block(vars, exprs);
+                res = BindArguments(args => Expression.Call(obj, Method, args), parameters, Arguments, vars, exprs);
             }
+
+            return res;
         }
     }
 

@@ -69,7 +69,7 @@ namespace Tests
             var body = createExpression(getLogEntry, appendVar);
 #endif
 
-            return
+            var res =
                 Expression.Lambda<Func<LogAndResult<T>>>(
                     Expression.Block(
                         new[]
@@ -96,6 +96,8 @@ namespace Tests
                         Expression.New(logAndResultCtor, logParam, valueParam, errorParam)
                     )
                 );
+
+            return res;
         }
     }
 
