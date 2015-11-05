@@ -40,6 +40,8 @@ var errors = new[]
 	new { Name = "NoEnumerablePattern", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has no valid enumerable pattern" },
 	new { Name = "InvalidInitializer", ExceptionType = "ArgumentException", Args = 0, Message = "Initializers should be assignments to variables" },
 	new { Name = "DuplicateLabels", ExceptionType = "ArgumentException", Args = 0, Message = "Break and continue lables should be different" },
+	new { Name = "ConditionalAccessRequiresNonStaticMember", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require non-static members." },
+	new { Name = "ConditionalAccessRequiresReadableProperty", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require readable properties." },
 };
 #>
 // Prototyping extended expression trees for C#.

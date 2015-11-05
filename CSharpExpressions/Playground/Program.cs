@@ -27,6 +27,7 @@ namespace Playground
             Using();
             ForEach();
             For();
+            ConditionalMember();
         }
 
         static void Call()
@@ -679,6 +680,40 @@ namespace Playground
                 )
             );
             loop.Compile()();
+        }
+
+        static void ConditionalMember()
+        {
+            ConditionalMember1();
+            ConditionalMember2();
+            ConditionalMember3();
+        }
+
+        static void ConditionalMember1()
+        {
+            var p = Expression.Parameter(typeof(TimeSpan?));
+            var e = Expression.Lambda<Func<TimeSpan?, int?>>(CSharpExpression.ConditionalProperty(p, "Seconds"), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(TimeSpan.FromSeconds(42)));
+        }
+
+        static void ConditionalMember2()
+        {
+            var p = Expression.Parameter(typeof(string));
+            var e = Expression.Lambda<Func<string, int?>>(CSharpExpression.ConditionalProperty(p, "Length"), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f("bar"));
+        }
+
+        static void ConditionalMember3()
+        {
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var e = Expression.Lambda<Func<DateTimeOffset?, int?>>(CSharpExpression.ConditionalProperty(CSharpExpression.ConditionalProperty(p, "Offset"), "Hours"), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTimeOffset.Now));
         }
 
         static int F(int x, int y, int z = 42)

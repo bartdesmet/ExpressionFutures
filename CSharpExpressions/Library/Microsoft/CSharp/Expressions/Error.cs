@@ -275,6 +275,22 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.DuplicateLabels);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Conditional access expressions require non-static members."
+        /// </summary>
+        internal static Exception ConditionalAccessRequiresNonStaticMember()
+        {
+            return new ArgumentException(Strings.ConditionalAccessRequiresNonStaticMember);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Conditional access expressions require readable properties."
+        /// </summary>
+        internal static Exception ConditionalAccessRequiresReadableProperty()
+        {
+            return new ArgumentException(Strings.ConditionalAccessRequiresReadableProperty);
+        }
+
     }
 
     /// <summary>
@@ -579,6 +595,28 @@ namespace Microsoft.CSharp.Expressions
 			}
         }
 
+        /// <summary>
+        /// A string like "Conditional access expressions require non-static members."
+        /// </summary>
+        internal static string ConditionalAccessRequiresNonStaticMember
+        {
+			get
+			{
+				return SR.ConditionalAccessRequiresNonStaticMember;
+			}
+        }
+
+        /// <summary>
+        /// A string like "Conditional access expressions require readable properties."
+        /// </summary>
+        internal static string ConditionalAccessRequiresReadableProperty
+        {
+			get
+			{
+				return SR.ConditionalAccessRequiresReadableProperty;
+			}
+        }
+
     }
 }
 
@@ -619,5 +657,7 @@ namespace System
 		public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
 		public const string InvalidInitializer = "Initializers should be assignments to variables";
 		public const string DuplicateLabels = "Break and continue lables should be different";
+		public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members.";
+		public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
 	}
 }
