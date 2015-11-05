@@ -149,6 +149,8 @@ namespace Microsoft.CSharp.Expressions
 
             return new MethodCallCSharpExpression(instance, method, argList);
         }
+
+        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
     }
 
     partial class CSharpExpressionVisitor
