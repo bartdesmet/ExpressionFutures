@@ -55,6 +55,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\ForCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ForEachCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Helpers.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\ConditionalIndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\IndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalLoopCSharpStatement.cs" />

@@ -72,7 +72,7 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the static type of the expression that this <see cref="System.Linq.Expressions.Expression" /> represents. (Inherited from <see cref="System.Linq.Expressions.Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public override Type Type => UnderlyingType.GetConditionalType();
+        public sealed override Type Type => UnderlyingType.GetConditionalType();
 
         /// <summary>
         /// Gets the result type of the underlying access.
@@ -83,7 +83,7 @@ namespace Microsoft.CSharp.Expressions
         /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
-        public override Expression Reduce()
+        public sealed override Expression Reduce()
         {
             // TODO: optimize for the case where Expression is a conditional access itself
             //       note we could possibly reuse variables of the same type as well

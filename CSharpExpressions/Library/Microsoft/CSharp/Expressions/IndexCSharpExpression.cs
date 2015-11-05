@@ -155,6 +155,15 @@ namespace Microsoft.CSharp.Expressions
 
             RequiresCanRead(instance, nameof(instance));
 
+            var argList = arguments.ToReadOnly();
+
+            ValidateIndexer(instance.Type, indexer, ref parameters, argList);
+
+            return new IndexCSharpExpression(instance, indexer, argList);
+        }
+
+        private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ref ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
+        {
             if (indexer.PropertyType.IsByRef) throw LinqError.PropertyCannotHaveRefType();
             if (indexer.PropertyType == typeof(void)) throw LinqError.PropertyTypeCannotBeVoid();
 
@@ -175,9 +184,8 @@ namespace Microsoft.CSharp.Expressions
             }
 
             ValidateMethodInfo(getter);
-            ValidateCallInstanceType(instance.Type, getter);
 
-            var argList = arguments.ToReadOnly();
+            ValidateCallInstanceType(instanceType, getter);
 
             foreach (var arg in argList)
             {
@@ -189,8 +197,6 @@ namespace Microsoft.CSharp.Expressions
 
             parameters = parameters ?? indexer.GetIndexParameters();
             ValidateParameterBindings(getter, parameters, argList);
-
-            return new IndexCSharpExpression(instance, indexer, argList);
         }
     }
 

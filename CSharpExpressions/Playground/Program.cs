@@ -29,6 +29,7 @@ namespace Playground
             For();
             ConditionalMember();
             ConditionalCall();
+            ConditionalIndex();
         }
 
         static void Call()
@@ -757,6 +758,23 @@ namespace Playground
             var f = e.Compile();
             Console.WriteLine(f(null));
             Console.WriteLine(f("bar"));
+        }
+
+        static void ConditionalIndex()
+        {
+            ConditionalIndex1();
+        }
+
+        static void ConditionalIndex1()
+        {
+            var index = PropertyInfoOf((List<int> xs) => xs[default(int)]);
+            var p0 = index.GetIndexParameters()[0];
+
+            var p = Expression.Parameter(typeof(List<int>));
+            var e = Expression.Lambda<Func<List<int>, int?>>(CSharpExpression.ConditionalIndex(p, index, CSharpExpression.Bind(p0, Expression.Constant(0))), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(new List<int> { 42 }));
         }
 
         static int F(int x, int y, int z = 42)
