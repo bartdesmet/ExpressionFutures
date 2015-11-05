@@ -76,6 +76,6 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// A node that represents a conditional delegate invocation.
         /// </summary>
-        ConditionalInvocation,
+        ConditionalInvoke,
     }
 }

@@ -30,6 +30,7 @@ namespace Playground
             ConditionalMember();
             ConditionalCall();
             ConditionalIndex();
+            ConditionalInvoke();
         }
 
         static void Call()
@@ -775,6 +776,20 @@ namespace Playground
             var f = e.Compile();
             Console.WriteLine(f(null));
             Console.WriteLine(f(new List<int> { 42 }));
+        }
+
+        static void ConditionalInvoke()
+        {
+            ConditionalInvoke1();
+        }
+
+        static void ConditionalInvoke1()
+        {
+            var p = Expression.Parameter(typeof(Func<int>));
+            var e = Expression.Lambda<Func<Func<int>, int?>>(CSharpExpression.ConditionalInvoke(p), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(() => 42));
         }
 
         static int F(int x, int y, int z = 42)
