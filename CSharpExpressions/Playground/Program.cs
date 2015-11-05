@@ -28,6 +28,7 @@ namespace Playground
             ForEach();
             For();
             ConditionalMember();
+            ConditionalCall();
         }
 
         static void Call()
@@ -714,6 +715,48 @@ namespace Playground
             var f = e.Compile();
             Console.WriteLine(f(null));
             Console.WriteLine(f(DateTimeOffset.Now));
+        }
+
+        static void ConditionalCall()
+        {
+            ConditionalCall1();
+            ConditionalCall2();
+            ConditionalCall3();
+        }
+
+        static void ConditionalCall1()
+        {
+            var addYears = MethodInfoOf((DateTime dt) => dt.AddYears(default(int)));
+            var p0 = addYears.GetParameters()[0];
+
+            var p = Expression.Parameter(typeof(DateTime?));
+            var e = Expression.Lambda<Func<DateTime?, DateTime?>>(CSharpExpression.ConditionalCall(p, addYears, CSharpExpression.Bind(p0, Expression.Constant(1))), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTime.Now));
+        }
+
+        static void ConditionalCall2()
+        {
+            var toString = MethodInfoOf((DateTime dt) => dt.ToString());
+
+            var p = Expression.Parameter(typeof(DateTime?));
+            var e = Expression.Lambda<Func<DateTime?, string>>(CSharpExpression.ConditionalCall(p, toString), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTime.Now));
+        }
+
+        static void ConditionalCall3()
+        {
+            var toUpper = MethodInfoOf((string s) => s.ToUpper());
+            var toLower = MethodInfoOf((string s) => s.ToLower());
+
+            var p = Expression.Parameter(typeof(string));
+            var e = Expression.Lambda<Func<string, string>>(CSharpExpression.ConditionalCall(CSharpExpression.ConditionalCall(p, toLower), toUpper), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f("bar"));
         }
 
         static int F(int x, int y, int z = 42)

@@ -86,13 +86,7 @@ namespace Microsoft.CSharp.Expressions
             {
             }
 
-            protected override Type UnderlyingType
-            {
-                get
-                {
-                    return ((FieldInfo)Member).FieldType;
-                }
-            }
+            protected override Type UnderlyingType => ((FieldInfo)Member).FieldType;
         }
 
         class PropertyExpression : ConditionalMemberCSharpExpression
@@ -102,13 +96,7 @@ namespace Microsoft.CSharp.Expressions
             {
             }
 
-            protected override Type UnderlyingType
-            {
-                get
-                {
-                    return ((PropertyInfo)Member).PropertyType;
-                }
-            }
+            protected override Type UnderlyingType => ((PropertyInfo)Member).PropertyType;
         }
     }
 
