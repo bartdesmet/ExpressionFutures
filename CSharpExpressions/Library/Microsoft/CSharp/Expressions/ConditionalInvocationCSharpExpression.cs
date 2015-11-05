@@ -115,6 +115,8 @@ namespace Microsoft.CSharp.Expressions
 
             return new ConditionalInvocationCSharpExpression(expression, argList, method);
         }
+
+        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
     }
 
     partial class CSharpExpressionVisitor

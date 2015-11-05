@@ -162,6 +162,8 @@ namespace Microsoft.CSharp.Expressions
             return new IndexCSharpExpression(instance, indexer, argList);
         }
 
+        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
+
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ref ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
         {
             if (indexer.PropertyType.IsByRef) throw LinqError.PropertyCannotHaveRefType();

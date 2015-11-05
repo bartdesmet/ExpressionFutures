@@ -154,6 +154,8 @@ namespace Microsoft.CSharp.Expressions
 
             return new ConditionalIndexCSharpExpression(instance, indexer, argList);
         }
+
+        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
     }
 
     partial class CSharpExpressionVisitor
