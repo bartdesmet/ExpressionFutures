@@ -10,6 +10,7 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -445,6 +446,16 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return writeback != null;
+        }
+
+        public static Type GetConditionalType(this Type type)
+        {
+            if (type.IsValueType && type != typeof(void) && !type.IsNullableType())
+            {
+                return GetNullableType(type);
+            }
+
+            return type;
         }
     }
 }

@@ -61,5 +61,21 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a for statement.
         /// </summary>
         For,
+        /// <summary>
+        /// A node that represents a conditional property or field access.
+        /// </summary>
+        ConditionalMemberAccess,
+        /// <summary>
+        /// A node that represents a conditional method call.
+        /// </summary>
+        ConditionalCall,
+        /// <summary>
+        /// A node that represents a conditional indexer lookup.
+        /// </summary>
+        ConditionalIndex,
+        /// <summary>
+        /// A node that represents a conditional delegate invocation.
+        /// </summary>
+        ConditionalInvocation,
     }
 }

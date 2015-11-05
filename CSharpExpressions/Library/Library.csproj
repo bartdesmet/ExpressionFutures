@@ -42,6 +42,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AsyncLambdaCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\ConditionalMemberCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Error.cs">
