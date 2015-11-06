@@ -129,7 +129,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ConditionalMember_Compile_Property()
+        public void ConditionalMember_Compile_Property_Ref()
         {
             var p = Expression.Parameter(typeof(Qux));
             var q = new Qux();
@@ -157,7 +157,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ConditionalMember_Compile_Field()
+        public void ConditionalMember_Compile_Field_Ref()
         {
             var p = Expression.Parameter(typeof(Qux));
             var q = new Qux();
@@ -178,6 +178,62 @@ namespace Tests
 
             var m3 = CSharpExpression.ConditionalField(p, "T");
             var f3 = Expression.Lambda<Func<Qux, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("bar", d3(q));
+            Assert.IsNull(d3(null));
+        }
+
+        [TestMethod]
+        public void ConditionalMember_Compile_Property_Val()
+        {
+            var p = Expression.Parameter(typeof(Quz?));
+            var q = new Quz(false);
+
+            var m1 = CSharpExpression.ConditionalProperty(p, "X");
+            var f1 = Expression.Lambda<Func<Quz?, int?>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalProperty(p, "N");
+            var f2 = Expression.Lambda<Func<Quz?, int?>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(42, d2(q));
+            Assert.IsNull(d2(null));
+
+            var m3 = CSharpExpression.ConditionalProperty(p, "S");
+            var f3 = Expression.Lambda<Func<Quz?, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("bar", d3(q));
+            Assert.IsNull(d3(null));
+        }
+
+        [TestMethod]
+        public void ConditionalMember_Compile_Field_Val()
+        {
+            var p = Expression.Parameter(typeof(Quz?));
+            var q = new Quz(false);
+
+            var m1 = CSharpExpression.ConditionalField(p, "Y");
+            var f1 = Expression.Lambda<Func<Quz?, int?>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalField(p, "O");
+            var f2 = Expression.Lambda<Func<Quz?, int?>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(42, d2(q));
+            Assert.IsNull(d2(null));
+
+            var m3 = CSharpExpression.ConditionalField(p, "T");
+            var f3 = Expression.Lambda<Func<Quz?, string>>(m3, p);
             var d3 = f3.Compile();
 
             Assert.AreEqual("bar", d3(q));
@@ -230,6 +286,24 @@ namespace Tests
             public int Y = 42;
             public int? O = 42;
             public string T = "bar";
+        }
+
+        struct Quz
+        {
+            public Quz(bool b)
+            {
+                Y = 42;
+                O = 42;
+                T = "bar";
+            }
+
+            public int X => 42;
+            public int? N => 42;
+            public string S => "bar";
+
+            public int Y;
+            public int? O;
+            public string T;
         }
     }
 }

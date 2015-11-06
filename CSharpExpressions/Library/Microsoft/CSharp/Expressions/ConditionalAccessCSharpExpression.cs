@@ -99,17 +99,24 @@ namespace Microsoft.CSharp.Expressions
             var variable = Expression.Parameter(expressionType);
             var assignExpressionToVariable = Expression.Assign(variable, Expression);
 
-            var checkNull =
-                Expression.IfThen(
-                    Expression.Equal(variable, Expression.Default(expressionType)),
-                    Expression.Goto(returnLabelTarget, nullValue)
-                );
+            var nullCheck = default(Expression);
 
             var nonNull = (Expression)variable;
             if (expressionType.IsNullableType())
             {
                 nonNull = Expression.Property(variable, "Value");
+                nullCheck = Expression.Not(Expression.Property(variable, "HasValue"));
             }
+            else
+            {
+                nullCheck = Expression.Equal(variable, Expression.Default(expressionType));
+            }
+
+            var checkNull =
+                Expression.IfThen(
+                    nullCheck,
+                    Expression.Goto(returnLabelTarget, nullValue)
+                );
 
             var eval = ReduceAccess(nonNull);
 
