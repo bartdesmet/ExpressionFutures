@@ -60,6 +60,7 @@
     <Compile Include="ConditionalCallTests.cs" />
     <Compile Include="ConditionalIndexTests.cs" />
     <Compile Include="ConditionalMemberTests.cs" />
+    <Compile Include="HelpersTests.cs" />
     <Compile Include="ShadowEliminatorTests.cs" />
     <Compile Include="ShallowVisitorTests.cs" />
     <Compile Include="SpillerTests.cs" />
