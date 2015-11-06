@@ -115,6 +115,7 @@ namespace Tests
         }
 
         // TODO: tests to assert args are not evaluated if receiver is null
+        // TODO: tests to assert receiver is only evaluated once
 
         [TestMethod]
         public void ConditionalInvoke_Visitor()

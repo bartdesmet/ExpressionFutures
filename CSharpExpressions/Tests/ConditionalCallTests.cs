@@ -88,9 +88,63 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ConditionalCall_Compile()
+        public void ConditionalCall_Compile_Ref()
         {
+            var p = Expression.Parameter(typeof(Qux));
+            var q = new Qux();
+
+            var m1 = CSharpExpression.ConditionalCall(p, typeof(Qux).GetMethod("X"));
+            var f1 = Expression.Lambda<Func<Qux, int?>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalCall(p, typeof(Qux).GetMethod("N"));
+            var f2 = Expression.Lambda<Func<Qux, int?>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(42, d2(q));
+            Assert.IsNull(d2(null));
+
+            var m3 = CSharpExpression.ConditionalCall(p, typeof(Qux).GetMethod("S"));
+            var f3 = Expression.Lambda<Func<Qux, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("bar", d3(q));
+            Assert.IsNull(d3(null));
         }
+
+        [TestMethod]
+        public void ConditionalCall_Compile_Val()
+        {
+            var p = Expression.Parameter(typeof(Quz?));
+            var q = new Quz();
+
+            var m1 = CSharpExpression.ConditionalCall(p, typeof(Quz).GetMethod("X"));
+            var f1 = Expression.Lambda<Func<Quz?, int?>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalCall(p, typeof(Quz).GetMethod("N"));
+            var f2 = Expression.Lambda<Func<Quz?, int?>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(42, d2(q));
+            Assert.IsNull(d2(null));
+
+            var m3 = CSharpExpression.ConditionalCall(p, typeof(Quz).GetMethod("S"));
+            var f3 = Expression.Lambda<Func<Quz?, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("bar", d3(q));
+            Assert.IsNull(d3(null));
+        }
+
+        // TODO: tests to assert args are not evaluated if receiver is null
+        // TODO: tests to assert receiver is only evaluated once
 
         [TestMethod]
         public void ConditionalCall_Visitor()
@@ -121,6 +175,20 @@ namespace Tests
             public int Foo() { return 0; }
             public int Baz(int x) { return 0; }
             public static int Qux() { return 0; }
+        }
+
+        class Qux
+        {
+            public int X() => 42;
+            public int? N() => 42;
+            public string S() => "bar";
+        }
+
+        struct Quz
+        {
+            public int X() => 42;
+            public int? N() => 42;
+            public string S() => "bar";
         }
     }
 }
