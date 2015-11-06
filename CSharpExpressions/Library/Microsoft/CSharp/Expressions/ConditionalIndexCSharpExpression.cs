@@ -9,8 +9,6 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -111,6 +109,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalIndexCSharpExpression ConditionalIndex(Expression instance, MethodInfo indexer, IEnumerable<ParameterAssignment> arguments)
         {
+            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
             var property = GetProperty(indexer);
             return ConditionalIndexCore(instance, property, indexer.GetParametersCached(), arguments);
         }

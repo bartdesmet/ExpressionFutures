@@ -119,6 +119,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, MethodInfo indexer, IEnumerable<ParameterAssignment> arguments)
         {
+            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
             var property = GetProperty(indexer);
             return IndexCore(instance, property, indexer.GetParametersCached(), arguments);
         }
