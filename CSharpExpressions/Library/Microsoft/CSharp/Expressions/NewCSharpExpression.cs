@@ -90,7 +90,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="NewCSharpExpression" /> that represents calling the specified constructor with the specified arguments.
         /// </summary>
-        /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="P:Constructor"/> property equal to.</param>
+        /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the call arguments.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static NewCSharpExpression New(ConstructorInfo constructor, params ParameterAssignment[] arguments)
@@ -101,7 +101,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="NewCSharpExpression" /> that represents calling the specified constructor with the specified arguments.
         /// </summary>
-        /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="P:Constructor"/> property equal to.</param>
+        /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="NewCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and the <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<ParameterAssignment> arguments)
