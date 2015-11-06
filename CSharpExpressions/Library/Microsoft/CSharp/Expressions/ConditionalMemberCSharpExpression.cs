@@ -124,6 +124,8 @@ namespace Microsoft.CSharp.Expressions
                 return ConditionalProperty(expression, propertyInfo);
             }
 
+            // NB: LINQ doesn't allow a MethodInfo for a property getter here either; should we change this?
+
             throw LinqError.MemberNotFieldOrProperty(member);
         }
 
@@ -200,6 +202,11 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.ConditionalAccessRequiresReadableProperty();
             }
 
+            if (property.GetIndexParameters().Length != 0)
+            {
+                throw Error.ConditionalAccessRequiresReadableProperty();
+            }
+
             if (property.GetGetMethod(true).IsStatic)
             {
                 throw Error.ConditionalAccessRequiresNonStaticMember();
@@ -258,6 +265,8 @@ namespace Microsoft.CSharp.Expressions
 
             return ConditionalProperty(expression, GetProperty(propertyAccessor));
         }
+        
+        // TODO: Add PropertyOrField equivalent?
     }
 
     partial class CSharpExpressionVisitor
