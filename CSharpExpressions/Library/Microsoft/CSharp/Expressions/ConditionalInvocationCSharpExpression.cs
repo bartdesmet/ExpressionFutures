@@ -106,7 +106,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresCanRead(expression, "expression");
 
-            var type = expression.Type.GetNonNullableType();
+            var type = expression.Type.GetNonNullReceiverType();
             var nonNull = Expression.Default(type); // NB: trick to be able to leverage the LINQ helper method; could benefit from refactoring
             var method = GetInvokeMethod(nonNull);
 

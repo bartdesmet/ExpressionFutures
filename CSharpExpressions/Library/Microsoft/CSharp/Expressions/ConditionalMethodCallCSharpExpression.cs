@@ -120,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.ConditionalAccessRequiresNonStaticMember();
             }
 
-            var type = instance.Type.GetNonNullableType();
+            var type = instance.Type.GetNonNullReceiverType();
             ValidateCallInstanceType(type, method);
 
             var argList = arguments.ToReadOnly();

@@ -457,5 +457,11 @@ namespace Microsoft.CSharp.Expressions
 
             return type;
         }
+
+        public static Type GetNonNullReceiverType(this Type type)
+        {
+            // DESIGN: Should we reject non-nullable value types here?
+            return type.GetNonNullableType();
+        }
     }
 }

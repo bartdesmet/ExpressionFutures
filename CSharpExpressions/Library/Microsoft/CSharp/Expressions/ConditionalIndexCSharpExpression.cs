@@ -149,7 +149,7 @@ namespace Microsoft.CSharp.Expressions
 
             var argList = arguments.ToReadOnly();
 
-            var type = instance.Type.GetNonNullableType();
+            var type = instance.Type.GetNonNullReceiverType();
             ValidateIndexer(type, indexer, ref parameters, argList);
 
             return new ConditionalIndexCSharpExpression(instance, indexer, argList);

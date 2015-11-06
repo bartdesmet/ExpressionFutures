@@ -146,7 +146,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.ConditionalAccessRequiresNonStaticMember();
             }
 
-            var type = expression.Type.GetNonNullableType();
+            var type = expression.Type.GetNonNullReceiverType();
 
             if (!TypeUtils.AreReferenceAssignable(field.DeclaringType, type))
             {
@@ -168,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(expression, nameof(expression));
             ContractUtils.RequiresNotNull(fieldName, nameof(fieldName));
 
-            var type = expression.Type.GetNonNullableType();
+            var type = expression.Type.GetNonNullReceiverType();
 
             var field = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 
@@ -212,7 +212,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.ConditionalAccessRequiresNonStaticMember();
             }
 
-            var type = expression.Type.GetNonNullableType();
+            var type = expression.Type.GetNonNullReceiverType();
 
             if (!TypeUtils.IsValidInstanceType(property, type))
             {
@@ -234,7 +234,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(expression, nameof(expression));
             ContractUtils.RequiresNotNull(propertyName, nameof(propertyName));
 
-            var type = expression.Type.GetNonNullableType();
+            var type = expression.Type.GetNonNullReceiverType();
 
             var property = type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 
