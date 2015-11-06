@@ -628,18 +628,9 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        class FinallyAndFaultRewriter : ShallowVisitor
+        class AwaitTracker : ShallowVisitor
         {
-            // NB: C# doesn't have fault handlers, so we should likely reject that in the Checker.
-            //
-            //     However, the implementation below supports fault handlers, which could come in handy
-            //     if a) we ever do support fault handlers, and b) if any language construct needs to
-            //     lower to a fault handler (e.g. some cases for iterators come to mind). In case the
-            //     latter is ever needed, the order of lowering steps will have to be reconsidered in
-            //     the Compile/Reduce methods for AsyncLambda.
-
             private readonly Stack<StrongBox<bool>> _hasAwait = new Stack<StrongBox<bool>>();
-            private int _n;
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
@@ -650,6 +641,35 @@ namespace Microsoft.CSharp.Expressions
 
                 return base.VisitAwait(node);
             }
+
+            protected bool VisitAndFindAwait(Expression expression, out Expression res)
+            {
+                _hasAwait.Push(new StrongBox<bool>());
+
+                res = Visit(expression);
+
+                var hasAwait = _hasAwait.Pop().Value;
+
+                if (hasAwait && _hasAwait.Count > 0)
+                {
+                    _hasAwait.Peek().Value = true;
+                }
+
+                return hasAwait;
+            }
+        }
+
+        class FinallyAndFaultRewriter : AwaitTracker
+        {
+            // NB: C# doesn't have fault handlers, so we should likely reject that in the Checker.
+            //
+            //     However, the implementation below supports fault handlers, which could come in handy
+            //     if a) we ever do support fault handlers, and b) if any language construct needs to
+            //     lower to a fault handler (e.g. some cases for iterators come to mind). In case the
+            //     latter is ever needed, the order of lowering steps will have to be reconsidered in
+            //     the Compile/Reduce methods for AsyncLambda.
+
+            private int _n;
 
             protected override Expression VisitTry(TryExpression node)
             {
@@ -704,22 +724,6 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 return res;
-            }
-
-            private bool VisitAndFindAwait(Expression expression, out Expression res)
-            {
-                _hasAwait.Push(new StrongBox<bool>());
-
-                res = Visit(expression);
-
-                var hasAwait = _hasAwait.Pop().Value;
-
-                if (hasAwait && _hasAwait.Count > 0)
-                {
-                    _hasAwait.Peek().Value = true;
-                }
-
-                return hasAwait;
             }
 
             private Expression RewriteHandler(Expression body, Expression handler, bool isFault)
