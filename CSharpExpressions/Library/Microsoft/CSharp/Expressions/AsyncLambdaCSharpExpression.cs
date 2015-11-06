@@ -783,7 +783,7 @@ namespace Microsoft.CSharp.Expressions
                             Expression.Assign(exStronglyTyped, Expression.TypeAs(err, typeof(Exception))),
                             Expression.IfThenElse(
                                 Expression.ReferenceEqual(exStronglyTyped, Expression.Default(typeof(Exception))),
-                                Expression.Throw(err),
+                                Expression.Throw(err), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
                                 Expression.Call(
                                     Expression.Call(
                                         typeof(ExceptionDispatchInfo).GetMethod("Capture", BindingFlags.Public | BindingFlags.Static),
@@ -791,7 +791,8 @@ namespace Microsoft.CSharp.Expressions
                                     ),
                                     typeof(ExceptionDispatchInfo).GetMethod("Throw", BindingFlags.Public | BindingFlags.Instance)
                                 )
-                            )
+                            ),
+                            Expression.Assign(err, Expression.Default(typeof(object)))
                         )
                     );
 
