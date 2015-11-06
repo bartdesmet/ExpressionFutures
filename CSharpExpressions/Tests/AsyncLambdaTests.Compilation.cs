@@ -576,6 +576,38 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_UnpendBranch1()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var lbl = Expression.Label();
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.Block(
+                    Expression.TryFinally(
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("T")),
+                            Expression.Goto(lbl)
+                        ),
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("FB")),
+                            CSharpExpression.Await(yield),
+                            Expression.Call(logExpr, add, Expression.Constant("FE"))
+                        )
+                    ),
+                    Expression.Call(logExpr, add, Expression.Constant("X")),
+                    Expression.Label(lbl),
+                    Expression.Call(logExpr, add, Expression.Constant("O"))
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            t.Wait();
+            Assert.IsTrue(new[] { "T", "FB", "FE", "O" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_ReducibleNodes()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));

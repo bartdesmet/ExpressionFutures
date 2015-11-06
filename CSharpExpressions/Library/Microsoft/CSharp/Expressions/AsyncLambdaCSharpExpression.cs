@@ -817,6 +817,8 @@ namespace Microsoft.CSharp.Expressions
                     exprs.Add(whenDone);
                 }
 
+                exprs.Add(rethrow);
+
                 if (leaveLabels.Count > 0)
                 {
                     vars.Add(pendingBranch);
@@ -834,8 +836,6 @@ namespace Microsoft.CSharp.Expressions
 
                     exprs.Add(Expression.Switch(pendingBranch, cases.ToArray()));
                 }
-
-                exprs.Add(rethrow);
 
                 if (body.Type != typeof(void))
                 {
