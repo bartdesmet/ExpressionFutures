@@ -129,8 +129,59 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ConditionalMember_Compile()
+        public void ConditionalMember_Compile_Property()
         {
+            var p = Expression.Parameter(typeof(Qux));
+            var q = new Qux();
+
+            var m1 = CSharpExpression.ConditionalProperty(p, "X");
+            var f1 = Expression.Lambda<Func<Qux, int?>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalProperty(p, "N");
+            var f2 = Expression.Lambda<Func<Qux, int?>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(42, d2(q));
+            Assert.IsNull(d2(null));
+
+            var m3 = CSharpExpression.ConditionalProperty(p, "S");
+            var f3 = Expression.Lambda<Func<Qux, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("bar", d3(q));
+            Assert.IsNull(d3(null));
+        }
+
+        [TestMethod]
+        public void ConditionalMember_Compile_Field()
+        {
+            var p = Expression.Parameter(typeof(Qux));
+            var q = new Qux();
+
+            var m1 = CSharpExpression.ConditionalField(p, "Y");
+            var f1 = Expression.Lambda<Func<Qux, int?>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalField(p, "O");
+            var f2 = Expression.Lambda<Func<Qux, int?>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(42, d2(q));
+            Assert.IsNull(d2(null));
+
+            var m3 = CSharpExpression.ConditionalField(p, "T");
+            var f3 = Expression.Lambda<Func<Qux, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("bar", d3(q));
+            Assert.IsNull(d3(null));
         }
 
         [TestMethod]
@@ -169,5 +220,16 @@ namespace Tests
             public static string SP { get; set; }
         }
 #pragma warning restore
+
+        class Qux
+        {
+            public int X => 42;
+            public int? N => 42;
+            public string S => "bar";
+
+            public int Y = 42;
+            public int? O = 42;
+            public string T = "bar";
+        }
     }
 }
