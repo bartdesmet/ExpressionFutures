@@ -19,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the operand of the unary operation.
         /// </summary>
-        /// <returns>An <see cref="T:System.Linq.Expressions.Expression" /> that represents the operand of the unary operation.</returns>
+        /// <returns>An <see cref="Expression" /> that represents the operand of the unary operation.</returns>
         public Expression Operand { get; }
     }
 }
