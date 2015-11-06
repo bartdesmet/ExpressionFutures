@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
@@ -229,7 +230,9 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var reduced = Reducer.Instance.Visit(Body);
+            var lowered = new FinallyAndFaultRewriter().Visit(Body);
+
+            var reduced = Reducer.Instance.Visit(lowered);
 
             var bright = new ShadowEliminator().Visit(reduced);
             var spilled = Spiller.Spill(bright);
@@ -622,6 +625,181 @@ namespace Microsoft.CSharp.Expressions
                     Label = label,
                     Index = index
                 };
+            }
+        }
+
+        class FinallyAndFaultRewriter : ShallowVisitor
+        {
+            // NB: C# doesn't have fault handlers, so we should likely reject that in the Checker.
+            //
+            //     However, the implementation below supports fault handlers, which could come in handy
+            //     if a) we ever do support fault handlers, and b) if any language construct needs to
+            //     lower to a fault handler (e.g. some cases for iterators come to mind). In case the
+            //     latter is ever needed, the order of lowering steps will have to be reconsidered in
+            //     the Compile/Reduce methods for AsyncLambda.
+
+            private readonly Stack<StrongBox<bool>> _hasAwait = new Stack<StrongBox<bool>>();
+            private int _n;
+
+            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
+            {
+                if (_hasAwait.Count > 0)
+                {
+                    _hasAwait.Peek().Value = true;
+                }
+
+                return base.VisitAwait(node);
+            }
+
+            protected override Expression VisitTry(TryExpression node)
+            {
+                var res = default(Expression);
+
+                if (node.Finally != null || node.Fault != null)
+                {
+                    var body = Visit(node.Body);
+                    var handlers = Visit(node.Handlers, VisitCatchBlock);
+
+                    if (node.Finally != null)
+                    {
+                        Debug.Assert(node.Fault == null);
+
+                        var @finally = default(Expression);
+
+                        if (VisitAndFindAwait(node.Finally, out @finally))
+                        {
+                            if (handlers.Count != 0)
+                            {
+                                body = Expression.TryCatch(body, handlers.ToArray());
+                            }
+
+                            res = RewriteHandler(body, @finally, isFault: false);
+                        }
+                        else
+                        {
+                            res = node.Update(body, handlers, @finally, null);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Assert(node.Finally == null);
+
+                        var fault = default(Expression);
+
+                        if (VisitAndFindAwait(node.Fault, out fault))
+                        {
+                            Debug.Assert(handlers.Count == 0);
+
+                            res = RewriteHandler(body, fault, isFault: true);
+                        }
+                        else
+                        {
+                            res = node.Update(body, handlers, null, fault);
+                        }
+                    }
+                }
+                else
+                {
+                    res = base.VisitTry(node);
+                }
+
+                return res;
+            }
+
+            private bool VisitAndFindAwait(Expression expression, out Expression res)
+            {
+                _hasAwait.Push(new StrongBox<bool>());
+
+                res = Visit(expression);
+
+                return _hasAwait.Pop().Value;
+            }
+
+            private Expression RewriteHandler(Expression body, Expression handler, bool isFault)
+            {
+                var err = Expression.Parameter(typeof(object), "__error" + _n++);
+                var ex = Expression.Parameter(typeof(object), "__ex" + _n++);
+
+                var saveException = default(Expression);
+                var value = default(ParameterExpression);
+
+                if (body.Type == typeof(void))
+                {
+                    saveException = Expression.Block(typeof(void), Expression.Assign(err, ex));
+                }
+                else
+                {
+                    value = Expression.Parameter(body.Type, "__result" + _n++);
+                    body = Expression.Assign(value, body);
+                    saveException = Expression.Block(Expression.Assign(err, ex), Expression.Default(body.Type));
+                }
+
+                // NB: This lowering technique is what the C# compiler applies as well. It's not a 100% semantics-
+                //     preserving in combination with exception filters though. In particular, the timing of those
+                //     filters will be different compared to the synchronous case:
+                //
+                //       try { try { T } finally { F } } catch (E) when (X) { C }
+                //
+                //     Consider the case where T throws an exception of a type assignable to E:
+                //
+                //     - If F is synchronous, the order will be T, X, F, C
+                //     - If F is asynchronous, the order will be T, F, X, C
+
+                var lowered =
+                    Expression.TryCatch(
+                        body,
+                        Expression.Catch(ex, saveException)
+                    );
+
+                var exStronglyTyped = Expression.Parameter(typeof(Exception), "__exception" + _n++);
+
+                var whenFaulted = default(Expression);
+                var whenDone = default(Expression);
+
+                if (isFault)
+                {
+                    whenFaulted = handler;
+                    whenDone = Expression.Empty();
+                }
+                else
+                {
+                    whenFaulted = Expression.Empty();
+                    whenDone = handler;
+                }
+
+                var rethrow =
+                    Expression.IfThen(
+                        Expression.ReferenceNotEqual(err, Expression.Default(typeof(object))),
+                        Expression.Block(
+                            new[] { exStronglyTyped },
+                            whenFaulted,
+                            Expression.Assign(exStronglyTyped, Expression.TypeAs(err, typeof(Exception))),
+                            Expression.IfThenElse(
+                                Expression.ReferenceEqual(exStronglyTyped, Expression.Default(typeof(Exception))),
+                                Expression.Throw(err),
+                                Expression.Call(
+                                    Expression.Call(
+                                        typeof(ExceptionDispatchInfo).GetMethod("Capture", BindingFlags.Public | BindingFlags.Static),
+                                        exStronglyTyped
+                                    ),
+                                    typeof(ExceptionDispatchInfo).GetMethod("Throw", BindingFlags.Public | BindingFlags.Instance)
+                                )
+                            )
+                        )
+                    );
+
+                var res = default(Expression);
+
+                if (body.Type == typeof(void))
+                {
+                    res = Expression.Block(new[] { err }, lowered, whenDone, rethrow);
+                }
+                else
+                {
+                    res = Expression.Block(new[] { err, value }, lowered, whenDone, rethrow, value);
+                }
+
+                return res;
             }
         }
     }
