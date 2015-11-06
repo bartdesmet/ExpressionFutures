@@ -89,7 +89,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the arguments that the delegate or lambda expression is applied to.</param>
-        /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalInvoke" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="Arguments" /> properties set to the specified values.</returns>
+        /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalInvoke" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="ConditionalInvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, params ParameterAssignment[] arguments)
         {
             return ConditionalInvoke(expression, (IEnumerable<ParameterAssignment>)arguments);
@@ -99,8 +99,8 @@ namespace Microsoft.CSharp.Expressions
         /// Creates an <see cref="ConditionalInvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
-        /// <param name="arguments">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="Arguments" /> collection.</param>
-        /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalInvoke" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="Arguments" /> properties set to the specified values.</returns>
+        /// <param name="arguments">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="ConditionalInvocationCSharpExpression.Arguments" /> collection.</param>
+        /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalInvoke" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="ConditionalInvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, IEnumerable<ParameterAssignment> arguments)
         {

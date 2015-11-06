@@ -65,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The <see cref="Variable" /> property of the result.</param>
         /// <param name="collection">The <see cref="Collection" /> property of the result.</param>
         /// <param name="conversion">The <see cref="Conversion"/> property of the result.</param>
-        /// <param name="body">The <see cref="Body" /> property of the result.</param>
+        /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ForEachCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, ParameterExpression variable, Expression collection, LambdaExpression conversion, Expression body)
         {

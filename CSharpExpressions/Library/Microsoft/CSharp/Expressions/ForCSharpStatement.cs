@@ -56,7 +56,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="breakLabel">The <see cref="LoopCSharpStatement.BreakLabel" /> property of the result.</param>
         /// <param name="continueLabel">The <see cref="LoopCSharpStatement.ContinueLabel" /> property of the result.</param>
         /// <param name="initializers">The <see cref="ForCSharpStatement.Initializers" /> property of the result.</param>
-        /// <param name="body">The <see cref="ForCSharpStatement.Body" /> property of the result.</param>
+        /// <param name="test">The <see cref="ConditionalLoopCSharpStatement.Test" /> property of the result.</param>
+        /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
         /// <param name="iterators">The <see cref="ForCSharpStatement.Iterators" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ForCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<BinaryExpression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body)
