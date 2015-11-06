@@ -44,7 +44,7 @@ namespace Microsoft.CSharp.Expressions
             [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitBlock(BlockExpression node)
             {
-                // NB: This gets rrid of SpilledExpressionBlock nodes
+                // NB: This gets rid of SpilledExpressionBlock nodes
                 return Expression.Block(node.Type, node.Variables, Visit(node.Expressions));
             }
 
