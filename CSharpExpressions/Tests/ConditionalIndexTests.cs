@@ -111,9 +111,75 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ConditionalIndex_Compile()
+        public void ConditionalIndex_Compile_Ref()
         {
+            var px = Expression.Parameter(typeof(QuxX));
+            var qx = new QuxX();
+            var ix = typeof(QuxX).GetProperty("Item");
+            var ax = CSharpExpression.Bind(ix.GetIndexParameters()[0], Expression.Constant(0));
+            var mx = CSharpExpression.ConditionalIndex(px, ix, ax);
+            var fx = Expression.Lambda<Func<QuxX, int?>>(mx, px);
+            var dx = fx.Compile();
+            Assert.AreEqual(42, dx(qx));
+            Assert.IsNull(dx(null));
+
+            var pn = Expression.Parameter(typeof(QuxN));
+            var qn = new QuxN();
+            var jn = typeof(QuxN).GetProperty("Item");
+            var an = CSharpExpression.Bind(jn.GetIndexParameters()[0], Expression.Constant(0));
+            var mn = CSharpExpression.ConditionalIndex(pn, jn, an);
+            var fn = Expression.Lambda<Func<QuxN, int?>>(mn, pn);
+            var dn = fn.Compile();
+            Assert.AreEqual(42, dn(qn));
+            Assert.IsNull(dn(null));
+
+            var ps = Expression.Parameter(typeof(QuxS));
+            var qs = new QuxS();
+            var js = typeof(QuxS).GetProperty("Item");
+            var bs = CSharpExpression.Bind(js.GetIndexParameters()[0], Expression.Constant(0));
+            var ms = CSharpExpression.ConditionalIndex(ps, js, bs);
+            var fs = Expression.Lambda<Func<QuxS, string>>(ms, ps);
+            var ds = fs.Compile();
+            Assert.AreEqual("bar", ds(qs));
+            Assert.IsNull(ds(null));
         }
+
+        [TestMethod]
+        public void ConditionalIndex_Compile_Val()
+        {
+            var px = Expression.Parameter(typeof(QuzX?));
+            var qx = new QuzX();
+            var ix = typeof(QuzX).GetProperty("Item");
+            var ax = CSharpExpression.Bind(ix.GetIndexParameters()[0], Expression.Constant(0));
+            var mx = CSharpExpression.ConditionalIndex(px, ix, ax);
+            var fx = Expression.Lambda<Func<QuzX?, int?>>(mx, px);
+            var dx = fx.Compile();
+            Assert.AreEqual(42, dx(qx));
+            Assert.IsNull(dx(null));
+
+            var pn = Expression.Parameter(typeof(QuzN?));
+            var qn = new QuzN();
+            var jn = typeof(QuzN).GetProperty("Item");
+            var an = CSharpExpression.Bind(jn.GetIndexParameters()[0], Expression.Constant(0));
+            var mn = CSharpExpression.ConditionalIndex(pn, jn, an);
+            var fn = Expression.Lambda<Func<QuzN?, int?>>(mn, pn);
+            var dn = fn.Compile();
+            Assert.AreEqual(42, dn(qn));
+            Assert.IsNull(dn(null));
+
+            var ps = Expression.Parameter(typeof(QuzS?));
+            var qs = new QuzS();
+            var js = typeof(QuzS).GetProperty("Item");
+            var bs = CSharpExpression.Bind(js.GetIndexParameters()[0], Expression.Constant(0));
+            var ms = CSharpExpression.ConditionalIndex(ps, js, bs);
+            var fs = Expression.Lambda<Func<QuzS?, string>>(ms, ps);
+            var ds = fs.Compile();
+            Assert.AreEqual("bar", ds(qs));
+            Assert.IsNull(ds(null));
+        }
+
+        // TODO: tests to assert args are not evaluated if receiver is null
+        // TODO: tests to assert receiver is only evaluated once
 
         [TestMethod]
         public void ConditionalIndex_Visitor()
@@ -144,6 +210,36 @@ namespace Tests
         {
             public bool this[int x] { get { return false; } }
             public int P { get; set; }
+        }
+
+        class QuxX
+        {
+            public int this[int x] => 42;
+        }
+
+        class QuxN
+        {
+            public int? this[int x] => 42;
+        }
+
+        class QuxS
+        {
+            public string this[int x] => "bar";
+        }
+
+        struct QuzX
+        {
+            public int this[int x] => 42;
+        }
+
+        struct QuzN
+        {
+            public int? this[int x] => 42;
+        }
+
+        struct QuzS
+        {
+            public string this[int x] => "bar";
         }
     }
 }
