@@ -348,20 +348,20 @@ namespace Playground
 
         static void AsyncLambda()
         {
-            //AsyncLambda1();
-            //AsyncLambda2();
-            //AsyncLambda3();
-            //AsyncLambda4();
-            //AsyncLambda5();
-            //AsyncLambda6();
-            //AsyncLambda7();
-            //AsyncLambda8();
-            //AsyncLambda9();
-            //AsyncLambda10();
-            //AsyncLambda11();
-            //AsyncLambda12();
-            //AsyncLambda13();
-            //AsyncLambda14();
+            AsyncLambda1();
+            AsyncLambda2();
+            AsyncLambda3();
+            AsyncLambda4();
+            AsyncLambda5();
+            AsyncLambda6();
+            AsyncLambda7();
+            AsyncLambda8();
+            AsyncLambda9();
+            AsyncLambda10();
+            AsyncLambda11();
+            AsyncLambda12();
+            AsyncLambda13();
+            AsyncLambda14();
             AsyncLambda15();
         }
 
