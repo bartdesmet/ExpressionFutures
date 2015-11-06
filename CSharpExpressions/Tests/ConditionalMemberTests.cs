@@ -157,6 +157,7 @@ namespace Tests
             }
         }
 
+#pragma warning disable CS0649
         class Bar
         {
             public bool this[int x] { get { return false; } }
@@ -167,5 +168,6 @@ namespace Tests
             public static int SF;
             public static string SP { get; set; }
         }
+#pragma warning restore
     }
 }
