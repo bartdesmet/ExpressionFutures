@@ -244,7 +244,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'"
+        /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'"
         /// </summary>
         internal static Exception MoreThanOneIEnumerableFound(object p0)
         {
@@ -303,7 +303,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ParameterNotDefinedForMethod(object p0, object p1)
         {
-			return SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
+            return SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ExpressionTypeDoesNotMatchParameter(object p0, object p1)
         {
-			return SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
+            return SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string DuplicateParameterBinding(object p0)
         {
-			return SR.Format(SR.DuplicateParameterBinding, p0);
+            return SR.Format(SR.DuplicateParameterBinding, p0);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string UnboundParameter(object p0)
         {
-			return SR.Format(SR.UnboundParameter, p0);
+            return SR.Format(SR.UnboundParameter, p0);
         }
 
         /// <summary>
@@ -335,10 +335,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string NonStaticConstructorRequired
         {
-			get
-			{
-				return SR.NonStaticConstructorRequired;
-			}
+            get
+            {
+                return SR.NonStaticConstructorRequired;
+            }
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string PropertyDoesNotHaveGetAccessor(object p0)
         {
-			return SR.Format(SR.PropertyDoesNotHaveGetAccessor, p0);
+            return SR.Format(SR.PropertyDoesNotHaveGetAccessor, p0);
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AccessorCannotBeStatic(object p0)
         {
-			return SR.Format(SR.AccessorCannotBeStatic, p0);
+            return SR.Format(SR.AccessorCannotBeStatic, p0);
         }
 
         /// <summary>
@@ -362,10 +362,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string RankMismatch
         {
-			get
-			{
-				return SR.RankMismatch;
-			}
+            get
+            {
+                return SR.RankMismatch;
+            }
         }
 
         /// <summary>
@@ -373,10 +373,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string IndexOutOfRange
         {
-			get
-			{
-				return SR.IndexOutOfRange;
-			}
+            get
+            {
+                return SR.IndexOutOfRange;
+            }
         }
 
         /// <summary>
@@ -384,10 +384,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string BoundCannotBeLessThanZero
         {
-			get
-			{
-				return SR.BoundCannotBeLessThanZero;
-			}
+            get
+            {
+                return SR.BoundCannotBeLessThanZero;
+            }
         }
 
         /// <summary>
@@ -395,10 +395,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ArrayBoundsElementCountMismatch
         {
-			get
-			{
-				return SR.ArrayBoundsElementCountMismatch;
-			}
+            get
+            {
+                return SR.ArrayBoundsElementCountMismatch;
+            }
         }
 
         /// <summary>
@@ -406,10 +406,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string GetAwaiterShouldTakeZeroParameters
         {
-			get
-			{
-				return SR.GetAwaiterShouldTakeZeroParameters;
-			}
+            get
+            {
+                return SR.GetAwaiterShouldTakeZeroParameters;
+            }
         }
 
         /// <summary>
@@ -417,10 +417,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string GetAwaiterShouldNotBeGeneric
         {
-			get
-			{
-				return SR.GetAwaiterShouldNotBeGeneric;
-			}
+            get
+            {
+                return SR.GetAwaiterShouldNotBeGeneric;
+            }
         }
 
         /// <summary>
@@ -428,10 +428,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string GetAwaiterShouldReturnAwaiterType
         {
-			get
-			{
-				return SR.GetAwaiterShouldReturnAwaiterType;
-			}
+            get
+            {
+                return SR.GetAwaiterShouldReturnAwaiterType;
+            }
         }
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaiterTypeShouldImplementINotifyCompletion(object p0)
         {
-			return SR.Format(SR.AwaiterTypeShouldImplementINotifyCompletion, p0);
+            return SR.Format(SR.AwaiterTypeShouldImplementINotifyCompletion, p0);
         }
 
         /// <summary>
@@ -447,7 +447,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaiterTypeShouldHaveIsCompletedProperty(object p0)
         {
-			return SR.Format(SR.AwaiterTypeShouldHaveIsCompletedProperty, p0);
+            return SR.Format(SR.AwaiterTypeShouldHaveIsCompletedProperty, p0);
         }
 
         /// <summary>
@@ -455,7 +455,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaiterIsCompletedShouldReturnBool(object p0)
         {
-			return SR.Format(SR.AwaiterIsCompletedShouldReturnBool, p0);
+            return SR.Format(SR.AwaiterIsCompletedShouldReturnBool, p0);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaiterIsCompletedShouldNotBeIndexer(object p0)
         {
-			return SR.Format(SR.AwaiterIsCompletedShouldNotBeIndexer, p0);
+            return SR.Format(SR.AwaiterIsCompletedShouldNotBeIndexer, p0);
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaiterTypeShouldHaveGetResultMethod(object p0)
         {
-			return SR.Format(SR.AwaiterTypeShouldHaveGetResultMethod, p0);
+            return SR.Format(SR.AwaiterTypeShouldHaveGetResultMethod, p0);
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaiterGetResultTypeInvalid(object p0)
         {
-			return SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
+            return SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
         }
 
         /// <summary>
@@ -487,7 +487,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AsyncLambdaCantHaveByRefParameter(object p0)
         {
-			return SR.Format(SR.AsyncLambdaCantHaveByRefParameter, p0);
+            return SR.Format(SR.AsyncLambdaCantHaveByRefParameter, p0);
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AsyncLambdaInvalidReturnType(object p0)
         {
-			return SR.Format(SR.AsyncLambdaInvalidReturnType, p0);
+            return SR.Format(SR.AsyncLambdaInvalidReturnType, p0);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AwaitForbiddenHere(object p0)
         {
-			return SR.Format(SR.AwaitForbiddenHere, p0);
+            return SR.Format(SR.AwaitForbiddenHere, p0);
         }
 
         /// <summary>
@@ -511,7 +511,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string LockNeedsReferenceType(object p0)
         {
-			return SR.Format(SR.LockNeedsReferenceType, p0);
+            return SR.Format(SR.LockNeedsReferenceType, p0);
         }
 
         /// <summary>
@@ -519,10 +519,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ConversionNeedsOneParameter
         {
-			get
-			{
-				return SR.ConversionNeedsOneParameter;
-			}
+            get
+            {
+                return SR.ConversionNeedsOneParameter;
+            }
         }
 
         /// <summary>
@@ -530,7 +530,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ConversionInvalidArgument(object p0, object p1)
         {
-			return SR.Format(SR.ConversionInvalidArgument, p0, p1);
+            return SR.Format(SR.ConversionInvalidArgument, p0, p1);
         }
 
         /// <summary>
@@ -538,7 +538,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ConversionInvalidResult(object p0, object p1)
         {
-			return SR.Format(SR.ConversionInvalidResult, p0, p1);
+            return SR.Format(SR.ConversionInvalidResult, p0, p1);
         }
 
         /// <summary>
@@ -546,7 +546,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string EnumeratorShouldHaveCurrentProperty(object p0)
         {
-			return SR.Format(SR.EnumeratorShouldHaveCurrentProperty, p0);
+            return SR.Format(SR.EnumeratorShouldHaveCurrentProperty, p0);
         }
 
         /// <summary>
@@ -554,15 +554,15 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string EnumeratorShouldHaveMoveNextMethod(object p0)
         {
-			return SR.Format(SR.EnumeratorShouldHaveMoveNextMethod, p0);
+            return SR.Format(SR.EnumeratorShouldHaveMoveNextMethod, p0);
         }
 
         /// <summary>
-        /// A string like "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'"
+        /// A string like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'"
         /// </summary>
         internal static string MoreThanOneIEnumerableFound(object p0)
         {
-			return SR.Format(SR.MoreThanOneIEnumerableFound, p0);
+            return SR.Format(SR.MoreThanOneIEnumerableFound, p0);
         }
 
         /// <summary>
@@ -570,7 +570,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string NoEnumerablePattern(object p0)
         {
-			return SR.Format(SR.NoEnumerablePattern, p0);
+            return SR.Format(SR.NoEnumerablePattern, p0);
         }
 
         /// <summary>
@@ -578,10 +578,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string InvalidInitializer
         {
-			get
-			{
-				return SR.InvalidInitializer;
-			}
+            get
+            {
+                return SR.InvalidInitializer;
+            }
         }
 
         /// <summary>
@@ -589,10 +589,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string DuplicateLabels
         {
-			get
-			{
-				return SR.DuplicateLabels;
-			}
+            get
+            {
+                return SR.DuplicateLabels;
+            }
         }
 
         /// <summary>
@@ -600,10 +600,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ConditionalAccessRequiresNonStaticMember
         {
-			get
-			{
-				return SR.ConditionalAccessRequiresNonStaticMember;
-			}
+            get
+            {
+                return SR.ConditionalAccessRequiresNonStaticMember;
+            }
         }
 
         /// <summary>
@@ -611,10 +611,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ConditionalAccessRequiresReadableProperty
         {
-			get
-			{
-				return SR.ConditionalAccessRequiresReadableProperty;
-			}
+            get
+            {
+                return SR.ConditionalAccessRequiresReadableProperty;
+            }
         }
 
     }
@@ -622,42 +622,42 @@ namespace Microsoft.CSharp.Expressions
 
 namespace System
 {
-	internal static partial class SR
-	{
-		public const string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
-		public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
-		public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
-		public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
-		public const string NonStaticConstructorRequired = "A non-static constructor is required";
-		public const string PropertyDoesNotHaveGetAccessor = "The property '{0}' has no 'get' accessor";
-		public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'";
-		public const string RankMismatch = "The number of indexes specified does not match the array rank";
-		public const string IndexOutOfRange = "The specified index is out of range";
-		public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0";
-		public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
-		public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters";
-		public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic";
-		public const string GetAwaiterShouldReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
-		public const string AwaiterTypeShouldImplementINotifyCompletion = "Awaiter type '{0}' should implement 'INotifyCompletion'";
-		public const string AwaiterTypeShouldHaveIsCompletedProperty = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor";
-		public const string AwaiterIsCompletedShouldReturnBool = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'";
-		public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters";
-		public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method";
-		public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type";
-		public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions";
-		public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression";
-		public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'";
-		public const string LockNeedsReferenceType = "An expression of type '{0}' can't be used as a lock";
-		public const string ConversionNeedsOneParameter = "The conversion lambda should have one parameter";
-		public const string ConversionInvalidArgument = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'";
-		public const string ConversionInvalidResult = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'";
-		public const string EnumeratorShouldHaveCurrentProperty = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor";
-		public const string EnumeratorShouldHaveMoveNextMethod = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type";
-		public const string MoreThanOneIEnumerableFound = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'";
-		public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
-		public const string InvalidInitializer = "Initializers should be assignments to variables";
-		public const string DuplicateLabels = "Break and continue lables should be different";
-		public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members.";
-		public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
-	}
+    internal static partial class SR
+    {
+        public const string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
+        public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
+        public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
+        public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
+        public const string NonStaticConstructorRequired = "A non-static constructor is required";
+        public const string PropertyDoesNotHaveGetAccessor = "The property '{0}' has no 'get' accessor";
+        public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'";
+        public const string RankMismatch = "The number of indexes specified does not match the array rank";
+        public const string IndexOutOfRange = "The specified index is out of range";
+        public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0";
+        public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
+        public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters";
+        public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic";
+        public const string GetAwaiterShouldReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
+        public const string AwaiterTypeShouldImplementINotifyCompletion = "Awaiter type '{0}' should implement 'INotifyCompletion'";
+        public const string AwaiterTypeShouldHaveIsCompletedProperty = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor";
+        public const string AwaiterIsCompletedShouldReturnBool = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'";
+        public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters";
+        public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method";
+        public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type";
+        public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions";
+        public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression";
+        public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'";
+        public const string LockNeedsReferenceType = "An expression of type '{0}' can't be used as a lock";
+        public const string ConversionNeedsOneParameter = "The conversion lambda should have one parameter";
+        public const string ConversionInvalidArgument = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'";
+        public const string ConversionInvalidResult = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'";
+        public const string EnumeratorShouldHaveCurrentProperty = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor";
+        public const string EnumeratorShouldHaveMoveNextMethod = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type";
+        public const string MoreThanOneIEnumerableFound = "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'";
+        public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
+        public const string InvalidInitializer = "Initializers should be assignments to variables";
+        public const string DuplicateLabels = "Break and continue lables should be different";
+        public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members.";
+        public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
+    }
 }

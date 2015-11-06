@@ -18,31 +18,33 @@ var errors = new[]
     new { Name = "IndexOutOfRange", ExceptionType = "ArgumentOutOfRangeException", Args = 0, Message = "The specified index is out of range" },
     new { Name = "BoundCannotBeLessThanZero", ExceptionType = "ArgumentException", Args = 0, Message = "An array dimension cannot be less than 0" },
     new { Name = "ArrayBoundsElementCountMismatch", ExceptionType = "ArgumentException", Args = 0, Message = "The number of elements does not match the length of the array" },
-	new { Name = "GetAwaiterShouldTakeZeroParameters", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method should take zero parameters" },
-	new { Name = "GetAwaiterShouldNotBeGeneric", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method should not be generic" },
-	new { Name = "GetAwaiterShouldReturnAwaiterType", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method has an unsupported return type" },
-	new { Name = "AwaiterTypeShouldImplementINotifyCompletion", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should implement 'INotifyCompletion'" },
-	new { Name = "AwaiterTypeShouldHaveIsCompletedProperty", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor" },
-	new { Name = "AwaiterIsCompletedShouldReturnBool", ExceptionType = "ArgumentException", Args = 1, Message = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'" },
-	new { Name = "AwaiterIsCompletedShouldNotBeIndexer", ExceptionType = "ArgumentException", Args = 1, Message = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters" },
-	new { Name = "AwaiterTypeShouldHaveGetResultMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should have a 'GetResult' method" },
-	new { Name = "AwaiterGetResultTypeInvalid", ExceptionType = "ArgumentException", Args = 1, Message = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type" },
-	new { Name = "AsyncLambdaCantHaveByRefParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions" },
-	new { Name = "AsyncLambdaInvalidReturnType", ExceptionType = "ArgumentException", Args = 1, Message = "Return type '{0}' is not valid for an asynchronous lambda expression" },
-	new { Name = "AwaitForbiddenHere", ExceptionType = "InvalidOperationException", Args = 1, Message = "Await expression cannot occur in '{0}'" },
-	new { Name = "LockNeedsReferenceType", ExceptionType = "ArgumentException", Args = 1, Message = "An expression of type '{0}' can't be used as a lock" },
-	new { Name = "ConversionNeedsOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "The conversion lambda should have one parameter" },
-	new { Name = "ConversionInvalidArgument", ExceptionType = "ArgumentException", Args = 2, Message = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'" },
-	new { Name = "ConversionInvalidResult", ExceptionType = "ArgumentException", Args = 2, Message = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'" },
-	new { Name = "EnumeratorShouldHaveCurrentProperty", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor" },
-	new { Name = "EnumeratorShouldHaveMoveNextMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type" },
-	new { Name = "MoreThanOneIEnumerableFound", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'" },
-	new { Name = "NoEnumerablePattern", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has no valid enumerable pattern" },
-	new { Name = "InvalidInitializer", ExceptionType = "ArgumentException", Args = 0, Message = "Initializers should be assignments to variables" },
-	new { Name = "DuplicateLabels", ExceptionType = "ArgumentException", Args = 0, Message = "Break and continue lables should be different" },
-	new { Name = "ConditionalAccessRequiresNonStaticMember", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require non-static members." },
-	new { Name = "ConditionalAccessRequiresReadableProperty", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require readable properties." },
+    new { Name = "GetAwaiterShouldTakeZeroParameters", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method should take zero parameters" },
+    new { Name = "GetAwaiterShouldNotBeGeneric", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method should not be generic" },
+    new { Name = "GetAwaiterShouldReturnAwaiterType", ExceptionType = "ArgumentException", Args = 0, Message = "The 'GetAwaiter' method has an unsupported return type" },
+    new { Name = "AwaiterTypeShouldImplementINotifyCompletion", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should implement 'INotifyCompletion'" },
+    new { Name = "AwaiterTypeShouldHaveIsCompletedProperty", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor" },
+    new { Name = "AwaiterIsCompletedShouldReturnBool", ExceptionType = "ArgumentException", Args = 1, Message = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'" },
+    new { Name = "AwaiterIsCompletedShouldNotBeIndexer", ExceptionType = "ArgumentException", Args = 1, Message = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters" },
+    new { Name = "AwaiterTypeShouldHaveGetResultMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Awaiter type '{0}' should have a 'GetResult' method" },
+    new { Name = "AwaiterGetResultTypeInvalid", ExceptionType = "ArgumentException", Args = 1, Message = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type" },
+    new { Name = "AsyncLambdaCantHaveByRefParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions" },
+    new { Name = "AsyncLambdaInvalidReturnType", ExceptionType = "ArgumentException", Args = 1, Message = "Return type '{0}' is not valid for an asynchronous lambda expression" },
+    new { Name = "AwaitForbiddenHere", ExceptionType = "InvalidOperationException", Args = 1, Message = "Await expression cannot occur in '{0}'" },
+    new { Name = "LockNeedsReferenceType", ExceptionType = "ArgumentException", Args = 1, Message = "An expression of type '{0}' can't be used as a lock" },
+    new { Name = "ConversionNeedsOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "The conversion lambda should have one parameter" },
+    new { Name = "ConversionInvalidArgument", ExceptionType = "ArgumentException", Args = 2, Message = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'" },
+    new { Name = "ConversionInvalidResult", ExceptionType = "ArgumentException", Args = 2, Message = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'" },
+    new { Name = "EnumeratorShouldHaveCurrentProperty", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor" },
+    new { Name = "EnumeratorShouldHaveMoveNextMethod", ExceptionType = "ArgumentException", Args = 1, Message = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type" },
+    new { Name = "MoreThanOneIEnumerableFound", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has multiple implementations of 'IEnumerable<T>'" },
+    new { Name = "NoEnumerablePattern", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has no valid enumerable pattern" },
+    new { Name = "InvalidInitializer", ExceptionType = "ArgumentException", Args = 0, Message = "Initializers should be assignments to variables" },
+    new { Name = "DuplicateLabels", ExceptionType = "ArgumentException", Args = 0, Message = "Break and continue lables should be different" },
+    new { Name = "ConditionalAccessRequiresNonStaticMember", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require non-static members." },
+    new { Name = "ConditionalAccessRequiresReadableProperty", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require readable properties." },
 };
+
+var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));
 #>
 // Prototyping extended expression trees for C#.
 //
@@ -63,9 +65,10 @@ foreach (var error in errors)
     var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object p" + i));
     var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
     var strArgs = error.Args > 0 ? "(" + args + ")" : "";
+    var msg = escape(error.Message);
 #>
         /// <summary>
-        /// <#=error.ExceptionType#> with message like "<#=error.Message#>"
+        /// <#=error.ExceptionType#> with message like "<#=msg#>"
         /// </summary>
         internal static Exception <#=error.Name#>(<#=pars#>)
         {
@@ -87,32 +90,33 @@ foreach (var error in errors)
 {
     var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object p" + i));
     var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
-	if (error.Args > 0)
-	{
-		pars = "(" + pars + ")";
-	}
+    if (error.Args > 0)
+    {
+        pars = "(" + pars + ")";
+    }
+    var msg = escape(error.Message);
 #>
         /// <summary>
-        /// A string like "<#=error.Message#>"
+        /// A string like "<#=msg#>"
         /// </summary>
         internal static string <#=error.Name#><#=pars#>
         {
 <#
-	if (error.Args == 0)
-	{
+    if (error.Args == 0)
+    {
 #>
-			get
-			{
-				return SR.<#=error.Name#>;
-			}
+            get
+            {
+                return SR.<#=error.Name#>;
+            }
 <#
-	}
-	else
-	{
+    }
+    else
+    {
 #>
-			return SR.Format(SR.<#=error.Name#>, <#=args#>);
+            return SR.Format(SR.<#=error.Name#>, <#=args#>);
 <#
-	}
+    }
 #>
         }
 
@@ -124,15 +128,16 @@ foreach (var error in errors)
 
 namespace System
 {
-	internal static partial class SR
-	{
+    internal static partial class SR
+    {
 <#
 foreach (var error in errors)
 {
+    var msg = escape(error.Message);
 #>
-		public const string <#=error.Name#> = "<#=error.Message#>";
+        public const string <#=error.Name#> = "<#=msg#>";
 <#
 }
 #>
-	}
+    }
 }
