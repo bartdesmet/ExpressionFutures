@@ -17,12 +17,8 @@ ERR_DictionaryInitializerInExpressionTree
 - C# 6.0 feature addition but applies to existing parent node type
 
 ERR_ExtensionCollectionElementInitializerInExpressionTree
-- Can be lifted by adding new nodes; trickiness with ListInt / ElementInit not being extensible
+- Can be lifted by adding new nodes; trickiness with ListInit / ElementInit not being extensible
 - C# 6.0 feature addition, but applies to exist parent node types
-
-ERR_NullPropagatingOpInExpressionTree
-- Can be lifted by adding new nodes
-- C# 6.0 feature addition
 
 ERR_ExpressionTreeContainsAssignment
 - () => a = 42
@@ -78,6 +74,10 @@ ERR_ExpressionTreeContainsNamedArgument
 ERR_ExpressionTreeContainsOptionalArgument
 - () => Bar(/*omitted argument*/)
 - Can be lifted by adding new nodes; design question whether to resolve the default value at compile time or at runtime
+
+ERR_NullPropagatingOpInExpressionTree
+- Can be lifted by adding new nodes
+- C# 6.0 feature addition
 
 
 Ignored
