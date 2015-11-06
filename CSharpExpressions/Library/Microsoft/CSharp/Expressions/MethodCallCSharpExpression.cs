@@ -18,6 +18,9 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class MethodCallCSharpExpression : CSharpExpression
     {
+        // TODO: optimized layout for cases where all arguments are specified in order?
+        //       could allocate and swap the ROC<ParameterAssignment> in lieu of a ROC<Expression>
+
         internal MethodCallCSharpExpression(Expression @object, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
         {
             Object = @object;
