@@ -728,6 +728,11 @@ namespace Microsoft.CSharp.Expressions
 
             private Expression RewriteHandler(Expression body, Expression handler, bool isFault)
             {
+                var leaveLabels = default(IDictionary<LabelTarget, LeaveLabelData>);
+                var exitLabel = default(LabelTarget);
+                var pendingBranch = default(ParameterExpression);
+                body = GotoRewriter.Rewrite(body, out exitLabel, out pendingBranch, out leaveLabels);
+
                 var err = Expression.Parameter(typeof(object), "__error" + _n++);
                 var ex = Expression.Parameter(typeof(object), "__ex" + _n++);
 
@@ -770,7 +775,6 @@ namespace Microsoft.CSharp.Expressions
                 if (isFault)
                 {
                     whenFaulted = handler;
-                    whenDone = Expression.Empty();
                 }
                 else
                 {
@@ -800,19 +804,172 @@ namespace Microsoft.CSharp.Expressions
                         )
                     );
 
-                var res = default(Expression);
+                var vars = new List<ParameterExpression> { err };
+                var exprs = new List<Expression> { lowered };
 
-                if (body.Type == typeof(void))
+                if (leaveLabels.Count > 0)
                 {
-                    res = Expression.Block(new[] { err }, lowered, whenDone, rethrow);
+                    exprs.Add(Expression.Label(exitLabel));
                 }
-                else
+
+                if (whenDone != null)
                 {
-                    res = Expression.Block(new[] { err, value }, lowered, whenDone, rethrow, value);
+                    exprs.Add(whenDone);
                 }
+
+                if (leaveLabels.Count > 0)
+                {
+                    vars.Add(pendingBranch);
+
+                    var cases = new List<SwitchCase>();
+
+                    foreach (var leaveLabel in leaveLabels.Values)
+                    {
+                        var index = Helpers.CreateConstantInt32(leaveLabel.Index);
+                        var jump = Expression.Goto(leaveLabel.Target, leaveLabel.Value);
+
+                        var @case = Expression.SwitchCase(jump, index);
+                        cases.Add(@case);
+                    }
+
+                    exprs.Add(Expression.Switch(pendingBranch, cases.ToArray()));
+                }
+
+                exprs.Add(rethrow);
+
+                if (body.Type != typeof(void))
+                {
+                    vars.Add(value);
+                    exprs.Add(value);
+                }
+
+                var res = Expression.Block(vars, exprs);
 
                 return res;
             }
+        }
+
+        static class GotoRewriter
+        {
+            public static Expression Rewrite(Expression expression, out LabelTarget exitLabel, out ParameterExpression pendingBranch, out IDictionary<LabelTarget, LeaveLabelData> leaveLabels)
+            {
+                pendingBranch = Expression.Parameter(typeof(int));
+                exitLabel = Expression.Label("__leave");
+
+                var labelScanner = new LabelScanner();
+                labelScanner.Visit(expression);
+
+                var gotoScanner = new GotoScanner(labelScanner.Labels, exitLabel, pendingBranch);
+                
+                var res = gotoScanner.Visit(expression);
+
+                leaveLabels = gotoScanner.LeaveLabels;
+                return res;
+            }
+
+            class LabelScanner : ShallowVisitor
+            {
+                public readonly HashSet<LabelTarget> Labels = new HashSet<LabelTarget>();
+
+                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+                protected override Expression VisitLabel(LabelExpression node)
+                {
+                    Labels.Add(node.Target);
+
+                    return base.VisitLabel(node);
+                }
+
+                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+                protected override Expression VisitLoop(LoopExpression node)
+                {
+                    if (node.BreakLabel != null)
+                    {
+                        Labels.Add(node.BreakLabel);
+                    }
+
+                    if (node.ContinueLabel != null)
+                    {
+                        Labels.Add(node.ContinueLabel);
+                    }
+
+                    return base.VisitLoop(node);
+                }
+            }
+
+            class GotoScanner : ShallowVisitor
+            {
+                private readonly HashSet<LabelTarget> _labels;
+                private readonly LabelTarget _exit;
+                private readonly ParameterExpression _pendingBranch;
+                public readonly IDictionary<LabelTarget, LeaveLabelData> LeaveLabels = new Dictionary<LabelTarget, LeaveLabelData>();
+
+                public GotoScanner(HashSet<LabelTarget> labels, LabelTarget exit, ParameterExpression pendingBranch)
+                {
+                    _labels = labels;
+                    _exit = exit;
+                    _pendingBranch = pendingBranch;
+                }
+
+                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+                protected override Expression VisitGoto(GotoExpression node)
+                {
+                    var target = node.Target;
+
+                    if (!_labels.Contains(target))
+                    {
+                        var data = default(LeaveLabelData);
+                        if (!LeaveLabels.TryGetValue(target, out data))
+                        {
+                            var parameter = default(ParameterExpression);
+
+                            if (target.Type != typeof(void))
+                            {
+                                parameter = Expression.Parameter(target.Type);
+                            }
+
+                            data = new LeaveLabelData
+                            {
+                                Index = LeaveLabels.Count + 1,
+                                Target = target,
+                                Value = parameter
+                            };
+
+                            LeaveLabels.Add(target, data);
+                        }
+
+                        var res = default(Expression);
+
+                        if (data.Value != null)
+                        {
+                            res =
+                                Expression.Block(
+                                    Expression.Assign(_pendingBranch, Helpers.CreateConstantInt32(data.Index)),
+                                    Expression.Assign(data.Value, node.Value),
+                                    Expression.Goto(_exit, node.Type)
+                                );
+                        }
+                        else
+                        {
+                            res =
+                                Expression.Block(
+                                    Expression.Assign(_pendingBranch, Helpers.CreateConstantInt32(data.Index)),
+                                    Expression.Goto(_exit, node.Type)
+                                );
+                        }
+
+                        return res;
+                    }
+
+                    return base.VisitGoto(node);
+                }
+            }
+        }
+
+        struct LeaveLabelData
+        {
+            public int Index;
+            public LabelTarget Target;
+            public ParameterExpression Value;
         }
     }
 

@@ -348,20 +348,21 @@ namespace Playground
 
         static void AsyncLambda()
         {
-            AsyncLambda1();
-            AsyncLambda2();
-            AsyncLambda3();
-            AsyncLambda4();
-            AsyncLambda5();
-            AsyncLambda6();
-            AsyncLambda7();
-            AsyncLambda8();
-            AsyncLambda9();
-            AsyncLambda10();
-            AsyncLambda11();
-            AsyncLambda12();
-            AsyncLambda13();
-            AsyncLambda14();
+            //AsyncLambda1();
+            //AsyncLambda2();
+            //AsyncLambda3();
+            //AsyncLambda4();
+            //AsyncLambda5();
+            //AsyncLambda6();
+            //AsyncLambda7();
+            //AsyncLambda8();
+            //AsyncLambda9();
+            //AsyncLambda10();
+            //AsyncLambda11();
+            //AsyncLambda12();
+            //AsyncLambda13();
+            //AsyncLambda14();
+            AsyncLambda15();
         }
 
         static void AsyncLambda1()
@@ -650,6 +651,33 @@ namespace Playground
                         ),
                         Expression.Call(cout, Expression.Constant("FE1"))
                     )
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
+        }
+
+        static void AsyncLambda15()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var lbl = Expression.Label();
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.Block(
+                    Expression.TryFinally(
+                        Expression.Block(
+                            Expression.Call(cout, Expression.Constant("T")),
+                            Expression.Goto(lbl)
+                        ),
+                        Expression.Block(
+                            Expression.Call(cout, Expression.Constant("FB")),
+                            CSharpExpression.Await(delay.Body),
+                            Expression.Call(cout, Expression.Constant("FE"))
+                        )
+                    ),
+                    Expression.Call(cout, Expression.Constant("X")),
+                    Expression.Label(lbl),
+                    Expression.Call(cout, Expression.Constant("O"))
                 )
             );
             var res = async.Compile()();
