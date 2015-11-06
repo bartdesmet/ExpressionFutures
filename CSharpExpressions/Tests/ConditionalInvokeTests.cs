@@ -97,7 +97,24 @@ namespace Tests
         [TestMethod]
         public void ConditionalInvoke_Compile()
         {
+            var p1 = Expression.Parameter(typeof(Func<int>));
+            var i1 = CSharpExpression.ConditionalInvoke(p1);
+            var f1 = Expression.Lambda<Func<Func<int>, int?>>(i1, p1);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual(42, d1(() => 42));
+            Assert.IsNull(d1(null));
+
+            var p2 = Expression.Parameter(typeof(Func<string>));
+            var i2 = CSharpExpression.ConditionalInvoke(p2);
+            var f2 = Expression.Lambda<Func<Func<string>, string>>(i2, p2);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual("bar", d2(() => "bar"));
+            Assert.IsNull(d2(null));
         }
+
+        // TODO: tests to assert args are not evaluated if receiver is null
 
         [TestMethod]
         public void ConditionalInvoke_Visitor()
