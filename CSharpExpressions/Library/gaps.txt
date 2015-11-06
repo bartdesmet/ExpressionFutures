@@ -18,7 +18,7 @@ ERR_DictionaryInitializerInExpressionTree
 
 ERR_ExtensionCollectionElementInitializerInExpressionTree
 - Can be lifted by adding new nodes; trickiness with ListInit / ElementInit not being extensible
-- C# 6.0 feature addition, but applies to exist parent node types
+- C# 6.0 feature addition, but applies to existing parent node types
 
 ERR_ExpressionTreeContainsAssignment
 - () => a = 42
