@@ -204,7 +204,7 @@ namespace Microsoft.CSharp.Expressions
             var result = default(ParameterExpression);
             var ex = Expression.Parameter(typeof(Exception), "exception");
 
-            var exit = Expression.Label();
+            var exit = Expression.Label("__exit");
 
             var hoistedVars = new Dictionary<Type, ParameterExpression>();
 
@@ -610,8 +610,8 @@ namespace Microsoft.CSharp.Expressions
 
             private StateMachineState GetLabel()
             {
-                var label = Expression.Label();
                 var index = _labelIndex++;
+                var label = Expression.Label("__state" + index);
 
                 var jump = Expression.Block(
                     Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(-1)),
