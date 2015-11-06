@@ -110,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
         public static ConditionalMemberCSharpExpression MakeConditionalMemberAccess(Expression expression, MemberInfo member)
         {
-            ContractUtils.RequiresNotNull(member, "member");
+            ContractUtils.RequiresNotNull(member, nameof(member));
 
             var fieldInfo = member as FieldInfo;
             if (fieldInfo != null)

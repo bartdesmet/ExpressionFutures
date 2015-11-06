@@ -112,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static InvocationCSharpExpression Invoke(Expression expression, IEnumerable<ParameterAssignment> arguments)
         {
-            RequiresCanRead(expression, "expression");
+            RequiresCanRead(expression, nameof(expression));
 
             var method = GetInvokeMethod(expression);
 
