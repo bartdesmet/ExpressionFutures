@@ -542,6 +542,40 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_NestedFinally()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFinally(
+                    Expression.Block(
+                        Expression.Call(logExpr, add, Expression.Constant("T1"))
+                    ),
+                    Expression.Block(
+                        Expression.Call(logExpr, add, Expression.Constant("FB1")),
+                         Expression.TryFinally(
+                            Expression.Block(
+                                Expression.Call(logExpr, add, Expression.Constant("T2"))
+                            ),
+                            Expression.Block(
+                                Expression.Call(logExpr, add, Expression.Constant("FB2")),
+                                CSharpExpression.Await(yield),
+                                Expression.Call(logExpr, add, Expression.Constant("FE2"))
+                            )
+                        ),
+                        Expression.Call(logExpr, add, Expression.Constant("FE1"))
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            t.Wait();
+            Assert.IsTrue(new[] { "T1", "FB1", "T2", "FB2", "FE2", "FE1" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_ReducibleNodes()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));

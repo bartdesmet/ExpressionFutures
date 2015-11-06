@@ -358,6 +358,10 @@ namespace Playground
             AsyncLambda8();
             AsyncLambda9();
             AsyncLambda10();
+            AsyncLambda11();
+            AsyncLambda12();
+            AsyncLambda13();
+            AsyncLambda14();
         }
 
         static void AsyncLambda1()
@@ -533,6 +537,123 @@ namespace Playground
             );
             var res = async.Compile()();
             Console.WriteLine(res.Result);
+        }
+
+        static void AsyncLambda11()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFinally(
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("TB")),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Call(cout, Expression.Constant("TE"))
+                    ),
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("FB")),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Call(cout, Expression.Constant("FE"))
+                    )
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
+        }
+
+        static void AsyncLambda12()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFinally(
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("TB1")),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.TryFinally(
+                            Expression.Block(
+                                Expression.Call(cout, Expression.Constant("TB2")),
+                                CSharpExpression.Await(delay.Body),
+                                Expression.Call(cout, Expression.Constant("TE2"))
+                            ),
+                            Expression.Block(
+                                Expression.Call(cout, Expression.Constant("FB2")),
+                                CSharpExpression.Await(delay.Body),
+                                Expression.Call(cout, Expression.Constant("FE2"))
+                            )
+                        ),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Call(cout, Expression.Constant("TE1"))
+                    ),
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("FB1")),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Call(cout, Expression.Constant("FE1"))
+                    )
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
+        }
+
+        static void AsyncLambda13()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFinally(
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("TB1")),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Call(cout, Expression.Constant("TE1"))
+                    ),
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("FB1")),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.TryFinally(
+                            Expression.Block(
+                                Expression.Call(cout, Expression.Constant("TB2")),
+                                CSharpExpression.Await(delay.Body),
+                                Expression.Call(cout, Expression.Constant("TE2"))
+                            ),
+                            Expression.Block(
+                                Expression.Call(cout, Expression.Constant("FB2")),
+                                CSharpExpression.Await(delay.Body),
+                                Expression.Call(cout, Expression.Constant("FE2"))
+                            )
+                        ),
+                        CSharpExpression.Await(delay.Body),
+                        Expression.Call(cout, Expression.Constant("FE1"))
+                    )
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
+        }
+
+        static void AsyncLambda14()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFinally(
+                    Expression.Call(cout, Expression.Constant("T1")),
+                    Expression.Block(
+                        Expression.Call(cout, Expression.Constant("FB1")),
+                        Expression.TryFinally(
+                            Expression.Call(cout, Expression.Constant("T2")),
+                            Expression.Block(
+                                Expression.Call(cout, Expression.Constant("FB2")),
+                                CSharpExpression.Await(delay.Body),
+                                Expression.Call(cout, Expression.Constant("FE2"))
+                            )
+                        ),
+                        Expression.Call(cout, Expression.Constant("FE1"))
+                    )
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
         }
 
         static void While()

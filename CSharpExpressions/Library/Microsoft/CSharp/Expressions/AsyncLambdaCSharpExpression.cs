@@ -712,7 +712,14 @@ namespace Microsoft.CSharp.Expressions
 
                 res = Visit(expression);
 
-                return _hasAwait.Pop().Value;
+                var hasAwait = _hasAwait.Pop().Value;
+
+                if (hasAwait && _hasAwait.Count > 0)
+                {
+                    _hasAwait.Peek().Value = true;
+                }
+
+                return hasAwait;
             }
 
             private Expression RewriteHandler(Expression body, Expression handler, bool isFault)
