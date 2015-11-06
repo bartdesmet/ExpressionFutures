@@ -60,6 +60,8 @@ ERR_AnonymousMethodToExpressionTree
 Done
 ----
 
+NB: This is done in the *runtime library* and not yet in the Roslyn compiler.
+
 ERR_ExpressionTreeContainsMultiDimensionalArrayInitializer
 - () => new int[2, 2] { { 1, 2 }, { 3, 4 } }
 - Can be lifted by adding a new ArrayInit node
