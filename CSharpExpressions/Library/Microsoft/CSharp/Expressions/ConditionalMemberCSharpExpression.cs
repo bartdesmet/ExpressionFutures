@@ -133,6 +133,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="field">The <see cref="FieldInfo" /> representing the field to access conditionally.</param>
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalField(Expression expression, FieldInfo field)
         {
             RequiresCanRead(expression, nameof(expression));
@@ -159,6 +160,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="fieldName">The name of the field to access conditionally.</param>
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="ConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="FieldInfo" /> that represents the field denoted by <paramref name="fieldName" />.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalField(Expression expression, string fieldName)
         {
             RequiresCanRead(expression, nameof(expression));
@@ -187,6 +189,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="property">The <see cref="PropertyInfo" /> representing the property to access conditionally.</param>
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, PropertyInfo property)
         {
             RequiresCanRead(expression, nameof(expression));
@@ -218,6 +221,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> whose <see cref="Expression.Type" /> contains a property named <paramref name="propertyName" />.</param>
         /// <param name="propertyName">The name of a property to be accessed.</param>
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="ConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="PropertyInfo" /> that represents the property denoted by <paramref name="propertyName" />.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, string propertyName)
         {
             RequiresCanRead(expression, nameof(expression));

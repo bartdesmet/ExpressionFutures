@@ -296,6 +296,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance", Justification = "Only part of the hierarchy is visible publicly.")]
         class ArrayForEachCSharpStatement : ArrayForEachCSharpStatementBase
         {
             private readonly LambdaExpression _conversion;
@@ -320,6 +321,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance", Justification = "Only part of the hierarchy is visible publicly.")]
         class SimpleArrayForEachCSharpStatement : ArrayForEachCSharpStatementBase
         {
             public SimpleArrayForEachCSharpStatement(ParameterExpression variable, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
