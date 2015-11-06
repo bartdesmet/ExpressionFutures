@@ -346,6 +346,202 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFinally1()
+        {
+            var p = Expression.Parameter(typeof(D));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<D, Task<int>>>(
+                Expression.TryFinally(
+                    Expression.Call(p, typeof(D).GetMethod("Do")),
+                    Expression.Block(
+                        CSharpExpression.Await(yield),
+                        Expression.Call(p, typeof(D).GetMethod("Dispose"))
+                    )
+                ),
+                p
+            );
+            var d = new D();
+            var f = e.Compile();
+            var t = f(d);
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+            Assert.IsTrue(d.IsDisposed);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFinally2()
+        {
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.TryCatch(
+                    Expression.TryFinally(
+                        Expression.Divide(Expression.Constant(1), Expression.Constant(0)),
+                        CSharpExpression.Await(yield)
+                    ),
+                    Expression.Catch(Expression.Parameter(typeof(DivideByZeroException)),
+                        Expression.Constant(-1)
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(-1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFinally3()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFinally(
+                    Expression.Call(logExpr, add, Expression.Constant("T")),
+                    Expression.Block(
+                        Expression.Call(logExpr, add, Expression.Constant("FB")),
+                        CSharpExpression.Await(yield),
+                        Expression.Call(logExpr, add, Expression.Constant("FE"))
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            t.Wait();
+            Assert.IsTrue(new[] { "T", "FB", "FE" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFinally4()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryCatch(
+                    Expression.TryFinally(
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("T")),
+                            Expression.Throw(Expression.Constant(new Exception()))
+                        ),
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("FB")),
+                            CSharpExpression.Await(yield),
+                            Expression.Call(logExpr, add, Expression.Constant("FE"))
+                        )
+                    ),
+                    Expression.Catch(Expression.Parameter(typeof(Exception)),
+                        Expression.Call(logExpr, add, Expression.Constant("C"))
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            t.Wait();
+            Assert.IsTrue(new[] { "T", "FB", "FE", "C" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFault1()
+        {
+            var p = Expression.Parameter(typeof(D));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<D, Task<int>>>(
+                Expression.TryFault(
+                    Expression.Call(p, typeof(D).GetMethod("Do")),
+                    Expression.Block(
+                        CSharpExpression.Await(yield),
+                        Expression.Call(p, typeof(D).GetMethod("Dispose"))
+                    )
+                ),
+                p
+            );
+            var d = new D();
+            var f = e.Compile();
+            var t = f(d);
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+            Assert.IsFalse(d.IsDisposed);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFault2()
+        {
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.TryCatch(
+                    Expression.TryFault(
+                        Expression.Divide(Expression.Constant(1), Expression.Constant(0)),
+                        CSharpExpression.Await(yield)
+                    ),
+                    Expression.Catch(Expression.Parameter(typeof(DivideByZeroException)),
+                        Expression.Constant(-1)
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(-1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFault3()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryFault(
+                    Expression.Call(logExpr, add, Expression.Constant("T")),
+                    Expression.Block(
+                        Expression.Call(logExpr, add, Expression.Constant("FB")),
+                        CSharpExpression.Await(yield),
+                        Expression.Call(logExpr, add, Expression.Constant("FE"))
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            t.Wait();
+            Assert.IsTrue(new[] { "T" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInFault4()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.TryCatch(
+                    Expression.TryFault(
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("T")),
+                            Expression.Throw(Expression.Constant(new Exception()))
+                        ),
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("FB")),
+                            CSharpExpression.Await(yield),
+                            Expression.Call(logExpr, add, Expression.Constant("FE"))
+                        )
+                    ),
+                    Expression.Catch(Expression.Parameter(typeof(Exception)),
+                        Expression.Call(logExpr, add, Expression.Constant("C"))
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            t.Wait();
+            Assert.IsTrue(new[] { "T", "FB", "FE", "C" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_ReducibleNodes()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
