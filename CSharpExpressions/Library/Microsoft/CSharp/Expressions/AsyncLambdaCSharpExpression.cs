@@ -61,8 +61,14 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
         public Delegate Compile()
         {
-            return ((LambdaExpression)Reduce()).Compile();
+            return CompileCore();
         }
+
+        /// <summary>
+        /// Produces a delegate that represents the asynchronous lambda expression.
+        /// </summary>
+        /// <returns>A <see cref="Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
+        protected abstract Delegate CompileCore();
     }
 
     // NB: Expression<TDelegate> is sealed, so we can't achieve compatibility with that type here.
@@ -121,7 +127,16 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A delegate of type <typeparamref name="TDelegate" /> that represents the compiled asynchronous lambda expression described by the <see cref="AsyncCSharpExpression{TDelegate}" />.</returns>
         public new TDelegate Compile()
         {
-            return ((Expression<TDelegate>)Reduce()).Compile();
+            return (TDelegate)(object)CompileCore();
+        }
+
+        /// <summary>
+        /// Produces a delegate that represents the asynchronous lambda expression.
+        /// </summary>
+        /// <returns>A <see cref="Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
+        protected override Delegate CompileCore()
+        {
+            return ((LambdaExpression)ReduceCore()).Compile();
         }
 
         /// <summary>
@@ -129,6 +144,15 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
+        {
+            // TODO: Investigate why an Invoke(AsyncLambda(x, x), x) causes invalid results to be returned
+            //       if we don't hide the reduced expression in a block as we do below. It looks like the
+            //       culprit is in StackSpiller.RewriteInvocationExpression where it tries to inline the
+            //       body of the lambda in case invocation target is a lambda.
+            return Expression.Block(ReduceCore());
+        }
+
+        private Expression ReduceCore()
         {
             AwaitChecker.Check(Body);
 
@@ -418,6 +442,41 @@ namespace Microsoft.CSharp.Expressions
             ValidateAsyncLambdaArgs(typeof(TDelegate), ref body, parameterList);
 
             return new AsyncCSharpExpression<TDelegate>(body, parameterList);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="Expression{TDelegate}" /> where the delegate type is known at compile time.
+        /// </summary>
+        /// <param name="isAsync">Indicates whether the resulting lambda is synchronous or asynchronous.</param>
+        /// <param name="body">An <see cref="Expression" /> representing the body of the lambda.</param>
+        /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects that represent the parameters passed to the lambda.</param>
+        /// <returns>An expression representing a lambda with the specified body and parameters.</returns>
+        public static Expression<TDelegate> Lambda<TDelegate>(bool isAsync, Expression body, params ParameterExpression[] parameters)
+        {
+            // NB: If we were to omit the isAsync parameter, we could try to check the TDelegate return type and
+            //     match it with the body type to determine whether the intent is to create a sync or an async
+            //     lambda. However, for a return type of void, it's unclear what the intent is. We could resort
+            //     to scanning the body looking for await expressions. None of these techniques aligns well with
+            //     the explicitness in the language wrt the async modifier, so we shy away from any such smarts.
+            //
+            // NB: Ultimately, this overload should likely go away and the language should bind to AsyncLambda in
+            //     case of emitting an expression tree for an async lambda. Right now, the overload exists to have
+            //     assignment compatibility with Expression<T> for async lambdas, so we don't have to extend the
+            //     language with AsyncCSharpExpression<T> as a type to consider for lambda convertibility. Notice
+            //     though that the async case here causes an expression tree to be created that's not very natural
+            //     to say the least. It does, however, compile and evaluate just fine at runtime. In order to lift
+            //     this restriction, we have to either extend LINQ to support async Expression<T> or unseal it to
+            //     allow for our library to create derived async variants.
+
+            if (isAsync)
+            {
+                var async = CSharpExpression.AsyncLambda<TDelegate>(body, parameters);
+                return Expression.Lambda<TDelegate>(Expression.Invoke(async, parameters), parameters);
+            }
+            else
+            {
+                return Expression.Lambda<TDelegate>(body, parameters);
+            }
         }
 
         private static void ValidateAsyncLambdaArgs(Type delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
