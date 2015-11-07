@@ -258,7 +258,7 @@ namespace Microsoft.CSharp.Expressions
             if (result != null)
             {
                 newBody = new TypedLabelRewriter().Visit(newBody);
-                newBody = AssignmentPercolator.Instance.Visit(newBody);
+                newBody = AssignmentPercolator.Percolate(newBody);
             }
 
             var i = 0;
@@ -301,42 +301,6 @@ namespace Microsoft.CSharp.Expressions
 
             variables = hoistedVars.Values.Concat(awaitRewriter.HoistedVariables);
             return res;
-        }
-
-        class AssignmentPercolator : CSharpExpressionVisitor
-        {
-            public static readonly ExpressionVisitor Instance = new AssignmentPercolator();
-
-            protected override Expression VisitBinary(BinaryExpression node)
-            {
-                var res = base.VisitBinary(node);
-
-                if (res.NodeType == ExpressionType.Assign)
-                {
-                    var b = (BinaryExpression)res;
-                    if (b.Right.NodeType == ExpressionType.Block && b.Conversion == null)
-                    {
-                        res = Percolate(b.Left, b.Right);
-                    }
-                }
-
-                return res;
-            }
-
-            private static Expression Percolate(Expression result, Expression expr)
-            {
-                if (expr.NodeType == ExpressionType.Block)
-                {
-                    var block = (BlockExpression)expr;
-                    var n = block.Expressions.Count;
-                    var res = Percolate(result, block.Expressions[n - 1]);
-                    return block.Update(block.Variables, block.Expressions.Take(n - 1).Concat(new[] { res }));
-                }
-                else
-                {
-                    return Expression.Assign(result, expr);
-                }
-            }
         }
 
         struct StateMachineState
@@ -542,37 +506,6 @@ namespace Microsoft.CSharp.Expressions
                     Label = label,
                     Index = index
                 };
-            }
-        }
-
-        class AwaitTracker : ShallowVisitor
-        {
-            private readonly Stack<StrongBox<bool>> _hasAwait = new Stack<StrongBox<bool>>();
-
-            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
-            {
-                if (_hasAwait.Count > 0)
-                {
-                    _hasAwait.Peek().Value = true;
-                }
-
-                return base.VisitAwait(node);
-            }
-
-            protected bool VisitAndFindAwait(Expression expression, out Expression res)
-            {
-                _hasAwait.Push(new StrongBox<bool>());
-
-                res = Visit(expression);
-
-                var hasAwait = _hasAwait.Pop().Value;
-
-                if (hasAwait && _hasAwait.Count > 0)
-                {
-                    _hasAwait.Peek().Value = true;
-                }
-
-                return hasAwait;
             }
         }
 

@@ -42,7 +42,9 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AsyncLambdaCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AssignmentPercolator.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitChecker.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitTrackingVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Reducer.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
