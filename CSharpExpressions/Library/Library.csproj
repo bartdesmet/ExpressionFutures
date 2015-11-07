@@ -46,6 +46,9 @@
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitChecker.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitTrackingVisitor.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\FinallyAndFaultRewriter.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\GotoRewriter.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\LeaveLabelData.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Reducer.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
