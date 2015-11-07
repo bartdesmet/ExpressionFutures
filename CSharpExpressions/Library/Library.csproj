@@ -44,6 +44,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AssignmentPercolator.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitChecker.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitTrackingVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Reducer.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
