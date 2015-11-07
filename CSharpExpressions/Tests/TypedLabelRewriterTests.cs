@@ -2,7 +2,7 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.Expressions;
+using Microsoft.CSharp.Expressions.Compiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;

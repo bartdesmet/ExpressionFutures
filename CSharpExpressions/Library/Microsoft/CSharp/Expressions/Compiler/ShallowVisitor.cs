@@ -4,7 +4,7 @@
 
 using System.Linq.Expressions;
 
-namespace Microsoft.CSharp.Expressions
+namespace Microsoft.CSharp.Expressions.Compiler
 {
     class ShallowVisitor : CSharpExpressionVisitor
     {

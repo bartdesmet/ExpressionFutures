@@ -7,7 +7,7 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Microsoft.CSharp.Expressions
+namespace Microsoft.CSharp.Expressions.Compiler
 {
     /// <summary>
     /// Typed labels can cause issues for async method rewrites. This rewriter gets rid of them by storing

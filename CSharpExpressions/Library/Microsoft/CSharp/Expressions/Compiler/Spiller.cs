@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Reflection;
 
-namespace Microsoft.CSharp.Expressions
+namespace Microsoft.CSharp.Expressions.Compiler
 {
     // NB: This is a devious way to leverage the StackSpiller from LINQ to rewrite our Await nodes.
     //     Ideally, we can plug in our custom node to the StackSpiller over there.

@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using Microsoft.CSharp.Expressions.Compiler;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -3,6 +3,7 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
+using Microsoft.CSharp.Expressions.Compiler;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
