@@ -131,7 +131,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            new Checker().Visit(Body);
+            new AwaitChecker().Visit(Body);
 
             const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* initial state */ + 1 /* start state machine */;
 
@@ -301,91 +301,6 @@ namespace Microsoft.CSharp.Expressions
 
             variables = hoistedVars.Values.Concat(awaitRewriter.HoistedVariables);
             return res;
-        }
-
-        class Reducer : ExpressionVisitor
-        {
-            public static readonly ExpressionVisitor Instance = new Reducer();
-
-            private Reducer()
-            {
-            }
-
-            protected override Expression VisitExtension(Expression node)
-            {
-                var csharp = node as CSharpExpression;
-                if (csharp != null && csharp.CSharpNodeType == CSharpExpressionType.Await)
-                {
-                    var await = (AwaitCSharpExpression)csharp;
-                    return await.Update(Visit(await.Operand));
-                }
-
-                return base.VisitExtension(node);
-            }
-        }
-
-        class Checker : CSharpExpressionVisitor
-        {
-            private readonly Stack<string> _forbidden = new Stack<string>();
-
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                _forbidden.Push(nameof(LambdaExpression));
-                {
-                    base.VisitLambda(node);
-                }
-                _forbidden.Pop();
-
-                return node;
-            }
-
-            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
-            {
-                return node;
-            }
-
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
-            protected override CatchBlock VisitCatchBlock(CatchBlock node)
-            {
-                if (node.Filter != null)
-                {
-                    Visit(node.Body);
-
-                    _forbidden.Push(nameof(CatchBlock));
-                    {
-                        Visit(node.Filter);
-                    }
-                    _forbidden.Pop();
-
-                    return node;
-                }
-
-                return base.VisitCatchBlock(node);
-            }
-
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
-            protected internal override Expression VisitLock(LockCSharpStatement node)
-            {
-                Visit(node.Expression);
-
-                _forbidden.Push(nameof(LockCSharpStatement));
-                {
-                    Visit(node.Body);
-                }
-                _forbidden.Pop();
-
-                return node;
-            }
-
-            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
-            {
-                if (_forbidden.Count > 0)
-                {
-                    throw Error.AwaitForbiddenHere(_forbidden.Peek());
-                }
-
-                return base.VisitAwait(node);
-            }
         }
 
         class AssignmentPercolator : CSharpExpressionVisitor
