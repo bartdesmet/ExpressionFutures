@@ -230,11 +230,11 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var lowered = new FinallyAndFaultRewriter().Visit(Body);
+            var reduced = Reducer.Instance.Visit(Body);
 
-            var reduced = Reducer.Instance.Visit(lowered);
+            var lowered = new FinallyAndFaultRewriter().Visit(reduced);
 
-            var bright = new ShadowEliminator().Visit(reduced);
+            var bright = new ShadowEliminator().Visit(lowered);
             var spilled = Spiller.Spill(bright);
 
             var awaitRewriter = new AwaitRewriter(stateVar, getVariable, onCompletedFactory, exit);
