@@ -12,7 +12,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    internal class FinallyAndFaultRewriter : AwaitTracker
+    internal class FinallyAndFaultRewriter : AwaitTrackingVisitor
     {
         // NB: C# doesn't have fault handlers, so we should likely reject that in the Checker.
         //

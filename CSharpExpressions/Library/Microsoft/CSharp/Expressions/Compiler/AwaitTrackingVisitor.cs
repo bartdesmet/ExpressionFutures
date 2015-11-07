@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    internal abstract class AwaitTracker : ShallowVisitor
+    internal abstract class AwaitTrackingVisitor : ShallowVisitor
     {
         private readonly Stack<StrongBox<bool>> _hasAwait = new Stack<StrongBox<bool>>();
 
