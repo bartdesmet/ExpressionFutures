@@ -71,6 +71,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\ShadowEliminator.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ShallowVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Spiller.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\TypedLabelRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DoCSharpStatement.cs" />
