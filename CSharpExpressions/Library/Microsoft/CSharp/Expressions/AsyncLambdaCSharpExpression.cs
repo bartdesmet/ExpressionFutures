@@ -235,7 +235,7 @@ namespace Microsoft.CSharp.Expressions
 
             var lowered = new FinallyAndFaultRewriter().Visit(reduced);
 
-            var bright = new ShadowEliminator().Visit(lowered);
+            var bright = ShadowEliminator.Eliminate(lowered);
             var spilled = Spiller.Spill(bright);
 
             var awaitRewriter = new AwaitRewriter(stateVar, getVariable, onCompletedFactory, exit);
