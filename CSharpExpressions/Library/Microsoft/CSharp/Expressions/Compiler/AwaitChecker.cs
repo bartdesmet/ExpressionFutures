@@ -7,6 +7,10 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    /// <summary>
+    /// Utility to check for usage of await in forbidden places such as lock statements and exception filters.
+    /// This step runs first during async lambda rewriting in order to raise errors if needed.
+    /// </summary>
     internal static class AwaitChecker
     {
         public static void Check(Expression body)

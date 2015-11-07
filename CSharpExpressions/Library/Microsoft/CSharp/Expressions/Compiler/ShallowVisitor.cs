@@ -6,7 +6,11 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    class ShallowVisitor : CSharpExpressionVisitor
+    /// <summary>
+    /// Base class for C# expression visitors that don't recurse into nested lambdas or async lambdas.
+    /// This visitor type is used to avoid rewrites that would span nested lambda boundaries.
+    /// </summary>
+    internal abstract class ShallowVisitor : CSharpExpressionVisitor
     {
         protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
         {

@@ -7,66 +7,69 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    class Optimizer : CSharpExpressionVisitor
+    /// <summary>
+    /// Expression optimizer to flatten deeply nested blocks that come into existence during async lambda rewriting.
+    /// This step is optional but increases the readability (and efficiency) of reduced async lambda expressions.
+    /// </summary>
+    internal static class Optimizer
     {
-        private static ExpressionVisitor s_optimizer = new Optimizer();
-
-        private Optimizer()
-        {
-        }
-
         public static Expression Optimize(Expression expression)
         {
-            return s_optimizer.Visit(expression);
+            return Impl.Instance.Visit(expression);
         }
 
-        protected override Expression VisitBlock(BlockExpression node)
+        class Impl : CSharpExpressionVisitor
         {
-            var res = (BlockExpression)base.VisitBlock(node);
+            public static readonly ExpressionVisitor Instance = new Impl();
 
-            if (CanOptimize(res))
+            protected override Expression VisitBlock(BlockExpression node)
             {
-                var expressions = default(List<Expression>);
+                var res = (BlockExpression)base.VisitBlock(node);
 
-                for (var i = 0; i < res.Expressions.Count; i++)
+                if (CanOptimize(res))
                 {
-                    var expression = res.Expressions[i];
-                    var nested = expression as BlockExpression;
-                    if (nested != null && CanOptimize(nested))
+                    var expressions = default(List<Expression>);
+
+                    for (var i = 0; i < res.Expressions.Count; i++)
                     {
-                        if (expressions == null)
+                        var expression = res.Expressions[i];
+                        var nested = expression as BlockExpression;
+                        if (nested != null && CanOptimize(nested))
                         {
-                            expressions = new List<Expression>();
-
-                            for (var j = 0; j < i; j++)
+                            if (expressions == null)
                             {
-                                expressions.Add(res.Expressions[j]);
+                                expressions = new List<Expression>();
+
+                                for (var j = 0; j < i; j++)
+                                {
+                                    expressions.Add(res.Expressions[j]);
+                                }
                             }
+
+                            expressions.AddRange(nested.Expressions);
                         }
-
-                        expressions.AddRange(nested.Expressions);
+                        else if (expressions != null)
+                        {
+                            expressions.Add(expression);
+                        }
                     }
-                    else if (expressions != null)
+
+                    if (expressions != null)
                     {
-                        expressions.Add(expression);
+                        return res.Update(res.Variables, expressions);
                     }
                 }
 
-                if (expressions != null)
-                {
-                    return res.Update(res.Variables, expressions);
-                }
+                return res;
             }
 
-            return res;
-        }
+            private static bool CanOptimize(BlockExpression block)
+            {
+                // TODO: some more optimizations are possible even if the types don't match,
+                //       e.g. flattening all but the last child block into the parent block.
 
-        private static bool CanOptimize(BlockExpression block)
-        {
-            // TODO: some more optimizations are possible even if the types don't match,
-            //       e.g. flattening all but the last child block into the parent block.
-
-            return block.Variables.Count == 0 && block.Result.Type == block.Type;
+                return block.Variables.Count == 0 && block.Result.Type == block.Type;
+            }
         }
     }
 }

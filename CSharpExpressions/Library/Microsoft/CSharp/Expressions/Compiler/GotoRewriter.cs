@@ -7,6 +7,11 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    /// <summary>
+    /// Utility to rewrite expressions by replacing branches the leave the expression for pending branches. This allows
+    /// for lowering of Goto expressions in catch and finally handlers that are subject to async lambda rewriting, thus
+    /// requiring preserving information about pending branches across asynchronous pause and resume operations.
+    /// </summary>
     internal static class GotoRewriter
     {
         public static Expression Rewrite(Expression expression, out LabelTarget exitLabel, out ParameterExpression pendingBranch, out IDictionary<LabelTarget, LeaveLabelData> leaveLabels)
@@ -25,6 +30,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Collects all labels defined within an expression.
+        /// </summary>
         class LabelScanner : ShallowVisitor
         {
             public readonly HashSet<LabelTarget> Labels = new HashSet<LabelTarget>();
@@ -54,6 +62,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
             }
         }
 
+        /// <summary>
+        /// Rewrites all Goto expressions that don't refer to label within the analyzed expression (see LabelScanner)
+        /// by using a pending branch described by a LeaveLabelData value. The caller is responsible to emit a jump
+        /// table that executes those pending branches by transferring control (and a value, if any) to the original
+        /// label target.
+        /// </summary>
         class GotoScanner : ShallowVisitor
         {
             private readonly HashSet<LabelTarget> _labels;

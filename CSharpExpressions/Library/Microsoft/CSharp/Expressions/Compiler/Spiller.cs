@@ -13,6 +13,27 @@ namespace Microsoft.CSharp.Expressions.Compiler
     // NB: This is a devious way to leverage the StackSpiller from LINQ to rewrite our Await nodes.
     //     Ideally, we can plug in our custom node to the StackSpiller over there.
 
+    /// <summary>
+    /// Utility to perform stack spilling to ensure an empty evaluation stack upon starting the evaluation of an
+    /// await expression.
+    /// </summary>
+    /// <remarks>
+    /// An example of stack spilling is shown below:
+    /// <code>
+    ///   F(A, await T, B)
+    /// </code>
+    /// In here, A and T are evaluated before awaiting T. The result of evaluating those subexpressions has to be
+    /// stored prior to performing the await. In case the asynchronous code path is picked, all this intermediate
+    /// evaluation state needs to be kept on the heap in order to restore it after the asynchrnous operation
+    /// completes and prior to evaluating B. Stack spilling will effectively turn the code into:
+    /// <code>
+    ///   var __1 = A;
+    ///   var __2 = T;
+    ///   var __3 = await __2;
+    ///   F(__1, __2, B)
+    /// </code>
+    /// where the compiler-generated variables will be hoisted.
+    /// </remarks>
     internal static class Spiller
     {
         private static readonly SpillSiteDecorator s_decorator = new SpillSiteDecorator();

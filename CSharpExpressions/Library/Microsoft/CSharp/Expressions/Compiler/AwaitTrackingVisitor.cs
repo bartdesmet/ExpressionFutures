@@ -8,6 +8,10 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    /// <summary>
+    /// Base classes for visitors that track await expressions in order to detect those in various constructs.
+    /// This type of visitor is used to detect await in exception handlers etc.
+    /// </summary>
     internal abstract class AwaitTrackingVisitor : ShallowVisitor
     {
         private readonly Stack<StrongBox<bool>> _hasAwait = new Stack<StrongBox<bool>>();

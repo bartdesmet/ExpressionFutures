@@ -12,6 +12,11 @@ using System.Runtime.ExceptionServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    // TODO: add support for catch handlers as well
+
+    /// <summary>
+    /// Utility to rewrite finally and fault handlers that contain asynchronous operations.
+    /// </summary>
     internal class FinallyAndFaultRewriter : AwaitTrackingVisitor
     {
         // NB: C# doesn't have fault handlers, so we should likely reject that in the Checker.

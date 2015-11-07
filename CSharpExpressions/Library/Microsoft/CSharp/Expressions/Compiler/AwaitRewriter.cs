@@ -11,6 +11,18 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    /// <summary>
+    /// Rewriter for await expressions by desugaring those into the await pattern.
+    /// </summary>
+    /// <remarks>
+    /// Rewriting await expressions entails the following steps:
+    /// - Desugaring await expressions using the await pattern of GetAwaiter, IsCompleted, and GetResult
+    /// - Dispatching to the builder's AwaitOnCompleted method upon non-synchronous completion of the awaitable
+    /// - Introducing a state machine state and a label target for the continuation of the await operation
+    /// - Hoisting of local variables in blocks that contain asynchronous operations
+    /// - Emission of jump tables in Try expressions in order to reenter upon resumption
+    /// - Building a jump table for the caller to embed in the top-level rewritten lambda body
+    /// </remarks>
     internal class AwaitRewriter : ShallowVisitor
     {
         private readonly Func<Type, string, ParameterExpression> _variableFactory;
@@ -41,7 +53,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
-        // TODO: Deal with Using blocks as well.
+        // TODO: Deal with Using blocks as well (should have been reduced already upon entering this; ensure).
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)

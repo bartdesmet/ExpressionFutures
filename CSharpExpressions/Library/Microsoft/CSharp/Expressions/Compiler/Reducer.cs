@@ -6,6 +6,10 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    /// <summary>
+    /// Utility to reduce all extension nodes, except for await, into more primitive forms.
+    /// This step is performed early on during async lambda rewriting so we don't have to worry about custom nodes.
+    /// </summary>
     internal static class Reducer
     {
         public static Expression Reduce(Expression expression)
