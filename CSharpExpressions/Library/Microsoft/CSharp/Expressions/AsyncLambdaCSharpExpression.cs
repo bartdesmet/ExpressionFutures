@@ -232,7 +232,8 @@ namespace Microsoft.CSharp.Expressions
 
             var reduced = Reducer.Reduce(Body);
 
-            var lowered = new FinallyAndFaultRewriter().Visit(reduced);
+            var lowered = new CatchRewriter().Visit(reduced);
+            lowered = new FinallyAndFaultRewriter().Visit(lowered);
 
             var bright = AliasEliminator.Eliminate(lowered);
             var spilled = Spiller.Spill(bright);
