@@ -268,9 +268,9 @@ namespace Microsoft.CSharp.Expressions
             exprs[i++] =
                 Expression.TryCatch(
                     Expression.Block(
+                        typeof(void),
                         jumpTable,
-                        newBody,
-                        Expression.Empty() // TODO: remove spurious node if not needed
+                        newBody
                     ),
                     Expression.Catch(ex,
                         Expression.Block(
@@ -573,7 +573,7 @@ namespace Microsoft.CSharp.Expressions
                         RewriteHandler(originalTry.Fault)
                     );
 
-                    var beforeTry = Expression.Label();
+                    var beforeTry = Expression.Label("__enterTry");
                     var enterTry = Expression.Goto(beforeTry);
 
                     var previousTable = _jumpTables.Peek();
