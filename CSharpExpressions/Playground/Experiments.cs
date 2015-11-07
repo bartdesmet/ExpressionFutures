@@ -68,7 +68,7 @@ namespace Playground
             throw new NotImplementedException();
         }
 
-        class TaskRewriter : ExpressionVisitor
+        class TaskRewriter : BetterExpressionVisitor
         {
             protected override Expression VisitMember(MemberExpression node)
             {

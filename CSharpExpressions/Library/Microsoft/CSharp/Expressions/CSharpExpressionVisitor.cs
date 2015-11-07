@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// classes whose functionality requires traversing, examining or copying
     /// an expression tree.
     /// </remarks>
-    public abstract partial class CSharpExpressionVisitor : ExpressionVisitor
+    public abstract partial class CSharpExpressionVisitor : BetterExpressionVisitor
     {
         /// <summary>
         /// Visits the children of the extension expression.

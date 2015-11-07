@@ -3,13 +3,12 @@
 // bartde - October 2015
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
     /// <summary>
-    /// Utility to eliminate shadowed variables by ensuring usage of unique ParameterExpression nodes.
+    /// Utility to eliminate aliased variables by ensuring usage of unique ParameterExpression nodes.
     /// This simplifies other stages of async lambda rewriting.
     /// </summary>
     /// <remarks>
@@ -25,7 +24,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// In order to perform this type of rewrite, the shadow eliminator keeps track of expressions that introduce
     /// a scopes and rewrites any variable that's shadowed by those nested scopes.
     /// </remarks>
-    internal static class ShadowEliminator
+    internal static class AliasEliminator
     {
         public static Expression Eliminate(Expression expression)
         {
@@ -34,31 +33,25 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         class Impl : ParameterSubstitutionVisitor
         {
-            private readonly Stack<HashSet<ParameterExpression>> _env = new Stack<HashSet<ParameterExpression>>();
+            private readonly HashSet<ParameterExpression> _env = new HashSet<ParameterExpression>();
 
             protected override void Push(IEnumerable<ParameterExpression> variables)
             {
-                var newEnv = new HashSet<ParameterExpression>(variables);
                 var subst = new Dictionary<ParameterExpression, ParameterExpression>();
 
-                foreach (var env in _env)
+                foreach (var var in variables)
                 {
-                    if (env.Overlaps(newEnv))
+                    if (!_env.Add(var))
                     {
-                        foreach (var p in newEnv.Intersect(env))
-                        {
-                            subst[p] = Expression.Parameter(p.Type, p.Name);
-                        }
+                        subst[var] = Expression.Parameter(var.Type, var.Name);
                     }
                 }
 
-                _env.Push(newEnv);
                 _subst.Push(subst);
             }
 
             protected override void Pop()
             {
-                _env.Pop();
                 _subst.Pop();
             }
         }

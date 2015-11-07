@@ -50,6 +50,9 @@
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\GotoRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\LeaveLabelData.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Reducer.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AliasEliminator.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ParameterSubstitutionVisitor.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ScopeTrackingVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMemberCSharpExpression.cs" />
@@ -94,6 +97,7 @@
       <DependentUpon>Stubs.tt</DependentUpon>
     </Compile>
     <Compile Include="Stubs.Manual.cs" />
+    <Compile Include="System\Linq\Expressions\BetterExpressionVisitor.cs" />
     <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>

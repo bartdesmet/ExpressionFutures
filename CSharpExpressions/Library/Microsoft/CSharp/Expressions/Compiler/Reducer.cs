@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return Impl.Instance.Visit(expression);
         }
 
-        class Impl : ExpressionVisitor
+        class Impl : BetterExpressionVisitor
         {
             public static readonly ExpressionVisitor Instance = new Impl();
 
