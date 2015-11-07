@@ -22,11 +22,8 @@ namespace Tests
             var sync = CSharpExpression.Lambda<Func<int, int>>(false, p, p);
             Assert.AreEqual(42, sync.Compile()(42));
 
-            //var async1 = CSharpExpression.AsyncLambda<Func<int, Task<int>>>(p, p);
-            //Assert.AreEqual(42, async1.Compile()(42).Result);
-
-            var async2 = CSharpExpression.Lambda<Func<int, Task<int>>>(true, p, p);
-            Assert.AreEqual(42, async2.Compile()(42).Result);
+            var async = CSharpExpression.Lambda<Func<int, Task<int>>>(true, p, p);
+            Assert.AreEqual(42, async.Compile()(42).Result);
         }
 
         [TestMethod]
