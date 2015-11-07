@@ -131,7 +131,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            new AwaitChecker().Visit(Body);
+            AwaitChecker.Check(Body);
 
             const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* initial state */ + 1 /* start state machine */;
 

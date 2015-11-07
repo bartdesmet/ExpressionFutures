@@ -7,67 +7,75 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    class AwaitChecker : CSharpExpressionVisitor
+    internal static class AwaitChecker
     {
-        private readonly Stack<string> _forbidden = new Stack<string>();
-
-        protected override Expression VisitLambda<T>(Expression<T> node)
+        public static void Check(Expression body)
         {
-            _forbidden.Push(nameof(LambdaExpression));
-            {
-                base.VisitLambda(node);
-            }
-            _forbidden.Pop();
-
-            return node;
+            new Impl().Visit(body);
         }
 
-        protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
+        class Impl : CSharpExpressionVisitor
         {
-            return node;
-        }
+            private readonly Stack<string> _forbidden = new Stack<string>();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
-        protected override CatchBlock VisitCatchBlock(CatchBlock node)
-        {
-            if (node.Filter != null)
+            protected override Expression VisitLambda<T>(Expression<T> node)
             {
-                Visit(node.Body);
-
-                _forbidden.Push(nameof(CatchBlock));
+                _forbidden.Push(nameof(LambdaExpression));
                 {
-                    Visit(node.Filter);
+                    base.VisitLambda(node);
                 }
                 _forbidden.Pop();
 
                 return node;
             }
 
-            return base.VisitCatchBlock(node);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
-        protected internal override Expression VisitLock(LockCSharpStatement node)
-        {
-            Visit(node.Expression);
-
-            _forbidden.Push(nameof(LockCSharpStatement));
+            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
             {
-                Visit(node.Body);
-            }
-            _forbidden.Pop();
-
-            return node;
-        }
-
-        protected internal override Expression VisitAwait(AwaitCSharpExpression node)
-        {
-            if (_forbidden.Count > 0)
-            {
-                throw Error.AwaitForbiddenHere(_forbidden.Peek());
+                return node;
             }
 
-            return base.VisitAwait(node);
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+            protected override CatchBlock VisitCatchBlock(CatchBlock node)
+            {
+                if (node.Filter != null)
+                {
+                    Visit(node.Body);
+
+                    _forbidden.Push(nameof(CatchBlock));
+                    {
+                        Visit(node.Filter);
+                    }
+                    _forbidden.Pop();
+
+                    return node;
+                }
+
+                return base.VisitCatchBlock(node);
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+            protected internal override Expression VisitLock(LockCSharpStatement node)
+            {
+                Visit(node.Expression);
+
+                _forbidden.Push(nameof(LockCSharpStatement));
+                {
+                    Visit(node.Body);
+                }
+                _forbidden.Pop();
+
+                return node;
+            }
+
+            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
+            {
+                if (_forbidden.Count > 0)
+                {
+                    throw Error.AwaitForbiddenHere(_forbidden.Peek());
+                }
+
+                return base.VisitAwait(node);
+            }
         }
     }
 }
