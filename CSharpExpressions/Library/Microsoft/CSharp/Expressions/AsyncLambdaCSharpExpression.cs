@@ -828,10 +828,16 @@ namespace Microsoft.CSharp.Expressions
                     foreach (var leaveLabel in leaveLabels.Values)
                     {
                         var index = Helpers.CreateConstantInt32(leaveLabel.Index);
-                        var jump = Expression.Goto(leaveLabel.Target, leaveLabel.Value);
+                        var valueVariable = leaveLabel.Value;
+                        var jump = Expression.Goto(leaveLabel.Target, valueVariable);
 
                         var @case = Expression.SwitchCase(jump, index);
                         cases.Add(@case);
+
+                        if (valueVariable != null)
+                        {
+                            vars.Add(valueVariable);
+                        }
                     }
 
                     exprs.Add(Expression.Switch(pendingBranch, cases.ToArray()));
