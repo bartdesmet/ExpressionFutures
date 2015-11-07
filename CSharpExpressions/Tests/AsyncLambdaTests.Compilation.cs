@@ -583,11 +583,17 @@ namespace Tests
             var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
             var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
             var lbl = Expression.Label();
+            var brk = Expression.Label();
+            var cnt = Expression.Label();
+            var lbm = Expression.Label();
             var e = CSharpExpression.AsyncLambda<Func<Task>>(
                 Expression.Block(
                     Expression.TryFinally(
                         Expression.Block(
                             Expression.Call(logExpr, add, Expression.Constant("T")),
+                            Expression.Goto(lbm),
+                            Expression.Loop(Expression.Empty(), brk, cnt),
+                            Expression.Label(lbm),
                             Expression.Goto(lbl)
                         ),
                         Expression.Block(
