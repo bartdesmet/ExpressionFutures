@@ -231,7 +231,7 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
-            var reduced = Reducer.Instance.Visit(Body);
+            var reduced = Reducer.Reduce(Body);
 
             var lowered = new FinallyAndFaultRewriter().Visit(reduced);
 

@@ -6,24 +6,28 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    class Reducer : ExpressionVisitor
+    internal static class Reducer
     {
-        public static readonly ExpressionVisitor Instance = new Reducer();
-
-        private Reducer()
+        public static Expression Reduce(Expression expression)
         {
+            return Impl.Instance.Visit(expression);
         }
 
-        protected override Expression VisitExtension(Expression node)
+        class Impl : ExpressionVisitor
         {
-            var csharp = node as CSharpExpression;
-            if (csharp != null && csharp.CSharpNodeType == CSharpExpressionType.Await)
-            {
-                var await = (AwaitCSharpExpression)csharp;
-                return await.Update(Visit(await.Operand));
-            }
+            public static readonly ExpressionVisitor Instance = new Impl();
 
-            return base.VisitExtension(node);
+            protected override Expression VisitExtension(Expression node)
+            {
+                var csharp = node as CSharpExpression;
+                if (csharp != null && csharp.CSharpNodeType == CSharpExpressionType.Await)
+                {
+                    var await = (AwaitCSharpExpression)csharp;
+                    return await.Update(Visit(await.Operand));
+                }
+
+                return base.VisitExtension(node);
+            }
         }
     }
 }
