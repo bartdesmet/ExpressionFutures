@@ -194,6 +194,17 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Simple6()
+        {
+            var l = Expression.Label(typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(Expression.Return(l, Expression.Constant(42)), Expression.Label(l, Expression.Constant(0))));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_CustomGetAwaiter()
         {
             var m = MethodInfoOf(() => GetAwaiter<int>(default(Task<int>)));
@@ -611,6 +622,44 @@ namespace Tests
             var t = f();
             t.Wait();
             Assert.IsTrue(new[] { "T", "FB", "FE", "O" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_UnpendBranch2()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
+            var lbl = Expression.Label(typeof(int), "l");
+            var brk = Expression.Label("b");
+            var cnt = Expression.Label("c");
+            var lbm = Expression.Label("m");
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.Block(
+                    Expression.TryFinally(
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("T")),
+                            Expression.Goto(lbm),
+                            Expression.Loop(Expression.Empty(), brk, cnt),
+                            Expression.Label(lbm),
+                            Expression.Goto(lbl, Expression.Constant(42))
+                        ),
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("FB")),
+                            CSharpExpression.Await(yield),
+                            Expression.Call(logExpr, add, Expression.Constant("FE"))
+                        )
+                    ),
+                    Expression.Call(logExpr, add, Expression.Constant("X")),
+                    Expression.Label(lbl, Expression.Constant(0))
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+            Assert.IsTrue(new[] { "T", "FB", "FE" }.SequenceEqual(log));
         }
 
         [TestMethod]

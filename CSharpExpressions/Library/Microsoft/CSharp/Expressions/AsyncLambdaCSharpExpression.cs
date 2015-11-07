@@ -256,6 +256,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (result != null)
             {
+                newBody = new TypedLabelRewriter().Visit(newBody);
                 newBody = AssignmentPercolator.Instance.Visit(newBody);
             }
 
