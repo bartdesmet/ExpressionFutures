@@ -63,6 +63,9 @@ namespace Microsoft.CSharp.Expressions
 
         private static bool CanOptimize(BlockExpression block)
         {
+            // TODO: some more optimizations are possible even if the types don't match,
+            //       e.g. flattening all but the last child block into the parent block.
+
             return block.Variables.Count == 0 && block.Result.Type == block.Type;
         }
     }
