@@ -92,12 +92,6 @@ namespace Microsoft.CSharp.Expressions
             var variable = Expression.Parameter(expressionType);
 
             var resultType = Type;
-            var resultVariable = default(ParameterExpression);
-
-            if (resultType != typeof(void))
-            {
-                resultVariable = Expression.Parameter(resultType);
-            }
 
             var assignExpressionToVariable = Expression.Assign(variable, Expression);
 
@@ -130,6 +124,8 @@ namespace Microsoft.CSharp.Expressions
 
             if (resultType != typeof(void))
             {
+                var resultVariable = Expression.Parameter(resultType);
+
                 res =
                     Expression.Block(
                         new[] { variable, resultVariable },
