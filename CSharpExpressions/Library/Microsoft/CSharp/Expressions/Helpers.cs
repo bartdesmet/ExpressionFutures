@@ -10,6 +10,7 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
@@ -89,16 +90,30 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        public static IEnumerable<ParameterAssignment> GetParameterBindings(MethodBase method, IEnumerable<Expression> expressions)
+        public static ReadOnlyCollection<ParameterAssignment> GetParameterBindings(MethodBase method, IEnumerable<Expression> expressions)
         {
             return GetParameterBindings(method.GetParametersCached(), expressions);
         }
 
-        public static IEnumerable<ParameterAssignment> GetParameterBindings(ParameterInfo[] parameters, IEnumerable<Expression> expressions)
+        public static ReadOnlyCollection<ParameterAssignment> GetParameterBindings(ParameterInfo[] parameters, IEnumerable<Expression> expressions)
         {
-            expressions = expressions ?? Enumerable.Empty<Expression>();
+            var arguments = expressions.ToReadOnly();
 
-            throw new NotImplementedException();
+            var n = arguments.Count;
+
+            if (n > parameters.Length)
+            {
+                throw Error.TooManyArguments();
+            }
+
+            var bindings = new ParameterAssignment[n];
+
+            for (var i = 0; i < n; i++)
+            {
+                bindings[i] = CSharpExpression.Bind(parameters[i], arguments[i]);
+            }
+
+            return new TrueReadOnlyCollection<ParameterAssignment>(bindings);
         }
 
         private const int MinConstInt32 = -2;

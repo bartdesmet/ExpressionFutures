@@ -291,6 +291,14 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.ConditionalAccessRequiresReadableProperty);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Too many arguments have been specified."
+        /// </summary>
+        internal static Exception TooManyArguments()
+        {
+            return new ArgumentException(Strings.TooManyArguments);
+        }
+
     }
 
     /// <summary>
@@ -617,6 +625,17 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        /// <summary>
+        /// A string like "Too many arguments have been specified."
+        /// </summary>
+        internal static string TooManyArguments
+        {
+            get
+            {
+                return SR.TooManyArguments;
+            }
+        }
+
     }
 }
 
@@ -659,5 +678,6 @@ namespace System
         public const string DuplicateLabels = "Break and continue lables should be different";
         public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members.";
         public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
+        public const string TooManyArguments = "Too many arguments have been specified.";
     }
 }
