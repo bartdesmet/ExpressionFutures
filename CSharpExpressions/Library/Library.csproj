@@ -46,6 +46,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitChecker.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitTrackingVisitor.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\RethrowRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\CatchRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\FinallyAndFaultRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\GotoRewriter.cs" />
