@@ -149,6 +149,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="ConditionalIndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalIndex" /> and the <see cref="ConditionalIndexCSharpExpression.Object" />, <see cref="ConditionalIndexCSharpExpression.Indexer" />, and <see cref="ConditionalIndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static ConditionalIndexCSharpExpression ConditionalIndex(Expression instance, MethodInfo indexer, Expression[] arguments)
         {
+            // NB: no params array to avoid overload resolution ambiguity
             return ConditionalIndex(instance, indexer, (IEnumerable<Expression>)arguments);
         }
 
@@ -177,6 +178,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="ConditionalIndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalIndex" /> and the <see cref="ConditionalIndexCSharpExpression.Object" />, <see cref="ConditionalIndexCSharpExpression.Indexer" />, and <see cref="ConditionalIndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static ConditionalIndexCSharpExpression ConditionalIndex(Expression instance, PropertyInfo indexer, Expression[] arguments)
         {
+            // NB: no params array to avoid overload resolution ambiguity
             return ConditionalIndex(instance, indexer, (IEnumerable<Expression>)arguments);
         }
 
