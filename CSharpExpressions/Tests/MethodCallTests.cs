@@ -62,6 +62,61 @@ namespace Tests
         }
 
         [TestMethod]
+        public void MethodCall_Factory_Expression()
+        {
+            var method = MethodInfoOf(() => F(default(int), default(int), default(int)));
+
+            var args = new[] { Expression.Constant(1), Expression.Constant(2) };
+
+            foreach (var e in new[]
+            {
+                CSharpExpression.Call(method, args),
+                CSharpExpression.Call(method, args.AsEnumerable()),
+                CSharpExpression.Call(null, method, args),
+                CSharpExpression.Call(null, method, args.AsEnumerable()),
+            })
+            {
+                Assert.IsNull(e.Object);
+
+                Assert.AreEqual(method, e.Method);
+
+                Assert.AreEqual(2, e.Arguments.Count);
+
+                Assert.AreEqual(method.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.AreEqual(method.GetParameters()[1], e.Arguments[1].Parameter);
+
+                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.AreSame(args[1], e.Arguments[1].Expression);
+            }
+
+            var tooLittle = args.Take(1);
+
+            foreach (var f in new Func<MethodCallCSharpExpression>[]
+            {
+                () => CSharpExpression.Call(method, tooLittle),
+                () => CSharpExpression.Call(method, tooLittle.AsEnumerable()),
+                () => CSharpExpression.Call(null, method, tooLittle),
+                () => CSharpExpression.Call(null, method, tooLittle.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+
+            var tooMany = args.Concat(args).ToArray();
+
+            foreach (var f in new Func<MethodCallCSharpExpression>[]
+            {
+                () => CSharpExpression.Call(method, tooMany),
+                () => CSharpExpression.Call(method, tooMany.AsEnumerable()),
+                () => CSharpExpression.Call(null, method, tooMany),
+                () => CSharpExpression.Call(null, method, tooMany.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+        }
+
+        [TestMethod]
         public void MethodCall_Properties_Instance()
         {
             var substring = MethodInfoOf((string s) => s.Substring(default(int), default(int)));

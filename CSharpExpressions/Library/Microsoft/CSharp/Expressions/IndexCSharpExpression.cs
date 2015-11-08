@@ -210,6 +210,8 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
+            parameters = GetParameters(indexer, parameters);
+
             return MakeIndex(instance, indexer, parameters, arguments);
         }
 
@@ -217,6 +219,8 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
+            parameters = GetParameters(indexer, parameters);
 
             var bindings = GetParameterBindings(parameters, arguments);
 
@@ -229,12 +233,17 @@ namespace Microsoft.CSharp.Expressions
 
             var argList = arguments.ToReadOnly();
 
-            ValidateIndexer(instance.Type, indexer, ref parameters, argList);
+            ValidateIndexer(instance.Type, indexer, parameters, argList);
 
             return new IndexCSharpExpression(instance, indexer, argList);
         }
 
-        private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ref ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
+        private static ParameterInfo[] GetParameters(PropertyInfo indexer, ParameterInfo[] parameters)
+        {
+            return parameters ?? indexer.GetIndexParameters();
+        }
+
+        private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
         {
             if (indexer.PropertyType.IsByRef) throw LinqError.PropertyCannotHaveRefType();
             if (indexer.PropertyType == typeof(void)) throw LinqError.PropertyTypeCannotBeVoid();
@@ -267,7 +276,6 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            parameters = parameters ?? indexer.GetIndexParameters();
             ValidateParameterBindings(getter, parameters, argList);
         }
     }

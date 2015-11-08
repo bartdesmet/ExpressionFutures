@@ -201,6 +201,8 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
+            parameters = GetParameters(indexer, parameters);
+
             return MakeConditionalIndex(instance, indexer, parameters, arguments);
         }
 
@@ -208,6 +210,8 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
+            parameters = GetParameters(indexer, parameters);
 
             var bindings = GetParameterBindings(parameters, arguments);
 
@@ -221,7 +225,7 @@ namespace Microsoft.CSharp.Expressions
             var argList = arguments.ToReadOnly();
 
             var type = instance.Type.GetNonNullReceiverType();
-            ValidateIndexer(type, indexer, ref parameters, argList);
+            ValidateIndexer(type, indexer, parameters, argList);
 
             return new ConditionalIndexCSharpExpression(instance, indexer, argList);
         }

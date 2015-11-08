@@ -63,11 +63,49 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(Expression.Default(typeof(X)), typeof(X).GetProperty("Item")));
         }
 
-        class X
+        [TestMethod]
+        public void Index_Factory_Expression()
         {
-            public object this[int x]
+            var obj = Expression.Constant(new S("foo"));
+            var substring = PropertyInfoOf((S s) => s[default(int), default(int)]);
+
+            var args = new[] { Expression.Constant(1) };
+
+            foreach (var e in new[]
             {
-                set { }
+                CSharpExpression.Index(obj, substring, args),
+                CSharpExpression.Index(obj, substring, args.AsEnumerable()),
+            })
+            {
+                Assert.AreSame(obj, e.Object);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+
+                Assert.AreEqual(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
+
+                Assert.AreSame(args[0], e.Arguments[0].Expression);
+            }
+
+            var tooLittle = new Expression[0];
+
+            foreach (var f in new Func<IndexCSharpExpression>[]
+            {
+                () => CSharpExpression.Index(obj, substring, tooLittle),
+                () => CSharpExpression.Index(obj, substring, tooLittle.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+
+            var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
+
+            foreach (var f in new Func<IndexCSharpExpression>[]
+            {
+                () => CSharpExpression.Index(obj, substring, tooMany),
+                () => CSharpExpression.Index(obj, substring, tooMany.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
             }
         }
 
@@ -273,6 +311,14 @@ namespace Tests
 
                     return _s.Substring(startIndex, length);
                 }
+            }
+        }
+
+        class X
+        {
+            public object this[int x]
+            {
+                set { }
             }
         }
     }

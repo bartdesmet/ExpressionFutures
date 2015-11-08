@@ -64,6 +64,53 @@ namespace Tests
         }
 
         [TestMethod]
+        public void New_Factory_Expression()
+        {
+            var constructor = ConstructorInfoOf(() => new C(default(int), default(int), default(int)));
+
+            var args = new[] { Expression.Constant(1), Expression.Constant(2) };
+
+            foreach (var e in new[]
+            {
+                CSharpExpression.New(constructor, args),
+                CSharpExpression.New(constructor, args.AsEnumerable()),
+            })
+            {
+                Assert.AreEqual(constructor, e.Constructor);
+
+                Assert.AreEqual(2, e.Arguments.Count);
+
+                Assert.AreEqual(constructor.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.AreEqual(constructor.GetParameters()[1], e.Arguments[1].Parameter);
+
+                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.AreSame(args[1], e.Arguments[1].Expression);
+            }
+
+            var tooLittle = args.Take(1);
+
+            foreach (var f in new Func<NewCSharpExpression>[]
+            {
+                () => CSharpExpression.New(constructor, tooLittle),
+                () => CSharpExpression.New(constructor, tooLittle.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+
+            var tooMany = args.Concat(args).ToArray();
+
+            foreach (var f in new Func<NewCSharpExpression>[]
+            {
+                () => CSharpExpression.New(constructor, tooMany),
+                () => CSharpExpression.New(constructor, tooMany.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+        }
+
+        [TestMethod]
         public void New_Properties()
         {
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));

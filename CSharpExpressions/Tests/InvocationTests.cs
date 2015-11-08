@@ -58,6 +58,52 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Invoke_Factory_Expression()
+        {
+            var function = Expression.Constant(new D((x, y) => x + y));
+            var method = typeof(D).GetMethod("Invoke");
+
+            var args = new[] { Expression.Constant(1) };
+
+            foreach (var e in new[]
+            {
+                CSharpExpression.Invoke(function, args),
+                CSharpExpression.Invoke(function, args.AsEnumerable()),
+            })
+            {
+                Assert.AreSame(function, e.Expression);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+
+                Assert.AreEqual(method.GetParameters()[0], e.Arguments[0].Parameter);
+
+                Assert.AreSame(args[0], e.Arguments[0].Expression);
+            }
+
+            var tooLittle = new Expression[0];
+
+            foreach (var f in new Func<InvocationCSharpExpression>[]
+            {
+                () => CSharpExpression.Invoke(function, tooLittle),
+                () => CSharpExpression.Invoke(function, tooLittle.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+
+            var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
+
+            foreach (var f in new Func<InvocationCSharpExpression>[]
+            {
+                () => CSharpExpression.Invoke(function, tooMany),
+                () => CSharpExpression.Invoke(function, tooMany.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+        }
+
+        [TestMethod]
         public void Invoke_Properties()
         {
             var invoke = MethodInfoOf((Func<int, int, int> f) => f.Invoke(default(int), default(int)));
