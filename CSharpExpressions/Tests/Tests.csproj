@@ -56,6 +56,7 @@
     <Compile Include="AsyncLambdaTests.cs" />
     <Compile Include="AsyncLambdaTests.Compilation.cs" />
     <Compile Include="AwaitTests.cs" />
+    <Compile Include="ConditionalAccessTests.cs" />
     <Compile Include="ConditionalInvokeTests.cs" />
     <Compile Include="ConditionalCallTests.cs" />
     <Compile Include="ConditionalIndexTests.cs" />

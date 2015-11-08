@@ -163,6 +163,12 @@ namespace Tests
 
             Assert.AreEqual("bar", d3(q));
             Assert.IsNull(d3(null));
+
+            var m4 = CSharpExpression.ConditionalCall(p, typeof(Qux).GetMethod("V"));
+            var f4 = Expression.Lambda<Action<Qux>>(m4, p);
+            var d4 = f4.Compile();
+
+            d4(q); // does not throw
         }
 
         [TestMethod]
@@ -232,6 +238,7 @@ namespace Tests
             public int X() => 42;
             public int? N() => 42;
             public string S() => "bar";
+            public void V() { }
         }
 
         struct Quz
