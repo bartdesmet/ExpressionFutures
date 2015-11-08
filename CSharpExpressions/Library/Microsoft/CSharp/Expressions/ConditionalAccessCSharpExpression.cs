@@ -89,34 +89,30 @@ namespace Microsoft.CSharp.Expressions
             //       note we could possibly reuse variables of the same type as well
 
             var expressionType = Expression.Type;
-            var resultType = Type;
-
-            var nullValue = Expression.Default(resultType);
-
-            var returnLabelTarget = Expression.Label(resultType);
-            var returnLabel = Expression.Label(returnLabelTarget, nullValue);
-
             var variable = Expression.Parameter(expressionType);
+
+            var resultType = Type;
+            var resultVariable = default(ParameterExpression);
+
+            if (resultType != typeof(void))
+            {
+                resultVariable = Expression.Parameter(resultType);
+            }
+
             var assignExpressionToVariable = Expression.Assign(variable, Expression);
 
-            var nullCheck = default(Expression);
+            var nonNullCheck = default(Expression);
 
             var nonNull = (Expression)variable;
             if (expressionType.IsNullableType())
             {
                 nonNull = Expression.Property(variable, "Value");
-                nullCheck = Expression.Not(Expression.Property(variable, "HasValue"));
+                nonNullCheck = Expression.Property(variable, "HasValue");
             }
             else
             {
-                nullCheck = Expression.Equal(variable, Expression.Default(expressionType));
+                nonNullCheck = Expression.NotEqual(variable, Expression.Default(expressionType));
             }
-
-            var checkNull =
-                Expression.IfThen(
-                    nullCheck,
-                    Expression.Goto(returnLabelTarget, nullValue)
-                );
 
             var eval = ReduceAccess(nonNull);
 
@@ -130,16 +126,33 @@ namespace Microsoft.CSharp.Expressions
                 result = eval;
             }
 
-            var returnResult = Expression.Return(returnLabelTarget, result);
+            var res = default(Expression);
 
-            var res =
-                Expression.Block(
-                    new[] { variable },
-                    assignExpressionToVariable,
-                    checkNull,
-                    returnResult,
-                    returnLabel
-                );
+            if (resultType != typeof(void))
+            {
+                res =
+                    Expression.Block(
+                        new[] { variable, resultVariable },
+                        assignExpressionToVariable,
+                        Expression.IfThen(
+                            nonNullCheck,
+                            Expression.Assign(resultVariable, result)
+                        ),
+                        resultVariable
+                    );
+            }
+            else
+            {
+                res =
+                    Expression.Block(
+                        new[] { variable },
+                        assignExpressionToVariable,
+                        Expression.IfThen(
+                            nonNullCheck,
+                            result
+                        )
+                    );
+            }
 
             return res;
         }
