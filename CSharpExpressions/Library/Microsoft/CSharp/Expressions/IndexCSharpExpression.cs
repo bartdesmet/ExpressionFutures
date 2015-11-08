@@ -102,7 +102,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance to index.</param>
         /// <param name="indexer">The <see cref="MethodInfo" /> representing an accessor of the property to index.</param>
-        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the indexer arguments.</param>
+        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the indexer arguments.</param>
         /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static IndexCSharpExpression Index(Expression instance, MethodInfo indexer, params ParameterAssignment[] arguments)
         {
@@ -130,7 +130,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance to index.</param>
         /// <param name="indexer">The <see cref="PropertyInfo" /> representing the property to index.</param>
-        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the indexer arguments.</param>
+        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the indexer arguments.</param>
         /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, params ParameterAssignment[] arguments)
         {
@@ -150,6 +150,61 @@ namespace Microsoft.CSharp.Expressions
             return IndexCore(instance, indexer, null, arguments);
         }
 
+        /// <summary>
+        /// Creates a <see cref="IndexCSharpExpression" /> that represents accessing an indexed property in an object.
+        /// </summary>
+        /// <param name="instance">An <see cref="Expression" /> that specifies the instance to index.</param>
+        /// <param name="indexer">The <see cref="MethodInfo" /> representing an accessor of the property to index.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the indexer arguments.</param>
+        /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        public static IndexCSharpExpression Index(Expression instance, MethodInfo indexer, Expression[] arguments)
+        {
+            // NB: no params array to avoid overload resolution ambiguity
+            return Index(instance, indexer, (IEnumerable<Expression>)arguments);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IndexCSharpExpression" /> that represents accessing an indexed property in an object.
+        /// </summary>
+        /// <param name="instance">An <see cref="Expression" /> that specifies the instance to index.</param>
+        /// <param name="indexer">The <see cref="MethodInfo" /> representing an accessor of the property to index.</param>
+        /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="IndexCSharpExpression.Arguments" /> collection.</param>
+        /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static IndexCSharpExpression Index(Expression instance, MethodInfo indexer, IEnumerable<Expression> arguments)
+        {
+            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
+            var property = GetProperty(indexer);
+            return IndexCore(instance, property, indexer.GetParametersCached(), arguments);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IndexCSharpExpression" /> that represents accessing an indexed property in an object.
+        /// </summary>
+        /// <param name="instance">An <see cref="Expression" /> that specifies the instance to index.</param>
+        /// <param name="indexer">The <see cref="PropertyInfo" /> representing the property to index.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the indexer arguments.</param>
+        /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, Expression[] arguments)
+        {
+            // NB: no params array to avoid overload resolution ambiguity
+            return Index(instance, indexer, (IEnumerable<Expression>)arguments);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IndexCSharpExpression" /> that represents accessing an indexed property in an object.
+        /// </summary>
+        /// <param name="instance">An <see cref="Expression" /> that specifies the instance to index.</param>
+        /// <param name="indexer">The <see cref="PropertyInfo" /> representing the property to index.</param>
+        /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="IndexCSharpExpression.Arguments" /> collection.</param>
+        /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments)
+        {
+            return IndexCore(instance, indexer, null, arguments);
+        }
+
         private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
         {
             ContractUtils.RequiresNotNull(instance, nameof(instance));
@@ -164,7 +219,10 @@ namespace Microsoft.CSharp.Expressions
             return new IndexCSharpExpression(instance, indexer, argList);
         }
 
-        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
+        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
+        {
+            throw new NotImplementedException();
+        }
 
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ref ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
         {

@@ -102,7 +102,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a <see cref="MethodCallCSharpExpression" /> that represents a call to a static method.
         /// </summary>
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
-        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the call arguments.</param>
+        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static MethodCallCSharpExpression Call(MethodInfo method, params ParameterAssignment[] arguments)
         {
@@ -125,7 +125,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance for an instance call. (pass null for a static method).</param>
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
-        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the call arguments.</param>
+        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static MethodCallCSharpExpression Call(Expression instance, MethodInfo method, params ParameterAssignment[] arguments)
         {
@@ -153,7 +153,54 @@ namespace Microsoft.CSharp.Expressions
             return new MethodCallCSharpExpression(instance, method, argList);
         }
 
-        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
+        /// <summary>
+        /// Creates a <see cref="MethodCallCSharpExpression" /> that represents a call to a static method.
+        /// </summary>
+        /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the call arguments.</param>
+        /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        public static new MethodCallCSharpExpression Call(MethodInfo method, Expression[] arguments)
+        {
+            // NB: no params array to avoid overload resolution ambiguity
+            return Call(null, method, (IEnumerable<Expression>)arguments);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MethodCallCSharpExpression" /> that represents a call to a static method.
+        /// </summary>
+        /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
+        /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="MethodCallCSharpExpression.Arguments" /> collection.</param>
+        /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        public static new MethodCallCSharpExpression Call(MethodInfo method, IEnumerable<Expression> arguments)
+        {
+            return Call(null, method, arguments);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MethodCallCSharpExpression" /> that represents a method call.
+        /// </summary>
+        /// <param name="instance">An <see cref="Expression" /> that specifies the instance for an instance call. (pass null for a static method).</param>
+        /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the call arguments.</param>
+        /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        public static new MethodCallCSharpExpression Call(Expression instance, MethodInfo method, Expression[] arguments)
+        {
+            // NB: no params array to avoid overload resolution ambiguity
+            return Call(instance, method, (IEnumerable<Expression>)arguments);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MethodCallCSharpExpression" /> that represents a method call.
+        /// </summary>
+        /// <param name="instance">An <see cref="Expression" /> that specifies the instance for an instance call. (pass null for a static method).</param>
+        /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
+        /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="MethodCallCSharpExpression.Arguments" /> collection.</param>
+        /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static new MethodCallCSharpExpression Call(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     partial class CSharpExpressionVisitor

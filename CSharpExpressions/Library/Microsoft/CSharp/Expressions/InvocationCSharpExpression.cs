@@ -96,7 +96,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates an <see cref="InvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
-        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> that represents the arguments that the delegate or lambda expression is applied to.</param>
+        /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the arguments that the delegate or lambda expression is applied to.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static InvocationCSharpExpression Invoke(Expression expression, params ParameterAssignment[] arguments)
         {
@@ -122,7 +122,29 @@ namespace Microsoft.CSharp.Expressions
             return new InvocationCSharpExpression(expression, argList, method);
         }
 
-        // TODO: add overloads with just Expression[] or IEnumerable<Expression>
+        /// <summary>
+        /// Creates an <see cref="InvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
+        /// </summary>
+        /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the arguments that the delegate or lambda expression is applied to.</param>
+        /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        public static new InvocationCSharpExpression Invoke(Expression expression, Expression[] arguments)
+        {
+            // NB: no params array to avoid overload resolution ambiguity
+            return Invoke(expression, (IEnumerable<Expression>)arguments);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="InvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
+        /// </summary>
+        /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
+        /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="InvocationCSharpExpression.Arguments" /> collection.</param>
+        /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static new InvocationCSharpExpression Invoke(Expression expression, IEnumerable<Expression> arguments)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     partial class CSharpExpressionVisitor
