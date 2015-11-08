@@ -147,10 +147,7 @@ namespace Microsoft.CSharp.Expressions
             ValidateMethodInfo(method);
             ValidateStaticOrInstanceMethod(instance, method);
 
-            var argList = arguments.ToReadOnly();
-            ValidateParameterBindings(method, argList);
-
-            return new MethodCallCSharpExpression(instance, method, argList);
+            return MakeCall(instance, method, arguments);
         }
 
         /// <summary>
@@ -199,7 +196,22 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static new MethodCallCSharpExpression Call(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
         {
-            throw new NotImplementedException();
+            ContractUtils.RequiresNotNull(method, nameof(method));
+
+            ValidateMethodInfo(method);
+            ValidateStaticOrInstanceMethod(instance, method);
+
+            var bindings = GetParameterBindings(method, arguments);
+
+            return MakeCall(instance, method, bindings);
+        }
+
+        private static MethodCallCSharpExpression MakeCall(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
+        {
+            var argList = arguments.ToReadOnly();
+            ValidateParameterBindings(method, argList);
+
+            return new MethodCallCSharpExpression(instance, method, argList);
         }
     }
 

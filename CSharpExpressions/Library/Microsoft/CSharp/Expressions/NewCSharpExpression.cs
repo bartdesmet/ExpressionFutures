@@ -110,10 +110,7 @@ namespace Microsoft.CSharp.Expressions
 
             ValidateConstructor(constructor);
 
-            var argList = arguments.ToReadOnly();
-            ValidateParameterBindings(constructor, argList);
-
-            return new NewCSharpExpression(constructor, argList);
+            return MakeNew(constructor, arguments);
         }
 
         /// <summary>
@@ -136,7 +133,21 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and the <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static new NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<Expression> arguments)
         {
-            throw new NotImplementedException();
+            ContractUtils.RequiresNotNull(constructor, nameof(constructor));
+
+            ValidateConstructor(constructor);
+
+            var bindings = GetParameterBindings(constructor, arguments);
+
+            return MakeNew(constructor, bindings);
+        }
+
+        private static NewCSharpExpression MakeNew(ConstructorInfo constructor, IEnumerable<ParameterAssignment> arguments)
+        {
+            var argList = arguments.ToReadOnly();
+            ValidateParameterBindings(constructor, argList);
+
+            return new NewCSharpExpression(constructor, argList);
         }
 
         private static void ValidateConstructor(ConstructorInfo constructor)

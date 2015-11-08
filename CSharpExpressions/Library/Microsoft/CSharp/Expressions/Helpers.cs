@@ -89,6 +89,18 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        public static IEnumerable<ParameterAssignment> GetParameterBindings(MethodBase method, IEnumerable<Expression> expressions)
+        {
+            return GetParameterBindings(method.GetParametersCached(), expressions);
+        }
+
+        public static IEnumerable<ParameterAssignment> GetParameterBindings(ParameterInfo[] parameters, IEnumerable<Expression> expressions)
+        {
+            expressions = expressions ?? Enumerable.Empty<Expression>();
+
+            throw new NotImplementedException();
+        }
+
         private const int MinConstInt32 = -2;
         private const int MaxConstInt32 = 7;
         private static ConstantExpression[] s_constInt32;

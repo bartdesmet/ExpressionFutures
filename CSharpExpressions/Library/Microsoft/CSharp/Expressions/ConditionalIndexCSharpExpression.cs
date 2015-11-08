@@ -9,6 +9,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using static System.Linq.Expressions.ExpressionStubs;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -200,6 +201,21 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
+            return MakeConditionalIndex(instance, indexer, parameters, arguments);
+        }
+
+        private static ConditionalIndexCSharpExpression ConditionalIndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
+        {
+            ContractUtils.RequiresNotNull(instance, nameof(instance));
+            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
+            var bindings = GetParameterBindings(parameters, arguments);
+
+            return MakeConditionalIndex(instance, indexer, parameters, bindings);
+        }
+
+        private static ConditionalIndexCSharpExpression MakeConditionalIndex(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        {
             RequiresCanRead(instance, nameof(instance));
 
             var argList = arguments.ToReadOnly();
@@ -208,11 +224,6 @@ namespace Microsoft.CSharp.Expressions
             ValidateIndexer(type, indexer, ref parameters, argList);
 
             return new ConditionalIndexCSharpExpression(instance, indexer, argList);
-        }
-
-        private static ConditionalIndexCSharpExpression ConditionalIndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
-        {
-            throw new NotImplementedException();
         }
     }
 

@@ -116,10 +116,7 @@ namespace Microsoft.CSharp.Expressions
 
             var method = GetInvokeMethod(expression);
 
-            var argList = arguments.ToReadOnly();
-            ValidateParameterBindings(method, argList);
-
-            return new InvocationCSharpExpression(expression, argList, method);
+            return MakeInvoke(expression, arguments, method);
         }
 
         /// <summary>
@@ -143,7 +140,21 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static new InvocationCSharpExpression Invoke(Expression expression, IEnumerable<Expression> arguments)
         {
-            throw new NotImplementedException();
+            RequiresCanRead(expression, nameof(expression));
+
+            var method = GetInvokeMethod(expression);
+
+            var bindings = GetParameterBindings(method, arguments);
+
+            return MakeInvoke(expression, bindings, method);
+        }
+
+        private static InvocationCSharpExpression MakeInvoke(Expression expression, IEnumerable<ParameterAssignment> arguments, MethodInfo method)
+        {
+            var argList = arguments.ToReadOnly();
+            ValidateParameterBindings(method, argList);
+
+            return new InvocationCSharpExpression(expression, argList, method);
         }
     }
 

@@ -110,23 +110,9 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
         {
-            RequiresCanRead(instance, nameof(instance));
-            ContractUtils.RequiresNotNull(method, nameof(method));
+            ValidateConditionalMethod(instance, method);
 
-            ValidateMethodInfo(method);
-
-            if (method.IsStatic)
-            {
-                throw Error.ConditionalAccessRequiresNonStaticMember();
-            }
-
-            var type = instance.Type.GetNonNullReceiverType();
-            ValidateCallInstanceType(type, method);
-
-            var argList = arguments.ToReadOnly();
-            ValidateParameterBindings(method, argList);
-
-            return new ConditionalMethodCallCSharpExpression(instance, method, argList);
+            return MakeConditionalMethodCall(instance, method, arguments);
         }
 
         /// <summary>
@@ -152,7 +138,35 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
         {
-            throw new NotImplementedException();
+            ValidateConditionalMethod(instance, method);
+
+            var bindings = GetParameterBindings(method.GetParametersCached(), arguments);
+
+            return MakeConditionalMethodCall(instance, method, bindings);
+        }
+
+        private static void ValidateConditionalMethod(Expression instance, MethodInfo method)
+        {
+            RequiresCanRead(instance, nameof(instance));
+            ContractUtils.RequiresNotNull(method, nameof(method));
+
+            ValidateMethodInfo(method);
+
+            if (method.IsStatic)
+            {
+                throw Error.ConditionalAccessRequiresNonStaticMember();
+            }
+
+            var type = instance.Type.GetNonNullReceiverType();
+            ValidateCallInstanceType(type, method);
+        }
+
+        private static ConditionalMethodCallCSharpExpression MakeConditionalMethodCall(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
+        {
+            var argList = arguments.ToReadOnly();
+            ValidateParameterBindings(method, argList);
+
+            return new ConditionalMethodCallCSharpExpression(instance, method, argList);
         }
     }
 

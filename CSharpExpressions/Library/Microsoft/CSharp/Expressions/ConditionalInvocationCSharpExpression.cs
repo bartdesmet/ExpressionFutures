@@ -106,14 +106,9 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresCanRead(expression, nameof(expression));
 
-            var type = expression.Type.GetNonNullReceiverType();
-            var nonNull = Expression.Default(type); // NB: trick to be able to leverage the LINQ helper method; could benefit from refactoring
-            var method = GetInvokeMethod(nonNull);
+            var method = GetConditionalInvokeMethod(expression);
 
-            var argList = arguments.ToReadOnly();
-            ValidateParameterBindings(method, argList);
-
-            return new ConditionalInvocationCSharpExpression(expression, argList, method);
+            return MakeConditionalInvoke(expression, arguments, method);
         }
 
         /// <summary>
@@ -137,7 +132,28 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, IEnumerable<Expression> arguments)
         {
-            throw new NotImplementedException();
+            RequiresCanRead(expression, nameof(expression));
+
+            var method = GetConditionalInvokeMethod(expression);
+
+            var bindings = GetParameterBindings(method.GetParametersCached(), arguments);
+
+            return MakeConditionalInvoke(expression, bindings, method);
+        }
+
+        private static MethodInfo GetConditionalInvokeMethod(Expression expression)
+        {
+            var type = expression.Type.GetNonNullReceiverType();
+            var nonNull = Expression.Default(type); // NB: trick to be able to leverage the LINQ helper method; could benefit from refactoring
+            return GetInvokeMethod(nonNull);
+        }
+
+        private static ConditionalInvocationCSharpExpression MakeConditionalInvoke(Expression expression, IEnumerable<ParameterAssignment> arguments, MethodInfo method)
+        {
+            var argList = arguments.ToReadOnly();
+            ValidateParameterBindings(method, argList);
+
+            return new ConditionalInvocationCSharpExpression(expression, argList, method);
         }
     }
 

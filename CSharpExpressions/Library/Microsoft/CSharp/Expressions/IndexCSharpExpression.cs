@@ -210,6 +210,21 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
+            return MakeIndex(instance, indexer, parameters, arguments);
+        }
+
+        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
+        {
+            ContractUtils.RequiresNotNull(instance, nameof(instance));
+            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+
+            var bindings = GetParameterBindings(parameters, arguments);
+
+            return MakeIndex(instance, indexer, parameters, bindings);
+        }
+
+        private static IndexCSharpExpression MakeIndex(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        {
             RequiresCanRead(instance, nameof(instance));
 
             var argList = arguments.ToReadOnly();
@@ -217,11 +232,6 @@ namespace Microsoft.CSharp.Expressions
             ValidateIndexer(instance.Type, indexer, ref parameters, argList);
 
             return new IndexCSharpExpression(instance, indexer, argList);
-        }
-
-        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
-        {
-            throw new NotImplementedException();
         }
 
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ref ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
