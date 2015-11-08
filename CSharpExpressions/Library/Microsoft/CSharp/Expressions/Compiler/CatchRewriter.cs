@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -62,10 +63,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     res = Expression.TryFinally(res, Visit(node.Finally));
                 }
 
-                if (node.Fault != null)
-                {
-                    res = Expression.TryFault(res, Visit(node.Fault));
-                }
+                Debug.Assert(node.Fault == null); // NB: Factories in LINQ prevent the combo of handlers with fault
             }
             else
             {
