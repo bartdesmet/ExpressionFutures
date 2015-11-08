@@ -43,6 +43,7 @@ namespace Tests
         {
             var obj = Expression.Constant(new S("foo"));
             var substring = PropertyInfoOf((S s) => s[default(int), default(int)]);
+            var substringGet = substring.GetGetMethod(true);
 
             var args = new[] { Expression.Constant(1) };
 
@@ -57,6 +58,21 @@ namespace Tests
                 Assert.AreEqual(1, e.Arguments.Count);
 
                 Assert.AreEqual(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
+
+                Assert.AreSame(args[0], e.Arguments[0].Expression);
+            }
+
+            foreach (var e in new[]
+            {
+                CSharpExpression.ConditionalIndex(obj, substringGet, args),
+                CSharpExpression.ConditionalIndex(obj, substringGet, args.AsEnumerable()),
+            })
+            {
+                Assert.AreSame(obj, e.Object);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+
+                Assert.AreEqual(substringGet.GetParameters()[0], e.Arguments[0].Parameter);
 
                 Assert.AreSame(args[0], e.Arguments[0].Expression);
             }
