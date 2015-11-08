@@ -39,6 +39,52 @@ namespace Tests
         }
 
         [TestMethod]
+        public void ConditionalIndex_Factory_Expression()
+        {
+            var obj = Expression.Constant(new S("foo"));
+            var substring = PropertyInfoOf((S s) => s[default(int), default(int)]);
+
+            var args = new[] { Expression.Constant(1) };
+
+            foreach (var e in new[]
+            {
+                CSharpExpression.ConditionalIndex(obj, substring, args),
+                CSharpExpression.ConditionalIndex(obj, substring, args.AsEnumerable()),
+            })
+            {
+                Assert.AreSame(obj, e.Object);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+
+                Assert.AreEqual(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
+
+                Assert.AreSame(args[0], e.Arguments[0].Expression);
+            }
+
+            var tooLittle = new Expression[0];
+
+            foreach (var f in new Func<ConditionalIndexCSharpExpression>[]
+            {
+                () => CSharpExpression.ConditionalIndex(obj, substring, tooLittle),
+                () => CSharpExpression.ConditionalIndex(obj, substring, tooLittle.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+
+            var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
+
+            foreach (var f in new Func<ConditionalIndexCSharpExpression>[]
+            {
+                () => CSharpExpression.ConditionalIndex(obj, substring, tooMany),
+                () => CSharpExpression.ConditionalIndex(obj, substring, tooMany.AsEnumerable()),
+            })
+            {
+                AssertEx.Throws<ArgumentException>(() => f());
+            }
+        }
+
+        [TestMethod]
         public void ConditionalIndex_Properties()
         {
             var item = PropertyInfoOf((Bar b) => b[default(int)]);
@@ -240,6 +286,29 @@ namespace Tests
         struct QuzS
         {
             public string this[int x] => "bar";
+        }
+
+        class S
+        {
+            private readonly string _s;
+
+            public S(string s)
+            {
+                _s = s;
+            }
+
+            public string this[int startIndex, int length = -1]
+            {
+                get
+                {
+                    if (length == -1)
+                    {
+                        return _s.Substring(startIndex);
+                    }
+
+                    return _s.Substring(startIndex, length);
+                }
+            }
         }
     }
 }
