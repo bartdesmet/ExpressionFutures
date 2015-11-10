@@ -34,7 +34,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             typeof(ExceptionDispatchInfo).GetMethod("Throw", BindingFlags.Public | BindingFlags.Instance)
                         )
                     ),
-                    Expression.Assign(err, Expression.Default(typeof(object)))
+                    Expression.Assign(err, Expression.Default(err.Type))
                 );
         }
     }
