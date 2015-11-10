@@ -60,6 +60,14 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// ArgumentException with message like "The property '{0}' has no 'set' accessor"
+        /// </summary>
+        internal static Exception PropertyDoesNotHaveSetAccessor(object p0)
+        {
+            return new ArgumentException(Strings.PropertyDoesNotHaveSetAccessor(p0));
+        }
+
+        /// <summary>
         /// ArgumentException with message like "A non-static 'get' accessor is required for property '{0}'"
         /// </summary>
         internal static Exception AccessorCannotBeStatic(object p0)
@@ -366,6 +374,14 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// A string like "The property '{0}' has no 'set' accessor"
+        /// </summary>
+        internal static string PropertyDoesNotHaveSetAccessor(object p0)
+        {
+            return SR.Format(SR.PropertyDoesNotHaveSetAccessor, p0);
+        }
+
+        /// <summary>
         /// A string like "A non-static 'get' accessor is required for property '{0}'"
         /// </summary>
         internal static string AccessorCannotBeStatic(object p0)
@@ -668,6 +684,7 @@ namespace System
         public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
         public const string NonStaticConstructorRequired = "A non-static constructor is required";
         public const string PropertyDoesNotHaveGetAccessor = "The property '{0}' has no 'get' accessor";
+        public const string PropertyDoesNotHaveSetAccessor = "The property '{0}' has no 'set' accessor";
         public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'";
         public const string RankMismatch = "The number of indexes specified does not match the array rank";
         public const string IndexOutOfRange = "The specified index is out of range";

@@ -245,8 +245,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
         {
-            if (indexer.PropertyType.IsByRef) throw LinqError.PropertyCannotHaveRefType();
-            if (indexer.PropertyType == typeof(void)) throw LinqError.PropertyTypeCannotBeVoid();
+            ValidateIndexer(indexer);
 
             // We ignore validating the setter. C# has no assignment expression support yet and the LINQ API
             // won't consider our node as assignable, so it can't occur in assignment targets. As such, the
@@ -259,24 +258,37 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.PropertyDoesNotHaveGetAccessor(indexer);
             }
 
-            if (getter.IsStatic)
+            ValidateCallInstanceType(instanceType, getter);
+
+            ValidateIndexerAccessor(indexer, getter);
+
+            ValidateParameterBindings(getter, parameters, argList);
+        }
+
+        private static void ValidateIndexer(PropertyInfo indexer)
+        {
+            if (indexer.PropertyType.IsByRef) throw LinqError.PropertyCannotHaveRefType();
+            if (indexer.PropertyType == typeof(void)) throw LinqError.PropertyTypeCannotBeVoid();
+        }
+
+        private static void ValidateIndexerAccessor(PropertyInfo indexer, MethodInfo accessor)
+        {
+            if (accessor.IsStatic)
             {
                 throw Error.AccessorCannotBeStatic(indexer);
             }
 
-            ValidateMethodInfo(getter);
+            ValidateMethodInfo(accessor);
 
-            ValidateCallInstanceType(instanceType, getter);
+            var parameters = accessor.GetParametersCached();
 
-            foreach (var arg in argList)
+            foreach (var parameter in parameters)
             {
-                if (arg.Parameter.ParameterType.IsByRef)
+                if (parameter.ParameterType.IsByRef)
                 {
                     throw LinqError.AccessorsCannotHaveByRefArgs();
                 }
             }
-
-            ValidateParameterBindings(getter, parameters, argList);
         }
     }
 

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace System.Runtime.CompilerServices
 {
@@ -113,6 +114,16 @@ namespace System.Linq.Expressions
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this._data.Keys.GetEnumerator();
+        }
+    }
+
+    internal static class ElementInitStub
+    {
+        private static readonly ConstructorInfo s_ctor = typeof(ElementInit).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Single();
+
+        public static ElementInit Create(MethodInfo addMethod, ReadOnlyCollection<Expression> arguments)
+        {
+            return (ElementInit)s_ctor.Invoke(new object[] { addMethod, arguments });
         }
     }
 }

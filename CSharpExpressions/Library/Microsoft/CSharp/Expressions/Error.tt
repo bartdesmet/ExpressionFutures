@@ -13,6 +13,7 @@ var errors = new[]
     new { Name = "UnboundParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Non-optional parameter '{0}' has no binding" },
     new { Name = "NonStaticConstructorRequired", ExceptionType = "ArgumentException", Args = 0, Message = "A non-static constructor is required" },
     new { Name = "PropertyDoesNotHaveGetAccessor", ExceptionType = "ArgumentException", Args = 1, Message = "The property '{0}' has no 'get' accessor" },
+	new { Name = "PropertyDoesNotHaveSetAccessor", ExceptionType = "ArgumentException", Args = 1, Message = "The property '{0}' has no 'set' accessor" },
     new { Name = "AccessorCannotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "A non-static 'get' accessor is required for property '{0}'" },
     new { Name = "RankMismatch", ExceptionType = "ArgumentException", Args = 0, Message = "The number of indexes specified does not match the array rank" },
     new { Name = "IndexOutOfRange", ExceptionType = "ArgumentOutOfRangeException", Args = 0, Message = "The specified index is out of range" },
