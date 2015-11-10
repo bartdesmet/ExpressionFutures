@@ -37,7 +37,7 @@ namespace Microsoft.CSharp.Expressions
     //
     //         Note that the third approach could be made to work if we'd extend existing nodes to have
     //         an option to be "lifted over null" upon construction. The factories would simply check
-    //         whether that flag is set in order to de-nullify the receiver type  prior to checking for
+    //         whether that flag is set in order to de-nullify the receiver type prior to checking for
     //         compatibility with the specified member. The compilation of such nodes would have to be
     //         changed to take this new null-lifted mode into account. Even though the default setting
     //         for the flag would be backwards compatible, it would still break custom visitors that
@@ -85,55 +85,122 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public sealed override Expression Reduce()
         {
-            // TODO: optimize for the case where Expression is a conditional access itself
-            //       note we could possibly reuse variables of the same type as well
-
-            var expressionType = Expression.Type;
-            var variable = Expression.Parameter(expressionType);
-
-            var resultType = Type;
-
-            var assignExpressionToVariable = Expression.Assign(variable, Expression);
-
-            var nonNullCheck = default(Expression);
-
-            var nonNull = (Expression)variable;
-            if (expressionType.IsNullableType())
-            {
-                nonNull = Expression.Property(variable, "Value");
-                nonNullCheck = Expression.Property(variable, "HasValue");
-            }
-            else
-            {
-                nonNullCheck = Expression.NotEqual(variable, Expression.Default(expressionType));
-            }
-
-            var eval = ReduceAccess(nonNull);
-
-            var result = default(Expression);
-            if (resultType.IsNullableType())
-            {
-                result = Expression.Convert(eval, resultType);
-            }
-            else
-            {
-                result = eval;
-            }
+            // NB: We optimize for cases where the receiver is a conditional access itself.
+            //
+            //     For example, consider the following expression:
+            //
+            //       x?.Y?.Z
+            //
+            //     We want to turn this into a series of nested conditionals, like this:
+            //
+            //       var result = default(T);
+            //
+            //       var t0 = x;
+            //       if (t0 != null)
+            //       {
+            //         var t1 = t0.Y;
+            //         if (t1 != null)
+            //         {
+            //           var t2 = t1.Z;
+            //           result = t2;
+            //         }
+            //       }
+            //
+            //       return result;
+            //
+            //     In order to achieve this, we'll build up the resulting expression inside-out by
+            //     checking for the Expression being a ConditionalAccess node itself.
 
             var res = default(Expression);
 
+            var resultType = Type;
+            var resultVariable = default(ParameterExpression);
+
+            var i = 0;
+            var variable = default(ParameterExpression);
+
             if (resultType != typeof(void))
             {
-                var resultVariable = Expression.Parameter(resultType);
+                resultVariable = Expression.Parameter(resultType, "__result");
+                variable = Expression.Parameter(resultType, "__temp" + i++);
+                res = Expression.Assign(resultVariable, variable);
+            }
+            else
+            {
+                res = Expression.Empty();
+            }
+
+            var current = this;
+            var expression = default(Expression);
+
+            while (current != null)
+            {
+                expression = current.Expression;
+                var expressionType = expression.Type;
+
+                var newVariable = Expression.Parameter(expressionType, "__temp" + i++);
+
+                var nonNullCheck = default(Expression);
+                var nonNull = default(Expression);
+
+                if (expressionType.IsNullableType())
+                {
+                    nonNullCheck = Expression.Property(newVariable, "HasValue");
+                    nonNull = Expression.Property(newVariable, "Value");
+                }
+                else
+                {
+                    nonNullCheck = Expression.NotEqual(newVariable, Expression.Default(expressionType));
+                    nonNull = newVariable;
+                }
+
+                var eval = current.ReduceAccess(nonNull);
+
+                var whenNotNull = default(Expression);
+
+                if (eval.Type != typeof(void))
+                {
+                    if (eval.Type != variable.Type)
+                    {
+                        eval = Expression.Convert(eval, variable.Type);
+                    }
+
+                    eval = Expression.Assign(variable, eval);
+
+                    whenNotNull =
+                        Expression.Block(
+                            new[] { variable },
+                            eval,
+                            res
+                        );
+                }
+                else
+                {
+                    whenNotNull =
+                        Expression.Block(
+                            eval,
+                            res
+                        );
+                }
 
                 res =
+                    Expression.IfThen(
+                        nonNullCheck,
+                        whenNotNull
+                    );
+
+                variable = newVariable;
+
+                current = expression as ConditionalAccessCSharpExpression;
+            }
+
+            if (resultVariable != null)
+            {
+                res =
                     Expression.Block(
-                        new[] { variable, resultVariable },
-                        assignExpressionToVariable,
-                        Expression.IfThen(
-                            nonNullCheck,
-                            Expression.Assign(resultVariable, result)
-                        ),
+                        new[] { resultVariable, variable },
+                        Expression.Assign(variable, expression),
+                        res,
                         resultVariable
                     );
             }
@@ -142,13 +209,16 @@ namespace Microsoft.CSharp.Expressions
                 res =
                     Expression.Block(
                         new[] { variable },
-                        assignExpressionToVariable,
-                        Expression.IfThen(
-                            nonNullCheck,
-                            result
-                        )
+                        Expression.Assign(variable, expression),
+                        res
                     );
             }
+
+            // NB: We could save on temporary locals for the left-most Expression if it's a pure
+            //     expression (e.g. a Constant or a Parameter). Similarly, we could save on a
+            //     temporary local for the result. However, it may be better to implement this as
+            //     a general-purpose optimizer (cf. the Optimizer class) such that other reductions
+            //     can benefit from it as well.
 
             return res;
         }

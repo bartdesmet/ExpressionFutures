@@ -115,6 +115,40 @@ namespace Tests
             }
         }
 
+        [TestMethod]
+        public void ConditionalAccess_ManOrBoy3()
+        {
+            var p1 = new Person { Name = "Bart" };
+            var p2 = new Person { Name = "Bart", DOB = new DateTime(1983, 2, 11) };
+
+            var p = Expression.Parameter(typeof(Person));
+
+            var name = PropertyInfoOf((Person x) => x.Name);
+            var dob = PropertyInfoOf((Person x) => x.DOB);
+            var length = PropertyInfoOf((string s) => s.Length);
+            var year = PropertyInfoOf((DateTime x) => x.Year);
+            var toUpper = MethodInfoOf((string s) => s.ToUpper());
+
+            var e1 = CSharpExpression.ConditionalProperty(CSharpExpression.ConditionalProperty(p, name), length);
+            var f1 = Expression.Lambda<Func<Person, int?>>(e1, p).Compile();
+
+            Assert.IsNull(f1(null));
+            Assert.AreEqual(4, f1(p1).Value);
+
+            var e2 = CSharpExpression.ConditionalCall(CSharpExpression.ConditionalProperty(p, name), toUpper);
+            var f2 = Expression.Lambda<Func<Person, string>>(e2, p).Compile();
+
+            Assert.IsNull(f2(null));
+            Assert.AreEqual("BART", f2(p1));
+
+            var e3 = CSharpExpression.ConditionalProperty(CSharpExpression.ConditionalProperty(p, dob), year);
+            var f3 = Expression.Lambda<Func<Person, int?>>(e3, p).Compile();
+
+            Assert.IsNull(f3(null));
+            Assert.IsNull(f3(p1));
+            Assert.AreEqual(1983, f3(p2));
+        }
+
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
@@ -151,6 +185,12 @@ namespace Tests
             public S? P => _n == 0 ? default(S?) : new S(_n - 1);
             public S? M(int x) => P;
             public override string ToString() => $"S({_n})";
+        }
+
+        class Person
+        {
+            public string Name { get; set; }
+            public DateTime? DOB { get; set; }
         }
     }
 }

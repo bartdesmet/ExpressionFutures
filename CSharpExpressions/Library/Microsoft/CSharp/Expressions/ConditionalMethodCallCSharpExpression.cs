@@ -13,6 +13,8 @@ using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
+    // TODO: conditional extension method calls
+
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
