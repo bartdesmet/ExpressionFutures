@@ -13,6 +13,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class ParameterSubstitutor
     {
+        public static Expression Substitute(Expression expression, ParameterExpression original, ParameterExpression replacement)
+        {
+            return Substitute(expression, new Dictionary<ParameterExpression, ParameterExpression> { { original, replacement } });
+        }
+
         public static Expression Substitute(Expression expression, IDictionary<ParameterExpression, ParameterExpression> substitutions)
         {
             return new Impl(substitutions).Visit(expression);

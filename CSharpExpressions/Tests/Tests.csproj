@@ -65,6 +65,7 @@
     <Compile Include="AliasEliminatorTests.cs" />
     <Compile Include="IndexInitTests.cs" />
     <Compile Include="ShadowEliminatorTests.cs" />
+    <Compile Include="ParameterSubstitutorTests.cs" />
     <Compile Include="ShallowVisitorTests.cs" />
     <Compile Include="SpillerTests.cs" />
     <Compile Include="ForEachTests.cs" />
