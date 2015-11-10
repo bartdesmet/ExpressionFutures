@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AssignmentPercolatorTests.cs" />
     <Compile Include="CSharpExpressionVisitorTests.cs" />
     <Compile Include="AssertEx.cs" />
     <Compile Include="AsyncLambdaTests.cs" />
