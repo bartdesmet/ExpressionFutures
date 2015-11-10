@@ -56,6 +56,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AliasEliminator.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\ParameterSubstitutionVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\ScopeTrackingVisitor.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\Utils.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMemberCSharpExpression.cs" />

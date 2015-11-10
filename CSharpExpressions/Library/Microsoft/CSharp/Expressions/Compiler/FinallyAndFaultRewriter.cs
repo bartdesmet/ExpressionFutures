@@ -2,18 +2,13 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    // TODO: add support for catch handlers as well
-
     /// <summary>
     /// Utility to rewrite finally and fault handlers that contain asynchronous operations.
     /// </summary>
@@ -125,8 +120,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     Expression.Catch(ex, saveException)
                 );
 
-            var exStronglyTyped = Expression.Parameter(typeof(Exception), "__exception" + _n++);
-
             var whenFaulted = default(Expression);
             var whenDone = default(Expression);
 
@@ -143,23 +136,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var rethrow =
                 Expression.IfThen(
                     Expression.ReferenceNotEqual(err, Expression.Default(typeof(object))),
-                    Expression.Block(
-                        new[] { exStronglyTyped },
-                        whenFaulted,
-                        Expression.Assign(exStronglyTyped, Expression.TypeAs(err, typeof(Exception))),
-                        Expression.IfThenElse(
-                            Expression.ReferenceEqual(exStronglyTyped, Expression.Default(typeof(Exception))),
-                            Expression.Throw(err), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
-                            Expression.Call(
-                                Expression.Call(
-                                    typeof(ExceptionDispatchInfo).GetMethod("Capture", BindingFlags.Public | BindingFlags.Static),
-                                    exStronglyTyped
-                                ),
-                                typeof(ExceptionDispatchInfo).GetMethod("Throw", BindingFlags.Public | BindingFlags.Instance)
-                            )
-                        ),
-                        Expression.Assign(err, Expression.Default(typeof(object)))
-                    )
+                    Utils.CreateRethrow(err, whenFaulted)
                 );
 
             var vars = new List<ParameterExpression> { err };
