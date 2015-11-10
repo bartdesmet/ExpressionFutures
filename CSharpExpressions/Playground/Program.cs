@@ -363,6 +363,7 @@ namespace Playground
             AsyncLambda13();
             AsyncLambda14();
             AsyncLambda15();
+            AsyncLambda16();
         }
 
         static void AsyncLambda1()
@@ -677,6 +678,38 @@ namespace Playground
                     ),
                     Expression.Call(cout, Expression.Constant("X")),
                     Expression.Label(lbl),
+                    Expression.Call(cout, Expression.Constant("O"))
+                )
+            );
+            var res = async.Compile()();
+            res.Wait();
+        }
+
+        static void AsyncLambda16()
+        {
+            var delay = (Expression<Action>)(() => Task.Delay(1000));
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var lbl = Expression.Label();
+            var ex = Expression.Parameter(typeof(DivideByZeroException));
+            var async = CSharpExpression.AsyncLambda<Func<Task>>(
+                Expression.Block(
+                    Expression.TryCatch(
+                        Expression.Block(
+                            Expression.Call(cout, Expression.Constant("T")),
+                            Expression.Divide(Expression.Constant(1), Expression.Constant(0)),
+                            Expression.Empty()
+                        ),
+                        Expression.Catch(
+                            ex,
+                            Expression.Block(
+                                Expression.Call(cout, Expression.Constant("TB")),
+                                Expression.Call(cout, Expression.Property(ex, "Message")),
+                                CSharpExpression.Await(delay.Body),
+                                Expression.Call(cout, Expression.Property(ex, "Message")),
+                                Expression.Call(cout, Expression.Constant("TE"))
+                            )
+                        )
+                    ),
                     Expression.Call(cout, Expression.Constant("O"))
                 )
             );
