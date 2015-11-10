@@ -72,6 +72,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
             [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitTry(TryExpression node)
             {
+                var res = default(Expression);
+
                 if (node.Handlers.Count == 0 && node.Finally != null)
                 {
                     if (node.Finally.NodeType == ExpressionType.Default && node.Finally.Type == typeof(void))
@@ -81,13 +83,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             var unquoted = default(Expression);
                             if (SpillHelpers.TryUnquote((MethodCallExpression)node.Body, out unquoted))
                             {
-                                return Visit(unquoted);
+                                res = Visit(unquoted);
                             }
                         }
                     }
                 }
 
-                return base.VisitTry(node);
+                if (res == null)
+                {
+                    res = base.VisitTry(node);
+                }
+
+                return res;
             }
         }
     }
