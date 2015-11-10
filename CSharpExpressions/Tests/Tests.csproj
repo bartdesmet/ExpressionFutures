@@ -64,6 +64,7 @@
     <Compile Include="HelpersTests.cs" />
     <Compile Include="AliasEliminatorTests.cs" />
     <Compile Include="IndexInitTests.cs" />
+    <Compile Include="RethrowRewriterTests.cs" />
     <Compile Include="ShadowEliminatorTests.cs" />
     <Compile Include="ParameterSubstitutorTests.cs" />
     <Compile Include="ShallowVisitorTests.cs" />
