@@ -11,8 +11,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
 {
     static class Utils
     {
-        public static Expression CreateRethrow(Expression err, Expression beforeThrow)
+        public static Expression CreateRethrow(Expression err, Expression beforeThrow = null)
         {
+            beforeThrow = beforeThrow ?? Expression.Empty();
+
             var exStronglyTyped = Expression.Parameter(typeof(Exception), "__exception");
 
             return
