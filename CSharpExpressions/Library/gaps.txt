@@ -12,10 +12,6 @@ Open
 Expressions
 ~~~~~~~~~~~
 
-ERR_DictionaryInitializerInExpressionTree
-- Can be lifted by adding new nodes; trickiness with MemberInit / MemberBinding not being extensible
-- C# 6.0 feature addition but applies to existing parent node type
-
 ERR_ExpressionTreeContainsDynamicOperation
 - (dynamic d) => d.Foo()
 - To be revisited if/when we add dynamic support
@@ -61,6 +57,7 @@ Done
 ----
 
 NB: This is done in the *runtime library* and not yet in the Roslyn compiler.
+NB: Design for some of these is not yet final; however, we do have a first sketch of it.
 
 ERR_ExpressionTreeContainsMultiDimensionalArrayInitializer
 - () => new int[2, 2] { { 1, 2 }, { 3, 4 } }
@@ -81,6 +78,10 @@ ERR_ExpressionTreeContainsOptionalArgument
 ERR_NullPropagatingOpInExpressionTree
 - Can be lifted by adding new nodes
 - C# 6.0 feature addition
+
+ERR_DictionaryInitializerInExpressionTree
+- Can be lifted by adding new nodes; trickiness with MemberInit / MemberBinding not being extensible
+- C# 6.0 feature addition but applies to existing parent node type
 
 
 Ignored
