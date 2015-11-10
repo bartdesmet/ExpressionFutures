@@ -13,12 +13,10 @@ using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // TODO: conditional extension method calls
-
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
-    public sealed class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression
+    public abstract class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression
     {
         internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
             : base(expression)
@@ -80,12 +78,25 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalCall(expression, Method, arguments);
         }
 
-        /// <summary>
-        /// Reduces the expression to an unconditional non-null access on the specified expression.
-        /// </summary>
-        /// <param name="nonNull">Non-null expression to apply the access to.</param>
-        /// <returns>The reduced expression.</returns>
-        protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Call(nonNull, Method, Arguments);
+        class InstanceMethodCall : ConditionalMethodCallCSharpExpression
+        {
+            internal InstanceMethodCall(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+                : base(expression, method, arguments)
+            {
+            }
+
+            /// <summary>
+            /// Reduces the expression to an unconditional non-null access on the specified expression.
+            /// </summary>
+            /// <param name="nonNull">Non-null expression to apply the access to.</param>
+            /// <returns>The reduced expression.</returns>
+            protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Call(nonNull, Method, Arguments);
+        }
+
+        internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+        {
+            return new InstanceMethodCall(expression, method, arguments);
+        }
     }
 
     partial class CSharpExpression
@@ -168,7 +179,7 @@ namespace Microsoft.CSharp.Expressions
             var argList = arguments.ToReadOnly();
             ValidateParameterBindings(method, argList);
 
-            return new ConditionalMethodCallCSharpExpression(instance, method, argList);
+            return ConditionalMethodCallCSharpExpression.Make(instance, method, argList);
         }
     }
 
