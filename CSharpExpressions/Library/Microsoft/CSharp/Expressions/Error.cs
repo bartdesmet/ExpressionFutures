@@ -276,7 +276,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// ArgumentException with message like "Conditional access expressions require non-static members."
+        /// ArgumentException with message like "Conditional access expressions require non-static members or extension methods."
         /// </summary>
         internal static Exception ConditionalAccessRequiresNonStaticMember()
         {
@@ -297,6 +297,14 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception TooManyArguments()
         {
             return new ArgumentException(Strings.TooManyArguments);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Conditional call expressions for extensions methods should specify an instance expression."
+        /// </summary>
+        internal static Exception ExtensionMethodRequiresInstance()
+        {
+            return new ArgumentException(Strings.ExtensionMethodRequiresInstance);
         }
 
     }
@@ -604,7 +612,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// A string like "Conditional access expressions require non-static members."
+        /// A string like "Conditional access expressions require non-static members or extension methods."
         /// </summary>
         internal static string ConditionalAccessRequiresNonStaticMember
         {
@@ -633,6 +641,17 @@ namespace Microsoft.CSharp.Expressions
             get
             {
                 return SR.TooManyArguments;
+            }
+        }
+
+        /// <summary>
+        /// A string like "Conditional call expressions for extensions methods should specify an instance expression."
+        /// </summary>
+        internal static string ExtensionMethodRequiresInstance
+        {
+            get
+            {
+                return SR.ExtensionMethodRequiresInstance;
             }
         }
 
@@ -676,8 +695,9 @@ namespace System
         public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
         public const string InvalidInitializer = "Initializers should be assignments to variables";
         public const string DuplicateLabels = "Break and continue lables should be different";
-        public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members.";
+        public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members or extension methods.";
         public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
         public const string TooManyArguments = "Too many arguments have been specified.";
+        public const string ExtensionMethodRequiresInstance = "Conditional call expressions for extensions methods should specify an instance expression.";
     }
 }

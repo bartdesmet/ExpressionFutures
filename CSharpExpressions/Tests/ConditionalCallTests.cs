@@ -36,6 +36,26 @@ namespace Tests
         }
 
         [TestMethod]
+        public void ConditionalCall_Factory_Extension()
+        {
+            var s = Expression.Constant("bar");
+            var x = Expression.Constant(42);
+
+            var reverse = MethodInfoOf(() => Ext.Reverse(default(string)));
+
+            // needs instance
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(null, reverse, new Expression[0]));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(null, reverse, new[] { s }));
+
+            // duplicate binding
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(s, reverse, new[] { s }));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(s, reverse, CSharpExpression.Bind(reverse.GetParameters()[0], s)));
+
+            // wrong type
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(x, reverse));
+        }
+
+        [TestMethod]
         public void ConditionalCall_Factory_Expression()
         {
             var method = MethodInfoOf((C c) => c.F(default(int), default(int), default(int)));
@@ -199,6 +219,39 @@ namespace Tests
             Assert.IsNull(d3(null));
         }
 
+        [TestMethod]
+        public void ConditionalCall_Compile_Extension()
+        {
+            var reverse = MethodInfoOf(() => Ext.Reverse(default(string)));
+            var reverseSubstring = MethodInfoOf(() => Ext.ReverseSubstring(default(string), default(int), default(int)));
+
+            var p = Expression.Parameter(typeof(string));
+            var q = "foobar";
+
+            var m1 = CSharpExpression.ConditionalCall(p, reverse);
+            var f1 = Expression.Lambda<Func<string, string>>(m1, p);
+            var d1 = f1.Compile();
+
+            Assert.AreEqual("raboof", d1(q));
+            Assert.IsNull(d1(null));
+
+            var m2 = CSharpExpression.ConditionalCall(p, reverseSubstring, new[] { Expression.Constant(2), Expression.Constant(3) });
+            var f2 = Expression.Lambda<Func<string, string>>(m2, p);
+            var d2 = f2.Compile();
+
+            Assert.AreEqual("abo", d2(q));
+            Assert.IsNull(d2(null));
+
+            var ps = reverseSubstring.GetParameters();
+
+            var m3 = CSharpExpression.ConditionalCall(p, reverseSubstring, CSharpExpression.Bind(ps[2], Expression.Constant(3)), CSharpExpression.Bind(ps[1], Expression.Constant(2)));
+            var f3 = Expression.Lambda<Func<string, string>>(m3, p);
+            var d3 = f3.Compile();
+
+            Assert.AreEqual("abo", d3(q));
+            Assert.IsNull(d3(null));
+        }
+
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
 
@@ -254,6 +307,19 @@ namespace Tests
             {
                 return x * y + z;
             }
+        }
+    }
+
+    static class Ext
+    {
+        public static string Reverse(this string s)
+        {
+            return new string(s.ToCharArray().Reverse().ToArray());
+        }
+
+        public static string ReverseSubstring(this string s, int start, int length)
+        {
+            return new string(s.Substring(start, length).ToCharArray().Reverse().ToArray());
         }
     }
 }

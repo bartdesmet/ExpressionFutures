@@ -40,9 +40,10 @@ var errors = new[]
     new { Name = "NoEnumerablePattern", ExceptionType = "ArgumentException", Args = 1, Message = "Collection type '{0}' has no valid enumerable pattern" },
     new { Name = "InvalidInitializer", ExceptionType = "ArgumentException", Args = 0, Message = "Initializers should be assignments to variables" },
     new { Name = "DuplicateLabels", ExceptionType = "ArgumentException", Args = 0, Message = "Break and continue lables should be different" },
-    new { Name = "ConditionalAccessRequiresNonStaticMember", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require non-static members." },
+    new { Name = "ConditionalAccessRequiresNonStaticMember", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require non-static members or extension methods." },
     new { Name = "ConditionalAccessRequiresReadableProperty", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require readable properties." },
 	new { Name = "TooManyArguments", ExceptionType = "ArgumentException", Args = 0, Message = "Too many arguments have been specified." },
+	new { Name = "ExtensionMethodRequiresInstance", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional call expressions for extensions methods should specify an instance expression." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

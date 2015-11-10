@@ -48,14 +48,19 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        public static void ValidateParameterBindings(MethodBase method, ReadOnlyCollection<ParameterAssignment> argList)
+        public static void ValidateParameterBindings(MethodBase method, ReadOnlyCollection<ParameterAssignment> argList, bool extensionMethod = false)
         {
-            ValidateParameterBindings(method, method.GetParametersCached(), argList);
+            ValidateParameterBindings(method, method.GetParametersCached(), argList, extensionMethod);
         }
 
-        public static void ValidateParameterBindings(MethodBase method, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
+        public static void ValidateParameterBindings(MethodBase method, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList, bool extensionMethod = false)
         {
             var boundParameters = new HashSet<ParameterInfo>();
+
+            if (extensionMethod)
+            {
+                boundParameters.Add(parameters[0]);
+            }
 
             foreach (var arg in argList)
             {

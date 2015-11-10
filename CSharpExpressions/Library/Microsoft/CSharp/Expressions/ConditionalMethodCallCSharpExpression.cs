@@ -6,10 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using static System.Linq.Expressions.ExpressionStubs;
+using System.Runtime.CompilerServices;
 using static Microsoft.CSharp.Expressions.Helpers;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -85,17 +87,42 @@ namespace Microsoft.CSharp.Expressions
             {
             }
 
-            /// <summary>
-            /// Reduces the expression to an unconditional non-null access on the specified expression.
-            /// </summary>
-            /// <param name="nonNull">Non-null expression to apply the access to.</param>
-            /// <returns>The reduced expression.</returns>
             protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Call(nonNull, Method, Arguments);
+        }
+
+        class ExtensionMethodCall : ConditionalMethodCallCSharpExpression
+        {
+            internal ExtensionMethodCall(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+                : base(expression, method, arguments)
+            {
+            }
+
+            // DESIGN: Unlike LINQ's MethodCallExpression, the Object property won't be null for a static extension method.
+            //         We could make it more similar by making the Object property virtual and returning null. We'd also have
+            //         to mask the underlying Arguments so it includes a binding for the "this" parameter. Finally, the logic
+            //         in the visitor would have to be revisited so the duplication of the binding for "this" in the Expression
+            //         property and the Arguments collection doesn't result in an error (we could use a Rewrite pattern a la
+            //         BlockExpression in lieu of an Update).
+
+            protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Call(Method, new[] { BindThis(nonNull) }.Concat(Arguments));
+
+            private ParameterAssignment BindThis(Expression expression)
+            {
+                var thisParameter = Method.GetParametersCached()[0];
+                return CSharpExpression.Bind(thisParameter, expression);
+            }
         }
 
         internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
         {
-            return new InstanceMethodCall(expression, method, arguments);
+            if (method.IsStatic)
+            {
+                return new ExtensionMethodCall(expression, method, arguments);
+            }
+            else
+            {
+                return new InstanceMethodCall(expression, method, arguments);
+            }
         }
     }
 
@@ -123,7 +150,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
         {
-            ValidateConditionalMethod(instance, method);
+            ValidateConditionalMethod(ref instance, method);
 
             return MakeConditionalMethodCall(instance, method, arguments);
         }
@@ -151,33 +178,57 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
         {
-            ValidateConditionalMethod(instance, method);
+            ValidateConditionalMethod(ref instance, method);
 
-            var bindings = GetParameterBindings(method.GetParametersCached(), arguments);
+            var parameters = method.GetParametersCached();
+
+            // DESIGN: Should the regular CSharpExpression.Call factories allow for calling extension methods like this as well?
+
+            if (method.IsStatic)
+            {
+                parameters = parameters.RemoveFirst(); // NB: Skip "this" parameters which should be in "instance".
+            }
+
+            var bindings = GetParameterBindings(parameters, arguments);
 
             return MakeConditionalMethodCall(instance, method, bindings);
         }
 
-        private static void ValidateConditionalMethod(Expression instance, MethodInfo method)
+        private static void ValidateConditionalMethod(ref Expression instance, MethodInfo method)
         {
-            RequiresCanRead(instance, nameof(instance));
             ContractUtils.RequiresNotNull(method, nameof(method));
 
             ValidateMethodInfo(method);
 
             if (method.IsStatic)
             {
-                throw Error.ConditionalAccessRequiresNonStaticMember();
-            }
+                var parameters = method.GetParametersCached();
 
-            var type = instance.Type.GetNonNullReceiverType();
-            ValidateCallInstanceType(type, method);
+                if (!method.IsDefined(typeof(ExtensionAttribute), false) || parameters.Length == 0 /* NB: someone could craft a method with [ExtensionAttribute] in IL */)
+                {
+                    throw Error.ConditionalAccessRequiresNonStaticMember();
+                }
+
+                if (instance == null)
+                {
+                    throw Error.ExtensionMethodRequiresInstance();
+                }
+
+                instance = ValidateOneArgument(parameters[0], instance);
+            }
+            else
+            {
+                RequiresCanRead(instance, nameof(instance));
+
+                var type = instance.Type.GetNonNullReceiverType();
+                ValidateCallInstanceType(type, method);
+            }
         }
 
         private static ConditionalMethodCallCSharpExpression MakeConditionalMethodCall(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
         {
             var argList = arguments.ToReadOnly();
-            ValidateParameterBindings(method, argList);
+            ValidateParameterBindings(method, argList, extensionMethod: method.IsStatic);
 
             return ConditionalMethodCallCSharpExpression.Make(instance, method, argList);
         }
