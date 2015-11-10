@@ -9,28 +9,36 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// <summary>
     /// Utility to rewrite rethrow statements.
     /// </summary>
-    internal class RethrowRewriter : ShallowVisitor
+    internal static class RethrowRewriter
     {
-        private readonly Expression _replacement;
-
-        public RethrowRewriter(Expression replacement)
+        public static Expression Rewrite(Expression expression, Expression throwReplacement)
         {
-            _replacement = replacement;
+            return new Impl(throwReplacement).Visit(expression);
         }
 
-        protected override CatchBlock VisitCatchBlock(CatchBlock node)
+        class Impl : ShallowVisitor
         {
-            return node; // NB: In nested catch blocks, the meaning of a rethrow changes.
-        }
+            private readonly Expression _replacement;
 
-        protected override Expression VisitUnary(UnaryExpression node)
-        {
-            if (node.NodeType == ExpressionType.Throw && node.Operand == null)
+            public Impl(Expression replacement)
             {
-                return _replacement;
+                _replacement = replacement;
             }
 
-            return base.VisitUnary(node);
+            protected override CatchBlock VisitCatchBlock(CatchBlock node)
+            {
+                return node; // NB: In nested catch blocks, the meaning of a rethrow changes.
+            }
+
+            protected override Expression VisitUnary(UnaryExpression node)
+            {
+                if (node.NodeType == ExpressionType.Throw && node.Operand == null)
+                {
+                    return _replacement;
+                }
+
+                return base.VisitUnary(node);
+            }
         }
     }
 }
