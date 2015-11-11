@@ -77,5 +77,37 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a conditional delegate invocation.
         /// </summary>
         ConditionalInvoke,
+        /// <summary>
+        /// A node that represents a dynamically bound unary operation.
+        /// </summary>
+        DynamicUnary,
+        /// <summary>
+        /// A node that represents a dynamically bound binary operation.
+        /// </summary>
+        DynamicBinary,
+        /// <summary>
+        /// A node that represents a dynamically bound member lookup.
+        /// </summary>
+        DynamicGetMember,
+        /// <summary>
+        /// A node that represents a dynamically bound indexing operation.
+        /// </summary>
+        DynamicGetIndex,
+        /// <summary>
+        /// A node that represents a dynamically bound invocation of a lambda or a delegate.
+        /// </summary>
+        DynamicInvoke,
+        /// <summary>
+        /// A node that represents a dynamically bound invocation of a member.
+        /// </summary>
+        DynamicInvokeMember,
+        /// <summary>
+        /// A node that represents a dynamically bound invocation of a constructor.
+        /// </summary>
+        DynamicInvokeConstructor,
+        /// <summary>
+        /// A node that represents a dynamically bound conversion to a static type.
+        /// </summary>
+        DynamicConvert,
     }
 }

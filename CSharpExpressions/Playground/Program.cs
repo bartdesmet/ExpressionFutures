@@ -31,6 +31,7 @@ namespace Playground
             ConditionalCall();
             ConditionalIndex();
             ConditionalInvoke();
+            Dynamic();
         }
 
         static void Call()
@@ -1072,6 +1073,89 @@ namespace Playground
             var f = e.Compile();
             Console.WriteLine(f(null));
             Console.WriteLine(f(() => 42));
+        }
+
+        static void Dynamic()
+        {
+            Dynamic1();
+            Dynamic2();
+            Dynamic3();
+            Dynamic4();
+            Dynamic5();
+            Dynamic6();
+            Dynamic7();
+            Dynamic8();
+        }
+
+        static void Dynamic1()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.DynamicInvokeMember(p, "Substring", Expression.Constant(1)), p);
+            var f = e.Compile();
+            Console.WriteLine(f("bar"));
+        }
+
+        static void Dynamic2()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.DynamicInvoke(p, Expression.Constant(1)), p);
+            var f = e.Compile();
+            Console.WriteLine(f(new Func<int, int>(x => x + 41)));
+        }
+
+        static void Dynamic3()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, p), p);
+            var f = e.Compile();
+            Console.WriteLine(f(-42));
+            Console.WriteLine(f(TimeSpan.FromSeconds(-42)));
+        }
+
+        static void Dynamic4()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var q = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, object, object>>(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, p, q), p, q);
+            var f = e.Compile();
+            Console.WriteLine(f(1, 2));
+            Console.WriteLine(f("a", "b"));
+            Console.WriteLine(f(DateTime.Now, TimeSpan.FromDays(1)));
+        }
+
+        static void Dynamic5()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, TimeSpan>>(DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), p), p);
+            var f = e.Compile();
+            Console.WriteLine(f(TimeSpan.FromSeconds(42).Ticks));
+        }
+
+        static void Dynamic6()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.DynamicGetMember(p, "TotalSeconds"), p);
+            var f = e.Compile();
+            Console.WriteLine(f(TimeSpan.FromSeconds(42)));
+        }
+
+        static void Dynamic7()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var q = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, object, object>>(DynamicCSharpExpression.DynamicGetIndex(p, q), p, q);
+            var f = e.Compile();
+            Console.WriteLine(f(new[] { 2, 3, 5 }, 2));
+            Console.WriteLine(f(new Dictionary<string, int> { { "Bart", 21 } }, "Bart"));
+        }
+
+        static void Dynamic8()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var e = Expression.Lambda<Func<object, DateTimeOffset>>(DynamicCSharpExpression.DynamicConvert(p, typeof(DateTimeOffset)), p);
+            var f = e.Compile();
+            Console.WriteLine(f(DateTime.Now));
+            Console.WriteLine(f(DateTimeOffset.Now));
         }
 
         static int F(int x, int y, int z = 42)

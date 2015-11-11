@@ -63,6 +63,16 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpIndexInit.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\ConvertDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\InvokeConstructorDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\BinaryDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpArgument.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\GetIndexDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\GetMemberDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\InvokeDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\InvokeMemberDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\UnaryDynamicCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Error.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -106,6 +116,7 @@
     <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <CodeAnalysisDictionary Include="CodeAnalysis.xml" />
     <Content Include="gaps.txt" />
     <Content Include="Microsoft\CSharp\Expressions\Error.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

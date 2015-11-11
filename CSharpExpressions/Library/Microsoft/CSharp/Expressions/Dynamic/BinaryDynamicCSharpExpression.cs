@@ -1,0 +1,220 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - October 2015
+
+using Microsoft.CSharp.RuntimeBinder;
+using System;
+using System.Collections.Generic;
+using System.Dynamic.Utils;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using LinqError = System.Linq.Expressions.Error;
+
+namespace Microsoft.CSharp.Expressions
+{
+    /// <summary>
+    /// Represents a dynamically bound binary operation.
+    /// </summary>
+    public sealed class BinaryDynamicCSharpExpression : DynamicCSharpExpression
+    {
+        internal BinaryDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right)
+            : base(context, binderFlags)
+        {
+            OperationNodeType = binaryType;
+            Left = left;
+            Right = right;
+        }
+
+        /// <summary>
+        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
+        /// </summary>
+        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
+        public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.DynamicBinary;
+
+        /// <summary>
+        /// Gets the expression kind of the dynamically bound operation.
+        /// </summary>
+        public ExpressionType OperationNodeType { get; }
+
+        /// <summary>
+        /// Gets the left operand of the binary operation.
+        /// </summary>
+        public DynamicCSharpArgument Left { get; }
+
+        /// <summary>
+        /// Gets the right operand of the binary operation.
+        /// </summary>
+        public DynamicCSharpArgument Right { get; }
+
+        /// <summary>
+        /// Reduces the dynamic expression to a binder and a set of arguments to apply the operation to.
+        /// </summary>
+        /// <param name="binder">The binder used to perform the dynamic operation.</param>
+        /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments)
+        {
+            binder = Binder.BinaryOperation(Flags, OperationNodeType, Context, new[] { Left.ArgumentInfo, Right.ArgumentInfo });
+            arguments = new[] { Left.Expression, Right.Expression };
+        }
+
+        /// <summary>
+        /// Dispatches to the specific visit method for this node type.
+        /// </summary>
+        /// <param name="visitor">The visitor to visit this node with.</param>
+        /// <returns>The result of visiting this node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
+        {
+            return visitor.VisitDynamicBinary(this);
+        }
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+        /// </summary>
+        /// <param name="left">The <see cref="Left" /> property of the result.</param>
+        /// <param name="right">The <see cref="Right" /> property of the result.</param>
+        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        public BinaryDynamicCSharpExpression Update(DynamicCSharpArgument left, DynamicCSharpArgument right)
+        {
+            if (left == this.Left && right == this.Right)
+            {
+                return this;
+            }
+
+            return DynamicCSharpExpression.MakeDynamicBinary(OperationNodeType, left, right, Flags, Context);
+        }
+    }
+
+    partial class DynamicCSharpExpression
+    {
+        // TODO: code-gen factories for all binary node types?
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary operation.
+        /// </summary>
+        /// <param name="binaryType">The type of the binary operation to perform.</param>
+        /// <param name="left">The expression representing the left operand of the operation.</param>
+        /// <param name="right">The expression representing the right operand of the operation.</param>
+        /// <returns>A new expression representing a dynamically bound binary operation.</returns>
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, Expression left, Expression right)
+        {
+            return MakeDynamicBinary(binaryType, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, null);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary operation.
+        /// </summary>
+        /// <param name="binaryType">The type of the binary operation to perform.</param>
+        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
+        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
+        /// <returns>A new expression representing a dynamically bound binary operation.</returns>
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right)
+        {
+            return MakeDynamicBinary(binaryType, left, right, CSharpBinderFlags.None, null);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary operation with the specified binder flags.
+        /// </summary>
+        /// <param name="binaryType">The type of the binary operation to perform.</param>
+        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
+        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
+        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
+        /// <returns>A new expression representing a dynamically bound binary operation.</returns>
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
+        {
+            return MakeDynamicBinary(binaryType, left, right, binderFlags, null);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary operation with the specified binder flags and the specified type context.
+        /// </summary>
+        /// <param name="binaryType">The type of the binary operation to perform.</param>
+        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
+        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
+        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
+        /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
+        /// <returns>A new expression representing a dynamically bound binary operation.</returns>
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
+        {
+            ContractUtils.RequiresNotNull(left, nameof(left));
+            ContractUtils.RequiresNotNull(right, nameof(right));
+
+            switch (binaryType)
+            {
+                case ExpressionType.Add:
+                case ExpressionType.AddChecked:
+                case ExpressionType.And:
+                case ExpressionType.AndAlso:
+                case ExpressionType.ArrayIndex:
+                case ExpressionType.Coalesce:
+                case ExpressionType.Divide:
+                case ExpressionType.Equal:
+                case ExpressionType.ExclusiveOr:
+                case ExpressionType.GreaterThan:
+                case ExpressionType.GreaterThanOrEqual:
+                case ExpressionType.LeftShift:
+                case ExpressionType.LessThan:
+                case ExpressionType.LessThanOrEqual:
+                case ExpressionType.Modulo:
+                case ExpressionType.Multiply:
+                case ExpressionType.MultiplyChecked:
+                case ExpressionType.NotEqual:
+                case ExpressionType.Or:
+                case ExpressionType.OrElse:
+                case ExpressionType.Power:
+                case ExpressionType.RightShift:
+                case ExpressionType.Subtract:
+                case ExpressionType.SubtractChecked:
+                    break;
+                // TODO: enable more of these when we decide to support assignments
+                case ExpressionType.AddAssign:
+                case ExpressionType.AndAssign:
+                case ExpressionType.DivideAssign:
+                case ExpressionType.ExclusiveOrAssign:
+                case ExpressionType.LeftShiftAssign:
+                case ExpressionType.ModuloAssign:
+                case ExpressionType.MultiplyAssign:
+                case ExpressionType.OrAssign:
+                case ExpressionType.PowerAssign:
+                case ExpressionType.RightShiftAssign:
+                case ExpressionType.SubtractAssign:
+                case ExpressionType.AddAssignChecked:
+                case ExpressionType.MultiplyAssignChecked:
+                case ExpressionType.SubtractAssignChecked:
+                // NB: The following are not supported by design
+                case ExpressionType.Assign:
+                default:
+                    throw LinqError.NotSupported();
+            }
+
+            switch (binaryType)
+            {
+                case ExpressionType.AddChecked:
+                case ExpressionType.MultiplyChecked:
+                case ExpressionType.SubtractChecked:
+                case ExpressionType.AddAssignChecked:
+                case ExpressionType.MultiplyAssignChecked:
+                case ExpressionType.SubtractAssignChecked:
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
+            }
+
+            return new BinaryDynamicCSharpExpression(context, binderFlags, binaryType, left, right);
+        }
+    }
+
+    partial class CSharpExpressionVisitor
+    {
+        /// <summary>
+        /// Visits the children of the <see cref="BinaryDynamicCSharpExpression" />.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal virtual Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node)
+        {
+            return node.Update(VisitDynamicArgument(node.Left), VisitDynamicArgument(node.Right));
+        }
+    }
+}
