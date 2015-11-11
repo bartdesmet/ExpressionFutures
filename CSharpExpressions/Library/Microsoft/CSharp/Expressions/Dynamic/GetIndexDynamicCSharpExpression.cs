@@ -10,6 +10,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using static System.Linq.Expressions.ExpressionStubs;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -56,12 +57,7 @@ namespace Microsoft.CSharp.Expressions
             expressions[0] = Object;
             argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
 
-            for (var i = 0; i < n; i++)
-            {
-                var argument = Arguments[i];
-                argumentInfos[i + 1] = argument.ArgumentInfo;
-                expressions[i + 1] = argument.Expression;
-            }
+            CopyArguments(Arguments, argumentInfos, expressions);
 
             binder = Binder.GetIndex(Flags, Context, argumentInfos);
             arguments = expressions;

@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -494,6 +495,18 @@ namespace Microsoft.CSharp.Expressions
         {
             // DESIGN: Should we reject non-nullable value types here?
             return type.GetNonNullableType();
+        }
+
+        public static void CopyArguments(ReadOnlyCollection<DynamicCSharpArgument> arguments, CSharpArgumentInfo[] argumentInfos, Expression[] expressions)
+        {
+            var n = arguments.Count;
+
+            for (var i = 0; i < n; i++)
+            {
+                var argument = arguments[i];
+                argumentInfos[i + 1] = argument.ArgumentInfo;
+                expressions[i + 1] = argument.Expression;
+            }
         }
     }
 }
