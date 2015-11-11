@@ -58,6 +58,63 @@ namespace Tests
                 Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
 
                 Assert.AreSame(p, e.Object);
+                Assert.IsNull(e.Target);
+
+                Assert.AreEqual(m, e.Name);
+                Assert.AreEqual(0, e.TypeArguments.Count);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.AreSame(a, e.Arguments[0].Expression);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Static()
+        {
+            var p = Expression.Parameter(typeof(object));
+
+            var d = DynamicCSharpExpression.DynamicInvokeMember(typeof(string), "Concat", p, Expression.Constant("!"));
+            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+
+            AssertNoChange(d);
+
+            var e = Expression.Lambda<Func<object, object>>(d, p);
+            var f = e.Compile();
+            Assert.AreEqual("bar!", f("bar"));
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Static_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var m = "bar";
+            var a = Expression.Constant(1);
+            var d = DynamicCSharpExpression.DynamicArgument(a);
+            var t = new Type[0];
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, new[] { a }),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, new[] { d }),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, t, new[] { a }),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, t, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, t, new[] { d }),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, t, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, t, new[] { d }.AsEnumerable(), CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicInvokeMember(typeof(string), m, t, new[] { d }.AsEnumerable(), CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
+
+                Assert.AreSame(typeof(string), e.Target);
+                Assert.IsNull(e.Object);
 
                 Assert.AreEqual(m, e.Name);
                 Assert.AreEqual(0, e.TypeArguments.Count);
