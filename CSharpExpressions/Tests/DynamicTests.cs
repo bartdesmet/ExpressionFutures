@@ -222,6 +222,12 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Dynamic_Unary_Factory_ArgumentChecking()
+        {
+            AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Add, Expression.Constant(0)));
+        }
+
+        [TestMethod]
         public void Dynamic_Unary_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -265,6 +271,12 @@ namespace Tests
             Assert.AreEqual(3, f(1, 2));
             Assert.AreEqual("ab", f("a", "b"));
             Assert.AreEqual(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 10), TimeSpan.FromDays(1)));
+        }
+
+        [TestMethod]
+        public void Dynamic_Binary_Factory_ArgumentChecking()
+        {
+            AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Negate, Expression.Constant(0), Expression.Constant(0)));
         }
 
         [TestMethod]
