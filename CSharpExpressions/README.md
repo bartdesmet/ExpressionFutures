@@ -27,3 +27,35 @@ Also note that some language constructs such as indexer initializers introduced 
 ## Supported Language Features
 
 In the following sections, we'll describe the C# language features that are supported in the `Microsoft.CSharp.Expressions` API, excluding those that are already supported by the LINQ expression APIs.
+
+### C# 3.0
+
+#### Multi-dimensional array initializers
+
+One omission in the LINQ expression API is support for multi-dimensional array initializers. An example of this restriction is shown below:
+
+```csharp
+Expression<Func<int[,]>> f = () => new int[2, 2] { { 1, 2 }, { 3, 4 } };
+```
+
+This will fail to compile with:
+
+```
+error CS0838: An expression tree may not contain a multidimensional array initializer
+```
+
+Note that the bounds of the array have to be compile-time constants. Therefore, the number of expected elements is known statically.
+
+In order to lift this restriction, we introduced `NewMultidimensionalArrayInitCSharpExpression` which contains a list of expressions denoting the array elements listed in row-major order. The node is parameterized on an array of `Int32` bounds for the array's dimensions. An example of creating an instance of this node typeis shown below:
+
+```csharp
+CSharpExpression.NewMultidimensionalArrayInit(
+  typeof(int), new[] { 2, 2 },
+  Expression.Constant(1), Expression.Constant(2),
+  Expression.Constant(3), Expression.Constant(4)
+);
+```
+
+The `GetExpression(int[])` method can be used to retrieve an expression representing an element in the array. This is useful when analyzing an instance of the node type.
+
+Reduction of the node produces a `Block` expression containing a `NewArrayBounds` expression to instantiate an empty multi-dimensional array, followed by a series of `Assign` binary expressions that assign the elements of the array via `ArrayAccess` index expressions. The expressions representing the elements are evaluated in left-to-right row-major order as the language prescribes.
