@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -87,8 +86,6 @@ namespace Microsoft.CSharp.Expressions
 
     partial class DynamicCSharpExpression
     {
-        // TODO: code-gen factories for all binary node types?
-
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary operation.
         /// </summary>
@@ -140,53 +137,7 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(left, nameof(left));
             ContractUtils.RequiresNotNull(right, nameof(right));
 
-            switch (binaryType)
-            {
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.Coalesce:
-                case ExpressionType.Divide:
-                case ExpressionType.Equal:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.LeftShift:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.Modulo:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.Power:
-                case ExpressionType.RightShift:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                    break;
-                // TODO: enable more of these when we decide to support assignments
-                case ExpressionType.AddAssign:
-                case ExpressionType.AndAssign:
-                case ExpressionType.DivideAssign:
-                case ExpressionType.ExclusiveOrAssign:
-                case ExpressionType.LeftShiftAssign:
-                case ExpressionType.ModuloAssign:
-                case ExpressionType.MultiplyAssign:
-                case ExpressionType.OrAssign:
-                case ExpressionType.PowerAssign:
-                case ExpressionType.RightShiftAssign:
-                case ExpressionType.SubtractAssign:
-                case ExpressionType.AddAssignChecked:
-                case ExpressionType.MultiplyAssignChecked:
-                case ExpressionType.SubtractAssignChecked:
-                // NB: The following are not supported by design
-                case ExpressionType.Assign:
-                default:
-                    throw LinqError.NotSupported();
-            }
+            CheckBinary(binaryType);
 
             switch (binaryType)
             {

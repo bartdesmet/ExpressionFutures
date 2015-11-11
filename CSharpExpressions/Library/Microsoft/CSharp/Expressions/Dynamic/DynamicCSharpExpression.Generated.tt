@@ -1,0 +1,234 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var bts = new[]
+{
+    ExpressionType.Add,
+    ExpressionType.AddChecked,
+    ExpressionType.And,
+    ExpressionType.AndAlso,
+    ExpressionType.ArrayIndex,
+    ExpressionType.Coalesce,
+    ExpressionType.Divide,
+    ExpressionType.Equal,
+    ExpressionType.ExclusiveOr,
+    ExpressionType.GreaterThan,
+    ExpressionType.GreaterThanOrEqual,
+    ExpressionType.LeftShift,
+    ExpressionType.LessThan,
+    ExpressionType.LessThanOrEqual,
+    ExpressionType.Modulo,
+    ExpressionType.Multiply,
+    ExpressionType.MultiplyChecked,
+    ExpressionType.NotEqual,
+    ExpressionType.Or,
+    ExpressionType.OrElse,
+    ExpressionType.Power,
+    ExpressionType.RightShift,
+    ExpressionType.Subtract,
+    ExpressionType.SubtractChecked,
+    
+    // TODO, enable more of these when we decide to support assignments
+    // ExpressionType.AddAssign,
+    // ExpressionType.AndAssign,
+    // ExpressionType.DivideAssign,
+    // ExpressionType.ExclusiveOrAssign,
+    // ExpressionType.LeftShiftAssign,
+    // ExpressionType.ModuloAssign,
+    // ExpressionType.MultiplyAssign,
+    // ExpressionType.OrAssign,
+    // ExpressionType.PowerAssign,
+    // ExpressionType.RightShiftAssign,
+    // ExpressionType.SubtractAssign,
+    // ExpressionType.AddAssignChecked,
+    // ExpressionType.MultiplyAssignChecked,
+    // ExpressionType.SubtractAssignChecked,
+    
+    // NB, The following are not supported by design
+    // ExpressionType.Assign,
+};
+
+var uts = new[]
+{
+    ExpressionType.Negate,
+    ExpressionType.UnaryPlus,
+    ExpressionType.NegateChecked,
+    ExpressionType.Not,
+    ExpressionType.Decrement,
+    ExpressionType.Increment,
+    ExpressionType.OnesComplement,
+    ExpressionType.IsTrue,
+    ExpressionType.IsFalse,
+
+    // TODO, enable more of these when we decide to support assignments
+    // ExpressionType.PreIncrementAssign,
+    // ExpressionType.PreDecrementAssign,
+    // ExpressionType.PostIncrementAssign,
+    // ExpressionType.PostDecrementAssign,
+    
+    // NB, The following are not supported by design
+    // ExpressionType.Convert,
+    // ExpressionType.ConvertChecked,
+    // ExpressionType.Unbox,
+    // ExpressionType.Quote,
+    // ExpressionType.Throw,
+};
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - October 2015
+
+using Microsoft.CSharp.RuntimeBinder;
+using System;
+using System.Linq.Expressions;
+using LinqError = System.Linq.Expressions.Error;
+
+namespace Microsoft.CSharp.Expressions
+{
+    partial class DynamicCSharpExpression
+    {
+<#
+foreach (var et in bts)
+{
+#>
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary '<#=et#>' operation.
+        /// </summary>
+        /// <param name="left">The expression representing the left operand of the operation.</param>
+        /// <param name="right">The expression representing the right operand of the operation.</param>
+        /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
+        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(Expression left, Expression right)
+        {
+            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary '<#=et#>' operation.
+        /// </summary>
+        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
+        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
+        /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
+        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right)
+        {
+            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary '<#=et#>' operation with the specified binder flags.
+        /// </summary>
+        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
+        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
+        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
+        /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
+        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
+        {
+            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right, binderFlags);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound binary '<#=et#>' operation with the specified binder flags and the specified type context.
+        /// </summary>
+        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
+        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
+        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
+        /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
+        /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
+        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
+        {
+            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right, binderFlags, context);
+        }
+
+<#
+}
+
+foreach (var et in uts)
+{
+#>
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound unary '<#=et#>' operation.
+        /// </summary>
+        /// <param name="operand">The expression representing the operand of the operation.</param>
+        /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
+        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(Expression operand)
+        {
+            return MakeDynamicUnary(ExpressionType.<#=et#>, operand);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound unary '<#=et#>' operation.
+        /// </summary>
+        /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
+        /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
+        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand)
+        {
+            return MakeDynamicUnary(ExpressionType.<#=et#>, operand);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound unary '<#=et#>' operation with the specified binder flags.
+        /// </summary>
+        /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
+        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
+        /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
+        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
+        {
+            return MakeDynamicUnary(ExpressionType.<#=et#>, operand, binderFlags);
+        }
+
+        /// <summary>
+        /// Creates a new expression representing a dynamically bound unary '<#=et#>' operation with the specified binder flags and the specified type context.
+        /// </summary>
+        /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
+        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
+        /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
+        /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
+        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
+        {
+            return MakeDynamicUnary(ExpressionType.<#=et#>, operand, binderFlags, context);
+        }
+
+<#
+}
+#>
+        private static void CheckBinary(ExpressionType binaryType)
+        {
+            switch (binaryType)
+            {
+<#
+foreach (var et in bts)
+{
+#>
+                case ExpressionType.<#=et#>:
+<#
+}
+#>
+                    break;
+                default:
+                    throw LinqError.NotSupported();
+            }
+        }
+
+        private static void CheckUnary(ExpressionType unaryType)
+        {
+            switch (unaryType)
+            {
+<#
+foreach (var et in uts)
+{
+#>
+                case ExpressionType.<#=et#>:
+<#
+}
+#>
+                    break;
+                default:
+                    throw LinqError.NotSupported();
+            }
+        }
+    }
+}

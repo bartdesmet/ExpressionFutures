@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -80,8 +79,6 @@ namespace Microsoft.CSharp.Expressions
 
     partial class DynamicCSharpExpression
     {
-        // TODO: code-gen factories for all unary node types?
-
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary operation.
         /// </summary>
@@ -128,32 +125,7 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
-            switch (unaryType)
-            {
-                case ExpressionType.Negate:
-                case ExpressionType.UnaryPlus:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.Decrement:
-                case ExpressionType.Increment:
-                case ExpressionType.OnesComplement:
-                case ExpressionType.IsTrue:
-                case ExpressionType.IsFalse:
-                    break;
-                // TODO: enable more of these when we decide to support assignments
-                case ExpressionType.PreIncrementAssign:
-                case ExpressionType.PreDecrementAssign:
-                case ExpressionType.PostIncrementAssign:
-                case ExpressionType.PostDecrementAssign:
-                // NB: The following are not supported by design
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.Unbox:
-                case ExpressionType.Quote:
-                case ExpressionType.Throw:
-                default:
-                    throw LinqError.NotSupported();
-            }
+            CheckUnary(unaryType);
 
             switch (unaryType)
             {

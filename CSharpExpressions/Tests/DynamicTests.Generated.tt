@@ -1,0 +1,174 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var bts = new[]
+{
+    ExpressionType.Add,
+    ExpressionType.AddChecked,
+    ExpressionType.And,
+    ExpressionType.AndAlso,
+    ExpressionType.ArrayIndex,
+    ExpressionType.Coalesce,
+    ExpressionType.Divide,
+    ExpressionType.Equal,
+    ExpressionType.ExclusiveOr,
+    ExpressionType.GreaterThan,
+    ExpressionType.GreaterThanOrEqual,
+    ExpressionType.LeftShift,
+    ExpressionType.LessThan,
+    ExpressionType.LessThanOrEqual,
+    ExpressionType.Modulo,
+    ExpressionType.Multiply,
+    ExpressionType.MultiplyChecked,
+    ExpressionType.NotEqual,
+    ExpressionType.Or,
+    ExpressionType.OrElse,
+    ExpressionType.Power,
+    ExpressionType.RightShift,
+    ExpressionType.Subtract,
+    ExpressionType.SubtractChecked,
+    
+    // TODO, enable more of these when we decide to support assignments
+    // ExpressionType.AddAssign,
+    // ExpressionType.AndAssign,
+    // ExpressionType.DivideAssign,
+    // ExpressionType.ExclusiveOrAssign,
+    // ExpressionType.LeftShiftAssign,
+    // ExpressionType.ModuloAssign,
+    // ExpressionType.MultiplyAssign,
+    // ExpressionType.OrAssign,
+    // ExpressionType.PowerAssign,
+    // ExpressionType.RightShiftAssign,
+    // ExpressionType.SubtractAssign,
+    // ExpressionType.AddAssignChecked,
+    // ExpressionType.MultiplyAssignChecked,
+    // ExpressionType.SubtractAssignChecked,
+    
+    // NB, The following are not supported by design
+    // ExpressionType.Assign,
+};
+
+var uts = new[]
+{
+    ExpressionType.Negate,
+    ExpressionType.UnaryPlus,
+    ExpressionType.NegateChecked,
+    ExpressionType.Not,
+    ExpressionType.Decrement,
+    ExpressionType.Increment,
+    ExpressionType.OnesComplement,
+    ExpressionType.IsTrue,
+    ExpressionType.IsFalse,
+
+    // TODO, enable more of these when we decide to support assignments
+    // ExpressionType.PreIncrementAssign,
+    // ExpressionType.PreDecrementAssign,
+    // ExpressionType.PostIncrementAssign,
+    // ExpressionType.PostDecrementAssign,
+    
+    // NB, The following are not supported by design
+    // ExpressionType.Convert,
+    // ExpressionType.ConvertChecked,
+    // ExpressionType.Unbox,
+    // ExpressionType.Quote,
+    // ExpressionType.Throw,
+};
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - October 2015
+
+using Microsoft.CSharp.Expressions;
+using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq.Expressions;
+
+namespace Tests
+{
+    partial class DynamicTests
+    {
+        [TestMethod]
+        public void Dynamic_Binary_GeneratedFactories()
+        {
+            var le = Expression.Constant(1);
+            var re = Expression.Constant(2);
+
+            var ld = DynamicCSharpExpression.DynamicArgument(le);
+            var rd = DynamicCSharpExpression.DynamicArgument(re);
+
+<#
+var i = 0;
+foreach (var et in bts)
+{
+#>
+            var be<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(le, re);
+            Assert.AreEqual(ExpressionType.<#=et#>, be<#=i#>.OperationNodeType);
+            Assert.AreSame(le, be<#=i#>.Left.Expression);
+            Assert.AreSame(re, be<#=i#>.Right.Expression);
+
+            var bd<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd);
+            Assert.AreEqual(ExpressionType.<#=et#>, bd<#=i#>.OperationNodeType);
+            Assert.AreSame(ld, bd<#=i#>.Left);
+            Assert.AreSame(rd, bd<#=i#>.Right);
+
+            var bf<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(ExpressionType.<#=et#>, bf<#=i#>.OperationNodeType);
+            Assert.AreSame(ld, bf<#=i#>.Left);
+            Assert.AreSame(rd, bf<#=i#>.Right);
+            Assert.AreEqual(CSharpBinderFlags.CheckedContext, bf<#=i#>.Flags);
+
+            var bc<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(ExpressionType.<#=et#>, bc<#=i#>.OperationNodeType);
+            Assert.AreSame(ld, bc<#=i#>.Left);
+            Assert.AreSame(rd, bc<#=i#>.Right);
+            Assert.AreEqual(CSharpBinderFlags.CheckedContext, bc<#=i#>.Flags);
+            Assert.AreEqual(typeof(int), bc<#=i#>.Context);
+
+<#
+    i++;
+}
+#>
+        }
+
+        [TestMethod]
+        public void Dynamic_Unary_GeneratedFactories()
+        {
+            var oe = Expression.Constant(1);
+
+            var od = DynamicCSharpExpression.DynamicArgument(oe);
+
+<#
+var j = 0;
+foreach (var et in uts)
+{
+#>
+            var ue<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(oe);
+            Assert.AreEqual(ExpressionType.<#=et#>, ue<#=j#>.OperationNodeType);
+            Assert.AreSame(oe, ue<#=j#>.Operand.Expression);
+
+            var ud<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od);
+            Assert.AreEqual(ExpressionType.<#=et#>, ud<#=j#>.OperationNodeType);
+            Assert.AreSame(od, ud<#=j#>.Operand);
+
+            var uf<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(ExpressionType.<#=et#>, uf<#=j#>.OperationNodeType);
+            Assert.AreSame(od, uf<#=j#>.Operand);
+            Assert.AreEqual(CSharpBinderFlags.CheckedContext, uf<#=j#>.Flags);
+
+            var uc<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(ExpressionType.<#=et#>, uc<#=j#>.OperationNodeType);
+            Assert.AreSame(od, uc<#=j#>.Operand);
+            Assert.AreEqual(CSharpBinderFlags.CheckedContext, uc<#=j#>.Flags);
+            Assert.AreEqual(typeof(int), uc<#=j#>.Context);
+<#
+    j++;
+}
+#>
+        }
+    }
+}

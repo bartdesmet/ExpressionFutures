@@ -64,6 +64,11 @@
     <Compile Include="ConditionalCallTests.cs" />
     <Compile Include="ConditionalIndexTests.cs" />
     <Compile Include="ConditionalMemberTests.cs" />
+    <Compile Include="DynamicTests.Generated.cs">
+      <DependentUpon>DynamicTests.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="DynamicTests.cs" />
     <Compile Include="HelpersTests.cs" />
     <Compile Include="AliasEliminatorTests.cs" />
@@ -95,6 +100,15 @@
       <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
       <Name>Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DynamicTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

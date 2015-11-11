@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 namespace Tests
 {
     [TestClass]
-    public class DynamicTests
+    public partial class DynamicTests
     {
         [TestMethod]
         public void Dynamic_InvokeMember()
@@ -495,6 +495,59 @@ namespace Tests
 
                 Assert.IsNull(e.Context);
                 Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
+        }
+
+        [TestMethod]
+        public void Dynamic_Argument_Factories()
+        {
+            var c = Expression.Constant(1);
+            var n = "x";
+            var f = CSharpArgumentInfoFlags.IsRef;
+
+            {
+                var es = new[]
+                {
+                    DynamicCSharpExpression.DynamicArgument(c),
+                    DynamicCSharpExpression.DynamicArgument(c, null),
+                    DynamicCSharpExpression.DynamicArgument(c, null, CSharpArgumentInfoFlags.None),
+                };
+
+                foreach (var e in es)
+                {
+                    Assert.AreSame(c, e.Expression);
+                    Assert.IsNull(e.Name);
+                    Assert.AreEqual(CSharpArgumentInfoFlags.None, e.Flags);
+                }
+            }
+
+            {
+                var es = new[]
+                {
+                    DynamicCSharpExpression.DynamicArgument(c, n),
+                    DynamicCSharpExpression.DynamicArgument(c, n, CSharpArgumentInfoFlags.None),
+                };
+
+                foreach (var e in es)
+                {
+                    Assert.AreSame(c, e.Expression);
+                    Assert.AreSame(n, e.Name);
+                    Assert.AreEqual(CSharpArgumentInfoFlags.None, e.Flags);
+                }
+            }
+
+            {
+                var es = new[]
+                {
+                    DynamicCSharpExpression.DynamicArgument(c, n, f),
+                };
+
+                foreach (var e in es)
+                {
+                    Assert.AreSame(c, e.Expression);
+                    Assert.AreSame(n, e.Name);
+                    Assert.AreEqual(f, e.Flags);
+                }
             }
         }
 
