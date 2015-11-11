@@ -3,9 +3,11 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
+using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Tests
@@ -26,6 +28,46 @@ namespace Tests
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual("ar", f("bar"));
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var m = "bar";
+            var a = Expression.Constant(1);
+            var d = DynamicCSharpExpression.DynamicArgument(a);
+            var t = new Type[0];
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, new[] { a }),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, new[] { d }),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, t, new[] { a }),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, t, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, t, new[] { d }),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, t, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, t, new[] { d }.AsEnumerable(), CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicInvokeMember(p, m, t, new[] { d }.AsEnumerable(), CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Object);
+
+                Assert.AreEqual(m, e.Name);
+                Assert.AreEqual(0, e.TypeArguments.Count);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.AreSame(a, e.Arguments[0].Expression);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
         }
 
         [TestMethod]
