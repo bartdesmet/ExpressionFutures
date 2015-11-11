@@ -20,6 +20,8 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class NewMultidimensionalArrayInitCSharpExpression : CSharpExpression
     {
+        // NB: We don't expose the bounds as a ReadOnlyCollection<int>. The Type property can be used to discover the bounds.
+
         private readonly int[] _bounds;
 
         internal NewMultidimensionalArrayInitCSharpExpression(Type type, int[] bounds, ReadOnlyCollection<Expression> expressions)
