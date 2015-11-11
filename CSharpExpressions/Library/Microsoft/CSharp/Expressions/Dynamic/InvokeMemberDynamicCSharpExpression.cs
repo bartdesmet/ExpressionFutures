@@ -77,15 +77,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The <see cref="Object" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            if (@object == this.Object && arguments == this.Arguments)
-            {
-                return this;
-            }
-
-            return DynamicCSharpExpression.DynamicInvokeMember(@object, Name, TypeArguments, arguments, Flags, Context);
-        }
+        public abstract InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments);
     }
 
     internal class InvokeInstanceMemberDynamicCSharpExpression : InvokeMemberDynamicCSharpExpression
@@ -113,6 +105,16 @@ namespace Microsoft.CSharp.Expressions
             binder = Binder.InvokeMember(Flags, Name, TypeArguments, Context, argumentInfos);
             arguments = expressions;
         }
+
+        public override InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
+        {
+            if (@object == this.Object && arguments == this.Arguments)
+            {
+                return this;
+            }
+
+            return DynamicCSharpExpression.DynamicInvokeMember(@object, Name, TypeArguments, arguments, Flags, Context);
+        }
     }
 
     internal class InvokeStaticMemberDynamicCSharpExpression : InvokeMemberDynamicCSharpExpression
@@ -139,6 +141,16 @@ namespace Microsoft.CSharp.Expressions
 
             binder = Binder.InvokeMember(Flags, Name, TypeArguments, Context, argumentInfos);
             arguments = expressions;
+        }
+
+        public override InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
+        {
+            if (@object == this.Object && arguments == this.Arguments)
+            {
+                return this;
+            }
+
+            return DynamicCSharpExpression.DynamicInvokeMember(Target, Name, TypeArguments, arguments, Flags, Context);
         }
     }
 

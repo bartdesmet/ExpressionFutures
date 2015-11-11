@@ -24,6 +24,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
@@ -95,6 +96,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
@@ -164,6 +166,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicInvoke, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
@@ -210,6 +213,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicUnary, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
@@ -254,6 +258,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicBinary, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
@@ -301,6 +306,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicInvokeConstructor, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, TimeSpan>>(d, p);
             var f = e.Compile();
@@ -347,6 +353,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicGetMember, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
@@ -397,6 +404,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicGetIndex, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
@@ -444,6 +452,7 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.DynamicConvert, d.CSharpNodeType);
 
             AssertNoChange(d);
+            AssertChange(d);
 
             var e = Expression.Lambda<Func<object, DateTimeOffset>>(d, p);
             var f = e.Compile();
@@ -457,8 +466,28 @@ namespace Tests
             Assert.AreSame(e, r);
         }
 
+        static void AssertChange(CSharpExpression e)
+        {
+            var r = new Change().Visit(e);
+            Assert.AreNotSame(e, r);
+            Assert.AreEqual(r.ToString(), e.ToString()); // TODO: use a DebugView when we add it
+        }
+
         class Nop : CSharpExpressionVisitor
         {
+        }
+
+        class Change : CSharpExpressionVisitor
+        {
+            protected override Expression VisitConstant(ConstantExpression node)
+            {
+                return Expression.Constant(node.Value, node.Type);
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                return Expression.Parameter(node.Type, node.Name);
+            }
         }
     }
 
