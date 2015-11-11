@@ -133,6 +133,33 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Dynamic_Unary_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var d = DynamicCSharpExpression.DynamicArgument(p);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, p),
+                DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, d),
+                DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, d, CSharpBinderFlags.None),
+                DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, d, CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicUnary, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Operand.Expression);
+
+                Assert.AreEqual(ExpressionType.Negate, e.OperationNodeType);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
+        }
+
+        [TestMethod]
         public void Dynamic_Binary()
         {
             var p = Expression.Parameter(typeof(object));
@@ -148,6 +175,36 @@ namespace Tests
             Assert.AreEqual(3, f(1, 2));
             Assert.AreEqual("ab", f("a", "b"));
             Assert.AreEqual(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 10), TimeSpan.FromDays(1)));
+        }
+
+        [TestMethod]
+        public void Dynamic_Binary_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var q = Expression.Parameter(typeof(object));
+            var l = DynamicCSharpExpression.DynamicArgument(p);
+            var r = DynamicCSharpExpression.DynamicArgument(q);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, p, q),
+                DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, l, r),
+                DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, l, r, CSharpBinderFlags.None),
+                DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, l, r, CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicBinary, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Left.Expression);
+                Assert.AreSame(q, e.Right.Expression);
+
+                Assert.AreEqual(ExpressionType.Add, e.OperationNodeType);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
         }
 
         [TestMethod]

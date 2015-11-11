@@ -90,7 +90,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound unary operation.</returns>
         public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, Expression operand)
         {
-            return MakeDynamicUnary(unaryType, DynamicArgument(operand));
+            return MakeDynamicUnary(unaryType, DynamicArgument(operand), CSharpBinderFlags.None, null);
         }
 
         /// <summary>
