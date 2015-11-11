@@ -31,6 +31,21 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Dynamic_InvokeMember_Generic()
+        {
+            var p = Expression.Parameter(typeof(object));
+
+            var d = DynamicCSharpExpression.DynamicInvokeMember(p, "Bar", new[] { typeof(int) });
+            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+
+            AssertNoChange(d);
+
+            var e = Expression.Lambda<Func<object, object>>(d, p);
+            var f = e.Compile();
+            Assert.AreEqual("Int32", f(new Foo()));
+        }
+
+        [TestMethod]
         public void Dynamic_InvokeMember_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -84,6 +99,19 @@ namespace Tests
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual("bar!", f("bar"));
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Static_Generic()
+        {
+            var d = DynamicCSharpExpression.DynamicInvokeMember(typeof(Foo), "Qux", new[] { typeof(int) });
+            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+
+            AssertNoChange(d);
+
+            var e = Expression.Lambda<Func<object>>(d);
+            var f = e.Compile();
+            Assert.AreEqual("Int32", f());
         }
 
         [TestMethod]
@@ -431,6 +459,19 @@ namespace Tests
 
         class Nop : CSharpExpressionVisitor
         {
+        }
+    }
+
+    public class Foo
+    {
+        public string Bar<T>()
+        {
+            return typeof(T).Name;
+        }
+
+        public static string Qux<T>()
+        {
+            return typeof(T).Name;
         }
     }
 }
