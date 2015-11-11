@@ -86,6 +86,37 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Dynamic_Invoke_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var a = Expression.Constant(1);
+            var d = DynamicCSharpExpression.DynamicArgument(a);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicInvoke(p, new[] { a }),
+                DynamicCSharpExpression.DynamicInvoke(p, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvoke(p, new[] { d }),
+                DynamicCSharpExpression.DynamicInvoke(p, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvoke(p, new[] { d }.AsEnumerable(), CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicInvoke(p, new[] { d }.AsEnumerable(), CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicInvoke, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Expression);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.AreSame(a, e.Arguments[0].Expression);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
+        }
+
+        [TestMethod]
         public void Dynamic_Unary()
         {
             var p = Expression.Parameter(typeof(object));
@@ -135,6 +166,37 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Dynamic_InvokeConstructor_Factories()
+        {
+            var a = Expression.Constant(1);
+            var d = DynamicCSharpExpression.DynamicArgument(a);
+            var t = typeof(TimeSpan);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicInvokeConstructor(t, new[] { a }),
+                DynamicCSharpExpression.DynamicInvokeConstructor(t, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeConstructor(t, new[] { d }),
+                DynamicCSharpExpression.DynamicInvokeConstructor(t, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicInvokeConstructor(t, new[] { d }.AsEnumerable(), CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicInvokeConstructor(t, new[] { d }.AsEnumerable(), CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicInvokeConstructor, e.CSharpNodeType);
+
+                Assert.AreSame(t, e.Type);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.AreSame(a, e.Arguments[0].Expression);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
+        }
+
+        [TestMethod]
         public void Dynamic_GetMember()
         {
             var p = Expression.Parameter(typeof(object));
@@ -147,6 +209,40 @@ namespace Tests
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(42.0, f(TimeSpan.FromSeconds(42)));
+        }
+
+        [TestMethod]
+        public void Dynamic_GetMember_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var m = "bar";
+            var a = Expression.Constant(1);
+            var d = DynamicCSharpExpression.DynamicArgument(a);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicGetMember(p, m, new[] { a }),
+                DynamicCSharpExpression.DynamicGetMember(p, m, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicGetMember(p, m, new[] { d }),
+                DynamicCSharpExpression.DynamicGetMember(p, m, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicGetMember(p, m, new[] { d }.AsEnumerable(), CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicGetMember(p, m, new[] { d }.AsEnumerable(), CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicGetMember, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Object);
+
+                Assert.AreSame(m, e.Name);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.AreSame(a, e.Arguments[0].Expression);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
         }
 
         [TestMethod]
@@ -164,6 +260,37 @@ namespace Tests
             var f = e.Compile();
             Assert.AreEqual(5, f(new[] { 2, 3, 5 }, 2));
             Assert.AreEqual(21, f(new Dictionary<string, int> { { "Bart", 21 } }, "Bart"));
+        }
+
+        [TestMethod]
+        public void Dynamic_GetIndex_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var a = Expression.Constant(1);
+            var d = DynamicCSharpExpression.DynamicArgument(a);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicGetIndex(p, new[] { a }),
+                DynamicCSharpExpression.DynamicGetIndex(p, new[] { a }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicGetIndex(p, new[] { d }),
+                DynamicCSharpExpression.DynamicGetIndex(p, new[] { d }.AsEnumerable()),
+                DynamicCSharpExpression.DynamicGetIndex(p, new[] { d }.AsEnumerable(), CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicGetIndex(p, new[] { d }.AsEnumerable(), CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicGetIndex, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Object);
+
+                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.AreSame(a, e.Arguments[0].Expression);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
         }
 
         [TestMethod]
