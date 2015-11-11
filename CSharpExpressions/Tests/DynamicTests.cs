@@ -472,6 +472,32 @@ namespace Tests
             Assert.AreEqual(new DateTime(1983, 2, 11), f((DateTimeOffset)new DateTime(1983, 2, 11)));
         }
 
+        [TestMethod]
+        public void Dynamic_Convert_Factories()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var t = typeof(int);
+
+            var es = new[]
+            {
+                DynamicCSharpExpression.DynamicConvert(p, t),
+                DynamicCSharpExpression.DynamicConvert(p, t, CSharpBinderFlags.None),
+                DynamicCSharpExpression.DynamicConvert(p, t, CSharpBinderFlags.None, null),
+            };
+
+            foreach (var e in es)
+            {
+                Assert.AreEqual(CSharpExpressionType.DynamicConvert, e.CSharpNodeType);
+
+                Assert.AreSame(p, e.Expression);
+
+                Assert.AreSame(t, e.Type);
+
+                Assert.IsNull(e.Context);
+                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+            }
+        }
+
         static void AssertNoChange(CSharpExpression e)
         {
             var r = new Nop().Visit(e);
