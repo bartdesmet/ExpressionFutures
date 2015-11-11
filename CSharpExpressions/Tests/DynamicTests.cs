@@ -17,7 +17,10 @@ namespace Tests
         public void Dynamic_InvokeMember()
         {
             var p = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.DynamicInvokeMember(p, "Substring", Expression.Constant(1));
+            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual("ar", f("bar"));
@@ -27,7 +30,10 @@ namespace Tests
         public void Dynamic_Invoke()
         {
             var p = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.DynamicInvoke(p, Expression.Constant(1));
+            Assert.AreEqual(CSharpExpressionType.DynamicInvoke, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(42, f(new Func<int, int>(x => x + 41)));
@@ -37,7 +43,10 @@ namespace Tests
         public void Dynamic_Unary()
         {
             var p = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, p);
+            Assert.AreEqual(CSharpExpressionType.DynamicUnary, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(42, f(-42));
@@ -49,7 +58,10 @@ namespace Tests
         {
             var p = Expression.Parameter(typeof(object));
             var q = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, p, q);
+            Assert.AreEqual(CSharpExpressionType.DynamicBinary, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
             Assert.AreEqual(3, f(1, 2));
@@ -61,7 +73,10 @@ namespace Tests
         public void Dynamic_InvokeConstructor()
         {
             var p = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), p);
+            Assert.AreEqual(CSharpExpressionType.DynamicInvokeConstructor, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, TimeSpan>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(TimeSpan.FromSeconds(42), f(TimeSpan.FromSeconds(42).Ticks));
@@ -71,7 +86,10 @@ namespace Tests
         public void Dynamic_GetMember()
         {
             var p = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.DynamicGetMember(p, "TotalSeconds");
+            Assert.AreEqual(CSharpExpressionType.DynamicGetMember, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(42.0, f(TimeSpan.FromSeconds(42)));
@@ -82,7 +100,10 @@ namespace Tests
         {
             var p = Expression.Parameter(typeof(object));
             var q = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.DynamicGetIndex(p, q);
+            Assert.AreEqual(CSharpExpressionType.DynamicGetIndex, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
             Assert.AreEqual(5, f(new[] { 2, 3, 5 }, 2));
@@ -93,7 +114,10 @@ namespace Tests
         public void Dynamic_Convert()
         {
             var p = Expression.Parameter(typeof(object));
+
             var d = DynamicCSharpExpression.DynamicConvert(p, typeof(DateTimeOffset));
+            Assert.AreEqual(CSharpExpressionType.DynamicConvert, d.CSharpNodeType);
+
             var e = Expression.Lambda<Func<object, DateTimeOffset>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 11)));
