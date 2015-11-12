@@ -179,3 +179,59 @@ DynamicCSharpExpression.DynamicInvokeMember(
 ```
 
 It goes without saying the the `CSharpExpressionVisitor` allows for visitation of all the nodes types mentioned above.
+
+### C# 5.0
+
+#### Async and Await
+
+Lambda expressions with the `async` modifier and `await` expressions are not supported in expressions. For example, consider the following piece of code:
+
+```csharp
+Expression<Func<Task<int>>> f = async () => await Task.FromResult(42);
+```
+
+This fails to compile with:
+
+```
+error CS1989: Async lambda expressions cannot be converted to expression trees
+```
+
+##### Async lambdas
+
+Support for asynchronous lambdas is added by the introduction of an `AsyncLambdaCSharpExpression` type and a `AsyncCSharpExpression<TDelegate>` type derived from it. These are analogous to the `LambdaExpression` and `Expression<TDelegate>` types in the LINQ expression API. Their behavior differs both in terms of typing and in terms of compilation.
+
+From a typing point of view, an asynchronous lambda requires its return type to be `void`, `Task`, or `Task<T>` with the `Body` being assignable to `T` in the latter case. In terms of compilation, the `Compile` methods perform a rewrite similar to the one carried out by the C# compiler, as described further on.
+
+Note that the introduction of custom node types for asynchronous lambdas was required in order to provide proper compilation support and to allow for the specialized type checking due to the return type being lifted over `Task<T>`. Alternatively, we could provide for an extensibility store in the LINQ expression API's `Lambda` nodes or push down the asynchronous lambda support the LINQ expression APIs so that VB can also benefit from it.
+
+##### Await expressions
+
+Await expressions are of type `AwaitCSharpExpression` and support the awaiter pattern as described in the C# language specification. As such, a custom `GetAwaiter` method can be specified on the `Await` factory, including support for extension methods. If left unspecified, the factory will try to find a suitable method. The `GetResult` and `IsCompleted` members on the awaiter type are discovered by the factory as well.
+
+The typing of await expressions follows the awaiter pattern and obtains the return type of the `GetResult` method on the awaiter. This allows those nodes to be composed with any existing LINQ expression nodes.
+
+Await expression nodes are not reducible; the reduction of the closest enclosing async lambda is responsible for its reduction into the await pattern within the generated state machine (see further).
+
+##### Example
+
+Prior to discussing the compilation support for asynchronous lambdas with await expressions, let's have a look at an example:
+
+```csharp
+CSharpExpression.AsyncLambda<Func<Task<int>>>(
+  CSharpExpression.Await(
+    Expression.Call(
+      fromResult,
+      Expression.Constant(42)
+    )
+  )
+)
+```
+
+In addition to the various `AsyncLambda` factory overloads, a single `Lambda` overload with an `isAsync` parameter is provided as well:
+
+```csharp
+public static Expression<TDelegate> Lambda<TDelegate>(bool isAsync, Expression body, params ParameterExpression[] parameters);
+```
+
+This overload is put in place for use by the C# compiler as a stop-gap measure for assignment compatibility of async lambda expressions to `Expression<TDelegate>`. The returned expression is simply an `Expression<TDelegate>` whose body is an `InvocationExpression` wrapping the underlying C#-specific `AsyncCSharpExpression<TDelegate>`. Unless we have an extensibility store for LINQ's `Expression<TDelegate>` we have to use this unnatural pattern (which does not look good at all in the resulting tree of course) to achieve assignment compatilbity. Alternatively, we have to introduce assignment compatibility with `AsyncCSharpExpression<TDelegate>` which would expand the language specification for lambda expressions and still require changes to the LINQ APIs to support implicit quoting of expression arguments assigned to expression-typed parameters.
+
