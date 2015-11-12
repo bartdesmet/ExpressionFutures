@@ -349,21 +349,82 @@ Various constructs are properly supported by the DLR nodes already, e.g. `Block`
 
 However, some node types are not supported directly or too primitive to compile to. In particular, `Loop` is not a great compilation target for `while`, `do`, `for`, and `foreach`. Similarly, `Try` is not a great compilation target for `using`. Instead, we like to model those C# statements as their own nodes.
 
-##### While
+Each statement node derives from `CSharpStatement` which ensures that the `Type` of the expression is reported as `void`. It does so by overriding the `Reduce` method and delegating the reduction step to a `ReduceCore` method, wrapping its result in a `void`-typed `Block` expression if needed.
 
-...
+Note that factories for statements are exposed on the `CSharpExpression` class. Alternatively, we could move those to the `CSharpStatement` class in order to provide for an opt-in mechanism by moving the statement node implementations to a separate assembly (similar to the approach taken for `dynamic`).
 
-##### Do
+##### Loops
 
-...
+We provide support for various loop constructs, including `while`, `do`, `for`, and `foreach`. Each of these nodes derives from `LoopCSharpStatement` which exposes `Body`, `BreakLabel`, and `ContinueLabel` properties. The loops that rely on a condition are derived from a `ConditionalLoopCSharpStatement` base class which exposes a `Test` property holding the expression representing the loop condition.
 
-##### For
+###### While
 
-...
+The `WhileCSharpStatement` node represents a `while` conditional loop deriving from `ConditionalLoopCSharpStatement`. It reduces into a `Loop` expression with an `IfThen` expression inside to check for loop termination conditions.
 
-##### ForEach
+An example of creating a `While` expression is shown below:
 
-...
+```csharp
+CSharpExpression.While(
+  Expression.LessThan(i, Expression.Constant(10)),
+  Expression.Block(
+    Expression.Call(writeLine, i),
+    Expression.PostIncrementAssign(i)
+  )
+)
+```
+
+###### Do
+
+The `DoCSharpStatement` node represents a `do` conditional loop deriving from `ConditionalLoopCSharpStatement`. It reduces into a `Block` expression holding the `Body` of the loop, an `IfThen` check for the loop termination condition, and various `Label` expressions denoting the `break` and `continue` labels.
+
+An example of creating a `Do` expression is shown below:
+
+```csharp
+CSharpExpression.Do(
+  Expression.Block(
+    Expression.Call(writeLine, i),
+    Expression.PostIncrementAssign(i)
+  ),
+  Expression.LessThan(i, Expression.Constant(10))
+)
+```
+
+###### For
+
+The `ForCSharpStatement` node represents a `for` loop deriving from `ConditionalLoopCSharpStatement`. It reduces into a `Block` expression performing the initialization steps, executing the `Body` of the loop, checking for the loop termination condition, executing the iterators, and various `Label` expressions denoting the `break` and `continue` labels.
+
+To create a `For` loop node, one specifies zero or more initializers, an optional `Boolean` loop termination condition, and zero or more iterator expressions. The initializers are modeled as `Binary` expression nodes whose kind should be `Assign` and whose `Left` property should be of the `Parameter` kind.
+
+An example of creating a `For` expression is shown below:
+
+```csharp
+CSharpExpression.For(
+  new[] { Expression.Assign(x, Expression.Constant(0)) },
+  Expression.LessThan(i, Expression.Constant(10)),
+  new[] { Expression.PostIncrementAssign(i) },
+  Expression.Call(writeLine, i)
+)
+```
+
+###### ForEach
+
+The `ForEachLoopCSharpStatement` node represents a `foreach` loop deriving from `LoopCSharpStatement`. It supports the enumerator pattern as specified in the C# language specification. Currently, the factory methods perform lookups for the `GetEnumerator`, `MoveNext`, `Current`, and `Dispose` members conform the iterator pattern. Overloads could be specified that specify those members using reflection objects.
+
+Reduction of a `ForEach` node uses a strategy similar to the C# compiler's. Special cases are provided for enumeration over arrays, strings, or objects implementing `IEnumerable` or `IEnumerable<T>`. The general case supports any enumerator pattern.
+
+Conform the C# specification, the reduced expression emits a call to `IDisposable.Dispose` if the enumerator implements `IDisposable`. It avoids boxing by calling the method implementing `IDisposable.Dispose` in case the enumerator is a value type. It also supports a conversion of the `Current` property of the enumerator to the type of the specified loop variable.
+
+```csharp
+CSharpExpression.ForEach(
+  x,
+  Expression.Constant(new[] { 1, 2, 3 }),
+  Expression.Call(writeLine, x)
+)
+```
+
+where `x` is a `ParameterExpression` of type `int`. Overloads are provided which allow the specification of `break` and `continue` labels.
+
+Note that the factory methods don't check for assignment to the iteration variable or passing the iteration variable in a `ref` or `out` parameter. Doing so would require a visit of the specified `Body`, which could lead to the early reduction of `Extension` nodes (too eager) or skip those nodes to avoid the reduction (too shallow). We could still add such a check to the `Reduce` code path where reduction of `Extension` nodes is carried out anyway.
 
 ##### Using
 
