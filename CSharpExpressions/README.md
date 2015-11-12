@@ -180,6 +180,8 @@ DynamicCSharpExpression.DynamicInvokeMember(
 
 It goes without saying the the `CSharpExpressionVisitor` allows for visitation of all the nodes types mentioned above.
 
+Reduction of dynamically bound expressions uses a `Dynamic` node underneath. To specialize the emitted expression for each dynamically bound node type, the `DynamicCSharpExpression` base class provides a `ReduceDynamic` method which returns a `CallSiteBinder` and an `IEnumerable<Expression>` with the expressions to pass to the `Dynamic` node. The returned binders are obtained from the `Microsoft.CSharp.RuntimeBinder.Binder` factory methods.
+
 ### C# 5.0
 
 #### Async and Await
