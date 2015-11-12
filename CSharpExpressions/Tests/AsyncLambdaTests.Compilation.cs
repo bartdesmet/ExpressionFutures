@@ -1049,6 +1049,8 @@ namespace Tests
             }
         }
 
+        // TODO: make every test use those awaiters as well
+
         class A
         {
             private readonly bool _b;
