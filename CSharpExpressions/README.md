@@ -235,3 +235,8 @@ public static Expression<TDelegate> Lambda<TDelegate>(bool isAsync, Expression b
 
 This overload is put in place for use by the C# compiler as a stop-gap measure for assignment compatibility of async lambda expressions to `Expression<TDelegate>`. The returned expression is simply an `Expression<TDelegate>` whose body is an `InvocationExpression` wrapping the underlying C#-specific `AsyncCSharpExpression<TDelegate>`. Unless we have an extensibility store for LINQ's `Expression<TDelegate>` we have to use this unnatural pattern (which does not look good at all in the resulting tree of course) to achieve assignment compatilbity. Alternatively, we have to introduce assignment compatibility with `AsyncCSharpExpression<TDelegate>` which would expand the language specification for lambda expressions and still require changes to the LINQ APIs to support implicit quoting of expression arguments assigned to expression-typed parameters.
 
+##### Compilation
+
+Compilation of async lambdas through the `Compile` methods is carried out via the `Reduce` method which reduces the node to a classic LINQ `Expression<TDelegate>`. By having the `Reduce` method perform this reduction, an async lambda can occur in a bigger (synchronous) expression tree. Await expressions in async lambdas get reduced using the awaiter pattern.
+
+The first step in compiling an async lambda is the creation of the appropriate asynchronous method builder from the `System.Runtime.CompilerServices` namespace.
