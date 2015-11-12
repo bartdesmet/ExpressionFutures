@@ -20,6 +20,7 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="node">The node to visit.</param>
         /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
             var variables = VisitAndConvert(node.Variables, nameof(VisitBlock));

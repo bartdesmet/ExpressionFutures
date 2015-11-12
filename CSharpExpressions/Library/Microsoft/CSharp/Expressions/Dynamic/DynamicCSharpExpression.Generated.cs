@@ -40,6 +40,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Add' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAdd(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Add, left, right, binderFlags);
@@ -53,6 +54,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Add' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAdd(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Add, left, right, binderFlags, context);
@@ -87,6 +89,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AddChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAddChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.AddChecked, left, right, binderFlags);
@@ -100,6 +103,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AddChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAddChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.AddChecked, left, right, binderFlags, context);
@@ -134,6 +138,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'And' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAnd(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.And, left, right, binderFlags);
@@ -147,6 +152,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'And' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAnd(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.And, left, right, binderFlags, context);
@@ -181,6 +187,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AndAlso' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAndAlso(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.AndAlso, left, right, binderFlags);
@@ -194,6 +201,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AndAlso' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicAndAlso(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.AndAlso, left, right, binderFlags, context);
@@ -228,6 +236,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'ArrayIndex' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicArrayIndex(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.ArrayIndex, left, right, binderFlags);
@@ -241,6 +250,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'ArrayIndex' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicArrayIndex(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.ArrayIndex, left, right, binderFlags, context);
@@ -275,6 +285,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Coalesce' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicCoalesce(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Coalesce, left, right, binderFlags);
@@ -288,6 +299,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Coalesce' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicCoalesce(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Coalesce, left, right, binderFlags, context);
@@ -322,6 +334,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Divide' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicDivide(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Divide, left, right, binderFlags);
@@ -335,6 +348,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Divide' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicDivide(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Divide, left, right, binderFlags, context);
@@ -369,6 +383,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Equal' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Equal, left, right, binderFlags);
@@ -382,6 +397,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Equal' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Equal, left, right, binderFlags, context);
@@ -416,6 +432,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'ExclusiveOr' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicExclusiveOr(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.ExclusiveOr, left, right, binderFlags);
@@ -429,6 +446,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'ExclusiveOr' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicExclusiveOr(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.ExclusiveOr, left, right, binderFlags, context);
@@ -463,6 +481,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'GreaterThan' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicGreaterThan(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.GreaterThan, left, right, binderFlags);
@@ -476,6 +495,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'GreaterThan' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicGreaterThan(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.GreaterThan, left, right, binderFlags, context);
@@ -510,6 +530,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'GreaterThanOrEqual' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicGreaterThanOrEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.GreaterThanOrEqual, left, right, binderFlags);
@@ -523,6 +544,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'GreaterThanOrEqual' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicGreaterThanOrEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.GreaterThanOrEqual, left, right, binderFlags, context);
@@ -557,6 +579,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LeftShift' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicLeftShift(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.LeftShift, left, right, binderFlags);
@@ -570,6 +593,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LeftShift' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicLeftShift(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.LeftShift, left, right, binderFlags, context);
@@ -604,6 +628,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LessThan' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicLessThan(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.LessThan, left, right, binderFlags);
@@ -617,6 +642,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LessThan' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicLessThan(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.LessThan, left, right, binderFlags, context);
@@ -651,6 +677,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LessThanOrEqual' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicLessThanOrEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.LessThanOrEqual, left, right, binderFlags);
@@ -664,6 +691,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LessThanOrEqual' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicLessThanOrEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.LessThanOrEqual, left, right, binderFlags, context);
@@ -698,6 +726,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Modulo' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicModulo(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Modulo, left, right, binderFlags);
@@ -711,6 +740,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Modulo' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicModulo(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Modulo, left, right, binderFlags, context);
@@ -745,6 +775,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Multiply' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicMultiply(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Multiply, left, right, binderFlags);
@@ -758,6 +789,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Multiply' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicMultiply(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Multiply, left, right, binderFlags, context);
@@ -792,6 +824,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'MultiplyChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicMultiplyChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.MultiplyChecked, left, right, binderFlags);
@@ -805,6 +838,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'MultiplyChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicMultiplyChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.MultiplyChecked, left, right, binderFlags, context);
@@ -839,6 +873,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'NotEqual' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicNotEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.NotEqual, left, right, binderFlags);
@@ -852,6 +887,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'NotEqual' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicNotEqual(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.NotEqual, left, right, binderFlags, context);
@@ -886,6 +922,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Or' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicOr(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Or, left, right, binderFlags);
@@ -899,6 +936,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Or' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicOr(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Or, left, right, binderFlags, context);
@@ -933,6 +971,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'OrElse' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicOrElse(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.OrElse, left, right, binderFlags);
@@ -946,6 +985,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'OrElse' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicOrElse(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.OrElse, left, right, binderFlags, context);
@@ -980,6 +1020,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Power' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicPower(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Power, left, right, binderFlags);
@@ -993,6 +1034,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Power' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicPower(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Power, left, right, binderFlags, context);
@@ -1027,6 +1069,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'RightShift' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicRightShift(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.RightShift, left, right, binderFlags);
@@ -1040,6 +1083,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'RightShift' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicRightShift(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.RightShift, left, right, binderFlags, context);
@@ -1074,6 +1118,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Subtract' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicSubtract(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.Subtract, left, right, binderFlags);
@@ -1087,6 +1132,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'Subtract' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicSubtract(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.Subtract, left, right, binderFlags, context);
@@ -1121,6 +1167,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary 'SubtractChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicSubtractChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicBinary(ExpressionType.SubtractChecked, left, right, binderFlags);
@@ -1134,6 +1181,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'SubtractChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static BinaryDynamicCSharpExpression DynamicSubtractChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicBinary(ExpressionType.SubtractChecked, left, right, binderFlags, context);
@@ -1165,6 +1213,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Negate' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicNegate(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.Negate, operand, binderFlags);
@@ -1177,6 +1226,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Negate' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicNegate(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.Negate, operand, binderFlags, context);
@@ -1208,6 +1258,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'UnaryPlus' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicUnaryPlus(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.UnaryPlus, operand, binderFlags);
@@ -1220,6 +1271,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'UnaryPlus' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicUnaryPlus(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.UnaryPlus, operand, binderFlags, context);
@@ -1251,6 +1303,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'NegateChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicNegateChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.NegateChecked, operand, binderFlags);
@@ -1263,6 +1316,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'NegateChecked' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicNegateChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.NegateChecked, operand, binderFlags, context);
@@ -1294,6 +1348,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Not' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicNot(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.Not, operand, binderFlags);
@@ -1306,6 +1361,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Not' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicNot(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.Not, operand, binderFlags, context);
@@ -1337,6 +1393,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Decrement' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicDecrement(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.Decrement, operand, binderFlags);
@@ -1349,6 +1406,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Decrement' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicDecrement(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.Decrement, operand, binderFlags, context);
@@ -1380,6 +1438,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Increment' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicIncrement(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.Increment, operand, binderFlags);
@@ -1392,6 +1451,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'Increment' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicIncrement(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.Increment, operand, binderFlags, context);
@@ -1423,6 +1483,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'OnesComplement' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicOnesComplement(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.OnesComplement, operand, binderFlags);
@@ -1435,6 +1496,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'OnesComplement' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicOnesComplement(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.OnesComplement, operand, binderFlags, context);
@@ -1466,6 +1528,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'IsTrue' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicIsTrue(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.IsTrue, operand, binderFlags);
@@ -1478,6 +1541,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'IsTrue' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicIsTrue(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.IsTrue, operand, binderFlags, context);
@@ -1509,6 +1573,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary 'IsFalse' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicIsFalse(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
             return MakeDynamicUnary(ExpressionType.IsFalse, operand, binderFlags);
@@ -1521,6 +1586,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'IsFalse' operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
         public static UnaryDynamicCSharpExpression DynamicIsFalse(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
             return MakeDynamicUnary(ExpressionType.IsFalse, operand, binderFlags, context);

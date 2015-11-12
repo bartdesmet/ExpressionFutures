@@ -30,6 +30,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return node; // NB: In nested catch blocks, the meaning of a rethrow changes.
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
             protected override Expression VisitUnary(UnaryExpression node)
             {
                 if (node.NodeType == ExpressionType.Throw && node.Operand == null)

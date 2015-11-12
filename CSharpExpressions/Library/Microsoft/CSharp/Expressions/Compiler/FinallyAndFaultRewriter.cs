@@ -24,6 +24,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private int _n;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitTry(TryExpression node)
         {
             var res = default(Expression);
