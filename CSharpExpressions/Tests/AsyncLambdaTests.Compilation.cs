@@ -986,6 +986,42 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_AwaitInCatch8()
+        {
+            foreach (var b in new[] { false, true })
+            {
+                var log = new List<string>();
+                var logExpr = Expression.Constant(log);
+                var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+                var yield = ((Expression<Func<A>>)(() => new A(b))).Body;
+                var e = CSharpExpression.AsyncLambda<Func<Task>>(
+                    Expression.TryCatchFinally(
+                        Expression.Block(
+                            typeof(void),
+                            Expression.Call(logExpr, add, Expression.Constant("T")),
+                            Expression.Divide(Expression.Constant(1), Expression.Constant(0))
+                        ),
+                        Expression.Block(
+                            Expression.Call(logExpr, add, Expression.Constant("F"))
+                        ),
+                        Expression.Catch(
+                            typeof(DivideByZeroException),
+                            Expression.Block(
+                                Expression.Call(logExpr, add, Expression.Constant("CB")),
+                                CSharpExpression.Await(yield),
+                                Expression.Call(logExpr, add, Expression.Constant("CE"))
+                            )
+                        )
+                    )
+                );
+                var f = e.Compile();
+                var t = f();
+                t.Wait();
+                Assert.IsTrue(new[] { "T", "CB", "CE", "F" }.SequenceEqual(log));
+            }
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_NoStaticType()
         {
             var e = CSharpExpression.AsyncLambda(Expression.Constant(42));
@@ -1011,6 +1047,30 @@ namespace Tests
             {
                 IsDisposed = true;
             }
+        }
+
+        class A
+        {
+            private readonly bool _b;
+
+            public A(bool b)
+            {
+                _b = b;
+            }
+
+            public W GetAwaiter() => new W(_b);
+        }
+
+        class W : INotifyCompletion
+        {
+            public W(bool b)
+            {
+                IsCompleted = b;
+            }
+
+            public bool IsCompleted { get; }
+            public int GetResult() => 42;
+            public void OnCompleted(Action continuation) => continuation();
         }
     }
 }

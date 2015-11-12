@@ -218,9 +218,9 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
         {
-            const int ExprCount = 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
+            const int ExprCount = 1 /* local state var */ + 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
-            var locals = Array.Empty<ParameterExpression>();
+            var locals = default(ParameterExpression[]);
             var exprs = default(Expression[]);
 
             var result = default(ParameterExpression);
@@ -260,7 +260,8 @@ namespace Microsoft.CSharp.Expressions
             var bright = AliasEliminator.Eliminate(lowered);
             var spilled = Spiller.Spill(bright);
 
-            var awaitRewriter = new AwaitRewriter(stateVar, getVariable, onCompletedFactory, exit);
+            var localStateVar = Expression.Parameter(typeof(int));
+            var awaitRewriter = new AwaitRewriter(localStateVar, stateVar, getVariable, onCompletedFactory, exit);
             var rewrittenBody = awaitRewriter.Visit(spilled);
 
             var newBody = rewrittenBody;
@@ -268,11 +269,11 @@ namespace Microsoft.CSharp.Expressions
             {
                 result = Expression.Parameter(Body.Type, "__result");
                 newBody = Expression.Assign(result, rewrittenBody);
-                locals = new[] { result };
+                locals = new[] { localStateVar, result };
             }
             else
             {
-                locals = Array.Empty<ParameterExpression>();
+                locals = new[] { localStateVar };
             }
 
             exprs = new Expression[ExprCount];
@@ -288,6 +289,9 @@ namespace Microsoft.CSharp.Expressions
             var resumeList = awaitRewriter.ResumeList;
             var jumpTable =
                 resumeList.Count > 0 ? Expression.Switch(stateVar, resumeList.ToArray()) : (Expression)Expression.Empty();
+
+            exprs[i++] =
+                Expression.Assign(localStateVar, stateVar);
 
             exprs[i++] =
                 Expression.TryCatch(

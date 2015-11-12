@@ -26,6 +26,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     internal class AwaitRewriter : ShallowVisitor
     {
         private readonly Func<Type, string, ParameterExpression> _variableFactory;
+        private readonly ParameterExpression _localStateVariable;
         private readonly ParameterExpression _stateVariable;
         private readonly Func<Expression, Expression> _onCompletedFactory;
         private readonly LabelTarget _exit;
@@ -33,9 +34,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
         private readonly Stack<IList<SwitchCase>> _jumpTables = new Stack<IList<SwitchCase>>();
         private int _labelIndex;
 
-        public AwaitRewriter(ParameterExpression stateVariable, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
+        public AwaitRewriter(ParameterExpression localStateVariable, ParameterExpression stateVariable, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)
         {
             _variableFactory = variableFactory;
+            _localStateVariable = localStateVariable;
             _stateVariable = stateVariable;
             _onCompletedFactory = onCompletedFactory;
             _exit = exit;
@@ -129,7 +131,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             exprs[i++] =
                 Expression.IfThen(Expression.Not(isCompleted),
                     Expression.Block(
-                        Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(continueLabel.Index)),
+                        UpdateState(continueLabel.Index),
                         _onCompletedFactory(awaiterVar),
                         Expression.Return(_exit)
                     )
@@ -141,7 +143,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             exprs[i++] =
                 Expression.Assign(awaiterVar, Expression.Default(awaiterVar.Type));
             exprs[i++] =
-                Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(-1));
+                UpdateState(-1);
 
             var res = Expression.Block(vars, exprs);
             return res;
@@ -157,7 +159,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             if (table.Count > 0)
             {
-                var dispatch = Expression.Switch(_stateVariable, table.ToArray());
+                var dispatch = Expression.Switch(_localStateVariable, table.ToArray());
 
                 var originalTry = (TryExpression)res;
                 var newTry = originalTry.Update(
@@ -197,7 +199,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             {
                 res =
                     Expression.IfThen(
-                        Expression.LessThan(_stateVariable, Helpers.CreateConstantInt32(0)),
+                        Expression.LessThan(_localStateVariable, Helpers.CreateConstantInt32(0)),
                         original
                     );
             }
@@ -211,7 +213,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var label = Expression.Label("__state" + index);
 
             var jump = Expression.Block(
-                Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(-1)),
+                UpdateState(-1),
                 Expression.Goto(label)
             );
 
@@ -222,6 +224,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 Label = label,
                 Index = index
             };
+        }
+
+        private Expression UpdateState(int value)
+        {
+            return Expression.Assign(_localStateVariable, Expression.Assign(_stateVariable, Helpers.CreateConstantInt32(value)));
         }
 
         struct StateMachineState
