@@ -414,6 +414,8 @@ Reduction of a `ForEach` node uses a strategy similar to the C# compiler's. Spec
 
 Conform the C# specification, the reduced expression emits a call to `IDisposable.Dispose` if the enumerator implements `IDisposable`. It avoids boxing by calling the method implementing `IDisposable.Dispose` in case the enumerator is a value type. It also supports a conversion of the `Current` property of the enumerator to the type of the specified loop variable.
 
+An example of creating a `ForEach` expression is shown below:
+
 ```csharp
 CSharpExpression.ForEach(
   x,
@@ -428,8 +430,35 @@ Note that the factory methods don't check for assignment to the iteration variab
 
 ##### Using
 
-...
+The `UsingCSharpStatement` node represents a `using` statement. It contains a `Variable` which is a `Parameter` node whose type should be assignment compatible with `IDisposable`. The `Resource` property holds the expression representing the resource to dispose after the execution of the `Body`.
+
+Reduction of a `Using` node consists of a `Block` evaluating the `Resource` and assigning it to the `Variable`, followed by a `TryFinally` expression which executes the `Body` in the protected region and disposes the resource held in the `Variable` (after an `IfThen` null-check for non-value types) in the finally handler. Boxing of the resource held in the `Variable` is avoided in case its type is a value type.
+
+An example of creating a `Using` expression is shown below:
+
+```csharp
+CSharpExpression.Using(
+  fs,
+  Expression.Call(fileOpen, "foo.txt"),
+  Expression.Call(printAllLines, fs)
+)
+```
+
+where `fs` is a `ParameterExpression` of type `FileStream`.
+
+Note that the factory methods don't check for assignment to the resource variable or passing the resource variable in a `ref` or `out` parameter. Doing so would require a visit of the specified `Body`, which could lead to the early reduction of `Extension` nodes (too eager) or skip those nodes to avoid the reduction (too shallow). We could still add such a check to the `Reduce` code path where reduction of `Extension` nodes is carried out anyway.
 
 ##### Lock
 
-...
+The `LockCSharpStatement` node represents a `lock` statement. It contains an `Expression` to synchronize on prior to executing a `Body` expression. Factory methods ensure that the specified `Expression` is not a value type which would incur boxing.
+
+Reduction of a `Lock` node consists of a `Block` containing a call to the `Monitor.Enter(object, ref bool)` method, followed by a `TryFinally` expression containing the execution of the `Body` in the protected region and a call to `Monitor.Exit(object)` in the finally handler. A `lockTaken` variable is introduced to perform an `IfThen` check prior to calling `Monitor.Exit(object)`. This is completely analogous to the code emitted by the C# compiler.
+
+An example of creating a `Lock` expression is shown below:
+
+```csharp
+CSharpExpression.Lock(
+  Expression.Constant(gate),
+  Expression.Call(foo)
+)
+```
