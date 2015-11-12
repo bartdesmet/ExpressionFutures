@@ -24,7 +24,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </code>
     /// In here, A and T are evaluated before awaiting T. The result of evaluating those subexpressions has to be
     /// stored prior to performing the await. In case the asynchronous code path is picked, all this intermediate
-    /// evaluation state needs to be kept on the heap in order to restore it after the asynchrnous operation
+    /// evaluation state needs to be kept on the heap in order to restore it after the asynchronous operation
     /// completes and prior to evaluating B. Stack spilling will effectively turn the code into:
     /// <code>
     ///   var __1 = A;
@@ -101,8 +101,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
     static class SpillHelpers
     {
-        public static readonly MethodInfo MethodQuoteT = typeof(SpillHelpers).GetMethod(nameof(QuoteT));
-        public static readonly MethodInfo MethodQuoteVoid = typeof(SpillHelpers).GetMethod(nameof(QuoteVoid));
+        private static readonly MethodInfo MethodQuoteT = typeof(SpillHelpers).GetMethod(nameof(QuoteT));
+        private static readonly MethodInfo MethodQuoteVoid = typeof(SpillHelpers).GetMethod(nameof(QuoteVoid));
 
         public static Expression Quote(Expression expression)
         {
