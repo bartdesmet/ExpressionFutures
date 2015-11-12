@@ -250,3 +250,21 @@ In order to generate an `IAsyncStateMachine` we use a `RuntimeStateMachine` type
 Although generating a custom state machine type would be more efficient (e.g. by using a struct and implementing `SetStateMachine` as well), it would introduce non-trivial complexity, require access to the `TypeBuilder` which is encapsulated in the LINQ lambda compiler, and prevent the same code from working with the expression interpreter as well. Note that the lambda compiler doesn't generate a full-blown display class for closures either (though it could).
 
 The next step in the compilation of an async lambda is the rewrite of the `Body` expression. This proceeds in a few steps. First, we reduce all nodes in the `Body` except for the `Await` nodes. By doing so, we only have to worry about LINQ nodes in the steps that follow. Second, we lower various constructs to a more primitive form in order to support their use in asynchronous lambdas. Those include `Try` expressions with `Await` expressions in any of the `Handlers` or `Finally` or `Fault` expressions. Third, we perform stack spilling in order to be able to await while having intermediate expression evaluation results on the stack. Finally, we transform the resulting lowered `Body` by rewriting all `Await` expressions into the awaiter pattern using a state machine. Some other manipulations of the expression are deemed implementation details and are omitted from this description.
+
+#### C# 6.0
+
+##### Conditional Access Expressions
+
+...
+
+##### Indexer Initializers
+
+...
+
+##### Await in Catch and Finally
+
+...
+
+#### Statement Trees
+
+...
