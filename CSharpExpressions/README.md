@@ -112,3 +112,70 @@ Reduction of those nodes first analyzes whether all arguments are supplied in th
 Each of those expression types supports by-ref parameters and write-backs to `Parameter`, `Index`, `MemberAccess`, `ArrayIndex`, and `Call` (for `ArrayAccess` via the `Array.Get` method) nodes. Strictly speaking this isn't required for C# but those nodes could be promoted to the LINQ APIs in order to be used by VB as well.
 
 Note that none of those expression types are recognized by the LINQ expression API and compiler as assignable targets. If we want to support assignment expressions, we either have to enlighten the LINQ APIs about the assignability of those new node types (by providing an extensibility story for `set` operations against those) or use a C#-specific version of `Assign`. The use of those nodes in by-ref positions is not supported either, but that's less of an issue for C#-specific expressions given that the C# language does not support passing e.g. indexing expressions by reference.
+
+#### Dynamic
+
+Even though a `Dynamic` node type was added in the .NET 4.0 revision of the LINQ expression APIs, the C# language does not support emitting expression trees containing dynamic operations, as illustrated below:
+
+```csharp
+Expression<Action<dynamic>> f = x => Console.WriteLine(x);
+```
+
+This will fail to compile with:
+
+```
+error CS1963: An expression tree may not contain a dynamic operation
+```
+
+Various operations can be performed in a late-bound fashion using `dynamic`, including invocations, invocation of members, lookup of members, indexing, object creation, unary operators, binary operators, and conversions.
+
+In order to support C# `dynamic` in expression trees, we have a few options. We could simply piggyback on the DLR's support for the `Dynamic` expression kind, specifying a `CallSiteBinder` argument using the `Microsoft.CSharp.RuntimeBinder.Binder` factories. While this would work to provide runtime compilation support, it leaves the resulting expression tree in a rather cumbersome shape for expression analysis and translation, e.g. in a LINQ provider. One would have to perform type checks against the `CallSiteBinder` in order to reverse engineer the user intent. This itself is hampered by the fact that the C# runtime binder types are marked as `internal` so C#-specific information is not accessible.
+
+Instead of going down the route of emitting calls to the `Expression.Dynamic` factory, we decided to model the dynamic operations as first-class node types in the C# expression API. This improves the experience for expression analysis and translation by retaining the user intent in the shape of the resulting tree. Reduction of those nodes ultimately falls back to emitting `Dynamic` nodes, thus leveraging the C# runtime binder and the DLR.
+
+All of the `dynamic` support is provided through `DynamicCSharpExpression` which derives from `CSharpExpression` and provides factory methods analogous to the LINQ factories but prefixed with `Dynamic`. For example, `Add` becomes `DynamicAdd`. We could flatten the class hierarchy for the factory methods, though the current design could allow for separating out the `dynamic` support in a separate library. When not referenced, the C# compiler would fail resolving the required factory methods, thus making the `dynamic` feature unavailable in expression trees. This opt-in mechanism could come in handy.
+
+Dynamic node types are mirrored after the `Microsoft.CSharp.RuntimeBinder.Binder` factory methods, so we have dynamically bound nodes for `BinaryOperation`, `Convert`, `GetIndex`, `GetMember`, `Invoke`, `InvokeConstructor`, `InvokeMember`, and `UnaryOperation`. Some of these could be revisited in the C# expression API to get nomenclature that aligns better with the existing LINQ expression API's, e.g. using `Call` in lieu of `InvokeMember`.
+
+Some dynamic operations require `Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo` objects to be passed, describing an argument's name and its behavior such as `ref` or `out` usage. This is modeled via a `DynamicCSharpArgument` that can be created via the `DynamicArgument` factory by specifying a `string`, an `Expression`, and a `CSharpArgumentInfoFlags` value. This node allows for inspection of e.g. the name of the argument during expression analysis but ultimately reduces into a `CSharpArgumentInfo` object. Note that the `CSharpArgumentInfoFlags` are exposed in the C# expression API as-is; this type is publicly accessible anyway.
+
+To illustrate this API, consider the most verbose `DynamicInvokeMember` factory methods, shown below:
+
+```csharp
+// Instance call
+public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context);
+
+// Static call
+public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context);
+```
+
+Note that a separate method exists for instance and static member invocations. Rather than modeling the receiver type for a static call as a dynamic argument (as done by the C# compiler when emitting a call to for `Binder.InvokeMember`) we decided to hoist this information up to the expression tree node. Effectively, the combination of `type`, `name`, and `typeArguments` is the equivalent of a `MethodInfo` in the statically bound case. This leads to a familiar API for those used to the LINQ expression API for `Call`.
+
+An example of using the API to make a dynamically-bound call is shown below:
+
+```csharp
+DynamicCSharpExpression.DynamicInvokeMember(
+  typeof(Console),
+  "WriteLine",
+  x
+)
+```
+
+Overloads are provided that allow for easy construction of those node types, e.g. as used in the example above. The more verbose equivalent would be:
+
+```csharp
+DynamicCSharpExpression.DynamicInvokeMember(
+  typeof(Console),
+  "WriteLine",
+  Array.Empty<Type>(),
+  DynamicCSharpExpression.DynamicArgument(
+    x,
+    null,
+    CSharpArgumentInfoFlags.None
+  ),
+  CSharpBinderFlags.None,
+  typeof(Program)
+)
+```
+
+It goes without saying the the `CSharpExpressionVisitor` allows for visitation of all the nodes types mentioned above.
