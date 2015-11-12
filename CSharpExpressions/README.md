@@ -255,16 +255,120 @@ The next step in the compilation of an async lambda is the rewrite of the `Body`
 
 ##### Conditional Access Expressions
 
-...
+Conditional access expressions, also known as "null-propagating operators", are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<string, int?>> f = s => s?.Length;
+```
+
+This fails to compile with:
+
+```
+error CS8072: An expression tree lambda may not contain a null propagating operator.
+```
+
+Null-propagation is supported for method invocation, member access, and indexing operations in C#. Delegate invocation using null-propagation is not supported due to syntactic ambiguities by can be achieved by using method invocation syntax to call `Invoke`.
+
+In order to support null-propagating operators, we have a few options. One is to introduce one new node type to perform conditional access to a receiver when performing an operation such as `Call`, `Member`, or `Index`. This would effectively wrap existing nodes in a null-conditional access node. While this approach is tempting, it doesn't compose well with existing node types which expect their input to be non-nullable. One way to make this work would be to refactor the existing node types to separate their receiver (e.g. `MethodCallExpression.Object`) from their target (e.g. `MethodCallExpression.Method`) and arguments (e.g. `MethodCallExpression.Arguments`).
+
+Rather than going down the path of wrapping existing nodes, we chose to model each null-propagating operator as its own new node type. Those node types are `ConditionalMemberAccess`, `ConditionalCall`, `ConditionalIndex`, and `ConditionalInvoke`. Note that the latter node type is strictly speaking not needed due to the syntactic limitation imposed by the C# language; nonetheless, we added a null-propagating invocation which could be emitted for `d?.Invoke()` where `d` is a delegate.
+
+Each null-propagating operator derives from `ConditionalAccessCSharpExpression` which has an `Expression` property representing the conditionally accessed receiver of the operation. The `Type` of the node is the type of the underlying operation but lifted over null. A protected virtual `ReduceAccess` method is used by the `Reduce` method to emit an expression representing the underlying operation after checking the `Expression` for a `null` value.
+
+An example of using those node types is shown below:
+
+```csharp
+CSharpExpression.ConditionalProperty(
+  s,
+  typeof(string).GetProperty("Length")
+)
+```
+
+The reduction of null-propagating operators emits a `Block` expression with an `Assign` binary expression to assign the result of evaluating the `Expression` to a `Variable` parameter expression. Next, an `IfThen` conditional expression is used to check the variable against a null value. If the variable is not null, the underlying operation is invoked by obtaining the expression from `ReduceAccess`. The result of the underlying operation is lifted to null using a `Convert` unary expression if necessary.
+
+When the receiver of a null-propagating operator is such an operator itself, the emitted code is optimized to nest a series of `IfThen` nodes in order to avoid a bunch of intermediate null checks if any null-propagating operation returned a null value.
 
 ##### Indexer Initializers
 
-...
+Indexer (or dictionary) initializers were introduced as an addition to object initializer expressions that were introduced in C# 3.0. They are not supported in expression trees:
+
+```csharp
+Expression<Func<Dictionary<string, int>>> f = () => new Dictionary<string, int> { ["Bart"] = 21 };
+```
+
+This fails to compile with:
+
+```
+error CS8074: An expression tree lambda may not contain a dictionary initializer.
+```
+
+Our options to support this are limited given the non-extensible nature of `MemberBinding` nodes in the LINQ expression API. We'd need proper support for reduction of custom binding nodes in order to provide an extension to set of bindings supportyed by the `MemberInitExpression` node.
+
+To work around this limitation as get a glimpse of what it may look like, we've hijacked `ElementInit` and tricked it into calling a specified indexer's `set` method. Unfortunately, `ElementInit` is only supported in `ListInitExpression` nodes so mileage is limited.
+
+An example of this hack is shown below:
+
+```csharp
+Expression.ListInit(
+  Expression.New(
+    typeof(Dictionary<string, int>).GetConstructor(Array.Empty<Type>())
+  ),
+  CSharpExpression.IndexInit(
+    typeof(Dictionary<string, int>).GetProperty("Item"),
+    Expression.Constant("Bart"),
+    Expression.Constant(21)
+  )
+)
+```
+
+In order to make this work for real, we need extension support for the `MemberBinding` hierarchy of types. This would likely involve a `Reduce` capability that's usable by the expression compiler to emit write operations against the initialized object. This type of reduction is a bit different from the one on `Expression` given that it wouldn't reduce into a node of its own kind, i.e. another `MemberBinding`.
 
 ##### Await in Catch and Finally
 
-...
+Our support for `Await` in an `AsyncLambda` (cf. the C# 5.0 section above) includes support for using `Await` in the `Handlers` and/or `Finally` portions of a `Try` expression.
+
+The compilation of such constructs is based on a lowering step where we translate the `Try` expression into a more primitive form with catch and rethrow constructs using `ExceptionDispatchInfo`. We also support pending branches out of the `Body` of a `Try` expression while ensuring the timely execution of the `Finally` handler, if any.
+
+All of this is very similar to the C# compiler approach of supporting `await` in `catch` and `finally` blocks. Two notable differences are our support for `Await` in a `Fault` handler and our support for non-void `Try` expressions which are permitted by the DLR.
 
 #### Statement Trees
+
+Statements have existed in C# since day zero, but have never been supported in expression trees. With the DLR refresh of the LINQ expression API in .NET 4.0, various statement constructs have been modeled, including `Block`, `Try`, `Loop`, etc. The C# compiler has not been updated to support emitting expression trees containing those, as illustrated below:
+
+```csharp
+Expression<Action> f = () => {};
+```
+
+This fails to compile with:
+
+```
+error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+```
+
+Various constructs are properly supported by the DLR nodes already, e.g. `Block`, `Try`, `IfThenElse`, and `Switch`. Note that the example shown above may require some tweaks to those nodes, e.g. supporting a `Block` with no statements inside of it.
+
+However, some node types are not supported directly or too primitive to compile to. In particular, `Loop` is not a great compilation target for `while`, `do`, `for`, and `foreach`. Similarly, `Try` is not a great compilation target for `using`. Instead, we like to model those C# statements as their own nodes.
+
+##### While
+
+...
+
+##### Do
+
+...
+
+##### For
+
+...
+
+##### ForEach
+
+...
+
+##### Using
+
+...
+
+##### Lock
 
 ...
