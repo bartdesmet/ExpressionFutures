@@ -218,8 +218,6 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
         {
-            // TODO: C# 6.0 features - await in catch and finally
-
             const int ExprCount = 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
             var locals = Array.Empty<ParameterExpression>();
