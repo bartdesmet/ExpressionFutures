@@ -12,10 +12,6 @@ Open
 Expressions
 ~~~~~~~~~~~
 
-ERR_ExpressionTreeContainsDynamicOperation
-- (dynamic d) => d.Foo()
-- To be revisited if/when we add dynamic support
-
 ERR_ExtensionCollectionElementInitializerInExpressionTree
 - Can be lifted by adding new nodes; trickiness with ListInit / ElementInit not being extensible
 - C# 6.0 feature addition, but applies to existing parent node types
@@ -82,6 +78,10 @@ ERR_NullPropagatingOpInExpressionTree
 ERR_DictionaryInitializerInExpressionTree
 - Can be lifted by adding new nodes; trickiness with MemberInit / MemberBinding not being extensible
 - C# 6.0 feature addition but applies to existing parent node type
+
+ERR_ExpressionTreeContainsDynamicOperation
+- (dynamic d) => d.Foo()
+- To be revisited if/when we add dynamic support
 
 
 Ignored
