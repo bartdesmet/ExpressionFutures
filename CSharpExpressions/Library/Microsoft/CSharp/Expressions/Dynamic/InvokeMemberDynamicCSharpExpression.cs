@@ -38,6 +38,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the expression representing the object to invoke the member on. (Or null for static members.)
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Object", Justification = "Analogous to various nodes in LINQ.")]
         public virtual Expression Object => null;
 
         /// <summary>
@@ -77,6 +78,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The <see cref="Object" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "object", Justification = "Analogous to some nodes in LINQ.")]
         public abstract InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments);
     }
 

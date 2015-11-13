@@ -75,6 +75,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects that represent the indexer arguments.</param>
         /// <param name="value">The <see cref="Expression"/> that represents the value to assign to the indexer.</param>
         /// <returns>An <see cref="ElementInit" /> that assigns the specified value to the specified indexer using the specified arguments.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ElementInit IndexInit(PropertyInfo indexer, IEnumerable<Expression> arguments, Expression value)
         {
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
