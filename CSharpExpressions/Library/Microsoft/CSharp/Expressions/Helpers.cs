@@ -315,6 +315,8 @@ namespace Microsoft.CSharp.Expressions
 
         private static bool IsPure(this Expression expression)
         {
+            // TODO: Convert and ConvertChecked can be pure under certain circumstances as well
+
             switch (expression.NodeType)
             {
                 case ExpressionType.Default:
