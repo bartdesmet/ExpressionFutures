@@ -321,6 +321,8 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.Parameter:
                 case ExpressionType.Constant:
                 case ExpressionType.Unbox:
+                case ExpressionType.Lambda:
+                case ExpressionType.Quote:
                     return true;
             }
 
