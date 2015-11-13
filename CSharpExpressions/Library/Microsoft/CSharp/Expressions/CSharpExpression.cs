@@ -27,24 +27,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value that indicates whether the expression tree node can be reduced. 
         /// </summary>
-        public override bool CanReduce
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool CanReduce => true;
 
         /// <summary>
         /// The <see cref="ExpressionType"/> of the <see cref="Expression"/>.
         /// </summary>
-        public sealed override ExpressionType NodeType
-        {
-            get
-            {
-                return ExpressionType.Extension;
-            }
-        }
+        public sealed override ExpressionType NodeType => ExpressionType.Extension;
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
