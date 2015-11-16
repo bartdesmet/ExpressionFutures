@@ -70,6 +70,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         ConditionalCall,
         /// <summary>
+        /// A node that represents a conditional array lookup.
+        /// </summary>
+        ConditionalArrayIndex,
+        /// <summary>
         /// A node that represents a conditional indexer lookup.
         /// </summary>
         ConditionalIndex,
