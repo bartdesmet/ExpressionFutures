@@ -50,10 +50,12 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments)
+        /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
             binder = Binder.BinaryOperation(Flags, OperationNodeType, Context, new[] { Left.ArgumentInfo, Right.ArgumentInfo });
             arguments = new[] { Left.Expression, Right.Expression };
+            argumentTypes = null;
         }
 
         /// <summary>

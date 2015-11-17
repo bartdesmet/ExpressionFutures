@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace Tests
 {
@@ -155,6 +156,69 @@ namespace Tests
                 Assert.IsNull(e.Context);
                 Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
             }
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Struct1()
+        {
+            var p = Expression.Parameter(typeof(object));
+
+            var d = DynamicCSharpExpression.DynamicInvokeMember(p, "X", new Type[0], new DynamicCSharpArgument[0], CSharpBinderFlags.ResultDiscarded);
+
+            var e = Expression.Lambda<Func<object, int>>(Expression.Block(typeof(int), d, Expression.Field(Expression.Convert(p, typeof(Bar)), "Value")), p);
+            var f = e.Compile();
+            var b = new Bar();
+            Assert.AreEqual(Dynamic_InvokeMember_Struct1_Compiled(b), f(b));
+        }
+
+        private static int Dynamic_InvokeMember_Struct1_Compiled(dynamic p)
+        {
+            p.X();
+            return p.Value;
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Struct2()
+        {
+            var p = Expression.Parameter(typeof(Bar));
+
+            var d = DynamicCSharpExpression.DynamicInvokeMember(p, "X", new Type[0], new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(0)) }, CSharpBinderFlags.ResultDiscarded);
+
+            var e = Expression.Lambda<Func<Bar, int>>(Expression.Block(typeof(int), d, Expression.Field(p, "Value")), p);
+            var f = e.Compile();
+            var b = new Bar();
+            Assert.AreEqual(Dynamic_InvokeMember_Struct2_Compiled(b, 0), f(b));
+        }
+
+        private static int Dynamic_InvokeMember_Struct2_Compiled(Bar p, dynamic d)
+        {
+            p.X(d);
+            return p.Value;
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_ByRef()
+        {
+            var p = Expression.Parameter(typeof(int));
+
+            var d = DynamicCSharpExpression.DynamicInvokeMember(typeof(Interlocked), "Exchange", new Type[0], new[] { DynamicCSharpExpression.DynamicArgument(p, null, CSharpArgumentInfoFlags.IsRef), DynamicCSharpExpression.DynamicArgument(Expression.Constant(42)) });
+
+            var e = Expression.Lambda<Func<int, int>>(Expression.Block(typeof(int), d, p), p);
+            var f = e.Compile();
+            Assert.AreEqual(42, f(0));
+        }
+
+        [TestMethod]
+        public void Dynamic_InvokeMember_Out()
+        {
+            var p = Expression.Parameter(typeof(string));
+            var q = Expression.Parameter(typeof(int));
+
+            var d = DynamicCSharpExpression.DynamicInvokeMember(typeof(int), "TryParse", new Type[0], new[] { DynamicCSharpExpression.DynamicArgument(p), DynamicCSharpExpression.DynamicArgument(q, null, CSharpArgumentInfoFlags.IsOut) });
+
+            var e = Expression.Lambda<Func<string, int>>(Expression.Block(typeof(int), new[] { q }, d, q), p);
+            var f = e.Compile();
+            Assert.AreEqual(42, f("42"));
         }
 
         [TestMethod]
@@ -592,6 +656,39 @@ namespace Tests
         public static string Qux<T>()
         {
             return typeof(T).Name;
+        }
+    }
+
+    public struct Bar
+    {
+        public int Value;
+
+        public void X()
+        {
+            Value = 42;
+        }
+
+        public void X(int x)
+        {
+            Value = 42;
+        }
+
+        public int this[int x]
+        {
+            get
+            {
+                Value = 42;
+                return 0;
+            }
+        }
+
+        public int Y
+        {
+            get
+            {
+                Value = 42;
+                return 0;
+            }
         }
     }
 }

@@ -1687,6 +1687,22 @@ namespace System.Linq.Expressions.Compiler
             }
         }
 
+        private static readonly MethodInfo s_1 = s_mtds["MakeCallSiteDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression>), typeof(System.Type) }));
+
+        public static System.Type MakeCallSiteDelegate(System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> types, System.Type returnType)
+        {
+            try
+            {
+                var args = new object[] { types, returnType };
+                var res = s_1.Invoke(null, args);
+                return (System.Type)res;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
     }
 }
 namespace System.Linq.Expressions.Compiler

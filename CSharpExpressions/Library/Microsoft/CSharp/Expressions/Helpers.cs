@@ -501,7 +501,21 @@ namespace Microsoft.CSharp.Expressions
             return type.GetNonNullableType();
         }
 
-        public static void CopyArguments(ReadOnlyCollection<DynamicCSharpArgument> arguments, CSharpArgumentInfo[] argumentInfos, Expression[] expressions)
+        public static void CopyReceiverArgument(Expression receiver, CSharpArgumentInfo[] argumentInfos, Expression[] expressions, ref Type[] argumentTypes)
+        {
+            var receiverFlags = CSharpArgumentInfoFlags.None;
+            if (IsReceiverByRef(receiver))
+            {
+                receiverFlags |= CSharpArgumentInfoFlags.IsRef;
+                argumentTypes = new Type[argumentInfos.Length];
+                argumentTypes[0] = receiver.Type.MakeByRefType();
+            }
+
+            expressions[0] = receiver;
+            argumentInfos[0] = CSharpArgumentInfo.Create(receiverFlags, null);
+        }
+
+        public static void CopyArguments(ReadOnlyCollection<DynamicCSharpArgument> arguments, CSharpArgumentInfo[] argumentInfos, Expression[] expressions, ref Type[] argumentTypes)
         {
             var n = arguments.Count;
 
@@ -510,7 +524,47 @@ namespace Microsoft.CSharp.Expressions
                 var argument = arguments[i];
                 argumentInfos[i + 1] = argument.ArgumentInfo;
                 expressions[i + 1] = argument.Expression;
+
+                if ((argument.Flags & (CSharpArgumentInfoFlags.IsRef | CSharpArgumentInfoFlags.IsOut)) != 0)
+                {
+                    if (argumentTypes == null)
+                    {
+                        argumentTypes = new Type[argumentInfos.Length];
+                        argumentTypes[0] = expressions[0].Type;
+
+                        for (var j = 0; j < i; j++)
+                        {
+                            argumentTypes[j + 1] = arguments[j].Expression.Type;
+                        }
+                    }
+
+                    argumentTypes[i + 1] = argument.Expression.Type.MakeByRefType();
+                }
+                else if (argumentTypes != null)
+                {
+                    argumentTypes[i + 1] = argument.Expression.Type;
+                }
             }
+        }
+
+        public static bool IsReceiverByRef(Expression expression)
+        {
+            // NB: Mimics behavior of GetReceiverRefKind in the C# compiler.
+            
+            // DESIGN: Should we keep the ArgumentInfo object for the receiver in our dynamic nodes instead?
+            //         Makes the shape of the tree wonky though, so we attempt to infer the behavior here.
+
+            if (expression.Type.IsValueType)
+            {
+                switch (expression.NodeType)
+                {
+                    case ExpressionType.Parameter:
+                    case ExpressionType.ArrayIndex:
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

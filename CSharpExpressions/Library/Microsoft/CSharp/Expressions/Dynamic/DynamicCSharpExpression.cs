@@ -5,7 +5,9 @@
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
+using System.Dynamic.Utils;
 using System.Linq.Expressions;
+using System.Linq.Expressions.Compiler;
 using System.Runtime.CompilerServices;
 
 namespace Microsoft.CSharp.Expressions
@@ -48,9 +50,20 @@ namespace Microsoft.CSharp.Expressions
         {
             var binder = default(CallSiteBinder);
             var arguments = default(IEnumerable<Expression>);
-            ReduceDynamic(out binder, out arguments);
+            var argumentTypes = default(Type[]);
+            ReduceDynamic(out binder, out arguments, out argumentTypes);
 
-            return Expression.Dynamic(binder, Type, arguments);
+            if (argumentTypes == null)
+            {
+                return Expression.Dynamic(binder, Type, arguments);
+            }
+            else
+            {
+                // NB: This is a trick to leverage MakeCallSiteDelegate; we should refactor it to take in an array of types.
+                var args = argumentTypes.Map(a => (Expression)Expression.Default(a)).ToReadOnly();
+                var delegateType = DelegateHelpers.MakeCallSiteDelegate(args, Type);
+                return Expression.MakeDynamic(delegateType, binder, arguments);
+            }
         }
 
         /// <summary>
@@ -58,7 +71,8 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
+        /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", Justification = "For internal use only.")]
-        protected abstract void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments);
+        protected abstract void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);
     }
 }

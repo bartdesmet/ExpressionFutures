@@ -92,17 +92,16 @@ namespace Microsoft.CSharp.Expressions
 
         public override Expression Object { get; }
 
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments)
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
             var n = Arguments.Count;
 
             var argumentInfos = new CSharpArgumentInfo[n + 1];
             var expressions = new Expression[n + 1];
 
-            expressions[0] = Object;
-            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
-
-            CopyArguments(Arguments, argumentInfos, expressions);
+            argumentTypes = null;
+            CopyReceiverArgument(Object, argumentInfos, expressions, ref argumentTypes);
+            CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
 
             binder = Binder.InvokeMember(Flags, Name, TypeArguments, Context, argumentInfos);
             arguments = expressions;
@@ -129,7 +128,7 @@ namespace Microsoft.CSharp.Expressions
 
         public override Type Target { get; }
 
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments)
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
             var n = Arguments.Count;
 
@@ -139,7 +138,8 @@ namespace Microsoft.CSharp.Expressions
             expressions[0] = Expression.Constant(Target, typeof(Type));
             argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType | CSharpArgumentInfoFlags.IsStaticType, null);
 
-            CopyArguments(Arguments, argumentInfos, expressions);
+            argumentTypes = null;
+            CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
 
             binder = Binder.InvokeMember(Flags, Name, TypeArguments, Context, argumentInfos);
             arguments = expressions;

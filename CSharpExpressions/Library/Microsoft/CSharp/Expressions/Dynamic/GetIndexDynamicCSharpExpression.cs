@@ -47,17 +47,21 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments)
+        /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
             var n = Arguments.Count;
 
             var argumentInfos = new CSharpArgumentInfo[n + 1];
             var expressions = new Expression[n + 1];
 
+            // NB: By-ref passing for the receiver seems to be omitted in Roslyn here; see https://github.com/dotnet/roslyn/issues/6818.
+            //     We're choosing to be consistent with that behavior until further notice.
             expressions[0] = Object;
             argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
 
-            CopyArguments(Arguments, argumentInfos, expressions);
+            argumentTypes = null;
+            CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
 
             binder = Binder.GetIndex(Flags, Context, argumentInfos);
             arguments = expressions;
