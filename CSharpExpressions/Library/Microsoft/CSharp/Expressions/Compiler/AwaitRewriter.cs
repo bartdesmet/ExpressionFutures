@@ -104,8 +104,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var getAwaiter = node.ReduceGetAwaiter();
             var awaiterVar = _variableFactory(getAwaiter.Type, "__awaiter");
-            var isCompleted = AwaitCSharpExpression.ReduceIsCompleted(awaiterVar);
-            var getResult = AwaitCSharpExpression.ReduceGetResult(awaiterVar);
+            var isCompleted = node.ReduceIsCompleted(awaiterVar);
+            var getResult = node.ReduceGetResult(awaiterVar);
 
             var vars = Array.Empty<ParameterExpression>();
             var exprs = new Expression[ExprCount];

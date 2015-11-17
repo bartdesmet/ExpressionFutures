@@ -15,7 +15,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that awaits an asynchronous operation.
     /// </summary>
-    public sealed class AwaitCSharpExpression : UnaryCSharpExpression
+    public class AwaitCSharpExpression : UnaryCSharpExpression
     {
         internal AwaitCSharpExpression(Expression operand, MethodInfo getAwaiterMethod, Type type)
             : base(operand)
@@ -65,6 +65,16 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
+            return Rewrite(operand);
+        }
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children.
+        /// </summary>
+        /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result.</param>
+        /// <returns>An expression with the updated children.</returns>
+        protected virtual AwaitCSharpExpression Rewrite(Expression operand)
+        {
             return CSharpExpression.Await(operand, GetAwaiterMethod);
         }
 
@@ -90,7 +100,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal Expression ReduceGetAwaiter()
+        internal virtual Expression ReduceGetAwaiter()
         {
             var getAwaiterCall = default(Expression);
             if (GetAwaiterMethod.IsStatic)
@@ -105,14 +115,14 @@ namespace Microsoft.CSharp.Expressions
             return getAwaiterCall;
         }
 
-        internal static Expression ReduceGetResult(Expression awaiter)
+        internal virtual Expression ReduceGetResult(Expression awaiter)
         {
             var getResultMethod = GetGetResult(awaiter.Type);
             var getResultCall = Expression.Call(awaiter, getResultMethod);
             return getResultCall;
         }
 
-        internal static Expression ReduceIsCompleted(Expression awaiter)
+        internal virtual Expression ReduceIsCompleted(Expression awaiter)
         {
             return Expression.Property(awaiter, "IsCompleted");
         }

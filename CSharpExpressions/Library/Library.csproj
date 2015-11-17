@@ -65,6 +65,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpIndexInit.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\ConvertDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicAwaitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
