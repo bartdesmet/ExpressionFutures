@@ -13,6 +13,30 @@ namespace Microsoft.CSharp.Expressions.Compiler
     // NB: This is a devious way to leverage the StackSpiller from LINQ to rewrite our Await nodes.
     //     Ideally, we can plug in our custom node to the StackSpiller over there.
 
+    // TODO: Replace with a real spiller that's more thorough than LINQ's. Current limitations lead to invalid
+    //       control flow operations to resume an async operation when it's buried in a bigger expression, e.g.
+    //
+    //         -(await x)    -->   no spilling but state machine jumps into '-' operator
+    //         1 + await x   -->   spills '1' but state machine jumps into '+' operator
+    //         await x + 1   -->   no spilling but state machine jumps into '+' operator
+    //
+    //       The current approach with the AssignmentPercolator is too limiting but still useful with a better
+    //       approach to spilling. I.e. if every await site results in a temporary and the containing expression
+    //       gets rewritten to spill intermediate evaluations into temporaries (a la SSA) we can still push down
+    //       the assignments of await results to temporaries using the AssignmentPercolator, e.g.
+    //
+    //           -(await x)
+    //       -->
+    //           { t0 = x; t1 = await t0; t2 = -t1; }
+    //       -->
+    //           { t0 = x; t1 = { a1 = t0.GetAwaiter(); ...; L: ...; r1 = a1.GetResult(); }; t2 = -t1; }
+    //       -->
+    //           result = { t0 = x; t1 = { a1 = t0.GetAwaiter(); ...; L: ...; r1 = a1.GetResult(); }; t2 = -t1; }
+    //       -->
+    //           result = { t0 = x; { a1 = t0.GetAwaiter(); ...; L: ...; t1 = r1 = a1.GetResult(); }; t2 = -t1; }
+    //       -->
+    //           { t0 = x; { a1 = t0.GetAwaiter(); ...; L: ...; t1 = r1 = a1.GetResult(); }; result = t2 = -t1; }
+
     /// <summary>
     /// Utility to perform stack spilling to ensure an empty evaluation stack upon starting the evaluation of an
     /// await expression.
