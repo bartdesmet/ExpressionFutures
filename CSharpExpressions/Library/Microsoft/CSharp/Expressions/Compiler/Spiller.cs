@@ -54,7 +54,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     ///   var __1 = A;
     ///   var __2 = T;
     ///   var __3 = await __2;
-    ///   F(__1, __2, B)
+    ///   F(__1, __3, B)
     /// </code>
     /// where the compiler-generated variables will be hoisted.
     /// </remarks>
