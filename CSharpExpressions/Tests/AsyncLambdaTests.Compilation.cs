@@ -248,7 +248,19 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling1()
+        public void AsyncLambda_Compilation_Spilling_Unary1()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var neg = Expression.Negate(CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(neg);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(-1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Binary1()
         {
             var v1 = Expression.Constant(Task.FromResult(1));
             var v2 = Expression.Constant(Task.FromResult(2));
@@ -261,19 +273,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling2()
-        {
-            var v = Expression.Constant(Task.FromResult(1));
-            var neg = Expression.Negate(CSharpExpression.Await(v));
-            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(neg);
-            var f = e.Compile();
-            var t = f();
-            var r = t.Result;
-            Assert.AreEqual(-1, r);
-        }
-
-        [TestMethod]
-        public void AsyncLambda_Compilation_Spilling3()
+        public void AsyncLambda_Compilation_Spilling_Binary2()
         {
             var v = Expression.Constant(Task.FromResult(1));
             var add = Expression.Add(CSharpExpression.Await(v), Expression.Constant(2));
@@ -285,7 +285,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling4()
+        public void AsyncLambda_Compilation_Spilling_Binary3()
         {
             var v = Expression.Constant(Task.FromResult(1));
             var add = Expression.Add(Expression.Constant(2), CSharpExpression.Await(v));
@@ -297,7 +297,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling5()
+        public void AsyncLambda_Compilation_Spilling_Member1()
         {
             var v = Expression.Constant(Task.FromResult("bar"));
             var length = Expression.Property(CSharpExpression.Await(v), "Length");
@@ -309,7 +309,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling6()
+        public void AsyncLambda_Compilation_Spilling_LogicalBinary1()
         {
             var v = Expression.Constant(Task.FromResult(true));
             var andAlso = Expression.AndAlso(Expression.Constant(true), CSharpExpression.Await(v));
@@ -321,7 +321,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling7()
+        public void AsyncLambda_Compilation_Spilling_LogicalBinary2()
         {
             var v = Expression.Constant(Task.FromResult(true));
             var orElse = Expression.OrElse(CSharpExpression.Await(v), Expression.Constant(true));
@@ -333,7 +333,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling8()
+        public void AsyncLambda_Compilation_Spilling_LogicalBinary3()
         {
             var v = Expression.Constant(Task.FromResult(default(string)));
             var coalesce = Expression.Coalesce(CSharpExpression.Await(v), Expression.Constant("bar"));
@@ -345,7 +345,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling9()
+        public void AsyncLambda_Compilation_Spilling_Condition1()
         {
             var v = Expression.Constant(Task.FromResult(true));
             var condition = Expression.Condition(CSharpExpression.Await(v), Expression.Constant(1), Expression.Constant(2));
@@ -357,7 +357,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling10()
+        public void AsyncLambda_Compilation_Spilling_Condition2()
         {
             var v = Expression.Constant(Task.FromResult(1));
             var condition = Expression.Condition(Expression.Constant(true), CSharpExpression.Await(v), Expression.Constant(2));
@@ -369,7 +369,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling11()
+        public void AsyncLambda_Compilation_Spilling_Condition3()
         {
             var v = Expression.Constant(Task.FromResult(1));
             var condition = Expression.Condition(Expression.Constant(false), Expression.Constant(2), CSharpExpression.Await(v));
