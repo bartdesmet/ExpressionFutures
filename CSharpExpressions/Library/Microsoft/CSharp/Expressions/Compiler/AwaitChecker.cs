@@ -71,6 +71,23 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return node;
             }
 
+            protected override SwitchCase VisitSwitchCase(SwitchCase node)
+            {
+                // NB: This restriction makes stack spilling for switch cases easier. C# doesn't allow
+                //     non-constant test values anyway. We could allow it if we lower SwitchExpression
+                //     nodes with non-constant test values into Conditional nodes prior to spilling, so
+                //     we can keep a lexical evaluation order.
+
+                Visit(node.Body);
+
+                _forbidden.Push($"{nameof(SwitchCase)}.{nameof(SwitchCase.TestValues)}");
+                {
+                    Visit(node.TestValues);
+                }
+
+                return node;
+            }
+
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {
                 if (_forbidden.Count > 0)

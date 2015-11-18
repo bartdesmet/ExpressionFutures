@@ -62,6 +62,30 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_NotInSwitchCaseTestValue()
+        {
+            var p = Expression.Parameter(typeof(Exception));
+
+            var expr = Expression.Lambda(
+                Expression.Switch(
+                    Expression.Constant(0),
+                    Expression.Constant(1),
+                    Expression.SwitchCase(
+                        Expression.Constant(1),
+                        Expression.Constant(0)
+                    ),
+                    Expression.SwitchCase(
+                        Expression.Constant(1),
+                        CSharpExpression.Await(Expression.Constant(Task.FromResult(42)))
+                    )
+                )
+            );
+
+            var e = CSharpExpression.AsyncLambda<Func<Task<Func<int>>>>(expr);
+            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_NestedLambda()
         {
             var p = Expression.Parameter(typeof(Exception));
