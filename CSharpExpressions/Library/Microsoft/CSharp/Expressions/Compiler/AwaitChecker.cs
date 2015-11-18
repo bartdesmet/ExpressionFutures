@@ -84,6 +84,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 {
                     Visit(node.TestValues);
                 }
+                _forbidden.Pop();
 
                 return node;
             }
