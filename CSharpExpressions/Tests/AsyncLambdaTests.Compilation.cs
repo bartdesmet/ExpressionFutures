@@ -754,6 +754,42 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Switch1()
+        {
+            var v = Expression.Constant(Task.FromResult(0));
+            var sw = Expression.Switch(CSharpExpression.Await(v), Expression.Constant(1), Expression.SwitchCase(Expression.Constant(2), Expression.Constant(1)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(sw);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Switch2()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var sw = Expression.Switch(Expression.Constant(0), CSharpExpression.Await(v), Expression.SwitchCase(Expression.Constant(2), Expression.Constant(1)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(sw);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Switch3()
+        {
+            var v = Expression.Constant(Task.FromResult(2));
+            var sw = Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(CSharpExpression.Await(v), Expression.Constant(1)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(sw);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(2, r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
