@@ -525,6 +525,7 @@ namespace System.Linq.Expressions.Compiler
 
             ChildRewriter cr;
 
+#if LINQ // NB: Our compiler doesn't inline; this could still happen at a later stage in the LINQ compiler after lowering async lambdas to sync ones.
             // See if the lambda will be inlined
             LambdaExpression lambda = node.LambdaOperand();
             if (lambda != null)
@@ -550,6 +551,7 @@ namespace System.Linq.Expressions.Compiler
                 Result result = cr.Finish(node);
                 return new Result(result.Action | spiller._lambdaRewrite, result.Node);
             }
+#endif
 
             cr = new ChildRewriter(this, stack, node.Arguments.Count + 1);
 

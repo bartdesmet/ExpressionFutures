@@ -110,7 +110,6 @@ namespace Tests
         }
 
         [TestMethod]
-        [Ignore] // DynamicMethod does not support BeginExceptFilterBlock (see https://github.com/dotnet/coreclr/issues/1764)
         public void AsyncLambda_Compilation_NotInFilter_NoFalsePositive()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -125,7 +124,9 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
-            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+
+            // DynamicMethod does not support BeginExceptFilterBlock (see https://github.com/dotnet/coreclr/issues/1764)
+            AssertEx.Throws<NotSupportedException>(() => e.Compile());
         }
 
         [TestMethod]
@@ -315,7 +316,7 @@ namespace Tests
             var oc = (Expression)Expression.Constant(operand);
 
             var oa = (Expression)CSharpExpression.Await(Expression.Constant(Task.FromResult(operand)));
-            
+
             foreach (var op in new[]
             {
                 oc,
@@ -540,13 +541,65 @@ namespace Tests
         [TestMethod]
         public void AsyncLambda_Compilation_Spilling_MemberInit1()
         {
+            var elem = typeof(int);
+            var sb = typeof(StrongBox<>).MakeGenericType(elem);
             var v = Expression.Constant(Task.FromResult(1));
-            var listInit = Expression.MemberInit(Expression.New(typeof(StrongBox<int>).GetConstructor(new Type[0])), Expression.Bind(typeof(StrongBox<int>).GetField("Value"), CSharpExpression.Await(v)));
-            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<int>>>>(listInit);
+            var a = CSharpExpression.Await(v);
+            var bind = Expression.Bind(sb.GetField("Value"), a);
+            var memberInit = Expression.MemberInit(Expression.New(sb.GetConstructor(new Type[0])), bind);
+            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<int>>>>(memberInit);
             var f = e.Compile();
             var t = f();
             var r = t.Result;
             Assert.AreEqual(1, r.Value);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_MemberInit2()
+        {
+            var elem = typeof(int);
+            var sb = typeof(StrongBox<>).MakeGenericType(elem);
+            var v = Expression.Constant(Task.FromResult(1));
+            var a = CSharpExpression.Await(v);
+            var bind = Expression.Bind(sb.GetField("Value"), Expression.Constant(2));
+            var memberInit = Expression.MemberInit(Expression.New(sb.GetConstructor(new[] { elem }), a), bind);
+            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<int>>>>(memberInit);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(2, r.Value);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_MemberInit3()
+        {
+            var elem = typeof(StrongBox<int>);
+            var sb = typeof(StrongBox<>).MakeGenericType(elem);
+            var v = Expression.Constant(Task.FromResult(1));
+            var a = CSharpExpression.Await(v);
+            var bind = Expression.MemberBind(sb.GetField("Value"), Expression.Bind(typeof(StrongBox<int>).GetField("Value"), a));
+            var memberInit = Expression.MemberInit(Expression.New(sb.GetConstructor(new[] { elem }), Expression.New(elem.GetConstructor(new Type[0]))), bind);
+            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<StrongBox<int>>>>>(memberInit);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r.Value.Value);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_MemberInit4()
+        {
+            var elem = typeof(List<int>);
+            var sb = typeof(StrongBox<>).MakeGenericType(elem);
+            var v = Expression.Constant(Task.FromResult(1));
+            var a = CSharpExpression.Await(v);
+            var bind = Expression.ListBind(sb.GetField("Value"), Expression.ElementInit(typeof(List<int>).GetMethod("Add"), a));
+            var memberInit = Expression.MemberInit(Expression.New(sb.GetConstructor(new[] { elem }), Expression.New(elem.GetConstructor(new Type[0]))), bind);
+            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<List<int>>>>>(memberInit);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r.Value[0]);
         }
 
         [TestMethod]
@@ -674,6 +727,30 @@ namespace Tests
             var t = f();
             var r = t.Result;
             Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Dynamic1()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var dyn = DynamicCSharpExpression.DynamicAdd(CSharpExpression.Await(v), Expression.Constant(2)).Reduce();
+            var e = CSharpExpression.AsyncLambda<Func<Task<object>>>(dyn);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Dynamic2()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var dyn = DynamicCSharpExpression.DynamicAdd(Expression.Constant(2), CSharpExpression.Await(v)).Reduce();
+            var e = CSharpExpression.AsyncLambda<Func<Task<object>>>(dyn);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
         }
 
         [TestMethod]
