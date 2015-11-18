@@ -393,6 +393,18 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_TypeBinary2()
+        {
+            var v = Expression.Constant(Task.FromResult((object)1));
+            var typeEqual = Expression.TypeEqual(CSharpExpression.Await(v), typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool>>>(typeEqual);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(true, r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Spilling_ListInit1()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -453,6 +465,90 @@ namespace Tests
             var v = Expression.Constant(Task.FromResult(1));
             var assign = Expression.Assign(i, CSharpExpression.Await(v));
             var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { p }, Expression.Assign(p, a), assign, i));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_New1()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var oc = Expression.New(typeof(StrongBox<int>).GetConstructor(new[] { typeof(int) }), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<int>>>>(oc);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r.Value);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_NewArray1()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var na = Expression.NewArrayInit(typeof(int), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int[]>>>(na);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r[0]);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_NewArray2()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var na = Expression.NewArrayBounds(typeof(int), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int[]>>>(na);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r.Length);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Invoke1()
+        {
+            var v = Expression.Constant(Task.FromResult(new Func<int, int>(x => x + 1)));
+            var i = Expression.Invoke(CSharpExpression.Await(v), Expression.Constant(2));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(i);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Invoke2()
+        {
+            var v = Expression.Constant(Task.FromResult(2));
+            var i = Expression.Invoke(Expression.Constant(new Func<int, int>(x => x + 1)), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(i);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Index1()
+        {
+            var v = Expression.Constant(Task.FromResult(new List<int> { 1 }));
+            var i = Expression.MakeIndex(CSharpExpression.Await(v), typeof(List<int>).GetProperty("Item"), new Expression[] { Expression.Constant(0) });
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(i);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Index2()
+        {
+            var v = Expression.Constant(Task.FromResult(0));
+            var i = Expression.MakeIndex(Expression.Constant(new List<int> { 1 }), typeof(List<int>).GetProperty("Item"), new Expression[] { CSharpExpression.Await(v) });
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(i);
             var f = e.Compile();
             var t = f();
             var r = t.Result;
