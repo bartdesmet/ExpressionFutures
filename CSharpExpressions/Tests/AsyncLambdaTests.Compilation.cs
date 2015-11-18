@@ -417,6 +417,49 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Assign1()
+        {
+            var p = Expression.Parameter(typeof(int));
+            var v = Expression.Constant(Task.FromResult(1));
+            var assign = Expression.Assign(p, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { p }, assign, p));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Assign2()
+        {
+            var p = Expression.Parameter(typeof(int[]));
+            var a = Expression.NewArrayInit(typeof(int), Expression.Constant(1));
+            var i = Expression.ArrayAccess(p, Expression.Constant(0));
+            var v = Expression.Constant(Task.FromResult(1));
+            var assign = Expression.Assign(i, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { p }, Expression.Assign(p, a), assign, i));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Assign3()
+        {
+            var p = Expression.Parameter(typeof(StrongBox<int>));
+            var a = Expression.New(typeof(StrongBox<int>).GetConstructor(new Type[0]));
+            var i = Expression.Field(p, "Value");
+            var v = Expression.Constant(Task.FromResult(1));
+            var assign = Expression.Assign(i, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { p }, Expression.Assign(p, a), assign, i));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
