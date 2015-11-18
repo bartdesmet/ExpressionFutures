@@ -1085,6 +1085,7 @@ namespace Playground
             Dynamic6();
             Dynamic7();
             Dynamic8();
+            Dynamic9();
         }
 
         static void Dynamic1()
@@ -1156,6 +1157,14 @@ namespace Playground
             var f = e.Compile();
             Console.WriteLine(f(DateTime.Now));
             Console.WriteLine(f(DateTimeOffset.Now));
+        }
+
+        static void Dynamic9()
+        {
+            var await = DynamicCSharpExpression.DynamicAwait(Expression.Constant(Task.FromResult(42), typeof(object)));
+            var async = CSharpExpression.AsyncLambda(Expression.Convert(await, typeof(int)));
+            var res = (Task<int>)async.Compile().DynamicInvoke();
+            Console.WriteLine(res.Result);
         }
 
         static int F(int x, int y, int z = 42)
