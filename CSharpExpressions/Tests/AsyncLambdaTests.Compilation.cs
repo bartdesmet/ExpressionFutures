@@ -260,6 +260,77 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Convert1()
+        {
+            var v = Expression.Constant(Task.FromResult((object)1));
+            var conv = Expression.Convert(CSharpExpression.Await(v), typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(conv);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Convert2()
+        {
+            var v = Expression.Constant(Task.FromResult(1L));
+            var conv = Expression.ConvertChecked(CSharpExpression.Await(v), typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(conv);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Unbox()
+        {
+            var v = Expression.Constant(Task.FromResult((object)1));
+            var conv = Expression.Unbox(CSharpExpression.Await(v), typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(conv);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Unary_More()
+        {
+            SpillUnary(Expression.UnaryPlus, 28, +28);
+            SpillUnary(Expression.Negate, 28, -28);
+            SpillUnary(Expression.NegateChecked, 28, checked(-28));
+            SpillUnary(Expression.OnesComplement, 28, ~28);
+            SpillUnary(Expression.Increment, 28, 28 + 1);
+            SpillUnary(Expression.Decrement, 28, 28 - 1);
+            SpillUnary(Expression.Not, true, !true);
+            SpillUnary(Expression.IsTrue, true, true == true);
+            SpillUnary(Expression.IsFalse, true, true == false);
+            SpillUnary(Expression.ArrayLength, new[] { 42 }, new[] { 42 }.Length);
+        }
+
+        private void SpillUnary<T, R>(Func<Expression, Expression> factory, T operand, R result)
+        {
+            var oc = (Expression)Expression.Constant(operand);
+
+            var oa = (Expression)CSharpExpression.Await(Expression.Constant(Task.FromResult(operand)));
+            
+            foreach (var op in new[]
+            {
+                oc,
+                oa
+            })
+            {
+                var e = CSharpExpression.AsyncLambda<Func<Task<R>>>(factory(op));
+                var f = e.Compile();
+                var t = f();
+                var r = t.Result;
+                Assert.AreEqual(result, r);
+            }
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Spilling_Binary1()
         {
             var v1 = Expression.Constant(Task.FromResult(1));
@@ -294,6 +365,56 @@ namespace Tests
             var t = f();
             var r = t.Result;
             Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_Binary_More()
+        {
+            SpillBinary(Expression.Add, 28, 41, 28 + 41);
+            SpillBinary(Expression.AddChecked, 28, 41, checked(28 + 41));
+            SpillBinary(Expression.Subtract, 28, 41, 28 - 41);
+            SpillBinary(Expression.SubtractChecked, 28, 41, checked(28 - 41));
+            SpillBinary(Expression.Multiply, 28, 41, 28 * 41);
+            SpillBinary(Expression.MultiplyChecked, 28, 41, checked(28 * 41));
+            SpillBinary(Expression.Divide, 28, 41, 28 / 41);
+            SpillBinary(Expression.Modulo, 28, 41, checked(28 % 41));
+            SpillBinary(Expression.And, 28, 41, 28 & 41);
+            SpillBinary(Expression.Or, 28, 41, 28 | 41);
+            SpillBinary(Expression.ExclusiveOr, 28, 41, 28 ^ 41);
+            SpillBinary(Expression.LeftShift, 28, 3, 28 << 3);
+            SpillBinary(Expression.RightShift, 28, 3, 28 >> 3);
+            SpillBinary(Expression.LessThan, 28, 41, 28 < 41);
+            SpillBinary(Expression.LessThanOrEqual, 28, 41, 28 <= 41);
+            SpillBinary(Expression.GreaterThan, 28, 41, 28 > 41);
+            SpillBinary(Expression.GreaterThanOrEqual, 28, 41, 28 >= 41);
+            SpillBinary(Expression.Equal, 28, 41, 28 == 41);
+            SpillBinary(Expression.NotEqual, 28, 41, 28 != 41);
+            SpillBinary(Expression.Power, 28.0, 41.0, Math.Pow(28.0, 41.0));
+            SpillBinary(Expression.ArrayIndex, new[] { 28, 41 }, 1, new[] { 28, 41 }[1]);
+        }
+
+        private void SpillBinary<T1, T2, R>(Func<Expression, Expression, Expression> factory, T1 left, T2 right, R result)
+        {
+            var lc = (Expression)Expression.Constant(left);
+            var rc = (Expression)Expression.Constant(right);
+
+            var la = (Expression)CSharpExpression.Await(Expression.Constant(Task.FromResult(left)));
+            var ra = (Expression)CSharpExpression.Await(Expression.Constant(Task.FromResult(right)));
+
+            foreach (var ops in new[]
+            {
+                new[] { lc, rc },
+                new[] { lc, ra },
+                new[] { la, rc },
+                new[] { la, ra },
+            })
+            {
+                var e = CSharpExpression.AsyncLambda<Func<Task<R>>>(factory(ops[0], ops[1]));
+                var f = e.Compile();
+                var t = f();
+                var r = t.Result;
+                Assert.AreEqual(result, r);
+            }
         }
 
         [TestMethod]
