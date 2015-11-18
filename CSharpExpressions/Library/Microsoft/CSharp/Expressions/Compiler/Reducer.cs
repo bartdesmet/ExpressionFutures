@@ -32,6 +32,28 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                 return base.VisitExtension(node);
             }
+
+            protected override Expression VisitBinary(BinaryExpression node)
+            {
+                // NB: This reduces assignment operators so that the stack spiller doesn't have to worry about it.
+                if (node.CanReduce)
+                {
+                    return node.Reduce();
+                }
+
+                return base.VisitBinary(node);
+            }
+
+            protected override Expression VisitUnary(UnaryExpression node)
+            {
+                // NB: This reduces assignment operators so that the stack spiller doesn't have to worry about it.
+                if (node.CanReduce)
+                {
+                    return node.Reduce();
+                }
+
+                return base.VisitUnary(node);
+            }
         }
     }
 }
