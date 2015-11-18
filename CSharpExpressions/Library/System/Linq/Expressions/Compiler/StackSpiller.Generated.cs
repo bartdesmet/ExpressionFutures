@@ -39,7 +39,11 @@ namespace System.Linq.Expressions.Compiler
                     result = RewriteBinaryExpression(node, stack);
                     break;
                 case ExpressionType.AndAlso:
+#if LINQ
                     result = RewriteLogicalBinaryExpression(node, stack);
+#else
+                    result = RewriteBinaryExpression(node, stack);
+#endif
                     break;
                 case ExpressionType.ArrayLength:
                     result = RewriteUnaryExpression(node, stack);
@@ -51,7 +55,11 @@ namespace System.Linq.Expressions.Compiler
                     result = RewriteMethodCallExpression(node, stack);
                     break;
                 case ExpressionType.Coalesce:
+#if LINQ
                     result = RewriteLogicalBinaryExpression(node, stack);
+#else
+                    result = RewriteBinaryExpression(node, stack);
+#endif
                     break;
                 case ExpressionType.Conditional:
                     result = RewriteConditionalExpression(node, stack);
@@ -138,7 +146,11 @@ namespace System.Linq.Expressions.Compiler
                     result = RewriteBinaryExpression(node, stack);
                     break;
                 case ExpressionType.OrElse:
+#if LINQ
                     result = RewriteLogicalBinaryExpression(node, stack);
+#else
+                    result = RewriteBinaryExpression(node, stack);
+#endif
                     break;
                 case ExpressionType.Power:
                     result = RewriteBinaryExpression(node, stack);

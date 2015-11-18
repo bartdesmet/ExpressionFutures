@@ -309,6 +309,42 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling6()
+        {
+            var v = Expression.Constant(Task.FromResult(true));
+            var andAlso = Expression.AndAlso(Expression.Constant(true), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool>>>(andAlso);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(true, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling7()
+        {
+            var v = Expression.Constant(Task.FromResult(true));
+            var orElse = Expression.OrElse(CSharpExpression.Await(v), Expression.Constant(true));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool>>>(orElse);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(true, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling8()
+        {
+            var v = Expression.Constant(Task.FromResult(default(string)));
+            var coalesce = Expression.Coalesce(CSharpExpression.Await(v), Expression.Constant("bar"));
+            var e = CSharpExpression.AsyncLambda<Func<Task<string>>>(coalesce);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual("bar", r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
