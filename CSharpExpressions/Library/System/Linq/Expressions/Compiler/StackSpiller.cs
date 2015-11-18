@@ -1140,6 +1140,8 @@ namespace System.Linq.Expressions.Compiler
         /// </remarks>
         private static void RequireNoRefArgs(MethodBase method)
         {
+            // TODO: Lift this restriction or improve error message for our compiler.
+
             if (method != null && method.GetParametersCached().Any(p => p.ParameterType.IsByRef))
             {
                 throw Error.TryNotSupportedForMethodsWithRefArgs(method);
@@ -1164,6 +1166,8 @@ namespace System.Linq.Expressions.Compiler
         /// </remarks>
         private static void RequireNotRefInstance(Expression instance)
         {
+            // TODO: Lift this restriction or improve error message for our compiler.
+
             // Primitive value types are okay because they are all readonly,
             // but we can't rely on this for non-primitive types. So we throw
             // NotSupported.
