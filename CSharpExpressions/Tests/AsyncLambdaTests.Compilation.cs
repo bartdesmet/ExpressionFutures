@@ -393,6 +393,30 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_ListInit1()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var listInit = Expression.ListInit(Expression.New(typeof(List<int>).GetConstructor(new Type[0])), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<List<int>>>>(listInit);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r[0]);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_MemberInit1()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var listInit = Expression.MemberInit(Expression.New(typeof(StrongBox<int>).GetConstructor(new Type[0])), Expression.Bind(typeof(StrongBox<int>).GetField("Value"), CSharpExpression.Await(v)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<StrongBox<int>>>>(listInit);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r.Value);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
