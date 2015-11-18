@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AssignmentPercolatorTests.cs" />
+    <Compile Include="DynamicAwaitTests.cs" />
     <Compile Include="ConditionalArrayIndexTests.cs" />
     <Compile Include="CSharpExpressionVisitorTests.cs" />
     <Compile Include="AssertEx.cs" />
