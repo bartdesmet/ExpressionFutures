@@ -586,6 +586,7 @@ namespace System.Linq.Expressions.Compiler
         }
 
         // TypeBinaryExpression
+#if LINQ
         private Result RewriteTypeBinaryExpression(Expression expr, Stack stack)
         {
             TypeBinaryExpression node = (TypeBinaryExpression)expr;
@@ -604,6 +605,29 @@ namespace System.Linq.Expressions.Compiler
             }
             return new Result(expression.Action, expr);
         }
+#else
+        private Result RewriteTypeBinaryExpression(Expression expr, Stack stack)
+        {
+            TypeBinaryExpression node = (TypeBinaryExpression)expr;
+
+            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+
+            cr.Add(node.Expression);
+
+            if (cr.Rewrite)
+            {
+                if (node.NodeType == ExpressionType.TypeIs)
+                {
+                    expr = Expression.TypeIs(cr[0], node.TypeOperand);
+                }
+                else
+                {
+                    expr = Expression.TypeEqual(cr[0], node.TypeOperand);
+                }
+            }
+            return cr.Finish(expr);
+        }
+#endif
 
         // Throw
         private Result RewriteThrowUnaryExpression(Expression expr, Stack stack)

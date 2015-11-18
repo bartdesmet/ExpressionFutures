@@ -381,6 +381,18 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_TypeBinary1()
+        {
+            var v = Expression.Constant(Task.FromResult((object)1));
+            var typeIs = Expression.TypeIs(CSharpExpression.Await(v), typeof(int));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool>>>(typeIs);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(true, r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
