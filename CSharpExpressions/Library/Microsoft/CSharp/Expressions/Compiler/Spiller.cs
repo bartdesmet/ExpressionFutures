@@ -60,18 +60,29 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </remarks>
     internal static class Spiller
     {
+#if OLD
         private static readonly SpillSiteDecorator s_decorator = new SpillSiteDecorator();
         private static readonly SpillSiteJanitor s_janitor = new SpillSiteJanitor();
+#endif
 
         public static Expression Spill(Expression expression)
         {
+#if OLD
             var decorated = s_decorator.Visit(expression);
             var spilled = StackSpiller.AnalyzeLambda(Expression.Lambda(decorated)).Body;
 
             var cleaned = s_janitor.Visit(spilled);
             return cleaned;
+#else
+            var decorated = expression;
+            var spilled = StackSpiller.AnalyzeLambda(Expression.Lambda(decorated)).Body;
+
+            var cleaned = spilled;
+            return cleaned;
+#endif
         }
 
+#if OLD
         class SpillSiteDecorator : ShallowVisitor
         {
             [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -121,8 +132,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return res;
             }
         }
+#endif
     }
 
+#if OLD
     static class SpillHelpers
     {
         private static readonly MethodInfo MethodQuoteT = typeof(SpillHelpers).GetMethod(nameof(QuoteT));
@@ -162,4 +175,5 @@ namespace Microsoft.CSharp.Expressions.Compiler
             throw new NotImplementedException();
         }
     }
+#endif
 }

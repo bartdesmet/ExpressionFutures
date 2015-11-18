@@ -139,7 +139,9 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
-            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+
+            // NB: This doesn't work right now because the stack spiller can't spill the by-ref argument of Monitor.Enter.
+            AssertEx.Throws<NotSupportedException>(() => e.Compile());
         }
 
         [TestMethod]
