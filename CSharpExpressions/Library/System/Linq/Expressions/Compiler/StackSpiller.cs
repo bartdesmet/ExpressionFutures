@@ -605,6 +605,7 @@ namespace System.Linq.Expressions.Compiler
         }
 
         // UnaryExpression
+#if LINQ
         private Result RewriteUnaryExpression(Expression expr, Stack stack)
         {
             UnaryExpression node = (UnaryExpression)expr;
@@ -626,6 +627,26 @@ namespace System.Linq.Expressions.Compiler
             }
             return new Result(expression.Action, expr);
         }
+#else
+        private Result RewriteUnaryExpression(Expression expr, Stack stack)
+        {
+            UnaryExpression node = (UnaryExpression)expr;
+
+            Debug.Assert(node.NodeType != ExpressionType.Quote, "unexpected Quote");
+            Debug.Assert(node.NodeType != ExpressionType.Throw, "unexpected Throw");
+
+            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+
+            cr.Add(node.Operand);
+
+            if (cr.Action == RewriteAction.SpillStack)
+            {
+                RequireNoRefArgs(node.Method);
+            }
+
+            return cr.Finish(cr.Rewrite ? CreateUnaryExpression(node.NodeType, cr[0], node.Type, node.Method) : expr);
+        }
+#endif
 
         // RewriteListInitExpression
         private Result RewriteListInitExpression(Expression expr, Stack stack)

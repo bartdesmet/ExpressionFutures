@@ -248,11 +248,47 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_Spilling()
+        public void AsyncLambda_Compilation_Spilling1()
         {
             var v1 = Expression.Constant(Task.FromResult(1));
             var v2 = Expression.Constant(Task.FromResult(2));
             var add = Expression.Add(CSharpExpression.Await(v1), CSharpExpression.Await(v2));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(add);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling2()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var add = Expression.Negate(CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(add);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(-1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling3()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var add = Expression.Add(CSharpExpression.Await(v), Expression.Constant(2));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(add);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling4()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var add = Expression.Add(Expression.Constant(2), CSharpExpression.Await(v));
             var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(add);
             var f = e.Compile();
             var t = f();
