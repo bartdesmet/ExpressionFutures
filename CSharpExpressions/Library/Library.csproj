@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -120,6 +120,11 @@
     </Compile>
     <Compile Include="Stubs.Manual.cs" />
     <Compile Include="System\Linq\Expressions\BetterExpressionVisitor.cs" />
+    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Bindings.cs" />
+    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.cs" />
+    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Generated.cs" />
+    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
+    <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
     <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
