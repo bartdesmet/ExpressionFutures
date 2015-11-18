@@ -383,6 +383,7 @@ namespace System.Linq.Expressions.Compiler
         }
 
         // MemberExpression
+#if LINQ
         private Result RewriteMemberExpression(Expression expr, Stack stack)
         {
             MemberExpression node = (MemberExpression)expr;
@@ -402,6 +403,30 @@ namespace System.Linq.Expressions.Compiler
             }
             return new Result(expression.Action, expr);
         }
+#else
+        private Result RewriteMemberExpression(Expression expr, Stack stack)
+        {
+            MemberExpression node = (MemberExpression)expr;
+
+            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+
+            cr.Add(node.Expression);
+
+            if (cr.Rewrite)
+            {
+                if (cr.Action == RewriteAction.SpillStack && node.Member is PropertyInfo)
+                {
+                    // Only need to validate propreties because reading a field
+                    // is always side-effect free.
+                    RequireNotRefInstance(node.Expression);
+                }
+
+                expr = MemberExpressionStubs.Make(cr[0], node.Member);
+            }
+
+            return cr.Finish(expr);
+        }
+#endif
 
         //RewriteIndexExpression
         private Result RewriteIndexExpression(Expression expr, Stack stack)

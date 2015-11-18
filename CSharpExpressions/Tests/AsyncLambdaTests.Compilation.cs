@@ -264,8 +264,8 @@ namespace Tests
         public void AsyncLambda_Compilation_Spilling2()
         {
             var v = Expression.Constant(Task.FromResult(1));
-            var add = Expression.Negate(CSharpExpression.Await(v));
-            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(add);
+            var neg = Expression.Negate(CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(neg);
             var f = e.Compile();
             var t = f();
             var r = t.Result;
@@ -290,6 +290,18 @@ namespace Tests
             var v = Expression.Constant(Task.FromResult(1));
             var add = Expression.Add(Expression.Constant(2), CSharpExpression.Await(v));
             var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(add);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(3, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling5()
+        {
+            var v = Expression.Constant(Task.FromResult("bar"));
+            var length = Expression.Property(CSharpExpression.Await(v), "Length");
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(length);
             var f = e.Compile();
             var t = f();
             var r = t.Result;
