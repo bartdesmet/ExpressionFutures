@@ -34,7 +34,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result.</param>
         /// <returns>An expression with the updated children.</returns>
-        protected override AwaitCSharpExpression Rewrite(Expression operand)
+        protected internal override AwaitCSharpExpression Rewrite(Expression operand)
         {
             return DynamicCSharpExpression.DynamicAwait(operand);
         }

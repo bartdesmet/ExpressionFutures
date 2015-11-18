@@ -73,7 +73,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result.</param>
         /// <returns>An expression with the updated children.</returns>
-        protected virtual AwaitCSharpExpression Rewrite(Expression operand)
+        protected internal virtual AwaitCSharpExpression Rewrite(Expression operand)
         {
             return CSharpExpression.Await(operand, GetAwaiterMethod);
         }
