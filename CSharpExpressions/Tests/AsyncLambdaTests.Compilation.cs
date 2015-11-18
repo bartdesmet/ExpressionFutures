@@ -345,6 +345,42 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AsyncLambda_Compilation_Spilling9()
+        {
+            var v = Expression.Constant(Task.FromResult(true));
+            var condition = Expression.Condition(CSharpExpression.Await(v), Expression.Constant(1), Expression.Constant(2));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(condition);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling10()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var condition = Expression.Condition(Expression.Constant(true), CSharpExpression.Await(v), Expression.Constant(2));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(condition);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling11()
+        {
+            var v = Expression.Constant(Task.FromResult(1));
+            var condition = Expression.Condition(Expression.Constant(false), Expression.Constant(2), CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(condition);
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(1, r);
+        }
+
+        [TestMethod]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
