@@ -122,6 +122,7 @@
     <Compile Include="System\Linq\Expressions\BetterExpressionVisitor.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Bindings.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.cs" />
+    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.CSharp.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Generated.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />

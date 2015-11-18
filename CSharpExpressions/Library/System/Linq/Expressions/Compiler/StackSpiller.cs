@@ -133,8 +133,10 @@ namespace System.Linq.Expressions.Compiler
             // (result.Action == RewriteAction.None) if and only if (node == result.Node)
             Debug.Assert((result.Action == RewriteAction.None) ^ (node != result.Node), "rewrite action does not match node object identity");
 
+#if LINQ // NB: For C#, we keep await nodes. Reduction happens in a separate step.
             // if the original node is an extension node, it should have been rewritten
             Debug.Assert(result.Node.NodeType != ExpressionType.Extension, "extension nodes must be rewritten");
+#endif
 
             // if we have Copy, then node type must match
             Debug.Assert(
@@ -1009,6 +1011,13 @@ namespace System.Linq.Expressions.Compiler
 
         private Result RewriteExtensionExpression(Expression expr, Stack stack)
         {
+#if !LINQ
+            if (expr is Microsoft.CSharp.Expressions.AwaitCSharpExpression)
+            {
+                return RewriteAwaitExpression(expr, stack);
+            }
+#endif
+
             Result result = RewriteExpression(expr.ReduceExtensions(), stack);
             // it's at least Copy because we reduced the node
             return new Result(result.Action | RewriteAction.Copy, result.Node);
