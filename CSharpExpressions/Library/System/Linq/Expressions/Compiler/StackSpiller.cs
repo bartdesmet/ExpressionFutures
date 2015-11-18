@@ -138,11 +138,13 @@ namespace System.Linq.Expressions.Compiler
             Debug.Assert(result.Node.NodeType != ExpressionType.Extension, "extension nodes must be rewritten");
 #endif
 
+#if LINQ // The C# spiller never returns a Copy action
             // if we have Copy, then node type must match
             Debug.Assert(
                 result.Action != RewriteAction.Copy || node.NodeType == result.Node.NodeType || node.CanReduce,
                 "rewrite action does not match node object kind"
             );
+#endif
 
             // New type must be reference assignable to the old type
             // (our rewrites preserve type exactly, but the rules for rewriting
@@ -302,13 +304,16 @@ namespace System.Linq.Expressions.Compiler
                     return RewriteMemberAssignment(node, stack);
                 case ExpressionType.Parameter:
                     return RewriteVariableAssignment(node, stack);
+#if LINQ // NB: Reducer runs before spiller, taking away all extension nodes except for Await (which is not assignable anyway).
                 case ExpressionType.Extension:
                     return RewriteExtensionAssignment(node, stack);
+#endif
                 default:
                     throw Error.InvalidLvalue(node.Left.NodeType);
             }
         }
 
+#if LINQ // NB: Reducer runs before spiller, taking away all extension nodes except for Await (which is not assignable anyway).
         private Result RewriteExtensionAssignment(BinaryExpression node, Stack stack)
         {
             node = Expression.Assign(node.Left.ReduceExtensions(), node.Right);
@@ -316,11 +321,13 @@ namespace System.Linq.Expressions.Compiler
             // it's at least Copy because we reduced the node
             return new Result(result.Action | RewriteAction.Copy, result.Node);
         }
+#endif
 
         // LambdaExpression
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stack")]
         private static Result RewriteLambdaExpression(Expression expr, Stack stack)
         {
+#if LINQ
             LambdaExpression node = (LambdaExpression)expr;
 
             // Call back into the rewriter
@@ -331,6 +338,12 @@ namespace System.Linq.Expressions.Compiler
             RewriteAction action = (expr == node) ? RewriteAction.None : RewriteAction.Copy;
 
             return new Result(action, expr);
+#else
+            // NB: We're only spilling for await sites (unlike LINQ where the whole tree is analyzed recursively).
+            //     Nested async lambdas will be reduced prior to spilling, so we don't have to recurse here. We
+            //     don't care about nested synchronous lambdas because those don't have await sites.
+            return new Result(RewriteAction.None, expr);
+#endif
         }
 
         // ConditionalExpression
@@ -731,6 +744,7 @@ namespace System.Linq.Expressions.Compiler
             {
                 case RewriteAction.None:
                     break;
+#if LINQ // The C# spiller never returns a Copy action
                 case RewriteAction.Copy:
                     ElementInit[] newInits = new ElementInit[inits.Count];
                     for (int i = 0; i < inits.Count; i++)
@@ -747,6 +761,7 @@ namespace System.Linq.Expressions.Compiler
                     }
                     expr = Expression.ListInit((NewExpression)rewrittenNew, new TrueReadOnlyCollection<ElementInit>(newInits));
                     break;
+#endif
                 case RewriteAction.SpillStack:
                     RequireNotRefInstance(node.NewExpression);
 
@@ -795,6 +810,7 @@ namespace System.Linq.Expressions.Compiler
             {
                 case RewriteAction.None:
                     break;
+#if LINQ // The C# spiller never returns a Copy action
                 case RewriteAction.Copy:
                     MemberBinding[] newBindings = new MemberBinding[bindings.Count];
                     for (int i = 0; i < bindings.Count; i++)
@@ -803,6 +819,7 @@ namespace System.Linq.Expressions.Compiler
                     }
                     expr = Expression.MemberInit((NewExpression)rewrittenNew, new TrueReadOnlyCollection<MemberBinding>(newBindings));
                     break;
+#endif
                 case RewriteAction.SpillStack:
                     RequireNotRefInstance(node.NewExpression);
 
@@ -1090,11 +1107,14 @@ namespace System.Linq.Expressions.Compiler
             {
                 return RewriteAwaitExpression(expr, stack);
             }
-#endif
 
+            // NB: Reducer runs before the spiller, taking away all extension nodes except for Await.
+            throw ContractUtils.Unreachable;
+#else
             Result result = RewriteExpression(expr.ReduceExtensions(), stack);
             // it's at least Copy because we reduced the node
             return new Result(result.Action | RewriteAction.Copy, result.Node);
+#endif
         }
 
 #endregion

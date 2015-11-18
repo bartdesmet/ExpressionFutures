@@ -30,7 +30,9 @@ namespace System.Linq.Expressions.Compiler
                 get { return _action; }
             }
 
+#if LINQ // The C# spiller never returns a Copy action, which results in copying of member bindings
             internal abstract MemberBinding AsBinding();
+#endif
             internal abstract Expression AsExpression(Expression target);
 
             internal static BindingRewriter Create(MemberBinding binding, StackSpiller spiller, Stack stack)
@@ -69,6 +71,7 @@ namespace System.Linq.Expressions.Compiler
                 }
             }
 
+#if LINQ // The C# spiller never returns a Copy action, which results in copying of member bindings
             internal override MemberBinding AsBinding()
             {
                 switch (_action)
@@ -85,6 +88,7 @@ namespace System.Linq.Expressions.Compiler
                 }
                 throw ContractUtils.Unreachable;
             }
+#endif
 
             internal override Expression AsExpression(Expression target)
             {
@@ -145,6 +149,7 @@ namespace System.Linq.Expressions.Compiler
                 }
             }
 
+#if LINQ // The C# spiller never returns a Copy action, which results in copying of member bindings
             internal override MemberBinding AsBinding()
             {
                 switch (_action)
@@ -169,6 +174,7 @@ namespace System.Linq.Expressions.Compiler
                 }
                 throw ContractUtils.Unreachable;
             }
+#endif
 
             internal override Expression AsExpression(Expression target)
             {
@@ -219,6 +225,7 @@ namespace System.Linq.Expressions.Compiler
                 _rhs = result.Node;
             }
 
+#if LINQ // The C# spiller never returns a Copy action, which results in copying of member bindings
             internal override MemberBinding AsBinding()
             {
                 switch (_action)
@@ -230,6 +237,7 @@ namespace System.Linq.Expressions.Compiler
                 }
                 throw ContractUtils.Unreachable;
             }
+#endif
 
             internal override Expression AsExpression(Expression target)
             {
