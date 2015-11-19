@@ -54,8 +54,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
             }
         }
 
-        // TODO: CatchBlock also introduces scope; [Async]Lambda hoists by itself.
-        // TODO: Deal with Using blocks as well (should have been reduced already upon entering this; ensure).
+        // NB: We don't have to deal with CatchBlock nodes which also introduce scope because the AwaitRewriter
+        //     runs after lowering Try blocks. When lowering a CatchBlock containing an Await node, its exception
+        //     variable gets hoisted to the enclosing Block. If there's no Await, there's nothing to worry about.
+
+        // NB: We don't have to deal with Using, For, and ForEach blocks because the AwaitRewriter runs after the
+        //     reduction step.
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
