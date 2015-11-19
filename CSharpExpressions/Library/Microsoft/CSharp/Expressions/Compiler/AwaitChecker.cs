@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using static System.FormattableString;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
@@ -71,6 +72,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return node;
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override SwitchCase VisitSwitchCase(SwitchCase node)
             {
                 // NB: This restriction makes stack spilling for switch cases easier. C# doesn't allow
@@ -80,7 +82,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                 Visit(node.Body);
 
-                _forbidden.Push($"{nameof(SwitchCase)}.{nameof(SwitchCase.TestValues)}");
+                _forbidden.Push(Invariant($"{nameof(SwitchCase)}.{nameof(SwitchCase.TestValues)}"));
                 {
                     Visit(node.TestValues);
                 }

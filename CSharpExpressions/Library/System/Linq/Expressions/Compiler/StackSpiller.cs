@@ -73,11 +73,13 @@ namespace System.Linq.Expressions.Compiler
         /// </summary>
         private readonly Stack _startingStack;
 
+#if LINQ // NB: our compiler doesn't inline
         /// <summary>
         /// Lambda rewrite result. We need this for inlined lambdas to figure
         /// out whether we need to guarentee it an empty stack.
         /// </summary>
         private RewriteAction _lambdaRewrite;
+#endif
 
         /// <summary>
         /// Analyzes a lambda, producing a new one that has correct invariants
@@ -102,7 +104,9 @@ namespace System.Linq.Expressions.Compiler
 
             // Lambda starts with an empty stack
             Result body = RewriteExpressionFreeTemps(lambda.Body, _startingStack);
+#if LINQ // NB: our compiler doesn't inline
             _lambdaRewrite = body.Action;
+#endif
 
             VerifyTemps();
 
