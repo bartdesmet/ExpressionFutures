@@ -212,6 +212,8 @@ Await expressions are of type `AwaitCSharpExpression` and support the awaiter pa
 
 The typing of await expressions follows the awaiter pattern and obtains the return type of the `GetResult` method on the awaiter. This allows those nodes to be composed with any existing LINQ expression nodes.
 
+A derived class `DynamicAwaitCSharpExpression` with a corresponding `DynamicAwait` factory method on `DynamicCSharpExpression` is provided to await a dynamically typed operand. This node reduces the required calls to `GetAwaiter`, `IsCompleted`, and `GetResult` using more primitive `DynamicCSharpExpression` nodes. This node has the same kind as the statically typed variant but its `GetAwaiterMethod` property always returns `null`.
+
 Await expression nodes are not reducible; the reduction of the closest enclosing async lambda is responsible for its reduction into the await pattern within the generated state machine (see further).
 
 ##### Example
@@ -302,9 +304,9 @@ This fails to compile with:
 error CS8074: An expression tree lambda may not contain a dictionary initializer.
 ```
 
-Our options to support this are limited given the non-extensible nature of `MemberBinding` nodes in the LINQ expression API. We'd need proper support for reduction of custom binding nodes in order to provide an extension to set of bindings supportyed by the `MemberInitExpression` node.
+Our options to support this are limited given the non-extensible nature of `MemberBinding` nodes in the LINQ expression API. We'd need proper support for reduction of custom binding nodes in order to provide an extension to set of bindings supported by the `MemberInitExpression` node.
 
-To work around this limitation as get a glimpse of what it may look like, we've hijacked `ElementInit` and tricked it into calling a specified indexer's `set` method. Unfortunately, `ElementInit` is only supported in `ListInitExpression` nodes so mileage is limited.
+To work around this limitation and get a glimpse of what it may look like, we've hijacked `ElementInit` and tricked it into calling a specified indexer's `set` method. Unfortunately, `ElementInit` is only supported in `ListInitExpression` nodes and `MemberListBinding` nodes so mileage is limited.
 
 An example of this hack is shown below:
 
