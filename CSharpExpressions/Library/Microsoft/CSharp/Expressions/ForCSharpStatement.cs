@@ -16,17 +16,23 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class ForCSharpStatement : ConditionalLoopCSharpStatement
     {
-        internal ForCSharpStatement(ReadOnlyCollection<BinaryExpression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        internal ForCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(test, body, breakLabel, continueLabel)
         {
+            Variables = variables;
             Initializers = initializers;
             Iterators = iterators;
         }
 
         /// <summary>
+        /// Gets a collection of variables in scope for the loop.
+        /// </summary>
+        public ReadOnlyCollection<ParameterExpression> Variables { get; }
+
+        /// <summary>
         /// Gets a collection of loop initializer expressions.
         /// </summary>
-        public ReadOnlyCollection<BinaryExpression> Initializers { get; }
+        public ReadOnlyCollection<Expression> Initializers { get; }
 
         /// <summary>
         /// Gets a collection of loop iterator expressions.
@@ -55,26 +61,27 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="breakLabel">The <see cref="LoopCSharpStatement.BreakLabel" /> property of the result.</param>
         /// <param name="continueLabel">The <see cref="LoopCSharpStatement.ContinueLabel" /> property of the result.</param>
+        /// <param name="variables">The <see cref="ForCSharpStatement.Variables" /> property of the result.</param>
         /// <param name="initializers">The <see cref="ForCSharpStatement.Initializers" /> property of the result.</param>
         /// <param name="test">The <see cref="ConditionalLoopCSharpStatement.Test" /> property of the result.</param>
         /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
         /// <param name="iterators">The <see cref="ForCSharpStatement.Iterators" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ForCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<BinaryExpression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body)
+        public ForCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && initializers == this.Initializers && test == this.Test && iterators == this.Iterators && body == this.Body)
+            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && variables == this.Variables && initializers == this.Initializers && test == this.Test && iterators == this.Iterators && body == this.Body)
             {
                 return this;
             }
 
-            return CSharpExpression.For(initializers, test, iterators, body, breakLabel, continueLabel);
+            return CSharpExpression.For(variables, initializers, test, iterators, body, breakLabel, continueLabel);
         }
 
-        internal static ForCSharpStatement Make(ReadOnlyCollection<BinaryExpression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        internal static ForCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
         {
             // TODO: optimized nodes for for(;;) and loops with a single initializer and single iterator
 
-            return new ForCSharpStatement(initializers, test, iterators, body, breakLabel, continueLabel);
+            return new ForCSharpStatement(variables, initializers, test, iterators, body, breakLabel, continueLabel);
         }
 
         /// <summary>
@@ -101,11 +108,9 @@ namespace Microsoft.CSharp.Expressions
             var j = 0;
             var expressions = new Expression[n];
 
-            var variables = new ParameterExpression[initializerCount];
             for (var i = 0; i < initializerCount; i++)
             {
                 var initializer = Initializers[i];
-                variables[i] = (ParameterExpression)initializer.Left;
                 expressions[j++] = initializer;
             }
 
@@ -135,7 +140,7 @@ namespace Microsoft.CSharp.Expressions
 
             expressions[j++] = Expression.Label(@break);
 
-            var res = Expression.Block(typeof(void), variables, expressions);
+            var res = Expression.Block(typeof(void), Variables, expressions);
 
             return res;
         }
@@ -187,12 +192,13 @@ namespace Microsoft.CSharp.Expressions
             // NB: While C# requires all initializers to be of the same type, we don't quite need that restriction here.
             //     This can be revisited. We will check whether all initializers are simple assignments though.
 
-            var initializerList = initializers.ToReadOnly();
+            var initializerList = initializers.ToReadOnly<Expression>();
             RequiresNotNullItems(initializerList, nameof(initializers));
 
-            var variables = new HashSet<ParameterExpression>();
+            var uniqueVariables = new HashSet<ParameterExpression>();
+            var variables = new List<ParameterExpression>();
 
-            foreach (var initializer in initializerList)
+            foreach (BinaryExpression initializer in initializerList)
             {
                 if (initializer.NodeType != ExpressionType.Assign || initializer.Left.NodeType != ExpressionType.Parameter)
                 {
@@ -201,7 +207,80 @@ namespace Microsoft.CSharp.Expressions
 
                 var variable = (ParameterExpression)initializer.Left;
 
-                if (!variables.Add(variable))
+                if (!uniqueVariables.Add(variable))
+                {
+                    throw LinqError.DuplicateVariable(variable);
+                }
+
+                // NB: We keep them in the order specified and don't rely on the hash set.
+                variables.Add(variable);
+            }
+
+            var variableList = variables.ToReadOnly();
+
+            var iteratorList = iterators.ToReadOnly();
+            RequiresNotNullItems(iteratorList, nameof(iterators));
+
+            return ForCSharpStatement.Make(variableList, initializerList, test, iteratorList, body, @break, @continue);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ForCSharpStatement"/> that represents a for loop.
+        /// </summary>
+        /// <param name="variables">The variables in scope of the loop.</param>
+        /// <param name="initializers">The loop initializers.</param>
+        /// <param name="test">The condition of the loop.</param>
+        /// <param name="iterators">The loop iterators.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body)
+        {
+            return For(variables, initializers, test, iterators, body, null, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ForCSharpStatement"/> that represents a for loop.
+        /// </summary>
+        /// <param name="variables">The variables in scope of the loop.</param>
+        /// <param name="initializers">The loop initializers.</param>
+        /// <param name="test">The condition of the loop.</param>
+        /// <param name="iterators">The loop iterators.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break)
+        {
+            return For(variables, initializers, test, iterators, body, @break, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ForCSharpStatement"/> that represents a for loop.
+        /// </summary>
+        /// <param name="variables">The variables in scope of the loop.</param>
+        /// <param name="initializers">The loop initializers.</param>
+        /// <param name="test">The condition of the loop.</param>
+        /// <param name="iterators">The loop iterators.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue)
+        {
+            ValidateLoop(test, body, @break, @continue, optionalTest: true);
+
+            // NB: While C# requires all initializers to be of the same type, we don't quite need that restriction here.
+            //     This can be revisited. We will check whether all initializers are simple assignments though.
+
+            var variableList = variables.ToReadOnly();
+
+            var initializerList = initializers.ToReadOnly<Expression>();
+            RequiresNotNullItems(initializerList, nameof(initializers));
+
+            var uniqueVariables = new HashSet<ParameterExpression>();
+
+            foreach (var variable in variableList)
+            {
+                if (!uniqueVariables.Add(variable))
                 {
                     throw LinqError.DuplicateVariable(variable);
                 }
@@ -210,7 +289,7 @@ namespace Microsoft.CSharp.Expressions
             var iteratorList = iterators.ToReadOnly();
             RequiresNotNullItems(iteratorList, nameof(iterators));
 
-            return ForCSharpStatement.Make(initializerList, test, iteratorList, body, @break, @continue);
+            return ForCSharpStatement.Make(variableList, initializerList, test, iteratorList, body, @break, @continue);
         }
     }
 
@@ -224,7 +303,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitFor(ForCSharpStatement node)
         {
-            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), VisitAndConvert(node.Initializers, nameof(VisitFor)), Visit(node.Test), Visit(node.Iterators), Visit(node.Body));
+            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), VisitAndConvert(node.Variables, nameof(VisitFor)), Visit(node.Initializers), Visit(node.Test), Visit(node.Iterators), Visit(node.Body));
         }
     }
 }

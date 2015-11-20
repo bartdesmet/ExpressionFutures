@@ -81,16 +81,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {
-            var n = node.Initializers.Count;
-
-            var variables = new ParameterExpression[n];
-
-            for (var i = 0; i < n; i++)
-            {
-                variables[i] = (ParameterExpression)node.Initializers[i].Left;
-            }
-
-            Push(variables);
+            Push(node.Variables);
 
             var res = base.VisitFor(node);
 

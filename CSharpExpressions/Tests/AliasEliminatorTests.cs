@@ -147,9 +147,9 @@ namespace Tests
             var e = CSharpExpression.For(new[] { i }, b, null, CSharpExpression.For(new[] { i }, b, null, x));
             var r = (ForCSharpStatement)AliasEliminator.Eliminate(e);
 
-            var v1 = r.Initializers[0].Left;
+            var v1 = r.Variables[0];
             var e1 = (ForCSharpStatement)r.Body;
-            var v2 = e1.Initializers[0].Left;
+            var v2 = e1.Variables[0];
             var e2 = e1.Body;
 
             Assert.AreSame(v2, e2);
