@@ -525,6 +525,28 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Switch_Compile_GotoDefault_Null()
+        {
+            AssertCompile<int?>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("D"),
+                    CSharpStatement.SwitchCase(log("A"), 1),
+                    CSharpStatement.SwitchCase(log("B"), 2),
+                    CSharpStatement.SwitchCase(Expression.Block(log("N"), CSharpStatement.GotoDefault(), log("X")), default(int?))
+                ),
+                new Asserts<int?>
+                {
+                    { 0, "E", "D" },
+                    { 1, "E", "A" },
+                    { 2, "E", "B" },
+                    { 3, "E", "D" },
+                    { null, "E", "N", "D" }
+                }
+            );
+        }
+
+        [TestMethod]
         public void Switch_Compile_GotoDefault_Error()
         {
             var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoDefault(), 1));
