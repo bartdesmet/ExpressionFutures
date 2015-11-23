@@ -48,7 +48,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.SwitchCase(body, TestValues);
+            return CSharpExpression.SwitchCase(body, (IEnumerable<object>)TestValues);
         }
     }
 
@@ -66,6 +66,10 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         public static CSharpSwitchCase SwitchCase<T>(Expression body, params T[] testValues)
         {
+            // TODO: Review this signature; the use of a generic unconstrained type can be subtle for overload resolution.
+            //       Should we have a specialization for each valid governing type (and its nullable)? We can code-gen it
+            //       but there'd be 21 overloads, and still we won't have enum support...
+
             return SwitchCase(body, (IEnumerable<T>)testValues);
         }
 
