@@ -413,6 +413,46 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void Switch_Compile_GotoDefault1()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("D"),
+                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoDefault(), log("X")), 1),
+                    CSharpStatement.SwitchCase(log("B"), 2)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E", "D" },
+                    { 1, "E", "A", "D" },
+                    { 2, "E", "B" },
+                    { 3, "E", "D" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_GotoDefault2()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("D"),
+                    CSharpStatement.SwitchCase(log("B"), 2),
+                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoDefault(), log("X")), 1)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E", "D" },
+                    { 1, "E", "A", "D" },
+                    { 2, "E", "B" },
+                    { 3, "E", "D" },
+                }
+            );
+        }
+
         private static SwitchCSharpStatement SwitchLogValue(Func<string, Expression> log, Expression expression, params CSharpSwitchCase[] cases)
         {
             var b = Expression.Label();
