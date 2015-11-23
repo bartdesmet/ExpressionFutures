@@ -125,12 +125,15 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var @case = Cases[i];
 
+                    var foundNull = false;
+
                     foreach (var testValue in @case.TestValues)
                     {
                         if (testValue == null)
                         {
                             Debug.Assert(!hasNull);
                             hasNull = true;
+                            foundNull = true;
                         }
                     }
 
@@ -140,7 +143,7 @@ namespace Microsoft.CSharp.Expressions
                     //     non-null test values in a switch case. Also, the reduced form would become more clunky for the reader
                     //     although we have other precedents a la async lambdas of course :-).
 
-                    if (@case.TestValues.Count == 1 && hasNull)
+                    if (@case.TestValues.Count == 1 && foundNull)
                     {
                         nullCase = @case;
 
@@ -178,7 +181,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else if (hasNull)
                 {
-                    // We have a case with a 'null' test value but it has other non-null test value too; we can't lower to non-
+                    // We have a case with a 'null' test value but it has other non-null test values too; we can't lower to non-
                     // null types. This should be the rare case. The DLR will further lower to if-then-else branches.
 
                     var lowered = LowerSwitchStatement(Cases, null, governingType);
@@ -187,7 +190,6 @@ namespace Microsoft.CSharp.Expressions
 
                     exprs = new Expression[]
                     {
-                        assignSwitchValue,
                         @switch,
                         @break,
                     };
@@ -198,16 +200,38 @@ namespace Microsoft.CSharp.Expressions
 
                     var lowered = LowerSwitchStatement(Cases, null, governingTypeNonNull);
 
-                    var @switch = Expression.Switch(value, lowered.DefaultBody, lowered.NonNullCases);
+                    var defaultBody = lowered.DefaultBody;
 
-                    var nullCheck = Expression.IfThen(hasValue, @switch);
-
-                    exprs = new Expression[]
+                    if (defaultBody != null)
                     {
-                        assignSwitchValue,
-                        nullCheck,
-                        @break,
-                    };
+                        var defaultLabel = Expression.Label();
+
+                        var @switch = Expression.Switch(value, Expression.Goto(defaultLabel), lowered.NonNullCases);
+
+                        var defaultCase = Expression.Block(Expression.Label(defaultLabel), defaultBody);
+
+                        var nullCheck = Expression.IfThenElse(hasValue, @switch, defaultCase);
+
+                        exprs = new Expression[]
+                        {
+                            assignSwitchValue,
+                            nullCheck,
+                            @break,
+                        };
+                    }
+                    else
+                    {
+                        var @switch = Expression.Switch(value, lowered.NonNullCases);
+
+                        var nullCheck = Expression.IfThen(hasValue, @switch);
+
+                        exprs = new Expression[]
+                        {
+                            assignSwitchValue,
+                            nullCheck,
+                            @break,
+                        };
+                    }
                 }
             }
             else
