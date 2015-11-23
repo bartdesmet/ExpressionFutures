@@ -363,10 +363,10 @@ We provide support for various loop constructs, including `while`, `do`, `for`, 
 
 The `WhileCSharpStatement` node represents a `while` conditional loop deriving from `ConditionalLoopCSharpStatement`. It reduces into a `Loop` expression with an `IfThen` expression inside to check for loop termination conditions.
 
-An example of creating a `While` expression is shown below:
+An example of creating a `While` statement is shown below:
 
 ```csharp
-CSharpExpression.While(
+CSharpStatement.While(
   Expression.LessThan(i, Expression.Constant(10)),
   Expression.Block(
     Expression.Call(writeLine, i),
@@ -379,10 +379,10 @@ CSharpExpression.While(
 
 The `DoCSharpStatement` node represents a `do` conditional loop deriving from `ConditionalLoopCSharpStatement`. It reduces into a `Block` expression holding the `Body` of the loop, an `IfThen` check for the loop termination condition, and various `Label` expressions denoting the `break` and `continue` labels.
 
-An example of creating a `Do` expression is shown below:
+An example of creating a `Do` statement is shown below:
 
 ```csharp
-CSharpExpression.Do(
+CSharpStatement.Do(
   Expression.Block(
     Expression.Call(writeLine, i),
     Expression.PostIncrementAssign(i)
@@ -416,10 +416,10 @@ Reduction of a `ForEach` node uses a strategy similar to the C# compiler's. Spec
 
 Conform the C# specification, the reduced expression emits a call to `IDisposable.Dispose` if the enumerator implements `IDisposable`. It avoids boxing by calling the method implementing `IDisposable.Dispose` in case the enumerator is a value type. It also supports a conversion of the `Current` property of the enumerator to the type of the specified loop variable.
 
-An example of creating a `ForEach` expression is shown below:
+An example of creating a `ForEach` statement is shown below:
 
 ```csharp
-CSharpExpression.ForEach(
+CSharpStatement.ForEach(
   x,
   Expression.Constant(new[] { 1, 2, 3 }),
   Expression.Call(writeLine, x)
@@ -436,10 +436,10 @@ The `UsingCSharpStatement` node represents a `using` statement. It contains a `V
 
 Reduction of a `Using` node consists of a `Block` evaluating the `Resource` and assigning it to the `Variable`, followed by a `TryFinally` expression which executes the `Body` in the protected region and disposes the resource held in the `Variable` (after an `IfThen` null-check for non-value types) in the finally handler. Boxing of the resource held in the `Variable` is avoided in case its type is a value type.
 
-An example of creating a `Using` expression is shown below:
+An example of creating a `Using` statement is shown below:
 
 ```csharp
-CSharpExpression.Using(
+CSharpStatement.Using(
   fs,
   Expression.Call(fileOpen, "foo.txt"),
   Expression.Call(printAllLines, fs)
@@ -456,10 +456,10 @@ The `LockCSharpStatement` node represents a `lock` statement. It contains an `Ex
 
 Reduction of a `Lock` node consists of a `Block` containing a call to the `Monitor.Enter(object, ref bool)` method, followed by a `TryFinally` expression containing the execution of the `Body` in the protected region and a call to `Monitor.Exit(object)` in the finally handler. A `lockTaken` variable is introduced to perform an `IfThen` check prior to calling `Monitor.Exit(object)`. This is completely analogous to the code emitted by the C# compiler.
 
-An example of creating a `Lock` expression is shown below:
+An example of creating a `Lock` statement is shown below:
 
 ```csharp
-CSharpExpression.Lock(
+CSharpStatement.Lock(
   Expression.Constant(gate),
   Expression.Call(foo)
 )
