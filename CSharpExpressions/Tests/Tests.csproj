@@ -72,6 +72,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="DynamicTests.cs" />
+    <Compile Include="GotoTests.cs" />
     <Compile Include="HelpersTests.cs" />
     <Compile Include="AliasEliminatorTests.cs" />
     <Compile Include="IndexInitTests.cs" />
