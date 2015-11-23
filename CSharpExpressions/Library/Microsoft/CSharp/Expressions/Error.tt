@@ -45,6 +45,15 @@ var errors = new[]
     new { Name = "ConditionalAccessRequiresReadableProperty", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional access expressions require readable properties." },
 	new { Name = "TooManyArguments", ExceptionType = "ArgumentException", Args = 0, Message = "Too many arguments have been specified." },
 	new { Name = "ExtensionMethodRequiresInstance", ExceptionType = "ArgumentException", Args = 0, Message = "Conditional call expressions for extensions methods should specify an instance expression." },
+	new { Name = "InvalidSwitchType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid governing type for a switch statement." },
+	new { Name = "DuplicateTestValue", ExceptionType = "ArgumentException", Args = 1, Message = "The test value '{0}' occurs more than once." },
+	new { Name = "SwitchCantHaveNullCase", ExceptionType = "ArgumentException", Args = 1, Message = "A 'null' test value cannot be used in a switch statement with governing type '{0}'." },
+	new { Name = "SwitchCaseHasIncompatibleType", ExceptionType = "ArgumentException", Args = 2, Message = "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'." },
+	new { Name = "TestValuesShouldHaveConsistentType", ExceptionType = "ArgumentException", Args = 0, Message = "All specified test values should have the same type." },
+	new { Name = "SwitchBreakLabelShouldBeVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The break label of a switch statement should be of type 'void'." },
+	new { Name = "InvalidGotoCase", ExceptionType = "ArgumentException", Args = 1, Message = "A 'goto case {0}' statement was found but the containing switch statement has no such label." },
+	new { Name = "InvalidGotoDefault", ExceptionType = "ArgumentException", Args = 0, Message = "A 'goto default' statement was found but the containing switch statement has no default label." },
+	new { Name = "GotoCanOnlyBeReducedInSwitch", ExceptionType = "InvalidOperationException", Args = 0, Message = "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

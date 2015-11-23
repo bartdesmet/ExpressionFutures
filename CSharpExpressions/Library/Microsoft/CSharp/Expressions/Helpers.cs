@@ -566,5 +566,17 @@ namespace Microsoft.CSharp.Expressions
 
             return false;
         }
+
+        public static string ToDebugString(this object o)
+        {
+            return o == null ? "null" : o.ToString();
+        }
+
+        private static object s_null = new object();
+
+        public static object OrNullSentinel(this object o)
+        {
+            return o ?? s_null;
+        }
     }
 }

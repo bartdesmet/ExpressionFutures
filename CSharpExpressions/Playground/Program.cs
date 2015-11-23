@@ -23,6 +23,7 @@ namespace Playground
             Index();
             NewMultidimensionalArrayInit();
             AsyncLambda();
+            Switch();
             While();
             DoWhile();
             Using();
@@ -779,6 +780,167 @@ namespace Playground
             );
             var res = async.Compile()();
             res.Wait();
+        }
+
+        static void Switch()
+        {
+            Switch1();
+            Switch2();
+            Switch3();
+            Switch4();
+            Switch5();
+            Switch6();
+            Switch7();
+        }
+
+        static void Switch1()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(int));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+            );
+
+            var f = Expression.Lambda<Action<int>>(s, p).Compile();
+            f(1);
+            f(2);
+            f(3);
+        }
+
+        static void Switch2()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(int));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                Log(Expression.Empty(), "D"),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+            );
+
+            var f = Expression.Lambda<Action<int>>(s, p).Compile();
+            f(1);
+            f(2);
+            f(3);
+        }
+
+        static void Switch3()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(int));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                CSharpExpression.SwitchCase(Expression.Block(Log(Expression.Empty(), "1"), Expression.Break(b), Log(Expression.Empty(), "X")), 1),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+            );
+
+            var f = Expression.Lambda<Action<int>>(s, p).Compile();
+            f(1);
+            f(2);
+            f(3);
+        }
+
+        static void Switch4()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(int?));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+            );
+
+            var f = Expression.Lambda<Action<int?>>(s, p).Compile();
+            f(1);
+            f(2);
+            f(3);
+            f(null);
+        }
+
+        static void Switch5()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(int?));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                Log(Expression.Empty(), "D"),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+            );
+
+            var f = Expression.Lambda<Action<int?>>(s, p).Compile();
+            f(1);
+            f(2);
+            f(3);
+            f(null);
+        }
+
+        static void Switch6()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(int?));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                Log(Expression.Empty(), "D"),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "N"), default(int?))
+            );
+
+            var f = Expression.Lambda<Action<int?>>(s, p).Compile();
+            f(1);
+            f(2);
+            f(3);
+            f(null);
+        }
+
+        static void Switch7()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(string));
+            var b = Expression.Label();
+
+            var s = CSharpExpression.Switch(
+                p,
+                b,
+                Log(Expression.Empty(), "D"),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), "1"),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), "2"),
+                CSharpExpression.SwitchCase(Log(Expression.Empty(), "N"), default(string))
+            );
+
+            var f = Expression.Lambda<Action<string>>(s, p).Compile();
+            f("1");
+            f("2");
+            f("3");
+            f(null);
         }
 
         static void While()

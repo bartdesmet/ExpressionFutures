@@ -62,8 +62,10 @@
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMemberCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Helpers.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\GotoCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpIndexInit.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\CSharpSwitchCase.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\ConvertDynamicCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicAwaitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.cs">
@@ -109,6 +111,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DoCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\LockCSharpStatement.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UsingCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\WhileCSharpStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

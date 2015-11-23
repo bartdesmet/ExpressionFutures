@@ -315,6 +315,78 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.ExtensionMethodRequiresInstance);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid governing type for a switch statement."
+        /// </summary>
+        internal static Exception InvalidSwitchType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidSwitchType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The test value '{0}' occurs more than once."
+        /// </summary>
+        internal static Exception DuplicateTestValue(object p0)
+        {
+            return new ArgumentException(Strings.DuplicateTestValue(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A 'null' test value cannot be used in a switch statement with governing type '{0}'."
+        /// </summary>
+        internal static Exception SwitchCantHaveNullCase(object p0)
+        {
+            return new ArgumentException(Strings.SwitchCantHaveNullCase(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'."
+        /// </summary>
+        internal static Exception SwitchCaseHasIncompatibleType(object p0, object p1)
+        {
+            return new ArgumentException(Strings.SwitchCaseHasIncompatibleType(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "All specified test values should have the same type."
+        /// </summary>
+        internal static Exception TestValuesShouldHaveConsistentType()
+        {
+            return new ArgumentException(Strings.TestValuesShouldHaveConsistentType);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The break label of a switch statement should be of type 'void'."
+        /// </summary>
+        internal static Exception SwitchBreakLabelShouldBeVoid()
+        {
+            return new ArgumentException(Strings.SwitchBreakLabelShouldBeVoid);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
+        /// </summary>
+        internal static Exception InvalidGotoCase(object p0)
+        {
+            return new ArgumentException(Strings.InvalidGotoCase(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A 'goto default' statement was found but the containing switch statement has no default label."
+        /// </summary>
+        internal static Exception InvalidGotoDefault()
+        {
+            return new ArgumentException(Strings.InvalidGotoDefault);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node."
+        /// </summary>
+        internal static Exception GotoCanOnlyBeReducedInSwitch()
+        {
+            return new InvalidOperationException(Strings.GotoCanOnlyBeReducedInSwitch);
+        }
+
     }
 
     /// <summary>
@@ -671,6 +743,90 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid governing type for a switch statement."
+        /// </summary>
+        internal static string InvalidSwitchType(object p0)
+        {
+            return SR.Format(SR.InvalidSwitchType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The test value '{0}' occurs more than once."
+        /// </summary>
+        internal static string DuplicateTestValue(object p0)
+        {
+            return SR.Format(SR.DuplicateTestValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "A 'null' test value cannot be used in a switch statement with governing type '{0}'."
+        /// </summary>
+        internal static string SwitchCantHaveNullCase(object p0)
+        {
+            return SR.Format(SR.SwitchCantHaveNullCase, p0);
+        }
+
+        /// <summary>
+        /// A string like "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'."
+        /// </summary>
+        internal static string SwitchCaseHasIncompatibleType(object p0, object p1)
+        {
+            return SR.Format(SR.SwitchCaseHasIncompatibleType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "All specified test values should have the same type."
+        /// </summary>
+        internal static string TestValuesShouldHaveConsistentType
+        {
+            get
+            {
+                return SR.TestValuesShouldHaveConsistentType;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The break label of a switch statement should be of type 'void'."
+        /// </summary>
+        internal static string SwitchBreakLabelShouldBeVoid
+        {
+            get
+            {
+                return SR.SwitchBreakLabelShouldBeVoid;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
+        /// </summary>
+        internal static string InvalidGotoCase(object p0)
+        {
+            return SR.Format(SR.InvalidGotoCase, p0);
+        }
+
+        /// <summary>
+        /// A string like "A 'goto default' statement was found but the containing switch statement has no default label."
+        /// </summary>
+        internal static string InvalidGotoDefault
+        {
+            get
+            {
+                return SR.InvalidGotoDefault;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node."
+        /// </summary>
+        internal static string GotoCanOnlyBeReducedInSwitch
+        {
+            get
+            {
+                return SR.GotoCanOnlyBeReducedInSwitch;
+            }
+        }
+
     }
 }
 
@@ -716,5 +872,14 @@ namespace System
         public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
         public const string TooManyArguments = "Too many arguments have been specified.";
         public const string ExtensionMethodRequiresInstance = "Conditional call expressions for extensions methods should specify an instance expression.";
+        public const string InvalidSwitchType = "Type '{0}' is not a valid governing type for a switch statement.";
+        public const string DuplicateTestValue = "The test value '{0}' occurs more than once.";
+        public const string SwitchCantHaveNullCase = "A 'null' test value cannot be used in a switch statement with governing type '{0}'.";
+        public const string SwitchCaseHasIncompatibleType = "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'.";
+        public const string TestValuesShouldHaveConsistentType = "All specified test values should have the same type.";
+        public const string SwitchBreakLabelShouldBeVoid = "The break label of a switch statement should be of type 'void'.";
+        public const string InvalidGotoCase = "A 'goto case {0}' statement was found but the containing switch statement has no such label.";
+        public const string InvalidGotoDefault = "A 'goto default' statement was found but the containing switch statement has no default label.";
+        public const string GotoCanOnlyBeReducedInSwitch = "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node.";
     }
 }

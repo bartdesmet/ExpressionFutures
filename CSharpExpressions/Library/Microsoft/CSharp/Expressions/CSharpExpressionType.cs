@@ -62,6 +62,14 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         For,
         /// <summary>
+        /// A node that represents a switch statement.
+        /// </summary>
+        Switch,
+        /// <summary>
+        /// A node that represents a goto statement.
+        /// </summary>
+        Goto,
+        /// <summary>
         /// A node that represents a conditional property or field access.
         /// </summary>
         ConditionalMemberAccess,
