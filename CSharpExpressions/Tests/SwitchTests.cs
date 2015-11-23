@@ -414,6 +414,70 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Switch_Compile_GotoCase_Null1()
+        {
+            AssertCompile<int?>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    Expression.Block(log("D"), CSharpStatement.GotoCase(null), log("X")),
+                    CSharpStatement.SwitchCase(log("A"), 1),
+                    CSharpStatement.SwitchCase(log("B"), 2),
+                    CSharpStatement.SwitchCase(log("N"), default(int?))
+                ),
+                new Asserts<int?>
+                {
+                    { 0, "E", "D", "N" },
+                    { 1, "E", "A" },
+                    { 2, "E", "B" },
+                    { 3, "E", "D", "N" },
+                    { null, "E", "N" }
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_GotoCase_Null2()
+        {
+            AssertCompile<int?>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(log("A"), 1),
+                    CSharpStatement.SwitchCase(Expression.Block(log("B"), CSharpStatement.GotoCase(null), log("X")), 2),
+                    CSharpStatement.SwitchCase(log("N"), default(int?))
+                ),
+                new Asserts<int?>
+                {
+                    { 0, "E" },
+                    { 1, "E", "A" },
+                    { 2, "E", "B", "N" },
+                    { 3, "E" },
+                    { null, "E","N" }
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_GotoCase_Null3()
+        {
+            AssertCompile<int?>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(log("A"), 1),
+                    CSharpStatement.SwitchCase(log("B"), 2),
+                    CSharpStatement.SwitchCase(Expression.Block(log("N"), CSharpStatement.GotoCase(1), log("X")), default(int?))
+                ),
+                new Asserts<int?>
+                {
+                    { 0, "E" },
+                    { 1, "E", "A" },
+                    { 2, "E", "B" },
+                    { 3, "E" },
+                    { null, "E", "N", "A" }
+                }
+            );
+        }
+
+        [TestMethod]
         public void Switch_Compile_GotoCase_Error()
         {
             var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoCase(2), 1));

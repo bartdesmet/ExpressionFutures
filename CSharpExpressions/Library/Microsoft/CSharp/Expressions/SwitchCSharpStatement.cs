@@ -331,7 +331,7 @@ namespace Microsoft.CSharp.Expressions
                     newNonNullCases[i++] = ConvertSwitchCase(@case, newBody, testValueType);
                 }
 
-                var newNullCaseBody = nullCase?.Body;
+                var newNullCaseBody = rewriter.Visit(nullCase?.Body);
 
                 if (nullCase != null)
                 {
