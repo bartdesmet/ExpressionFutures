@@ -464,3 +464,28 @@ CSharpExpression.Lock(
   Expression.Call(foo)
 )
 ```
+
+##### Switch
+
+Even though the DLR has a `SwitchExpression`, we've introduced a custom construct for C# to capture some specific semantics. The `SwitchCSharpStatement` node represents a `switch` statement. It contains a `SwitchValue` to switch on, a `BreakLabel` to denote the label to break out of the `switch`, a `Cases` collection containing the switch cases, and a `DefaultBody` for the default case.
+
+Differences from the DLR node include:
+- C# switch statements have type `void`.
+- C# switch statements can have no cases with test values and/or no default case.
+- C# switch statements support `GotoCase` and `GotoDefault` control flow.
+
+Note that the support for `GotoCase` and `GotoDefault` is realized by the reduction phase of the node. It'd be hard to provide this type of control flow in a DLR `SwitchExpression` without relying on a node higher up (e.g. a custom `Lambda` node) to perform a rewrite of the entire body. The reduction process is described in more detail below.
+
+Factory methods for `SwitchCSharpStatement` check whether all test values for cases are unique and consistently typed. The type of the switch value and the cases is checked against the supported governing types conform the C# language specification. Null test values are supported for governing types that are either `string` or a nullable value type.
+
+Each switch case is described as a `CSharpSwitchCase` node. Unlike the DLR `SwitchCase`, the `TestValues` collection contains constant values of type `object` rather than `Expression` nodes. This reflects the restriction of the C# language whereby test cases have to be compile-time constants. Alternatively, we could use `Expression` nodes here and require them to be of type `Constant`. Each node also contains a `Body` expression containg the body of the switch case.
+
+Factory methods for `CSharpSwitchCase` test for the presence of at least one test value and check the governing type of the test values to be valid and consistent.
+
+Note that `CSharpSwitchCase` nodes don't have a `LabelTarget` property for use in `Goto` statements targeting the case. Instead, we decided to support a `GotoCase` node with a `Value` property of type `object` referring to the case to jump to. This retains the original user intent which is useful when expression trees are used to translate C# statements to a foreign language, preserving the exact `goto case` statements.
+
+Reduction of a `Switch` node is non-trivial and involves a lowering step whereby the cases of the `switch` are analyzed for `goto case` and `goto default` control transfers. For any cases that are jump targets, a `LabelTarget` is created, a `Label` expression is prepended to the case body, and the `GotoCase` and `GotoDefault` statements are rewritten to `Goto` expressions that jump to these labels. A `Block` expression wraps the lowered form of the `Switch` node and appends a `Label` expression for the `BreakLabel`.
+
+Generally speaking, the `Switch` node reduces into the DLR equivalent, therefore keeping the rewrite minimally invasive. This is done in order to make consuming the C# expression through a (reducing) `ExpressionVisitor` reasonable given that we have a good DLR construct to emit (unlike for `AsyncLambda` where we have to do an overhaul and the reduced form isn't human-readable).
+
+However, we optimize a few cases that the DLR fails to optimize for. In particular, we have special treatment for switches with a nullable governing type cases in order to emit an `IfThenElse` with null-checking logic wrapping the `Switch` on non-null values. The DLR doesn't optimize this case and emits a chain of `IfThenElse` nodes rather than leveraging the `switch` IL instruction. This optimization is analogous to the one in the C# and VB compilers.
