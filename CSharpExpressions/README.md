@@ -474,6 +474,38 @@ Differences from the DLR node include:
 - C# switch statements can have no cases with test values and/or no default case.
 - C# switch statements support `GotoCase` and `GotoDefault` control flow.
 
+An example of creating a `Switch` expression is shown below:
+
+```csharp
+CSharpStatement.Switch(
+  switchValue,
+  breakLabel,
+  Expression.Call(cout, "Default"),
+  CSharpStatement.SwitchCase(
+    Expression.Call(cout, "Even"),
+	0, 2, 4
+  ),
+  CSharpStatement.SwitchCase(
+    CSharpStatement.GotoCase(0),
+	6, 8
+  ),
+  CSharpStatement.SwitchCase(
+    Expression.Call(cout, "Odd"),
+	1, 3, 5
+  ),
+  CSharpStatement.SwitchCase(
+    CSharpStatement.GotoCase(1),
+	7, 9
+  ),
+  CSharpStatement.SwitchCase(
+    CSharpStatement.GotoDefault(),
+	-1
+  )
+)
+```
+
+where `switchValue` is the expression of type `int` representing the value to switch on, and `breakLabel` is a `LabelTarget` of type `void`.
+
 Note that the support for `GotoCase` and `GotoDefault` is realized by the reduction phase of the node. It'd be hard to provide this type of control flow in a DLR `SwitchExpression` without relying on a node higher up (e.g. a custom `Lambda` node) to perform a rewrite of the entire body. The reduction process is described in more detail below.
 
 Factory methods for `SwitchCSharpStatement` check whether all test values for cases are unique and consistently typed. The type of the switch value and the cases is checked against the supported governing types conform the C# language specification. Null test values are supported for governing types that are either `string` or a nullable value type.
