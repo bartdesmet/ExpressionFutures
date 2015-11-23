@@ -333,6 +333,8 @@ namespace Microsoft.CSharp.Expressions
 
                 var newNullCaseBody = rewriter.Visit(nullCase?.Body);
 
+                newNullCaseBody = EnsureVoid(newNullCaseBody);
+
                 if (nullCase != null)
                 {
                     var jumpTarget = default(LabelTarget);
@@ -361,13 +363,14 @@ namespace Microsoft.CSharp.Expressions
             else
             {
                 var newNonNullCases = nonNullCases.Select(@case => ConvertSwitchCase(@case, @case.Body, testValueType)).ToArray();
-                var newDefaultBody = DefaultBody;
+                var newDefaultBody = EnsureVoid(DefaultBody);
+                var newNullCaseBody = EnsureVoid(nullCase?.Body);
 
                 return new LoweredSwitchStatement
                 {
                     DefaultBody = newDefaultBody,
                     NonNullCases = newNonNullCases,
-                    NullCaseBody = EnsureVoid(nullCase?.Body),
+                    NullCaseBody = newNullCaseBody,
                 };
             }
         }
@@ -398,6 +401,7 @@ namespace Microsoft.CSharp.Expressions
             protected override Expression VisitSwitch(SwitchExpression node)
             {
                 // NB: Nested switch statements end the reach of "goto case" and "goto default" statements.
+                // DESIGN: Should we just not care about non-C# switches here?
                 return node;
             }
         }

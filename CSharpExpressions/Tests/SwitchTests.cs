@@ -17,7 +17,7 @@ namespace Tests
     public class SwitchTests
     {
         [TestMethod]
-        public void Switch_Factory_ArgumentCheckin()
+        public void Switch_Factory_ArgumentChecking()
         {
             var value = Expression.Constant(1);
             var breakLabel = Expression.Label();
@@ -73,6 +73,67 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, nonIntCases));
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases));
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases.AsEnumerable()));
+        }
+
+        [TestMethod]
+        public void Switch_Properties()
+        {
+            var value = Expression.Constant(1);
+            var label = Expression.Label();
+            var defaultBody = Expression.Empty();
+            var cases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 42) };
+
+            var res = CSharpStatement.Switch(value, label, defaultBody, cases);
+
+            Assert.AreEqual(CSharpExpressionType.Switch, res.CSharpNodeType);
+            Assert.AreSame(value, res.SwitchValue);
+            Assert.AreSame(label, res.BreakLabel);
+            Assert.AreSame(defaultBody, res.DefaultBody);
+            Assert.IsTrue(cases.SequenceEqual(res.Cases));
+        }
+
+        [TestMethod]
+        public void Switch_Update()
+        {
+            var value1 = Expression.Constant(1);
+            var label1 = Expression.Label();
+            var defaultBody1 = Expression.Empty();
+            var cases1 = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 42) };
+
+            var value2 = Expression.Constant(1);
+            var label2 = Expression.Label();
+            var defaultBody2 = Expression.Empty();
+            var cases2 = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 43) };
+
+            var res = CSharpStatement.Switch(value1, label1, defaultBody1, cases1);
+
+            var u0 = res.Update(res.SwitchValue, res.BreakLabel, res.Cases, res.DefaultBody);
+            var u1 = res.Update(value2, res.BreakLabel, res.Cases, res.DefaultBody);
+            var u2 = res.Update(res.SwitchValue, label2, res.Cases, res.DefaultBody);
+            var u3 = res.Update(res.SwitchValue, res.BreakLabel, cases2, res.DefaultBody);
+            var u4 = res.Update(res.SwitchValue, res.BreakLabel, res.Cases, defaultBody2);
+
+            Assert.AreSame(res, u0);
+
+            Assert.AreSame(value2, u1.SwitchValue);
+            Assert.AreSame(label1, u1.BreakLabel);
+            Assert.IsTrue(cases1.SequenceEqual(u1.Cases));
+            Assert.AreSame(defaultBody1, u1.DefaultBody);
+
+            Assert.AreSame(value1, u2.SwitchValue);
+            Assert.AreSame(label2, u2.BreakLabel);
+            Assert.IsTrue(cases1.SequenceEqual(u2.Cases));
+            Assert.AreSame(defaultBody1, u2.DefaultBody);
+
+            Assert.AreSame(value1, u3.SwitchValue);
+            Assert.AreSame(label1, u3.BreakLabel);
+            Assert.IsTrue(cases2.SequenceEqual(u3.Cases));
+            Assert.AreSame(defaultBody1, u3.DefaultBody);
+
+            Assert.AreSame(value1, u4.SwitchValue);
+            Assert.AreSame(label1, u4.BreakLabel);
+            Assert.IsTrue(cases1.SequenceEqual(u4.Cases));
+            Assert.AreSame(defaultBody2, u4.DefaultBody);
         }
 
         [TestMethod]
@@ -551,6 +612,173 @@ namespace Tests
         {
             var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoDefault(), 1));
             AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto default"));
+        }
+
+        [TestMethod]
+        public void Switch_Compile_VoidAllCases1()
+        {
+            var p = Expression.Parameter(typeof(int));
+
+            var res = CSharpStatement.Switch(
+                p,
+                Expression.Label(),
+                Expression.Constant("foo"),
+                CSharpStatement.SwitchCase(Expression.Constant(2), 3)
+            );
+
+            var f = Expression.Lambda<Action<int>>(res, p).Compile(); // no error despite non-void cases
+            f(1);
+            f(2);
+            f(3);
+        }
+
+        [TestMethod]
+        public void Switch_Compile_VoidAllCases2()
+        {
+            var p = Expression.Parameter(typeof(int?));
+
+            var res = CSharpStatement.Switch(
+                p,
+                Expression.Label(),
+                Expression.Constant("foo"),
+                CSharpStatement.SwitchCase(Expression.Constant(2), 3)
+            );
+
+            var f = Expression.Lambda<Action<int?>>(res, p).Compile(); // no error despite non-void cases
+            f(1);
+            f(2);
+            f(3);
+            f(null);
+        }
+
+        [TestMethod]
+        public void Switch_Compile_VoidAllCases3()
+        {
+            var p = Expression.Parameter(typeof(int?));
+
+            var res = CSharpStatement.Switch(
+                p,
+                Expression.Label(),
+                Expression.Constant("foo"),
+                CSharpStatement.SwitchCase(Expression.Constant(2), 3),
+                CSharpStatement.SwitchCase(Expression.Default(typeof(DateTime)), default(int?))
+            );
+
+            var f = Expression.Lambda<Action<int?>>(res, p).Compile(); // no error despite non-void cases
+            f(1);
+            f(2);
+            f(3);
+            f(null);
+        }
+
+        [TestMethod]
+        public void Switch_Compile_NestedSwitch1()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("XD"),
+                    CSharpStatement.SwitchCase(
+                        CSharpStatement.Switch(
+                            Expression.Constant(3),
+                            Expression.Label(),
+                            Expression.Block(log("D")),
+                            CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoDefault(), log("X")), 3)
+                        ),
+                        1
+                    ),
+                    CSharpStatement.SwitchCase(log("XC"), 2),
+                    CSharpStatement.SwitchCase(Expression.Block(log("B"), CSharpStatement.GotoDefault()), 3)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E", "XD" },
+                    { 1, "E", "A", "D" },
+                    { 2, "E", "XC" },
+                    { 3, "E", "B", "XD" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_NestedSwitch2()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(
+                        CSharpStatement.Switch(
+                            Expression.Constant(3),
+                            Expression.Label(),
+                            CSharpStatement.SwitchCase(log("C"), 2),
+                            CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoCase(2), log("X")), 3)
+                        ),
+                        1
+                    ),
+                    CSharpStatement.SwitchCase(log("XC"), 2),
+                    CSharpStatement.SwitchCase(Expression.Block(log("B"), CSharpStatement.GotoCase(2)), 3)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E" },
+                    { 1, "E", "A", "C" },
+                    { 2, "E", "XC" },
+                    { 3, "E", "B", "XC" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_NestedSwitch3()
+        {
+            // NB: See design remark in code.
+
+            var res =
+                CSharpStatement.Switch(
+                    Expression.Constant(1),
+                    Expression.Label(),
+                    CSharpStatement.SwitchCase(
+                        CSharpStatement.Switch(
+                            Expression.Constant(2),
+                            Expression.Label(),
+                            CSharpStatement.SwitchCase(CSharpStatement.GotoCase(3), 4)
+                        ),
+                        5
+                    )
+                );
+
+            var f = Expression.Lambda<Action>(res);
+
+            AssertEx.Throws<InvalidOperationException>(() => f.Compile(), ex => ex.Message.Contains("goto case"));
+        }
+
+        // TODO: tests for break behavior
+
+        [TestMethod]
+        public void Switch_Visitor()
+        {
+            var value = Expression.Constant(1);
+            var label = Expression.Label();
+            var defaultBody = Expression.Empty();
+            var cases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 42) };
+
+            var res = CSharpStatement.Switch(value, label, defaultBody, cases);
+
+            var v = new V();
+            Assert.AreSame(res, v.Visit(res));
+            Assert.IsTrue(v.Visited);
+        }
+
+        class V : CSharpExpressionVisitor
+        {
+            public bool Visited = false;
+
+            protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
+            {
+                Visited = true;
+
+                return base.VisitSwitch(node);
+            }
         }
 
         private static SwitchCSharpStatement SwitchLogValue(Func<string, Expression> log, Expression expression, params CSharpSwitchCase[] cases)
