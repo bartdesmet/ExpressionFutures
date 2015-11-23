@@ -387,7 +387,22 @@ namespace Microsoft.CSharp.Expressions
             return expression;
         }
 
-        class SwitchCaseGotoAnalyzer : CSharpExpressionVisitor
+        class ShallowSwitchCSharpExpressionVisitor : CSharpExpressionVisitor
+        {
+            protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
+            {
+                // NB: Nested switch statements end the reach of "goto case" and "goto default" statements.
+                return node;
+            }
+
+            protected override Expression VisitSwitch(SwitchExpression node)
+            {
+                // NB: Nested switch statements end the reach of "goto case" and "goto default" statements.
+                return node;
+            }
+        }
+
+        class SwitchCaseGotoAnalyzer : ShallowSwitchCSharpExpressionVisitor
         {
             public readonly IDictionary<CSharpSwitchCase, SwitchCaseInfo> SwitchCaseInfos = new Dictionary<CSharpSwitchCase, SwitchCaseInfo>();
             public SwitchCaseInfo? Default;
@@ -460,21 +475,9 @@ namespace Microsoft.CSharp.Expressions
 
                 return node;
             }
-
-            protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
-            {
-                // NB: Nested switch statements end the reach of "goto case" and "goto default" statements.
-                return node;
-            }
-
-            protected override Expression VisitSwitch(SwitchExpression node)
-            {
-                // NB: Nested switch statements end the reach of "goto case" and "goto default" statements.
-                return node;
-            }
         }
 
-        class SwitchCaseRewriter : CSharpExpressionVisitor
+        class SwitchCaseRewriter : ShallowSwitchCSharpExpressionVisitor
         {
             private readonly Func<object, LabelTarget> _getGotoCaseLabel;
             private readonly LabelTarget _gotoDefaultLabel;
