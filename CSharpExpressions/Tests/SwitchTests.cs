@@ -355,6 +355,64 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void Switch_Compile_GotoCase1()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoCase(2), log("X")), 1),
+                    CSharpStatement.SwitchCase(log("B"), 2)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E" },
+                    { 1, "E", "A", "B" },
+                    { 2, "E", "B" },
+                    { 3, "E" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_GotoCase2()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(log("B"), 2),
+                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoCase(2), log("X")), 1)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E" },
+                    { 1, "E", "A", "B" },
+                    { 2, "E", "B" },
+                    { 3, "E" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_GotoCase3()
+        {
+            AssertCompile<int>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    Expression.Block(log("D"), CSharpStatement.GotoCase(2), log("X")),
+                    CSharpStatement.SwitchCase(log("A"), 1),
+                    CSharpStatement.SwitchCase(log("B"), 2)
+                ),
+                new Asserts<int>
+                {
+                    { 0, "E", "D", "B" },
+                    { 1, "E", "A" },
+                    { 2, "E", "B" },
+                    { 3, "E", "D", "B" },
+                }
+            );
+        }
+
         private static SwitchCSharpStatement SwitchLogValue(Func<string, Expression> log, Expression expression, params CSharpSwitchCase[] cases)
         {
             var b = Expression.Label();

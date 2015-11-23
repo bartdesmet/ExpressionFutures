@@ -266,10 +266,15 @@ namespace Microsoft.CSharp.Expressions
                 analyzer.Analyze(@case);
             }
 
+            if (DefaultBody != null)
+            {
+                analyzer.AnalyzeDefault(DefaultBody);
+            }
+
             var caseHasJumpInto = new HashSet<CSharpSwitchCase>();
             var defaultHasJumpInto = false;
 
-            foreach (var info in analyzer.SwitchCaseInfos.Values)
+            foreach (var info in analyzer.AllSwitchCaseInfos)
             {
                 if (info.HasGotoDefault)
                 {
@@ -300,12 +305,12 @@ namespace Microsoft.CSharp.Expressions
 
                 foreach (var @case in caseHasJumpInto)
                 {
-                    caseJumpTargets.Add(@case, Expression.Label());
+                    caseJumpTargets.Add(@case, Expression.Label(FormattableString.Invariant($"__case<{@case.TestValues[0].ToDebugString()}>")));
                 }
 
                 if (defaultHasJumpInto)
                 {
-                    defaultJumpTarget = Expression.Label();
+                    defaultJumpTarget = Expression.Label("__default");
                 }
 
                 var rewriter = new SwitchCaseRewriter(testValue => caseJumpTargets[testValueToCaseMap[testValue.OrNullSentinel()]], defaultJumpTarget);
@@ -337,7 +342,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                var newDefaultBody = DefaultBody;
+                var newDefaultBody = rewriter.Visit(DefaultBody);
 
                 if (defaultHasJumpInto)
                 {
@@ -369,7 +374,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static SwitchCase ConvertSwitchCase(CSharpSwitchCase @case, Expression body, Type type)
         {
-            return Expression.SwitchCase(EnsureVoid(@case.Body), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
+            return Expression.SwitchCase(EnsureVoid(body), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
         }
 
         private static Expression EnsureVoid(Expression expression)
@@ -385,25 +390,56 @@ namespace Microsoft.CSharp.Expressions
         class SwitchCaseGotoAnalyzer : CSharpExpressionVisitor
         {
             public readonly IDictionary<CSharpSwitchCase, SwitchCaseInfo> SwitchCaseInfos = new Dictionary<CSharpSwitchCase, SwitchCaseInfo>();
+            public SwitchCaseInfo? Default;
 
             private SwitchCaseInfo _info;
             private static HashSet<object> s_empty;
 
+            public IEnumerable<SwitchCaseInfo> AllSwitchCaseInfos
+            {
+                get
+                {
+                    foreach (var info in SwitchCaseInfos.Values)
+                    {
+                        yield return info;
+                    }
+
+                    if (Default != null)
+                    {
+                        yield return Default.Value;
+                    }
+                }
+            }
+
             public void Analyze(CSharpSwitchCase @case)
+            {
+                var info = Analyze(@case.Body);
+
+                SwitchCaseInfos.Add(@case, info);
+            }
+
+            public void AnalyzeDefault(Expression expression)
+            {
+                var info = Analyze(expression);
+
+                Default = info;
+            }
+
+            private SwitchCaseInfo Analyze(Expression expr)
             {
                 Debug.Assert(_info.HasGotoDefault == false);
                 Debug.Assert(_info.GotoCases == null);
 
-                VisitSwitchCase(@case);
+                Visit(expr);
 
                 if (_info.GotoCases == null)
                 {
                     _info.GotoCases = (s_empty ?? (s_empty = new HashSet<object>()));
                 }
 
-                SwitchCaseInfos.Add(@case, _info);
-
+                var info = _info;
                 _info = default(SwitchCaseInfo);
+                return info;
             }
 
             protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
