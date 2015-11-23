@@ -84,6 +84,7 @@
     <Compile Include="ForEachTests.cs" />
     <Compile Include="ForTests.cs" />
     <Compile Include="SwitchCaseTests.cs" />
+    <Compile Include="SwitchTests.cs" />
     <Compile Include="TypedLabelRewriterTests.cs" />
     <Compile Include="WhileTests.cs" />
     <Compile Include="InvocationTests.cs" />
