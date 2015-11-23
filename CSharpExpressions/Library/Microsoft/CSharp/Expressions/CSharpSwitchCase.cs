@@ -9,7 +9,6 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -20,10 +19,10 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class CSharpSwitchCase
     {
-        internal CSharpSwitchCase(ReadOnlyCollection<object> testValues, Expression body)
+        internal CSharpSwitchCase(ReadOnlyCollection<object> testValues, ReadOnlyCollection<Expression> statements)
         {
             TestValues = testValues;
-            Body = body;
+            Statements = statements;
         }
 
         /// <summary>
@@ -32,23 +31,23 @@ namespace Microsoft.CSharp.Expressions
         public ReadOnlyCollection<object> TestValues { get; }
 
         /// <summary>
-        /// Gets the <see cref="Expression" /> representing the body of the case.
+        /// Gets a collection of <see cref="Expression" /> nodes representing the body of the case.
         /// </summary>
-        public Expression Body { get; }
+        public ReadOnlyCollection<Expression> Statements { get; }
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="body">The <see cref="Body" /> property of the result.</param>
+        /// <param name="statements">The <see cref="Statements" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public CSharpSwitchCase Update(Expression body)
+        public CSharpSwitchCase Update(IEnumerable<Expression> statements)
         {
-            if (body == this.Body)
+            if (statements == this.Statements)
             {
                 return this;
             }
 
-            return CSharpExpression.SwitchCase(body, (IEnumerable<object>)TestValues);
+            return CSharpExpression.SwitchCase(TestValues, statements);
         }
     }
 
@@ -61,29 +60,26 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
         /// </summary>
         /// <typeparam name="T">The type of the test values.</typeparam>
-        /// <param name="body">The body of the case.</param>
         /// <param name="testValues">The collection of values to test for.</param>
+        /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        public static CSharpSwitchCase SwitchCase<T>(Expression body, params T[] testValues)
+        public static CSharpSwitchCase SwitchCase<T>(IEnumerable<T> testValues, params Expression[] statements)
         {
-            // TODO: Review this signature; the use of a generic unconstrained type can be subtle for overload resolution.
-            //       Should we have a specialization for each valid governing type (and its nullable)? We can code-gen it
-            //       but there'd be 21 overloads, and still we won't have enum support...
-
-            return SwitchCase(body, (IEnumerable<T>)testValues);
+            return SwitchCase(testValues, (IEnumerable<Expression>)statements);
         }
 
         /// <summary>
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
         /// </summary>
         /// <typeparam name="T">The type of the test values.</typeparam>
-        /// <param name="body">The body of the case.</param>
         /// <param name="testValues">The collection of values to test for.</param>
+        /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static CSharpSwitchCase SwitchCase<T>(Expression body, IEnumerable<T> testValues)
+        public static CSharpSwitchCase SwitchCase<T>(IEnumerable<T> testValues, IEnumerable<Expression> statements)
         {
-            RequiresCanRead(body, nameof(body));
+            ContractUtils.RequiresNotNull(testValues, nameof(testValues));
+            ContractUtils.RequiresNotNull(statements, nameof(statements));
 
             // NB: We don't check the body for Break statements; worst case we'll insert one at the end during Reduce.
             //     Note that the semantics are nonetheless consistent with C#, i.e. no implicit fall-through.
@@ -104,19 +100,34 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            return new CSharpSwitchCase(testValuesList, body);
+            var statementsList = GetStatements(statements);
+
+            return new CSharpSwitchCase(testValuesList, statementsList);
         }
 
         /// <summary>
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
         /// </summary>
-        /// <param name="body">The body of the case.</param>
         /// <param name="testValues">The collection of values to test for.</param>
+        /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static CSharpSwitchCase SwitchCase(Expression body, IEnumerable<object> testValues)
+        public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, params Expression[] statements)
         {
-            RequiresCanRead(body, nameof(body));
+            return SwitchCase(testValues, (IEnumerable<Expression>)statements);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
+        /// </summary>
+        /// <param name="testValues">The collection of values to test for.</param>
+        /// <param name="statements">The statements in the body of the case.</param>
+        /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, IEnumerable<Expression> statements)
+        {
+            ContractUtils.RequiresNotNull(testValues, nameof(testValues));
+            ContractUtils.RequiresNotNull(statements, nameof(statements));
 
             // NB: We don't check the body for Break statements; worst case we'll insert one at the end during Reduce.
             //     Note that the semantics are nonetheless consistent with C#, i.e. no implicit fall-through.
@@ -154,7 +165,22 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            return new CSharpSwitchCase(testValuesList, body);
+            var statementsList = GetStatements(statements);
+
+            return new CSharpSwitchCase(testValuesList, statementsList);
+        }
+
+        private static ReadOnlyCollection<Expression> GetStatements(IEnumerable<Expression> statements)
+        {
+            var statementsList = statements.ToReadOnly();
+
+            // DESIGN: Require non-empty body with explicit Break or allow empty with implicit Break?
+            //         Note we don't do a control flow analysis to check for the required Break on all paths.
+
+            RequiresNotEmpty(statementsList, nameof(statements));
+            RequiresNotNullItems(statementsList, nameof(statements));
+
+            return statementsList;
         }
     }
 
@@ -168,7 +194,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
         {
-            return node.Update(Visit(node.Body));
+            return node.Update(Visit(node.Statements));
         }
     }
 }

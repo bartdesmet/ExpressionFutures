@@ -22,14 +22,14 @@ namespace Tests
             var value = Expression.Constant(1);
             var breakLabel = Expression.Label();
             var defaultBody = Expression.Empty();
-            var cases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 1), CSharpStatement.SwitchCase(Expression.Empty(), 2) };
+            var cases = new[] { CSharpStatement.SwitchCase(new[] { 1 }, Expression.Empty()), CSharpStatement.SwitchCase(new[] { 2 }, Expression.Empty()) };
             var empty = Expression.Empty();
             var label = Expression.Label(typeof(int));
             var dateTime = Expression.Default(typeof(DateTime));
             var nullCase = new[] { cases[0], null, cases[1] };
             var duplicateCase = new[] { cases[0], cases[1], cases[0] };
-            var withNullCase = new[] { cases[0], CSharpStatement.SwitchCase(Expression.Empty(), default(int?)) };
-            var nonIntCases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 1L) };
+            var withNullCase = new[] { cases[0], CSharpStatement.SwitchCase(new[] { default(int?) }, Expression.Empty()) };
+            var nonIntCases = new[] { CSharpStatement.SwitchCase(new[] { 1L }, Expression.Empty()) };
 
             // null
             AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(default(Expression), breakLabel, cases));
@@ -81,7 +81,7 @@ namespace Tests
             var value = Expression.Constant(1);
             var label = Expression.Label();
             var defaultBody = Expression.Empty();
-            var cases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 42) };
+            var cases = new[] { CSharpStatement.SwitchCase(new[] { 42 }, Expression.Empty()) };
 
             var res = CSharpStatement.Switch(value, label, defaultBody, cases);
 
@@ -98,12 +98,12 @@ namespace Tests
             var value1 = Expression.Constant(1);
             var label1 = Expression.Label();
             var defaultBody1 = Expression.Empty();
-            var cases1 = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 42) };
+            var cases1 = new[] { CSharpStatement.SwitchCase(new[] { 42 }, Expression.Empty()) };
 
             var value2 = Expression.Constant(1);
             var label2 = Expression.Label();
             var defaultBody2 = Expression.Empty();
-            var cases2 = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 43) };
+            var cases2 = new[] { CSharpStatement.SwitchCase(new[] { 43 }, Expression.Empty()) };
 
             var res = CSharpStatement.Switch(value1, label1, defaultBody1, cases1);
 
@@ -142,7 +142,7 @@ namespace Tests
             AssertCompile<int>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), 1)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"))
                 ),
                 new Asserts<int>
                 {
@@ -160,7 +160,7 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), 1)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"))
                 ),
                 new Asserts<int>
                 {
@@ -178,8 +178,8 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("O"), 1, 3),
-                    CSharpStatement.SwitchCase(log("E"), 2, 4)
+                    CSharpStatement.SwitchCase(new[] { 1, 3 }, log("O")),
+                    CSharpStatement.SwitchCase(new[] { 2, 4 }, log("E"))
                 ),
                 new Asserts<int>
                 {
@@ -199,7 +199,7 @@ namespace Tests
             AssertCompile<int?>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), 1)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"))
                 ),
                 new Asserts<int?>
                 {
@@ -218,7 +218,7 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), 1)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"))
                 ),
                 new Asserts<int?>
                 {
@@ -236,8 +236,8 @@ namespace Tests
             AssertCompile<int?>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("O"), 1, 3),
-                    CSharpStatement.SwitchCase(log("E"), 2, 4)
+                    CSharpStatement.SwitchCase(new[] { 1, 3 }, log("O")),
+                    CSharpStatement.SwitchCase(new[] { 2, 4 }, log("E"))
                 ),
                 new Asserts<int?>
                 {
@@ -257,9 +257,9 @@ namespace Tests
             AssertCompile<int?>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("N"), default(int?)),
-                    CSharpStatement.SwitchCase(log("B"), 2)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { default(int?) }, log("N")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"))
                 ),
                 new Asserts<int?>
                 {
@@ -279,9 +279,9 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("N"), default(int?)),
-                    CSharpStatement.SwitchCase(log("B"), 2)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { default(int?) }, log("N")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"))
                 ),
                 new Asserts<int?>
                 {
@@ -301,9 +301,9 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("Z"), default(int?), 3),
-                    CSharpStatement.SwitchCase(log("B"), 2)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { default(int?), 3 }, log("Z")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"))
                 ),
                 new Asserts<int?>
                 {
@@ -323,7 +323,7 @@ namespace Tests
             AssertCompile<string>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), "1")
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A"))
                 ),
                 new Asserts<string>
                 {
@@ -342,7 +342,7 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), "1")
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A"))
                 ),
                 new Asserts<string>
                 {
@@ -360,8 +360,8 @@ namespace Tests
             AssertCompile<string>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), "1"),
-                    CSharpStatement.SwitchCase(log("N"), default(string))
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { default(string) }, log("N"))
                 ),
                 new Asserts<string>
                 {
@@ -380,8 +380,8 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), "1"),
-                    CSharpStatement.SwitchCase(log("N"), default(string))
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { default(string) }, log("N"))
                 ),
                 new Asserts<string>
                 {
@@ -400,9 +400,9 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), "1"),
-                    CSharpStatement.SwitchCase(log("Z"), default(string), "3"),
-                    CSharpStatement.SwitchCase(log("B"), "2")
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { default(string), "3" }, log("Z")),
+                    CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
                 ),
                 new Asserts<string>
                 {
@@ -422,8 +422,8 @@ namespace Tests
             AssertCompile<int>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoCase(2), log("X")), 1),
-                    CSharpStatement.SwitchCase(log("B"), 2)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"), CSharpStatement.GotoCase(2), log("X")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"))
                 ),
                 new Asserts<int>
                 {
@@ -441,8 +441,8 @@ namespace Tests
             AssertCompile<int>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("B"), 2),
-                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoCase(2), log("X")), 1)
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B")),
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"), CSharpStatement.GotoCase(2), log("X"))
                 ),
                 new Asserts<int>
                 {
@@ -461,8 +461,8 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     Expression.Block(log("D"), CSharpStatement.GotoCase(2), log("X")),
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("B"), 2)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"))
                 ),
                 new Asserts<int>
                 {
@@ -481,9 +481,9 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     Expression.Block(log("D"), CSharpStatement.GotoCase(null), log("X")),
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("B"), 2),
-                    CSharpStatement.SwitchCase(log("N"), default(int?))
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B")),
+                    CSharpStatement.SwitchCase(new[] { default(int?) }, log("N"))
                 ),
                 new Asserts<int?>
                 {
@@ -502,9 +502,9 @@ namespace Tests
             AssertCompile<int?>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(Expression.Block(log("B"), CSharpStatement.GotoCase(null), log("X")), 2),
-                    CSharpStatement.SwitchCase(log("N"), default(int?))
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"), CSharpStatement.GotoCase(null), log("X")),
+                    CSharpStatement.SwitchCase(new[] { default(int?) }, log("N"))
                 ),
                 new Asserts<int?>
                 {
@@ -523,9 +523,9 @@ namespace Tests
             AssertCompile<int?>((log, v) =>
                 SwitchLogValue(log,
                     v,
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("B"), 2),
-                    CSharpStatement.SwitchCase(Expression.Block(log("N"), CSharpStatement.GotoCase(1), log("X")), default(int?))
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B")),
+                    CSharpStatement.SwitchCase(new[] { default(int?) }, log("N"), CSharpStatement.GotoCase(1), log("X"))
                 ),
                 new Asserts<int?>
                 {
@@ -541,7 +541,7 @@ namespace Tests
         [TestMethod]
         public void Switch_Compile_GotoCase_Error()
         {
-            var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoCase(2), 1));
+            var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(new[] { 1 }, CSharpStatement.GotoCase(2)));
             AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto case"));
         }
 
@@ -552,8 +552,8 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoDefault(), log("X")), 1),
-                    CSharpStatement.SwitchCase(log("B"), 2)
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"), CSharpStatement.GotoDefault(), log("X")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B"))
                 ),
                 new Asserts<int>
                 {
@@ -572,8 +572,8 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("B"), 2),
-                    CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoDefault(), log("X")), 1)
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B")),
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A"), CSharpStatement.GotoDefault(), log("X"))
                 ),
                 new Asserts<int>
                 {
@@ -592,9 +592,9 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     log("D"),
-                    CSharpStatement.SwitchCase(log("A"), 1),
-                    CSharpStatement.SwitchCase(log("B"), 2),
-                    CSharpStatement.SwitchCase(Expression.Block(log("N"), CSharpStatement.GotoDefault(), log("X")), default(int?))
+                    CSharpStatement.SwitchCase(new[] { 1 }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("B")),
+                    CSharpStatement.SwitchCase(new[] { default(int?) }, log("N"), CSharpStatement.GotoDefault(), log("X"))
                 ),
                 new Asserts<int?>
                 {
@@ -610,7 +610,7 @@ namespace Tests
         [TestMethod]
         public void Switch_Compile_GotoDefault_Error()
         {
-            var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoDefault(), 1));
+            var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(new[] { 1 }, CSharpStatement.GotoDefault()));
             AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto default"));
         }
 
@@ -623,7 +623,7 @@ namespace Tests
                 p,
                 Expression.Label(),
                 Expression.Constant("foo"),
-                CSharpStatement.SwitchCase(Expression.Constant(2), 3)
+                CSharpStatement.SwitchCase(new[] { 3 }, Expression.Constant(2))
             );
 
             var f = Expression.Lambda<Action<int>>(res, p).Compile(); // no error despite non-void cases
@@ -641,7 +641,7 @@ namespace Tests
                 p,
                 Expression.Label(),
                 Expression.Constant("foo"),
-                CSharpStatement.SwitchCase(Expression.Constant(2), 3)
+                CSharpStatement.SwitchCase(new[] { 3 }, Expression.Constant(2))
             );
 
             var f = Expression.Lambda<Action<int?>>(res, p).Compile(); // no error despite non-void cases
@@ -660,8 +660,8 @@ namespace Tests
                 p,
                 Expression.Label(),
                 Expression.Constant("foo"),
-                CSharpStatement.SwitchCase(Expression.Constant(2), 3),
-                CSharpStatement.SwitchCase(Expression.Default(typeof(DateTime)), default(int?))
+                CSharpStatement.SwitchCase(new[] { 3 }, Expression.Constant(2)),
+                CSharpStatement.SwitchCase(new[] { default(int?) }, Expression.Default(typeof(DateTime)))
             );
 
             var f = Expression.Lambda<Action<int?>>(res, p).Compile(); // no error despite non-void cases
@@ -679,16 +679,16 @@ namespace Tests
                     v,
                     log("XD"),
                     CSharpStatement.SwitchCase(
+                        new[] { 1 },
                         CSharpStatement.Switch(
                             Expression.Constant(3),
                             Expression.Label(),
-                            Expression.Block(log("D")),
-                            CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoDefault(), log("X")), 3)
-                        ),
-                        1
+                            log("D"),
+                            CSharpStatement.SwitchCase(new[] { 3 }, log("A"), CSharpStatement.GotoDefault(), log("X"))
+                        )
                     ),
-                    CSharpStatement.SwitchCase(log("XC"), 2),
-                    CSharpStatement.SwitchCase(Expression.Block(log("B"), CSharpStatement.GotoDefault()), 3)
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("XC")),
+                    CSharpStatement.SwitchCase(new[] { 3 }, log("B"), CSharpStatement.GotoDefault())
                 ),
                 new Asserts<int>
                 {
@@ -707,16 +707,16 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     CSharpStatement.SwitchCase(
+                        new[] { 1 },
                         CSharpStatement.Switch(
                             Expression.Constant(3),
                             Expression.Label(),
-                            CSharpStatement.SwitchCase(log("C"), 2),
-                            CSharpStatement.SwitchCase(Expression.Block(log("A"), CSharpStatement.GotoCase(2), log("X")), 3)
-                        ),
-                        1
+                            CSharpStatement.SwitchCase(new[] { 2 }, log("C")),
+                            CSharpStatement.SwitchCase(new[] { 3 }, log("A"), CSharpStatement.GotoCase(2), log("X"))
+                        )
                     ),
-                    CSharpStatement.SwitchCase(log("XC"), 2),
-                    CSharpStatement.SwitchCase(Expression.Block(log("B"), CSharpStatement.GotoCase(2)), 3)
+                    CSharpStatement.SwitchCase(new[] { 2 }, log("XC")),
+                    CSharpStatement.SwitchCase(new[] { 3 }, log("B"), CSharpStatement.GotoCase(2))
                 ),
                 new Asserts<int>
                 {
@@ -738,11 +738,11 @@ namespace Tests
                     Expression.Constant(1),
                     Expression.Label(),
                     CSharpStatement.SwitchCase(
+                        new[] { 5 },
                         Expression.Switch(
                             Expression.Constant(2),
                             Expression.SwitchCase(CSharpStatement.GotoCase(3), Expression.Constant(4))
-                        ),
-                        5
+                        )
                     )
                 );
 
@@ -762,7 +762,7 @@ namespace Tests
             var value = Expression.Constant(1);
             var label = Expression.Label();
             var defaultBody = Expression.Empty();
-            var cases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 42) };
+            var cases = new[] { CSharpStatement.SwitchCase(new[] { 42 }, Expression.Empty()) };
 
             var res = CSharpStatement.Switch(value, label, defaultBody, cases);
 

@@ -803,8 +803,8 @@ namespace Playground
             var s = CSharpExpression.Switch(
                 p,
                 b,
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+                CSharpExpression.SwitchCase(new[] { 1 }, Log(Expression.Empty(), "1")),
+                CSharpExpression.SwitchCase(new[] { 2 }, Log(Expression.Empty(), "2"))
             );
 
             var f = Expression.Lambda<Action<int>>(s, p).Compile();
@@ -824,8 +824,8 @@ namespace Playground
                 p,
                 b,
                 Log(Expression.Empty(), "D"),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+                CSharpExpression.SwitchCase(new[] { 1 }, Log(Expression.Empty(), "1")),
+                CSharpExpression.SwitchCase(new[] { 2 }, Log(Expression.Empty(), "2"))
             );
 
             var f = Expression.Lambda<Action<int>>(s, p).Compile();
@@ -844,8 +844,8 @@ namespace Playground
             var s = CSharpExpression.Switch(
                 p,
                 b,
-                CSharpExpression.SwitchCase(Expression.Block(Log(Expression.Empty(), "1"), Expression.Break(b), Log(Expression.Empty(), "X")), 1),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+                CSharpExpression.SwitchCase(new[] { 1 }, Log(Expression.Empty(), "1"), Expression.Break(b), Log(Expression.Empty(), "X")),
+                CSharpExpression.SwitchCase(new[] { 2 }, Log(Expression.Empty(), "2"))
             );
 
             var f = Expression.Lambda<Action<int>>(s, p).Compile();
@@ -864,8 +864,8 @@ namespace Playground
             var s = CSharpExpression.Switch(
                 p,
                 b,
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+                CSharpExpression.SwitchCase(new[] { 1 }, Log(Expression.Empty(), "1")),
+                CSharpExpression.SwitchCase(new[] { 2 }, Log(Expression.Empty(), "2"))
             );
 
             var f = Expression.Lambda<Action<int?>>(s, p).Compile();
@@ -886,8 +886,8 @@ namespace Playground
                 p,
                 b,
                 Log(Expression.Empty(), "D"),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2)
+                CSharpExpression.SwitchCase(new[] { 1 }, Log(Expression.Empty(), "1")),
+                CSharpExpression.SwitchCase(new[] { 2 }, Log(Expression.Empty(), "2"))
             );
 
             var f = Expression.Lambda<Action<int?>>(s, p).Compile();
@@ -908,9 +908,9 @@ namespace Playground
                 p,
                 b,
                 Log(Expression.Empty(), "D"),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), 1),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), 2),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "N"), default(int?))
+                CSharpExpression.SwitchCase(new[] { 1 }, Log(Expression.Empty(), "1")),
+                CSharpExpression.SwitchCase(new[] { 2 }, Log(Expression.Empty(), "2")),
+                CSharpExpression.SwitchCase(new[] { default(int?) }, Log(Expression.Empty(), "N"))
             );
 
             var f = Expression.Lambda<Action<int?>>(s, p).Compile();
@@ -931,9 +931,9 @@ namespace Playground
                 p,
                 b,
                 Log(Expression.Empty(), "D"),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "1"), "1"),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "2"), "2"),
-                CSharpExpression.SwitchCase(Log(Expression.Empty(), "N"), default(string))
+                CSharpExpression.SwitchCase(new[] { "1" }, Log(Expression.Empty(), "1")),
+                CSharpExpression.SwitchCase(new[] { "2" }, Log(Expression.Empty(), "2")),
+                CSharpExpression.SwitchCase(new[] { default(string) }, Log(Expression.Empty(), "N"))
             );
 
             var f = Expression.Lambda<Action<string>>(s, p).Compile();

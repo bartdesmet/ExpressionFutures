@@ -320,28 +320,30 @@ namespace Microsoft.CSharp.Expressions
                 var i = 0;
                 foreach (var @case in nonNullCases)
                 {
-                    var newBody = rewriter.Visit(@case.Body);
+                    var newBody = rewriter.Visit(@case.Statements);
 
                     var jumpTarget = default(LabelTarget);
                     if (caseJumpTargets.TryGetValue(@case, out jumpTarget))
                     {
-                        newBody = Expression.Block(typeof(void), Expression.Label(jumpTarget), newBody);
+                        newBody = newBody.AddFirst(Expression.Label(jumpTarget)).ToReadOnly();
                     }
 
                     newNonNullCases[i++] = ConvertSwitchCase(@case, newBody, testValueType);
                 }
 
-                var newNullCaseBody = rewriter.Visit(nullCase?.Body);
-
-                newNullCaseBody = EnsureVoid(newNullCaseBody);
+                var newNullCaseBody = default(Expression);
 
                 if (nullCase != null)
                 {
+                    var newBody = rewriter.Visit(nullCase.Statements);
+
                     var jumpTarget = default(LabelTarget);
                     if (caseJumpTargets.TryGetValue(nullCase, out jumpTarget))
                     {
-                        newNullCaseBody = Expression.Block(typeof(void), Expression.Label(jumpTarget), newNullCaseBody);
+                        newBody = newBody.AddFirst(Expression.Label(jumpTarget)).ToReadOnly();
                     }
+
+                    newNullCaseBody = MakeBlock(newBody);
                 }
 
                 var newDefaultBody = rewriter.Visit(DefaultBody);
@@ -362,9 +364,9 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var newNonNullCases = nonNullCases.Select(@case => ConvertSwitchCase(@case, @case.Body, testValueType)).ToArray();
+                var newNonNullCases = nonNullCases.Select(@case => ConvertSwitchCase(@case, @case.Statements, testValueType)).ToArray();
                 var newDefaultBody = EnsureVoid(DefaultBody);
-                var newNullCaseBody = EnsureVoid(nullCase?.Body);
+                var newNullCaseBody = MakeBlock(nullCase?.Statements);
 
                 return new LoweredSwitchStatement
                 {
@@ -375,9 +377,9 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static SwitchCase ConvertSwitchCase(CSharpSwitchCase @case, Expression body, Type type)
+        private static SwitchCase ConvertSwitchCase(CSharpSwitchCase @case, ReadOnlyCollection<Expression> body, Type type)
         {
-            return Expression.SwitchCase(EnsureVoid(body), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
+            return Expression.SwitchCase(MakeBlock(body), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
         }
 
         private static Expression EnsureVoid(Expression expression)
@@ -388,6 +390,32 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return expression;
+        }
+
+        private static Expression MakeBlock(ReadOnlyCollection<Expression> expressions)
+        {
+            if (expressions == null)
+            {
+                return null;
+            }
+
+            var n = expressions.Count;
+
+            if (n == 0)
+            {
+                return Expression.Empty();
+            }
+            else
+            {
+                if (expressions[n - 1].Type != typeof(void))
+                {
+                    return Expression.Block(typeof(void), expressions);
+                }
+                else
+                {
+                    return Expression.Block(expressions);
+                }
+            }
         }
 
         class ShallowSwitchCSharpExpressionVisitor : CSharpExpressionVisitor
@@ -432,24 +460,27 @@ namespace Microsoft.CSharp.Expressions
 
             public void Analyze(CSharpSwitchCase @case)
             {
-                var info = Analyze(@case.Body);
+                var info = Analyze(@case.Statements);
 
                 SwitchCaseInfos.Add(@case, info);
             }
 
             public void AnalyzeDefault(Expression expression)
             {
-                var info = Analyze(expression);
+                var info = Analyze(new[] { expression });
 
                 Default = info;
             }
 
-            private SwitchCaseInfo Analyze(Expression expr)
+            private SwitchCaseInfo Analyze(IEnumerable<Expression> exprs)
             {
                 Debug.Assert(_info.HasGotoDefault == false);
                 Debug.Assert(_info.GotoCases == null);
 
-                Visit(expr);
+                foreach (var expr in exprs)
+                {
+                    Visit(expr);
+                }
 
                 if (_info.GotoCases == null)
                 {
