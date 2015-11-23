@@ -62,7 +62,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <typeparam name="T">The type of the test values.</typeparam>
         /// <param name="body">The body of the case.</param>
-        /// <param name="cases">The collection of values to test for.</param>
+        /// <param name="testValues">The collection of values to test for.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         public static CSharpSwitchCase SwitchCase<T>(Expression body, params T[] testValues)
         {
@@ -74,7 +74,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <typeparam name="T">The type of the test values.</typeparam>
         /// <param name="body">The body of the case.</param>
-        /// <param name="cases">The collection of values to test for.</param>
+        /// <param name="testValues">The collection of values to test for.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase<T>(Expression body, IEnumerable<T> testValues)
@@ -107,7 +107,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
         /// </summary>
         /// <param name="body">The body of the case.</param>
-        /// <param name="cases">The collection of values to test for.</param>
+        /// <param name="testValues">The collection of values to test for.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase(Expression body, IEnumerable<object> testValues)
