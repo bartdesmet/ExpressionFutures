@@ -738,18 +738,20 @@ namespace Tests
                     Expression.Constant(1),
                     Expression.Label(),
                     CSharpStatement.SwitchCase(
-                        CSharpStatement.Switch(
+                        Expression.Switch(
                             Expression.Constant(2),
-                            Expression.Label(),
-                            CSharpStatement.SwitchCase(CSharpStatement.GotoCase(3), 4)
+                            Expression.SwitchCase(CSharpStatement.GotoCase(3), Expression.Constant(4))
                         ),
                         5
                     )
                 );
 
+            var red = res.Reduce(); // This doesn't throw because we don't recurse into the nested Switch.
+            Assert.AreNotSame(red, res);
+
             var f = Expression.Lambda<Action>(res);
 
-            AssertEx.Throws<InvalidOperationException>(() => f.Compile(), ex => ex.Message.Contains("goto case"));
+            AssertEx.Throws<ArgumentException>(() => f.Compile()); // must be reducible node
         }
 
         // TODO: tests for break behavior
