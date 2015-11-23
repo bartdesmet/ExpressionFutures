@@ -51,8 +51,8 @@ var errors = new[]
 	new { Name = "SwitchCaseHasIncompatibleType", ExceptionType = "ArgumentException", Args = 2, Message = "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'." },
 	new { Name = "TestValuesShouldHaveConsistentType", ExceptionType = "ArgumentException", Args = 0, Message = "All specified test values should have the same type." },
 	new { Name = "SwitchBreakLabelShouldBeVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The break label of a switch statement should be of type 'void'." },
-	new { Name = "InvalidGotoCase", ExceptionType = "ArgumentException", Args = 1, Message = "A 'goto case {0}' statement was found but the containing switch statement has no such label." },
-	new { Name = "InvalidGotoDefault", ExceptionType = "ArgumentException", Args = 0, Message = "A 'goto default' statement was found but the containing switch statement has no default label." },
+	new { Name = "InvalidGotoCase", ExceptionType = "InvalidOperationException", Args = 1, Message = "A 'goto case {0}' statement was found but the containing switch statement has no such label." },
+	new { Name = "InvalidGotoDefault", ExceptionType = "InvalidOperationException", Args = 0, Message = "A 'goto default' statement was found but the containing switch statement has no default label." },
 	new { Name = "GotoCanOnlyBeReducedInSwitch", ExceptionType = "InvalidOperationException", Args = 0, Message = "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node." },
 };
 

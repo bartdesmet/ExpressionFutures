@@ -414,6 +414,13 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Switch_Compile_GotoCase_Error()
+        {
+            var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoCase(2), 1));
+            AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto case"));
+        }
+
+        [TestMethod]
         public void Switch_Compile_GotoDefault1()
         {
             AssertCompile<int>((log, v) =>
@@ -451,6 +458,13 @@ namespace Tests
                     { 3, "E", "D" },
                 }
             );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_GotoDefault_Error()
+        {
+            var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(CSharpStatement.GotoDefault(), 1));
+            AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto default"));
         }
 
         private static SwitchCSharpStatement SwitchLogValue(Func<string, Expression> log, Expression expression, params CSharpSwitchCase[] cases)

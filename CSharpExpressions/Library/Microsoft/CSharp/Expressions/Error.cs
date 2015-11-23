@@ -364,19 +364,19 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// ArgumentException with message like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
+        /// InvalidOperationException with message like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
         /// </summary>
         internal static Exception InvalidGotoCase(object p0)
         {
-            return new ArgumentException(Strings.InvalidGotoCase(p0));
+            return new InvalidOperationException(Strings.InvalidGotoCase(p0));
         }
 
         /// <summary>
-        /// ArgumentException with message like "A 'goto default' statement was found but the containing switch statement has no default label."
+        /// InvalidOperationException with message like "A 'goto default' statement was found but the containing switch statement has no default label."
         /// </summary>
         internal static Exception InvalidGotoDefault()
         {
-            return new ArgumentException(Strings.InvalidGotoDefault);
+            return new InvalidOperationException(Strings.InvalidGotoDefault);
         }
 
         /// <summary>
