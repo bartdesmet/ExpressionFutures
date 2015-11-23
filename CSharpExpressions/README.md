@@ -474,7 +474,7 @@ Differences from the DLR node include:
 - C# switch statements can have no cases with test values and/or no default case.
 - C# switch statements support `GotoCase` and `GotoDefault` control flow.
 
-An example of creating a `Switch` expression is shown below:
+An example of creating a `Switch` statement is shown below:
 
 ```csharp
 CSharpStatement.Switch(
