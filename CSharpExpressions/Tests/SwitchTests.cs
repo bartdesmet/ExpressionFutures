@@ -256,6 +256,105 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void Switch_Compile_String()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(log("A"), "1")
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E" },
+                    { "1", "E", "A" },
+                    { "2", "E" },
+                    { null, "E" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_Default()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("D"),
+                    CSharpStatement.SwitchCase(log("A"), "1")
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "D" },
+                    { null, "E", "D" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_NullCase()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(log("A"), "1"),
+                    CSharpStatement.SwitchCase(log("N"), default(string))
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E" },
+                    { "1", "E", "A" },
+                    { "2", "E" },
+                    { null, "E", "N" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_Default_NullCase()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("D"),
+                    CSharpStatement.SwitchCase(log("A"), "1"),
+                    CSharpStatement.SwitchCase(log("N"), default(string))
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "D" },
+                    { null, "E", "N" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_NullCaseWithCompanionship()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    log("D"),
+                    CSharpStatement.SwitchCase(log("A"), "1"),
+                    CSharpStatement.SwitchCase(log("Z"), default(string), "3"),
+                    CSharpStatement.SwitchCase(log("B"), "2")
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "B" },
+                    { "3", "E", "Z" },
+                    { "4", "E", "D" },
+                    { null, "E", "Z" },
+                }
+            );
+        }
+
         private static SwitchCSharpStatement SwitchLogValue(Func<string, Expression> log, Expression expression, params CSharpSwitchCase[] cases)
         {
             var b = Expression.Label();
