@@ -17,6 +17,65 @@ namespace Tests
     public class SwitchTests
     {
         [TestMethod]
+        public void Switch_Factory_ArgumentCheckin()
+        {
+            var value = Expression.Constant(1);
+            var breakLabel = Expression.Label();
+            var defaultBody = Expression.Empty();
+            var cases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 1), CSharpStatement.SwitchCase(Expression.Empty(), 2) };
+            var empty = Expression.Empty();
+            var label = Expression.Label(typeof(int));
+            var dateTime = Expression.Default(typeof(DateTime));
+            var nullCase = new[] { cases[0], null, cases[1] };
+            var duplicateCase = new[] { cases[0], cases[1], cases[0] };
+            var withNullCase = new[] { cases[0], CSharpStatement.SwitchCase(Expression.Empty(), default(int?)) };
+            var nonIntCases = new[] { CSharpStatement.SwitchCase(Expression.Empty(), 1L) };
+
+            // null
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(default(Expression), breakLabel, cases));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(default(Expression), breakLabel, defaultBody, cases));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(default(Expression), breakLabel, defaultBody, cases.AsEnumerable()));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(value, default(LabelTarget), cases));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(value, default(LabelTarget), defaultBody, cases));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(value, default(LabelTarget), defaultBody, cases.AsEnumerable()));
+
+            // switch type void
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(empty, breakLabel, cases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(empty, breakLabel, defaultBody, cases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(empty, breakLabel, defaultBody, cases.AsEnumerable()));
+
+            // non-void break label
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, label, cases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, label, defaultBody, cases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, label, defaultBody, cases.AsEnumerable()));
+
+            // invalid switch type
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(dateTime, breakLabel, cases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(dateTime, breakLabel, defaultBody, cases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(dateTime, breakLabel, defaultBody, cases.AsEnumerable()));
+
+            // null case
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(value, breakLabel, nullCase));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nullCase));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nullCase.AsEnumerable()));
+
+            // duplicate values
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, duplicateCase));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, duplicateCase));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, duplicateCase.AsEnumerable()));
+
+            // null not allowed
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, withNullCase));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, withNullCase));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, withNullCase.AsEnumerable()));
+
+            // incompatible types
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, nonIntCases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases.AsEnumerable()));
+        }
+
+        [TestMethod]
         public void Switch_Compile_Int32()
         {
             AssertCompile<int>((log, v) =>
