@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static Playground.ReflectionUtils;
 
@@ -48,6 +49,8 @@ namespace Playground
 
         static void Call1()
         {
+            Title();
+
             var mtd = MethodInfoOf(() => Math.Min(default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
@@ -65,6 +68,8 @@ namespace Playground
 
         static void Call2()
         {
+            Title();
+
             var mtd = MethodInfoOf(() => Math.Min(default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
@@ -82,6 +87,8 @@ namespace Playground
 
         static void Call3()
         {
+            Title();
+
             var mtd = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
@@ -99,6 +106,8 @@ namespace Playground
 
         static void Call4()
         {
+            Title();
+
             var mtd = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
@@ -116,6 +125,8 @@ namespace Playground
 
         static void Call5()
         {
+            Title();
+
             var mtd = MethodInfoOf(() => F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
@@ -135,6 +146,8 @@ namespace Playground
 
         static void Call6()
         {
+            Title();
+
             var mtd = MethodInfoOf((Bar b) => b.F(default(int), default(int), default(int)));
 
             var val1 = mtd.GetParameters()[0];
@@ -155,6 +168,8 @@ namespace Playground
 
         static void Call7()
         {
+            Title();
+
             var x = default(int);
             var mtd = MethodInfoOf((string s) => int.TryParse(s, out x));
 
@@ -174,6 +189,8 @@ namespace Playground
 
         static void Call8()
         {
+            Title();
+
             var x = default(int);
             var mtd = MethodInfoOf((string s) => int.TryParse(s, out x));
 
@@ -199,6 +216,8 @@ namespace Playground
 
         static void Invoke1()
         {
+            Title();
+
             var f = new Func<int, int, int>((a, b) => a + b);
             var mtd = MethodInfoOf(() => f.Invoke(default(int), default(int)));
 
@@ -218,6 +237,8 @@ namespace Playground
 
         static void Invoke2()
         {
+            Title();
+
             var f = new Func<int, int, int>((a, b) => a + b);
             var mtd = MethodInfoOf(() => f.Invoke(default(int), default(int)));
 
@@ -243,6 +264,8 @@ namespace Playground
 
         static void New1()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
 
             var val1 = ctor.GetParameters()[0];
@@ -262,6 +285,8 @@ namespace Playground
 
         static void New2()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
 
             var val1 = ctor.GetParameters()[0];
@@ -287,6 +312,8 @@ namespace Playground
 
         static void Index1()
         {
+            Title();
+
             var get = MethodInfoOf((Field f) => f[default(int), default(int), default(int)]);
             var idx = get.DeclaringType.GetProperty(get.Name.Substring("get_".Length));
 
@@ -308,6 +335,8 @@ namespace Playground
 
         static void Index2()
         {
+            Title();
+
             var get = MethodInfoOf((Field f) => f[default(int), default(int), default(int)]);
             var idx = get.DeclaringType.GetProperty(get.Name.Substring("get_".Length));
 
@@ -329,6 +358,8 @@ namespace Playground
 
         static void NewMultidimensionalArrayInit()
         {
+            Title();
+
             var expr = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3, 5 }, Enumerable.Range(0, 30).Select(i => Expression.Constant(i)));
 
             var res = Expression.Lambda<Func<int[,,]>>(expr).Compile()();
@@ -369,6 +400,8 @@ namespace Playground
 
         static void AsyncLambda1()
         {
+            Title();
+
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Constant(42));
             var res = async.Compile()();
             Console.WriteLine(res.Result);
@@ -376,6 +409,8 @@ namespace Playground
 
         static void AsyncLambda2()
         {
+            Title();
+
             var async = CSharpExpression.AsyncLambda(Expression.Constant(42));
             var res = (Task<int>)async.Compile().DynamicInvoke();
             Console.WriteLine(res.Result);
@@ -383,6 +418,8 @@ namespace Playground
 
         static void AsyncLambda3()
         {
+            Title();
+
             var await = CSharpExpression.Await(Expression.Constant(Task.FromResult(42)));
             var async = CSharpExpression.AsyncLambda(await);
             var res = (Task<int>)async.Compile().DynamicInvoke();
@@ -391,6 +428,8 @@ namespace Playground
 
         static void AsyncLambda4()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(100));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
                 Expression.Block(
@@ -404,6 +443,8 @@ namespace Playground
 
         static void AsyncLambda5()
         {
+            Title();
+
             var i = Expression.Parameter(typeof(int));
             var delay = (Expression<Action>)(() => Task.Delay(100));
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
@@ -429,6 +470,8 @@ namespace Playground
 
         static void AsyncLambda6()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
                 Expression.Block(
@@ -448,6 +491,8 @@ namespace Playground
 
         static void AsyncLambda7()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
@@ -469,6 +514,8 @@ namespace Playground
 
         static void AsyncLambda8()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
@@ -490,6 +537,8 @@ namespace Playground
 
         static void AsyncLambda9()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
@@ -517,6 +566,8 @@ namespace Playground
 
         static void AsyncLambda10()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task<int>>>(
@@ -544,6 +595,8 @@ namespace Playground
 
         static void AsyncLambda11()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task>>(
@@ -566,6 +619,8 @@ namespace Playground
 
         static void AsyncLambda12()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task>>(
@@ -601,6 +656,8 @@ namespace Playground
 
         static void AsyncLambda13()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task>>(
@@ -636,6 +693,8 @@ namespace Playground
 
         static void AsyncLambda14()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var async = CSharpExpression.AsyncLambda<Func<Task>>(
@@ -661,6 +720,8 @@ namespace Playground
 
         static void AsyncLambda15()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var lbl = Expression.Label();
@@ -688,6 +749,8 @@ namespace Playground
 
         static void AsyncLambda16()
         {
+            Title();
+
             var delay = (Expression<Action>)(() => Task.Delay(1000));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var lbl = Expression.Label();
@@ -720,6 +783,8 @@ namespace Playground
 
         static void While()
         {
+            Title();
+
             var i = Expression.Parameter(typeof(int));
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
             var loop = Expression.Lambda<Action>(
@@ -740,6 +805,8 @@ namespace Playground
 
         static void DoWhile()
         {
+            Title();
+
             var i = Expression.Parameter(typeof(int));
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
             var loop = Expression.Lambda<Action>(
@@ -771,6 +838,8 @@ namespace Playground
 
         static void Using1()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RC(default(string)));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var @using = Expression.Lambda<Action>(
@@ -784,6 +853,8 @@ namespace Playground
 
         static void Using2()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RC(default(string)));
             var prnt = MethodInfoOf((RC r) => r.Print());
             var resv = Expression.Parameter(typeof(RC));
@@ -799,6 +870,8 @@ namespace Playground
 
         static void Using3()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RC(default(string)));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var resv = Expression.Parameter(typeof(IDisposable));
@@ -814,6 +887,8 @@ namespace Playground
 
         static void Using4()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RC(default(string)));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             var resv = Expression.Parameter(typeof(IDisposable));
@@ -832,6 +907,8 @@ namespace Playground
 
         static void Using5()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RV(default(string)));
             var prnt = MethodInfoOf((RV r) => r.Print());
             var resv = Expression.Parameter(typeof(RV));
@@ -847,6 +924,8 @@ namespace Playground
 
         static void Using6()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RV(default(string)));
             var cout = MethodInfoOf(() => Console.WriteLine(default(string))); ;
             var @using = Expression.Lambda<Action>(
@@ -860,6 +939,8 @@ namespace Playground
 
         static void Using7()
         {
+            Title();
+
             var ctor = ConstructorInfoOf(() => new RV(default(string)));
             var prnt = MethodInfoOf((RV r) => r.Print());
             var resv = Expression.Parameter(typeof(RV?));
@@ -884,6 +965,8 @@ namespace Playground
 
         static void ForEach1()
         {
+            Title();
+
             var x = Expression.Parameter(typeof(int));
             var xs = Expression.Constant(new[] { 2, 3, 5 });
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
@@ -897,6 +980,8 @@ namespace Playground
 
         static void ForEach2()
         {
+            Title();
+
             var x = Expression.Parameter(typeof(int?));
             var xs = Expression.Constant(new[] { 2, 3, 5 });
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
@@ -910,6 +995,8 @@ namespace Playground
 
         static void ForEach3()
         {
+            Title();
+
             var x = Expression.Parameter(typeof(int));
             var xs = Expression.Constant(new int?[] { 2, 3, 5 });
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
@@ -923,6 +1010,8 @@ namespace Playground
 
         static void ForEach4()
         {
+            Title();
+
             var x = Expression.Parameter(typeof(string));
             var xs = Expression.Constant(new object[] { "bar", "foo", "qux" });
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
@@ -936,6 +1025,8 @@ namespace Playground
 
         static void ForEach5()
         {
+            Title();
+
             var x = Expression.Parameter(typeof(string));
             var xs = Expression.Constant(new List<string> { "bar", "foo", "qux" });
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
@@ -954,6 +1045,8 @@ namespace Playground
 
         static void For1()
         {
+            Title();
+
             var i = Expression.Parameter(typeof(int));
             var init = Expression.Assign(i, Expression.Constant(0));
             var test = Expression.LessThan(i, Expression.Constant(5));
@@ -977,6 +1070,8 @@ namespace Playground
 
         static void ConditionalMember1()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(TimeSpan?));
             var e = Expression.Lambda<Func<TimeSpan?, int?>>(CSharpExpression.ConditionalProperty(p, "Seconds"), p);
             var f = e.Compile();
@@ -986,6 +1081,8 @@ namespace Playground
 
         static void ConditionalMember2()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(string));
             var e = Expression.Lambda<Func<string, int?>>(CSharpExpression.ConditionalProperty(p, "Length"), p);
             var f = e.Compile();
@@ -995,6 +1092,8 @@ namespace Playground
 
         static void ConditionalMember3()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(DateTimeOffset?));
             var e = Expression.Lambda<Func<DateTimeOffset?, int?>>(CSharpExpression.ConditionalProperty(CSharpExpression.ConditionalProperty(p, "Offset"), "Hours"), p);
             var f = e.Compile();
@@ -1011,6 +1110,8 @@ namespace Playground
 
         static void ConditionalCall1()
         {
+            Title();
+
             var addYears = MethodInfoOf((DateTime dt) => dt.AddYears(default(int)));
             var p0 = addYears.GetParameters()[0];
 
@@ -1023,6 +1124,8 @@ namespace Playground
 
         static void ConditionalCall2()
         {
+            Title();
+
             var toString = MethodInfoOf((DateTime dt) => dt.ToString());
 
             var p = Expression.Parameter(typeof(DateTime?));
@@ -1034,6 +1137,8 @@ namespace Playground
 
         static void ConditionalCall3()
         {
+            Title();
+
             var toUpper = MethodInfoOf((string s) => s.ToUpper());
             var toLower = MethodInfoOf((string s) => s.ToLower());
 
@@ -1051,6 +1156,8 @@ namespace Playground
 
         static void ConditionalIndex1()
         {
+            Title();
+
             var index = PropertyInfoOf((List<int> xs) => xs[default(int)]);
             var p0 = index.GetIndexParameters()[0];
 
@@ -1068,6 +1175,8 @@ namespace Playground
 
         static void ConditionalInvoke1()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(Func<int>));
             var e = Expression.Lambda<Func<Func<int>, int?>>(CSharpExpression.ConditionalInvoke(p), p);
             var f = e.Compile();
@@ -1090,6 +1199,8 @@ namespace Playground
 
         static void Dynamic1()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.DynamicInvokeMember(p, "Substring", Expression.Constant(1)), p);
             var f = e.Compile();
@@ -1098,6 +1209,8 @@ namespace Playground
 
         static void Dynamic2()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.DynamicInvoke(p, Expression.Constant(1)), p);
             var f = e.Compile();
@@ -1106,6 +1219,8 @@ namespace Playground
 
         static void Dynamic3()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, p), p);
             var f = e.Compile();
@@ -1115,6 +1230,8 @@ namespace Playground
 
         static void Dynamic4()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var q = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, object, object>>(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, p, q), p, q);
@@ -1126,6 +1243,8 @@ namespace Playground
 
         static void Dynamic5()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, TimeSpan>>(DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), p), p);
             var f = e.Compile();
@@ -1134,6 +1253,8 @@ namespace Playground
 
         static void Dynamic6()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, object>>(DynamicCSharpExpression.DynamicGetMember(p, "TotalSeconds"), p);
             var f = e.Compile();
@@ -1142,6 +1263,8 @@ namespace Playground
 
         static void Dynamic7()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var q = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, object, object>>(DynamicCSharpExpression.DynamicGetIndex(p, q), p, q);
@@ -1152,6 +1275,8 @@ namespace Playground
 
         static void Dynamic8()
         {
+            Title();
+
             var p = Expression.Parameter(typeof(object));
             var e = Expression.Lambda<Func<object, DateTimeOffset>>(DynamicCSharpExpression.DynamicConvert(p, typeof(DateTimeOffset)), p);
             var f = e.Compile();
@@ -1161,6 +1286,8 @@ namespace Playground
 
         static void Dynamic9()
         {
+            Title();
+
             var await = DynamicCSharpExpression.DynamicAwait(Expression.Constant(Task.FromResult(42), typeof(object)));
             var async = CSharpExpression.AsyncLambda(Expression.Convert(await, typeof(int)));
             var res = (Task<int>)async.Compile().DynamicInvoke();
@@ -1176,6 +1303,15 @@ namespace Playground
         {
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
             return Expression.Block(Expression.Call(cout, Expression.Constant(log, typeof(string))), expression);
+        }
+
+        static void Title([CallerMemberName]string caller = null)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(caller);
+            Console.WriteLine(new string('-', caller.Length));
+            Console.ResetColor();
         }
     }
 
