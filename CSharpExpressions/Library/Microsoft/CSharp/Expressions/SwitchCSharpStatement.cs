@@ -120,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 foreach (var testValue in @case.TestValues)
                 {
-                    if (testValue == CSharpSwitchCase.DefaultCaseValue)
+                    if (testValue == SwitchCaseDefaultValue)
                     {
                         defaultCase = @case;
                     }
@@ -224,7 +224,7 @@ namespace Microsoft.CSharp.Expressions
                     {
                         foundNull = true;
                     }
-                    else if (testValue == CSharpSwitchCase.DefaultCaseValue)
+                    else if (testValue == SwitchCaseDefaultValue)
                     {
                         foundDefault = true;
                     }
@@ -433,16 +433,6 @@ namespace Microsoft.CSharp.Expressions
             return Expression.SwitchCase(MakeBlock(@case.Statements), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
         }
 
-        private static Expression EnsureVoid(Expression expression)
-        {
-            if (expression != null && expression.Type != typeof(void))
-            {
-                expression = Expression.Block(typeof(void), expression);
-            }
-
-            return expression;
-        }
-
         private static Expression MakeBlock(ReadOnlyCollection<Expression> expressions)
         {
             if (expressions == null)
@@ -601,7 +591,7 @@ namespace Microsoft.CSharp.Expressions
                     //       break;
                     //  }
 
-                    var roDefaultTestValues = new TrueReadOnlyCollection<object>(new[] { CSharpSwitchCase.DefaultCaseValue });
+                    var roDefaultTestValues = new TrueReadOnlyCollection<object>(new[] { SwitchCaseDefaultValue });
                     var newDefaultCase = new CSharpSwitchCase(roDefaultTestValues, DefaultCase.Statements);
 
                     if (DefaultCase == NullCase)
@@ -659,7 +649,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (defaultBody != null)
             {
-                var @default = new[] { CSharpStatement.SwitchCase(new[] { CSharpSwitchCase.DefaultCaseValue }, defaultBody) };
+                var @default = new[] { CSharpStatement.SwitchCase(new[] { SwitchCaseDefaultValue }, defaultBody) };
 
                 if (cases != null)
                 {
@@ -730,7 +720,7 @@ namespace Microsoft.CSharp.Expressions
                                 throw Error.SwitchCantHaveNullCase(type);
                             }
                         }
-                        else if (value != CSharpSwitchCase.DefaultCaseValue)
+                        else if (value != SwitchCaseDefaultValue)
                         {
                             var valueType = value.GetType().GetNonNullableType();
 

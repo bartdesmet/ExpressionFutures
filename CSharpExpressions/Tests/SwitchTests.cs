@@ -410,7 +410,7 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
-                    CSharpStatement.SwitchCase(new[] { CSharpSwitchCase.DefaultCaseValue, "3" }, log("D")),
+                    CSharpStatement.SwitchCase(new[] { CSharpStatement.SwitchCaseDefaultValue, "3" }, log("D")),
                     CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
                 ),
                 new Asserts<string>
@@ -432,7 +432,7 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
-                    CSharpStatement.SwitchCase(new[] { "3", CSharpSwitchCase.DefaultCaseValue, "4" }, log("D")),
+                    CSharpStatement.SwitchCase(new[] { "3", CSharpStatement.SwitchCaseDefaultValue, "4" }, log("D")),
                     CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
                 ),
                 new Asserts<string>
@@ -454,7 +454,7 @@ namespace Tests
                 SwitchLogValue(log,
                     v,
                     CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
-                    CSharpStatement.SwitchCase(new[] { "3", CSharpSwitchCase.DefaultCaseValue, default(string) }, log("D")),
+                    CSharpStatement.SwitchCase(new[] { "3", CSharpStatement.SwitchCaseDefaultValue, default(string) }, log("D")),
                     CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
                 ),
                 new Asserts<string>
