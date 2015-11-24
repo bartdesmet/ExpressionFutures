@@ -467,12 +467,13 @@ CSharpStatement.Lock(
 
 ##### Switch
 
-Even though the DLR has a `SwitchExpression`, we've introduced a custom construct for C# to capture some specific semantics. The `SwitchCSharpStatement` node represents a `switch` statement. It contains a `SwitchValue` to switch on, a `BreakLabel` to denote the label to break out of the `switch`, a `Cases` collection containing the switch cases, and a `DefaultBody` for the default case.
+Even though the DLR has a `SwitchExpression`, we've introduced a custom construct for C# to capture some specific semantics. The `SwitchCSharpStatement` node represents a `switch` statement. It contains a `SwitchValue` to switch on, a `BreakLabel` to denote the label to break out of the `switch` and a `Cases` collection containing the switch cases.
 
 Differences from the DLR node include:
 - C# switch statements have type `void`.
-- C# switch statements can have no cases with test values and/or no default case.
+- C# switch statements can have no cases with test values and/or no default case (i.e. they can be emptier).
 - C# switch statements support `GotoCase` and `GotoDefault` control flow.
+- C# switch statements can have cases that include test values and a default label.
 
 An example of creating a `Switch` statement is shown below:
 
@@ -480,7 +481,6 @@ An example of creating a `Switch` statement is shown below:
 CSharpStatement.Switch(
   switchValue,
   breakLabel,
-  Expression.Call(cout, "Default"),
   CSharpStatement.SwitchCase(
     Expression.Call(cout, "Even"),
 	0, 2, 4
@@ -500,6 +500,9 @@ CSharpStatement.Switch(
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoDefault(),
 	-1
+  ),
+  CSharpStatement.SwitchCaseDefault(
+    Expression.Call(cout, "Default")
   )
 )
 ```
