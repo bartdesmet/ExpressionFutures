@@ -96,31 +96,42 @@ namespace Tests
             var value1 = Expression.Constant(1);
             var label1 = Expression.Label();
             var cases1 = new[] { CSharpStatement.SwitchCase(new[] { 42 }, Expression.Empty()) };
+            var vars1 = new[] { Expression.Parameter(typeof(int)) };
 
             var value2 = Expression.Constant(1);
             var label2 = Expression.Label();
             var cases2 = new[] { CSharpStatement.SwitchCase(new[] { 43 }, Expression.Empty()) };
+            var vars2 = new[] { Expression.Parameter(typeof(int)) };
 
-            var res = CSharpStatement.Switch(value1, label1, cases1);
+            var res = CSharpStatement.Switch(value1, label1, vars1, cases1);
 
-            var u0 = res.Update(res.SwitchValue, res.BreakLabel, res.Cases);
-            var u1 = res.Update(value2, res.BreakLabel, res.Cases);
-            var u2 = res.Update(res.SwitchValue, label2, res.Cases);
-            var u3 = res.Update(res.SwitchValue, res.BreakLabel, cases2);
+            var u0 = res.Update(res.SwitchValue, res.BreakLabel, res.Variables, res.Cases);
+            var u1 = res.Update(value2, res.BreakLabel, res.Variables, res.Cases);
+            var u2 = res.Update(res.SwitchValue, label2, res.Variables, res.Cases);
+            var u3 = res.Update(res.SwitchValue, res.BreakLabel, vars2, res.Cases);
+            var u4 = res.Update(res.SwitchValue, res.BreakLabel, res.Variables, cases2);
 
             Assert.AreSame(res, u0);
 
             Assert.AreSame(value2, u1.SwitchValue);
             Assert.AreSame(label1, u1.BreakLabel);
+            Assert.IsTrue(vars1.SequenceEqual(u1.Variables));
             Assert.IsTrue(cases1.SequenceEqual(u1.Cases));
 
             Assert.AreSame(value1, u2.SwitchValue);
             Assert.AreSame(label2, u2.BreakLabel);
+            Assert.IsTrue(vars1.SequenceEqual(u2.Variables));
             Assert.IsTrue(cases1.SequenceEqual(u2.Cases));
 
             Assert.AreSame(value1, u3.SwitchValue);
             Assert.AreSame(label1, u3.BreakLabel);
-            Assert.IsTrue(cases2.SequenceEqual(u3.Cases));
+            Assert.IsTrue(vars2.SequenceEqual(u3.Variables));
+            Assert.IsTrue(cases1.SequenceEqual(u3.Cases));
+
+            Assert.AreSame(value1, u4.SwitchValue);
+            Assert.AreSame(label1, u4.BreakLabel);
+            Assert.IsTrue(vars1.SequenceEqual(u4.Variables));
+            Assert.IsTrue(cases2.SequenceEqual(u4.Cases));
         }
         
         [TestMethod]

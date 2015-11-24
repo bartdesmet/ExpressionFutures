@@ -90,6 +90,20 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
+        {
+            var switchValue = Visit(node.SwitchValue);
+
+            Push(node.Variables);
+
+            var res = node.Update(switchValue, VisitLabelTarget(node.BreakLabel), VisitAndConvert(node.Variables, nameof(VisitSwitch)), Visit(node.Cases, VisitSwitchCase));
+
+            Pop();
+
+            return res;
+        }
+
         protected abstract override Expression VisitParameter(ParameterExpression node);
 
         protected abstract void Push(IEnumerable<ParameterExpression> variables);

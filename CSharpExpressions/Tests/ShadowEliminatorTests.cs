@@ -156,6 +156,27 @@ namespace Tests
             Assert.AreNotSame(v1, v2);
         }
 
+        [TestMethod]
+        public void ShadowEliminator_Shadow_Switch()
+        {
+            var v = Expression.Constant(1);
+            var l = Expression.Label();
+            var x = Expression.Parameter(typeof(int));
+
+            var e = CSharpExpression.Switch(v, l, new[] { x }, new[] { CSharpExpression.SwitchCase(new[] { 1 }, CSharpExpression.Switch(x, l, new[] { x }, new[] { CSharpExpression.SwitchCase(new[] { 2 }, x) })) });
+            var r = (SwitchCSharpStatement)ShadowEliminator.Eliminate(e);
+
+            var v1 = r.Variables[0];
+            var e1 = (SwitchCSharpStatement)r.Cases[0].Statements[0];
+            var vi = e1.SwitchValue; // not in inner scope
+            var v2 = e1.Variables[0];
+            var e2 = e1.Cases[0].Statements[0];
+
+            Assert.AreSame(v1, vi); // not in inner scope
+            Assert.AreSame(v2, e2);
+            Assert.AreNotSame(v1, v2);
+        }
+
         // TODO: add more tests that nest the different constructs
     }
 }

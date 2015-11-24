@@ -26,10 +26,11 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class SwitchCSharpStatement : CSharpStatement
     {
-        internal SwitchCSharpStatement(Expression switchValue, LabelTarget breakLabel, ReadOnlyCollection<CSharpSwitchCase> cases)
+        internal SwitchCSharpStatement(Expression switchValue, LabelTarget breakLabel, ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<CSharpSwitchCase> cases)
         {
             SwitchValue = switchValue;
             BreakLabel = breakLabel;
+            Variables = variables;
             Cases = cases;
         }
 
@@ -42,6 +43,11 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the <see cref="LabelTarget"/> representing the break label of the switch statement.
         /// </summary>
         public LabelTarget BreakLabel { get; }
+
+        /// <summary>
+        /// Gets a collection of variables in scope for the switch cases.
+        /// </summary>
+        public ReadOnlyCollection<ParameterExpression> Variables { get; }
 
         /// <summary>
         /// Gets the collection of switch cases.
@@ -70,16 +76,17 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="switchValue">The <see cref="SwitchValue" /> property of the result.</param>
         /// <param name="breakLabel">The <see cref="BreakLabel"/> property of the result.</param>
+        /// <param name="variables">The <see cref="Variables" /> property of the result.</param>
         /// <param name="cases">The <see cref="Cases" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<CSharpSwitchCase> cases)
+        public SwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<CSharpSwitchCase> cases)
         {
-            if (switchValue == this.SwitchValue && breakLabel == this.BreakLabel && cases == this.Cases)
+            if (switchValue == this.SwitchValue && breakLabel == this.BreakLabel && variables == this.Variables && cases == this.Cases)
             {
                 return this;
             }
 
-            return CSharpExpression.Switch(switchValue, breakLabel, cases);
+            return CSharpExpression.Switch(switchValue, breakLabel, variables, cases);
         }
 
         /// <summary>
@@ -279,6 +286,12 @@ namespace Microsoft.CSharp.Expressions
             var governingType = SwitchValue.Type;
             var governingTypeNonNull = governingType.GetNonNullableType();
 
+            var valueLocal = Expression.Parameter(governingType);
+            var vars = new[] { valueLocal };
+
+            var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
+            var body = default(Expression);
+
             // NB: The DLR switch expression does not optimize the nullable case into a switch table after a null check.
             //     We can do this here instead, but we could consider moving this logic to the DLR too.
 
@@ -289,11 +302,6 @@ namespace Microsoft.CSharp.Expressions
                     // We found a case with only a 'null' test value; we can lower to a null-check followed by a non-null switch,
                     // and move the 'null' case to an else branch.
 
-                    var valueLocal = Expression.Parameter(governingType);
-                    var vars = new[] { valueLocal };
-
-                    var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
-
                     var hasValue = Expression.Property(valueLocal, "HasValue");
                     var value = Expression.Property(valueLocal, "Value");
 
@@ -301,15 +309,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var @switch = Expression.Switch(value, lowered.DefaultCase, null, lowered.Cases);
 
-                    var nullCheck = Expression.IfThenElse(hasValue, @switch, lowered.NullCase);
-
-                    var exprs = new Expression[]
-                    {
-                        assignSwitchValue,
-                        nullCheck,
-                    };
-
-                    return Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(vars), new TrueReadOnlyCollection<Expression>(exprs));
+                    body = Expression.IfThenElse(hasValue, @switch, lowered.NullCase);
                 }
                 else
                 {
@@ -318,26 +318,12 @@ namespace Microsoft.CSharp.Expressions
 
                     var lowered = LowerSwitchStatement(analysis, governingType, hoistNull: false);
 
-                    var @switch = Expression.Switch(SwitchValue, lowered.DefaultCase, null, lowered.Cases);
-
-                    var exprs = new Expression[]
-                    {
-                        @switch,
-                    };
-
-                    return Expression.Block(new TrueReadOnlyCollection<Expression>(exprs));
+                    body = Expression.Switch(valueLocal, lowered.DefaultCase, null, lowered.Cases);
                 }
             }
             else
             {
                 // We have no 'null' test value whatsoever; we can lower to a null-check followed by a non-null switch.
-
-                var valueLocal = Expression.Parameter(governingType);
-                var vars = new[] { valueLocal };
-
-                var exprs = default(Expression[]);
-
-                var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
 
                 var hasValue = Expression.Property(valueLocal, "HasValue");
                 var value = Expression.Property(valueLocal, "Value");
@@ -354,29 +340,35 @@ namespace Microsoft.CSharp.Expressions
 
                     var defaultCase = Expression.Block(Expression.Label(defaultLabel), defaultBody);
 
-                    var nullCheck = Expression.IfThenElse(hasValue, @switch, defaultCase);
-
-                    exprs = new Expression[]
-                    {
-                        assignSwitchValue,
-                        nullCheck,
-                    };
+                    body = Expression.IfThenElse(hasValue, @switch, defaultCase);
                 }
                 else
                 {
                     var @switch = Expression.Switch(value, null, null, lowered.Cases);
 
-                    var nullCheck = Expression.IfThen(hasValue, @switch);
-
-                    exprs = new Expression[]
-                    {
-                        assignSwitchValue,
-                        nullCheck,
-                    };
+                    body = Expression.IfThen(hasValue, @switch);
                 }
-
-                return Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(vars), new TrueReadOnlyCollection<Expression>(exprs));
             }
+
+            // NB: Variable scope should not include the switch value.
+
+            var exprs = new Expression[]
+            {
+                assignSwitchValue,
+                WithVariableScope(body),
+            };
+
+            return Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(vars), new TrueReadOnlyCollection<Expression>(exprs));
+        }
+
+        private Expression WithVariableScope(Expression expression)
+        {
+            if (Variables.Count > 0)
+            {
+                expression = Expression.Block(Variables, expression);
+            }
+
+            return expression;
         }
 
         private static LoweredSwitchStatement LowerSwitchStatement(SwitchAnalysis analysis, Type testValueType, bool hoistNull = false)
@@ -620,7 +612,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, params CSharpSwitchCase[] cases)
         {
-            return Switch(switchValue, breakLabel, null, (IEnumerable<CSharpSwitchCase>)cases);
+            return Switch(switchValue, breakLabel, default(IEnumerable<ParameterExpression>), (IEnumerable<CSharpSwitchCase>)cases);
         }
 
         /// <summary>
@@ -628,11 +620,24 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="switchValue">The value to be tested against each case.</param>
         /// <param name="breakLabel">The break label of the switch statement.</param>
-        /// <param name="defaultBody">The body of the default case.</param>
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<CSharpSwitchCase> cases)
+        {
+            return Switch(switchValue, breakLabel, default(IEnumerable<ParameterExpression>), cases);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="SwitchCSharpStatement"/> that represents a switch statement.
+        /// </summary>
+        /// <param name="switchValue">The value to be tested against each case.</param>
+        /// <param name="breakLabel">The break label of the switch statement.</param>
+        /// <param name="variables">The variables in scope of the cases.</param>
+        /// <param name="cases">The set of cases to switch on.</param>
+        /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<CSharpSwitchCase> cases)
         {
             RequiresCanRead(switchValue, nameof(switchValue));
             RequiresNotNull(breakLabel, nameof(breakLabel));
@@ -692,9 +697,11 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
+            var variableList = variables.ToReadOnly();
+
             // NB: No check for DefaultBody to be of type void; we'll make it void in Reduce if need be.
 
-            return new SwitchCSharpStatement(switchValue, breakLabel, casesList);
+            return new SwitchCSharpStatement(switchValue, breakLabel, variableList, casesList);
         }
 
         /// <summary>
@@ -735,7 +742,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            return Switch(switchValue, breakLabel, cases);
+            return Switch(switchValue, breakLabel, default(IEnumerable<ParameterExpression>), cases);
         }
 
         private static void CheckValidSwitchType(Type type)
@@ -778,7 +785,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitSwitch(SwitchCSharpStatement node)
         {
-            return node.Update(Visit(node.SwitchValue), VisitLabelTarget(node.BreakLabel), Visit(node.Cases, VisitSwitchCase));
+            return node.Update(Visit(node.SwitchValue), VisitLabelTarget(node.BreakLabel), VisitAndConvert(node.Variables, nameof(VisitSwitch)), Visit(node.Cases, VisitSwitchCase));
         }
     }
 }
