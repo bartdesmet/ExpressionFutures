@@ -723,7 +723,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (defaultBody != null)
             {
-                var @default = new[] { CSharpStatement.SwitchCase(new[] { SwitchCaseDefaultValue }, defaultBody) };
+                var @default = new[] { CSharpStatement.SwitchCaseDefault(defaultBody) };
 
                 if (cases != null)
                 {

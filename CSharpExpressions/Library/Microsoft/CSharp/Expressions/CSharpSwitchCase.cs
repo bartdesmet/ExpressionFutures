@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
@@ -53,10 +54,13 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        private static readonly object s_SwitchCaseDefaultValue = new object();
+        private static ReadOnlyCollection<object> s_default;
+
         /// <summary>
         /// Gets an object representing the 'default' case.
         /// </summary>
-        public static object SwitchCaseDefaultValue { get; } = new object();
+        public static object SwitchCaseDefaultValue => s_SwitchCaseDefaultValue;
 
         // NB: Generic factory methods below help the user to provide consistent typing.
         //     The non-generic overload is used for easier binding without having to close the generic parameter.
@@ -173,6 +177,29 @@ namespace Microsoft.CSharp.Expressions
             var statementsList = GetStatements(statements);
 
             return new CSharpSwitchCase(testValuesList, statementsList);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CSharpSwitchCase"/> that represents a default switch case.
+        /// </summary>
+        /// <param name="statements">The statements in the body of the case.</param>
+        /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static CSharpSwitchCase SwitchCaseDefault(params Expression[] statements)
+        {
+            return SwitchCaseDefault((IEnumerable<Expression>)statements);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CSharpSwitchCase"/> that represents a default switch case.
+        /// </summary>
+        /// <param name="statements">The statements in the body of the case.</param>
+        /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static CSharpSwitchCase SwitchCaseDefault(IEnumerable<Expression> statements)
+        {
+            var testValues = s_default ?? (s_default = new TrueReadOnlyCollection<object>(new[] { s_SwitchCaseDefaultValue }));
+            return SwitchCase(testValues, statements);
         }
 
         private static ReadOnlyCollection<Expression> GetStatements(IEnumerable<Expression> statements)

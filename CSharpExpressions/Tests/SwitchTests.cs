@@ -323,12 +323,31 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Switch_Compile_String_Default()
+        public void Switch_Compile_String_Default1()
         {
             AssertCompile<string>((log, v) =>
                 SwitchLogValue(log,
                     v,
                     log("D"),
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A"))
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "D" },
+                    { null, "E", "D" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_Default2()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCaseDefault(log("D")),
                     CSharpStatement.SwitchCase(new[] { "1" }, log("A"))
                 ),
                 new Asserts<string>

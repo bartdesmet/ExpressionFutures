@@ -30,6 +30,8 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(vals, default(IEnumerable<Expression>)));
             AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(objs, default(Expression[])));
             AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(objs, default(IEnumerable<Expression>)));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCaseDefault(default(Expression[])));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCaseDefault(default(IEnumerable<Expression>)));
 
             // empty
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Array.Empty<int>(), body));
@@ -40,6 +42,8 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(vals, Enumerable.Empty<Expression>()));
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(objs, Array.Empty<Expression>()));
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(objs, Enumerable.Empty<Expression>()));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCaseDefault(Array.Empty<Expression>()));
+            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCaseDefault(Enumerable.Empty<Expression>()));
 
             // switch type
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }, body));
@@ -99,6 +103,21 @@ namespace Tests
             {
                 Assert.IsTrue(b.SequenceEqual(s.Statements));
                 Assert.IsTrue(t.SequenceEqual(s.TestValues.Cast<int>()));
+            }
+        }
+
+        [TestMethod]
+        public void SwitchCaseDefault_Properties()
+        {
+            var b = new[] { Expression.Empty() };
+
+            var s1 = CSharpStatement.SwitchCaseDefault(b);
+            var s2 = CSharpStatement.SwitchCaseDefault(b.AsEnumerable());
+
+            foreach (var s in new[] { s1, s2 })
+            {
+                Assert.IsTrue(b.SequenceEqual(s.Statements));
+                Assert.AreSame(CSharpStatement.SwitchCaseDefaultValue, s.TestValues.Single());
             }
         }
 
