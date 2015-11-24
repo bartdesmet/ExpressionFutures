@@ -74,21 +74,19 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases));
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases.AsEnumerable()));
         }
-
+        
         [TestMethod]
         public void Switch_Properties()
         {
             var value = Expression.Constant(1);
             var label = Expression.Label();
-            var defaultBody = Expression.Empty();
             var cases = new[] { CSharpStatement.SwitchCase(new[] { 42 }, Expression.Empty()) };
 
-            var res = CSharpStatement.Switch(value, label, defaultBody, cases);
+            var res = CSharpStatement.Switch(value, label, cases);
 
             Assert.AreEqual(CSharpExpressionType.Switch, res.CSharpNodeType);
             Assert.AreSame(value, res.SwitchValue);
             Assert.AreSame(label, res.BreakLabel);
-            Assert.AreSame(defaultBody, res.DefaultBody);
             Assert.IsTrue(cases.SequenceEqual(res.Cases));
         }
 
@@ -97,45 +95,34 @@ namespace Tests
         {
             var value1 = Expression.Constant(1);
             var label1 = Expression.Label();
-            var defaultBody1 = Expression.Empty();
             var cases1 = new[] { CSharpStatement.SwitchCase(new[] { 42 }, Expression.Empty()) };
 
             var value2 = Expression.Constant(1);
             var label2 = Expression.Label();
-            var defaultBody2 = Expression.Empty();
             var cases2 = new[] { CSharpStatement.SwitchCase(new[] { 43 }, Expression.Empty()) };
 
-            var res = CSharpStatement.Switch(value1, label1, defaultBody1, cases1);
+            var res = CSharpStatement.Switch(value1, label1, cases1);
 
-            var u0 = res.Update(res.SwitchValue, res.BreakLabel, res.Cases, res.DefaultBody);
-            var u1 = res.Update(value2, res.BreakLabel, res.Cases, res.DefaultBody);
-            var u2 = res.Update(res.SwitchValue, label2, res.Cases, res.DefaultBody);
-            var u3 = res.Update(res.SwitchValue, res.BreakLabel, cases2, res.DefaultBody);
-            var u4 = res.Update(res.SwitchValue, res.BreakLabel, res.Cases, defaultBody2);
+            var u0 = res.Update(res.SwitchValue, res.BreakLabel, res.Cases);
+            var u1 = res.Update(value2, res.BreakLabel, res.Cases);
+            var u2 = res.Update(res.SwitchValue, label2, res.Cases);
+            var u3 = res.Update(res.SwitchValue, res.BreakLabel, cases2);
 
             Assert.AreSame(res, u0);
 
             Assert.AreSame(value2, u1.SwitchValue);
             Assert.AreSame(label1, u1.BreakLabel);
             Assert.IsTrue(cases1.SequenceEqual(u1.Cases));
-            Assert.AreSame(defaultBody1, u1.DefaultBody);
 
             Assert.AreSame(value1, u2.SwitchValue);
             Assert.AreSame(label2, u2.BreakLabel);
             Assert.IsTrue(cases1.SequenceEqual(u2.Cases));
-            Assert.AreSame(defaultBody1, u2.DefaultBody);
 
             Assert.AreSame(value1, u3.SwitchValue);
             Assert.AreSame(label1, u3.BreakLabel);
             Assert.IsTrue(cases2.SequenceEqual(u3.Cases));
-            Assert.AreSame(defaultBody1, u3.DefaultBody);
-
-            Assert.AreSame(value1, u4.SwitchValue);
-            Assert.AreSame(label1, u4.BreakLabel);
-            Assert.IsTrue(cases1.SequenceEqual(u4.Cases));
-            Assert.AreSame(defaultBody2, u4.DefaultBody);
         }
-
+        
         [TestMethod]
         public void Switch_Compile_Int32()
         {
@@ -412,6 +399,72 @@ namespace Tests
                     { "3", "E", "Z" },
                     { "4", "E", "D" },
                     { null, "E", "Z" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_DefaultWithCompanionship1()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { CSharpSwitchCase.DefaultCaseValue, "3" }, log("D")),
+                    CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "B" },
+                    { "3", "E", "D" },
+                    { "4", "E", "D" },
+                    { null, "E", "D" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_DefaultWithCompanionship2()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { "3", CSharpSwitchCase.DefaultCaseValue, "4" }, log("D")),
+                    CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "B" },
+                    { "3", "E", "D" },
+                    { "4", "E", "D" },
+                    { null, "E", "D" },
+                }
+            );
+        }
+
+        [TestMethod]
+        public void Switch_Compile_String_DefaultWithCompanionship3()
+        {
+            AssertCompile<string>((log, v) =>
+                SwitchLogValue(log,
+                    v,
+                    CSharpStatement.SwitchCase(new[] { "1" }, log("A")),
+                    CSharpStatement.SwitchCase(new[] { "3", CSharpSwitchCase.DefaultCaseValue, default(string) }, log("D")),
+                    CSharpStatement.SwitchCase(new[] { "2" }, log("B"))
+                ),
+                new Asserts<string>
+                {
+                    { "0", "E", "D" },
+                    { "1", "E", "A" },
+                    { "2", "E", "B" },
+                    { "3", "E", "D" },
+                    { "4", "E", "D" },
+                    { null, "E", "D" },
                 }
             );
         }

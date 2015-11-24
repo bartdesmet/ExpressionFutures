@@ -24,6 +24,11 @@ namespace Microsoft.CSharp.Expressions
             TestValues = testValues;
             Statements = statements;
         }
+        
+        /// <summary>
+        /// Gets an object representing the 'default' case.
+        /// </summary>
+        public static readonly object DefaultCaseValue = new object();
 
         /// <summary>
         /// Gets a collection of values to test for.
@@ -148,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
 
                 // NB: Null is fine; every valid governing type in C# has a nullable variant (trivial for string).
 
-                if (testValue != null)
+                if (testValue != null && testValue != CSharpSwitchCase.DefaultCaseValue)
                 {
                     var testValueType = testValue.GetType();
                     if (testType == null)
