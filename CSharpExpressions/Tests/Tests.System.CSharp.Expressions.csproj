@@ -102,9 +102,9 @@
     <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Library\Library.csproj">
+    <ProjectReference Include="..\Library\System.CSharp.Expressions.csproj">
       <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
-      <Name>Library</Name>
+      <Name>System.CSharp.Expressions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
