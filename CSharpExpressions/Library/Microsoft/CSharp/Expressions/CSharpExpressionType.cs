@@ -38,6 +38,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         AsyncLambda,
         /// <summary>
+        /// A node that represents a block.
+        /// </summary>
+        Block,
+        /// <summary>
         /// A node that represents a while loop.
         /// </summary>
         While,

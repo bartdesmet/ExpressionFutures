@@ -55,6 +55,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
         //     out if we want to reduce code size.
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitBlock(BlockCSharpExpression node)
+        {
+            Push(node.Variables);
+
+            var res = base.VisitBlock(node);
+
+            Pop();
+
+            return res;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
             Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());

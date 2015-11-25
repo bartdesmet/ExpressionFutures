@@ -28,6 +28,10 @@ namespace Tests
             var c2 = Expression.Parameter(typeof(int[]));
             var i1 = Expression.Default(typeof(int));
             var b1 = Expression.Default(typeof(bool));
+            var l1 = Expression.Label();
+            var l2 = Expression.Label();
+            var x1 = Expression.Constant(1);
+            var x2 = Expression.Constant(2);
 
             var es = new Expression[]
             {
@@ -39,6 +43,8 @@ namespace Tests
                 CSharpExpression.Using(r1, CSharpExpression.Using(r1, Expression.Empty())),
                 CSharpExpression.ForEach(v1, c1, CSharpExpression.ForEach(v2, c2, Expression.Empty())),
                 CSharpExpression.For(new[] { Expression.Assign(v1, i1) }, b1, null, CSharpExpression.For(new[] { Expression.Assign(v2, i1) }, b1, null, Expression.Empty())),
+                CSharpExpression.Switch(x1, l1, new[] { v1 }, new[] { CSharpExpression.SwitchCase(new[] { 1 }, CSharpExpression.Switch(x2, l2, new[] { v2 }, new[] { CSharpExpression.SwitchCase(new[] { 2 }, Expression.Add(v1, v2)) })) }),
+                CSharpExpression.Block(new[] { v1 }, new Expression[] { CSharpExpression.Block(new[] { v2 }, new Expression[] { Expression.Add(v1, v2) }, l1) }, l2),
             };
 
             foreach (var e in es)
@@ -48,7 +54,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ShadowEliminator_Shadow_Block()
+        public void ShadowEliminator_Shadow_Block1()
         {
             var x = Expression.Parameter(typeof(int));
 
@@ -59,6 +65,26 @@ namespace Tests
             var e1 = (BlockExpression)r.Expressions[0];
             var v2 = e1.Variables[0];
             var e2 = e1.Expressions[0];
+
+            Assert.AreSame(v2, e2);
+            Assert.AreNotSame(v1, v2);
+        }
+
+        [TestMethod]
+        public void ShadowEliminator_Shadow_Block2()
+        {
+            var x = Expression.Parameter(typeof(int));
+
+            var l1 = Expression.Label();
+            var l2 = Expression.Label();
+
+            var e = CSharpStatement.Block(new[] { x }, new Expression[] { CSharpStatement.Block(new[] { x }, new Expression[] { x }, l2) }, l1);
+            var r = (BlockCSharpExpression)ShadowEliminator.Eliminate(e);
+
+            var v1 = r.Variables[0];
+            var e1 = (BlockCSharpExpression)r.Statements[0];
+            var v2 = e1.Variables[0];
+            var e2 = e1.Statements[0];
 
             Assert.AreSame(v2, e2);
             Assert.AreNotSame(v1, v2);
