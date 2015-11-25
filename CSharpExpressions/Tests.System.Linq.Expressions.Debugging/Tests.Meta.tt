@@ -1,0 +1,136 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension="Generated.tt" #>
+<#
+var exprs = new string[]
+{
+	"Expression.Default(typeof(int))",
+
+	"Expression.Constant(1)",
+	
+	"((Expression<Func<int, int>>)(x => x))",
+	
+	"((Expression<Func<int, int>>)(x => x + 1)).Body",
+	"((Expression<Func<TimeSpan, TimeSpan, TimeSpan>>)((a, b) => a + b)).Body",
+	
+	"((Expression<Func<int, int>>)(x => -x)).Body",
+	"((Expression<Func<TimeSpan, TimeSpan>>)(x => -x)).Body",
+	
+	"((Expression<Func<string, int>>)(s => s.Length)).Body",
+	"((Expression<Func<DateTime>>)(() => DateTime.Now)).Body",
+	
+	"((Expression<Func<string, string>>)(s => s.Substring(1))).Body",
+	"((Expression<Func<string, int>>)(x => int.Parse(x))).Body",
+
+	"((Expression<Func<bool, int, int, int>>)((b, t, f) => b ? t : f)).Body",
+	"Expression.IfThen(Expression.Constant(true), Expression.Empty())",
+
+	"((Expression<Func<List<string>, int, string>>)((ss, i) => ss[i])).Body",
+	"Expression.MakeIndex(Expression.Default(typeof(List<string>)), typeof(List<string>).GetProperty(\"Item\"), new[] { Expression.Constant(1) })",
+
+	"((Expression<Func<TimeSpan>>)(() => new TimeSpan())).Body",
+	"((Expression<Func<TimeSpan>>)(() => new TimeSpan(1L))).Body",
+	"((Expression<Func<object>>)(() => new { a = 1 })).Body",
+
+	"((Expression<Func<int[,]>>)(() => new int[1, 2])).Body",
+	"((Expression<Func<int[]>>)(() => new int[] { 1, 2 })).Body",
+
+	"((Expression<Func<Func<int, int, int>, int, int, int>>)((f, x, y) => f(x, y))).Body",
+
+	"((Expression<Func<object, bool>>)(o => o is string)).Body",
+
+	"((Expression<Func<StrongBox<int>>>)(() => new StrongBox<int>() { Value = 1 })).Body",
+	"((Expression<Func<StrongBox<StrongBox<int>>>>)(() => new StrongBox<StrongBox<int>>() { Value = { Value = 1 } })).Body",
+	"((Expression<Func<StrongBox<List<int>>>>)(() => new StrongBox<List<int>>() { Value = { 1 } })).Body",
+
+	"((Expression<Func<List<int>>>)(() => new List<int>() { 1 })).Body",
+
+	"Expression.Block(Expression.Empty())",
+	"Expression.Block(new[] { Expression.Parameter(typeof(int)) }, Expression.Empty())",
+	"Expression.Block(typeof(int), Expression.Constant(1))",
+
+	"Expression.Switch(Expression.Parameter(typeof(int)), Expression.Constant(1), new[] { Expression.SwitchCase(Expression.Constant(2), Expression.Constant(3), Expression.Constant(4)) })",
+	"Expression.Switch(Expression.Parameter(typeof(int)), new[] { Expression.SwitchCase(Expression.Empty(), Expression.Constant(3), Expression.Constant(4)) })",
+
+	"Expression.Label(Expression.Label())",
+	"Expression.Label(Expression.Label(typeof(int)), Expression.Default(typeof(int)))",
+	"Expression.Label(Expression.Label(typeof(int), \"foo\"), Expression.Default(typeof(int)))",
+
+	"Expression.Break(Expression.Label())",
+	"Expression.Break(Expression.Label(typeof(int)), Expression.Constant(1))",
+	"Expression.Continue(Expression.Label())",
+	"Expression.Goto(Expression.Label())",
+	"Expression.Goto(Expression.Label(), Expression.Constant(1))",
+
+	"Expression.TryCatch(Expression.Constant(1), Expression.Catch(Expression.Parameter(typeof(Exception)), Expression.Constant(2)))",
+	"Expression.TryCatch(Expression.Constant(1), Expression.Catch(typeof(Exception), Expression.Constant(2)))",
+	"Expression.TryCatch(Expression.Constant(1), Expression.Catch(Expression.Parameter(typeof(Exception)), Expression.Constant(2), Expression.Constant(true)))",
+	"Expression.TryCatch(Expression.Constant(1), Expression.Catch(typeof(Exception), Expression.Constant(2), Expression.Constant(true)))",
+	"Expression.TryCatchFinally(Expression.Constant(1), Expression.Empty(), Expression.Catch(Expression.Parameter(typeof(Exception)), Expression.Constant(2)))",
+	"Expression.TryFinally(Expression.Constant(1), Expression.Empty())",
+	"Expression.TryFault(Expression.Constant(1), Expression.Empty())",
+
+	"Expression.Loop(Expression.Empty())",
+	"Expression.Loop(Expression.Empty(), Expression.Label(typeof(void), \"break\"))",
+	"Expression.Loop(Expression.Empty(), Expression.Label(typeof(void), \"break\"), Expression.Label(typeof(void), \"continue\"))",
+
+	"Expression.RuntimeVariables(Expression.Parameter(typeof(int)))",
+
+	"Expression.ClearDebugInfo(Expression.SymbolDocument(\"foo\"))",
+	"Expression.DebugInfo(Expression.SymbolDocument(\"foo\"), 1, 2, 3, 4)",
+};
+#>
+\<#@ template debug="false" hostspecific="false" language="C#" \#>
+\<#@ assembly name="System.Core" \#>
+\<#@ import namespace="System" \#>
+\<#@ import namespace="System.Linq" \#>
+\<#@ import namespace="System.Linq.Expressions" \#>
+\<#@ import namespace="System.Text" \#>
+\<#@ import namespace="System.Collections.Generic" \#>
+\<#@ import namespace="System.Runtime.CompilerServices" \#>
+\<#@ assembly name="System.Xml" \#>
+\<#@ assembly name="System.Xml.Linq" \#>
+\<#@ assembly name="$(SolutionDir)\System.Linq.Expressions.Debugging\bin\$(Configuration)\System.Linq.Expressions.Debugging.dll" \#>
+\<#
+var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace("\"", "\"\"") + "\"");
+\#>
+// NOTE: These tests are auto-generated and can *never* fail because they assert the outcome of DebugView()
+//       at runtime against the outcome obtained at compile time. However, a human should read through the
+//       cases to assert the outcome is as expected.
+//
+//       Regressions can still be caught given that the T4 won't be re-run unless it gets saved in the IDE.
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+
+namespace Tests
+{
+	[TestClass]
+    public class DebugViewTests
+	{
+<#
+var i = 0;
+foreach (var expr in exprs)
+{
+#>
+        private Expression expr<#=i#> = <#=expr#>;
+        private string dbg<#=i#> = \<#=toEscapedString(<#=expr#>.DebugView())\#>;
+
+		[TestMethod]
+		public void DebugView_Test<#=i#>()
+		{
+			Assert.AreEqual(dbg<#=i#>, expr<#=i#>.DebugView().ToString());
+		}
+
+<#
+i++;
+}
+#>
+    }
+}

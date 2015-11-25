@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace System.Linq.Expressions
 {
     /// <summary>
-    /// Expression visitors that produces a debug view.
+    /// Expression visitor that produces a debug view.
     /// </summary>
     public class DebugViewExpressionVisitor : ExpressionVisitor, IDebugViewExpressionVisitor
     {
@@ -22,8 +22,7 @@ namespace System.Linq.Expressions
         /// <returns>Debug view for the specified expression.</returns>
         public XNode GetDebugView(Expression expression)
         {
-            base.Visit(expression);
-            return _nodes.Pop();
+            return Visit(expression);
         }
 
         protected override Expression VisitConstant(ConstantExpression node)
@@ -38,9 +37,17 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            var id = MakeInstanceId(node);
+            var args = new List<object>();
 
-            return Push(node, new XAttribute("Name", node.Name), new XAttribute("Id", id));
+            var id = MakeInstanceId(node);
+            args.Add(new XAttribute("Id", id));
+
+            if (node.Name != null)
+            {
+                args.Add(new XAttribute("Name", node.Name));
+            }
+
+            return Push(node, args);
         }
 
         protected override Expression VisitLambda<T>(Expression<T> node)
@@ -54,33 +61,39 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            var left = Visit(node.Left);
-            var right = Visit(node.Right);
+            var args = new List<object>();
+
+            if (node.Method != null)
+            {
+                args.Add(new XAttribute("Method", node.Method));
+            }
+
+            args.Add(new XElement("Left", Visit(node.Left)));
+            args.Add(new XElement("Right", Visit(node.Right)));
 
             if (node.Conversion != null)
             {
-                var convert = Visit(node.Conversion);
+                args.Add(new XElement("Conversion", Visit(node.Conversion)));
+            }
 
-                return Push(node, new XElement("Left", left), new XElement("Right", right), new XElement("Conversion", convert));
-            }
-            else
-            {
-                return Push(node, new XElement("Left", left), new XElement("Right", right));
-            }
+            return Push(node, args);
         }
 
         protected override Expression VisitUnary(UnaryExpression node)
         {
+            var args = new List<object>();
+
+            if (node.Method != null)
+            {
+                args.Add(new XAttribute("Method", node.Method));
+            }
+
             if (node.Operand != null)
             {
-                var operand = Visit(node.Operand);
+                args.Add(new XElement("Operand", Visit(node.Operand)));
+            }
 
-                return Push(node, new XElement("Operand", operand));
-            }
-            else
-            {
-                return Push(node, new XElement(node.NodeType.ToString()));
-            }
+            return Push(node, args);
         }
 
         protected override Expression VisitConditional(ConditionalExpression node)
@@ -89,11 +102,7 @@ namespace System.Linq.Expressions
 
             args.Add(new XElement("Test", Visit(node.Test)));
             args.Add(new XElement("IfTrue", Visit(node.IfTrue)));
-
-            if (node.IfFalse != null)
-            {
-                args.Add(new XElement("IfFalse", Visit(node.IfFalse)));
-            }
+            args.Add(new XElement("IfFalse", Visit(node.IfFalse)));
 
             return Push(node, args);
         }
@@ -113,15 +122,17 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            var args = Visit("Arguments", node.Arguments);
-
             if (node.Object != null)
             {
                 var obj = Visit(node.Object);
+                var args = Visit("Arguments", node.Arguments);
+
                 return Push(node, new XAttribute("Method", node.Method), new XElement("Object", obj), args);
             }
             else
             {
+                var args = Visit("Arguments", node.Arguments);
+
                 return Push(node, new XAttribute("Method", node.Method), args);
             }
         }
@@ -349,7 +360,19 @@ namespace System.Linq.Expressions
 
         protected override LabelTarget VisitLabelTarget(LabelTarget node)
         {
-            _nodes.Push(new XElement("LabelTarget", new XAttribute("Type", node.Type), new XAttribute("Name", node.Name), new XAttribute("Id", MakeInstanceId(node))));
+            var args = new List<object>();
+
+            args.Add(new XAttribute("Type", node.Type));
+
+            var id = MakeInstanceId(node);
+            args.Add(new XAttribute("Id", id));
+
+            if (node.Name != null)
+            {
+                args.Add(new XAttribute("Name", node.Name));
+            }
+
+            _nodes.Push(new XElement("LabelTarget", args));
             return node;
         }
 
@@ -436,7 +459,7 @@ namespace System.Linq.Expressions
 
             foreach (var expression in expressions)
             {
-                res.Add(GetDebugView(expression));
+                res.Add(Visit(expression));
             }
 
             return new XElement(name, res);
@@ -481,31 +504,31 @@ namespace System.Linq.Expressions
 
         private XNode VisitMemberBinding2(MemberBinding node)
         {
-            base.VisitMemberBinding(node);
+            VisitMemberBinding(node);
             return _nodes.Pop();
         }
 
         private XNode VisitElementInit2(ElementInit node)
         {
-            base.VisitElementInit(node);
+            VisitElementInit(node);
             return _nodes.Pop();
         }
 
         private XNode VisitCatchBlock2(CatchBlock node)
         {
-            base.VisitCatchBlock(node);
+            VisitCatchBlock(node);
             return _nodes.Pop();
         }
 
         private XNode VisitLabelTarget2(LabelTarget node)
         {
-            base.VisitLabelTarget(node);
+            VisitLabelTarget(node);
             return _nodes.Pop();
         }
 
         private XNode VisitSwitchCase2(SwitchCase node)
         {
-            base.VisitSwitchCase(node);
+            VisitSwitchCase(node);
             return _nodes.Pop();
         }
     }

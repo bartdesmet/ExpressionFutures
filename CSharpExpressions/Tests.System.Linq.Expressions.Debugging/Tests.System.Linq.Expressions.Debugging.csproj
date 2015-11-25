@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{099B1D7F-69C2-4C91-AF48-896CF3189493}</ProjectGuid>
+    <ProjectGuid>{25D71B89-30E9-4192-A553-D4F5157D0963}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>Tests.System.Linq.Expressions.Debugging</RootNamespace>
+    <AssemblyName>Tests.System.Linq.Expressions.Debugging</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +26,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,11 +34,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -53,68 +53,30 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AssignmentPercolatorTests.cs" />
-    <Compile Include="BlockTests.cs" />
-    <Compile Include="DynamicAwaitTests.cs" />
-    <Compile Include="ConditionalArrayIndexTests.cs" />
-    <Compile Include="CSharpExpressionVisitorTests.cs" />
-    <Compile Include="AssertEx.cs" />
-    <Compile Include="AsyncLambdaTests.cs" />
-    <Compile Include="AsyncLambdaTests.Compilation.cs" />
-    <Compile Include="AwaitTests.cs" />
-    <Compile Include="ConditionalAccessTests.cs" />
-    <Compile Include="ConditionalInvokeTests.cs" />
-    <Compile Include="ConditionalCallTests.cs" />
-    <Compile Include="ConditionalIndexTests.cs" />
-    <Compile Include="ConditionalMemberTests.cs" />
-    <Compile Include="DynamicTests.Generated.cs">
-      <DependentUpon>DynamicTests.Generated.tt</DependentUpon>
+    <Compile Include="Tests.Meta.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="DynamicTests.cs" />
-    <Compile Include="GotoTests.cs" />
-    <Compile Include="HelpersTests.cs" />
-    <Compile Include="AliasEliminatorTests.cs" />
-    <Compile Include="IndexInitTests.cs" />
-    <Compile Include="RethrowRewriterTests.cs" />
-    <Compile Include="ShadowEliminatorTests.cs" />
-    <Compile Include="ParameterSubstitutorTests.cs" />
-    <Compile Include="ShallowVisitorTests.cs" />
-    <Compile Include="SpillerTests.cs" />
-    <Compile Include="ForEachTests.cs" />
-    <Compile Include="ForTests.cs" />
-    <Compile Include="SwitchCaseTests.cs" />
-    <Compile Include="SwitchTests.cs" />
-    <Compile Include="TypedLabelRewriterTests.cs" />
-    <Compile Include="WhileTests.cs" />
-    <Compile Include="InvocationTests.cs" />
-    <Compile Include="IndexTests.cs" />
-    <Compile Include="DoTests.cs" />
-    <Compile Include="UsingTests.cs" />
-    <Compile Include="LockTests.cs" />
-    <Compile Include="NewTests.cs" />
-    <Compile Include="MethodCallTests.cs" />
-    <Compile Include="ParameterAssignmentTests.cs" />
-    <Compile Include="NewMultidimensionalArrayInitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionUtils.cs" />
-    <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Library\System.CSharp.Expressions.csproj">
-      <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
-      <Name>System.CSharp.Expressions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
       <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
       <Name>System.Linq.Expressions.Debugging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DynamicTests.Generated.tt">
+    <Content Include="Tests.Meta.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tests.Meta.tt</DependentUpon>
+      <LastGenOutput>Tests.Meta.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Tests.Meta.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Tests.Meta.Generated.tt</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
