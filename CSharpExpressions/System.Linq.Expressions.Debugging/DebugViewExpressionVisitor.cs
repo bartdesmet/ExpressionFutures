@@ -25,6 +25,56 @@ namespace System.Linq.Expressions
             return Visit(expression);
         }
 
+        /// <summary>
+        /// Gets the debug view for the specified label.
+        /// </summary>
+        /// <param name="label">The label to get a debug view for.</param>
+        /// <returns>Debug view for the specified label.</returns>
+        public XNode GetDebugView(LabelTarget label)
+        {
+            return Visit(label);
+        }
+
+        /// <summary>
+        /// Gets the debug view for the specified member binding.
+        /// </summary>
+        /// <param name="binding">The member binding to get a debug view for.</param>
+        /// <returns>Debug view for the specified member binding.</returns>
+        public XNode GetDebugView(MemberBinding binding)
+        {
+            return Visit(binding);
+        }
+
+        /// <summary>
+        /// Gets the debug view for the specified element initializer.
+        /// </summary>
+        /// <param name="initializer">The element initializer to get a debug view for.</param>
+        /// <returns>Debug view for the specified element initializer.</returns>
+        public XNode GetDebugView(ElementInit initializer)
+        {
+            return Visit(initializer);
+        }
+
+        /// <summary>
+        /// Gets the debug view for the specified catch block.
+        /// </summary>
+        /// <param name="catchBlock">The catch block to get a debug view for.</param>
+        /// <returns>Debug view for the specified catch block.</returns>
+        public XNode GetDebugView(CatchBlock catchBlock)
+        {
+            return Visit(catchBlock);
+        }
+
+        /// <summary>
+        /// Gets the debug view for the specified switch case.
+        /// </summary>
+        /// <param name="switchCase">The switch case to get a debug view for.</param>
+        /// <returns>Debug view for the specified switch case.</returns>
+        public XNode GetDebugView(SwitchCase switchCase)
+        {
+            return Visit(switchCase);
+        }
+
         protected override Expression VisitConstant(ConstantExpression node)
         {
             return Push(node, new XAttribute("Value", node.Value));
@@ -192,7 +242,7 @@ namespace System.Linq.Expressions
         {
             var create = Visit(node.NewExpression);
 
-            var bindings = Visit("Bindings", node.Bindings, VisitMemberBinding2);
+            var bindings = Visit("Bindings", node.Bindings, Visit);
 
             return Push(node, new XElement("NewExpression", create), bindings);
         }
@@ -206,14 +256,14 @@ namespace System.Linq.Expressions
 
         protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
         {
-            var bindings = Visit("Bindings", node.Bindings, VisitMemberBinding2);
+            var bindings = Visit("Bindings", node.Bindings, Visit);
 
             return PushBinding(node, new XAttribute("Member", node.Member), bindings);
         }
 
         protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
         {
-            var initializers = Visit("Initializers", node.Initializers, VisitElementInit2);
+            var initializers = Visit("Initializers", node.Initializers, Visit);
 
             return PushBinding(node, new XAttribute("Member", node.Member), initializers);
         }
@@ -222,7 +272,7 @@ namespace System.Linq.Expressions
         {
             var create = Visit(node.NewExpression);
 
-            var initializers = Visit("Initializers", node.Initializers, VisitElementInit2);
+            var initializers = Visit("Initializers", node.Initializers, Visit);
 
             return Push(node, new XElement("NewExpression", create), initializers);
         }
@@ -263,7 +313,7 @@ namespace System.Linq.Expressions
 
             args.Add(new XElement("SwitchValue", Visit(node.SwitchValue)));
 
-            args.Add(Visit("Cases", node.Cases, VisitSwitchCase2));
+            args.Add(Visit("Cases", node.Cases, Visit));
 
             if (node.DefaultBody != null)
             {
@@ -287,7 +337,7 @@ namespace System.Linq.Expressions
 
             if (node.Handlers.Count > 0)
             {
-                args.Add(Visit("Handlers", node.Handlers, VisitCatchBlock2));
+                args.Add(Visit("Handlers", node.Handlers, Visit));
             }
 
             if (node.Finally != null)
@@ -334,7 +384,7 @@ namespace System.Linq.Expressions
 
             args.Add(new XAttribute("Kind", node.Kind));
 
-            args.Add(new XElement("Target", VisitLabelTarget2(node.Target)));
+            args.Add(new XElement("Target", Visit(node.Target)));
 
             if (node.Value != null)
             {
@@ -348,7 +398,7 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XElement("Target", VisitLabelTarget2(node.Target)));
+            args.Add(new XElement("Target", Visit(node.Target)));
 
             if (node.DefaultValue != null)
             {
@@ -384,12 +434,12 @@ namespace System.Linq.Expressions
 
             if (node.BreakLabel != null)
             {
-                args.Add(new XElement("BreakLabel", VisitLabelTarget2(node.BreakLabel)));
+                args.Add(new XElement("BreakLabel", Visit(node.BreakLabel)));
             }
 
             if (node.ContinueLabel != null)
             {
-                args.Add(new XElement("ContinueLabel", VisitLabelTarget2(node.ContinueLabel)));
+                args.Add(new XElement("ContinueLabel", Visit(node.ContinueLabel)));
             }
 
             return Push(node, args);
@@ -453,6 +503,36 @@ namespace System.Linq.Expressions
             return _nodes.Pop();
         }
 
+        protected XNode Visit(LabelTarget node)
+        {
+            VisitLabelTarget(node);
+            return _nodes.Pop();
+        }
+
+        protected XNode Visit(MemberBinding node)
+        {
+            VisitMemberBinding(node);
+            return _nodes.Pop();
+        }
+
+        protected XNode Visit(ElementInit node)
+        {
+            VisitElementInit(node);
+            return _nodes.Pop();
+        }
+
+        protected XNode Visit(CatchBlock node)
+        {
+            VisitCatchBlock(node);
+            return _nodes.Pop();
+        }
+
+        protected XNode Visit(SwitchCase node)
+        {
+            VisitSwitchCase(node);
+            return _nodes.Pop();
+        }
+
         protected XNode Visit(string name, IEnumerable<Expression> expressions)
         {
             var res = new List<XNode>();
@@ -500,36 +580,6 @@ namespace System.Linq.Expressions
             }
 
             return id;
-        }
-
-        private XNode VisitMemberBinding2(MemberBinding node)
-        {
-            VisitMemberBinding(node);
-            return _nodes.Pop();
-        }
-
-        private XNode VisitElementInit2(ElementInit node)
-        {
-            VisitElementInit(node);
-            return _nodes.Pop();
-        }
-
-        private XNode VisitCatchBlock2(CatchBlock node)
-        {
-            VisitCatchBlock(node);
-            return _nodes.Pop();
-        }
-
-        private XNode VisitLabelTarget2(LabelTarget node)
-        {
-            VisitLabelTarget(node);
-            return _nodes.Pop();
-        }
-
-        private XNode VisitSwitchCase2(SwitchCase node)
-        {
-            VisitSwitchCase(node);
-            return _nodes.Pop();
         }
     }
 }
