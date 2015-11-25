@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{B266F8B2-7D9D-4E1F-9148-1211BBB7040A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.CSharp.Expressions", "Library\System.CSharp.Expressions.csproj", "{6CD01EF9-CF8D-498E-B9BE-B7AFD1540302}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.CSharp.Expressions", "Library\Microsoft.CSharp.Expressions.csproj", "{6CD01EF9-CF8D-498E-B9BE-B7AFD1540302}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.System.CSharp.Expressions", "Tests\Tests.System.CSharp.Expressions.csproj", "{099B1D7F-69C2-4C91-AF48-896CF3189493}"
 EndProject
