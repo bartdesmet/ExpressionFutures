@@ -54,7 +54,7 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
-        private static readonly object s_SwitchCaseDefaultValue = new object();
+        private static readonly object s_SwitchCaseDefaultValue = new SwitchDefaultValue();
         private static ReadOnlyCollection<object> s_default;
 
         /// <summary>
@@ -213,6 +213,14 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNullItems(statementsList, nameof(statements));
 
             return statementsList;
+        }
+
+        class SwitchDefaultValue
+        {
+            public override string ToString()
+            {
+                return "default";
+            }
         }
     }
 

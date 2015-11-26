@@ -118,6 +118,7 @@ namespace Tests
             {
                 Assert.IsTrue(b.SequenceEqual(s.Statements));
                 Assert.AreSame(CSharpStatement.SwitchCaseDefaultValue, s.TestValues.Single());
+                Assert.AreEqual("default", s.TestValues.Single().ToString());
             }
         }
 
