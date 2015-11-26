@@ -494,6 +494,7 @@ namespace Microsoft.CSharp.Expressions
                 _info = default(SwitchCaseInfo);
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
             {
                 if (_info.GotoCases == null)
@@ -525,6 +526,7 @@ namespace Microsoft.CSharp.Expressions
                 _gotoDefaultLabel = gotoDefaultLabel;
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
             {
                 return Expression.Goto(_getGotoCaseLabel(node.Value));

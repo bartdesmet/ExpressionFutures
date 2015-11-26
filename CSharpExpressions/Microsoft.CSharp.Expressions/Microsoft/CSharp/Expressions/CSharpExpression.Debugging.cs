@@ -57,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
             : this(new DebugViewExpressionVisitor())
         {
         }
-        
+
         public CSharpDebugViewExpressionVisitor(IDebugViewExpressionVisitor parent)
         {
             _parent = parent;
@@ -84,6 +84,7 @@ namespace Microsoft.CSharp.Expressions
             return Visit(assignment);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
         {
             var parameters = Visit(nameof(AsyncCSharpExpression<TDelegate>.Parameters), node.Parameters);
@@ -93,6 +94,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, parameters, new XElement(nameof(AsyncCSharpExpression<TDelegate>.Body), body));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitAwait(AwaitCSharpExpression node)
         {
             var args = new List<object>();
@@ -120,6 +122,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitBlock(BlockCSharpExpression node)
         {
             var args = new List<object>();
@@ -139,6 +142,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
         {
             var array = Visit(node.Array);
@@ -147,6 +151,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XElement(nameof(node.Array), array), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
         {
             var obj = Visit(node.Object);
@@ -155,6 +160,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
         {
             var expr = Visit(node.Expression);
@@ -163,6 +169,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XElement(nameof(node.Expression), expr), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
         {
             var expr = Visit(node.Expression);
@@ -170,6 +177,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute(nameof(node.Member), node.Member), new XElement(nameof(node.Expression), expr));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
         {
             var obj = Visit(node.Object);
@@ -178,6 +186,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute(nameof(node.Method), node.Method), new XElement(nameof(node.Object), obj), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDo(DoCSharpStatement node)
         {
             var args = new List<object>();
@@ -198,6 +207,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override DynamicCSharpArgument VisitDynamicArgument(DynamicCSharpArgument node)
         {
             var expr = Visit(node.Expression);
@@ -222,6 +232,7 @@ namespace Microsoft.CSharp.Expressions
             return node;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node)
         {
             var args = new List<object>();
@@ -236,6 +247,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicConvert(ConvertDynamicCSharpExpression node)
         {
             var args = VisitDynamicCSharpExpression(node);
@@ -246,6 +258,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicGetIndex(GetIndexDynamicCSharpExpression node)
         {
             var args = VisitDynamicCSharpExpression(node);
@@ -256,6 +269,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicGetMember(GetMemberDynamicCSharpExpression node)
         {
             var args = new List<object>();
@@ -269,6 +283,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicInvoke(InvokeDynamicCSharpExpression node)
         {
             var args = VisitDynamicCSharpExpression(node);
@@ -279,6 +294,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicInvokeConstructor(InvokeConstructorDynamicCSharpExpression node)
         {
             var args = VisitDynamicCSharpExpression(node);
@@ -289,6 +305,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicInvokeMember(InvokeMemberDynamicCSharpExpression node)
         {
             var args = new List<object>();
@@ -317,6 +334,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicUnary(UnaryDynamicCSharpExpression node)
         {
             var args = new List<object>();
@@ -330,7 +348,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
-        private List<object> VisitDynamicCSharpExpression(DynamicCSharpExpression node)
+        private static List<object> VisitDynamicCSharpExpression(DynamicCSharpExpression node)
         {
             var args = new List<object>();
 
@@ -339,7 +357,7 @@ namespace Microsoft.CSharp.Expressions
             return args;
         }
 
-        private void VisitDynamicCSharpExpression(DynamicCSharpExpression node, List<object> args)
+        private static void VisitDynamicCSharpExpression(DynamicCSharpExpression node, List<object> args)
         {
             if (node.Flags != CSharpBinderFlags.None)
             {
@@ -352,6 +370,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {
             var args = new List<object>();
@@ -391,6 +410,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
             var args = new List<object>();
@@ -419,21 +439,25 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
         {
             return Push(node, new XAttribute(nameof(node.Value), node.Value));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoDefault(GotoDefaultCSharpStatement node)
         {
             return Push(node);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoLabel(GotoLabelCSharpStatement node)
         {
             return Push(node, new XElement(nameof(node.Target), _parent.GetDebugView(node.Target)));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitIndex(IndexCSharpExpression node)
         {
             var obj = Visit(node.Object);
@@ -442,6 +466,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitInvocation(InvocationCSharpExpression node)
         {
             var expr = Visit(node.Expression);
@@ -450,6 +475,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XElement(nameof(node.Expression), expr), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitLock(LockCSharpStatement node)
         {
             var expr = Visit(node.Expression);
@@ -458,6 +484,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XElement(nameof(node.Expression), expr), new XElement(nameof(node.Body), body));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitMethodCall(MethodCallCSharpExpression node)
         {
             var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
@@ -473,6 +500,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitNew(NewCSharpExpression node)
         {
             var nodes = new List<object>();
@@ -488,6 +516,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, nodes);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
         {
             var exprs = Visit(nameof(node.Expressions), node.Expressions);
@@ -496,6 +525,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute("Bounds", bounds), exprs);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override ParameterAssignment VisitParameterAssignment(ParameterAssignment node)
         {
             var expr = Visit(node.Expression);
@@ -506,6 +536,7 @@ namespace Microsoft.CSharp.Expressions
             return node;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
         {
             var args = new List<object>();
@@ -524,6 +555,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
         {
             var args = new List<object>();
@@ -542,17 +574,17 @@ namespace Microsoft.CSharp.Expressions
             {
                 return "null";
             }
-            else if (obj is string)
+
+            var s = obj as string;
+            if (s != null)
             {
-                var s = (string)obj;
                 return "\"" + s.Replace("\"", "\\\"") + "\"";
             }
-            else
-            {
-                return obj.ToString();
-            }
+
+            return obj.ToString();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
             var args = new List<object>();
@@ -573,6 +605,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
             var args = new List<object>();
@@ -624,7 +657,7 @@ namespace Microsoft.CSharp.Expressions
             return new XElement(name, res);
         }
 
-        protected XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
+        protected static XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
         {
             var res = new List<XNode>();
 
