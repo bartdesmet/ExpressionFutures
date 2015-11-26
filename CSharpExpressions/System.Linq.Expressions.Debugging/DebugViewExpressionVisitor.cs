@@ -77,7 +77,7 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            return Push(node, new XAttribute("Value", node.Value));
+            return Push(node, new XAttribute(nameof(ConstantExpression.Value), node.Value));
         }
 
         protected override Expression VisitDefault(DefaultExpression node)
@@ -94,7 +94,7 @@ namespace System.Linq.Expressions
 
             if (node.Name != null)
             {
-                args.Add(new XAttribute("Name", node.Name));
+                args.Add(new XAttribute(nameof(ParameterExpression.Name), node.Name));
             }
 
             return Push(node, args);
@@ -104,9 +104,9 @@ namespace System.Linq.Expressions
         {
             var body = Visit(node.Body);
 
-            var parameters = Visit("Parameters", node.Parameters);
+            var parameters = Visit(nameof(Expression<T>.Parameters), node.Parameters);
 
-            return Push(node, new XElement("Body", body), parameters);
+            return Push(node, new XElement(nameof(Expression<T>.Body), body), parameters);
         }
 
         protected override Expression VisitBinary(BinaryExpression node)
@@ -115,15 +115,15 @@ namespace System.Linq.Expressions
 
             if (node.Method != null)
             {
-                args.Add(new XAttribute("Method", node.Method));
+                args.Add(new XAttribute(nameof(BinaryExpression.Method), node.Method));
             }
 
-            args.Add(new XElement("Left", Visit(node.Left)));
-            args.Add(new XElement("Right", Visit(node.Right)));
+            args.Add(new XElement(nameof(BinaryExpression.Left), Visit(node.Left)));
+            args.Add(new XElement(nameof(BinaryExpression.Right), Visit(node.Right)));
 
             if (node.Conversion != null)
             {
-                args.Add(new XElement("Conversion", Visit(node.Conversion)));
+                args.Add(new XElement(nameof(BinaryExpression.Conversion), Visit(node.Conversion)));
             }
 
             return Push(node, args);
@@ -135,12 +135,12 @@ namespace System.Linq.Expressions
 
             if (node.Method != null)
             {
-                args.Add(new XAttribute("Method", node.Method));
+                args.Add(new XAttribute(nameof(UnaryExpression.Method), node.Method));
             }
 
             if (node.Operand != null)
             {
-                args.Add(new XElement("Operand", Visit(node.Operand)));
+                args.Add(new XElement(nameof(UnaryExpression.Operand), Visit(node.Operand)));
             }
 
             return Push(node, args);
@@ -150,9 +150,9 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XElement("Test", Visit(node.Test)));
-            args.Add(new XElement("IfTrue", Visit(node.IfTrue)));
-            args.Add(new XElement("IfFalse", Visit(node.IfFalse)));
+            args.Add(new XElement(nameof(ConditionalExpression.Test), Visit(node.Test)));
+            args.Add(new XElement(nameof(ConditionalExpression.IfTrue), Visit(node.IfTrue)));
+            args.Add(new XElement(nameof(ConditionalExpression.IfFalse), Visit(node.IfFalse)));
 
             return Push(node, args);
         }
@@ -162,11 +162,11 @@ namespace System.Linq.Expressions
             if (node.Expression != null)
             {
                 var expr = Visit(node.Expression);
-                return Push(node, new XAttribute("Member", node.Member), new XElement("Expression", expr));
+                return Push(node, new XAttribute(nameof(MemberExpression.Member), node.Member), new XElement(nameof(MemberExpression.Expression), expr));
             }
             else
             {
-                return Push(node, new XAttribute("Member", node.Member));
+                return Push(node, new XAttribute(nameof(MemberExpression.Member), node.Member));
             }
         }
 
@@ -175,32 +175,32 @@ namespace System.Linq.Expressions
             if (node.Object != null)
             {
                 var obj = Visit(node.Object);
-                var args = Visit("Arguments", node.Arguments);
+                var args = Visit(nameof(MethodCallExpression.Arguments), node.Arguments);
 
-                return Push(node, new XAttribute("Method", node.Method), new XElement("Object", obj), args);
+                return Push(node, new XAttribute(nameof(MethodCallExpression.Method), node.Method), new XElement(nameof(MethodCallExpression.Object), obj), args);
             }
             else
             {
-                var args = Visit("Arguments", node.Arguments);
+                var args = Visit(nameof(MethodCallExpression.Arguments), node.Arguments);
 
-                return Push(node, new XAttribute("Method", node.Method), args);
+                return Push(node, new XAttribute(nameof(MethodCallExpression.Method), node.Method), args);
             }
         }
 
         protected override Expression VisitIndex(IndexExpression node)
         {
             var obj = Visit(node.Object);
-            var args = Visit("Arguments", node.Arguments);
+            var args = Visit(nameof(IndexExpression.Arguments), node.Arguments);
 
-            return Push(node, new XAttribute("Indexer", node.Indexer), new XElement("Object", obj), args);
+            return Push(node, new XAttribute(nameof(IndexExpression.Indexer), node.Indexer), new XElement(nameof(IndexExpression.Object), obj), args);
         }
 
         protected override Expression VisitInvocation(InvocationExpression node)
         {
             var expr = Visit(node.Expression);
-            var args = Visit("Arguments", node.Arguments);
+            var args = Visit(nameof(InvocationExpression.Arguments), node.Arguments);
 
-            return Push(node, new XElement("Expression", expr), args);
+            return Push(node, new XElement(nameof(InvocationExpression.Expression), expr), args);
         }
 
         protected override Expression VisitNew(NewExpression node)
@@ -209,15 +209,15 @@ namespace System.Linq.Expressions
 
             if (node.Constructor != null)
             {
-                nodes.Add(new XAttribute("Constructor", node.Constructor));
+                nodes.Add(new XAttribute(nameof(NewExpression.Constructor), node.Constructor));
             }
 
-            var args = Visit("Arguments", node.Arguments);
+            var args = Visit(nameof(NewExpression.Arguments), node.Arguments);
             nodes.Add(args);
 
             if (node.Members != null)
             {
-                var members = new XElement("Members", node.Members.Select(m => new XElement("Member", m)));
+                var members = new XElement(nameof(NewExpression.Members), node.Members.Select(m => new XElement("Member", m)));
                 nodes.Add(members);
             }
 
@@ -226,7 +226,7 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitNewArray(NewArrayExpression node)
         {
-            var exprs = Visit("Expressions", node.Expressions);
+            var exprs = Visit(nameof(NewArrayExpression.Expressions), node.Expressions);
 
             return Push(node, exprs);
         }
@@ -235,53 +235,53 @@ namespace System.Linq.Expressions
         {
             var expr = Visit(node.Expression);
 
-            return Push(node, new XAttribute("TypeOperand", node.TypeOperand), new XElement("Expression", expr));
+            return Push(node, new XAttribute(nameof(TypeBinaryExpression.TypeOperand), node.TypeOperand), new XElement(nameof(TypeBinaryExpression.Expression), expr));
         }
 
         protected override Expression VisitMemberInit(MemberInitExpression node)
         {
             var create = Visit(node.NewExpression);
 
-            var bindings = Visit("Bindings", node.Bindings, Visit);
+            var bindings = Visit(nameof(MemberInitExpression.Bindings), node.Bindings, Visit);
 
-            return Push(node, new XElement("NewExpression", create), bindings);
+            return Push(node, new XElement(nameof(MemberInitExpression.NewExpression), create), bindings);
         }
 
         protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
         {
             var expr = Visit(node.Expression);
 
-            return PushBinding(node, new XAttribute("Member", node.Member), new XElement("Expression", expr));
+            return PushBinding(node, new XAttribute(nameof(MemberAssignment.Member), node.Member), new XElement(nameof(MemberAssignment.Expression), expr));
         }
 
         protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
         {
-            var bindings = Visit("Bindings", node.Bindings, Visit);
+            var bindings = Visit(nameof(MemberMemberBinding.Bindings), node.Bindings, Visit);
 
-            return PushBinding(node, new XAttribute("Member", node.Member), bindings);
+            return PushBinding(node, new XAttribute(nameof(MemberMemberBinding.Member), node.Member), bindings);
         }
 
         protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
         {
-            var initializers = Visit("Initializers", node.Initializers, Visit);
+            var initializers = Visit(nameof(MemberListBinding.Initializers), node.Initializers, Visit);
 
-            return PushBinding(node, new XAttribute("Member", node.Member), initializers);
+            return PushBinding(node, new XAttribute(nameof(MemberListBinding.Member), node.Member), initializers);
         }
 
         protected override Expression VisitListInit(ListInitExpression node)
         {
             var create = Visit(node.NewExpression);
 
-            var initializers = Visit("Initializers", node.Initializers, Visit);
+            var initializers = Visit(nameof(ListInitExpression.Initializers), node.Initializers, Visit);
 
-            return Push(node, new XElement("NewExpression", create), initializers);
+            return Push(node, new XElement(nameof(ListInitExpression.NewExpression), create), initializers);
         }
 
         protected override ElementInit VisitElementInit(ElementInit node)
         {
-            var args = Visit("Arguments", node.Arguments);
+            var args = Visit(nameof(ElementInit.Arguments), node.Arguments);
 
-            var res = new XElement("ElementInit", new XAttribute("AddMethod", node.AddMethod), args);
+            var res = new XElement(nameof(ElementInit), new XAttribute(nameof(ElementInit.AddMethod), node.AddMethod), args);
             _nodes.Push(res);
 
             return node;
@@ -289,11 +289,11 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitBlock(BlockExpression node)
         {
-            var expressions = Visit("Expressions", node.Expressions);
+            var expressions = Visit(nameof(BlockExpression.Expressions), node.Expressions);
 
             if (node.Variables.Count > 0)
             {
-                var variables = Visit("Variables", node.Variables);
+                var variables = Visit(nameof(BlockExpression.Variables), node.Variables);
                 return Push(node, variables, expressions);
             }
             else
@@ -308,16 +308,16 @@ namespace System.Linq.Expressions
 
             if (node.Comparison != null)
             {
-                args.Add(new XAttribute("Comparison", node.Comparison));
+                args.Add(new XAttribute(nameof(SwitchExpression.Comparison), node.Comparison));
             }
 
-            args.Add(new XElement("SwitchValue", Visit(node.SwitchValue)));
+            args.Add(new XElement(nameof(SwitchExpression.SwitchValue), Visit(node.SwitchValue)));
 
-            args.Add(Visit("Cases", node.Cases, Visit));
+            args.Add(Visit(nameof(SwitchExpression.Cases), node.Cases, Visit));
 
             if (node.DefaultBody != null)
             {
-                args.Add(new XElement("DefaultBody", Visit(node.DefaultBody)));
+                args.Add(new XElement(nameof(SwitchExpression.DefaultBody), Visit(node.DefaultBody)));
             }
 
             return Push(node, args);
@@ -325,7 +325,7 @@ namespace System.Linq.Expressions
 
         protected override SwitchCase VisitSwitchCase(SwitchCase node)
         {
-            _nodes.Push(new XElement("SwitchCase", new XElement("Body", Visit(node.Body)), Visit("TestValues", node.TestValues)));
+            _nodes.Push(new XElement(nameof(SwitchCase), new XElement(nameof(SwitchCase.Body), Visit(node.Body)), Visit(nameof(SwitchCase.TestValues), node.TestValues)));
             return node;
         }
 
@@ -333,21 +333,21 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XElement("Body", Visit(node.Body)));
+            args.Add(new XElement(nameof(TryExpression.Body), Visit(node.Body)));
 
             if (node.Handlers.Count > 0)
             {
-                args.Add(Visit("Handlers", node.Handlers, Visit));
+                args.Add(Visit(nameof(TryExpression.Handlers), node.Handlers, Visit));
             }
 
             if (node.Finally != null)
             {
-                args.Add(new XElement("Finally", Visit(node.Finally)));
+                args.Add(new XElement(nameof(TryExpression.Finally), Visit(node.Finally)));
             }
 
             if (node.Fault != null)
             {
-                args.Add(new XElement("Fault", Visit(node.Fault)));
+                args.Add(new XElement(nameof(TryExpression.Fault), Visit(node.Fault)));
             }
 
             return Push(node, args);
@@ -359,21 +359,21 @@ namespace System.Linq.Expressions
 
             if (node.Variable != null)
             {
-                args.Add(new XElement("Variable", Visit(node.Variable)));
+                args.Add(new XElement(nameof(CatchBlock.Variable), Visit(node.Variable)));
             }
             else
             {
-                args.Add(new XAttribute("Test", node.Test));
+                args.Add(new XAttribute(nameof(CatchBlock.Test), node.Test));
             }
 
-            args.Add(new XElement("Body", Visit(node.Body)));
+            args.Add(new XElement(nameof(CatchBlock.Body), Visit(node.Body)));
 
             if (node.Filter != null)
             {
-                args.Add(new XElement("Filter", Visit(node.Filter)));
+                args.Add(new XElement(nameof(CatchBlock.Filter), Visit(node.Filter)));
             }
 
-            _nodes.Push(new XElement("CatchBlock", args));
+            _nodes.Push(new XElement(nameof(CatchBlock), args));
 
             return node;
         }
@@ -382,13 +382,13 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XAttribute("Kind", node.Kind));
+            args.Add(new XAttribute(nameof(GotoExpression.Kind), node.Kind));
 
-            args.Add(new XElement("Target", Visit(node.Target)));
+            args.Add(new XElement(nameof(GotoExpression.Target), Visit(node.Target)));
 
             if (node.Value != null)
             {
-                args.Add(new XElement("Value", Visit(node.Value)));
+                args.Add(new XElement(nameof(GotoExpression.Value), Visit(node.Value)));
             }
 
             return Push(node, args);
@@ -398,11 +398,11 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XElement("Target", Visit(node.Target)));
+            args.Add(new XElement(nameof(LabelExpression.Target), Visit(node.Target)));
 
             if (node.DefaultValue != null)
             {
-                args.Add(new XElement("DefaultValue", Visit(node.DefaultValue)));
+                args.Add(new XElement(nameof(LabelExpression.DefaultValue), Visit(node.DefaultValue)));
             }
 
             return Push(node);
@@ -412,17 +412,17 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XAttribute("Type", node.Type));
+            args.Add(new XAttribute(nameof(LabelTarget.Type), node.Type));
 
             var id = MakeInstanceId(node);
             args.Add(new XAttribute("Id", id));
 
             if (node.Name != null)
             {
-                args.Add(new XAttribute("Name", node.Name));
+                args.Add(new XAttribute(nameof(LabelTarget.Name), node.Name));
             }
 
-            _nodes.Push(new XElement("LabelTarget", args));
+            _nodes.Push(new XElement(nameof(LabelTarget), args));
             return node;
         }
 
@@ -430,16 +430,16 @@ namespace System.Linq.Expressions
         {
             var args = new List<object>();
 
-            args.Add(new XElement("Body", Visit(node.Body)));
+            args.Add(new XElement(nameof(LoopExpression.Body), Visit(node.Body)));
 
             if (node.BreakLabel != null)
             {
-                args.Add(new XElement("BreakLabel", Visit(node.BreakLabel)));
+                args.Add(new XElement(nameof(LoopExpression.BreakLabel), Visit(node.BreakLabel)));
             }
 
             if (node.ContinueLabel != null)
             {
-                args.Add(new XElement("ContinueLabel", Visit(node.ContinueLabel)));
+                args.Add(new XElement(nameof(LoopExpression.ContinueLabel), Visit(node.ContinueLabel)));
             }
 
             return Push(node, args);
@@ -447,7 +447,7 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
         {
-            return Push(node, Visit("Variables", node.Variables));
+            return Push(node, Visit(nameof(RuntimeVariablesExpression.Variables), node.Variables));
         }
 
         protected override Expression VisitDebugInfo(DebugInfoExpression node)
@@ -455,18 +455,18 @@ namespace System.Linq.Expressions
             var args = new List<object>();
 
             // TODO: add more document info?
-            args.Add(new XAttribute("FileName", node.Document.FileName));
+            args.Add(new XAttribute(nameof(SymbolDocumentInfo.FileName), node.Document.FileName));
 
             if (node.IsClear)
             {
-                args.Add(new XAttribute("IsClear", true));
+                args.Add(new XAttribute(nameof(DebugInfoExpression.IsClear), true));
             }
             else
             {
-                args.Add(new XAttribute("StartLine", node.StartLine));
-                args.Add(new XAttribute("StartColumn", node.StartColumn));
-                args.Add(new XAttribute("EndLine", node.EndLine));
-                args.Add(new XAttribute("EndColumn", node.EndColumn));
+                args.Add(new XAttribute(nameof(DebugInfoExpression.StartLine), node.StartLine));
+                args.Add(new XAttribute(nameof(DebugInfoExpression.StartColumn), node.StartColumn));
+                args.Add(new XAttribute(nameof(DebugInfoExpression.EndLine), node.EndLine));
+                args.Add(new XAttribute(nameof(DebugInfoExpression.EndColumn), node.EndColumn));
             }
 
             return Push(node, args);
@@ -474,8 +474,8 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitDynamic(DynamicExpression node)
         {
-            var args = Visit("Arguments", node.Arguments);
-            return Push(node, new XAttribute("Binder", node.Binder), new XAttribute("DelegateType", node.DelegateType), args);
+            var args = Visit(nameof(DynamicExpression.Arguments), node.Arguments);
+            return Push(node, new XAttribute(nameof(DynamicExpression.Binder), node.Binder), new XAttribute(nameof(DynamicExpression.DelegateType), node.DelegateType), args);
         }
 
         protected override Expression VisitExtension(Expression node)
@@ -560,7 +560,7 @@ namespace System.Linq.Expressions
         protected T Push<T>(T node, params object[] content)
             where T : Expression
         {
-            _nodes.Push(new XElement(node.NodeType.ToString(), new XAttribute("Type", node.Type), content));
+            _nodes.Push(new XElement(node.NodeType.ToString(), new XAttribute(nameof(node.Type), node.Type), content));
             return node;
         }
 
