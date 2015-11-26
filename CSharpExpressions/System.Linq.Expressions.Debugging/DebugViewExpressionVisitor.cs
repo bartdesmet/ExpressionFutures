@@ -102,11 +102,11 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
-            var body = Visit(node.Body);
-
             var parameters = Visit(nameof(Expression<T>.Parameters), node.Parameters);
 
-            return Push(node, new XElement(nameof(Expression<T>.Body), body), parameters);
+            var body = Visit(node.Body);
+
+            return Push(node, parameters, new XElement(nameof(Expression<T>.Body), body));
         }
 
         protected override Expression VisitBinary(BinaryExpression node)

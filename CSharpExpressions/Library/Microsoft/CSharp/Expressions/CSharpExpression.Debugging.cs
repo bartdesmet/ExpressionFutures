@@ -48,11 +48,11 @@ namespace Microsoft.CSharp.Expressions
 
             protected internal override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
             {
-                var body = Visit(node.Body);
-
                 var parameters = Visit(nameof(AsyncCSharpExpression<TDelegate>.Parameters), node.Parameters);
 
-                return Push(node, new XElement(nameof(AsyncCSharpExpression<TDelegate>.Body), body), parameters);
+                var body = Visit(node.Body);
+
+                return Push(node, parameters, new XElement(nameof(AsyncCSharpExpression<TDelegate>.Body), body));
             }
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)

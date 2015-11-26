@@ -58,6 +58,7 @@ namespace Tests
 
         private Expression expr3 = CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(Expression.Default(typeof(Task<int>))));
         private string dbg3 = @"<CSharpAsyncLambda Type=""System.Func`1[System.Threading.Tasks.Task`1[System.Int32]]"">
+  <Parameters />
   <Body>
     <CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
       <Operand>
@@ -65,7 +66,6 @@ namespace Tests
       </Operand>
     </CSharpAwait>
   </Body>
-  <Parameters />
 </CSharpAsyncLambda>";
 
 		[TestMethod]
@@ -804,12 +804,12 @@ namespace Tests
   </Variable>
   <Conversion>
     <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
-      <Body>
-        <Default Type=""System.Int32"" />
-      </Body>
       <Parameters>
         <Parameter Type=""System.Int32"" Id=""1"" />
       </Parameters>
+      <Body>
+        <Default Type=""System.Int32"" />
+      </Body>
     </Lambda>
   </Conversion>
   <Collection>

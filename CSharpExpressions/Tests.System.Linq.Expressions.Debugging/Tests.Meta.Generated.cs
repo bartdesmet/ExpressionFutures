@@ -35,12 +35,12 @@ namespace Tests
 
         private Expression expr2 = ((Expression<Func<int, int>>)(x => x));
         private string dbg2 = @"<Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
-  <Body>
-    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
-  </Body>
   <Parameters>
     <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
   </Parameters>
+  <Body>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Body>
 </Lambda>";
 
 		[TestMethod]
