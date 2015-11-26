@@ -1,4 +1,8 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - October 2015
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
@@ -21,10 +25,6 @@ var types = new[]
 	new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.BinaryExpression", Members = new string[] { "Create" }, Suffix = "Stubs", Partial = true },
 };
 #>
-// Prototyping extended expression trees for C#.
-//
-// bartde - October 2015
-
 using System;
 using System.Linq;
 using System.Reflection;

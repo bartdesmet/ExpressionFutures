@@ -1,4 +1,8 @@
-﻿// NOTE: These tests are auto-generated and can *never* fail because they assert the outcome of DebugView()
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+// NOTE: These tests are auto-generated and can *never* fail because they assert the outcome of DebugView()
 //       at runtime against the outcome obtained at compile time. However, a human should read through the
 //       cases to assert the outcome is as expected.
 //
