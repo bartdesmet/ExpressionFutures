@@ -32,458 +32,458 @@ using System.Threading.Tasks;
 
 namespace Tests
 {
-	[TestClass]
+    [TestClass]
     public class DebugViewTests
-	{
+    {
         private Expression expr0 = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42));
         private string dbg0 = <#=toEscapedString(CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test0()
-		{
-			Assert.AreEqual(dbg0, expr0.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test0()
+        {
+            Assert.AreEqual(dbg0, expr0.DebugView().ToString());
+        }
 
         private Expression expr1 = CSharpExpression.Await(Expression.Default(typeof(Task<int>)));
         private string dbg1 = <#=toEscapedString(CSharpExpression.Await(Expression.Default(typeof(Task<int>))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test1()
-		{
-			Assert.AreEqual(dbg1, expr1.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test1()
+        {
+            Assert.AreEqual(dbg1, expr1.DebugView().ToString());
+        }
 
         private Expression expr2 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object));
         private string dbg2 = <#=toEscapedString(DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test2()
-		{
-			Assert.AreEqual(dbg2, expr2.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test2()
+        {
+            Assert.AreEqual(dbg2, expr2.DebugView().ToString());
+        }
 
         private Expression expr3 = CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(Expression.Default(typeof(Task<int>))));
         private string dbg3 = <#=toEscapedString(CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(Expression.Default(typeof(Task<int>)))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test3()
-		{
-			Assert.AreEqual(dbg3, expr3.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test3()
+        {
+            Assert.AreEqual(dbg3, expr3.DebugView().ToString());
+        }
 
         private Expression expr4 = CSharpExpression.Call(typeof(Math).GetMethod("Abs", new[] { typeof(int) }), CSharpExpression.Bind(typeof(Math).GetMethod("Abs", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)));
         private string dbg4 = <#=toEscapedString(CSharpExpression.Call(typeof(Math).GetMethod("Abs", new[] { typeof(int) }), CSharpExpression.Bind(typeof(Math).GetMethod("Abs", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test4()
-		{
-			Assert.AreEqual(dbg4, expr4.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test4()
+        {
+            Assert.AreEqual(dbg4, expr4.DebugView().ToString());
+        }
 
         private Expression expr5 = CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)));
         private string dbg5 = <#=toEscapedString(CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test5()
-		{
-			Assert.AreEqual(dbg5, expr5.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test5()
+        {
+            Assert.AreEqual(dbg5, expr5.DebugView().ToString());
+        }
 
         private Expression expr6 = CSharpExpression.Invoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod("Invoke").GetParameters()[0], Expression.Constant(42)));
         private string dbg6 = <#=toEscapedString(CSharpExpression.Invoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod("Invoke").GetParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test6()
-		{
-			Assert.AreEqual(dbg6, expr6.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test6()
+        {
+            Assert.AreEqual(dbg6, expr6.DebugView().ToString());
+        }
 
         private Expression expr7 = CSharpExpression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), CSharpExpression.Bind(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }).GetParameters()[0], Expression.Constant(42L)));
         private string dbg7 = <#=toEscapedString(CSharpExpression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), CSharpExpression.Bind(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }).GetParameters()[0], Expression.Constant(42L))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test7()
-		{
-			Assert.AreEqual(dbg7, expr7.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test7()
+        {
+            Assert.AreEqual(dbg7, expr7.DebugView().ToString());
+        }
 
         private Expression expr8 = CSharpExpression.Index(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(42)));
         private string dbg8 = <#=toEscapedString(CSharpExpression.Index(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test8()
-		{
-			Assert.AreEqual(dbg8, expr8.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test8()
+        {
+            Assert.AreEqual(dbg8, expr8.DebugView().ToString());
+        }
 
         private Expression expr9 = CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[])), Expression.Constant(42));
         private string dbg9 = <#=toEscapedString(CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[])), Expression.Constant(42)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test9()
-		{
-			Assert.AreEqual(dbg9, expr9.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test9()
+        {
+            Assert.AreEqual(dbg9, expr9.DebugView().ToString());
+        }
 
         private Expression expr10 = CSharpExpression.ConditionalCall(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)));
         private string dbg10 = <#=toEscapedString(CSharpExpression.ConditionalCall(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test10()
-		{
-			Assert.AreEqual(dbg10, expr10.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test10()
+        {
+            Assert.AreEqual(dbg10, expr10.DebugView().ToString());
+        }
 
         private Expression expr11 = CSharpExpression.ConditionalInvoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod("Invoke").GetParameters()[0], Expression.Constant(42)));
         private string dbg11 = <#=toEscapedString(CSharpExpression.ConditionalInvoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod("Invoke").GetParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test11()
-		{
-			Assert.AreEqual(dbg11, expr11.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test11()
+        {
+            Assert.AreEqual(dbg11, expr11.DebugView().ToString());
+        }
 
         private Expression expr12 = CSharpExpression.ConditionalIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(42)));
         private string dbg12 = <#=toEscapedString(CSharpExpression.ConditionalIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(42))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test12()
-		{
-			Assert.AreEqual(dbg12, expr12.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test12()
+        {
+            Assert.AreEqual(dbg12, expr12.DebugView().ToString());
+        }
 
         private Expression expr13 = CSharpExpression.ConditionalProperty(Expression.Default(typeof(string)), typeof(string).GetProperty("Length"));
         private string dbg13 = <#=toEscapedString(CSharpExpression.ConditionalProperty(Expression.Default(typeof(string)), typeof(string).GetProperty("Length")).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test13()
-		{
-			Assert.AreEqual(dbg13, expr13.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test13()
+        {
+            Assert.AreEqual(dbg13, expr13.DebugView().ToString());
+        }
 
         private Expression expr14 = DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2));
         private string dbg14 = <#=toEscapedString(DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test14()
-		{
-			Assert.AreEqual(dbg14, expr14.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test14()
+        {
+            Assert.AreEqual(dbg14, expr14.DebugView().ToString());
+        }
 
         private Expression expr15 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext);
         private string dbg15 = <#=toEscapedString(DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test15()
-		{
-			Assert.AreEqual(dbg15, expr15.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test15()
+        {
+            Assert.AreEqual(dbg15, expr15.DebugView().ToString());
+        }
 
         private Expression expr16 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext, typeof(object));
         private string dbg16 = <#=toEscapedString(DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext, typeof(object)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test16()
-		{
-			Assert.AreEqual(dbg16, expr16.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test16()
+        {
+            Assert.AreEqual(dbg16, expr16.DebugView().ToString());
+        }
 
         private Expression expr17 = DynamicCSharpExpression.DynamicNegate(Expression.Constant(1));
         private string dbg17 = <#=toEscapedString(DynamicCSharpExpression.DynamicNegate(Expression.Constant(1)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test17()
-		{
-			Assert.AreEqual(dbg17, expr17.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test17()
+        {
+            Assert.AreEqual(dbg17, expr17.DebugView().ToString());
+        }
 
         private Expression expr18 = DynamicCSharpExpression.DynamicConvert(Expression.Constant(1), typeof(int));
         private string dbg18 = <#=toEscapedString(DynamicCSharpExpression.DynamicConvert(Expression.Constant(1), typeof(int)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test18()
-		{
-			Assert.AreEqual(dbg18, expr18.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test18()
+        {
+            Assert.AreEqual(dbg18, expr18.DebugView().ToString());
+        }
 
         private Expression expr19 = DynamicCSharpExpression.DynamicGetMember(Expression.Default(typeof(string)), "Length");
         private string dbg19 = <#=toEscapedString(DynamicCSharpExpression.DynamicGetMember(Expression.Default(typeof(string)), "Length").DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test19()
-		{
-			Assert.AreEqual(dbg19, expr19.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test19()
+        {
+            Assert.AreEqual(dbg19, expr19.DebugView().ToString());
+        }
 
         private Expression expr20 = DynamicCSharpExpression.DynamicGetIndex(Expression.Default(typeof(List<int>)), Expression.Constant(1));
         private string dbg20 = <#=toEscapedString(DynamicCSharpExpression.DynamicGetIndex(Expression.Default(typeof(List<int>)), Expression.Constant(1)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test20()
-		{
-			Assert.AreEqual(dbg20, expr20.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test20()
+        {
+            Assert.AreEqual(dbg20, expr20.DebugView().ToString());
+        }
 
         private Expression expr21 = DynamicCSharpExpression.DynamicInvoke(Expression.Default(typeof(Action<int>)), Expression.Constant(1));
         private string dbg21 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvoke(Expression.Default(typeof(Action<int>)), Expression.Constant(1)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test21()
-		{
-			Assert.AreEqual(dbg21, expr21.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test21()
+        {
+            Assert.AreEqual(dbg21, expr21.DebugView().ToString());
+        }
 
         private Expression expr22 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Math), "Abs", Expression.Constant(1));
         private string dbg22 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvokeMember(typeof(Math), "Abs", Expression.Constant(1)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test22()
-		{
-			Assert.AreEqual(dbg22, expr22.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test22()
+        {
+            Assert.AreEqual(dbg22, expr22.DebugView().ToString());
+        }
 
         private Expression expr23 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Activator), "CreateInstance", new[] { typeof(int) });
         private string dbg23 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvokeMember(typeof(Activator), "CreateInstance", new[] { typeof(int) }).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test23()
-		{
-			Assert.AreEqual(dbg23, expr23.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test23()
+        {
+            Assert.AreEqual(dbg23, expr23.DebugView().ToString());
+        }
 
         private Expression expr24 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", Expression.Constant(1));
         private string dbg24 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", Expression.Constant(1)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test24()
-		{
-			Assert.AreEqual(dbg24, expr24.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test24()
+        {
+            Assert.AreEqual(dbg24, expr24.DebugView().ToString());
+        }
 
         private Expression expr25 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex") });
         private string dbg25 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex") }).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test25()
-		{
-			Assert.AreEqual(dbg25, expr25.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test25()
+        {
+            Assert.AreEqual(dbg25, expr25.DebugView().ToString());
+        }
 
         private Expression expr26 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex", CSharpArgumentInfoFlags.NamedArgument) });
         private string dbg26 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex", CSharpArgumentInfoFlags.NamedArgument) }).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test26()
-		{
-			Assert.AreEqual(dbg26, expr26.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test26()
+        {
+            Assert.AreEqual(dbg26, expr26.DebugView().ToString());
+        }
 
         private Expression expr27 = DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), Expression.Constant(1L));
         private string dbg27 = <#=toEscapedString(DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), Expression.Constant(1L)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test27()
-		{
-			Assert.AreEqual(dbg27, expr27.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test27()
+        {
+            Assert.AreEqual(dbg27, expr27.DebugView().ToString());
+        }
 
         private Expression expr28 = CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label());
         private string dbg28 = <#=toEscapedString(CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test28()
-		{
-			Assert.AreEqual(dbg28, expr28.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test28()
+        {
+            Assert.AreEqual(dbg28, expr28.DebugView().ToString());
+        }
 
         private Expression expr29 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Empty() }, Expression.Label());
         private string dbg29 = <#=toEscapedString(CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Empty() }, Expression.Label()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test29()
-		{
-			Assert.AreEqual(dbg29, expr29.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test29()
+        {
+            Assert.AreEqual(dbg29, expr29.DebugView().ToString());
+        }
 
         private Expression expr30 = Expression.Block(CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label()));
         private string dbg30 = <#=toEscapedString(Expression.Block(CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label())).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test30()
-		{
-			Assert.AreEqual(dbg30, expr30.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test30()
+        {
+            Assert.AreEqual(dbg30, expr30.DebugView().ToString());
+        }
 
         private Expression expr31 = CSharpStatement.Do(Expression.Empty(), Expression.Constant(true));
         private string dbg31 = <#=toEscapedString(CSharpStatement.Do(Expression.Empty(), Expression.Constant(true)).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test31()
-		{
-			Assert.AreEqual(dbg31, expr31.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test31()
+        {
+            Assert.AreEqual(dbg31, expr31.DebugView().ToString());
+        }
 
         private Expression expr32 = CSharpStatement.Do(Expression.Empty(), Expression.Constant(true), Expression.Label("break"), Expression.Label("continue"));
         private string dbg32 = <#=toEscapedString(CSharpStatement.Do(Expression.Empty(), Expression.Constant(true), Expression.Label("break"), Expression.Label("continue")).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test32()
-		{
-			Assert.AreEqual(dbg32, expr32.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test32()
+        {
+            Assert.AreEqual(dbg32, expr32.DebugView().ToString());
+        }
 
         private Expression expr33 = CSharpStatement.While(Expression.Constant(true), Expression.Empty());
         private string dbg33 = <#=toEscapedString(CSharpStatement.While(Expression.Constant(true), Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test33()
-		{
-			Assert.AreEqual(dbg33, expr33.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test33()
+        {
+            Assert.AreEqual(dbg33, expr33.DebugView().ToString());
+        }
 
         private Expression expr34 = CSharpStatement.While(Expression.Constant(true), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
         private string dbg34 = <#=toEscapedString(CSharpStatement.While(Expression.Constant(true), Expression.Empty(), Expression.Label("break"), Expression.Label("continue")).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test34()
-		{
-			Assert.AreEqual(dbg34, expr34.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test34()
+        {
+            Assert.AreEqual(dbg34, expr34.DebugView().ToString());
+        }
 
         private Expression expr35 = CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Empty());
         private string dbg35 = <#=toEscapedString(CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test35()
-		{
-			Assert.AreEqual(dbg35, expr35.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test35()
+        {
+            Assert.AreEqual(dbg35, expr35.DebugView().ToString());
+        }
 
         private Expression expr36 = CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty());
         private string dbg36 = <#=toEscapedString(CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test36()
-		{
-			Assert.AreEqual(dbg36, expr36.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test36()
+        {
+            Assert.AreEqual(dbg36, expr36.DebugView().ToString());
+        }
 
         private Expression expr37 = CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
         private string dbg37 = <#=toEscapedString(CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty(), Expression.Label("break"), Expression.Label("continue")).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test37()
-		{
-			Assert.AreEqual(dbg37, expr37.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test37()
+        {
+            Assert.AreEqual(dbg37, expr37.DebugView().ToString());
+        }
 
         private Expression expr38 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty());
         private string dbg38 = <#=toEscapedString(CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test38()
-		{
-			Assert.AreEqual(dbg38, expr38.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test38()
+        {
+            Assert.AreEqual(dbg38, expr38.DebugView().ToString());
+        }
 
         private Expression expr39 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
         private string dbg39 = <#=toEscapedString(CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue")).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test39()
-		{
-			Assert.AreEqual(dbg39, expr39.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test39()
+        {
+            Assert.AreEqual(dbg39, expr39.DebugView().ToString());
+        }
 
         private Expression expr40 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int))));
         private string dbg40 = <#=toEscapedString(CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int)))).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test40()
-		{
-			Assert.AreEqual(dbg40, expr40.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test40()
+        {
+            Assert.AreEqual(dbg40, expr40.DebugView().ToString());
+        }
 
         private Expression expr41 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"));
         private string dbg41 = <#=toEscapedString(CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break")).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test41()
-		{
-			Assert.AreEqual(dbg41, expr41.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test41()
+        {
+            Assert.AreEqual(dbg41, expr41.DebugView().ToString());
+        }
 
         private Expression expr42 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Empty()), CSharpStatement.SwitchCaseDefault(Expression.Empty()));
         private string dbg42 = <#=toEscapedString(CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Empty()), CSharpStatement.SwitchCaseDefault(Expression.Empty())).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test42()
-		{
-			Assert.AreEqual(dbg42, expr42.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test42()
+        {
+            Assert.AreEqual(dbg42, expr42.DebugView().ToString());
+        }
 
         private Expression expr43 = CSharpStatement.Switch(Expression.Default(typeof(string)), Expression.Label("break"), new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { "bar", "foo", "this is a \"quoted\" string", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Empty()) });
         private string dbg43 = <#=toEscapedString(CSharpStatement.Switch(Expression.Default(typeof(string)), Expression.Label("break"), new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { "bar", "foo", "this is a \"quoted\" string", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Empty()) }).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test43()
-		{
-			Assert.AreEqual(dbg43, expr43.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test43()
+        {
+            Assert.AreEqual(dbg43, expr43.DebugView().ToString());
+        }
 
         private Expression expr44 = CSharpStatement.GotoLabel(Expression.Label());
         private string dbg44 = <#=toEscapedString(CSharpStatement.GotoLabel(Expression.Label()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test44()
-		{
-			Assert.AreEqual(dbg44, expr44.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test44()
+        {
+            Assert.AreEqual(dbg44, expr44.DebugView().ToString());
+        }
 
         private Expression expr45 = CSharpStatement.GotoCase(1);
         private string dbg45 = <#=toEscapedString(CSharpStatement.GotoCase(1).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test45()
-		{
-			Assert.AreEqual(dbg45, expr45.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test45()
+        {
+            Assert.AreEqual(dbg45, expr45.DebugView().ToString());
+        }
 
         private Expression expr46 = CSharpStatement.GotoDefault();
         private string dbg46 = <#=toEscapedString(CSharpStatement.GotoDefault().DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test46()
-		{
-			Assert.AreEqual(dbg46, expr46.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test46()
+        {
+            Assert.AreEqual(dbg46, expr46.DebugView().ToString());
+        }
 
         private Expression expr47 = CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Empty());
         private string dbg47 = <#=toEscapedString(CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test47()
-		{
-			Assert.AreEqual(dbg47, expr47.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test47()
+        {
+            Assert.AreEqual(dbg47, expr47.DebugView().ToString());
+        }
 
         private Expression expr48 = CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Empty());
         private string dbg48 = <#=toEscapedString(CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test48()
-		{
-			Assert.AreEqual(dbg48, expr48.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test48()
+        {
+            Assert.AreEqual(dbg48, expr48.DebugView().ToString());
+        }
 
         private Expression expr49 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Empty());
         private string dbg49 = <#=toEscapedString(CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Empty()).DebugView())#>;
 
-		[TestMethod]
-		public void CSharp_DebugView_Test49()
-		{
-			Assert.AreEqual(dbg49, expr49.DebugView().ToString());
-		}
+        [TestMethod]
+        public void CSharp_DebugView_Test49()
+        {
+            Assert.AreEqual(dbg49, expr49.DebugView().ToString());
+        }
 
     }
 }
