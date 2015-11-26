@@ -18,6 +18,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         public static string GetDebugView(string expr)
         {
+            // TODO: Investigate using the scripting APIs here instead.
+            
             var typeName = "Expressions";
             var propName = "Expression";
 
