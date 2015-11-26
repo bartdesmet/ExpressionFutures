@@ -39,35 +39,37 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     [TestClass]
     public partial class CompilerTests
     {
-        // Elapsed = 00:00:00.6517087
+        // Elapsed = 00:00:00.6283784
         [TestMethod]
         public void CompilerTest_9D30_AA02()
         {
-            // <PERF>1303.4781ms</PERF>
+            // <PERF>1339.8255ms</PERF>
 
             // (Expression<Func<int>>)(() => 42)
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => 42)");
-            var expected = @"<Lambda Type=""System.Func`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32]"">
   <Parameters />
   <Body>
     <Constant Type=""System.Int32"" Value=""42"" />
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_9D30_AA02();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9D30_AA02() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:01.9556255
+        // Elapsed = 00:00:01.9689103
         [TestMethod]
         public void CompilerTest_3ECF_6910()
         {
-            // <PERF>161.2816ms</PERF>
+            // <PERF>160.3008ms</PERF>
 
             // (Expression<Func<string, int>>)(s => s.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int>>)(s => s.Length)");
-            var expected = @"<Lambda Type=""System.Func`2[System.String,System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.String,System.Int32]"">
   <Parameters>
     <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
   </Parameters>
@@ -79,21 +81,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </MemberAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3ECF_6910();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3ECF_6910() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.1169759
+        // Elapsed = 00:00:02.1293137
         [TestMethod]
         public void CompilerTest_F51F_71B6()
         {
-            // <PERF>59.5741ms</PERF>
+            // <PERF>21.5721ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })");
-            var expected = @"<Lambda Type=""System.Func`1[System.Int32[,]]"">
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32[,]]"">
   <Parameters />
   <Body>
     <CSharpNewMultidimensionalArrayInit Type=""System.Int32[,]"" Bounds=""1, 1"">
@@ -103,21 +106,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpNewMultidimensionalArrayInit>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_F51F_71B6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F51F_71B6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.1766089
+        // Elapsed = 00:00:02.1509545
         [TestMethod]
         public void CompilerTest_E9F4_7C15()
         {
-            // <PERF>50.2524ms</PERF>
+            // <PERF>39.854ms</PERF>
 
             // (Expression<Func<int>>)(() => Math.Abs(value: 42))
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => Math.Abs(value: 42))");
-            var expected = @"<Lambda Type=""System.Func`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32]"">
   <Parameters />
   <Body>
     <CSharpCall Type=""System.Int32"" Method=""Int32 Abs(Int32)"">
@@ -131,21 +135,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpCall>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_E9F4_7C15();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E9F4_7C15() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.2269327
+        // Elapsed = 00:00:02.1908562
         [TestMethod]
         public void CompilerTest_EDEC_D0C9()
         {
-            // <PERF>27.8566ms</PERF>
+            // <PERF>24.3107ms</PERF>
 
             // (Expression<Func<List<int>, int>>)(xs => xs[index: 42])
             var actual = GetDebugView(@"(Expression<Func<List<int>, int>>)(xs => xs[index: 42])");
-            var expected = @"<Lambda Type=""System.Func`2[System.Collections.Generic.List`1[System.Int32],System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Collections.Generic.List`1[System.Int32],System.Int32]"">
   <Parameters>
     <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
   </Parameters>
@@ -164,21 +169,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpIndex>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_EDEC_D0C9();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EDEC_D0C9() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.2548482
+        // Elapsed = 00:00:02.2152156
         [TestMethod]
         public void CompilerTest_6271_EABC()
         {
-            // <PERF>34.5048ms</PERF>
+            // <PERF>33.6051ms</PERF>
 
             // (Expression<Action<Action<int>>>)(a => a(obj: 42))
             var actual = GetDebugView(@"(Expression<Action<Action<int>>>)(a => a(obj: 42))");
-            var expected = @"<Lambda Type=""System.Action`1[System.Action`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Action`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Action`1[System.Int32]"" Id=""0"" Name=""a"" />
   </Parameters>
@@ -197,21 +203,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInvoke>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_6271_EABC();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6271_EABC() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.2894208
+        // Elapsed = 00:00:02.2488694
         [TestMethod]
         public void CompilerTest_8E43_6B25()
         {
-            // <PERF>33.0795ms</PERF>
+            // <PERF>24.4553ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => -x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => -x)");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -227,21 +234,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicUnary>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_8E43_6B25();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8E43_6B25() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.3225869
+        // Elapsed = 00:00:02.2733760
         [TestMethod]
         public void CompilerTest_191C_CEEB()
         {
-            // <PERF>33.4204ms</PERF>
+            // <PERF>37.4273ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))");
-            var expected = @"<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""a"" />
     <Parameter Type=""System.Object"" Id=""1"" Name=""b"" />
@@ -265,21 +273,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicBinary>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_191C_CEEB();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_191C_CEEB() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.3560814
+        // Elapsed = 00:00:02.3108751
         [TestMethod]
         public void CompilerTest_6647_1258()
         {
-            // <PERF>24.0228ms</PERF>
+            // <PERF>25.94ms</PERF>
 
             // (Expression<Func<dynamic, int>>)(x => (int)x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => (int)x)");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Int32]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -291,21 +300,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicConvert>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_6647_1258();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6647_1258() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.3801551
+        // Elapsed = 00:00:02.3368824
         [TestMethod]
         public void CompilerTest_AB76_B2ED()
         {
-            // <PERF>35.6686ms</PERF>
+            // <PERF>29.6854ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo)");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -317,21 +327,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicGetMember>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_AB76_B2ED();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AB76_B2ED() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.4159357
+        // Elapsed = 00:00:02.3666160
         [TestMethod]
         public void CompilerTest_C598_D480()
         {
-            // <PERF>29.1757ms</PERF>
+            // <PERF>25.5914ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -350,21 +361,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicInvokeMember>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_C598_D480();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C598_D480() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.4452078
+        // Elapsed = 00:00:02.3922623
         [TestMethod]
         public void CompilerTest_55B7_3EFA()
         {
-            // <PERF>24.4437ms</PERF>
+            // <PERF>41.7425ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -387,21 +399,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicGetIndex>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_55B7_3EFA();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55B7_3EFA() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.4697439
+        // Elapsed = 00:00:02.4340824
         [TestMethod]
         public void CompilerTest_7760_936B()
         {
-            // <PERF>24.2125ms</PERF>
+            // <PERF>23.1639ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x[1])");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -420,21 +433,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicGetIndex>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_7760_936B();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7760_936B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.4940309
+        // Elapsed = 00:00:02.4573043
         [TestMethod]
         public void CompilerTest_22AA_5962()
         {
-            // <PERF>24.7008ms</PERF>
+            // <PERF>32.0803ms</PERF>
 
             // (Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))
             var actual = GetDebugView(@"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.TimeSpan]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.TimeSpan]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -450,21 +464,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpDynamicInvokeConstructor>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_22AA_5962();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_22AA_5962() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.5188080
+        // Elapsed = 00:00:02.4894631
         [TestMethod]
         public void CompilerTest_0FFA_7AF2()
         {
-            // <PERF>44.154ms</PERF>
+            // <PERF>24.3099ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t)");
-            var expected = @"<Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
   </Parameters>
@@ -490,21 +505,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Invoke>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0FFA_7AF2();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_7AF2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.5630673
+        // Elapsed = 00:00:02.5138363
         [TestMethod]
         public void CompilerTest_83AE_26E4()
         {
-            // <PERF>47.45ms</PERF>
+            // <PERF>33.2272ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))");
-            var expected = @"<Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
   </Parameters>
@@ -537,21 +553,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Invoke>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_83AE_26E4();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_26E4() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.6106173
+        // Elapsed = 00:00:02.5471282
         [TestMethod]
         public void CompilerTest_1A0E_F439()
         {
-            // <PERF>23.9081ms</PERF>
+            // <PERF>25.0662ms</PERF>
 
             // (Expression<Func<dynamic, Task<int>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<int>>>)(async d => await d)");
-            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Threading.Tasks.Task`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Threading.Tasks.Task`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
   </Parameters>
@@ -581,21 +598,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Invoke>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1A0E_F439();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_F439() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.6346053
+        // Elapsed = 00:00:02.5722819
         [TestMethod]
         public void CompilerTest_B340_DAC2()
         {
-            // <PERF>45.1621ms</PERF>
+            // <PERF>42.1544ms</PERF>
 
             // (Expression<Func<string, int?>>)(s => s?.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int?>>)(s => s?.Length)");
-            var expected = @"<Lambda Type=""System.Func`2[System.String,System.Nullable`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.String,System.Nullable`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
   </Parameters>
@@ -607,21 +625,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalMemberAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B340_DAC2();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B340_DAC2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.6798277
+        // Elapsed = 00:00:02.6144920
         [TestMethod]
         public void CompilerTest_A997_3059()
         {
-            // <PERF>26.1407ms</PERF>
+            // <PERF>21.5311ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s?.ToUpper())
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s?.ToUpper())");
-            var expected = @"<Lambda Type=""System.Func`2[System.String,System.String]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.String,System.String]"">
   <Parameters>
     <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
   </Parameters>
@@ -634,21 +653,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalCall>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A997_3059();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A997_3059() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.7060157
+        // Elapsed = 00:00:02.6360954
         [TestMethod]
         public void CompilerTest_CF40_3016()
         {
-            // <PERF>22.2883ms</PERF>
+            // <PERF>39.8352ms</PERF>
 
             // (Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))
             var actual = GetDebugView(@"(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))");
-            var expected = @"<Lambda Type=""System.Func`2[System.Func`2[System.Int32,System.Int32],System.Nullable`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Func`2[System.Int32,System.Int32],System.Nullable`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Func`2[System.Int32,System.Int32]"" Id=""0"" Name=""f"" />
   </Parameters>
@@ -667,21 +687,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalCall>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_CF40_3016();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_3016() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.7283951
+        // Elapsed = 00:00:02.6760283
         [TestMethod]
         public void CompilerTest_A8D0_49C3()
         {
-            // <PERF>21.6925ms</PERF>
+            // <PERF>23.6293ms</PERF>
 
             // (Expression<Action>)(() => { })
             var actual = GetDebugView(@"(Expression<Action>)(() => { })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -692,21 +713,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A8D0_49C3();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A8D0_49C3() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.7501323
+        // Elapsed = 00:00:02.6997036
         [TestMethod]
         public void CompilerTest_0BD6_C135()
         {
-            // <PERF>50.7714ms</PERF>
+            // <PERF>35.1192ms</PERF>
 
             // (Expression<Action>)(() => { ; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { ; })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -719,21 +741,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0BD6_C135();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0BD6_C135() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.8009497
+        // Elapsed = 00:00:02.7348728
         [TestMethod]
         public void CompilerTest_6102_7F8E()
         {
-            // <PERF>23.7555ms</PERF>
+            // <PERF>25.8949ms</PERF>
 
             // (Expression<Action>)(() => { return; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { return; })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -750,59 +773,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_6102_7F8E();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6102_7F8E() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.8247588
+        // Elapsed = 00:00:02.7608378
         [TestMethod]
         public void CompilerTest_7381_AA02()
         {
-            // <PERF>20.2186ms</PERF>
+            // <PERF>34.7877ms</PERF>
 
             // (Expression<Func<int>>)(() => { return 42; })
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => { return 42; })");
-            var expected = @"<Lambda Type=""System.Func`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32]"">
   <Parameters />
   <Body>
     <Constant Type=""System.Int32"" Value=""42"" />
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_7381_AA02();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_AA02() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.8450260
+        // Elapsed = 00:00:02.7956723
         [Ignore]
         // (10,84): error CS1525: Invalid expression term '}'
         // (10,84): error CS1002: ; expected
         [TestMethod]
         public void CompilerTest_1245_B7BA()
         {
-            // <PERF>21.7162ms</PERF>
+            // <PERF>27.0873ms</PERF>
 
             // (Expression<Action>)(() => { goto A; A: })
             var actual = GetDebugView(@"(Expression<Action>)(() => { goto A; A: })");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1245_B7BA();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1245_B7BA() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.8668096
+        // Elapsed = 00:00:02.8233227
         [TestMethod]
         public void CompilerTest_3464_9552()
         {
-            // <PERF>23.3027ms</PERF>
+            // <PERF>40.7947ms</PERF>
 
             // (Expression<Action>)(() => { A: goto A; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { A: goto A; })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <Block Type=""System.Void"">
@@ -817,21 +843,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Block>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3464_9552();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3464_9552() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.8901783
+        // Elapsed = 00:00:02.8641977
         [TestMethod]
         public void CompilerTest_C90B_9C05()
         {
-            // <PERF>26.355ms</PERF>
+            // <PERF>24.4227ms</PERF>
 
             // (Expression<Action>)(() => { while (true) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) Console.Write('.'); })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <Block Type=""System.Void"">
@@ -858,21 +885,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Block>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_C90B_9C05();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C90B_9C05() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.9166051
+        // Elapsed = 00:00:02.8887075
         [TestMethod]
         public void CompilerTest_6674_1E31()
         {
-            // <PERF>76.8247ms</PERF>
+            // <PERF>56.5374ms</PERF>
 
             // (Expression<Action>)(() => { do { Console.Write('.'); } while (true); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <Block Type=""System.Void"">
@@ -903,21 +931,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Block>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_6674_1E31();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6674_1E31() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.9935003
+        // Elapsed = 00:00:02.9453064
         [TestMethod]
         public void CompilerTest_AD48_8B6A()
         {
-            // <PERF>27.2573ms</PERF>
+            // <PERF>28.2676ms</PERF>
 
             // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -974,21 +1003,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_AD48_8B6A();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD48_8B6A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.0208170
+        // Elapsed = 00:00:02.9736419
         [TestMethod]
         public void CompilerTest_25E2_35E6()
         {
-            // <PERF>25.225ms</PERF>
+            // <PERF>26.0943ms</PERF>
 
             // (Expression<Action>)(() => { for (;;) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (;;) Console.Write('.'); })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <Block Type=""System.Void"">
@@ -1012,21 +1042,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Block>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_25E2_35E6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_35E6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.0460938
+        // Elapsed = 00:00:02.9998339
         [TestMethod]
         public void CompilerTest_DA7B_B67A()
         {
-            // <PERF>31.5738ms</PERF>
+            // <PERF>25.9293ms</PERF>
 
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Int32[]]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32[]]"">
   <Parameters>
     <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
   </Parameters>
@@ -1061,21 +1092,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_DA7B_B67A();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B67A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.0777270
+        // Elapsed = 00:00:03.0258346
         [TestMethod]
         public void CompilerTest_34B8_D672()
         {
-            // <PERF>25.0756ms</PERF>
+            // <PERF>48.5313ms</PERF>
 
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Object[]]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Object[]]"">
   <Parameters>
     <Parameter Type=""System.Object[]"" Id=""0"" Name=""xs"" />
   </Parameters>
@@ -1124,21 +1156,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_34B8_D672();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D672() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.1028664
+        // Elapsed = 00:00:03.0744627
         [TestMethod]
         public void CompilerTest_5598_03A6()
         {
-            // <PERF>63.0187ms</PERF>
+            // <PERF>25.2576ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })");
-            var expected = @"<Lambda Type=""System.Action`1[System.IDisposable]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.IDisposable]"">
   <Parameters>
     <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
   </Parameters>
@@ -1168,21 +1201,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_5598_03A6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5598_03A6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.1659458
+        // Elapsed = 00:00:03.0997734
         [TestMethod]
         public void CompilerTest_BB7C_2A2A()
         {
-            // <PERF>31.9759ms</PERF>
+            // <PERF>27.447ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })");
-            var expected = @"<Lambda Type=""System.Action`1[System.IDisposable]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.IDisposable]"">
   <Parameters>
     <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
   </Parameters>
@@ -1211,21 +1245,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_BB7C_2A2A();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_2A2A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.1979967
+        // Elapsed = 00:00:03.1272717
         [TestMethod]
         public void CompilerTest_2CF2_18B2()
         {
-            // <PERF>32.5265ms</PERF>
+            // <PERF>47.3358ms</PERF>
 
             // (Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })
             var actual = GetDebugView(@"(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Object]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Object]"">
   <Parameters>
     <Parameter Type=""System.Object"" Id=""0"" Name=""o"" />
   </Parameters>
@@ -1255,21 +1290,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_2CF2_18B2();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CF2_18B2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2306085
+        // Elapsed = 00:00:03.1746695
         [TestMethod]
         public void CompilerTest_880F_A24B()
         {
-            // <PERF>27.2135ms</PERF>
+            // <PERF>23.893ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -1305,21 +1341,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_880F_A24B();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_880F_A24B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2578983
+        // Elapsed = 00:00:03.1986250
         [TestMethod]
         public void CompilerTest_19B3_485B()
         {
-            // <PERF>34.603ms</PERF>
+            // <PERF>30.505ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -1359,21 +1396,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_19B3_485B();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_19B3_485B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2925892
+        // Elapsed = 00:00:03.2291898
         [TestMethod]
         public void CompilerTest_0662_485B()
         {
-            // <PERF>52.1249ms</PERF>
+            // <PERF>26.4974ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -1413,21 +1451,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0662_485B();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0662_485B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.3447694
+        // Elapsed = 00:00:03.2557737
         [TestMethod]
         public void CompilerTest_F63E_8707()
         {
-            // <PERF>31.3972ms</PERF>
+            // <PERF>32.7734ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -1470,21 +1509,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_F63E_8707();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F63E_8707() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.3762451
+        // Elapsed = 00:00:03.2886341
         [TestMethod]
         public void CompilerTest_1C02_6E0D()
         {
-            // <PERF>27.7325ms</PERF>
+            // <PERF>50.8294ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -1537,21 +1577,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1C02_6E0D();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1C02_6E0D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.4040428
+        // Elapsed = 00:00:03.3396193
         [TestMethod]
         public void CompilerTest_744C_C5E7()
         {
-            // <PERF>36.1443ms</PERF>
+            // <PERF>39.0681ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })");
-            var expected = @"<Lambda Type=""System.Action"">
+            var expected = @"
+<Lambda Type=""System.Action"">
   <Parameters />
   <Body>
     <CSharpBlock Type=""System.Void"">
@@ -1605,21 +1646,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_744C_C5E7();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_744C_C5E7() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.4404919
+        // Elapsed = 00:00:03.3787512
         [TestMethod]
         public void CompilerTest_2156_D7F7()
         {
-            // <PERF>31.7706ms</PERF>
+            // <PERF>21.7261ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) {} })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) {} })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
   <Parameters>
     <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1642,21 +1684,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_2156_D7F7();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_D7F7() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.4723344
+        // Elapsed = 00:00:03.4005446
         [TestMethod]
         public void CompilerTest_FCA9_3B3F()
         {
-            // <PERF>51.929ms</PERF>
+            // <PERF>41.0834ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
   <Parameters>
     <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1694,21 +1737,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_FCA9_3B3F();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_3B3F() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.5243548
+        // Elapsed = 00:00:03.4416838
         [TestMethod]
         public void CompilerTest_6832_C62D()
         {
-            // <PERF>31.1767ms</PERF>
+            // <PERF>32.5243ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
   <Parameters>
     <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1746,21 +1790,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_6832_C62D();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_C62D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.5555891
+        // Elapsed = 00:00:03.4742938
         [TestMethod]
         public void CompilerTest_4E9F_42FD()
         {
-            // <PERF>32.9545ms</PERF>
+            // <PERF>45.9863ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
   <Parameters>
     <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1812,21 +1857,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_4E9F_42FD();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_42FD() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.5886413
+        // Elapsed = 00:00:03.5203440
         [TestMethod]
         public void CompilerTest_30E5_8D77()
         {
-            // <PERF>33.6565ms</PERF>
+            // <PERF>26.5736ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1864,21 +1910,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_30E5_8D77();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_8D77() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.6223732
+        // Elapsed = 00:00:03.5469778
         [TestMethod]
         public void CompilerTest_AD7C_9EAF()
         {
-            // <PERF>51.7023ms</PERF>
+            // <PERF>30.946ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1921,21 +1968,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_AD7C_9EAF();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_9EAF() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.6743607
+        // Elapsed = 00:00:03.5780104
         [TestMethod]
         public void CompilerTest_3E56_D0C6()
         {
-            // <PERF>55.4856ms</PERF>
+            // <PERF>44.5632ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })");
-            var expected = @"<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
   <Parameters>
     <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
   </Parameters>
@@ -1978,7 +2026,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3E56_D0C6();
         }
 

@@ -118,7 +118,7 @@ var exprs = new[]
 <#
 var sw = Stopwatch.StartNew();
 var all = new List<string>();
-var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace("\"", "\"\"") + "\"");
+var toEscapedString = new Func<object, bool, string>((o, multiLine) => "@\"" + (multiLine ? "\r\n" : "") + o.ToString().Replace("\"", "\"\"") + "\"");
 var md5 = System.Security.Cryptography.MD5.Create();
 var getHash = new Func<string, string>(input =>
 {
@@ -223,9 +223,9 @@ foreach (var expr in exprs)
             // <PERF><#=cost.TotalMilliseconds#>ms</PERF>
 
             // <#=expr#>
-            var actual = GetDebugView(<#=toEscapedString(expr)#>);
-            var expected = <#=toEscapedString(dbgTest)#>;
-            Assert.AreEqual(expected, actual);
+            var actual = GetDebugView(<#=toEscapedString(expr, false)#>);
+            var expected = <#=toEscapedString(dbgTest, true)#>;
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_<#=id#>();
         }
 
