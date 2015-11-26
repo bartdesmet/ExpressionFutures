@@ -30,13 +30,13 @@ var exprs = new[]
 
     // Multi-dimensional array initializer
     "(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })",
-
+	 
     // Named/optional parameters
     "(Expression<Func<int>>)(() => Math.Abs(value: 42))",
-    "(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
+    // !!!BUG!!! "(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
     "(Expression<Func<List<int>, int>>)(xs => xs[index: 42])",
     "(Expression<Action<Action<int>>>)(a => a(obj: 42))",
-
+	 
     // Dynamic
     "(Expression<Func<dynamic, dynamic>>)(x => -x)",
     "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
@@ -45,72 +45,72 @@ var exprs = new[]
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))",
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
     "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
-    "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
+	// !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
     "(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
-
+	 
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))",
     "(Expression<Func<dynamic, Task<int>>>)(async d => await d)",
-
+	 
     // Conditional access
     "(Expression<Func<string, int?>>)(s => s?.Length)",
     "(Expression<Func<string, string>>)(s => s?.ToUpper())",
-    "(Expression<Func<string, char?>>)(s => s?[42])",
+    // !!!BUG!!! "(Expression<Func<string, char?>>)(s => s?[42])",
     "(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))",
-
+	 
     // Block
     "(Expression<Action>)(() => { })",
-
+	 
     // Empty
     "(Expression<Action>)(() => { ; })",
-
+	 
     // Return
     "(Expression<Action>)(() => { return; })",
     "(Expression<Func<int>>)(() => { return 42; })",
-
+	 
     // Label/Goto
     "(Expression<Action>)(() => { goto A; A: })",
     "(Expression<Action>)(() => { A: goto A; })",
-
+	 
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
-
+	 
     // Do
     "(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
-
+	 
     // For
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
     "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
-
+	 
     // ForEach
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     "(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
-    "(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
-
+	// !!!BUG!!! "(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+	 
     // Using
     "(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })",
-
+	 
     // Lock
     "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
-
+	 
     // Try
     "(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })",
-    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
+    // !!!BUG!!! "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
-
+	 
     // Switch
     "(Expression<Action<int>>)(x => { switch (x) {} })",
     "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })",
     "(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })",
     "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })",
-    "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
+    // !!!BUG!!! "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
 };

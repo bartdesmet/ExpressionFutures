@@ -39,11 +39,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     [TestClass]
     public partial class CompilerTests
     {
-        // Elapsed = 00:00:00.3464049
+        // Elapsed = 00:00:00.6517087
         [TestMethod]
         public void CompilerTest_9D30_AA02()
         {
-            // <PERF>4548.0105ms</PERF>
+            // <PERF>1303.4781ms</PERF>
 
             // (Expression<Func<int>>)(() => 42)
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => 42)");
@@ -59,11 +59,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9D30_AA02() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.8954208
+        // Elapsed = 00:00:01.9556255
         [TestMethod]
         public void CompilerTest_3ECF_6910()
         {
-            // <PERF>193.7913ms</PERF>
+            // <PERF>161.2816ms</PERF>
 
             // (Expression<Func<string, int>>)(s => s.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int>>)(s => s.Length)");
@@ -85,443 +85,705 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3ECF_6910() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.0892580
-        [Ignore]
-        // (10,77): error CS0838: An expression tree may not contain a multidimensional array initializer
+        // Elapsed = 00:00:02.1169759
         [TestMethod]
-        public void CompilerTest_F51F_B7BA()
+        public void CompilerTest_F51F_71B6()
         {
-            // <PERF>78.0404ms</PERF>
+            // <PERF>59.5741ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`1[System.Int32[,]]"">
+  <Parameters />
+  <Body>
+    <CSharpNewMultidimensionalArrayInit Type=""System.Int32[,]"" Bounds=""1, 1"">
+      <Expressions>
+        <Constant Type=""System.Int32"" Value=""42"" />
+      </Expressions>
+    </CSharpNewMultidimensionalArrayInit>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_F51F_B7BA();
+            Verify.CompilerTest_F51F_71B6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F51F_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F51F_71B6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.1673524
-        [Ignore]
-        // (10,74): error CS0853: An expression tree may not contain a named argument specification
+        // Elapsed = 00:00:02.1766089
         [TestMethod]
-        public void CompilerTest_E9F4_B7BA()
+        public void CompilerTest_E9F4_7C15()
         {
-            // <PERF>68.0595ms</PERF>
+            // <PERF>50.2524ms</PERF>
 
             // (Expression<Func<int>>)(() => Math.Abs(value: 42))
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => Math.Abs(value: 42))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`1[System.Int32]"">
+  <Parameters />
+  <Body>
+    <CSharpCall Type=""System.Int32"" Method=""Int32 Abs(Int32)"">
+      <Arguments>
+        <ParameterAssignment Parameter=""Int32 value"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""42"" />
+          </Expression>
+        </ParameterAssignment>
+      </Arguments>
+    </CSharpCall>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_E9F4_B7BA();
+            Verify.CompilerTest_E9F4_7C15();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E9F4_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E9F4_7C15() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.2354819
-        [Ignore]
-        // (10,79): error CS0853: An expression tree may not contain a named argument specification
+        // Elapsed = 00:00:02.2269327
         [TestMethod]
-        public void CompilerTest_00C1_B7BA()
+        public void CompilerTest_EDEC_D0C9()
         {
-            // <PERF>32.4512ms</PERF>
-
-            // (Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))
-            var actual = GetDebugView(@"(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_00C1_B7BA();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_00C1_B7BA() => INCONCLUSIVE(); }
-
-        // Elapsed = 00:00:05.2679991
-        [Ignore]
-        // (10,85): error CS0853: An expression tree may not contain a named argument specification
-        [TestMethod]
-        public void CompilerTest_EDEC_B7BA()
-        {
-            // <PERF>62.9175ms</PERF>
+            // <PERF>27.8566ms</PERF>
 
             // (Expression<Func<List<int>, int>>)(xs => xs[index: 42])
             var actual = GetDebugView(@"(Expression<Func<List<int>, int>>)(xs => xs[index: 42])");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Collections.Generic.List`1[System.Int32],System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpIndex Type=""System.Int32"" Indexer=""Int32 Item [Int32]"">
+      <Object>
+        <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+      </Object>
+      <Arguments>
+        <ParameterAssignment Parameter=""Int32 index"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""42"" />
+          </Expression>
+        </ParameterAssignment>
+      </Arguments>
+    </CSharpIndex>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_EDEC_B7BA();
+            Verify.CompilerTest_EDEC_D0C9();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EDEC_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EDEC_D0C9() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.3309964
-        [Ignore]
-        // (10,83): error CS0853: An expression tree may not contain a named argument specification
+        // Elapsed = 00:00:02.2548482
         [TestMethod]
-        public void CompilerTest_6271_B7BA()
+        public void CompilerTest_6271_EABC()
         {
-            // <PERF>22.64ms</PERF>
+            // <PERF>34.5048ms</PERF>
 
             // (Expression<Action<Action<int>>>)(a => a(obj: 42))
             var actual = GetDebugView(@"(Expression<Action<Action<int>>>)(a => a(obj: 42))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Action`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Action`1[System.Int32]"" Id=""0"" Name=""a"" />
+  </Parameters>
+  <Body>
+    <CSharpInvoke Type=""System.Void"">
+      <Expression>
+        <Parameter Type=""System.Action`1[System.Int32]"" Id=""0"" Name=""a"" />
+      </Expression>
+      <Arguments>
+        <ParameterAssignment Parameter=""Int32 obj"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""42"" />
+          </Expression>
+        </ParameterAssignment>
+      </Arguments>
+    </CSharpInvoke>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_6271_B7BA();
+            Verify.CompilerTest_6271_EABC();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6271_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6271_EABC() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.3537131
-        [Ignore]
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.2894208
         [TestMethod]
-        public void CompilerTest_8E43_B7BA()
+        public void CompilerTest_8E43_6B25()
         {
-            // <PERF>22.5686ms</PERF>
+            // <PERF>33.0795ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => -x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => -x)");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicUnary Type=""System.Object"" OperationNodeType=""Negate"" Context=""Expressions"">
+      <Operand>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Operand>
+    </CSharpDynamicUnary>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_8E43_B7BA();
+            Verify.CompilerTest_8E43_6B25();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8E43_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8E43_6B25() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.3764410
-        [Ignore]
-        // (10,108): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.3225869
         [TestMethod]
-        public void CompilerTest_191C_B7BA()
+        public void CompilerTest_191C_CEEB()
         {
-            // <PERF>45.586ms</PERF>
+            // <PERF>33.4204ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""a"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""b"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"" Context=""Expressions"">
+      <Left>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""a"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Left>
+      <Right>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""b"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Right>
+    </CSharpDynamicBinary>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_191C_B7BA();
+            Verify.CompilerTest_191C_CEEB();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_191C_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_191C_CEEB() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.4220841
-        [Ignore]
-        // (10,82): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.3560814
         [TestMethod]
-        public void CompilerTest_6647_B7BA()
+        public void CompilerTest_6647_1258()
         {
-            // <PERF>26.7816ms</PERF>
+            // <PERF>24.0228ms</PERF>
 
             // (Expression<Func<dynamic, int>>)(x => (int)x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => (int)x)");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicConvert Type=""System.Int32"" Flags=""ConvertExplicit"" Context=""Expressions"">
+      <Expression>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Expression>
+    </CSharpDynamicConvert>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_6647_B7BA();
+            Verify.CompilerTest_6647_1258();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6647_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6647_1258() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.4489264
-        [Ignore]
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.3801551
         [TestMethod]
-        public void CompilerTest_AB76_B7BA()
+        public void CompilerTest_AB76_B2ED()
         {
-            // <PERF>13.3736ms</PERF>
+            // <PERF>35.6686ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo)");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicGetMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+    </CSharpDynamicGetMember>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_AB76_B7BA();
+            Verify.CompilerTest_AB76_B2ED();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AB76_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AB76_B2ED() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.4623531
-        [Ignore]
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.4159357
         [TestMethod]
-        public void CompilerTest_C598_B7BA()
+        public void CompilerTest_C598_D480()
         {
-            // <PERF>18.065ms</PERF>
+            // <PERF>29.1757ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_C598_B7BA();
+            Verify.CompilerTest_C598_D480();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C598_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C598_D480() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.4804788
-        [Ignore]
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.4452078
         [TestMethod]
-        public void CompilerTest_55B7_B7BA()
+        public void CompilerTest_55B7_3EFA()
         {
-            // <PERF>25.8735ms</PERF>
+            // <PERF>24.4437ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicGetIndex Type=""System.Object"" Context=""Expressions"">
+      <Object>
+        <CSharpDynamicGetMember Type=""System.Object"" Name=""Foo"" Flags=""ResultIndexed"" Context=""Expressions"">
+          <Object>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Object>
+        </CSharpDynamicGetMember>
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicGetIndex>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_55B7_B7BA();
+            Verify.CompilerTest_55B7_3EFA();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55B7_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55B7_3EFA() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.5064036
-        [Ignore]
-        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.4697439
         [TestMethod]
-        public void CompilerTest_7760_B7BA()
+        public void CompilerTest_7760_936B()
         {
-            // <PERF>12.1884ms</PERF>
+            // <PERF>24.2125ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x[1])");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicGetIndex Type=""System.Object"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicGetIndex>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_7760_B7BA();
+            Verify.CompilerTest_7760_936B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7760_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7760_936B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.5186625
-        [Ignore]
-        // (10,82): error CS1963: An expression tree may not contain a dynamic operation
-        // (10,82): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.4940309
         [TestMethod]
-        public void CompilerTest_4B4B_B7BA()
+        public void CompilerTest_22AA_5962()
         {
-            // <PERF>31.9139ms</PERF>
-
-            // (Expression<Func<dynamic, int>>)(x => int.Parse(x))
-            var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => int.Parse(x))");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_4B4B_B7BA();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4B4B_B7BA() => INCONCLUSIVE(); }
-
-        // Elapsed = 00:00:05.5506446
-        [Ignore]
-        // (10,87): error CS1963: An expression tree may not contain a dynamic operation
-        [TestMethod]
-        public void CompilerTest_22AA_B7BA()
-        {
-            // <PERF>18.9071ms</PERF>
+            // <PERF>24.7008ms</PERF>
 
             // (Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))
             var actual = GetDebugView(@"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.TimeSpan]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeConstructor Type=""System.TimeSpan"" Context=""Expressions"">
+      <Arguments>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeConstructor>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_22AA_B7BA();
+            Verify.CompilerTest_22AA_5962();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_22AA_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_22AA_5962() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.5696276
-        [Ignore]
-        // (10,85): error CS1989: Async lambda expressions cannot be converted to expression trees
+        // Elapsed = 00:00:02.5188080
         [TestMethod]
-        public void CompilerTest_0FFA_B7BA()
+        public void CompilerTest_0FFA_7AF2()
         {
-            // <PERF>62.9402ms</PERF>
+            // <PERF>44.154ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t)");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <Invoke Type=""System.Threading.Tasks.Task`1[System.Int32]"">
+      <Expression>
+        <CSharpAsyncLambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+          </Parameters>
+          <Body>
+            <CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+              <Operand>
+                <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+              </Operand>
+            </CSharpAwait>
+          </Body>
+        </CSharpAsyncLambda>
+      </Expression>
+      <Arguments>
+        <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+      </Arguments>
+    </Invoke>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_0FFA_B7BA();
+            Verify.CompilerTest_0FFA_7AF2();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_7AF2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.6326534
-        [Ignore]
-        // (10,85): error CS1989: Async lambda expressions cannot be converted to expression trees
+        // Elapsed = 00:00:02.5630673
         [TestMethod]
-        public void CompilerTest_83AE_B7BA()
+        public void CompilerTest_83AE_26E4()
         {
-            // <PERF>35.6115ms</PERF>
+            // <PERF>47.45ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <Invoke Type=""System.Threading.Tasks.Task`1[System.Int32]"">
+      <Expression>
+        <CSharpAsyncLambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Threading.Tasks.Task`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+          </Parameters>
+          <Body>
+            <CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""ConfiguredTaskAwaiter GetAwaiter()"">
+              <Operand>
+                <Call Type=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32]"" Method=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32] ConfigureAwait(Boolean)"">
+                  <Object>
+                    <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+                  </Object>
+                  <Arguments>
+                    <Constant Type=""System.Boolean"" Value=""false"" />
+                  </Arguments>
+                </Call>
+              </Operand>
+            </CSharpAwait>
+          </Body>
+        </CSharpAsyncLambda>
+      </Expression>
+      <Arguments>
+        <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
+      </Arguments>
+    </Invoke>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_83AE_B7BA();
+            Verify.CompilerTest_83AE_26E4();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_26E4() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.6683484
-        [Ignore]
-        // (10,83): error CS1989: Async lambda expressions cannot be converted to expression trees
-        // (10,94): error CS1963: An expression tree may not contain a dynamic operation
+        // Elapsed = 00:00:02.6106173
         [TestMethod]
-        public void CompilerTest_1A0E_B7BA()
+        public void CompilerTest_1A0E_F439()
         {
-            // <PERF>18.2493ms</PERF>
+            // <PERF>23.9081ms</PERF>
 
             // (Expression<Func<dynamic, Task<int>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<int>>>)(async d => await d)");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Object,System.Threading.Tasks.Task`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
+  </Parameters>
+  <Body>
+    <Invoke Type=""System.Threading.Tasks.Task`1[System.Int32]"">
+      <Expression>
+        <CSharpAsyncLambda Type=""System.Func`2[System.Object,System.Threading.Tasks.Task`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
+          </Parameters>
+          <Body>
+            <CSharpDynamicConvert Type=""System.Int32"" Context=""Expressions"">
+              <Expression>
+                <CSharpAwait Type=""System.Object"" IsDynamic=""true"">
+                  <Operand>
+                    <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
+                  </Operand>
+                </CSharpAwait>
+              </Expression>
+            </CSharpDynamicConvert>
+          </Body>
+        </CSharpAsyncLambda>
+      </Expression>
+      <Arguments>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
+      </Arguments>
+    </Invoke>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_1A0E_B7BA();
+            Verify.CompilerTest_1A0E_F439();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_F439() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.6866780
-        [Ignore]
-        // (10,82): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        // Elapsed = 00:00:02.6346053
         [TestMethod]
-        public void CompilerTest_B340_B7BA()
+        public void CompilerTest_B340_DAC2()
         {
-            // <PERF>53.0839ms</PERF>
+            // <PERF>45.1621ms</PERF>
 
             // (Expression<Func<string, int?>>)(s => s?.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int?>>)(s => s?.Length)");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.String,System.Nullable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpConditionalMemberAccess Type=""System.Nullable`1[System.Int32]"" Member=""Int32 Length"">
+      <Expression>
+        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+      </Expression>
+    </CSharpConditionalMemberAccess>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_B340_B7BA();
+            Verify.CompilerTest_B340_DAC2();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B340_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B340_DAC2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.7398369
-        [Ignore]
-        // (10,84): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        // Elapsed = 00:00:02.6798277
         [TestMethod]
-        public void CompilerTest_A997_B7BA()
+        public void CompilerTest_A997_3059()
         {
-            // <PERF>17.0507ms</PERF>
+            // <PERF>26.1407ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s?.ToUpper())
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s?.ToUpper())");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.String,System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpConditionalCall Type=""System.String"" Method=""System.String ToUpper()"">
+      <Object>
+        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+      </Object>
+      <Arguments />
+    </CSharpConditionalCall>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_A997_B7BA();
+            Verify.CompilerTest_A997_3059();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A997_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A997_3059() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.7569773
-        [Ignore]
-        // (10,83): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        // Elapsed = 00:00:02.7060157
         [TestMethod]
-        public void CompilerTest_CB0C_B7BA()
+        public void CompilerTest_CF40_3016()
         {
-            // <PERF>15.3031ms</PERF>
-
-            // (Expression<Func<string, char?>>)(s => s?[42])
-            var actual = GetDebugView(@"(Expression<Func<string, char?>>)(s => s?[42])");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_CB0C_B7BA();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CB0C_B7BA() => INCONCLUSIVE(); }
-
-        // Elapsed = 00:00:05.7723429
-        [Ignore]
-        // (10,90): error CS8072: An expression tree lambda may not contain a null propagating operator.
-        [TestMethod]
-        public void CompilerTest_CF40_B7BA()
-        {
-            // <PERF>13.3607ms</PERF>
+            // <PERF>22.2883ms</PERF>
 
             // (Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))
             var actual = GetDebugView(@"(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`2[System.Func`2[System.Int32,System.Int32],System.Nullable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Func`2[System.Int32,System.Int32]"" Id=""0"" Name=""f"" />
+  </Parameters>
+  <Body>
+    <CSharpConditionalCall Type=""System.Nullable`1[System.Int32]"" Method=""Int32 Invoke(Int32)"">
+      <Object>
+        <Parameter Type=""System.Func`2[System.Int32,System.Int32]"" Id=""0"" Name=""f"" />
+      </Object>
+      <Arguments>
+        <ParameterAssignment Parameter=""Int32 arg"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""42"" />
+          </Expression>
+        </ParameterAssignment>
+      </Arguments>
+    </CSharpConditionalCall>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_CF40_B7BA();
+            Verify.CompilerTest_CF40_3016();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_3016() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.7857634
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.7283951
         [TestMethod]
-        public void CompilerTest_A8D0_B7BA()
+        public void CompilerTest_A8D0_49C3()
         {
-            // <PERF>49.1721ms</PERF>
+            // <PERF>21.6925ms</PERF>
 
             // (Expression<Action>)(() => { })
             var actual = GetDebugView(@"(Expression<Action>)(() => { })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements />
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_A8D0_B7BA();
+            Verify.CompilerTest_A8D0_49C3();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A8D0_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A8D0_49C3() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.8350198
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.7501323
         [TestMethod]
-        public void CompilerTest_0BD6_B7BA()
+        public void CompilerTest_0BD6_C135()
         {
-            // <PERF>21.075ms</PERF>
+            // <PERF>50.7714ms</PERF>
 
             // (Expression<Action>)(() => { ; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { ; })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Default Type=""System.Void"" />
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_0BD6_B7BA();
+            Verify.CompilerTest_0BD6_C135();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0BD6_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0BD6_C135() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.8561474
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.8009497
         [TestMethod]
-        public void CompilerTest_6102_B7BA()
+        public void CompilerTest_6102_7F8E()
         {
-            // <PERF>20.1044ms</PERF>
+            // <PERF>23.7555ms</PERF>
 
             // (Expression<Action>)(() => { return; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { return; })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Goto Type=""System.Void"" Kind=""Return"">
+          <Target>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </Target>
+        </Goto>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_6102_B7BA();
+            Verify.CompilerTest_6102_7F8E();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6102_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6102_7F8E() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.8763959
-        [Ignore]
-        // (10,68): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.8247588
         [TestMethod]
-        public void CompilerTest_7381_B7BA()
+        public void CompilerTest_7381_AA02()
         {
-            // <PERF>27.7036ms</PERF>
+            // <PERF>20.2186ms</PERF>
 
             // (Expression<Func<int>>)(() => { return 42; })
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => { return 42; })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Func`1[System.Int32]"">
+  <Parameters />
+  <Body>
+    <Constant Type=""System.Int32"" Value=""42"" />
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_7381_B7BA();
+            Verify.CompilerTest_7381_AA02();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_AA02() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.9042034
+        // Elapsed = 00:00:02.8450260
         [Ignore]
         // (10,84): error CS1525: Invalid expression term '}'
         // (10,84): error CS1002: ; expected
         [TestMethod]
         public void CompilerTest_1245_B7BA()
         {
-            // <PERF>91.9999ms</PERF>
+            // <PERF>21.7162ms</PERF>
 
             // (Expression<Action>)(() => { goto A; A: })
             var actual = GetDebugView(@"(Expression<Action>)(() => { goto A; A: })");
@@ -532,448 +794,1195 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1245_B7BA() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.9962591
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.8668096
         [TestMethod]
-        public void CompilerTest_3464_B7BA()
+        public void CompilerTest_3464_9552()
         {
-            // <PERF>15.7525ms</PERF>
+            // <PERF>23.3027ms</PERF>
 
             // (Expression<Action>)(() => { A: goto A; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { A: goto A; })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <Label Type=""System.Void"" />
+        <CSharpGoto Type=""System.Void"">
+          <Target>
+            <LabelTarget Type=""System.Void"" Id=""0"" Name=""A"" />
+          </Target>
+        </CSharpGoto>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_3464_B7BA();
+            Verify.CompilerTest_3464_9552();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3464_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3464_9552() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.0121000
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.8901783
         [TestMethod]
-        public void CompilerTest_C90B_B7BA()
+        public void CompilerTest_C90B_9C05()
         {
-            // <PERF>93.3676ms</PERF>
+            // <PERF>26.355ms</PERF>
 
             // (Expression<Action>)(() => { while (true) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) Console.Write('.'); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <CSharpWhile Type=""System.Void"">
+          <Test>
+            <Constant Type=""System.Boolean"" Value=""true"" />
+          </Test>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Char)"">
+              <Arguments>
+                <Constant Type=""System.Char"" Value=""."" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_C90B_B7BA();
+            Verify.CompilerTest_C90B_9C05();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C90B_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C90B_9C05() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.1055305
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:02.9166051
         [TestMethod]
-        public void CompilerTest_6674_B7BA()
+        public void CompilerTest_6674_1E31()
         {
-            // <PERF>16.8624ms</PERF>
+            // <PERF>76.8247ms</PERF>
 
             // (Expression<Action>)(() => { do { Console.Write('.'); } while (true); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <CSharpDo Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""."" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Test>
+            <Constant Type=""System.Boolean"" Value=""true"" />
+          </Test>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </ContinueLabel>
+        </CSharpDo>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_6674_B7BA();
+            Verify.CompilerTest_6674_1E31();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6674_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6674_1E31() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.1224469
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
-        // (10,97): error CS0832: An expression tree may not contain an assignment operator
+        // Elapsed = 00:00:02.9935003
         [TestMethod]
-        public void CompilerTest_AD48_B7BA()
+        public void CompilerTest_AD48_8B6A()
         {
-            // <PERF>127.0811ms</PERF>
+            // <PERF>27.2573ms</PERF>
 
             // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpFor Type=""System.Void"">
+          <Variables>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+          </Variables>
+          <Initializers>
+            <Assign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""0"" />
+              </Right>
+            </Assign>
+          </Initializers>
+          <Test>
+            <LessThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""10"" />
+              </Right>
+            </LessThan>
+          </Test>
+          <Iterators>
+            <PostIncrementAssign Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Operand>
+            </PostIncrementAssign>
+          </Iterators>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </ContinueLabel>
+        </CSharpFor>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""3"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_AD48_B7BA();
+            Verify.CompilerTest_AD48_8B6A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD48_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD48_8B6A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.2495852
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.0208170
         [TestMethod]
-        public void CompilerTest_25E2_B7BA()
+        public void CompilerTest_25E2_35E6()
         {
-            // <PERF>15.4178ms</PERF>
+            // <PERF>25.225ms</PERF>
 
             // (Expression<Action>)(() => { for (;;) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (;;) Console.Write('.'); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <CSharpFor Type=""System.Void"">
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Char)"">
+              <Arguments>
+                <Constant Type=""System.Char"" Value=""."" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </ContinueLabel>
+        </CSharpFor>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_25E2_B7BA();
+            Verify.CompilerTest_25E2_35E6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_35E6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.2650704
-        [Ignore]
-        // (10,72): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.0460938
         [TestMethod]
-        public void CompilerTest_DA7B_B7BA()
+        public void CompilerTest_DA7B_B67A()
         {
-            // <PERF>35.1077ms</PERF>
+            // <PERF>31.5738ms</PERF>
 
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Int32[]]"">
+  <Parameters>
+    <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Collection>
+            <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_DA7B_B7BA();
+            Verify.CompilerTest_DA7B_B67A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B67A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.3002482
-        [Ignore]
-        // (10,75): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.0777270
         [TestMethod]
-        public void CompilerTest_34B8_B7BA()
+        public void CompilerTest_34B8_D672()
         {
-            // <PERF>18.8785ms</PERF>
+            // <PERF>25.0756ms</PERF>
 
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Object[]]"">
+  <Parameters>
+    <Parameter Type=""System.Object[]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Conversion>
+            <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+              <Parameters>
+                <Parameter Type=""System.Object"" Id=""2"" />
+              </Parameters>
+              <Body>
+                <Convert Type=""System.Int32"">
+                  <Operand>
+                    <Parameter Type=""System.Object"" Id=""2"" />
+                  </Operand>
+                </Convert>
+              </Body>
+            </Lambda>
+          </Conversion>
+          <Collection>
+            <Parameter Type=""System.Object[]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""4"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""5"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_34B8_B7BA();
+            Verify.CompilerTest_34B8_D672();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D672() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.3191784
-        [Ignore]
-        // (10,83): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.1028664
         [TestMethod]
-        public void CompilerTest_3958_B7BA()
+        public void CompilerTest_5598_03A6()
         {
-            // <PERF>33.7538ms</PERF>
-
-            // (Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
-            var actual = GetDebugView(@"(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_3958_B7BA();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_B7BA() => INCONCLUSIVE(); }
-
-        // Elapsed = 00:00:06.3529880
-        [Ignore]
-        // (10,78): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
-        [TestMethod]
-        public void CompilerTest_5598_B7BA()
-        {
-            // <PERF>25.578ms</PERF>
+            // <PERF>63.0187ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.IDisposable]"">
+  <Parameters>
+    <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpUsing Type=""System.Void"">
+          <Resource>
+            <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
+          </Resource>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""."" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+        </CSharpUsing>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_5598_B7BA();
+            Verify.CompilerTest_5598_03A6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5598_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5598_03A6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.3786896
-        [Ignore]
-        // (10,78): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.1659458
         [TestMethod]
-        public void CompilerTest_BB7C_B7BA()
+        public void CompilerTest_BB7C_2A2A()
         {
-            // <PERF>36.409ms</PERF>
+            // <PERF>31.9759ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.IDisposable]"">
+  <Parameters>
+    <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpUsing Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.IDisposable"" Id=""1"" Name=""e"" />
+          </Variable>
+          <Resource>
+            <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
+          </Resource>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void WriteLine(System.Object)"">
+              <Arguments>
+                <Parameter Type=""System.IDisposable"" Id=""1"" Name=""e"" />
+              </Arguments>
+            </Call>
+          </Body>
+        </CSharpUsing>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_BB7C_B7BA();
+            Verify.CompilerTest_BB7C_2A2A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_2A2A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.4151789
-        [Ignore]
-        // (10,73): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.1979967
         [TestMethod]
-        public void CompilerTest_2CF2_B7BA()
+        public void CompilerTest_2CF2_18B2()
         {
-            // <PERF>30.1508ms</PERF>
+            // <PERF>32.5265ms</PERF>
 
             // (Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })
             var actual = GetDebugView(@"(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""o"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpLock Type=""System.Void"">
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""o"" />
+          </Expression>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""."" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+        </CSharpLock>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_2CF2_B7BA();
+            Verify.CompilerTest_2CF2_18B2();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CF2_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CF2_18B2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.4454095
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.2306085
         [TestMethod]
-        public void CompilerTest_880F_B7BA()
+        public void CompilerTest_880F_A24B()
         {
-            // <PERF>63.3909ms</PERF>
+            // <PERF>27.2135ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Finally>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""F"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Finally>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_880F_B7BA();
+            Verify.CompilerTest_880F_A24B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_880F_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_880F_A24B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.5088495
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.2578983
         [TestMethod]
-        public void CompilerTest_19B3_B7BA()
+        public void CompilerTest_19B3_485B()
         {
-            // <PERF>28.6005ms</PERF>
+            // <PERF>34.603ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Handlers>
+            <CatchBlock Test=""System.Exception"">
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                      <Arguments>
+                        <Constant Type=""System.Char"" Value=""C"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_19B3_B7BA();
+            Verify.CompilerTest_19B3_485B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_19B3_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_19B3_485B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.5375058
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.2925892
         [TestMethod]
-        public void CompilerTest_0662_B7BA()
+        public void CompilerTest_0662_485B()
         {
-            // <PERF>19.8335ms</PERF>
+            // <PERF>52.1249ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Handlers>
+            <CatchBlock Test=""System.Exception"">
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                      <Arguments>
+                        <Constant Type=""System.Char"" Value=""C"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_0662_B7BA();
+            Verify.CompilerTest_0662_485B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0662_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0662_485B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.5573875
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.3447694
         [TestMethod]
-        public void CompilerTest_F63E_B7BA()
+        public void CompilerTest_F63E_8707()
         {
-            // <PERF>23.1874ms</PERF>
+            // <PERF>31.3972ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Handlers>
+            <CatchBlock>
+              <Variable>
+                <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+              </Variable>
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void WriteLine(System.Object)"">
+                      <Arguments>
+                        <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_F63E_B7BA();
+            Verify.CompilerTest_F63E_8707();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F63E_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F63E_8707() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.5806504
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.3762451
         [TestMethod]
-        public void CompilerTest_02EE_B7BA()
+        public void CompilerTest_1C02_6E0D()
         {
-            // <PERF>38.8423ms</PERF>
-
-            // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })
-            var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_02EE_B7BA();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_02EE_B7BA() => INCONCLUSIVE(); }
-
-        // Elapsed = 00:00:06.6195632
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
-        [TestMethod]
-        public void CompilerTest_1C02_B7BA()
-        {
-            // <PERF>13.2455ms</PERF>
+            // <PERF>27.7325ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Handlers>
+            <CatchBlock Test=""System.InvalidOperationException"">
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                      <Arguments>
+                        <Constant Type=""System.Char"" Value=""I"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+            <CatchBlock Test=""System.OverflowException"">
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                      <Arguments>
+                        <Constant Type=""System.Char"" Value=""O"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_1C02_B7BA();
+            Verify.CompilerTest_1C02_6E0D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1C02_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1C02_6E0D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.6328609
-        [Ignore]
-        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.4040428
         [TestMethod]
-        public void CompilerTest_744C_B7BA()
+        public void CompilerTest_744C_C5E7()
         {
-            // <PERF>36.5937ms</PERF>
+            // <PERF>36.1443ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Handlers>
+            <CatchBlock>
+              <Variable>
+                <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+              </Variable>
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void WriteLine(System.Object)"">
+                      <Arguments>
+                        <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+          <Finally>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""F"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Finally>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_744C_B7BA();
+            Verify.CompilerTest_744C_C5E7();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_744C_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_744C_C5E7() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.6695055
-        [Ignore]
-        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.4404919
         [TestMethod]
-        public void CompilerTest_2156_B7BA()
+        public void CompilerTest_2156_D7F7()
         {
-            // <PERF>30.4761ms</PERF>
+            // <PERF>31.7706ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) {} })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) {} })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases />
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_2156_B7BA();
+            Verify.CompilerTest_2156_D7F7();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_D7F7() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.7000369
-        [Ignore]
-        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.4723344
         [TestMethod]
-        public void CompilerTest_FCA9_B7BA()
+        public void CompilerTest_FCA9_3B3F()
         {
-            // <PERF>37.9369ms</PERF>
+            // <PERF>51.929ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""0"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""0"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_FCA9_B7BA();
+            Verify.CompilerTest_FCA9_3B3F();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_3B3F() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.7380251
-        [Ignore]
-        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.5243548
         [TestMethod]
-        public void CompilerTest_6832_B7BA()
+        public void CompilerTest_6832_C62D()
         {
-            // <PERF>13.6182ms</PERF>
+            // <PERF>31.1767ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""0, 1"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""A"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_6832_B7BA();
+            Verify.CompilerTest_6832_C62D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_C62D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.7516937
-        [Ignore]
-        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.5555891
         [TestMethod]
-        public void CompilerTest_4E9F_B7BA()
+        public void CompilerTest_4E9F_42FD()
         {
-            // <PERF>19.3814ms</PERF>
+            // <PERF>32.9545ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""0"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""A"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+            <CSharpSwitchCase TestValues=""default"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""D"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_4E9F_B7BA();
+            Verify.CompilerTest_4E9F_42FD();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_42FD() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.7711394
-        [Ignore]
-        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.5886413
         [TestMethod]
-        public void CompilerTest_30E5_B7BA()
+        public void CompilerTest_30E5_8D77()
         {
-            // <PERF>14.0193ms</PERF>
+            // <PERF>33.6565ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""0, null"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""N"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_30E5_B7BA();
+            Verify.CompilerTest_30E5_8D77();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_8D77() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.7852100
-        [Ignore]
-        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.6223732
         [TestMethod]
-        public void CompilerTest_1754_B7BA()
+        public void CompilerTest_AD7C_9EAF()
         {
-            // <PERF>23.4834ms</PERF>
-
-            // (Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })
-            var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })");
-            var expected = @"???";
-            Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_1754_B7BA();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_B7BA() => INCONCLUSIVE(); }
-
-        // Elapsed = 00:00:06.8087782
-        [Ignore]
-        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
-        [TestMethod]
-        public void CompilerTest_AD7C_B7BA()
-        {
-            // <PERF>33.8716ms</PERF>
+            // <PERF>51.7023ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""0"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""N"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+            <CSharpSwitchCase TestValues=""null"">
+              <Statements>
+                <CSharpGoto Type=""System.Void"" Value=""0"" />
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_AD7C_B7BA();
+            Verify.CompilerTest_AD7C_9EAF();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_9EAF() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:06.8427118
-        [Ignore]
-        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // Elapsed = 00:00:03.6743607
         [TestMethod]
-        public void CompilerTest_3E56_B7BA()
+        public void CompilerTest_3E56_D0C6()
         {
-            // <PERF>21.3601ms</PERF>
+            // <PERF>55.4856ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })");
-            var expected = @"???";
+            var expected = @"<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""null"">
+              <Statements>
+                <CSharpGoto Type=""System.Void"" />
+              </Statements>
+            </CSharpSwitchCase>
+            <CSharpSwitchCase TestValues=""default"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""N"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected, actual);
-            Verify.CompilerTest_3E56_B7BA();
+            Verify.CompilerTest_3E56_D0C6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_D0C6() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -1003,58 +2012,52 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             public override void CompilerTest_9D30_AA02 => OK();
             public override void CompilerTest_3ECF_6910 => OK();
-            public override void CompilerTest_F51F_B7BA => OK();
-            public override void CompilerTest_E9F4_B7BA => OK();
-            public override void CompilerTest_00C1_B7BA => OK();
-            public override void CompilerTest_EDEC_B7BA => OK();
-            public override void CompilerTest_6271_B7BA => OK();
-            public override void CompilerTest_8E43_B7BA => OK();
-            public override void CompilerTest_191C_B7BA => OK();
-            public override void CompilerTest_6647_B7BA => OK();
-            public override void CompilerTest_AB76_B7BA => OK();
-            public override void CompilerTest_C598_B7BA => OK();
-            public override void CompilerTest_55B7_B7BA => OK();
-            public override void CompilerTest_7760_B7BA => OK();
-            public override void CompilerTest_4B4B_B7BA => OK();
-            public override void CompilerTest_22AA_B7BA => OK();
-            public override void CompilerTest_0FFA_B7BA => OK();
-            public override void CompilerTest_83AE_B7BA => OK();
-            public override void CompilerTest_1A0E_B7BA => OK();
-            public override void CompilerTest_B340_B7BA => OK();
-            public override void CompilerTest_A997_B7BA => OK();
-            public override void CompilerTest_CB0C_B7BA => OK();
-            public override void CompilerTest_CF40_B7BA => OK();
-            public override void CompilerTest_A8D0_B7BA => OK();
-            public override void CompilerTest_0BD6_B7BA => OK();
-            public override void CompilerTest_6102_B7BA => OK();
-            public override void CompilerTest_7381_B7BA => OK();
+            public override void CompilerTest_F51F_71B6 => OK();
+            public override void CompilerTest_E9F4_7C15 => OK();
+            public override void CompilerTest_EDEC_D0C9 => OK();
+            public override void CompilerTest_6271_EABC => OK();
+            public override void CompilerTest_8E43_6B25 => OK();
+            public override void CompilerTest_191C_CEEB => OK();
+            public override void CompilerTest_6647_1258 => OK();
+            public override void CompilerTest_AB76_B2ED => OK();
+            public override void CompilerTest_C598_D480 => OK();
+            public override void CompilerTest_55B7_3EFA => OK();
+            public override void CompilerTest_7760_936B => OK();
+            public override void CompilerTest_22AA_5962 => OK();
+            public override void CompilerTest_0FFA_7AF2 => OK();
+            public override void CompilerTest_83AE_26E4 => OK();
+            public override void CompilerTest_1A0E_F439 => OK();
+            public override void CompilerTest_B340_DAC2 => OK();
+            public override void CompilerTest_A997_3059 => OK();
+            public override void CompilerTest_CF40_3016 => OK();
+            public override void CompilerTest_A8D0_49C3 => OK();
+            public override void CompilerTest_0BD6_C135 => OK();
+            public override void CompilerTest_6102_7F8E => OK();
+            public override void CompilerTest_7381_AA02 => OK();
             public override void CompilerTest_1245_B7BA => OK();
-            public override void CompilerTest_3464_B7BA => OK();
-            public override void CompilerTest_C90B_B7BA => OK();
-            public override void CompilerTest_6674_B7BA => OK();
-            public override void CompilerTest_AD48_B7BA => OK();
-            public override void CompilerTest_25E2_B7BA => OK();
-            public override void CompilerTest_DA7B_B7BA => OK();
-            public override void CompilerTest_34B8_B7BA => OK();
-            public override void CompilerTest_3958_B7BA => OK();
-            public override void CompilerTest_5598_B7BA => OK();
-            public override void CompilerTest_BB7C_B7BA => OK();
-            public override void CompilerTest_2CF2_B7BA => OK();
-            public override void CompilerTest_880F_B7BA => OK();
-            public override void CompilerTest_19B3_B7BA => OK();
-            public override void CompilerTest_0662_B7BA => OK();
-            public override void CompilerTest_F63E_B7BA => OK();
-            public override void CompilerTest_02EE_B7BA => OK();
-            public override void CompilerTest_1C02_B7BA => OK();
-            public override void CompilerTest_744C_B7BA => OK();
-            public override void CompilerTest_2156_B7BA => OK();
-            public override void CompilerTest_FCA9_B7BA => OK();
-            public override void CompilerTest_6832_B7BA => OK();
-            public override void CompilerTest_4E9F_B7BA => OK();
-            public override void CompilerTest_30E5_B7BA => OK();
-            public override void CompilerTest_1754_B7BA => OK();
-            public override void CompilerTest_AD7C_B7BA => OK();
-            public override void CompilerTest_3E56_B7BA => OK();
+            public override void CompilerTest_3464_9552 => OK();
+            public override void CompilerTest_C90B_9C05 => OK();
+            public override void CompilerTest_6674_1E31 => OK();
+            public override void CompilerTest_AD48_8B6A => OK();
+            public override void CompilerTest_25E2_35E6 => OK();
+            public override void CompilerTest_DA7B_B67A => OK();
+            public override void CompilerTest_34B8_D672 => OK();
+            public override void CompilerTest_5598_03A6 => OK();
+            public override void CompilerTest_BB7C_2A2A => OK();
+            public override void CompilerTest_2CF2_18B2 => OK();
+            public override void CompilerTest_880F_A24B => OK();
+            public override void CompilerTest_19B3_485B => OK();
+            public override void CompilerTest_0662_485B => OK();
+            public override void CompilerTest_F63E_8707 => OK();
+            public override void CompilerTest_1C02_6E0D => OK();
+            public override void CompilerTest_744C_C5E7 => OK();
+            public override void CompilerTest_2156_D7F7 => OK();
+            public override void CompilerTest_FCA9_3B3F => OK();
+            public override void CompilerTest_6832_C62D => OK();
+            public override void CompilerTest_4E9F_42FD => OK();
+            public override void CompilerTest_30E5_8D77 => OK();
+            public override void CompilerTest_AD7C_9EAF => OK();
+            public override void CompilerTest_3E56_D0C6 => OK();
         }
     }
 }

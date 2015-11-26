@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using CSharpDynamic = Microsoft.CSharp.RuntimeBinder;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -101,6 +102,9 @@ public static class {typeName}
 
                 // Our custom assembly
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location))
+
+                // Support for dynamic
+                .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
 
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
