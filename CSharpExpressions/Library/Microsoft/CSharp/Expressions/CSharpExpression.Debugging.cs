@@ -30,580 +30,617 @@ namespace Microsoft.CSharp.Expressions
             return new CSharpDebugViewExpressionVisitor(visitor).GetDebugView(this);
         }
 
-        class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
+        internal string DebugView => this.DebugView().ToString();
+    }
+
+    partial class DynamicCSharpArgument
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
+    partial class CSharpSwitchCase
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
+    partial class ParameterAssignment
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
+    class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
+    {
+        private readonly IDebugViewExpressionVisitor _parent;
+        private readonly Stack<XNode> _nodes = new Stack<XNode>();
+
+        public CSharpDebugViewExpressionVisitor()
+            : this(new DebugViewExpressionVisitor())
         {
-            private readonly IDebugViewExpressionVisitor _parent;
-            private readonly Stack<XNode> _nodes = new Stack<XNode>();
+        }
+        
+        public CSharpDebugViewExpressionVisitor(IDebugViewExpressionVisitor parent)
+        {
+            _parent = parent;
+        }
 
-            public CSharpDebugViewExpressionVisitor(IDebugViewExpressionVisitor parent)
+        public XNode GetDebugView(CSharpExpression expression)
+        {
+            base.Visit(expression);
+            return _nodes.Pop();
+        }
+
+        public XNode GetDebugView(DynamicCSharpArgument argument)
+        {
+            return Visit(argument);
+        }
+
+        public XNode GetDebugView(CSharpSwitchCase switchCase)
+        {
+            return Visit(switchCase);
+        }
+
+        public XNode GetDebugView(ParameterAssignment assignment)
+        {
+            return Visit(assignment);
+        }
+
+        protected internal override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
+        {
+            var parameters = Visit(nameof(AsyncCSharpExpression<TDelegate>.Parameters), node.Parameters);
+
+            var body = Visit(node.Body);
+
+            return Push(node, parameters, new XElement(nameof(AsyncCSharpExpression<TDelegate>.Body), body));
+        }
+
+        protected internal override Expression VisitAwait(AwaitCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.GetAwaiterMethod != null)
             {
-                _parent = parent;
+                args.Add(new XAttribute(nameof(AwaitCSharpExpression.GetAwaiterMethod), node.GetAwaiterMethod));
             }
-
-            public XNode GetDebugView(CSharpExpression expression)
+            else
             {
-                base.Visit(expression);
-                return _nodes.Pop();
-            }
-
-            protected internal override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
-            {
-                var parameters = Visit(nameof(AsyncCSharpExpression<TDelegate>.Parameters), node.Parameters);
-
-                var body = Visit(node.Body);
-
-                return Push(node, parameters, new XElement(nameof(AsyncCSharpExpression<TDelegate>.Body), body));
-            }
-
-            protected internal override Expression VisitAwait(AwaitCSharpExpression node)
-            {
-                var args = new List<object>();
-
-                if (node.GetAwaiterMethod != null)
+                var dynamic = node as DynamicAwaitCSharpExpression;
+                if (dynamic != null)
                 {
-                    args.Add(new XAttribute(nameof(AwaitCSharpExpression.GetAwaiterMethod), node.GetAwaiterMethod));
-                }
-                else
-                {
-                    var dynamic = node as DynamicAwaitCSharpExpression;
-                    if (dynamic != null)
+                    args.Add(new XAttribute("IsDynamic", true));
+
+                    if (dynamic.Context != null)
                     {
-                        args.Add(new XAttribute("IsDynamic", true));
-
-                        if (dynamic.Context != null)
-                        {
-                            args.Add(new XAttribute(nameof(dynamic.Context), dynamic.Context));
-                        }
+                        args.Add(new XAttribute(nameof(dynamic.Context), dynamic.Context));
                     }
                 }
-
-                args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
-
-                return Push(node, args);
             }
 
-            protected internal override Expression VisitBlock(BlockCSharpExpression node)
+            args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitBlock(BlockCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.Variables.Count > 0)
             {
-                var args = new List<object>();
-
-                if (node.Variables.Count > 0)
-                {
-                    args.Add(Visit(nameof(node.Variables), node.Variables));
-                }
-
-                args.Add(Visit(nameof(node.Statements), node.Statements));
-
-                if (node.ReturnLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.ReturnLabel), _parent.GetDebugView(node.ReturnLabel)));
-                }
-
-                return Push(node, args);
+                args.Add(Visit(nameof(node.Variables), node.Variables));
             }
 
-            protected internal override Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
+            args.Add(Visit(nameof(node.Statements), node.Statements));
+
+            if (node.ReturnLabel != null)
             {
-                var array = Visit(node.Array);
-                var args = Visit(nameof(node.Indexes), node.Indexes);
-
-                return Push(node, new XElement(nameof(node.Array), array), args);
+                args.Add(new XElement(nameof(node.ReturnLabel), _parent.GetDebugView(node.ReturnLabel)));
             }
 
-            protected internal override Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
+        {
+            var array = Visit(node.Array);
+            var args = Visit(nameof(node.Indexes), node.Indexes);
+
+            return Push(node, new XElement(nameof(node.Array), array), args);
+        }
+
+        protected internal override Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
+        {
+            var obj = Visit(node.Object);
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+
+            return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
+        }
+
+        protected internal override Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
+        {
+            var expr = Visit(node.Expression);
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+
+            return Push(node, new XElement(nameof(node.Expression), expr), args);
+        }
+
+        protected internal override Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
+        {
+            var expr = Visit(node.Expression);
+
+            return Push(node, new XAttribute(nameof(node.Member), node.Member), new XElement(nameof(node.Expression), expr));
+        }
+
+        protected internal override Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
+        {
+            var obj = Visit(node.Object);
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+
+            return Push(node, new XAttribute(nameof(node.Method), node.Method), new XElement(nameof(node.Object), obj), args);
+        }
+
+        protected internal override Expression VisitDo(DoCSharpStatement node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
+
+            if (node.BreakLabel != null)
+            {
+                args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
+            }
+
+            if (node.ContinueLabel != null)
+            {
+                args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
+            }
+
+            return Push(node, args);
+        }
+
+        protected internal override DynamicCSharpArgument VisitDynamicArgument(DynamicCSharpArgument node)
+        {
+            var expr = Visit(node.Expression);
+
+            var args = new List<object>();
+
+            if (node.Name != null)
+            {
+                args.Add(new XAttribute(nameof(node.Name), node.Name));
+            }
+
+            if (node.Flags != CSharpArgumentInfoFlags.None)
+            {
+                args.Add(new XAttribute(nameof(node.Flags), node.Flags));
+            }
+
+            args.Add(new XElement(nameof(node.Expression), expr));
+
+            var res = new XElement(nameof(DynamicCSharpArgument), args);
+            _nodes.Push(res);
+
+            return node;
+        }
+
+        protected internal override Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+
+            VisitDynamicCSharpExpression(node, args);
+
+            args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
+            args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicConvert(ConvertDynamicCSharpExpression node)
+        {
+            var args = VisitDynamicCSharpExpression(node);
+
+            // NB: Type is always added
+            args.Add(new XElement(nameof(node.Expression), Visit(node.Expression)));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicGetIndex(GetIndexDynamicCSharpExpression node)
+        {
+            var args = VisitDynamicCSharpExpression(node);
+
+            args.Add(new XElement(nameof(node.Object), Visit(node.Object)));
+            args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicGetMember(GetMemberDynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XAttribute(nameof(node.Name), node.Name));
+
+            VisitDynamicCSharpExpression(node, args);
+
+            args.Add(new XElement(nameof(node.Object), Visit(node.Object)));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicInvoke(InvokeDynamicCSharpExpression node)
+        {
+            var args = VisitDynamicCSharpExpression(node);
+
+            args.Add(new XElement(nameof(node.Expression), Visit(node.Expression)));
+            args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicInvokeConstructor(InvokeConstructorDynamicCSharpExpression node)
+        {
+            var args = VisitDynamicCSharpExpression(node);
+
+            // NB: Type is always added
+            args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicInvokeMember(InvokeMemberDynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.Target != null)
+            {
+                args.Add(new XAttribute(nameof(node.Target), node.Target));
+            }
+
+            args.Add(new XAttribute(nameof(node.Name), node.Name));
+
+            if (node.TypeArguments.Count > 0)
+            {
+                args.Add(new XAttribute(nameof(node.TypeArguments), string.Join(", ", node.TypeArguments)));
+            }
+
+            VisitDynamicCSharpExpression(node, args);
+
+            if (node.Object != null)
+            {
+                args.Add(new XElement(nameof(node.Object), Visit(node.Object)));
+            }
+
+            args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicUnary(UnaryDynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+
+            VisitDynamicCSharpExpression(node, args);
+
+            args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
+
+            return Push(node, args);
+        }
+
+        private List<object> VisitDynamicCSharpExpression(DynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            VisitDynamicCSharpExpression(node, args);
+
+            return args;
+        }
+
+        private void VisitDynamicCSharpExpression(DynamicCSharpExpression node, List<object> args)
+        {
+            if (node.Flags != CSharpBinderFlags.None)
+            {
+                args.Add(new XAttribute(nameof(node.Flags), node.Flags));
+            }
+
+            if (node.Context != null)
+            {
+                args.Add(new XAttribute(nameof(node.Context), node.Context));
+            }
+        }
+
+        protected internal override Expression VisitFor(ForCSharpStatement node)
+        {
+            var args = new List<object>();
+
+            if (node.Variables.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Variables), node.Variables));
+            }
+
+            if (node.Initializers.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Initializers), node.Initializers));
+            }
+
+            if (node.Test != null)
+            {
+                args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
+            }
+
+            if (node.Iterators.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Iterators), node.Iterators));
+            }
+
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+
+            if (node.BreakLabel != null)
+            {
+                args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
+            }
+
+            if (node.ContinueLabel != null)
+            {
+                args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
+            }
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitForEach(ForEachCSharpStatement node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
+
+            if (node.Conversion != null)
+            {
+                args.Add(new XElement(nameof(node.Conversion), Visit(node.Conversion)));
+            }
+
+            args.Add(new XElement(nameof(node.Collection), Visit(node.Collection)));
+
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+
+            if (node.BreakLabel != null)
+            {
+                args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
+            }
+
+            if (node.ContinueLabel != null)
+            {
+                args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
+            }
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
+        {
+            return Push(node, new XAttribute(nameof(node.Value), node.Value));
+        }
+
+        protected internal override Expression VisitGotoDefault(GotoDefaultCSharpStatement node)
+        {
+            return Push(node);
+        }
+
+        protected internal override Expression VisitGotoLabel(GotoLabelCSharpStatement node)
+        {
+            return Push(node, new XElement(nameof(node.Target), _parent.GetDebugView(node.Target)));
+        }
+
+        protected internal override Expression VisitIndex(IndexCSharpExpression node)
+        {
+            var obj = Visit(node.Object);
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+
+            return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
+        }
+
+        protected internal override Expression VisitInvocation(InvocationCSharpExpression node)
+        {
+            var expr = Visit(node.Expression);
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+
+            return Push(node, new XElement(nameof(node.Expression), expr), args);
+        }
+
+        protected internal override Expression VisitLock(LockCSharpStatement node)
+        {
+            var expr = Visit(node.Expression);
+            var body = Visit(node.Body);
+
+            return Push(node, new XElement(nameof(node.Expression), expr), new XElement(nameof(node.Body), body));
+        }
+
+        protected internal override Expression VisitMethodCall(MethodCallCSharpExpression node)
+        {
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+
+            if (node.Object != null)
             {
                 var obj = Visit(node.Object);
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-
-                return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
-            }
-
-            protected internal override Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
-            {
-                var expr = Visit(node.Expression);
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-
-                return Push(node, new XElement(nameof(node.Expression), expr), args);
-            }
-
-            protected internal override Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
-            {
-                var expr = Visit(node.Expression);
-
-                return Push(node, new XAttribute(nameof(node.Member), node.Member), new XElement(nameof(node.Expression), expr));
-            }
-
-            protected internal override Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
-            {
-                var obj = Visit(node.Object);
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-
                 return Push(node, new XAttribute(nameof(node.Method), node.Method), new XElement(nameof(node.Object), obj), args);
             }
-
-            protected internal override Expression VisitDo(DoCSharpStatement node)
+            else
             {
-                var args = new List<object>();
+                return Push(node, new XAttribute(nameof(node.Method), node.Method), args);
+            }
+        }
 
-                args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
-                args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
+        protected internal override Expression VisitNew(NewCSharpExpression node)
+        {
+            var nodes = new List<object>();
 
-                if (node.BreakLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
-                }
-
-                if (node.ContinueLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
-                }
-
-                return Push(node, args);
+            if (node.Constructor != null)
+            {
+                nodes.Add(new XAttribute(nameof(node.Constructor), node.Constructor));
             }
 
-            protected internal override DynamicCSharpArgument VisitDynamicArgument(DynamicCSharpArgument node)
+            var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
+            nodes.Add(args);
+
+            return Push(node, nodes);
+        }
+
+        protected internal override Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
+        {
+            var exprs = Visit(nameof(node.Expressions), node.Expressions);
+            var bounds = string.Join(", ", node._bounds); // TODO: looks like it's not very practical to derive this info from the type
+
+            return Push(node, new XAttribute("Bounds", bounds), exprs);
+        }
+
+        protected override ParameterAssignment VisitParameterAssignment(ParameterAssignment node)
+        {
+            var expr = Visit(node.Expression);
+
+            var res = new XElement(nameof(ParameterAssignment), new XAttribute(nameof(node.Parameter), node.Parameter), new XElement(nameof(node.Expression), expr));
+            _nodes.Push(res);
+
+            return node;
+        }
+
+        protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XElement(nameof(node.SwitchValue), Visit(node.SwitchValue)));
+
+            if (node.Variables.Count > 0)
             {
-                var expr = Visit(node.Expression);
-
-                var args = new List<object>();
-
-                if (node.Name != null)
-                {
-                    args.Add(new XAttribute(nameof(node.Name), node.Name));
-                }
-
-                if (node.Flags != CSharpArgumentInfoFlags.None)
-                {
-                    args.Add(new XAttribute(nameof(node.Flags), node.Flags));
-                }
-
-                args.Add(new XElement(nameof(node.Expression), expr));
-
-                var res = new XElement(nameof(DynamicCSharpArgument), args);
-                _nodes.Push(res);
-
-                return node;
+                args.Add(Visit(nameof(node.Variables), node.Variables));
             }
 
-            protected internal override Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node)
+            args.Add(Visit(nameof(node.Cases), node.Cases, Visit));
+
+            args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
+
+            return Push(node, args);
+        }
+
+        protected internal override CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XAttribute(nameof(node.TestValues), string.Join(", ", node.TestValues.Select(EscapeToString))));
+
+            args.Add(Visit(nameof(node.Statements), node.Statements));
+
+            _nodes.Push(new XElement(nameof(CSharpSwitchCase), args));
+            return node;
+        }
+
+        private static string EscapeToString(object obj)
+        {
+            if (obj == null)
             {
-                var args = new List<object>();
-
-                args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
-
-                VisitDynamicCSharpExpression(node, args);
-
-                args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
-                args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
-
-                return Push(node, args);
+                return "null";
             }
-
-            protected internal override Expression VisitDynamicConvert(ConvertDynamicCSharpExpression node)
+            else if (obj is string)
             {
-                var args = VisitDynamicCSharpExpression(node);
-
-                // NB: Type is always added
-                args.Add(new XElement(nameof(node.Expression), Visit(node.Expression)));
-
-                return Push(node, args);
+                var s = (string)obj;
+                return "\"" + s.Replace("\"", "\\\"") + "\"";
             }
-
-            protected internal override Expression VisitDynamicGetIndex(GetIndexDynamicCSharpExpression node)
+            else
             {
-                var args = VisitDynamicCSharpExpression(node);
-
-                args.Add(new XElement(nameof(node.Object), Visit(node.Object)));
-                args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
-
-                return Push(node, args);
+                return obj.ToString();
             }
+        }
 
-            protected internal override Expression VisitDynamicGetMember(GetMemberDynamicCSharpExpression node)
+        protected internal override Expression VisitWhile(WhileCSharpStatement node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+
+            if (node.BreakLabel != null)
             {
-                var args = new List<object>();
-
-                args.Add(new XAttribute(nameof(node.Name), node.Name));
-
-                VisitDynamicCSharpExpression(node, args);
-
-                args.Add(new XElement(nameof(node.Object), Visit(node.Object)));
-
-                return Push(node, args);
-            }
-
-            protected internal override Expression VisitDynamicInvoke(InvokeDynamicCSharpExpression node)
-            {
-                var args = VisitDynamicCSharpExpression(node);
-
-                args.Add(new XElement(nameof(node.Expression), Visit(node.Expression)));
-                args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
-
-                return Push(node, args);
-            }
-
-            protected internal override Expression VisitDynamicInvokeConstructor(InvokeConstructorDynamicCSharpExpression node)
-            {
-                var args = VisitDynamicCSharpExpression(node);
-
-                // NB: Type is always added
-                args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
-
-                return Push(node, args);
-            }
-
-            protected internal override Expression VisitDynamicInvokeMember(InvokeMemberDynamicCSharpExpression node)
-            {
-                var args = new List<object>();
-
-                if (node.Target != null)
-                {
-                    args.Add(new XAttribute(nameof(node.Target), node.Target));
-                }
-
-                args.Add(new XAttribute(nameof(node.Name), node.Name));
-
-                if (node.TypeArguments.Count > 0)
-                {
-                    args.Add(new XAttribute(nameof(node.TypeArguments), string.Join(", ", node.TypeArguments)));
-                }
-
-                VisitDynamicCSharpExpression(node, args);
-
-                if (node.Object != null)
-                {
-                    args.Add(new XElement(nameof(node.Object), Visit(node.Object)));
-                }
-
-                args.Add(Visit(nameof(node.Arguments), node.Arguments, Visit));
-
-                return Push(node, args);
-            }
-
-            protected internal override Expression VisitDynamicUnary(UnaryDynamicCSharpExpression node)
-            {
-                var args = new List<object>();
-
-                args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
-
-                VisitDynamicCSharpExpression(node, args);
-
-                args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
-
-                return Push(node, args);
-            }
-
-            private List<object> VisitDynamicCSharpExpression(DynamicCSharpExpression node)
-            {
-                var args = new List<object>();
-
-                VisitDynamicCSharpExpression(node, args);
-
-                return args;
-            }
-
-            private void VisitDynamicCSharpExpression(DynamicCSharpExpression node, List<object> args)
-            {
-                if (node.Flags != CSharpBinderFlags.None)
-                {
-                    args.Add(new XAttribute(nameof(node.Flags), node.Flags));
-                }
-
-                if (node.Context != null)
-                {
-                    args.Add(new XAttribute(nameof(node.Context), node.Context));
-                }
-            }
-
-            protected internal override Expression VisitFor(ForCSharpStatement node)
-            {
-                var args = new List<object>();
-
-                if (node.Variables.Count > 0)
-                {
-                    args.Add(Visit(nameof(node.Variables), node.Variables));
-                }
-
-                if (node.Initializers.Count > 0)
-                {
-                    args.Add(Visit(nameof(node.Initializers), node.Initializers));
-                }
-
-                if (node.Test != null)
-                {
-                    args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
-                }
-
-                if (node.Iterators.Count > 0)
-                {
-                    args.Add(Visit(nameof(node.Iterators), node.Iterators));
-                }
-
-                args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
-
-                if (node.BreakLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
-                }
-
-                if (node.ContinueLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
-                }
-
-                return Push(node, args);
-            }
-
-            protected internal override Expression VisitForEach(ForEachCSharpStatement node)
-            {
-                var args = new List<object>();
-
-                args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
-
-                if (node.Conversion != null)
-                {
-                    args.Add(new XElement(nameof(node.Conversion), Visit(node.Conversion)));
-                }
-
-                args.Add(new XElement(nameof(node.Collection), Visit(node.Collection)));
-
-                args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
-
-                if (node.BreakLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
-                }
-
-                if (node.ContinueLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
-                }
-
-                return Push(node, args);
-            }
-
-            protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
-            {
-                return Push(node, new XAttribute(nameof(node.Value), node.Value));
-            }
-
-            protected internal override Expression VisitGotoDefault(GotoDefaultCSharpStatement node)
-            {
-                return Push(node);
-            }
-
-            protected internal override Expression VisitGotoLabel(GotoLabelCSharpStatement node)
-            {
-                return Push(node, new XElement(nameof(node.Target), _parent.GetDebugView(node.Target)));
-            }
-
-            protected internal override Expression VisitIndex(IndexCSharpExpression node)
-            {
-                var obj = Visit(node.Object);
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-
-                return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
-            }
-
-            protected internal override Expression VisitInvocation(InvocationCSharpExpression node)
-            {
-                var expr = Visit(node.Expression);
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-
-                return Push(node, new XElement(nameof(node.Expression), expr), args);
-            }
-
-            protected internal override Expression VisitLock(LockCSharpStatement node)
-            {
-                var expr = Visit(node.Expression);
-                var body = Visit(node.Body);
-
-                return Push(node, new XElement(nameof(node.Expression), expr), new XElement(nameof(node.Body), body));
-            }
-
-            protected internal override Expression VisitMethodCall(MethodCallCSharpExpression node)
-            {
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-
-                if (node.Object != null)
-                {
-                    var obj = Visit(node.Object);
-                    return Push(node, new XAttribute(nameof(node.Method), node.Method), new XElement(nameof(node.Object), obj), args);
-                }
-                else
-                {
-                    return Push(node, new XAttribute(nameof(node.Method), node.Method), args);
-                }
-            }
-
-            protected internal override Expression VisitNew(NewCSharpExpression node)
-            {
-                var nodes = new List<object>();
-
-                if (node.Constructor != null)
-                {
-                    nodes.Add(new XAttribute(nameof(node.Constructor), node.Constructor));
-                }
-
-                var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
-                nodes.Add(args);
-
-                return Push(node, nodes);
-            }
-
-            protected internal override Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
-            {
-                var exprs = Visit(nameof(node.Expressions), node.Expressions);
-                var bounds = string.Join(", ", node._bounds); // TODO: looks like it's not very practical to derive this info from the type
-
-                return Push(node, new XAttribute("Bounds", bounds), exprs);
-            }
-
-            protected override ParameterAssignment VisitParameterAssignment(ParameterAssignment node)
-            {
-                var expr = Visit(node.Expression);
-
-                var res = new XElement(nameof(ParameterAssignment), new XAttribute(nameof(node.Parameter), node.Parameter), new XElement(nameof(node.Expression), expr));
-                _nodes.Push(res);
-
-                return node;
-            }
-
-            protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
-            {
-                var args = new List<object>();
-
-                args.Add(new XElement(nameof(node.SwitchValue), Visit(node.SwitchValue)));
-
-                if (node.Variables.Count > 0)
-                {
-                    args.Add(Visit(nameof(node.Variables), node.Variables));
-                }
-
-                args.Add(Visit(nameof(node.Cases), node.Cases, Visit));
-
                 args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
-
-                return Push(node, args);
             }
 
-            protected internal override CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
+            if (node.ContinueLabel != null)
             {
-                var args = new List<object>();
-
-                args.Add(new XAttribute(nameof(node.TestValues), string.Join(", ", node.TestValues.Select(EscapeToString))));
-
-                args.Add(Visit(nameof(node.Statements), node.Statements));
-
-                _nodes.Push(new XElement(nameof(CSharpSwitchCase), args));
-                return node;
+                args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
             }
 
-            private static string EscapeToString(object obj)
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitUsing(UsingCSharpStatement node)
+        {
+            var args = new List<object>();
+
+            if (node.Variable != null)
             {
-                if (obj == null)
-                {
-                    return "null";
-                }
-                else if (obj is string)
-                {
-                    var s = (string)obj;
-                    return "\"" + s.Replace("\"", "\\\"") + "\"";
-                }
-                else
-                {
-                    return obj.ToString();
-                }
+                args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
             }
 
-            protected internal override Expression VisitWhile(WhileCSharpStatement node)
+            args.Add(new XElement(nameof(node.Resource), Visit(node.Resource)));
+
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+
+            return Push(node, args);
+        }
+
+        private XNode Visit(ParameterAssignment node)
+        {
+            VisitParameterAssignment(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(DynamicCSharpArgument node)
+        {
+            VisitDynamicArgument(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(CSharpSwitchCase node)
+        {
+            VisitSwitchCase(node);
+            return _nodes.Pop();
+        }
+
+        protected new XNode Visit(Expression expression)
+        {
+            return _parent.GetDebugView(expression);
+        }
+
+        protected XNode Visit(string name, IEnumerable<Expression> expressions)
+        {
+            var res = new List<XNode>();
+
+            foreach (var expression in expressions)
             {
-                var args = new List<object>();
-
-                args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
-                args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
-
-                if (node.BreakLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
-                }
-
-                if (node.ContinueLabel != null)
-                {
-                    args.Add(new XElement(nameof(node.ContinueLabel), _parent.GetDebugView(node.ContinueLabel)));
-                }
-
-                return Push(node, args);
+                res.Add(Visit(expression));
             }
 
-            protected internal override Expression VisitUsing(UsingCSharpStatement node)
+            return new XElement(name, res);
+        }
+
+        protected XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
+        {
+            var res = new List<XNode>();
+
+            foreach (var expression in expressions)
             {
-                var args = new List<object>();
-
-                if (node.Variable != null)
-                {
-                    args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
-                }
-
-                args.Add(new XElement(nameof(node.Resource), Visit(node.Resource)));
-
-                args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
-
-                return Push(node, args);
+                res.Add(visit(expression));
             }
 
-            private XNode Visit(ParameterAssignment node)
-            {
-                VisitParameterAssignment(node);
-                return _nodes.Pop();
-            }
+            return new XElement(name, res);
+        }
 
-            private XNode Visit(DynamicCSharpArgument node)
-            {
-                VisitDynamicArgument(node);
-                return _nodes.Pop();
-            }
-
-            private XNode Visit(CSharpSwitchCase node)
-            {
-                VisitSwitchCase(node);
-                return _nodes.Pop();
-            }
-
-            protected new XNode Visit(Expression expression)
-            {
-                return _parent.GetDebugView(expression);
-            }
-
-            protected XNode Visit(string name, IEnumerable<Expression> expressions)
-            {
-                var res = new List<XNode>();
-
-                foreach (var expression in expressions)
-                {
-                    res.Add(Visit(expression));
-                }
-
-                return new XElement(name, res);
-            }
-
-            protected XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
-            {
-                var res = new List<XNode>();
-
-                foreach (var expression in expressions)
-                {
-                    res.Add(visit(expression));
-                }
-
-                return new XElement(name, res);
-            }
-
-            protected T Push<T>(T node, params object[] content)
-                where T : CSharpExpression
-            {
-                _nodes.Push(new XElement("CSharp" + node.CSharpNodeType.ToString(), new XAttribute(nameof(node.Type), node.Type), content));
-                return node;
-            }
+        protected T Push<T>(T node, params object[] content)
+            where T : CSharpExpression
+        {
+            _nodes.Push(new XElement("CSharp" + node.CSharpNodeType.ToString(), new XAttribute(nameof(node.Type), node.Type), content));
+            return node;
         }
     }
 }

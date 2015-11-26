@@ -53,7 +53,7 @@ if (File.Exists(path))
         var types = asm.GetTypes();
         foreach (var type in types)
         {
-            if (type.IsPublic && !type.IsGenericType && !type.IsEnum && type.FullName.StartsWith("Microsoft.CSharp.Expressions"))
+            if (type.IsPublic && !type.IsGenericType && !type.IsEnum && type.FullName.StartsWith("Microsoft.CSharp.Expressions") && type.GetProperty("DebugView", BindingFlags.NonPublic | BindingFlags.Instance) != null)
             {
 #>
     [DebuggerTypeProxy(typeof(<#=type.Name#>Proxy))]
@@ -72,10 +72,10 @@ if (File.Exists(path))
         }
 
 <#
-if (typeof(Expression).IsAssignableFrom(type))
+//if (type.Name != "CSharpExpressionVisitor")
 {
 #>
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
 <#
 }

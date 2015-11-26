@@ -23,7 +23,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
@@ -48,29 +48,12 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
-    }
-
-    [DebuggerTypeProxy(typeof(CSharpExpressionVisitorProxy))]
-    partial class CSharpExpressionVisitor
-    {
-    }
-
-    [ExcludeFromCodeCoverage]
-    internal class CSharpExpressionVisitorProxy
-    {
-        private readonly CSharpExpressionVisitor _node;
-
-        public CSharpExpressionVisitorProxy(CSharpExpressionVisitor node)
-        {
-            _node = node;
-        }
-
     }
 
     [DebuggerTypeProxy(typeof(AwaitCSharpExpressionProxy))]
@@ -88,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
@@ -113,7 +96,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.Expression Expression => _node.Expression;
         public System.Type Type => _node.Type;
@@ -137,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Array => _node.Array;
@@ -163,7 +146,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Object => _node.Object;
@@ -190,7 +173,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Reflection.MemberInfo Member => _node.Member;
@@ -198,6 +181,70 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(DynamicCSharpArgumentProxy))]
+    partial class DynamicCSharpArgument
+    {
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal class DynamicCSharpArgumentProxy
+    {
+        private readonly DynamicCSharpArgument _node;
+
+        public DynamicCSharpArgumentProxy(DynamicCSharpArgument node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags Flags => _node.Flags;
+        public System.String Name => _node.Name;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpSwitchCaseProxy))]
+    partial class CSharpSwitchCase
+    {
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal class CSharpSwitchCaseProxy
+    {
+        private readonly CSharpSwitchCase _node;
+
+        public CSharpSwitchCaseProxy(CSharpSwitchCase node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Object> TestValues => _node.TestValues;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
+    }
+
+    [DebuggerTypeProxy(typeof(ParameterAssignmentProxy))]
+    partial class ParameterAssignment
+    {
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal class ParameterAssignmentProxy
+    {
+        private readonly ParameterAssignment _node;
+
+        public ParameterAssignmentProxy(ParameterAssignment node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Reflection.ParameterInfo Parameter => _node.Parameter;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
     }
 
     [DebuggerTypeProxy(typeof(BlockCSharpExpressionProxy))]
@@ -215,7 +262,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
@@ -241,7 +288,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
@@ -265,7 +312,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
         public System.Linq.Expressions.LabelTarget Target => _node.Target;
@@ -290,7 +337,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
         public System.Object Value => _node.Value;
@@ -315,7 +362,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
         public System.Boolean CanReduce => _node.CanReduce;
@@ -339,31 +386,12 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Type Type => _node.Type;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
-    }
-
-    [DebuggerTypeProxy(typeof(CSharpSwitchCaseProxy))]
-    partial class CSharpSwitchCase
-    {
-    }
-
-    [ExcludeFromCodeCoverage]
-    internal class CSharpSwitchCaseProxy
-    {
-        private readonly CSharpSwitchCase _node;
-
-        public CSharpSwitchCaseProxy(CSharpSwitchCase node)
-        {
-            _node = node;
-        }
-
-        public System.Collections.ObjectModel.ReadOnlyCollection<System.Object> TestValues => _node.TestValues;
-        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
     }
 
     [DebuggerTypeProxy(typeof(ConvertDynamicCSharpExpressionProxy))]
@@ -381,7 +409,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Type Type => _node.Type;
         public System.Linq.Expressions.Expression Expression => _node.Expression;
@@ -407,7 +435,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Type Context => _node.Context;
         public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
@@ -432,7 +460,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Type Context => _node.Context;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
@@ -458,7 +486,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Type Type => _node.Type;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
@@ -484,7 +512,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.ExpressionType OperationNodeType => _node.OperationNodeType;
@@ -495,26 +523,6 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
-    }
-
-    [DebuggerTypeProxy(typeof(DynamicCSharpArgumentProxy))]
-    partial class DynamicCSharpArgument
-    {
-    }
-
-    [ExcludeFromCodeCoverage]
-    internal class DynamicCSharpArgumentProxy
-    {
-        private readonly DynamicCSharpArgument _node;
-
-        public DynamicCSharpArgumentProxy(DynamicCSharpArgument node)
-        {
-            _node = node;
-        }
-
-        public Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags Flags => _node.Flags;
-        public System.String Name => _node.Name;
-        public System.Linq.Expressions.Expression Expression => _node.Expression;
     }
 
     [DebuggerTypeProxy(typeof(GetIndexDynamicCSharpExpressionProxy))]
@@ -532,7 +540,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Object => _node.Object;
@@ -559,7 +567,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Object => _node.Object;
@@ -587,7 +595,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Expression => _node.Expression;
@@ -614,7 +622,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Object => _node.Object;
@@ -644,7 +652,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.ExpressionType OperationNodeType => _node.OperationNodeType;
@@ -671,7 +679,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Initializers => _node.Initializers;
@@ -701,7 +709,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
         public System.Linq.Expressions.Expression Collection => _node.Collection;
@@ -730,7 +738,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Object => _node.Object;
@@ -757,7 +765,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
@@ -782,7 +790,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
@@ -807,7 +815,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
@@ -833,7 +841,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.Expression Test => _node.Test;
         public System.Linq.Expressions.Expression Body => _node.Body;
@@ -860,7 +868,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
@@ -885,32 +893,13 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Expressions => _node.Expressions;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
-    }
-
-    [DebuggerTypeProxy(typeof(ParameterAssignmentProxy))]
-    partial class ParameterAssignment
-    {
-    }
-
-    [ExcludeFromCodeCoverage]
-    internal class ParameterAssignmentProxy
-    {
-        private readonly ParameterAssignment _node;
-
-        public ParameterAssignmentProxy(ParameterAssignment node)
-        {
-            _node = node;
-        }
-
-        public System.Reflection.ParameterInfo Parameter => _node.Parameter;
-        public System.Linq.Expressions.Expression Expression => _node.Expression;
     }
 
     [DebuggerTypeProxy(typeof(MethodCallCSharpExpressionProxy))]
@@ -928,7 +917,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Type Type => _node.Type;
@@ -954,7 +943,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.Expression Operand => _node.Operand;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
@@ -978,7 +967,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.Expression Body => _node.Body;
         public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
@@ -1004,7 +993,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
@@ -1031,7 +1020,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.Expression Expression => _node.Expression;
         public System.Linq.Expressions.Expression Body => _node.Body;
@@ -1056,7 +1045,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.Expression SwitchValue => _node.SwitchValue;
         public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
@@ -1083,7 +1072,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
         public System.Linq.Expressions.Expression Resource => _node.Resource;
@@ -1109,7 +1098,7 @@ namespace Microsoft.CSharp.Expressions
             _node = node;
         }
 
-        public string DebugView => _node.DebugView().ToString();
+        public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
