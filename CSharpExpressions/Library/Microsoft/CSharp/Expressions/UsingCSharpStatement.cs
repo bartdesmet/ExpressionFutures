@@ -122,15 +122,73 @@ namespace Microsoft.CSharp.Expressions
                     );
             }
 
+            var temp = default(ParameterExpression);
+            var resource = default(Expression);
+
+            if (variable == Variable)
+            {
+                // NB: Resource could contain a reference to Variable that needs to be bound in the
+                //     enclosing scope. This isn't possible to write in C# due to scoping rules for
+                //     variables, but it's valid in the LINQ APIs in general.
+                //
+                //                          +-------------+
+                //                          v             |
+                //       Block({ x }, Using(x, R(x), Call(x, foo)))
+                //               ^               |
+                //               +---------------+
+                //
+                //     If we're not careful about scoping, we could end up creating:
+                //
+                //                          +-------------+
+                //                          v             |
+                //       Block({ x }, Using(x, R(x), Call(x, foo)))
+                //                          ^    |
+                //                          +----+
+                //
+                //     So we rewrite the whole thing by adding another temporary variable:
+                //
+                //                                                        +----------+
+                //                                                        v          |
+                //       Block({ x }, Block({ t }, Assign(t, R(x)), Using(x, t, Call(x, foo))))
+                //               ^                             |
+                //               +-----------------------------+
+                //
+                // NB: We could do a scope tracking visit to Resource to check whether the variable
+                //     is being referred to. For now, we'll just apply the additional assignment all
+                //     the time, but we could optimize this later (or we could invest in a /o+ type
+                //     of flag for all of the expression APIs, so we can optimize the user's code as
+                //     well when it exhibits patterns like this; additional Blocks seems common when
+                //     generating code from extension nodes of a higher abstraction kind).
+
+                temp = Expression.Parameter(variable.Type);
+                resource = temp;
+            }
+            else
+            {
+                resource = Resource;
+            }
+
             var res =
                 Expression.Block(
                     new[] { variable },
-                    Expression.Assign(variable, Resource),
+                    Expression.Assign(variable, resource),
                     Expression.TryFinally(
                         Body,
                         cleanup
                     )
                 );
+
+            if (temp != null)
+            {
+                // NB: See remarks above for an explation of the need for this addition scope.
+
+                res =
+                    Expression.Block(
+                        new[] { temp },
+                        Expression.Assign(temp, Resource),
+                        res
+                    );
+            }
 
             return res;
         }

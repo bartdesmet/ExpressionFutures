@@ -417,6 +417,7 @@ namespace Microsoft.CSharp.Expressions
                         Expression.TryFinally(
                             CSharpExpression.While(
                                 moveNext,
+                                // NB: This is using C# 5.0 scoping rules for the loop variable.
                                 Expression.Block(
                                     new[] { Variable },
                                     Expression.Assign(Variable, current),

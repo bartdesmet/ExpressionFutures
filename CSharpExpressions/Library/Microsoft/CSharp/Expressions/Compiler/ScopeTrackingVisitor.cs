@@ -69,9 +69,16 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
+            var resource = Visit(node.Resource);
+
             Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
 
-            var res = base.VisitUsing(node);
+            var res =
+                node.Update(
+                    VisitAndConvert(node.Variable, nameof(VisitUsing)),
+                    resource,
+                    Visit(node.Body)
+                );
 
             Pop();
 
@@ -81,9 +88,19 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
+            var collection = Visit(node.Collection);
+
             Push(new[] { node.Variable });
 
-            var res = base.VisitForEach(node);
+            var res = 
+                node.Update(
+                    VisitLabelTarget(node.BreakLabel),
+                    VisitLabelTarget(node.ContinueLabel),
+                    VisitAndConvert(node.Variable, nameof(VisitForEach)),
+                    collection,
+                    VisitAndConvert(node.Conversion, nameof(VisitForEach)),
+                    Visit(node.Body)
+                );
 
             Pop();
 
@@ -93,6 +110,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {
+            // NB: See notes in ForCSharpStatement.ReduceCore for the scoping rules applied here.
+
             Push(node.Variables);
 
             var res = base.VisitFor(node);
@@ -109,7 +128,13 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             Push(node.Variables);
 
-            var res = node.Update(switchValue, VisitLabelTarget(node.BreakLabel), VisitAndConvert(node.Variables, nameof(VisitSwitch)), Visit(node.Cases, VisitSwitchCase));
+            var res =
+                node.Update(
+                    switchValue,
+                    VisitLabelTarget(node.BreakLabel),
+                    VisitAndConvert(node.Variables, nameof(VisitSwitch)),
+                    Visit(node.Cases, VisitSwitchCase)
+                );
 
             Pop();
 

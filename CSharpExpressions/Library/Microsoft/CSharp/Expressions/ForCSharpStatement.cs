@@ -140,6 +140,56 @@ namespace Microsoft.CSharp.Expressions
 
             expressions[j++] = Expression.Label(@break);
 
+            // NB: The scoping of the variables here could be considered to be in conflict with
+            //     C# spec section 8.8.3 when interpreted wearing an Expression API hat:
+            //
+            //       "The scope of a local variable declared by a for-initializer starts at the
+            //        local-variable-declarator for the variable and extends to the end of the
+            //        embedded statement. The scope includes the for-condition and the for-iterator."
+            //
+            //     Considering that Parameter nodes have reference equality in the Expression API,
+            //     this could be interpreted to have the following binding:
+            //
+            //               +-----------------+
+            //               v                 |
+            //       Block({ x, y }, For({ x = x + 1, y = x + y }, x < y, { x++, y-- }, F(x, y))
+            //                             ^              |        |        |             |
+            //                             +--------------+--------+--------+-------------+
+            //
+            //     and similar for variable y. First of all, this is not expressible in C# because
+            //     the scoping rules for variables are based on their lexical name. By bundling
+            //     all variables in one top-level collection here, binding means:
+            //
+            //                             +---+
+            //                             v   |
+            //       Block({ x, y }, For({ x = x + 1, y = x + y }, x < y, { x++, y-- }, F(x, y))
+            //                             ^              |        |        |             |
+            //                             +--------------+--------+--------+-------------+
+            //
+            //     which will always cause x to have value 1 given the Expression API doesn't do
+            //     any definite assignment checks. The reason we don't try to create a series of
+            //     nested scopes is because the initializer expressions can contain regular Assign
+            //     nodes and it would be perceived strange that those have a special meaning when
+            //     used in the Initializers section of a For loop.
+            //
+            //     If we want to support the binding shown above, we'd likely want to model the
+            //     local-variable-declarator construct as a separate node where the rhs is bound in
+            //     the enclosing scope and the lhs (which has to be a Parameter) is introduced in
+            //     a new scope for the successor expressions to use. A parent node such as For can
+            //     then reduce the declarator, establishing the scope for the bound variables, and
+            //     reduce the for-condition, for-iterator, and embedded-statement in that scope.
+            //
+            //     However, given that this is the C#-specific expression API, we can live with
+            //     this oddity (as it may be perceived by Expression API fanatics). If one really
+            //     wants to have the binding effect described above, an additional variable can
+            //     be introduced or an alpha-substitution for Parameter nodes can be carried out.
+            //
+            //     Note that the scoping for Using, Switch, and ForEach is a bit more natural for
+            //     users of Expression APIs given that their Resource, SwitchValue, and Collection
+            //     nodes (hereafter referred to as the "source") are bound in the enclosing scope
+            //     and any variables introduced by those constructs are brought in scope beyond
+            //     evaluation of the "source".
+
             var res = Expression.Block(typeof(void), Variables, expressions);
 
             return res;
