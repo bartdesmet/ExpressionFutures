@@ -16,10 +16,63 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     public static class TestUtilities
     {
+        // NB: This domain is used to load custom-built Roslyn assemblies when invoking TestUtilities from the T4
+        //     text template when generating tests. The problem is that the T4 engine is loaded in VS, with the Roslyn
+        //     binaries on the AppDomain's probing path. If we don't tweak this, it will pick up the v1 RTM binaries
+        //     from "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\PrivateAssemblies".
+        private static AppDomain s_roslyn;
+
+        public static void InitializeDomain(string path)
+        {
+            var setup = new AppDomainSetup
+            {
+                ApplicationBase = path,
+                ShadowCopyFiles = "true",
+            };
+
+            s_roslyn = AppDomain.CreateDomain("RoslynHost", null, setup);
+        }
+
+        public static void UnloadDomain()
+        {
+            if (s_roslyn != null)
+            {
+                AppDomain.Unload(s_roslyn);
+                // NB: not setting to null, so subsequent invocations fail DoCallBack upon misuse
+            }
+        }
+
         public static string GetDebugView(string expr)
         {
+            if (s_roslyn != null)
+            {
+                return GetDebugViewMarshal(expr);
+            }
+
+            return GetDebugViewCore(expr);
+        }
+
+        private static string GetDebugViewMarshal(string expr)
+        {
+            s_roslyn.SetData("expr", expr);
+
+            s_roslyn.DoCallBack(GetDebugViewCallback);
+
+            var res = (string)s_roslyn.GetData("debugView");
+            return res;
+        }
+
+        private static void GetDebugViewCallback()
+        {
+            var expr = (string)AppDomain.CurrentDomain.GetData("expr");
+            var res = GetDebugViewCore(expr);
+            AppDomain.CurrentDomain.SetData("debugView", res);
+        }
+
+        private static string GetDebugViewCore(string expr)
+        {
             // TODO: Investigate using the scripting APIs here instead.
-            
+
             var typeName = "Expressions";
             var propName = "Expression";
 
@@ -41,11 +94,11 @@ public static class {typeName}
                 // A class library `Expressions` which will be emitted in memory
                 .Create("Expressions")
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, warningLevel: 0))
-                
+
                 // BCL assemblies
                 .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
-                
+
                 // Our custom assembly
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location))
 
