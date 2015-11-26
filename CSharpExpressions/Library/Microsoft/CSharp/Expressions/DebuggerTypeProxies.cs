@@ -3,6 +3,7 @@
 // bartde - November 2015
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -12,6 +13,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class AsyncLambdaCSharpExpressionProxy
     {
         private readonly AsyncLambdaCSharpExpression _node;
@@ -36,6 +38,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class CSharpExpressionProxy
     {
         private readonly CSharpExpression _node;
@@ -58,6 +61,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class CSharpExpressionVisitorProxy
     {
         private readonly CSharpExpressionVisitor _node;
@@ -74,6 +78,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class AwaitCSharpExpressionProxy
     {
         private readonly AwaitCSharpExpression _node;
@@ -98,6 +103,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalAccessCSharpExpressionProxy
     {
         private readonly ConditionalAccessCSharpExpression _node;
@@ -121,6 +127,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalArrayIndexCSharpExpressionProxy
     {
         private readonly ConditionalArrayIndexCSharpExpression _node;
@@ -146,6 +153,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalMethodCallCSharpExpressionProxy
     {
         private readonly ConditionalMethodCallCSharpExpression _node;
@@ -172,6 +180,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalMemberCSharpExpressionProxy
     {
         private readonly ConditionalMemberCSharpExpression _node;
@@ -196,6 +205,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class BlockCSharpExpressionProxy
     {
         private readonly BlockCSharpExpression _node;
@@ -221,6 +231,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class GotoCSharpStatementProxy
     {
         private readonly GotoCSharpStatement _node;
@@ -244,6 +255,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class GotoLabelCSharpStatementProxy
     {
         private readonly GotoLabelCSharpStatement _node;
@@ -268,6 +280,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class GotoCaseCSharpStatementProxy
     {
         private readonly GotoCaseCSharpStatement _node;
@@ -292,6 +305,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class GotoDefaultCSharpStatementProxy
     {
         private readonly GotoDefaultCSharpStatement _node;
@@ -315,6 +329,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class CSharpStatementProxy
     {
         private readonly CSharpStatement _node;
@@ -337,6 +352,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class CSharpSwitchCaseProxy
     {
         private readonly CSharpSwitchCase _node;
@@ -355,6 +371,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConvertDynamicCSharpExpressionProxy
     {
         private readonly ConvertDynamicCSharpExpression _node;
@@ -380,6 +397,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class DynamicCSharpExpressionProxy
     {
         private readonly DynamicCSharpExpression _node;
@@ -404,6 +422,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class DynamicAwaitCSharpExpressionProxy
     {
         private readonly DynamicAwaitCSharpExpression _node;
@@ -429,6 +448,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class InvokeConstructorDynamicCSharpExpressionProxy
     {
         private readonly InvokeConstructorDynamicCSharpExpression _node;
@@ -454,6 +474,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class BinaryDynamicCSharpExpressionProxy
     {
         private readonly BinaryDynamicCSharpExpression _node;
@@ -481,6 +502,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class DynamicCSharpArgumentProxy
     {
         private readonly DynamicCSharpArgument _node;
@@ -500,6 +522,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class GetIndexDynamicCSharpExpressionProxy
     {
         private readonly GetIndexDynamicCSharpExpression _node;
@@ -526,6 +549,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class GetMemberDynamicCSharpExpressionProxy
     {
         private readonly GetMemberDynamicCSharpExpression _node;
@@ -553,6 +577,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class InvokeDynamicCSharpExpressionProxy
     {
         private readonly InvokeDynamicCSharpExpression _node;
@@ -579,6 +604,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class InvokeMemberDynamicCSharpExpressionProxy
     {
         private readonly InvokeMemberDynamicCSharpExpression _node;
@@ -608,6 +634,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class UnaryDynamicCSharpExpressionProxy
     {
         private readonly UnaryDynamicCSharpExpression _node;
@@ -634,6 +661,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ForCSharpStatementProxy
     {
         private readonly ForCSharpStatement _node;
@@ -663,6 +691,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ForEachCSharpStatementProxy
     {
         private readonly ForEachCSharpStatement _node;
@@ -691,6 +720,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalIndexCSharpExpressionProxy
     {
         private readonly ConditionalIndexCSharpExpression _node;
@@ -717,6 +747,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalInvocationCSharpExpressionProxy
     {
         private readonly ConditionalInvocationCSharpExpression _node;
@@ -741,6 +772,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class InvocationCSharpExpressionProxy
     {
         private readonly InvocationCSharpExpression _node;
@@ -765,6 +797,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class IndexCSharpExpressionProxy
     {
         private readonly IndexCSharpExpression _node;
@@ -790,6 +823,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ConditionalLoopCSharpStatementProxy
     {
         private readonly ConditionalLoopCSharpStatement _node;
@@ -816,6 +850,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class NewCSharpExpressionProxy
     {
         private readonly NewCSharpExpression _node;
@@ -840,6 +875,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class NewMultidimensionalArrayInitCSharpExpressionProxy
     {
         private readonly NewMultidimensionalArrayInitCSharpExpression _node;
@@ -863,6 +899,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class ParameterAssignmentProxy
     {
         private readonly ParameterAssignment _node;
@@ -881,6 +918,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class MethodCallCSharpExpressionProxy
     {
         private readonly MethodCallCSharpExpression _node;
@@ -906,6 +944,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class UnaryCSharpExpressionProxy
     {
         private readonly UnaryCSharpExpression _node;
@@ -929,6 +968,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class LoopCSharpStatementProxy
     {
         private readonly LoopCSharpStatement _node;
@@ -954,6 +994,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class DoCSharpStatementProxy
     {
         private readonly DoCSharpStatement _node;
@@ -980,6 +1021,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class LockCSharpStatementProxy
     {
         private readonly LockCSharpStatement _node;
@@ -1004,6 +1046,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class SwitchCSharpStatementProxy
     {
         private readonly SwitchCSharpStatement _node;
@@ -1030,6 +1073,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class UsingCSharpStatementProxy
     {
         private readonly UsingCSharpStatement _node;
@@ -1055,6 +1099,7 @@ namespace Microsoft.CSharp.Expressions
     {
     }
 
+    [ExcludeFromCodeCoverage]
     internal class WhileCSharpStatementProxy
     {
         private readonly WhileCSharpStatement _node;
