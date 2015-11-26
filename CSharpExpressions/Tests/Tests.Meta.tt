@@ -1,0 +1,128 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension="Generated.tt" #>
+<#
+var exprs = new string[]
+{
+	"CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42))",
+
+	"CSharpExpression.Await(Expression.Default(typeof(Task<int>)))",
+	"DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object))",
+	"CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(Expression.Default(typeof(Task<int>))))",
+	
+	"CSharpExpression.Call(typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }), CSharpExpression.Bind(typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)))",
+	"CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod(\"Substring\", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod(\"Substring\", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)))",
+	"CSharpExpression.Invoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod(\"Invoke\").GetParameters()[0], Expression.Constant(42)))",
+	"CSharpExpression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), CSharpExpression.Bind(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }).GetParameters()[0], Expression.Constant(42L)))",
+	"CSharpExpression.Index(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty(\"Item\"), CSharpExpression.Bind(typeof(List<int>).GetProperty(\"Item\").GetIndexParameters()[0], Expression.Constant(42)))",
+
+	"CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[])), Expression.Constant(42))",
+	"CSharpExpression.ConditionalCall(Expression.Default(typeof(string)), typeof(string).GetMethod(\"Substring\", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod(\"Substring\", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)))",
+	"CSharpExpression.ConditionalInvoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod(\"Invoke\").GetParameters()[0], Expression.Constant(42)))",
+	"CSharpExpression.ConditionalIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty(\"Item\"), CSharpExpression.Bind(typeof(List<int>).GetProperty(\"Item\").GetIndexParameters()[0], Expression.Constant(42)))",
+	"CSharpExpression.ConditionalProperty(Expression.Default(typeof(string)), typeof(string).GetProperty(\"Length\"))",
+	
+	"DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2))",
+	"DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext)",
+	"DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext, typeof(object))",
+	"DynamicCSharpExpression.DynamicNegate(Expression.Constant(1))",
+	"DynamicCSharpExpression.DynamicConvert(Expression.Constant(1), typeof(int))",
+	"DynamicCSharpExpression.DynamicGetMember(Expression.Default(typeof(string)), \"Length\")",
+    "DynamicCSharpExpression.DynamicGetIndex(Expression.Default(typeof(List<int>)), Expression.Constant(1))",
+    "DynamicCSharpExpression.DynamicInvoke(Expression.Default(typeof(Action<int>)), Expression.Constant(1))",
+    "DynamicCSharpExpression.DynamicInvokeMember(typeof(Math), \"Abs\", Expression.Constant(1))",
+	"DynamicCSharpExpression.DynamicInvokeMember(typeof(Activator), \"CreateInstance\", new[] { typeof(int) })",
+	"DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), \"Substring\", Expression.Constant(1))",
+	"DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), \"Substring\", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), \"startIndex\") })",
+	"DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), \"Substring\", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), \"startIndex\", CSharpArgumentInfoFlags.NamedArgument) })",
+    "DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), Expression.Constant(1L))",
+
+	"CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label())",
+	"CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Empty() }, Expression.Label())",
+	"Expression.Block(CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label()))",
+
+	"CSharpStatement.Do(Expression.Empty(), Expression.Constant(true))",
+	"CSharpStatement.Do(Expression.Empty(), Expression.Constant(true), Expression.Label(\"break\"), Expression.Label(\"continue\"))",
+	"CSharpStatement.While(Expression.Constant(true), Expression.Empty())",
+	"CSharpStatement.While(Expression.Constant(true), Expression.Empty(), Expression.Label(\"break\"), Expression.Label(\"continue\"))",
+	"CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Empty())",
+	"CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty())",
+	"CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty(), Expression.Label(\"break\"), Expression.Label(\"continue\"))",
+	"CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty())",
+	"CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label(\"break\"), Expression.Label(\"continue\"))",
+	"CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label(\"break\"), Expression.Label(\"continue\"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int))))",
+
+	"CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label(\"break\"))",
+	"CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label(\"break\"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Empty()), CSharpStatement.SwitchCaseDefault(Expression.Empty()))",
+	"CSharpStatement.Switch(Expression.Default(typeof(string)), Expression.Label(\"break\"), new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { \"bar\", \"foo\", \"this is a \\\"quoted\\\" string\", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Empty()) })",
+
+	"CSharpStatement.GotoLabel(Expression.Label())",
+	"CSharpStatement.GotoCase(1)",
+	"CSharpStatement.GotoDefault()",
+	
+	"CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Empty())",
+
+	"CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Empty())",
+	"CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Empty())",
+};
+#>
+\<#@ template debug="false" hostspecific="false" language="C#" \#>
+\<#@ assembly name="System.Core" \#>
+\<#@ assembly name="Microsoft.CSharp" \#>
+\<#@ import namespace="System" \#>
+\<#@ import namespace="System.Linq" \#>
+\<#@ import namespace="System.Linq.Expressions" \#>
+\<#@ import namespace="System.Text" \#>
+\<#@ import namespace="System.Collections.Generic" \#>
+\<#@ import namespace="System.Threading.Tasks" \#>
+\<#@ import namespace="Microsoft.CSharp.Expressions" \#>
+\<#@ import namespace="Microsoft.CSharp.RuntimeBinder" \#>
+\<#@ assembly name="System.Xml" \#>
+\<#@ assembly name="System.Xml.Linq" \#>
+\<#@ assembly name="$(SolutionDir)\Library\bin\$(Configuration)\Microsoft.CSharp.Expressions.dll" \#>
+\<#@ assembly name="$(SolutionDir)\System.Linq.Expressions.Debugging\bin\$(Configuration)\System.Linq.Expressions.Debugging.dll" \#>
+\<#
+var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace("\"", "\"\"") + "\"");
+\#>
+// NOTE: These tests are auto-generated and can *never* fail because they assert the outcome of DebugView()
+//       at runtime against the outcome obtained at compile time. However, a human should read through the
+//       cases to assert the outcome is as expected.
+//
+//       Regressions can still be caught given that the T4 won't be re-run unless it gets saved in the IDE.
+
+using Microsoft.CSharp.Expressions;
+using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+
+namespace Tests
+{
+	[TestClass]
+    public class DebugViewTests
+	{
+<#
+var i = 0;
+foreach (var expr in exprs)
+{
+#>
+        private Expression expr<#=i#> = <#=expr#>;
+        private string dbg<#=i#> = \<#=toEscapedString(<#=expr#>.DebugView())\#>;
+
+		[TestMethod]
+		public void CSharp_DebugView_Test<#=i#>()
+		{
+			Assert.AreEqual(dbg<#=i#>, expr<#=i#>.DebugView().ToString());
+		}
+
+<#
+i++;
+}
+#>
+    }
+}

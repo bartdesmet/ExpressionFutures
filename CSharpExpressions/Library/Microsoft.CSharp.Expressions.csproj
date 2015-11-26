@@ -36,6 +36,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Friends.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalArrayIndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalMemberCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Debugging.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\BlockCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\GotoCSharpStatement.cs" />
@@ -151,6 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
+      <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
+      <Name>System.Linq.Expressions.Debugging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
