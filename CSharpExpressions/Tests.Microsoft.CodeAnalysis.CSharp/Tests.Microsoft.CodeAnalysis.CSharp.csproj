@@ -70,6 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CompilerTests.Generated.tt</DependentUpon>
     </Compile>
+    <Compile Include="CompilerTests.Verify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

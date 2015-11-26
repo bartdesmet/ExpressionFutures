@@ -37,13 +37,13 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     [TestClass]
-    public class CompilerTests
+    public partial class CompilerTests
     {
-        // Elapsed = 00:00:00.0000142
+        // Elapsed = 00:00:00.0000236
         [TestMethod]
-        public void CompilerTest_0()
+        public void CompilerTest_9D30_AA02()
         {
-			// <PERF>17.0837ms</PERF>
+            // <PERF>29.4189ms</PERF>
 
             // (Expression<Func<int>>)(() => 42)
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => 42)");
@@ -54,13 +54,16 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_9D30_AA02();
         }
 
-        // Elapsed = 00:00:00.0171319
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9D30_AA02() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.0295117
         [TestMethod]
-        public void CompilerTest_1()
+        public void CompilerTest_3ECF_6910()
         {
-			// <PERF>30.0592ms</PERF>
+            // <PERF>29.7384ms</PERF>
 
             // (Expression<Func<string, int>>)(s => s.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int>>)(s => s.Length)");
@@ -77,741 +80,983 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_3ECF_6910();
         }
 
-        // Elapsed = 00:00:00.0472344
-		[Ignore]
-		// (10,77): error CS0838: An expression tree may not contain a multidimensional array initializer
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3ECF_6910() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.0593193
+        [Ignore]
+        // (10,77): error CS0838: An expression tree may not contain a multidimensional array initializer
         [TestMethod]
-        public void CompilerTest_2()
+        public void CompilerTest_F51F_B7BA()
         {
-			// <PERF>13.5584ms</PERF>
+            // <PERF>10.834ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_F51F_B7BA();
         }
 
-        // Elapsed = 00:00:00.0608352
-		[Ignore]
-		// (10,74): error CS0853: An expression tree may not contain a named argument specification
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F51F_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.0702247
+        [Ignore]
+        // (10,74): error CS0853: An expression tree may not contain a named argument specification
         [TestMethod]
-        public void CompilerTest_3()
+        public void CompilerTest_E9F4_B7BA()
         {
-			// <PERF>14.2839ms</PERF>
+            // <PERF>29.3015ms</PERF>
 
             // (Expression<Func<int>>)(() => Math.Abs(value: 42))
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => Math.Abs(value: 42))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_E9F4_B7BA();
         }
 
-        // Elapsed = 00:00:00.0751736
-		[Ignore]
-		// (10,79): error CS0853: An expression tree may not contain a named argument specification
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E9F4_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.0995815
+        [Ignore]
+        // (10,79): error CS0853: An expression tree may not contain a named argument specification
         [TestMethod]
-        public void CompilerTest_4()
+        public void CompilerTest_00C1_B7BA()
         {
-			// <PERF>12.8452ms</PERF>
+            // <PERF>11.0273ms</PERF>
 
             // (Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))
             var actual = GetDebugView(@"(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_00C1_B7BA();
         }
 
-        // Elapsed = 00:00:00.0880567
-		[Ignore]
-		// (10,85): error CS0853: An expression tree may not contain a named argument specification
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_00C1_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.1106829
+        [Ignore]
+        // (10,85): error CS0853: An expression tree may not contain a named argument specification
         [TestMethod]
-        public void CompilerTest_5()
+        public void CompilerTest_EDEC_B7BA()
         {
-			// <PERF>25.8302ms</PERF>
+            // <PERF>11.6738ms</PERF>
 
             // (Expression<Func<List<int>, int>>)(xs => xs[index: 42])
             var actual = GetDebugView(@"(Expression<Func<List<int>, int>>)(xs => xs[index: 42])");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_EDEC_B7BA();
         }
 
-        // Elapsed = 00:00:00.1139387
-		[Ignore]
-		// (10,83): error CS0853: An expression tree may not contain a named argument specification
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EDEC_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.1223987
+        [Ignore]
+        // (10,83): error CS0853: An expression tree may not contain a named argument specification
         [TestMethod]
-        public void CompilerTest_6()
+        public void CompilerTest_6271_B7BA()
         {
-			// <PERF>13.9488ms</PERF>
+            // <PERF>12.154ms</PERF>
 
             // (Expression<Action<Action<int>>>)(a => a(obj: 42))
             var actual = GetDebugView(@"(Expression<Action<Action<int>>>)(a => a(obj: 42))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_6271_B7BA();
         }
 
-        // Elapsed = 00:00:00.1279299
-		[Ignore]
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6271_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.1346263
+        [Ignore]
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_7()
+        public void CompilerTest_8E43_B7BA()
         {
-			// <PERF>21.8554ms</PERF>
+            // <PERF>46.7427ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => -x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => -x)");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_8E43_B7BA();
         }
 
-        // Elapsed = 00:00:00.1498228
-		[Ignore]
-		// (10,108): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8E43_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.1814797
+        [Ignore]
+        // (10,108): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_8()
+        public void CompilerTest_191C_B7BA()
         {
-			// <PERF>15.5741ms</PERF>
+            // <PERF>13.6998ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_191C_B7BA();
         }
 
-        // Elapsed = 00:00:00.1654527
-		[Ignore]
-		// (10,82): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_191C_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.1952589
+        [Ignore]
+        // (10,82): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_9()
+        public void CompilerTest_6647_B7BA()
         {
-			// <PERF>30.4087ms</PERF>
+            // <PERF>9.0299ms</PERF>
 
             // (Expression<Func<dynamic, int>>)(x => (int)x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => (int)x)");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_6647_B7BA();
         }
 
-        // Elapsed = 00:00:00.1959042
-		[Ignore]
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6647_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2043369
+        [Ignore]
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_10()
+        public void CompilerTest_AB76_B7BA()
         {
-			// <PERF>12.1594ms</PERF>
+            // <PERF>18.6488ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo)");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_AB76_B7BA();
         }
 
-        // Elapsed = 00:00:00.2081073
-		[Ignore]
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AB76_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2230392
+        [Ignore]
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_11()
+        public void CompilerTest_C598_B7BA()
         {
-			// <PERF>11.0013ms</PERF>
+            // <PERF>10.6479ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_C598_B7BA();
         }
 
-        // Elapsed = 00:00:00.2191417
-		[Ignore]
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C598_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2337411
+        [Ignore]
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_12()
+        public void CompilerTest_55B7_B7BA()
         {
-			// <PERF>12.0772ms</PERF>
+            // <PERF>12.7716ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_55B7_B7BA();
         }
 
-        // Elapsed = 00:00:00.2312524
-		[Ignore]
-		// (10,86): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55B7_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2466011
+        [Ignore]
+        // (10,86): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_13()
+        public void CompilerTest_7760_B7BA()
         {
-			// <PERF>11.6265ms</PERF>
+            // <PERF>13.7543ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x[1])");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_7760_B7BA();
         }
 
-        // Elapsed = 00:00:00.2429361
-		[Ignore]
-		// (10,82): error CS1963: An expression tree may not contain a dynamic operation
-		// (10,82): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7760_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2604098
+        [Ignore]
+        // (10,82): error CS1963: An expression tree may not contain a dynamic operation
+        // (10,82): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_14()
+        public void CompilerTest_4B4B_B7BA()
         {
-			// <PERF>19.7567ms</PERF>
+            // <PERF>19.3337ms</PERF>
 
             // (Expression<Func<dynamic, int>>)(x => int.Parse(x))
             var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => int.Parse(x))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_4B4B_B7BA();
         }
 
-        // Elapsed = 00:00:00.2627522
-		[Ignore]
-		// (10,87): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4B4B_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2798042
+        [Ignore]
+        // (10,87): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_15()
+        public void CompilerTest_22AA_B7BA()
         {
-			// <PERF>17.6268ms</PERF>
+            // <PERF>9.5711ms</PERF>
 
             // (Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))
             var actual = GetDebugView(@"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_22AA_B7BA();
         }
 
-        // Elapsed = 00:00:00.2804410
-		[Ignore]
-		// (10,85): error CS1989: Async lambda expressions cannot be converted to expression trees
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_22AA_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.2894226
+        [Ignore]
+        // (10,85): error CS1989: Async lambda expressions cannot be converted to expression trees
         [TestMethod]
-        public void CompilerTest_16()
+        public void CompilerTest_0FFA_B7BA()
         {
-			// <PERF>19.4577ms</PERF>
+            // <PERF>11.0522ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t)");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_0FFA_B7BA();
         }
 
-        // Elapsed = 00:00:00.2999465
-		[Ignore]
-		// (10,85): error CS1989: Async lambda expressions cannot be converted to expression trees
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3005342
+        [Ignore]
+        // (10,85): error CS1989: Async lambda expressions cannot be converted to expression trees
         [TestMethod]
-        public void CompilerTest_17()
+        public void CompilerTest_83AE_B7BA()
         {
-			// <PERF>20.0812ms</PERF>
+            // <PERF>20.7541ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_83AE_B7BA();
         }
 
-        // Elapsed = 00:00:00.3200598
-		[Ignore]
-		// (10,83): error CS1989: Async lambda expressions cannot be converted to expression trees
-		// (10,94): error CS1963: An expression tree may not contain a dynamic operation
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3213472
+        [Ignore]
+        // (10,83): error CS1989: Async lambda expressions cannot be converted to expression trees
+        // (10,94): error CS1963: An expression tree may not contain a dynamic operation
         [TestMethod]
-        public void CompilerTest_18()
+        public void CompilerTest_1A0E_B7BA()
         {
-			// <PERF>42.9536ms</PERF>
+            // <PERF>10.515ms</PERF>
 
             // (Expression<Func<dynamic, Task<int>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<int>>>)(async d => await d)");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_1A0E_B7BA();
         }
 
-        // Elapsed = 00:00:00.3630736
-		[Ignore]
-		// (10,82): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3319411
+        [Ignore]
+        // (10,82): error CS8072: An expression tree lambda may not contain a null propagating operator.
         [TestMethod]
-        public void CompilerTest_19()
+        public void CompilerTest_B340_B7BA()
         {
-			// <PERF>16.1886ms</PERF>
+            // <PERF>14.541ms</PERF>
 
             // (Expression<Func<string, int?>>)(s => s?.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int?>>)(s => s?.Length)");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_B340_B7BA();
         }
 
-        // Elapsed = 00:00:00.3793086
-		[Ignore]
-		// (10,84): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B340_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3465803
+        [Ignore]
+        // (10,84): error CS8072: An expression tree lambda may not contain a null propagating operator.
         [TestMethod]
-        public void CompilerTest_20()
+        public void CompilerTest_A997_B7BA()
         {
-			// <PERF>14.7003ms</PERF>
+            // <PERF>16.4813ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s?.ToUpper())
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s?.ToUpper())");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_A997_B7BA();
         }
 
-        // Elapsed = 00:00:00.3940602
-		[Ignore]
-		// (10,83): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A997_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3631544
+        [Ignore]
+        // (10,83): error CS8072: An expression tree lambda may not contain a null propagating operator.
         [TestMethod]
-        public void CompilerTest_21()
+        public void CompilerTest_CB0C_B7BA()
         {
-			// <PERF>14.749ms</PERF>
+            // <PERF>16.0966ms</PERF>
 
             // (Expression<Func<string, char?>>)(s => s?[42])
             var actual = GetDebugView(@"(Expression<Func<string, char?>>)(s => s?[42])");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_CB0C_B7BA();
         }
 
-        // Elapsed = 00:00:00.4088556
-		[Ignore]
-		// (10,90): error CS8072: An expression tree lambda may not contain a null propagating operator.
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CB0C_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3793233
+        [Ignore]
+        // (10,90): error CS8072: An expression tree lambda may not contain a null propagating operator.
         [TestMethod]
-        public void CompilerTest_22()
+        public void CompilerTest_CF40_B7BA()
         {
-			// <PERF>19.6599ms</PERF>
+            // <PERF>10.7983ms</PERF>
 
             // (Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))
             var actual = GetDebugView(@"(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_CF40_B7BA();
         }
 
-        // Elapsed = 00:00:00.4285677
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.3901832
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_23()
+        public void CompilerTest_A8D0_B7BA()
         {
-			// <PERF>12.1464ms</PERF>
+            // <PERF>11.7189ms</PERF>
 
             // (Expression<Action>)(() => { })
             var actual = GetDebugView(@"(Expression<Action>)(() => { })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_A8D0_B7BA();
         }
 
-        // Elapsed = 00:00:00.4407534
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A8D0_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4019642
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_24()
+        public void CompilerTest_0BD6_B7BA()
         {
-			// <PERF>12.6212ms</PERF>
+            // <PERF>11.6818ms</PERF>
 
             // (Expression<Action>)(() => { ; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { ; })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_0BD6_B7BA();
         }
 
-        // Elapsed = 00:00:00.4534125
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0BD6_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4137197
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_25()
+        public void CompilerTest_6102_B7BA()
         {
-			// <PERF>11.5186ms</PERF>
+            // <PERF>9.5974ms</PERF>
 
             // (Expression<Action>)(() => { return; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { return; })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_6102_B7BA();
         }
 
-        // Elapsed = 00:00:00.4649628
-		[Ignore]
-		// (10,68): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6102_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4233934
+        [Ignore]
+        // (10,68): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_26()
+        public void CompilerTest_7381_B7BA()
         {
-			// <PERF>12.523ms</PERF>
+            // <PERF>13.3527ms</PERF>
 
             // (Expression<Func<int>>)(() => { return 42; })
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => { return 42; })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_7381_B7BA();
         }
 
-        // Elapsed = 00:00:00.4775247
-		[Ignore]
-		// (10,84): error CS1525: Invalid expression term '}'
-		// (10,84): error CS1002: ; expected
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4368045
+        [Ignore]
+        // (10,84): error CS1525: Invalid expression term '}'
+        // (10,84): error CS1002: ; expected
         [TestMethod]
-        public void CompilerTest_27()
+        public void CompilerTest_1245_B7BA()
         {
-			// <PERF>15.5923ms</PERF>
+            // <PERF>10.4396ms</PERF>
 
             // (Expression<Action>)(() => { goto A; A: })
             var actual = GetDebugView(@"(Expression<Action>)(() => { goto A; A: })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_1245_B7BA();
         }
 
-        // Elapsed = 00:00:00.4932567
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1245_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4473074
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_28()
+        public void CompilerTest_3464_B7BA()
         {
-			// <PERF>20.3141ms</PERF>
+            // <PERF>9.386ms</PERF>
 
             // (Expression<Action>)(() => { A: goto A; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { A: goto A; })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_3464_B7BA();
         }
 
-        // Elapsed = 00:00:00.5136119
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3464_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4567442
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_29()
+        public void CompilerTest_C90B_B7BA()
         {
-			// <PERF>15.6865ms</PERF>
+            // <PERF>31.8046ms</PERF>
 
             // (Expression<Action>)(() => { while (true) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) Console.Write('.'); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_C90B_B7BA();
         }
 
-        // Elapsed = 00:00:00.5293403
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C90B_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.4886416
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_30()
+        public void CompilerTest_6674_B7BA()
         {
-			// <PERF>84.4667ms</PERF>
+            // <PERF>14.0849ms</PERF>
 
             // (Expression<Action>)(() => { do { Console.Write('.'); } while (true); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_6674_B7BA();
         }
 
-        // Elapsed = 00:00:00.6138646
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
-		// (10,97): error CS0832: An expression tree may not contain an assignment operator
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6674_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5027836
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        // (10,97): error CS0832: An expression tree may not contain an assignment operator
         [TestMethod]
-        public void CompilerTest_31()
+        public void CompilerTest_AD48_B7BA()
         {
-			// <PERF>17.7486ms</PERF>
+            // <PERF>13.848ms</PERF>
 
             // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_AD48_B7BA();
         }
 
-        // Elapsed = 00:00:00.6316712
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD48_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5167026
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_32()
+        public void CompilerTest_25E2_B7BA()
         {
-			// <PERF>13.7106ms</PERF>
+            // <PERF>12.3111ms</PERF>
 
             // (Expression<Action>)(() => { for (;;) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (;;) Console.Write('.'); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_25E2_B7BA();
         }
 
-        // Elapsed = 00:00:00.6454157
-		[Ignore]
-		// (10,72): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5290788
+        [Ignore]
+        // (10,72): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_33()
+        public void CompilerTest_DA7B_B7BA()
         {
-			// <PERF>13.8787ms</PERF>
+            // <PERF>11.8693ms</PERF>
 
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_DA7B_B7BA();
         }
 
-        // Elapsed = 00:00:00.6593257
-		[Ignore]
-		// (10,75): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5410267
+        [Ignore]
+        // (10,75): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_34()
+        public void CompilerTest_34B8_B7BA()
         {
-			// <PERF>12.216ms</PERF>
+            // <PERF>14.5186ms</PERF>
 
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_34B8_B7BA();
         }
 
-        // Elapsed = 00:00:00.6715761
-		[Ignore]
-		// (10,83): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5556243
+        [Ignore]
+        // (10,83): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_35()
+        public void CompilerTest_3958_B7BA()
         {
-			// <PERF>14.6026ms</PERF>
+            // <PERF>12.3415ms</PERF>
 
             // (Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_3958_B7BA();
         }
 
-        // Elapsed = 00:00:00.6862211
-		[Ignore]
-		// (10,78): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5680135
+        [Ignore]
+        // (10,78): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_36()
+        public void CompilerTest_5598_B7BA()
         {
-			// <PERF>15.5182ms</PERF>
+            // <PERF>12.2848ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_5598_B7BA();
         }
 
-        // Elapsed = 00:00:00.7017853
-		[Ignore]
-		// (10,78): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5598_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5803581
+        [Ignore]
+        // (10,78): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_37()
+        public void CompilerTest_BB7C_B7BA()
         {
-			// <PERF>16.0274ms</PERF>
+            // <PERF>15.3496ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_BB7C_B7BA();
         }
 
-        // Elapsed = 00:00:00.7178529
-		[Ignore]
-		// (10,73): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.5957884
+        [Ignore]
+        // (10,73): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_38()
+        public void CompilerTest_2CF2_B7BA()
         {
-			// <PERF>18.1038ms</PERF>
+            // <PERF>36.1805ms</PERF>
 
             // (Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })
             var actual = GetDebugView(@"(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_2CF2_B7BA();
         }
 
-        // Elapsed = 00:00:00.7360009
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CF2_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.6320247
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_39()
+        public void CompilerTest_880F_B7BA()
         {
-			// <PERF>46.7865ms</PERF>
+            // <PERF>10.6381ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_880F_B7BA();
         }
 
-        // Elapsed = 00:00:00.7828302
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_880F_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.6427168
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_40()
+        public void CompilerTest_19B3_B7BA()
         {
-			// <PERF>15.7227ms</PERF>
+            // <PERF>12.0134ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_19B3_B7BA();
         }
 
-        // Elapsed = 00:00:00.7985823
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_19B3_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.6548007
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_41()
+        public void CompilerTest_0662_B7BA()
         {
-			// <PERF>16.6352ms</PERF>
+            // <PERF>10.8064ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_0662_B7BA();
         }
 
-        // Elapsed = 00:00:00.8152626
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0662_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.6656820
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_42()
+        public void CompilerTest_F63E_B7BA()
         {
-			// <PERF>19.3471ms</PERF>
+            // <PERF>15.973ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_F63E_B7BA();
         }
 
-        // Elapsed = 00:00:00.8346557
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F63E_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.6817135
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_43()
+        public void CompilerTest_02EE_B7BA()
         {
-			// <PERF>17.9298ms</PERF>
+            // <PERF>11.4869ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_02EE_B7BA();
         }
 
-        // Elapsed = 00:00:00.8526270
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_02EE_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.6932526
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_44()
+        public void CompilerTest_1C02_B7BA()
         {
-			// <PERF>17.8869ms</PERF>
+            // <PERF>10.6274ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_1C02_B7BA();
         }
 
-        // Elapsed = 00:00:00.8705684
-		[Ignore]
-		// (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1C02_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.7039286
+        [Ignore]
+        // (10,65): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_45()
+        public void CompilerTest_744C_B7BA()
         {
-			// <PERF>18.7196ms</PERF>
+            // <PERF>55.47ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_744C_B7BA();
         }
 
-        // Elapsed = 00:00:00.8893228
-		[Ignore]
-		// (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_744C_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.7594798
+        [Ignore]
+        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_46()
+        public void CompilerTest_2156_B7BA()
         {
-			// <PERF>11.5985ms</PERF>
+            // <PERF>16.7932ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) {} })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) {} })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_2156_B7BA();
         }
 
-        // Elapsed = 00:00:00.9009583
-		[Ignore]
-		// (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.7763476
+        [Ignore]
+        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_47()
+        public void CompilerTest_FCA9_B7BA()
         {
-			// <PERF>60.999ms</PERF>
+            // <PERF>21.2427ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_FCA9_B7BA();
         }
 
-        // Elapsed = 00:00:00.9620104
-		[Ignore]
-		// (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.7976898
+        [Ignore]
+        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_48()
+        public void CompilerTest_6832_B7BA()
         {
-			// <PERF>24.2884ms</PERF>
+            // <PERF>10.6283ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_6832_B7BA();
         }
 
-        // Elapsed = 00:00:00.9863497
-		[Ignore]
-		// (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.8083797
+        [Ignore]
+        // (10,70): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_49()
+        public void CompilerTest_4E9F_B7BA()
         {
-			// <PERF>31.9603ms</PERF>
+            // <PERF>11.9469ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_4E9F_B7BA();
         }
 
-        // Elapsed = 00:00:01.0183555
-		[Ignore]
-		// (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.8203824
+        [Ignore]
+        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_50()
+        public void CompilerTest_30E5_B7BA()
         {
-			// <PERF>15.2344ms</PERF>
+            // <PERF>10.5765ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_30E5_B7BA();
         }
 
-        // Elapsed = 00:00:01.0336216
-		[Ignore]
-		// (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.8310125
+        [Ignore]
+        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_51()
+        public void CompilerTest_1754_B7BA()
         {
-			// <PERF>18.3984ms</PERF>
+            // <PERF>12.3093ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_1754_B7BA();
         }
 
-        // Elapsed = 00:00:01.0520713
-		[Ignore]
-		// (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.8434003
+        [Ignore]
+        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_52()
+        public void CompilerTest_AD7C_B7BA()
         {
-			// <PERF>17.9294ms</PERF>
+            // <PERF>15.2376ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_AD7C_B7BA();
         }
 
-        // Elapsed = 00:00:01.0700323
-		[Ignore]
-		// (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_B7BA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:00.8586919
+        [Ignore]
+        // (10,71): error CS0834: A lambda expression with a statement body cannot be converted to an expression tree
         [TestMethod]
-        public void CompilerTest_53()
+        public void CompilerTest_3E56_B7BA()
         {
-			// <PERF>13.8618ms</PERF>
+            // <PERF>11.37ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })");
             var expected = @"???";
             Assert.AreEqual(expected, actual);
+            Verify.CompilerTest_3E56_B7BA();
         }
 
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_B7BA() => INCONCLUSIVE(); }
+
+        partial class Review
+        {
+            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+        }
+
+        partial class Reviewed : Review
+        {
+            private void OK() {}
+            private void FAIL(string message = "") { Assert.Fail(message); }
+        }
+
+        private Reviewed Verify = new Reviewed();
     }
+
+/*
+// NB: The code generated below accepts all tests. *DON'T* just copy/paste this to the .Verify.cs file
+//     but review the tests one by one. This output is included in case a minor change is made to debug
+//     output produced by DebugView() and all hashes are invalidated. In that case, this output can be
+//     copied and pasted into .Verify.cs.
+
+namespace Tests.Microsoft.CodeAnalysis.CSharp
+{
+    partial class CompilerTests
+    {
+        partial class Reviewed
+        {
+            public override void CompilerTest_9D30_AA02 => OK();
+            public override void CompilerTest_3ECF_6910 => OK();
+            public override void CompilerTest_F51F_B7BA => OK();
+            public override void CompilerTest_E9F4_B7BA => OK();
+            public override void CompilerTest_00C1_B7BA => OK();
+            public override void CompilerTest_EDEC_B7BA => OK();
+            public override void CompilerTest_6271_B7BA => OK();
+            public override void CompilerTest_8E43_B7BA => OK();
+            public override void CompilerTest_191C_B7BA => OK();
+            public override void CompilerTest_6647_B7BA => OK();
+            public override void CompilerTest_AB76_B7BA => OK();
+            public override void CompilerTest_C598_B7BA => OK();
+            public override void CompilerTest_55B7_B7BA => OK();
+            public override void CompilerTest_7760_B7BA => OK();
+            public override void CompilerTest_4B4B_B7BA => OK();
+            public override void CompilerTest_22AA_B7BA => OK();
+            public override void CompilerTest_0FFA_B7BA => OK();
+            public override void CompilerTest_83AE_B7BA => OK();
+            public override void CompilerTest_1A0E_B7BA => OK();
+            public override void CompilerTest_B340_B7BA => OK();
+            public override void CompilerTest_A997_B7BA => OK();
+            public override void CompilerTest_CB0C_B7BA => OK();
+            public override void CompilerTest_CF40_B7BA => OK();
+            public override void CompilerTest_A8D0_B7BA => OK();
+            public override void CompilerTest_0BD6_B7BA => OK();
+            public override void CompilerTest_6102_B7BA => OK();
+            public override void CompilerTest_7381_B7BA => OK();
+            public override void CompilerTest_1245_B7BA => OK();
+            public override void CompilerTest_3464_B7BA => OK();
+            public override void CompilerTest_C90B_B7BA => OK();
+            public override void CompilerTest_6674_B7BA => OK();
+            public override void CompilerTest_AD48_B7BA => OK();
+            public override void CompilerTest_25E2_B7BA => OK();
+            public override void CompilerTest_DA7B_B7BA => OK();
+            public override void CompilerTest_34B8_B7BA => OK();
+            public override void CompilerTest_3958_B7BA => OK();
+            public override void CompilerTest_5598_B7BA => OK();
+            public override void CompilerTest_BB7C_B7BA => OK();
+            public override void CompilerTest_2CF2_B7BA => OK();
+            public override void CompilerTest_880F_B7BA => OK();
+            public override void CompilerTest_19B3_B7BA => OK();
+            public override void CompilerTest_0662_B7BA => OK();
+            public override void CompilerTest_F63E_B7BA => OK();
+            public override void CompilerTest_02EE_B7BA => OK();
+            public override void CompilerTest_1C02_B7BA => OK();
+            public override void CompilerTest_744C_B7BA => OK();
+            public override void CompilerTest_2156_B7BA => OK();
+            public override void CompilerTest_FCA9_B7BA => OK();
+            public override void CompilerTest_6832_B7BA => OK();
+            public override void CompilerTest_4E9F_B7BA => OK();
+            public override void CompilerTest_30E5_B7BA => OK();
+            public override void CompilerTest_1754_B7BA => OK();
+            public override void CompilerTest_AD7C_B7BA => OK();
+            public override void CompilerTest_3E56_B7BA => OK();
+        }
+    }
+}
+*/
 }
