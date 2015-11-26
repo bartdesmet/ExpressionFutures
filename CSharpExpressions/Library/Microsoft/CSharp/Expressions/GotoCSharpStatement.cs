@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a goto statement.
     /// </summary>
-    public abstract class GotoCSharpStatement : CSharpStatement
+    public abstract partial class GotoCSharpStatement : CSharpStatement
     {
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
@@ -28,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a goto statement with a label target.
     /// </summary>
-    public sealed class GotoLabelCSharpStatement : GotoCSharpStatement
+    public sealed partial class GotoLabelCSharpStatement : GotoCSharpStatement
     {
         internal GotoLabelCSharpStatement(LabelTarget target)
         {
@@ -81,7 +81,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a goto statement with a switch statement case target.
     /// </summary>
-    public sealed class GotoCaseCSharpStatement : GotoCSharpStatement
+    public sealed partial class GotoCaseCSharpStatement : GotoCSharpStatement
     {
         internal GotoCaseCSharpStatement(object value)
         {
@@ -127,7 +127,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a goto statement with a switch statement default case target.
     /// </summary>
-    public sealed class GotoDefaultCSharpStatement : GotoCSharpStatement
+    public sealed partial class GotoDefaultCSharpStatement : GotoCSharpStatement
     {
         internal GotoDefaultCSharpStatement()
         {

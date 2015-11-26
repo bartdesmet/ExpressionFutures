@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound lookup of a member.
     /// </summary>
-    public sealed class GetMemberDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class GetMemberDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal GetMemberDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Expression @object, string name, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)

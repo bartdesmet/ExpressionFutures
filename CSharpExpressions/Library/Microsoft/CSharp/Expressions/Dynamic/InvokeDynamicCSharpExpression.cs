@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound invocation of a delegate or lambda.
     /// </summary>
-    public sealed class InvokeDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class InvokeDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal InvokeDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Expression @object, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)

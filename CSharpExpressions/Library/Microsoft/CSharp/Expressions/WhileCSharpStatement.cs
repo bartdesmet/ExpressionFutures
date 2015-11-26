@@ -9,7 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a while loop.
     /// </summary>
-    public sealed class WhileCSharpStatement : ConditionalLoopCSharpStatement
+    public sealed partial class WhileCSharpStatement : ConditionalLoopCSharpStatement
     {
         internal WhileCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(test, body, breakLabel, continueLabel)

@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents indexing a property.
     /// </summary>
-    public sealed class IndexCSharpExpression : CSharpExpression
+    public sealed partial class IndexCSharpExpression : CSharpExpression
     {
         internal IndexCSharpExpression(Expression @object, PropertyInfo indexer, ReadOnlyCollection<ParameterAssignment> arguments)
         {

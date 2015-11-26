@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents conditional (null-propagating) access to a member.
     /// </summary>
-    public abstract class ConditionalMemberCSharpExpression : ConditionalAccessCSharpExpression
+    public abstract partial class ConditionalMemberCSharpExpression : ConditionalAccessCSharpExpression
     {
         internal ConditionalMemberCSharpExpression(Expression expression, MemberInfo member)
             : base(expression)

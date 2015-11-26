@@ -15,7 +15,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that awaits an asynchronous operation.
     /// </summary>
-    public class AwaitCSharpExpression : UnaryCSharpExpression
+    public partial class AwaitCSharpExpression : UnaryCSharpExpression
     {
         internal AwaitCSharpExpression(Expression operand, MethodInfo getAwaiterMethod, Type type)
             : base(operand)

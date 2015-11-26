@@ -22,7 +22,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an asynchronous lambda expression.
     /// </summary>
-    public abstract class AsyncLambdaCSharpExpression : CSharpExpression
+    public abstract partial class AsyncLambdaCSharpExpression : CSharpExpression
     {
         internal AsyncLambdaCSharpExpression(Type delegateType, Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {

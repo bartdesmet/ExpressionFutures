@@ -13,7 +13,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a lock statement.
     /// </summary>
-    public sealed class LockCSharpStatement : CSharpStatement
+    public sealed partial class LockCSharpStatement : CSharpStatement
     {
         private static MethodInfo s_enterMethod, s_exitMethod;
 

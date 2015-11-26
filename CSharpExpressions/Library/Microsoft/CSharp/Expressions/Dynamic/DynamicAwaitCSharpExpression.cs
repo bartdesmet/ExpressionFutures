@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that awaits an asynchronous operation using a dynamically typed operand.
     /// </summary>
-    public sealed class DynamicAwaitCSharpExpression : AwaitCSharpExpression
+    public sealed partial class DynamicAwaitCSharpExpression : AwaitCSharpExpression
     {
         internal DynamicAwaitCSharpExpression(Expression operand, Type context)
             : base(operand, null, typeof(object))

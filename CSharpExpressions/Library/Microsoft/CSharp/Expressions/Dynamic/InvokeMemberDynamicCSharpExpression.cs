@@ -19,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound invocation of a member.
     /// </summary>
-    public abstract class InvokeMemberDynamicCSharpExpression : DynamicCSharpExpression
+    public abstract partial class InvokeMemberDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal InvokeMemberDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, string name, ReadOnlyCollection<Type> typeArguments, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)

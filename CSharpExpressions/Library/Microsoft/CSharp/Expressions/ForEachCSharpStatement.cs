@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a foreach loop.
     /// </summary>
-    public abstract class ForEachCSharpStatement : LoopCSharpStatement
+    public abstract partial class ForEachCSharpStatement : LoopCSharpStatement
     {
         internal ForEachCSharpStatement(ParameterExpression variable, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(body, breakLabel, continueLabel)

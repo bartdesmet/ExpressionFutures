@@ -19,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a using statement.
     /// </summary>
-    public sealed class UsingCSharpStatement : CSharpStatement
+    public sealed partial class UsingCSharpStatement : CSharpStatement
     {
         internal UsingCSharpStatement(ParameterExpression variable, Expression resource, Expression body)
         {

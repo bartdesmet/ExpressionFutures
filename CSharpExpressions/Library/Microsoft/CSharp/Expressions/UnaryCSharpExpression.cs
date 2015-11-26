@@ -9,7 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that has a unary operator.
     /// </summary>
-    public abstract class UnaryCSharpExpression : CSharpExpression
+    public abstract partial class UnaryCSharpExpression : CSharpExpression
     {
         internal UnaryCSharpExpression(Expression operand)
         {

@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound indexing operation.
     /// </summary>
-    public sealed class GetIndexDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class GetIndexDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal GetIndexDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Expression @object, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)

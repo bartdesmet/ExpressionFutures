@@ -9,7 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for C# conditional loop statement nodes.
     /// </summary>
-    public abstract class ConditionalLoopCSharpStatement : LoopCSharpStatement
+    public abstract partial class ConditionalLoopCSharpStatement : LoopCSharpStatement
     {
         internal ConditionalLoopCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(body, breakLabel, continueLabel)

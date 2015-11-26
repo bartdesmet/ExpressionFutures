@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a call to either static or an instance method.
     /// </summary>
-    public sealed class MethodCallCSharpExpression : CSharpExpression
+    public sealed partial class MethodCallCSharpExpression : CSharpExpression
     {
         // TODO: optimized layout for cases where all arguments are specified in order?
         //       could allocate and swap the ROC<ParameterAssignment> in lieu of a ROC<Expression>

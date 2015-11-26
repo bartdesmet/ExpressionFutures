@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an argument passed to a dynamically bound operation.
     /// </summary>
-    public sealed class DynamicCSharpArgument
+    public sealed partial class DynamicCSharpArgument
     {
         internal DynamicCSharpArgument(CSharpArgumentInfoFlags flags, string name, Expression expression)
         {

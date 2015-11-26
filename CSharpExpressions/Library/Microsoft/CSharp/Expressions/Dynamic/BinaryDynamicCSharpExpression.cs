@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound binary operation.
     /// </summary>
-    public sealed class BinaryDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class BinaryDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal BinaryDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right)
             : base(context, binderFlags)

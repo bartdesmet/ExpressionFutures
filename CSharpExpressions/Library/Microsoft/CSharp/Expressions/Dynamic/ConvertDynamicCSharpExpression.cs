@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound conversion to a static type.
     /// </summary>
-    public sealed class ConvertDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class ConvertDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal ConvertDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Expression expression, Type type)
             : base(context, binderFlags)

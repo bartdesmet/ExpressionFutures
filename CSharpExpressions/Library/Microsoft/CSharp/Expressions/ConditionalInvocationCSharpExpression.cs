@@ -20,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that applies a delegate or lambda expression to a list of argument expressions.
     /// </summary>
-    public sealed class ConditionalInvocationCSharpExpression : ConditionalAccessCSharpExpression
+    public sealed partial class ConditionalInvocationCSharpExpression : ConditionalAccessCSharpExpression
     {
         private readonly MethodInfo _invokeMethod;
 

@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that applies a delegate or lambda expression to a list of argument expressions.
     /// </summary>
-    public sealed class InvocationCSharpExpression : CSharpExpression
+    public sealed partial class InvocationCSharpExpression : CSharpExpression
     {
         private readonly MethodInfo _invokeMethod;
 

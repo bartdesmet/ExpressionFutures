@@ -49,7 +49,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for conditional access (null-propagating) expressions.
     /// </summary>
-    public abstract class ConditionalAccessCSharpExpression : CSharpExpression
+    public abstract partial class ConditionalAccessCSharpExpression : CSharpExpression
     {
         /// <summary>
         /// Creates a new conditional access expression.

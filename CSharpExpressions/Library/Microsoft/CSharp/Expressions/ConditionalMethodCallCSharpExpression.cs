@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
-    public abstract class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression
+    public abstract partial class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression
     {
         internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
             : base(expression)

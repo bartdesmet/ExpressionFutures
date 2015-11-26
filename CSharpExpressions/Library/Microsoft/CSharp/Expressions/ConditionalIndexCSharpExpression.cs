@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) access to an indexer.
     /// </summary>
-    public sealed class ConditionalIndexCSharpExpression : ConditionalAccessCSharpExpression
+    public sealed partial class ConditionalIndexCSharpExpression : ConditionalAccessCSharpExpression
     {
         internal ConditionalIndexCSharpExpression(Expression expression, PropertyInfo indexer, ReadOnlyCollection<ParameterAssignment> arguments)
             : base(expression)

@@ -12,7 +12,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents assignment to a parameter of a method.
     /// </summary>
-    public sealed class ParameterAssignment
+    public sealed partial class ParameterAssignment
     {
         internal ParameterAssignment(ParameterInfo parameter, Expression expression)
         {

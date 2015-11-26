@@ -1,0 +1,1079 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+using System.Diagnostics;
+using System.Linq.Expressions;
+
+namespace Microsoft.CSharp.Expressions
+{
+    [DebuggerTypeProxy(typeof(AsyncLambdaCSharpExpressionProxy))]
+    partial class AsyncLambdaCSharpExpression
+    {
+    }
+
+    internal class AsyncLambdaCSharpExpressionProxy
+    {
+        private readonly AsyncLambdaCSharpExpression _node;
+
+        public AsyncLambdaCSharpExpressionProxy(AsyncLambdaCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Parameters => _node.Parameters;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpExpressionProxy))]
+    partial class CSharpExpression
+    {
+    }
+
+    internal class CSharpExpressionProxy
+    {
+        private readonly CSharpExpression _node;
+
+        public CSharpExpressionProxy(CSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpExpressionVisitorProxy))]
+    partial class CSharpExpressionVisitor
+    {
+    }
+
+    internal class CSharpExpressionVisitorProxy
+    {
+        private readonly CSharpExpressionVisitor _node;
+
+        public CSharpExpressionVisitorProxy(CSharpExpressionVisitor node)
+        {
+            _node = node;
+        }
+
+    }
+
+    [DebuggerTypeProxy(typeof(AwaitCSharpExpressionProxy))]
+    partial class AwaitCSharpExpression
+    {
+    }
+
+    internal class AwaitCSharpExpressionProxy
+    {
+        private readonly AwaitCSharpExpression _node;
+
+        public AwaitCSharpExpressionProxy(AwaitCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Reflection.MethodInfo GetAwaiterMethod => _node.GetAwaiterMethod;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.Expression Operand => _node.Operand;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalAccessCSharpExpressionProxy))]
+    partial class ConditionalAccessCSharpExpression
+    {
+    }
+
+    internal class ConditionalAccessCSharpExpressionProxy
+    {
+        private readonly ConditionalAccessCSharpExpression _node;
+
+        public ConditionalAccessCSharpExpressionProxy(ConditionalAccessCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalArrayIndexCSharpExpressionProxy))]
+    partial class ConditionalArrayIndexCSharpExpression
+    {
+    }
+
+    internal class ConditionalArrayIndexCSharpExpressionProxy
+    {
+        private readonly ConditionalArrayIndexCSharpExpression _node;
+
+        public ConditionalArrayIndexCSharpExpressionProxy(ConditionalArrayIndexCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Array => _node.Array;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Indexes => _node.Indexes;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalMethodCallCSharpExpressionProxy))]
+    partial class ConditionalMethodCallCSharpExpression
+    {
+    }
+
+    internal class ConditionalMethodCallCSharpExpressionProxy
+    {
+        private readonly ConditionalMethodCallCSharpExpression _node;
+
+        public ConditionalMethodCallCSharpExpressionProxy(ConditionalMethodCallCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Reflection.MethodInfo Method => _node.Method;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalMemberCSharpExpressionProxy))]
+    partial class ConditionalMemberCSharpExpression
+    {
+    }
+
+    internal class ConditionalMemberCSharpExpressionProxy
+    {
+        private readonly ConditionalMemberCSharpExpression _node;
+
+        public ConditionalMemberCSharpExpressionProxy(ConditionalMemberCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Reflection.MemberInfo Member => _node.Member;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(BlockCSharpExpressionProxy))]
+    partial class BlockCSharpExpression
+    {
+    }
+
+    internal class BlockCSharpExpressionProxy
+    {
+        private readonly BlockCSharpExpression _node;
+
+        public BlockCSharpExpressionProxy(BlockCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
+        public System.Linq.Expressions.LabelTarget ReturnLabel => _node.ReturnLabel;
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(GotoCSharpStatementProxy))]
+    partial class GotoCSharpStatement
+    {
+    }
+
+    internal class GotoCSharpStatementProxy
+    {
+        private readonly GotoCSharpStatement _node;
+
+        public GotoCSharpStatementProxy(GotoCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(GotoLabelCSharpStatementProxy))]
+    partial class GotoLabelCSharpStatement
+    {
+    }
+
+    internal class GotoLabelCSharpStatementProxy
+    {
+        private readonly GotoLabelCSharpStatement _node;
+
+        public GotoLabelCSharpStatementProxy(GotoLabelCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
+        public System.Linq.Expressions.LabelTarget Target => _node.Target;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(GotoCaseCSharpStatementProxy))]
+    partial class GotoCaseCSharpStatement
+    {
+    }
+
+    internal class GotoCaseCSharpStatementProxy
+    {
+        private readonly GotoCaseCSharpStatement _node;
+
+        public GotoCaseCSharpStatementProxy(GotoCaseCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
+        public System.Object Value => _node.Value;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(GotoDefaultCSharpStatementProxy))]
+    partial class GotoDefaultCSharpStatement
+    {
+    }
+
+    internal class GotoDefaultCSharpStatementProxy
+    {
+        private readonly GotoDefaultCSharpStatement _node;
+
+        public GotoDefaultCSharpStatementProxy(GotoDefaultCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpStatementProxy))]
+    partial class CSharpStatement
+    {
+    }
+
+    internal class CSharpStatementProxy
+    {
+        private readonly CSharpStatement _node;
+
+        public CSharpStatementProxy(CSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpSwitchCaseProxy))]
+    partial class CSharpSwitchCase
+    {
+    }
+
+    internal class CSharpSwitchCaseProxy
+    {
+        private readonly CSharpSwitchCase _node;
+
+        public CSharpSwitchCaseProxy(CSharpSwitchCase node)
+        {
+            _node = node;
+        }
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Object> TestValues => _node.TestValues;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
+    }
+
+    [DebuggerTypeProxy(typeof(ConvertDynamicCSharpExpressionProxy))]
+    partial class ConvertDynamicCSharpExpression
+    {
+    }
+
+    internal class ConvertDynamicCSharpExpressionProxy
+    {
+        private readonly ConvertDynamicCSharpExpression _node;
+
+        public ConvertDynamicCSharpExpressionProxy(ConvertDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(DynamicCSharpExpressionProxy))]
+    partial class DynamicCSharpExpression
+    {
+    }
+
+    internal class DynamicCSharpExpressionProxy
+    {
+        private readonly DynamicCSharpExpression _node;
+
+        public DynamicCSharpExpressionProxy(DynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(DynamicAwaitCSharpExpressionProxy))]
+    partial class DynamicAwaitCSharpExpression
+    {
+    }
+
+    internal class DynamicAwaitCSharpExpressionProxy
+    {
+        private readonly DynamicAwaitCSharpExpression _node;
+
+        public DynamicAwaitCSharpExpressionProxy(DynamicAwaitCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Reflection.MethodInfo GetAwaiterMethod => _node.GetAwaiterMethod;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.Expression Operand => _node.Operand;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(InvokeConstructorDynamicCSharpExpressionProxy))]
+    partial class InvokeConstructorDynamicCSharpExpression
+    {
+    }
+
+    internal class InvokeConstructorDynamicCSharpExpressionProxy
+    {
+        private readonly InvokeConstructorDynamicCSharpExpression _node;
+
+        public InvokeConstructorDynamicCSharpExpressionProxy(InvokeConstructorDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.DynamicCSharpArgument> Arguments => _node.Arguments;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(BinaryDynamicCSharpExpressionProxy))]
+    partial class BinaryDynamicCSharpExpression
+    {
+    }
+
+    internal class BinaryDynamicCSharpExpressionProxy
+    {
+        private readonly BinaryDynamicCSharpExpression _node;
+
+        public BinaryDynamicCSharpExpressionProxy(BinaryDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.ExpressionType OperationNodeType => _node.OperationNodeType;
+        public Microsoft.CSharp.Expressions.DynamicCSharpArgument Left => _node.Left;
+        public Microsoft.CSharp.Expressions.DynamicCSharpArgument Right => _node.Right;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(DynamicCSharpArgumentProxy))]
+    partial class DynamicCSharpArgument
+    {
+    }
+
+    internal class DynamicCSharpArgumentProxy
+    {
+        private readonly DynamicCSharpArgument _node;
+
+        public DynamicCSharpArgumentProxy(DynamicCSharpArgument node)
+        {
+            _node = node;
+        }
+
+        public Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags Flags => _node.Flags;
+        public System.String Name => _node.Name;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+    }
+
+    [DebuggerTypeProxy(typeof(GetIndexDynamicCSharpExpressionProxy))]
+    partial class GetIndexDynamicCSharpExpression
+    {
+    }
+
+    internal class GetIndexDynamicCSharpExpressionProxy
+    {
+        private readonly GetIndexDynamicCSharpExpression _node;
+
+        public GetIndexDynamicCSharpExpressionProxy(GetIndexDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.DynamicCSharpArgument> Arguments => _node.Arguments;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(GetMemberDynamicCSharpExpressionProxy))]
+    partial class GetMemberDynamicCSharpExpression
+    {
+    }
+
+    internal class GetMemberDynamicCSharpExpressionProxy
+    {
+        private readonly GetMemberDynamicCSharpExpression _node;
+
+        public GetMemberDynamicCSharpExpressionProxy(GetMemberDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.String Name => _node.Name;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.DynamicCSharpArgument> Arguments => _node.Arguments;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(InvokeDynamicCSharpExpressionProxy))]
+    partial class InvokeDynamicCSharpExpression
+    {
+    }
+
+    internal class InvokeDynamicCSharpExpressionProxy
+    {
+        private readonly InvokeDynamicCSharpExpression _node;
+
+        public InvokeDynamicCSharpExpressionProxy(InvokeDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.DynamicCSharpArgument> Arguments => _node.Arguments;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(InvokeMemberDynamicCSharpExpressionProxy))]
+    partial class InvokeMemberDynamicCSharpExpression
+    {
+    }
+
+    internal class InvokeMemberDynamicCSharpExpressionProxy
+    {
+        private readonly InvokeMemberDynamicCSharpExpression _node;
+
+        public InvokeMemberDynamicCSharpExpressionProxy(InvokeMemberDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Type Target => _node.Target;
+        public System.String Name => _node.Name;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Type> TypeArguments => _node.TypeArguments;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.DynamicCSharpArgument> Arguments => _node.Arguments;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(UnaryDynamicCSharpExpressionProxy))]
+    partial class UnaryDynamicCSharpExpression
+    {
+    }
+
+    internal class UnaryDynamicCSharpExpressionProxy
+    {
+        private readonly UnaryDynamicCSharpExpression _node;
+
+        public UnaryDynamicCSharpExpressionProxy(UnaryDynamicCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.ExpressionType OperationNodeType => _node.OperationNodeType;
+        public Microsoft.CSharp.Expressions.DynamicCSharpArgument Operand => _node.Operand;
+        public System.Type Context => _node.Context;
+        public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ForCSharpStatementProxy))]
+    partial class ForCSharpStatement
+    {
+    }
+
+    internal class ForCSharpStatementProxy
+    {
+        private readonly ForCSharpStatement _node;
+
+        public ForCSharpStatementProxy(ForCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Initializers => _node.Initializers;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Iterators => _node.Iterators;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Test => _node.Test;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ForEachCSharpStatementProxy))]
+    partial class ForEachCSharpStatement
+    {
+    }
+
+    internal class ForEachCSharpStatementProxy
+    {
+        private readonly ForEachCSharpStatement _node;
+
+        public ForEachCSharpStatementProxy(ForEachCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+        public System.Linq.Expressions.Expression Collection => _node.Collection;
+        public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalIndexCSharpExpressionProxy))]
+    partial class ConditionalIndexCSharpExpression
+    {
+    }
+
+    internal class ConditionalIndexCSharpExpressionProxy
+    {
+        private readonly ConditionalIndexCSharpExpression _node;
+
+        public ConditionalIndexCSharpExpressionProxy(ConditionalIndexCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Reflection.PropertyInfo Indexer => _node.Indexer;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalInvocationCSharpExpressionProxy))]
+    partial class ConditionalInvocationCSharpExpression
+    {
+    }
+
+    internal class ConditionalInvocationCSharpExpressionProxy
+    {
+        private readonly ConditionalInvocationCSharpExpression _node;
+
+        public ConditionalInvocationCSharpExpressionProxy(ConditionalInvocationCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(InvocationCSharpExpressionProxy))]
+    partial class InvocationCSharpExpression
+    {
+    }
+
+    internal class InvocationCSharpExpressionProxy
+    {
+        private readonly InvocationCSharpExpression _node;
+
+        public InvocationCSharpExpressionProxy(InvocationCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(IndexCSharpExpressionProxy))]
+    partial class IndexCSharpExpression
+    {
+    }
+
+    internal class IndexCSharpExpressionProxy
+    {
+        private readonly IndexCSharpExpression _node;
+
+        public IndexCSharpExpressionProxy(IndexCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Reflection.PropertyInfo Indexer => _node.Indexer;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ConditionalLoopCSharpStatementProxy))]
+    partial class ConditionalLoopCSharpStatement
+    {
+    }
+
+    internal class ConditionalLoopCSharpStatementProxy
+    {
+        private readonly ConditionalLoopCSharpStatement _node;
+
+        public ConditionalLoopCSharpStatementProxy(ConditionalLoopCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.Expression Test => _node.Test;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(NewCSharpExpressionProxy))]
+    partial class NewCSharpExpression
+    {
+    }
+
+    internal class NewCSharpExpressionProxy
+    {
+        private readonly NewCSharpExpression _node;
+
+        public NewCSharpExpressionProxy(NewCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Reflection.ConstructorInfo Constructor => _node.Constructor;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(NewMultidimensionalArrayInitCSharpExpressionProxy))]
+    partial class NewMultidimensionalArrayInitCSharpExpression
+    {
+    }
+
+    internal class NewMultidimensionalArrayInitCSharpExpressionProxy
+    {
+        private readonly NewMultidimensionalArrayInitCSharpExpression _node;
+
+        public NewMultidimensionalArrayInitCSharpExpressionProxy(NewMultidimensionalArrayInitCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Expressions => _node.Expressions;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(ParameterAssignmentProxy))]
+    partial class ParameterAssignment
+    {
+    }
+
+    internal class ParameterAssignmentProxy
+    {
+        private readonly ParameterAssignment _node;
+
+        public ParameterAssignmentProxy(ParameterAssignment node)
+        {
+            _node = node;
+        }
+
+        public System.Reflection.ParameterInfo Parameter => _node.Parameter;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+    }
+
+    [DebuggerTypeProxy(typeof(MethodCallCSharpExpressionProxy))]
+    partial class MethodCallCSharpExpression
+    {
+    }
+
+    internal class MethodCallCSharpExpressionProxy
+    {
+        private readonly MethodCallCSharpExpression _node;
+
+        public MethodCallCSharpExpressionProxy(MethodCallCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Reflection.MethodInfo Method => _node.Method;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.ParameterAssignment> Arguments => _node.Arguments;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(UnaryCSharpExpressionProxy))]
+    partial class UnaryCSharpExpression
+    {
+    }
+
+    internal class UnaryCSharpExpressionProxy
+    {
+        private readonly UnaryCSharpExpression _node;
+
+        public UnaryCSharpExpressionProxy(UnaryCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.Expression Operand => _node.Operand;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(LoopCSharpStatementProxy))]
+    partial class LoopCSharpStatement
+    {
+    }
+
+    internal class LoopCSharpStatementProxy
+    {
+        private readonly LoopCSharpStatement _node;
+
+        public LoopCSharpStatementProxy(LoopCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
+        public System.Type Type => _node.Type;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(DoCSharpStatementProxy))]
+    partial class DoCSharpStatement
+    {
+    }
+
+    internal class DoCSharpStatementProxy
+    {
+        private readonly DoCSharpStatement _node;
+
+        public DoCSharpStatementProxy(DoCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Test => _node.Test;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(LockCSharpStatementProxy))]
+    partial class LockCSharpStatement
+    {
+    }
+
+    internal class LockCSharpStatementProxy
+    {
+        private readonly LockCSharpStatement _node;
+
+        public LockCSharpStatementProxy(LockCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(SwitchCSharpStatementProxy))]
+    partial class SwitchCSharpStatement
+    {
+    }
+
+    internal class SwitchCSharpStatementProxy
+    {
+        private readonly SwitchCSharpStatement _node;
+
+        public SwitchCSharpStatementProxy(SwitchCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.Expression SwitchValue => _node.SwitchValue;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.CSharpSwitchCase> Cases => _node.Cases;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(UsingCSharpStatementProxy))]
+    partial class UsingCSharpStatement
+    {
+    }
+
+    internal class UsingCSharpStatementProxy
+    {
+        private readonly UsingCSharpStatement _node;
+
+        public UsingCSharpStatementProxy(UsingCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+        public System.Linq.Expressions.Expression Resource => _node.Resource;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(WhileCSharpStatementProxy))]
+    partial class WhileCSharpStatement
+    {
+    }
+
+    internal class WhileCSharpStatementProxy
+    {
+        private readonly WhileCSharpStatement _node;
+
+        public WhileCSharpStatementProxy(WhileCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView().ToString();
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Test => _node.Test;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
+        public System.Type Type => _node.Type;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+}

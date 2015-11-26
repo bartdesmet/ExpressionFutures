@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a for loop.
     /// </summary>
-    public sealed class ForCSharpStatement : ConditionalLoopCSharpStatement
+    public sealed partial class ForCSharpStatement : ConditionalLoopCSharpStatement
     {
         internal ForCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(test, body, breakLabel, continueLabel)

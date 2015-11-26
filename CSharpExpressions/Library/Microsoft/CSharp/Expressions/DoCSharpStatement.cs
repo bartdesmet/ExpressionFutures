@@ -9,7 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a do...while loop.
     /// </summary>
-    public sealed class DoCSharpStatement : ConditionalLoopCSharpStatement
+    public sealed partial class DoCSharpStatement : ConditionalLoopCSharpStatement
     {
         internal DoCSharpStatement(Expression body, Expression test, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(test, body, breakLabel, continueLabel)

@@ -50,7 +50,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a block with a return label.
     /// </summary>
-    public sealed class BlockCSharpExpression : CSharpExpression
+    public sealed partial class BlockCSharpExpression : CSharpExpression
     {
         // DESIGN: The name of the Statements property may be misguiding. If no label is present, we infer the type of
         //         the node from the last statement, expecting it to be non-void, thus treating it as an expression.

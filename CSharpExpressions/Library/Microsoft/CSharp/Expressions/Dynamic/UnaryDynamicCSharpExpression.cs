@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound unary operation.
     /// </summary>
-    public sealed class UnaryDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class UnaryDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal UnaryDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, ExpressionType unaryType, DynamicCSharpArgument operand)
             : base(context, binderFlags)

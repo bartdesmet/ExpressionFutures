@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for C# loop statement nodes.
     /// </summary>
-    public abstract class LoopCSharpStatement : CSharpStatement
+    public abstract partial class LoopCSharpStatement : CSharpStatement
     {
         internal LoopCSharpStatement(Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
         {

@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a dynamically bound invocation of a constructor.
     /// </summary>
-    public sealed class InvokeConstructorDynamicCSharpExpression : DynamicCSharpExpression
+    public sealed partial class InvokeConstructorDynamicCSharpExpression : DynamicCSharpExpression
     {
         internal InvokeConstructorDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Type type, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)

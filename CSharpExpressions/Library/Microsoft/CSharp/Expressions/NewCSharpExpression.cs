@@ -15,7 +15,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a constructor call.
     /// </summary>
-    public sealed class NewCSharpExpression : CSharpExpression
+    public sealed partial class NewCSharpExpression : CSharpExpression
     {
         internal NewCSharpExpression(ConstructorInfo constructor, ReadOnlyCollection<ParameterAssignment> arguments)
         {

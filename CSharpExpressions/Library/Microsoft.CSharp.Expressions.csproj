@@ -66,6 +66,11 @@
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Debugging.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\BlockCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\DebuggerTypeProxies.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
+    </Compile>
     <Compile Include="Microsoft\CSharp\Expressions\GotoCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpIndexInit.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
@@ -138,6 +143,10 @@
   <ItemGroup>
     <CodeAnalysisDictionary Include="CodeAnalysis.xml" />
     <Content Include="gaps.txt" />
+    <Content Include="Microsoft\CSharp\Expressions\DebuggerTypeProxies.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DebuggerTypeProxies.cs</LastGenOutput>
+    </Content>
     <Content Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DynamicCSharpExpression.Generated.cs</LastGenOutput>

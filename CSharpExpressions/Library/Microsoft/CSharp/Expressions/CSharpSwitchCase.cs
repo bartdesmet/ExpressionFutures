@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a switch case.
     /// </summary>
-    public sealed class CSharpSwitchCase
+    public sealed partial class CSharpSwitchCase
     {
         internal CSharpSwitchCase(ReadOnlyCollection<object> testValues, ReadOnlyCollection<Expression> statements)
         {

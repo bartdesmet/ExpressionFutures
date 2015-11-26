@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for C# statement nodes.
     /// </summary>
-    public abstract class CSharpStatement : CSharpExpression
+    public abstract partial class CSharpStatement : CSharpExpression
     {
         internal CSharpStatement()
         {

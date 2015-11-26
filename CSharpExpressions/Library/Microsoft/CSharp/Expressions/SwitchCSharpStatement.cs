@@ -24,7 +24,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a switch statement.
     /// </summary>
-    public sealed class SwitchCSharpStatement : CSharpStatement
+    public sealed partial class SwitchCSharpStatement : CSharpStatement
     {
         internal SwitchCSharpStatement(Expression switchValue, LabelTarget breakLabel, ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<CSharpSwitchCase> cases)
         {

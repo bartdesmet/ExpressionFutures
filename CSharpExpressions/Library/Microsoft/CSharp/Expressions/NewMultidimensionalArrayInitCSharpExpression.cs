@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents creating a new multi-dimensional array and possibly initializing the elements of the new array.
     /// </summary>
-    public sealed class NewMultidimensionalArrayInitCSharpExpression : CSharpExpression
+    public sealed partial class NewMultidimensionalArrayInitCSharpExpression : CSharpExpression
     {
         // NB: We don't expose the bounds as a ReadOnlyCollection<int>. The Type property can be used to discover the bounds.
 
