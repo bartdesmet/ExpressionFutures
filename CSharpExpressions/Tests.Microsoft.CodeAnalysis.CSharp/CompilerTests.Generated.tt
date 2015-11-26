@@ -1,0 +1,205 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)\Tests.Microsoft.CodeAnalysis.CSharp.Helpers\bin\$(Configuration)\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.dll" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Tests.Microsoft.CodeAnalysis.CSharp" #>
+<#@ output extension=".cs" #>
+<#
+var sw = Stopwatch.StartNew();
+var exprs = new[]
+{
+    "(Expression<Func<int>>)(() => 42)",
+    "(Expression<Func<string, int>>)(s => s.Length)",
+	
+	// NB: Right now, the below will fail, because we're running with C# 6.0 RTM compiler binaries.
+	//     Once we plug in our custom build of the compiler, we should be able to run this.
+
+	// Multi-dimensional array initializer
+	"(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })",
+
+	// Named/optional parameters
+	"(Expression<Func<int>>)(() => Math.Abs(value: 42))",
+	"(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
+	"(Expression<Func<List<int>, int>>)(xs => xs[index: 42])",
+	"(Expression<Action<Action<int>>>)(a => a(obj: 42))",
+
+	// Dynamic
+	"(Expression<Func<dynamic, dynamic>>)(x => -x)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
+	"(Expression<Func<dynamic, int>>)(x => (int)x)",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
+	"(Expression<Func<dynamic, dynamic>>)(x => x[1])",
+	"(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
+	"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
+
+	// Async/await
+	"(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
+	"(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))",
+	"(Expression<Func<dynamic, Task<int>>>)(async d => await d)",
+
+	// Conditional access
+	"(Expression<Func<string, int?>>)(s => s?.Length)",
+	"(Expression<Func<string, string>>)(s => s?.ToUpper())",
+	"(Expression<Func<string, char?>>)(s => s?[42])",
+	"(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))",
+
+	// Block
+	"(Expression<Action>)(() => { })",
+
+	// Empty
+	"(Expression<Action>)(() => { ; })",
+
+	// Return
+	"(Expression<Action>)(() => { return; })",
+	"(Expression<Func<int>>)(() => { return 42; })",
+
+	// Label/Goto
+	"(Expression<Action>)(() => { goto A; A: })",
+	"(Expression<Action>)(() => { A: goto A; })",
+
+	// While
+	"(Expression<Action>)(() => { while (true) Console.Write('.'); })",
+
+	// Do
+	"(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
+
+	// For
+	"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
+	"(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
+
+	// ForEach
+	"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+	"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
+	"(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+
+	// Using
+	"(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
+	"(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })",
+
+	// Lock
+	"(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
+
+	// Try
+	"(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })",
+	"(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })",
+	"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })",
+	"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })",
+	"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
+	"(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
+	"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
+
+	// Switch
+	"(Expression<Action<int>>)(x => { switch (x) {} })",
+	"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })",
+	"(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })",
+	"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })",
+	"(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })",
+	"(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
+	"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
+	"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
+};
+#>
+<#
+var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace("\"", "\"\"") + "\"");
+#>
+// NB: Running these tests can take a *VERY LONG* time because it invokes the C# compiler for every test
+//     case in order to obtain an expression tree object. Be patient when running these tests.
+
+// NB: These tests are generated from a list of expressions in the .tt file by invoking the C# compiler at
+//     text template processing time by the T4 engine. See TestUtilities for the helper functions that call
+//     into the compiler, load the generated assembly, extract the Expression objects through reflection on
+//     the generated type, and call DebugView() on those. The resulting DebugView string is emitted in this
+//     file as `expected` variables. The original expression is escaped and gets passed ot the GetDebugView
+//     helper method to obtain `actual`, which causes the C# compiler to run at test execution time, using
+//     the same helper library, thus obtaining the DebugView string again. This serves a number of goals:
+//
+//       1. At test generation time, a custom Roslyn build can be invoked to test the implicit conversion
+//          of a lambda expression to an expression tree, which involves the changes made to support the
+//          C# expression library in this solution. Any fatal compiler errors will come out at that time.
+//
+//       2. Reflection on the properties in the emitted class causes a deferred execution of the factory
+//          method calls generated by the Roslyn compiler for the implicit conversion of the lambda to an
+//          expression tree. Any exceptions thrown by the factory methods will show up as well during test
+//          generation time, allowing issues to be uncovered.
+//
+//       3. The string literals in the `expected` variables are inspectable by a human to assert that the
+//          compiler has indeed generated an expression representation that's homo-iconic to the original
+//          expression that was provided in the test.
+//
+//       4. Any changes to the compiler or the runtime library could cause regressions. Because template
+//          processing of the T4 only takes place upon editing the .tt file, the generated test code won't
+//          change. As such, any regression can cause test failures which allows to detect any changes to
+//          compiler or runtime library behavior.
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
+
+namespace Tests.Microsoft.CodeAnalysis.CSharp
+{
+    [TestClass]
+    public class CompilerTests
+    {
+<#
+var i = 0;
+foreach (var expr in exprs)
+{
+	var before = sw.Elapsed;
+#>
+        // Elapsed = <#=before#>
+<#
+	var dbgTest = default(string);
+	var ignore = default(string);
+	try
+	{
+        dbgTest = TestUtilities.GetDebugView(expr);
+	}
+	catch (InvalidProgramException ex)
+	{
+		dbgTest = "???";
+		ignore = ex.Message;
+	}
+
+	var cost = sw.Elapsed - before;
+	if (ignore != null)
+	{
+#>
+		[Ignore]
+<#
+		foreach (var line in ignore.Split('\n'))
+		{
+#>
+		// <#=line.TrimEnd('\r')#>
+<#
+		}
+	}
+#>
+        [TestMethod]
+        public void CompilerTest_<#=i#>()
+        {
+			// <PERF><#=cost.TotalMilliseconds#>ms</PERF>
+
+            // <#=expr#>
+            var actual = GetDebugView(<#=toEscapedString(expr)#>);
+            var expected = <#=toEscapedString(dbgTest)#>;
+            Assert.AreEqual(expected, actual);
+        }
+
+<#
+    i++;
+}
+#>
+    }
+}
