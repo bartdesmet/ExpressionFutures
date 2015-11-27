@@ -64,6 +64,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_93FA_3B2C() => OK();
             public override void CompilerTest_8FB3_87A6() => OK();
 
+            // Dynamic get member
+            public override void CompilerTest_AB76_B2ED() => OK();
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
