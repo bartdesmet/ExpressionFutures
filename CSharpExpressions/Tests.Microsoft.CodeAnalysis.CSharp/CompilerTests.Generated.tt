@@ -126,6 +126,7 @@ var exprs = new[]
 	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[y])",
 	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[a: y])",
 	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[a: y])",
+	"(Expression<Func<dynamic, int, dynamic, dynamic>>)((x, y, z) => x[a: ref y, b: out z])",
 	"(Expression<Func<string, dynamic, dynamic>>)((s, i) => s[i])",
 
 	// Dynamic invoke constructor

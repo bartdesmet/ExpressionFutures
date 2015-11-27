@@ -103,6 +103,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_F77D_040F() => OK(); // REVIEW: Is UseCompileTimeType expected?
             public override void CompilerTest_604B_718E() => OK(); // REVIEW: Is UseCompileTimeType expected?
             public override void CompilerTest_D83C_2D6C() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_447A_FCCE() => OK(); // REVIEW: Is UseCompileTimeType expected?
             public override void CompilerTest_F586_7D7E() => OK(); // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument (compile-time type comes to mind)?
 
             // Async/await
