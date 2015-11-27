@@ -37,6 +37,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6102_7F8E() => OK();
             public override void CompilerTest_AEF8_9F07() => OK();
             public override void CompilerTest_7381_AA02() => INCONCLUSIVE(); // TODO: Degenerates into an expression body
+
+            // Label/Goto
+            public override void CompilerTest_BBBC_A048() => INCONCLUSIVE(); // TODO: Misses label name
+            public override void CompilerTest_6FC7_B707() => INCONCLUSIVE(); // TODO: Misses label name
         }
     }
 }
