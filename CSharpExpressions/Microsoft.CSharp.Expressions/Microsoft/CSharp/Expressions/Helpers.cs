@@ -173,7 +173,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (typeof(IDisposable).IsAssignableFrom(type))
                 {
-                    return typeof(IDisposable).GetMethod("Dispose");
+                    return typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
                 }
             }
 

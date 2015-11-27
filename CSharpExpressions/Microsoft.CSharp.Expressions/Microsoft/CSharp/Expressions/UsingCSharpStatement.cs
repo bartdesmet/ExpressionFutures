@@ -87,19 +87,20 @@ namespace Microsoft.CSharp.Expressions
             var cleanup = default(Expression);
             var checkNull = false;
 
-            if (Resource.Type.IsValueType)
+            var resourceType = Resource.Type;
+            if (resourceType.IsValueType)
             {
                 var variableValue = default(Expression);
 
-                if (Resource.Type.IsNullableType())
+                if (resourceType.IsNullableType())
                 {
-                    variable = Variable ?? Expression.Parameter(Resource.Type);
+                    variable = Variable ?? Expression.Parameter(resourceType);
                     variableValue = Expression.Property(variable, "Value");
                     checkNull = true;
                 }
                 else
                 {
-                    variable = Variable ?? Expression.Parameter(Resource.Type);
+                    variable = Variable ?? Expression.Parameter(resourceType);
                     variableValue = variable;
                 }
 
@@ -109,7 +110,14 @@ namespace Microsoft.CSharp.Expressions
             else
             {
                 variable = Variable ?? Expression.Parameter(typeof(IDisposable));
-                cleanup = Expression.Call(variable, typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose)));
+
+                // NB: This optimization would be more effective if the expression compiler would emit a `call` instruction,
+                //     but the JIT may still optimize it if it realizes the `callvirt` to the resource is predicated by a
+                //     prior null check.
+                var variableType = variable.Type;
+                var disposeMethod = variableType.IsSealed ? variableType.FindDisposeMethod() : typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
+                cleanup = Expression.Call(variable, disposeMethod);
+
                 checkNull = true;
             }
 

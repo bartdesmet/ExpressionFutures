@@ -111,7 +111,7 @@ namespace Tests
                 new LogAndResult<object> { Log = { "B" } }
             );
 
-            foreach (var t in new[] { typeof(D2), typeof(D3), typeof(D4), typeof(D5) })
+            foreach (var t in new[] { typeof(D2), typeof(D3), typeof(D4), typeof(D5), typeof(D6) })
             {
                 AssertCompile((log, append) =>
                     CSharpExpression.Using(
@@ -320,6 +320,26 @@ namespace Tests
             }
 
             void IDisposable.Dispose()
+            {
+                _log("D");
+            }
+        }
+
+        sealed class D6 : IDisposable
+        {
+            private readonly Action<string> _log;
+
+            public D6(Action<string> log)
+            {
+                _log = log;
+            }
+
+            public void Do()
+            {
+                _log("B");
+            }
+
+            public void Dispose()
             {
                 _log("D");
             }
