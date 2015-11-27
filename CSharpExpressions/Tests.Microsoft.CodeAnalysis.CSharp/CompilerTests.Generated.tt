@@ -42,7 +42,7 @@ var exprs = new[]
 
     // Named parameters for constructors
     "(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
-	"(Expression<Func<TimeSpan>>)(() => new TimeSpan(seconds: 3, minutes: 2, hours: 1))",
+    "(Expression<Func<TimeSpan>>)(() => new TimeSpan(seconds: 3, minutes: 2, hours: 1))",
     // TODO: ref/out
 
     // Named parameters for indexers
@@ -89,8 +89,6 @@ var exprs = new[]
     "(Expression<Func<dynamic, string>>)(x => (string)x)",
     "(Expression<Func<dynamic, object>>)(x => (object)x)", // NB: gets erased
 
-    // TODO: support for dynamic set member and set index?
-
     // Dynamic get member
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
 
@@ -124,7 +122,7 @@ var exprs = new[]
     "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: ref d, b: out x))",
     "(Expression<Func<Func<int, int, int>, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
 
-    // Dynamic index
+    // Dynamic get index
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
     "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[a: 1])",
@@ -142,6 +140,11 @@ var exprs = new[]
     "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(x))",
     "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
     // TODO: ref/out
+
+    // TODO: support for dynamic set member and set index?
+    // !!!BUG!!! "(Expression<Action<dynamic>>)(x => { x[1] = 42; })",
+    // !!!BUG!!! "(Expression<Action<dynamic>>)(x => { x.Foo = 42; })",
+    // !!!BUG!!! "(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })",
 
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
@@ -198,14 +201,14 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { --x; })",
     "(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
     "(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
-	"(Expression<Action<int>>)(x => { checked { x += 1; } })",
-	"(Expression<Action<int>>)(x => { checked { x -= 1; } })",
+    "(Expression<Action<int>>)(x => { checked { x += 1; } })",
+    "(Expression<Action<int>>)(x => { checked { x -= 1; } })",
     "(Expression<Action<int>>)(x => { checked { x *= 1; } })",
-	"(Expression<Action<int>>)(x => { checked { x++; } })",
-	"(Expression<Action<int>>)(x => { checked { x--; } })",
-	"(Expression<Action<int>>)(x => { checked { ++x; } })",
-	"(Expression<Action<int>>)(x => { checked { --x; } })",
-	"(Expression<Action<int?>>)(x => { x += 1; })",
+    "(Expression<Action<int>>)(x => { checked { x++; } })",
+    "(Expression<Action<int>>)(x => { checked { x--; } })",
+    "(Expression<Action<int>>)(x => { checked { ++x; } })",
+    "(Expression<Action<int>>)(x => { checked { --x; } })",
+    "(Expression<Action<int?>>)(x => { x += 1; })",
     "/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
 
     // If

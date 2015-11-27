@@ -98,7 +98,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_DC58_213C() => OK(); // REVIEW: Is UseCompileTimeType expected?
             public override void CompilerTest_5C4C_E9EB() => OK(); // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument(compile-time type comes to mind)?
 
-            // Dynamic index
+            // Dynamic get index
             public override void CompilerTest_55B7_3EFA() => OK();
             public override void CompilerTest_7760_936B() => OK();
             public override void CompilerTest_7FDD_6511() => OK();
