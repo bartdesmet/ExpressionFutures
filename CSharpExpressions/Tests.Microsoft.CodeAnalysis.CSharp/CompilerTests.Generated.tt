@@ -87,7 +87,23 @@ var exprs = new[]
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
 
 	// Dynamic invoke member
-    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo())",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1, 2))",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(x: 1, y: 2))",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int>())",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int, bool>())",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y))",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y: y))",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(ref y))",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: ref y))",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(out y))",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: out y))",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y))",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y: y))",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(ref y))",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))",
 	// !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
 
 	// Dynamic index

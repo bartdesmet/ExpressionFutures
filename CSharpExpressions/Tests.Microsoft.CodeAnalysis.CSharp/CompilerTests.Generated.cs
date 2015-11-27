@@ -39,11 +39,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     [TestClass]
     public partial class CompilerTests
     {
-        // Elapsed = 00:00:00.8711735
+        // Elapsed = 00:00:00.9055578
         [TestMethod]
         public void CompilerTest_9D30_AA02()
         {
-            // <PERF>1895.4405ms</PERF>
+            // <PERF>1990.5641ms</PERF>
 
             // (Expression<Func<int>>)(() => 42)
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => 42)");
@@ -60,11 +60,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9D30_AA02() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:02.7675239
+        // Elapsed = 00:00:02.8967904
         [TestMethod]
         public void CompilerTest_3ECF_6910()
         {
-            // <PERF>254.7679ms</PERF>
+            // <PERF>239.3456ms</PERF>
 
             // (Expression<Func<string, int>>)(s => s.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int>>)(s => s.Length)");
@@ -87,11 +87,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3ECF_6910() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.0223628
+        // Elapsed = 00:00:03.1362042
         [TestMethod]
         public void CompilerTest_F51F_71B6()
         {
-            // <PERF>33.3316ms</PERF>
+            // <PERF>24.9431ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })");
@@ -112,11 +112,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F51F_71B6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.0557591
+        // Elapsed = 00:00:03.1770185
         [TestMethod]
         public void CompilerTest_E70E_4B35()
         {
-            // <PERF>21.8974ms</PERF>
+            // <PERF>25.9735ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })");
@@ -138,11 +138,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E70E_4B35() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.0777074
+        // Elapsed = 00:00:03.2030424
         [TestMethod]
         public void CompilerTest_59A0_FFB9()
         {
-            // <PERF>38.4585ms</PERF>
+            // <PERF>22.9193ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[2, 1] { { 42 }, { 43 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[2, 1] { { 42 }, { 43 } })");
@@ -164,11 +164,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_59A0_FFB9() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.1162351
+        // Elapsed = 00:00:03.2260322
         [TestMethod]
         public void CompilerTest_789A_453A()
         {
-            // <PERF>26.475ms</PERF>
+            // <PERF>24.6641ms</PERF>
 
             // (Expression<Func<int[,]>>)(() => new int[2, 2] { { 41, 42 }, { 43, 44 } })
             var actual = GetDebugView(@"(Expression<Func<int[,]>>)(() => new int[2, 2] { { 41, 42 }, { 43, 44 } })");
@@ -192,11 +192,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_789A_453A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.1427913
+        // Elapsed = 00:00:03.2507628
         [TestMethod]
         public void CompilerTest_E9F4_7C15()
         {
-            // <PERF>35.4932ms</PERF>
+            // <PERF>26.2184ms</PERF>
 
             // (Expression<Func<int>>)(() => Math.Abs(value: 42))
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => Math.Abs(value: 42))");
@@ -221,11 +221,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E9F4_7C15() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.1783292
+        // Elapsed = 00:00:03.2770464
         [TestMethod]
         public void CompilerTest_4EB1_83FD()
         {
-            // <PERF>27.9913ms</PERF>
+            // <PERF>42.2994ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s.Substring(startIndex: 42))
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42))");
@@ -255,11 +255,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4EB1_83FD() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2064040
+        // Elapsed = 00:00:03.3194020
         [TestMethod]
         public void CompilerTest_C437_AA4C()
         {
-            // <PERF>37.479ms</PERF>
+            // <PERF>50.8848ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s.Substring(startIndex: 42, length: 43))
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42, length: 43))");
@@ -294,11 +294,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C437_AA4C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2439370
+        // Elapsed = 00:00:03.3703917
         [TestMethod]
         public void CompilerTest_4C39_BCFC()
         {
-            // <PERF>25.6481ms</PERF>
+            // <PERF>26.7579ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s.Substring(length: 43, startIndex: 42))
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s.Substring(length: 43, startIndex: 42))");
@@ -333,11 +333,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4C39_BCFC() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2696628
+        // Elapsed = 00:00:03.3972063
         [TestMethod]
         public void CompilerTest_EDEC_D0C9()
         {
-            // <PERF>26.143ms</PERF>
+            // <PERF>24.0728ms</PERF>
 
             // (Expression<Func<List<int>, int>>)(xs => xs[index: 42])
             var actual = GetDebugView(@"(Expression<Func<List<int>, int>>)(xs => xs[index: 42])");
@@ -367,11 +367,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EDEC_D0C9() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.2958825
+        // Elapsed = 00:00:03.4213291
         [TestMethod]
         public void CompilerTest_6271_EABC()
         {
-            // <PERF>39.6951ms</PERF>
+            // <PERF>31.5328ms</PERF>
 
             // (Expression<Action<Action<int>>>)(a => a(obj: 42))
             var actual = GetDebugView(@"(Expression<Action<Action<int>>>)(a => a(obj: 42))");
@@ -401,11 +401,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6271_EABC() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.3356325
+        // Elapsed = 00:00:03.4529168
         [TestMethod]
         public void CompilerTest_053A_671C()
         {
-            // <PERF>25.6378ms</PERF>
+            // <PERF>28.3488ms</PERF>
 
             // (Expression<Action<Action<string, int, bool>>>)(a => a(arg2: 42, arg1: "foo", arg3: false))
             var actual = GetDebugView(@"(Expression<Action<Action<string, int, bool>>>)(a => a(arg2: 42, arg1: ""foo"", arg3: false))");
@@ -445,11 +445,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_053A_671C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.3613734
+        // Elapsed = 00:00:03.4813539
         [TestMethod]
         public void CompilerTest_B473_5F62()
         {
-            // <PERF>26.1372ms</PERF>
+            // <PERF>23.8274ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => +x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => +x)");
@@ -476,11 +476,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B473_5F62() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.3875700
+        // Elapsed = 00:00:03.5052353
         [TestMethod]
         public void CompilerTest_8E43_6B25()
         {
-            // <PERF>49.2765ms</PERF>
+            // <PERF>42.0951ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => -x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => -x)");
@@ -507,11 +507,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8E43_6B25() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.4369130
+        // Elapsed = 00:00:03.5474004
         [TestMethod]
         public void CompilerTest_CE27_211A()
         {
-            // <PERF>23.7939ms</PERF>
+            // <PERF>34.0461ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => !x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => !x)");
@@ -538,11 +538,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CE27_211A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.4607654
+        // Elapsed = 00:00:03.5815067
         [TestMethod]
         public void CompilerTest_EA86_0AAE()
         {
-            // <PERF>24.2241ms</PERF>
+            // <PERF>22.4802ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => ~x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => ~x)");
@@ -569,11 +569,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EA86_0AAE() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.4850386
+        // Elapsed = 00:00:03.6040364
         [TestMethod]
         public void CompilerTest_7005_E877()
         {
-            // <PERF>27.1912ms</PERF>
+            // <PERF>23.2728ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => checked(-x))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => checked(-x))");
@@ -600,11 +600,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7005_E877() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.5123003
+        // Elapsed = 00:00:03.6273926
         [TestMethod]
         public void CompilerTest_775D_E1DB()
         {
-            // <PERF>26.596ms</PERF>
+            // <PERF>27.0886ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a + b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a + b)");
@@ -639,11 +639,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_775D_E1DB() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.5389757
+        // Elapsed = 00:00:03.6545357
         [TestMethod]
         public void CompilerTest_84B6_6376()
         {
-            // <PERF>28.8437ms</PERF>
+            // <PERF>23.0063ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a - b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a - b)");
@@ -678,11 +678,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_84B6_6376() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.5678944
+        // Elapsed = 00:00:03.6776152
         [TestMethod]
         public void CompilerTest_754C_C121()
         {
-            // <PERF>55.0759ms</PERF>
+            // <PERF>39.8807ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a * b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a * b)");
@@ -717,11 +717,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_754C_C121() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.6230475
+        // Elapsed = 00:00:03.7175553
         [TestMethod]
         public void CompilerTest_6E28_DBCA()
         {
-            // <PERF>25.9752ms</PERF>
+            // <PERF>28.8517ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a / b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a / b)");
@@ -756,11 +756,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6E28_DBCA() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.6491079
+        // Elapsed = 00:00:03.7464632
         [TestMethod]
         public void CompilerTest_A085_4C3D()
         {
-            // <PERF>24.8253ms</PERF>
+            // <PERF>25.5723ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a % b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a % b)");
@@ -795,11 +795,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A085_4C3D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.6739858
+        // Elapsed = 00:00:03.7720859
         [TestMethod]
         public void CompilerTest_DE17_40A5()
         {
-            // <PERF>29.4564ms</PERF>
+            // <PERF>25.4709ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a & b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a & b)");
@@ -834,11 +834,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DE17_40A5() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.7035074
+        // Elapsed = 00:00:03.7976166
         [TestMethod]
         public void CompilerTest_5CD0_0AE2()
         {
-            // <PERF>23.6846ms</PERF>
+            // <PERF>33.9689ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a | b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a | b)");
@@ -873,11 +873,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CD0_0AE2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.7272442
+        // Elapsed = 00:00:03.8316796
         [TestMethod]
         public void CompilerTest_0C84_0C91()
         {
-            // <PERF>24.2875ms</PERF>
+            // <PERF>33.2147ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a ^ b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a ^ b)");
@@ -912,11 +912,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0C84_0C91() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.7516071
+        // Elapsed = 00:00:03.8649555
         [TestMethod]
         public void CompilerTest_FF88_BC1C()
         {
-            // <PERF>55.1032ms</PERF>
+            // <PERF>50.6482ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a < b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a < b)");
@@ -951,11 +951,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FF88_BC1C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.8067643
+        // Elapsed = 00:00:03.9156756
         [TestMethod]
         public void CompilerTest_F2A3_DCF3()
         {
-            // <PERF>22.3963ms</PERF>
+            // <PERF>28.0444ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a <= b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a <= b)");
@@ -990,11 +990,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F2A3_DCF3() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.8292132
+        // Elapsed = 00:00:03.9438686
         [TestMethod]
         public void CompilerTest_3DBC_7187()
         {
-            // <PERF>24.8235ms</PERF>
+            // <PERF>24.1389ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a > b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a > b)");
@@ -1029,11 +1029,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3DBC_7187() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.8540902
+        // Elapsed = 00:00:03.9680611
         [TestMethod]
         public void CompilerTest_5002_22B5()
         {
-            // <PERF>27.0391ms</PERF>
+            // <PERF>25.1536ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >= b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >= b)");
@@ -1068,11 +1068,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5002_22B5() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.8812092
+        // Elapsed = 00:00:03.9932982
         [TestMethod]
         public void CompilerTest_1A1B_4504()
         {
-            // <PERF>31.2717ms</PERF>
+            // <PERF>23.9528ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a == b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a == b)");
@@ -1107,11 +1107,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A1B_4504() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.9125567
+        // Elapsed = 00:00:04.0173264
         [TestMethod]
         public void CompilerTest_8DF7_1EFB()
         {
-            // <PERF>28.3988ms</PERF>
+            // <PERF>27.2122ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a != b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a != b)");
@@ -1146,11 +1146,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8DF7_1EFB() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:03.9410153
+        // Elapsed = 00:00:04.0446114
         [TestMethod]
         public void CompilerTest_5F46_EC7B()
         {
-            // <PERF>83.0053ms</PERF>
+            // <PERF>44.0554ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a << b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a << b)");
@@ -1185,11 +1185,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5F46_EC7B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.0240808
+        // Elapsed = 00:00:04.0887386
         [TestMethod]
         public void CompilerTest_106F_B1CC()
         {
-            // <PERF>21.137ms</PERF>
+            // <PERF>27.1605ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >> b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >> b)");
@@ -1224,11 +1224,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_106F_B1CC() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.0452736
+        // Elapsed = 00:00:04.1159731
         [TestMethod]
         public void CompilerTest_2275_966C()
         {
-            // <PERF>26.0587ms</PERF>
+            // <PERF>25.3652ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a && b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a && b)");
@@ -1263,11 +1263,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2275_966C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.0714139
+        // Elapsed = 00:00:04.1413896
         [TestMethod]
         public void CompilerTest_FB20_C3F6()
         {
-            // <PERF>31.2459ms</PERF>
+            // <PERF>26.0538ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a || b)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a || b)");
@@ -1302,11 +1302,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FB20_C3F6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.1027530
+        // Elapsed = 00:00:04.1675001
         [TestMethod]
         public void CompilerTest_191C_CEEB()
         {
-            // <PERF>24.79ms</PERF>
+            // <PERF>27.4554ms</PERF>
 
             // (Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))");
@@ -1341,11 +1341,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_191C_CEEB() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.1276189
+        // Elapsed = 00:00:04.1950264
         [TestMethod]
         public void CompilerTest_6647_1258()
         {
-            // <PERF>27.4835ms</PERF>
+            // <PERF>24.5709ms</PERF>
 
             // (Expression<Func<dynamic, int>>)(x => (int)x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => (int)x)");
@@ -1368,11 +1368,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6647_1258() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.1551600
+        // Elapsed = 00:00:04.2196607
         [TestMethod]
         public void CompilerTest_93FA_3B2C()
         {
-            // <PERF>54.0045ms</PERF>
+            // <PERF>47.8507ms</PERF>
 
             // (Expression<Func<dynamic, string>>)(x => (string)x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, string>>)(x => (string)x)");
@@ -1395,11 +1395,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_93FA_3B2C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.2092162
+        // Elapsed = 00:00:04.2675944
         [TestMethod]
         public void CompilerTest_8FB3_87A6()
         {
-            // <PERF>23.9644ms</PERF>
+            // <PERF>26.9007ms</PERF>
 
             // (Expression<Func<dynamic, object>>)(x => (object)x)
             var actual = GetDebugView(@"(Expression<Func<dynamic, object>>)(x => (object)x)");
@@ -1422,11 +1422,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8FB3_87A6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.2333060
+        // Elapsed = 00:00:04.2945795
         [TestMethod]
         public void CompilerTest_AB76_B2ED()
         {
-            // <PERF>24.479ms</PERF>
+            // <PERF>27.8472ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo)
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo)");
@@ -1449,14 +1449,42 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AB76_B2ED() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.2578390
+        // Elapsed = 00:00:04.3225048
         [TestMethod]
-        public void CompilerTest_C598_D480()
+        public void CompilerTest_14B0_8F1F()
         {
-            // <PERF>24.5994ms</PERF>
+            // <PERF>31.7528ms</PERF>
 
-            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))
-            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))");
+            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo())
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo())");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments />
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_14B0_8F1F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_14B0_8F1F() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.3543290
+        [TestMethod]
+        public void CompilerTest_ABB7_09A0()
+        {
+            // <PERF>26.1925ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo(1, 2))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1, 2))");
             var expected = @"
 <Lambda Type=""System.Func`2[System.Object,System.Object]"">
   <Parameters>
@@ -1473,21 +1501,541 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             <Constant Type=""System.Int32"" Value=""1"" />
           </Expression>
         </DynamicCSharpArgument>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""2"" />
+          </Expression>
+        </DynamicCSharpArgument>
       </Arguments>
     </CSharpDynamicInvokeMember>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_C598_D480();
+            Verify.CompilerTest_ABB7_09A0();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C598_D480() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_ABB7_09A0() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.2825169
+        // Elapsed = 00:00:04.3805840
+        [TestMethod]
+        public void CompilerTest_647C_869C()
+        {
+            // <PERF>24.8716ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo(x: 1, y: 2))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(x: 1, y: 2))");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""x"" Flags=""UseCompileTimeType, Constant, NamedArgument"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Expression>
+        </DynamicCSharpArgument>
+        <DynamicCSharpArgument Name=""y"" Flags=""UseCompileTimeType, Constant, NamedArgument"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""2"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_647C_869C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_647C_869C() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.4055109
+        [TestMethod]
+        public void CompilerTest_A62F_E0EA()
+        {
+            // <PERF>71.6059ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo<int>())
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int>())");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" TypeArguments=""System.Int32"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments />
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_A62F_E0EA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A62F_E0EA() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.4772435
+        [TestMethod]
+        public void CompilerTest_6E0D_C117()
+        {
+            // <PERF>23.076ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo<int, bool>())
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int, bool>())");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" TypeArguments=""System.Int32, System.Boolean"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments />
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_6E0D_C117();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6E0D_C117() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.5003677
+        [TestMethod]
+        public void CompilerTest_9AE8_6C9F()
+        {
+            // <PERF>24.9903ms</PERF>
+
+            // (Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Int32,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType"">
+          <Expression>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_9AE8_6C9F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9AE8_6C9F() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.5254263
+        [TestMethod]
+        public void CompilerTest_2069_9E36()
+        {
+            // <PERF>29.1659ms</PERF>
+
+            // (Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y: y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y: y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Int32,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""y"" Flags=""UseCompileTimeType, NamedArgument"">
+          <Expression>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2069_9E36();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2069_9E36() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.5546426
+        [TestMethod]
+        public void CompilerTest_4C1E_1B45()
+        {
+            // <PERF>24.4803ms</PERF>
+
+            // (Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(ref y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(ref y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Int32,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, IsRef"">
+          <Expression>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_4C1E_1B45();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4C1E_1B45() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.5791737
+        [TestMethod]
+        public void CompilerTest_5D0B_BB53()
+        {
+            // <PERF>27.5987ms</PERF>
+
+            // (Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: ref y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: ref y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Int32,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""a"" Flags=""UseCompileTimeType, NamedArgument, IsRef"">
+          <Expression>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5D0B_BB53();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5D0B_BB53() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.6068541
+        [TestMethod]
+        public void CompilerTest_644B_2D72()
+        {
+            // <PERF>44.6078ms</PERF>
+
+            // (Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(out y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(out y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Int32,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, IsOut"">
+          <Expression>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_644B_2D72();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_644B_2D72() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.6515137
+        [TestMethod]
+        public void CompilerTest_3B77_970B()
+        {
+            // <PERF>22.7974ms</PERF>
+
+            // (Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: out y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: out y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Int32,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""a"" Flags=""UseCompileTimeType, NamedArgument, IsOut"">
+          <Expression>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_3B77_970B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3B77_970B() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.6743607
+        [TestMethod]
+        public void CompilerTest_3418_D0D2()
+        {
+            // <PERF>24.0005ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_3418_D0D2();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3418_D0D2() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.6984148
+        [TestMethod]
+        public void CompilerTest_0946_2AB1()
+        {
+            // <PERF>23.0438ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y: y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y: y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""y"" Flags=""NamedArgument"">
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_0946_2AB1();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0946_2AB1() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.7215121
+        [TestMethod]
+        public void CompilerTest_1B29_3F4D()
+        {
+            // <PERF>25.8378ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(ref y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(ref y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, IsRef"">
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_1B29_3F4D();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1B29_3F4D() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.7474093
+        [TestMethod]
+        public void CompilerTest_EEB8_ED24()
+        {
+            // <PERF>24.1589ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""a"" Flags=""UseCompileTimeType, NamedArgument, IsRef"">
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_EEB8_ED24();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EEB8_ED24() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.7716463
+        [TestMethod]
+        public void CompilerTest_7349_817B()
+        {
+            // <PERF>42.648ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Flags=""UseCompileTimeType, IsOut"">
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7349_817B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7349_817B() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.8143679
+        [TestMethod]
+        public void CompilerTest_76D5_13EF()
+        {
+            // <PERF>47.0809ms</PERF>
+
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument Name=""a"" Flags=""UseCompileTimeType, NamedArgument, IsOut"">
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_76D5_13EF();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_76D5_13EF() => INCONCLUSIVE(); }
+
+        // Elapsed = 00:00:04.8615417
         [TestMethod]
         public void CompilerTest_55B7_3EFA()
         {
-            // <PERF>27.9941ms</PERF>
+            // <PERF>25.2317ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])");
@@ -1521,11 +2069,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55B7_3EFA() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.3105801
+        // Elapsed = 00:00:04.8868649
         [TestMethod]
         public void CompilerTest_7760_936B()
         {
-            // <PERF>24.4839ms</PERF>
+            // <PERF>21.7202ms</PERF>
 
             // (Expression<Func<dynamic, dynamic>>)(x => x[1])
             var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x[1])");
@@ -1555,11 +2103,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7760_936B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.3351340
+        // Elapsed = 00:00:04.9086588
         [TestMethod]
         public void CompilerTest_22AA_5962()
         {
-            // <PERF>58.7053ms</PERF>
+            // <PERF>24.7043ms</PERF>
 
             // (Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))
             var actual = GetDebugView(@"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))");
@@ -1586,11 +2134,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_22AA_5962() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.3939040
+        // Elapsed = 00:00:04.9334447
         [TestMethod]
         public void CompilerTest_0FFA_7AF2()
         {
-            // <PERF>26.1711ms</PERF>
+            // <PERF>30.676ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t)");
@@ -1627,11 +2175,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_7AF2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.4201358
+        // Elapsed = 00:00:04.9642135
         [TestMethod]
         public void CompilerTest_83AE_26E4()
         {
-            // <PERF>25.3402ms</PERF>
+            // <PERF>70.7553ms</PERF>
 
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))");
@@ -1675,11 +2223,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_26E4() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.4455586
+        // Elapsed = 00:00:05.0350581
         [TestMethod]
         public void CompilerTest_4DC5_243C()
         {
-            // <PERF>24.7342ms</PERF>
+            // <PERF>27.9931ms</PERF>
 
             // (Expression<Func<dynamic, Task<dynamic>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<dynamic>>>)(async d => await d)");
@@ -1716,11 +2264,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4DC5_243C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.4703682
+        // Elapsed = 00:00:05.0631347
         [TestMethod]
         public void CompilerTest_5DFD_243C()
         {
-            // <PERF>27.8601ms</PERF>
+            // <PERF>26.0997ms</PERF>
 
             // (Expression<Func<dynamic, Task<object>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<object>>>)(async d => await d)");
@@ -1757,11 +2305,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5DFD_243C() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.4983752
+        // Elapsed = 00:00:05.0893223
         [TestMethod]
         public void CompilerTest_1A0E_F439()
         {
-            // <PERF>26.1465ms</PERF>
+            // <PERF>26.1095ms</PERF>
 
             // (Expression<Func<dynamic, Task<int>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<int>>>)(async d => await d)");
@@ -1802,11 +2350,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_F439() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.5245838
+        // Elapsed = 00:00:05.1155171
         [TestMethod]
         public void CompilerTest_B340_DAC2()
         {
-            // <PERF>82.443ms</PERF>
+            // <PERF>26.2715ms</PERF>
 
             // (Expression<Func<string, int?>>)(s => s?.Length)
             var actual = GetDebugView(@"(Expression<Func<string, int?>>)(s => s?.Length)");
@@ -1829,11 +2377,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B340_DAC2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.6070906
+        // Elapsed = 00:00:05.1418461
         [TestMethod]
         public void CompilerTest_A997_3059()
         {
-            // <PERF>22.1941ms</PERF>
+            // <PERF>28.2257ms</PERF>
 
             // (Expression<Func<string, string>>)(s => s?.ToUpper())
             var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s?.ToUpper())");
@@ -1857,11 +2405,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A997_3059() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.6293436
+        // Elapsed = 00:00:05.1701267
         [TestMethod]
         public void CompilerTest_CF40_3016()
         {
-            // <PERF>24.9564ms</PERF>
+            // <PERF>47.9052ms</PERF>
 
             // (Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))
             var actual = GetDebugView(@"(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))");
@@ -1891,11 +2439,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_3016() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.6543710
+        // Elapsed = 00:00:05.2180894
         [TestMethod]
         public void CompilerTest_A8D0_49C3()
         {
-            // <PERF>30.2293ms</PERF>
+            // <PERF>28.3876ms</PERF>
 
             // (Expression<Action>)(() => { })
             var actual = GetDebugView(@"(Expression<Action>)(() => { })");
@@ -1917,11 +2465,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A8D0_49C3() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.6846712
+        // Elapsed = 00:00:05.2465382
         [TestMethod]
         public void CompilerTest_197A_9EF8()
         {
-            // <PERF>35.3496ms</PERF>
+            // <PERF>23.8252ms</PERF>
 
             // (Expression<Action>)(() => { int x; x = 5; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { int x; x = 5; })");
@@ -1955,11 +2503,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_197A_9EF8() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.7200819
+        // Elapsed = 00:00:05.2704151
         [TestMethod]
         public void CompilerTest_27AA_544E()
         {
-            // <PERF>74.2508ms</PERF>
+            // <PERF>94.411ms</PERF>
 
             // (Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })");
@@ -2020,11 +2568,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_27AA_544E() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.7944268
+        // Elapsed = 00:00:05.3648966
         [TestMethod]
         public void CompilerTest_0BD6_C135()
         {
-            // <PERF>50.6273ms</PERF>
+            // <PERF>21.3766ms</PERF>
 
             // (Expression<Action>)(() => { ; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { ; })");
@@ -2048,11 +2596,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0BD6_C135() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.8451037
+        // Elapsed = 00:00:05.3863209
         [TestMethod]
         public void CompilerTest_7F95_E445()
         {
-            // <PERF>25.8212ms</PERF>
+            // <PERF>23.0251ms</PERF>
 
             // (Expression<Action>)(() => { ;; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { ;; })");
@@ -2077,11 +2625,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7F95_E445() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.8710044
+        // Elapsed = 00:00:05.4094120
         [TestMethod]
         public void CompilerTest_6102_7F8E()
         {
-            // <PERF>48.5941ms</PERF>
+            // <PERF>42.0379ms</PERF>
 
             // (Expression<Action>)(() => { return; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { return; })");
@@ -2109,11 +2657,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6102_7F8E() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.9197431
+        // Elapsed = 00:00:05.4515048
         [TestMethod]
         public void CompilerTest_AEF8_9F07()
         {
-            // <PERF>30.3967ms</PERF>
+            // <PERF>24.5115ms</PERF>
 
             // (Expression<Func<int>>)(() => { int x = 42; return x; })
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => { int x = 42; return x; })");
@@ -2155,11 +2703,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AEF8_9F07() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.9502210
+        // Elapsed = 00:00:05.4760922
         [TestMethod]
         public void CompilerTest_7381_AA02()
         {
-            // <PERF>21.3128ms</PERF>
+            // <PERF>24.661ms</PERF>
 
             // (Expression<Func<int>>)(() => { return 42; })
             var actual = GetDebugView(@"(Expression<Func<int>>)(() => { return 42; })");
@@ -2176,11 +2724,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_AA02() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:04.9716204
+        // Elapsed = 00:00:05.5008010
         [TestMethod]
         public void CompilerTest_BBBC_A048()
         {
-            // <PERF>31.3029ms</PERF>
+            // <PERF>27.5152ms</PERF>
 
             // (Expression<Action>)(() => { goto A; A: Console.Write('A'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { goto A; A: Console.Write('A'); })");
@@ -2214,11 +2762,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BBBC_A048() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.0030019
+        // Elapsed = 00:00:05.5283903
         [TestMethod]
         public void CompilerTest_6FC7_B707()
         {
-            // <PERF>55.9697ms</PERF>
+            // <PERF>29.8316ms</PERF>
 
             // (Expression<Action>)(() => { A: Console.Write('A'); goto A; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { A: Console.Write('A'); goto A; })");
@@ -2249,11 +2797,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6FC7_B707() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.0590386
+        // Elapsed = 00:00:05.5582701
         [TestMethod]
         public void CompilerTest_C90B_9C05()
         {
-            // <PERF>27.9306ms</PERF>
+            // <PERF>29.904ms</PERF>
 
             // (Expression<Action>)(() => { while (true) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) Console.Write('.'); })");
@@ -2291,11 +2839,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C90B_9C05() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.0870447
+        // Elapsed = 00:00:05.5882446
         [TestMethod]
         public void CompilerTest_6674_1E31()
         {
-            // <PERF>33.3972ms</PERF>
+            // <PERF>74.7515ms</PERF>
 
             // (Expression<Action>)(() => { do { Console.Write('.'); } while (true); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })");
@@ -2337,11 +2885,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6674_1E31() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.1204945
+        // Elapsed = 00:00:05.6630715
         [TestMethod]
         public void CompilerTest_AD48_8B6A()
         {
-            // <PERF>29.3542ms</PERF>
+            // <PERF>28.297ms</PERF>
 
             // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })");
@@ -2409,11 +2957,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD48_8B6A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.1499536
+        // Elapsed = 00:00:05.6914368
         [TestMethod]
         public void CompilerTest_25E2_35E6()
         {
-            // <PERF>26.8757ms</PERF>
+            // <PERF>27.2069ms</PERF>
 
             // (Expression<Action>)(() => { for (;;) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { for (;;) Console.Write('.'); })");
@@ -2448,11 +2996,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_35E6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.1768797
+        // Elapsed = 00:00:05.7187119
         [TestMethod]
         public void CompilerTest_DA7B_B67A()
         {
-            // <PERF>31.7399ms</PERF>
+            // <PERF>30.1075ms</PERF>
 
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -2498,11 +3046,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B67A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.2087088
+        // Elapsed = 00:00:05.7488756
         [TestMethod]
         public void CompilerTest_34B8_D672()
         {
-            // <PERF>54.6784ms</PERF>
+            // <PERF>28.4591ms</PERF>
 
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -2562,11 +3110,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D672() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.2634496
+        // Elapsed = 00:00:05.7774275
         [TestMethod]
         public void CompilerTest_5598_03A6()
         {
-            // <PERF>28.1021ms</PERF>
+            // <PERF>58.2849ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })");
@@ -2607,11 +3155,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5598_03A6() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.2916324
+        // Elapsed = 00:00:05.8357829
         [TestMethod]
         public void CompilerTest_BB7C_2A2A()
         {
-            // <PERF>27.9508ms</PERF>
+            // <PERF>53.3289ms</PERF>
 
             // (Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })");
@@ -2651,11 +3199,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_2A2A() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.3196399
+        // Elapsed = 00:00:05.8891912
         [TestMethod]
         public void CompilerTest_2CF2_18B2()
         {
-            // <PERF>26.3835ms</PERF>
+            // <PERF>35.117ms</PERF>
 
             // (Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })
             var actual = GetDebugView(@"(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })");
@@ -2696,11 +3244,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CF2_18B2() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.3460801
+        // Elapsed = 00:00:05.9243765
         [TestMethod]
         public void CompilerTest_880F_A24B()
         {
-            // <PERF>30.9776ms</PERF>
+            // <PERF>33.5824ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })");
@@ -2747,11 +3295,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_880F_A24B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.3771108
+        // Elapsed = 00:00:05.9580232
         [TestMethod]
         public void CompilerTest_19B3_485B()
         {
-            // <PERF>64.0522ms</PERF>
+            // <PERF>29.2832ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })");
@@ -2802,11 +3350,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_19B3_485B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.4412501
+        // Elapsed = 00:00:05.9873979
         [TestMethod]
         public void CompilerTest_0662_485B()
         {
-            // <PERF>28.4282ms</PERF>
+            // <PERF>61.2096ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })");
@@ -2857,11 +3405,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0662_485B() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.4697336
+        // Elapsed = 00:00:06.0486704
         [TestMethod]
         public void CompilerTest_F63E_8707()
         {
-            // <PERF>41.1048ms</PERF>
+            // <PERF>31.0433ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })");
@@ -2915,11 +3463,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F63E_8707() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.5108969
+        // Elapsed = 00:00:06.0797766
         [TestMethod]
         public void CompilerTest_1C02_6E0D()
         {
-            // <PERF>35.6717ms</PERF>
+            // <PERF>30.4712ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })");
@@ -2983,11 +3531,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1C02_6E0D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.5466431
+        // Elapsed = 00:00:06.1103317
         [TestMethod]
         public void CompilerTest_744C_C5E7()
         {
-            // <PERF>69.4621ms</PERF>
+            // <PERF>35.6516ms</PERF>
 
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })");
@@ -3052,11 +3600,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_744C_C5E7() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.6178746
+        // Elapsed = 00:00:06.1460797
         [TestMethod]
         public void CompilerTest_2156_D7F7()
         {
-            // <PERF>52.3592ms</PERF>
+            // <PERF>25.8172ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) {} })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) {} })");
@@ -3090,11 +3638,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_D7F7() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.6702949
+        // Elapsed = 00:00:06.1719483
         [TestMethod]
         public void CompilerTest_FCA9_3B3F()
         {
-            // <PERF>40.522ms</PERF>
+            // <PERF>75.0964ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })");
@@ -3143,11 +3691,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_3B3F() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.7109057
+        // Elapsed = 00:00:06.2471286
         [TestMethod]
         public void CompilerTest_6832_C62D()
         {
-            // <PERF>44.7824ms</PERF>
+            // <PERF>30.1226ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })");
@@ -3196,11 +3744,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_C62D() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.7557559
+        // Elapsed = 00:00:06.2773190
         [TestMethod]
         public void CompilerTest_4E9F_42FD()
         {
-            // <PERF>37.9931ms</PERF>
+            // <PERF>47.4286ms</PERF>
 
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })");
@@ -3263,11 +3811,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_42FD() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.7938208
+        // Elapsed = 00:00:06.3252229
         [TestMethod]
         public void CompilerTest_30E5_8D77()
         {
-            // <PERF>34.4906ms</PERF>
+            // <PERF>39.1895ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })");
@@ -3316,11 +3864,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_8D77() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.8284024
+        // Elapsed = 00:00:06.3644762
         [TestMethod]
         public void CompilerTest_AD7C_9EAF()
         {
-            // <PERF>72.3422ms</PERF>
+            // <PERF>30.2195ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })");
@@ -3374,11 +3922,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_9EAF() => INCONCLUSIVE(); }
 
-        // Elapsed = 00:00:05.9008548
+        // Elapsed = 00:00:06.3948041
         [TestMethod]
         public void CompilerTest_3E56_D0C6()
         {
-            // <PERF>35.9386ms</PERF>
+            // <PERF>52.7751ms</PERF>
 
             // (Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })");
@@ -3499,7 +4047,23 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_93FA_3B2C => OK();
             public override void CompilerTest_8FB3_87A6 => OK();
             public override void CompilerTest_AB76_B2ED => OK();
-            public override void CompilerTest_C598_D480 => OK();
+            public override void CompilerTest_14B0_8F1F => OK();
+            public override void CompilerTest_ABB7_09A0 => OK();
+            public override void CompilerTest_647C_869C => OK();
+            public override void CompilerTest_A62F_E0EA => OK();
+            public override void CompilerTest_6E0D_C117 => OK();
+            public override void CompilerTest_9AE8_6C9F => OK();
+            public override void CompilerTest_2069_9E36 => OK();
+            public override void CompilerTest_4C1E_1B45 => OK();
+            public override void CompilerTest_5D0B_BB53 => OK();
+            public override void CompilerTest_644B_2D72 => OK();
+            public override void CompilerTest_3B77_970B => OK();
+            public override void CompilerTest_3418_D0D2 => OK();
+            public override void CompilerTest_0946_2AB1 => OK();
+            public override void CompilerTest_1B29_3F4D => OK();
+            public override void CompilerTest_EEB8_ED24 => OK();
+            public override void CompilerTest_7349_817B => OK();
+            public override void CompilerTest_76D5_13EF => OK();
             public override void CompilerTest_55B7_3EFA => OK();
             public override void CompilerTest_7760_936B => OK();
             public override void CompilerTest_22AA_5962 => OK();

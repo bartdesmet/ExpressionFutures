@@ -67,6 +67,25 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // Dynamic get member
             public override void CompilerTest_AB76_B2ED() => OK();
 
+            // Dynamic invoke member
+            public override void CompilerTest_14B0_8F1F() => OK();
+            public override void CompilerTest_ABB7_09A0() => OK();
+            public override void CompilerTest_647C_869C() => OK();
+            public override void CompilerTest_A62F_E0EA() => OK();
+            public override void CompilerTest_6E0D_C117() => OK();
+            public override void CompilerTest_9AE8_6C9F() => OK(); // REVIEW: UseCompileTimeType, will expression type match what the compiler has inferred?
+            public override void CompilerTest_2069_9E36() => OK(); // REVIEW: UseCompileTimeType, will expression type match what the compiler has inferred?
+            public override void CompilerTest_4C1E_1B45() => OK();
+            public override void CompilerTest_5D0B_BB53() => OK();
+            public override void CompilerTest_644B_2D72() => OK();
+            public override void CompilerTest_3B77_970B() => OK();
+            public override void CompilerTest_3418_D0D2() => OK();
+            public override void CompilerTest_0946_2AB1() => OK();
+            public override void CompilerTest_1B29_3F4D() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_EEB8_ED24() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_7349_817B() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_76D5_13EF() => OK(); // REVIEW: Is UseCompileTimeType expected?
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
