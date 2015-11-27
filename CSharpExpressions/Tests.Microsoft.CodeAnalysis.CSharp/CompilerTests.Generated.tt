@@ -63,7 +63,9 @@ var exprs = new[]
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))",
-    "(Expression<Func<dynamic, Task<int>>>)(async d => await d)",
+    "(Expression<Func<dynamic, Task<dynamic>>>)(async d => await d)",
+	"(Expression<Func<dynamic, Task<object>>>)(async d => await d)",
+	"(Expression<Func<dynamic, Task<int>>>)(async d => await d)",
 	 
     // Conditional access
     "(Expression<Func<string, int?>>)(s => s?.Length)",
