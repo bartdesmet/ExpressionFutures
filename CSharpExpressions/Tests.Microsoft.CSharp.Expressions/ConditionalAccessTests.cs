@@ -17,6 +17,180 @@ namespace Tests
     public class ConditionalAccessTests
     {
         [TestMethod]
+        public void ConditionalAccess_ArgumentChecking()
+        {
+            var rec = Expression.Constant(1, typeof(int?));
+            var nrc = CSharpExpression.ConditionalReceiver(typeof(int));
+            var wnn = Expression.Constant(1);
+
+            // null
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(default(Expression), nrc, wnn));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(rec, default(ConditionalReceiver), wnn));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(rec, nrc, default(Expression)));
+
+            // invalid receiver type
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Empty(), nrc, wnn));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(int)), nrc, wnn));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(int).MakeByRefType()), nrc, wnn));
+
+            // type mismatch receiver
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(long?)), nrc, wnn));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(string)), nrc, wnn));
+        }
+
+        [TestMethod]
+        public void ConditionalReceiver_ArgumentChecking()
+        {
+            // null
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalReceiver(default(Type)));
+
+            // invalid receiver type
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(void)));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int?)));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int).MakeByRefType()));
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Member1()
+        {
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTimeOffset));
+            var e = CSharpExpression.ConditionalAccess(p, n, Expression.Property(n, "Offset"));
+            var f = Expression.Lambda<Func<DateTimeOffset?, TimeSpan?>>(e, p);
+            var c = f.Compile();
+
+            foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
+            {
+                Assert.AreEqual(d?.Offset, c(d));
+            }
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Member2()
+        {
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTimeOffset));
+            var e = CSharpExpression.ConditionalAccess(p, n, Expression.Property(Expression.Property(n, "Offset"), "Hours"));
+            var f = Expression.Lambda<Func<DateTimeOffset?, int?>>(e, p);
+            var c = f.Compile();
+
+            foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
+            {
+                Assert.AreEqual(d?.Offset.Hours, c(d));
+            }
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Member3()
+        {
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTimeOffset));
+            var m = CSharpExpression.ConditionalReceiver(typeof(TimeSpan));
+            var e = CSharpExpression.ConditionalAccess(CSharpExpression.ConditionalAccess(p, n, Expression.Property(n, "Offset")), m, Expression.Property(m, "Hours"));
+            var f = Expression.Lambda<Func<DateTimeOffset?, int?>>(e, p);
+            var c = f.Compile();
+
+            foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
+            {
+                Assert.AreEqual((d?.Offset)?.Hours, c(d));
+            }
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Member4()
+        {
+            var p = Expression.Parameter(typeof(string));
+            var n = CSharpExpression.ConditionalReceiver(typeof(string));
+            var e = CSharpExpression.ConditionalAccess(p, n, Expression.Property(n, "Length"));
+            var f = Expression.Lambda<Func<string, int?>>(e, p);
+            var c = f.Compile();
+
+            foreach (var s in new string[] { null, "bar" })
+            {
+                Assert.AreEqual(s?.Length, c(s));
+            }
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Potpourri1()
+        {
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTimeOffset));
+            var m = CSharpExpression.ConditionalReceiver(typeof(string));
+            var e = CSharpExpression.ConditionalAccess(p, n, CSharpExpression.ConditionalAccess(Expression.Call(Expression.Property(n, "Offset"), typeof(TimeSpan).GetMethod("ToString", new Type[0])), m, Expression.Property(m, "Length")));
+            var f = Expression.Lambda<Func<DateTimeOffset?, int?>>(e, p);
+            var c = f.Compile();
+
+            foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
+            {
+                Assert.AreEqual(d?.Offset.ToString()?.Length, c(d));
+            }
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Potpourri2()
+        {
+            var p = Expression.Parameter(typeof(string));
+            var n = CSharpExpression.ConditionalReceiver(typeof(string));
+            var e = CSharpExpression.ConditionalAccess(p, n, CSharpExpression.ConditionalAccess(Expression.Call(Expression.Call(n, typeof(string).GetMethod("ToUpper", new Type[0])), typeof(string).GetMethod("ToLower", new Type[0])), n, Expression.Property(n, "Length")));
+            var f = Expression.Lambda<Func<string, int?>>(e, p);
+            var c = f.Compile();
+
+            foreach (var s in new string[] { null, "bar" })
+            {
+                Assert.AreEqual(s?.ToUpper().ToLower()?.Length, c(s));
+            }
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Compile_Invoke1()
+        {
+            var p = Expression.Parameter(typeof(Action));
+            var n = CSharpExpression.ConditionalReceiver(typeof(Action));
+            var e = CSharpExpression.ConditionalAccess(p, n, Expression.Invoke(n));
+            var f = Expression.Lambda<Action<Action>>(e, p);
+            var c = f.Compile();
+
+            c(null); // doesn't throw
+
+            var called = false;
+            c(() => { called = true; });
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public void ConditionalAccess_Update()
+        {
+            var rec1 = Expression.Constant(1, typeof(int?));
+            var nrc1 = CSharpExpression.ConditionalReceiver(typeof(int));
+            var wnn1 = Expression.Constant(1);
+
+            var rec2 = Expression.Constant(1, typeof(int?));
+            var nrc2 = CSharpExpression.ConditionalReceiver(typeof(int));
+            var wnn2 = Expression.Constant(1);
+
+            var ca0 = CSharpExpression.ConditionalAccess(rec1, nrc1, wnn1);
+
+            var ca1 = ca0.Update(rec1, nrc1, wnn1);
+            Assert.AreSame(ca0, ca1);
+
+            var ca2 = ca0.Update(rec2, nrc1, wnn1);
+            Assert.AreSame(rec2, ca2.Receiver);
+            Assert.AreSame(nrc1, ca2.NonNullReceiver);
+            Assert.AreSame(wnn1, ca2.WhenNotNull);
+
+            var ca3 = ca0.Update(rec1, nrc2, wnn1);
+            Assert.AreSame(rec1, ca3.Receiver);
+            Assert.AreSame(nrc2, ca3.NonNullReceiver);
+            Assert.AreSame(wnn1, ca3.WhenNotNull);
+
+            var ca4 = ca0.Update(rec1, nrc1, wnn2);
+            Assert.AreSame(rec1, ca4.Receiver);
+            Assert.AreSame(nrc1, ca4.NonNullReceiver);
+            Assert.AreSame(wnn2, ca4.WhenNotNull);
+        }
+
+        [TestMethod]
         public void ConditionalAccess_ManOrBoy1()
         {
             var p = Expression.Parameter(typeof(C));

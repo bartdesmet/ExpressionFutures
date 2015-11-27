@@ -396,11 +396,11 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// ArgumentException with message like "Type '{0}' of the receiver expression is not a reference type or a nullable type."
+        /// ArgumentException with message like "Type '{0}' is not a valid type for a receiver in a conditional access expression."
         /// </summary>
-        internal static Exception ConditionalReceiverExpressionShouldBeNullable(object p0)
+        internal static Exception InvalidConditionalReceiverExpressionType(object p0)
         {
-            return new ArgumentException(Strings.ConditionalReceiverExpressionShouldBeNullable(p0));
+            return new ArgumentException(Strings.InvalidConditionalReceiverExpressionType(p0));
         }
 
         /// <summary>
@@ -860,11 +860,11 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// A string like "Type '{0}' of the receiver expression is not a reference type or a nullable type."
+        /// A string like "Type '{0}' is not a valid type for a receiver in a conditional access expression."
         /// </summary>
-        internal static string ConditionalReceiverExpressionShouldBeNullable(object p0)
+        internal static string InvalidConditionalReceiverExpressionType(object p0)
         {
-            return SR.Format(SR.ConditionalReceiverExpressionShouldBeNullable, p0);
+            return SR.Format(SR.InvalidConditionalReceiverExpressionType, p0);
         }
 
         /// <summary>
@@ -930,7 +930,7 @@ namespace System
         public const string InvalidGotoDefault = "A 'goto default' statement was found but the containing switch statement has no default label.";
         public const string GotoCanOnlyBeReducedInSwitch = "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node.";
         public const string InvalidConditionalReceiverType = "Type '{0}' is not a valid type for a conditional receiver.";
-        public const string ConditionalReceiverExpressionShouldBeNullable = "Type '{0}' of the receiver expression is not a reference type or a nullable type.";
+        public const string InvalidConditionalReceiverExpressionType = "Type '{0}' is not a valid type for a receiver in a conditional access expression.";
         public const string ConditionalReceiverTypeMismatch = "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver.";
     }
 }

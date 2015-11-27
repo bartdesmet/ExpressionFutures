@@ -74,7 +74,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, WhenNotNull);
+            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
         }
 
         /// <summary>
@@ -210,9 +210,9 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(whenNotNull, nameof(whenNotNull));
 
             var receiverType = receiver.Type;
-            if (receiverType.IsValueType && !receiverType.IsNullableType())
+            if (receiverType == typeof(void) || receiverType.IsByRef || (receiverType.IsValueType && !receiverType.IsNullableType()))
             {
-                throw Error.ConditionalReceiverExpressionShouldBeNullable(receiverType);
+                throw Error.InvalidConditionalReceiverExpressionType(receiverType);
             }
 
             var nonNullReceiverType = receiverType.GetNonNullReceiverType();

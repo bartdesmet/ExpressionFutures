@@ -59,7 +59,7 @@ var errors = new[]
 	new { Name = "InvalidGotoDefault", ExceptionType = "InvalidOperationException", Args = 0, Message = "A 'goto default' statement was found but the containing switch statement has no default label." },
 	new { Name = "GotoCanOnlyBeReducedInSwitch", ExceptionType = "InvalidOperationException", Args = 0, Message = "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node." },
 	new { Name = "InvalidConditionalReceiverType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for a conditional receiver." },
-	new { Name = "ConditionalReceiverExpressionShouldBeNullable", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' of the receiver expression is not a reference type or a nullable type." },
+	new { Name = "InvalidConditionalReceiverExpressionType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for a receiver in a conditional access expression." },
 	new { Name = "ConditionalReceiverTypeMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver." },
 };
 
