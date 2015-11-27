@@ -59,6 +59,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_FB20_C3F6() => OK(); // DESIGN: Uses Or, not OrElse; Flags contains BinaryOperationLogical
             public override void CompilerTest_191C_CEEB() => OK(); // DESIGN: Uses Add, not AddChecked; Flags contains CheckedContext
 
+            // Dynamic convert
+            public override void CompilerTest_6647_1258() => OK();
+            public override void CompilerTest_93FA_3B2C() => OK();
+            public override void CompilerTest_8FB3_87A6() => OK();
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda

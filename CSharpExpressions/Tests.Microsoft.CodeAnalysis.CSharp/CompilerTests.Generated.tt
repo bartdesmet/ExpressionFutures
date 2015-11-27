@@ -80,6 +80,8 @@ var exprs = new[]
 
 	// Dynamic convert
     "(Expression<Func<dynamic, int>>)(x => (int)x)",
+	"(Expression<Func<dynamic, string>>)(x => (string)x)",
+	"(Expression<Func<dynamic, object>>)(x => (object)x)", // NB: gets erased
 
 	// Dynamic get member
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
