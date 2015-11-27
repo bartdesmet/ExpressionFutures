@@ -3076,6 +3076,72 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_3D45() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_4241_E360()
+        {
+            // (Expression<Func<string, string>>)(s => s?.Substring(length: 1, startIndex: 0).ToUpper()?.ToLower())
+            var actual = GetDebugView(@"(Expression<Func<string, string>>)(s => s?.Substring(length: 1, startIndex: 0).ToUpper()?.ToLower())");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.String,System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpConditionalAccess Type=""System.String"">
+      <Receiver>
+        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+      </Receiver>
+      <NonNullReceiver>
+        <ConditionalReceiver Id=""1"" Type=""System.String"" />
+      </NonNullReceiver>
+      <WhenNotNull>
+        <CSharpConditionalAccess Type=""System.String"">
+          <Receiver>
+            <Call Type=""System.String"" Method=""System.String ToUpper()"">
+              <Object>
+                <CSharpCall Type=""System.String"" Method=""System.String Substring(Int32, Int32)"">
+                  <Object>
+                    <ConditionalReceiver Id=""1"" Type=""System.String"" />
+                  </Object>
+                  <Arguments>
+                    <ParameterAssignment Parameter=""Int32 length"">
+                      <Expression>
+                        <Constant Type=""System.Int32"" Value=""1"" />
+                      </Expression>
+                    </ParameterAssignment>
+                    <ParameterAssignment Parameter=""Int32 startIndex"">
+                      <Expression>
+                        <Constant Type=""System.Int32"" Value=""0"" />
+                      </Expression>
+                    </ParameterAssignment>
+                  </Arguments>
+                </CSharpCall>
+              </Object>
+              <Arguments />
+            </Call>
+          </Receiver>
+          <NonNullReceiver>
+            <ConditionalReceiver Id=""2"" Type=""System.String"" />
+          </NonNullReceiver>
+          <WhenNotNull>
+            <Call Type=""System.String"" Method=""System.String ToLower()"">
+              <Object>
+                <ConditionalReceiver Id=""2"" Type=""System.String"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </WhenNotNull>
+        </CSharpConditionalAccess>
+      </WhenNotNull>
+    </CSharpConditionalAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_4241_E360();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4241_E360() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_A8D0_49C3()
         {
             // (Expression<Action>)(() => { })
@@ -5927,6 +5993,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_2462_8DFD => OK();
             public override void CompilerTest_3041_FAE0 => OK();
             public override void CompilerTest_CF40_3D45 => OK();
+            public override void CompilerTest_4241_E360 => OK();
             public override void CompilerTest_A8D0_49C3 => OK();
             public override void CompilerTest_197A_9EF8 => OK();
             public override void CompilerTest_27AA_544E => OK();

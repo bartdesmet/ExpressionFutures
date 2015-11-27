@@ -119,6 +119,17 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_5DFD_243C() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_1A0E_F439() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
 
+            // Conditional access
+            public override void CompilerTest_B340_BC70() => OK();
+            public override void CompilerTest_9320_B6D2() => OK();
+            public override void CompilerTest_A997_18C3() => OK();
+            public override void CompilerTest_A5F9_6775() => OK();
+            public override void CompilerTest_F165_9386() => OK();
+            public override void CompilerTest_2462_8DFD() => OK();
+            public override void CompilerTest_3041_FAE0() => OK();
+            public override void CompilerTest_CF40_3D45() => OK(); // DESIGN: Should we emit InvocationExpression here?
+            public override void CompilerTest_4241_E360() => OK();
+
             // Block
             public override void CompilerTest_A8D0_49C3() => OK();
             public override void CompilerTest_197A_9EF8() => OK();
