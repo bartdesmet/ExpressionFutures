@@ -261,23 +261,22 @@ namespace Tests
             Assert.AreEqual(dbg13, expr13.DebugView().ToString());
         }
 
-        private Expression expr14 = DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2));
-        private string dbg14 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"">
-  <Left>
-    <DynamicCSharpArgument>
+        private Expression expr14 = CSharpExpression.ConditionalAccess(Expression.Default(typeof(string)), CSharpExpression.ConditionalReceiver(typeof(string)), Expression.Property(CSharpExpression.ConditionalReceiver(typeof(string)), "Length"));
+        private string dbg14 = @"<CSharpConditionalAccess Type=""System.Nullable`1[System.Int32]"">
+  <Receiver>
+    <Default Type=""System.String"" />
+  </Receiver>
+  <NonNullReceiver>
+    <ConditionalReceiver Id=""0"" Type=""System.String"" />
+  </NonNullReceiver>
+  <WhenNotNull>
+    <MemberAccess Type=""System.Int32"" Member=""Int32 Length"">
       <Expression>
-        <Constant Type=""System.Int32"" Value=""1"" />
+        <ConditionalReceiver Id=""1"" Type=""System.String"" />
       </Expression>
-    </DynamicCSharpArgument>
-  </Left>
-  <Right>
-    <DynamicCSharpArgument>
-      <Expression>
-        <Constant Type=""System.Int32"" Value=""2"" />
-      </Expression>
-    </DynamicCSharpArgument>
-  </Right>
-</CSharpDynamicBinary>";
+    </MemberAccess>
+  </WhenNotNull>
+</CSharpConditionalAccess>";
 
         [TestMethod]
         public void CSharp_DebugView_Test14()
@@ -285,8 +284,8 @@ namespace Tests
             Assert.AreEqual(dbg14, expr14.DebugView().ToString());
         }
 
-        private Expression expr15 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext);
-        private string dbg15 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"">
+        private Expression expr15 = DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2));
+        private string dbg15 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"">
   <Left>
     <DynamicCSharpArgument>
       <Expression>
@@ -309,8 +308,8 @@ namespace Tests
             Assert.AreEqual(dbg15, expr15.DebugView().ToString());
         }
 
-        private Expression expr16 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext, typeof(object));
-        private string dbg16 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"" Context=""System.Object"">
+        private Expression expr16 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext);
+        private string dbg16 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"">
   <Left>
     <DynamicCSharpArgument>
       <Expression>
@@ -333,8 +332,32 @@ namespace Tests
             Assert.AreEqual(dbg16, expr16.DebugView().ToString());
         }
 
-        private Expression expr17 = DynamicCSharpExpression.DynamicNegate(Expression.Constant(1));
-        private string dbg17 = @"<CSharpDynamicUnary Type=""System.Object"" OperationNodeType=""Negate"">
+        private Expression expr17 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext, typeof(object));
+        private string dbg17 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"" Context=""System.Object"">
+  <Left>
+    <DynamicCSharpArgument>
+      <Expression>
+        <Constant Type=""System.Int32"" Value=""1"" />
+      </Expression>
+    </DynamicCSharpArgument>
+  </Left>
+  <Right>
+    <DynamicCSharpArgument>
+      <Expression>
+        <Constant Type=""System.Int32"" Value=""2"" />
+      </Expression>
+    </DynamicCSharpArgument>
+  </Right>
+</CSharpDynamicBinary>";
+
+        [TestMethod]
+        public void CSharp_DebugView_Test17()
+        {
+            Assert.AreEqual(dbg17, expr17.DebugView().ToString());
+        }
+
+        private Expression expr18 = DynamicCSharpExpression.DynamicNegate(Expression.Constant(1));
+        private string dbg18 = @"<CSharpDynamicUnary Type=""System.Object"" OperationNodeType=""Negate"">
   <Operand>
     <DynamicCSharpArgument>
       <Expression>
@@ -345,30 +368,17 @@ namespace Tests
 </CSharpDynamicUnary>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test17()
-        {
-            Assert.AreEqual(dbg17, expr17.DebugView().ToString());
-        }
-
-        private Expression expr18 = DynamicCSharpExpression.DynamicConvert(Expression.Constant(1), typeof(int));
-        private string dbg18 = @"<CSharpDynamicConvert Type=""System.Int32"">
-  <Expression>
-    <Constant Type=""System.Int32"" Value=""1"" />
-  </Expression>
-</CSharpDynamicConvert>";
-
-        [TestMethod]
         public void CSharp_DebugView_Test18()
         {
             Assert.AreEqual(dbg18, expr18.DebugView().ToString());
         }
 
-        private Expression expr19 = DynamicCSharpExpression.DynamicGetMember(Expression.Default(typeof(string)), "Length");
-        private string dbg19 = @"<CSharpDynamicGetMember Type=""System.Object"" Name=""Length"">
-  <Object>
-    <Default Type=""System.String"" />
-  </Object>
-</CSharpDynamicGetMember>";
+        private Expression expr19 = DynamicCSharpExpression.DynamicConvert(Expression.Constant(1), typeof(int));
+        private string dbg19 = @"<CSharpDynamicConvert Type=""System.Int32"">
+  <Expression>
+    <Constant Type=""System.Int32"" Value=""1"" />
+  </Expression>
+</CSharpDynamicConvert>";
 
         [TestMethod]
         public void CSharp_DebugView_Test19()
@@ -376,8 +386,21 @@ namespace Tests
             Assert.AreEqual(dbg19, expr19.DebugView().ToString());
         }
 
-        private Expression expr20 = DynamicCSharpExpression.DynamicGetIndex(Expression.Default(typeof(List<int>)), Expression.Constant(1));
-        private string dbg20 = @"<CSharpDynamicGetIndex Type=""System.Object"">
+        private Expression expr20 = DynamicCSharpExpression.DynamicGetMember(Expression.Default(typeof(string)), "Length");
+        private string dbg20 = @"<CSharpDynamicGetMember Type=""System.Object"" Name=""Length"">
+  <Object>
+    <Default Type=""System.String"" />
+  </Object>
+</CSharpDynamicGetMember>";
+
+        [TestMethod]
+        public void CSharp_DebugView_Test20()
+        {
+            Assert.AreEqual(dbg20, expr20.DebugView().ToString());
+        }
+
+        private Expression expr21 = DynamicCSharpExpression.DynamicGetIndex(Expression.Default(typeof(List<int>)), Expression.Constant(1));
+        private string dbg21 = @"<CSharpDynamicGetIndex Type=""System.Object"">
   <Object>
     <Default Type=""System.Collections.Generic.List`1[System.Int32]"" />
   </Object>
@@ -391,13 +414,13 @@ namespace Tests
 </CSharpDynamicGetIndex>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test20()
+        public void CSharp_DebugView_Test21()
         {
-            Assert.AreEqual(dbg20, expr20.DebugView().ToString());
+            Assert.AreEqual(dbg21, expr21.DebugView().ToString());
         }
 
-        private Expression expr21 = DynamicCSharpExpression.DynamicInvoke(Expression.Default(typeof(Action<int>)), Expression.Constant(1));
-        private string dbg21 = @"<CSharpDynamicInvoke Type=""System.Object"">
+        private Expression expr22 = DynamicCSharpExpression.DynamicInvoke(Expression.Default(typeof(Action<int>)), Expression.Constant(1));
+        private string dbg22 = @"<CSharpDynamicInvoke Type=""System.Object"">
   <Expression>
     <Default Type=""System.Action`1[System.Int32]"" />
   </Expression>
@@ -411,13 +434,13 @@ namespace Tests
 </CSharpDynamicInvoke>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test21()
+        public void CSharp_DebugView_Test22()
         {
-            Assert.AreEqual(dbg21, expr21.DebugView().ToString());
+            Assert.AreEqual(dbg22, expr22.DebugView().ToString());
         }
 
-        private Expression expr22 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Math), "Abs", Expression.Constant(1));
-        private string dbg22 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Target=""System.Math"" Name=""Abs"">
+        private Expression expr23 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Math), "Abs", Expression.Constant(1));
+        private string dbg23 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Target=""System.Math"" Name=""Abs"">
   <Arguments>
     <DynamicCSharpArgument>
       <Expression>
@@ -425,17 +448,6 @@ namespace Tests
       </Expression>
     </DynamicCSharpArgument>
   </Arguments>
-</CSharpDynamicInvokeMember>";
-
-        [TestMethod]
-        public void CSharp_DebugView_Test22()
-        {
-            Assert.AreEqual(dbg22, expr22.DebugView().ToString());
-        }
-
-        private Expression expr23 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Activator), "CreateInstance", new[] { typeof(int) });
-        private string dbg23 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Target=""System.Activator"" Name=""CreateInstance"" TypeArguments=""System.Int32"">
-  <Arguments />
 </CSharpDynamicInvokeMember>";
 
         [TestMethod]
@@ -444,18 +456,9 @@ namespace Tests
             Assert.AreEqual(dbg23, expr23.DebugView().ToString());
         }
 
-        private Expression expr24 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", Expression.Constant(1));
-        private string dbg24 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Name=""Substring"">
-  <Object>
-    <Default Type=""System.String"" />
-  </Object>
-  <Arguments>
-    <DynamicCSharpArgument>
-      <Expression>
-        <Constant Type=""System.Int32"" Value=""1"" />
-      </Expression>
-    </DynamicCSharpArgument>
-  </Arguments>
+        private Expression expr24 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Activator), "CreateInstance", new[] { typeof(int) });
+        private string dbg24 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Target=""System.Activator"" Name=""CreateInstance"" TypeArguments=""System.Int32"">
+  <Arguments />
 </CSharpDynamicInvokeMember>";
 
         [TestMethod]
@@ -464,13 +467,13 @@ namespace Tests
             Assert.AreEqual(dbg24, expr24.DebugView().ToString());
         }
 
-        private Expression expr25 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex") });
+        private Expression expr25 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", Expression.Constant(1));
         private string dbg25 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Name=""Substring"">
   <Object>
     <Default Type=""System.String"" />
   </Object>
   <Arguments>
-    <DynamicCSharpArgument Name=""startIndex"">
+    <DynamicCSharpArgument>
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -484,13 +487,13 @@ namespace Tests
             Assert.AreEqual(dbg25, expr25.DebugView().ToString());
         }
 
-        private Expression expr26 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex", CSharpArgumentInfoFlags.NamedArgument) });
+        private Expression expr26 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex") });
         private string dbg26 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Name=""Substring"">
   <Object>
     <Default Type=""System.String"" />
   </Object>
   <Arguments>
-    <DynamicCSharpArgument Name=""startIndex"" Flags=""NamedArgument"">
+    <DynamicCSharpArgument Name=""startIndex"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -504,8 +507,28 @@ namespace Tests
             Assert.AreEqual(dbg26, expr26.DebugView().ToString());
         }
 
-        private Expression expr27 = DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), Expression.Constant(1L));
-        private string dbg27 = @"<CSharpDynamicInvokeConstructor Type=""System.TimeSpan"">
+        private Expression expr27 = DynamicCSharpExpression.DynamicInvokeMember(Expression.Default(typeof(string)), "Substring", new[] { DynamicCSharpExpression.DynamicArgument(Expression.Constant(1), "startIndex", CSharpArgumentInfoFlags.NamedArgument) });
+        private string dbg27 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Name=""Substring"">
+  <Object>
+    <Default Type=""System.String"" />
+  </Object>
+  <Arguments>
+    <DynamicCSharpArgument Name=""startIndex"" Flags=""NamedArgument"">
+      <Expression>
+        <Constant Type=""System.Int32"" Value=""1"" />
+      </Expression>
+    </DynamicCSharpArgument>
+  </Arguments>
+</CSharpDynamicInvokeMember>";
+
+        [TestMethod]
+        public void CSharp_DebugView_Test27()
+        {
+            Assert.AreEqual(dbg27, expr27.DebugView().ToString());
+        }
+
+        private Expression expr28 = DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), Expression.Constant(1L));
+        private string dbg28 = @"<CSharpDynamicInvokeConstructor Type=""System.TimeSpan"">
   <Arguments>
     <DynamicCSharpArgument>
       <Expression>
@@ -516,13 +539,13 @@ namespace Tests
 </CSharpDynamicInvokeConstructor>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test27()
+        public void CSharp_DebugView_Test28()
         {
-            Assert.AreEqual(dbg27, expr27.DebugView().ToString());
+            Assert.AreEqual(dbg28, expr28.DebugView().ToString());
         }
 
-        private Expression expr28 = CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label());
-        private string dbg28 = @"<CSharpBlock Type=""System.Void"">
+        private Expression expr29 = CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label());
+        private string dbg29 = @"<CSharpBlock Type=""System.Void"">
   <Statements>
     <Default Type=""System.Void"" />
   </Statements>
@@ -532,13 +555,13 @@ namespace Tests
 </CSharpBlock>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test28()
+        public void CSharp_DebugView_Test29()
         {
-            Assert.AreEqual(dbg28, expr28.DebugView().ToString());
+            Assert.AreEqual(dbg29, expr29.DebugView().ToString());
         }
 
-        private Expression expr29 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Empty() }, Expression.Label());
-        private string dbg29 = @"<CSharpBlock Type=""System.Void"">
+        private Expression expr30 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Empty() }, Expression.Label());
+        private string dbg30 = @"<CSharpBlock Type=""System.Void"">
   <Variables>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Variables>
@@ -551,13 +574,13 @@ namespace Tests
 </CSharpBlock>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test29()
+        public void CSharp_DebugView_Test30()
         {
-            Assert.AreEqual(dbg29, expr29.DebugView().ToString());
+            Assert.AreEqual(dbg30, expr30.DebugView().ToString());
         }
 
-        private Expression expr30 = Expression.Block(CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label()));
-        private string dbg30 = @"<Block Type=""System.Void"">
+        private Expression expr31 = Expression.Block(CSharpExpression.Block(new Expression[] { Expression.Empty() }, Expression.Label()));
+        private string dbg31 = @"<Block Type=""System.Void"">
   <Expressions>
     <CSharpBlock Type=""System.Void"">
       <Statements>
@@ -571,28 +594,12 @@ namespace Tests
 </Block>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test30()
-        {
-            Assert.AreEqual(dbg30, expr30.DebugView().ToString());
-        }
-
-        private Expression expr31 = CSharpStatement.Do(Expression.Empty(), Expression.Constant(true));
-        private string dbg31 = @"<CSharpDo Type=""System.Void"">
-  <Body>
-    <Default Type=""System.Void"" />
-  </Body>
-  <Test>
-    <Constant Type=""System.Boolean"" Value=""true"" />
-  </Test>
-</CSharpDo>";
-
-        [TestMethod]
         public void CSharp_DebugView_Test31()
         {
             Assert.AreEqual(dbg31, expr31.DebugView().ToString());
         }
 
-        private Expression expr32 = CSharpStatement.Do(Expression.Empty(), Expression.Constant(true), Expression.Label("break"), Expression.Label("continue"));
+        private Expression expr32 = CSharpStatement.Do(Expression.Empty(), Expression.Constant(true));
         private string dbg32 = @"<CSharpDo Type=""System.Void"">
   <Body>
     <Default Type=""System.Void"" />
@@ -600,12 +607,6 @@ namespace Tests
   <Test>
     <Constant Type=""System.Boolean"" Value=""true"" />
   </Test>
-  <BreakLabel>
-    <LabelTarget Type=""System.Void"" Id=""0"" Name=""break"" />
-  </BreakLabel>
-  <ContinueLabel>
-    <LabelTarget Type=""System.Void"" Id=""1"" Name=""continue"" />
-  </ContinueLabel>
 </CSharpDo>";
 
         [TestMethod]
@@ -614,8 +615,30 @@ namespace Tests
             Assert.AreEqual(dbg32, expr32.DebugView().ToString());
         }
 
-        private Expression expr33 = CSharpStatement.While(Expression.Constant(true), Expression.Empty());
-        private string dbg33 = @"<CSharpWhile Type=""System.Void"">
+        private Expression expr33 = CSharpStatement.Do(Expression.Empty(), Expression.Constant(true), Expression.Label("break"), Expression.Label("continue"));
+        private string dbg33 = @"<CSharpDo Type=""System.Void"">
+  <Body>
+    <Default Type=""System.Void"" />
+  </Body>
+  <Test>
+    <Constant Type=""System.Boolean"" Value=""true"" />
+  </Test>
+  <BreakLabel>
+    <LabelTarget Type=""System.Void"" Id=""0"" Name=""break"" />
+  </BreakLabel>
+  <ContinueLabel>
+    <LabelTarget Type=""System.Void"" Id=""1"" Name=""continue"" />
+  </ContinueLabel>
+</CSharpDo>";
+
+        [TestMethod]
+        public void CSharp_DebugView_Test33()
+        {
+            Assert.AreEqual(dbg33, expr33.DebugView().ToString());
+        }
+
+        private Expression expr34 = CSharpStatement.While(Expression.Constant(true), Expression.Empty());
+        private string dbg34 = @"<CSharpWhile Type=""System.Void"">
   <Test>
     <Constant Type=""System.Boolean"" Value=""true"" />
   </Test>
@@ -625,13 +648,13 @@ namespace Tests
 </CSharpWhile>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test33()
+        public void CSharp_DebugView_Test34()
         {
-            Assert.AreEqual(dbg33, expr33.DebugView().ToString());
+            Assert.AreEqual(dbg34, expr34.DebugView().ToString());
         }
 
-        private Expression expr34 = CSharpStatement.While(Expression.Constant(true), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
-        private string dbg34 = @"<CSharpWhile Type=""System.Void"">
+        private Expression expr35 = CSharpStatement.While(Expression.Constant(true), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
+        private string dbg35 = @"<CSharpWhile Type=""System.Void"">
   <Test>
     <Constant Type=""System.Boolean"" Value=""true"" />
   </Test>
@@ -647,26 +670,26 @@ namespace Tests
 </CSharpWhile>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test34()
+        public void CSharp_DebugView_Test35()
         {
-            Assert.AreEqual(dbg34, expr34.DebugView().ToString());
+            Assert.AreEqual(dbg35, expr35.DebugView().ToString());
         }
 
-        private Expression expr35 = CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Empty());
-        private string dbg35 = @"<CSharpFor Type=""System.Void"">
+        private Expression expr36 = CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Empty());
+        private string dbg36 = @"<CSharpFor Type=""System.Void"">
   <Body>
     <Default Type=""System.Void"" />
   </Body>
 </CSharpFor>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test35()
+        public void CSharp_DebugView_Test36()
         {
-            Assert.AreEqual(dbg35, expr35.DebugView().ToString());
+            Assert.AreEqual(dbg36, expr36.DebugView().ToString());
         }
 
-        private Expression expr36 = CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty());
-        private string dbg36 = @"<CSharpFor Type=""System.Void"">
+        private Expression expr37 = CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty());
+        private string dbg37 = @"<CSharpFor Type=""System.Void"">
   <Variables>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Variables>
@@ -703,13 +726,13 @@ namespace Tests
 </CSharpFor>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test36()
+        public void CSharp_DebugView_Test37()
         {
-            Assert.AreEqual(dbg36, expr36.DebugView().ToString());
+            Assert.AreEqual(dbg37, expr37.DebugView().ToString());
         }
 
-        private Expression expr37 = CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
-        private string dbg37 = @"<CSharpFor Type=""System.Void"">
+        private Expression expr38 = CSharpStatement.For(new[] { Expression.Parameter(typeof(int)) }, new[] { Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(Expression.Parameter(typeof(int))) }, Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
+        private string dbg38 = @"<CSharpFor Type=""System.Void"">
   <Variables>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Variables>
@@ -752,13 +775,13 @@ namespace Tests
 </CSharpFor>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test37()
+        public void CSharp_DebugView_Test38()
         {
-            Assert.AreEqual(dbg37, expr37.DebugView().ToString());
+            Assert.AreEqual(dbg38, expr38.DebugView().ToString());
         }
 
-        private Expression expr38 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty());
-        private string dbg38 = @"<CSharpForEach Type=""System.Void"">
+        private Expression expr39 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty());
+        private string dbg39 = @"<CSharpForEach Type=""System.Void"">
   <Variable>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Variable>
@@ -771,13 +794,13 @@ namespace Tests
 </CSharpForEach>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test38()
+        public void CSharp_DebugView_Test39()
         {
-            Assert.AreEqual(dbg38, expr38.DebugView().ToString());
+            Assert.AreEqual(dbg39, expr39.DebugView().ToString());
         }
 
-        private Expression expr39 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
-        private string dbg39 = @"<CSharpForEach Type=""System.Void"">
+        private Expression expr40 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
+        private string dbg40 = @"<CSharpForEach Type=""System.Void"">
   <Variable>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Variable>
@@ -796,13 +819,13 @@ namespace Tests
 </CSharpForEach>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test39()
+        public void CSharp_DebugView_Test40()
         {
-            Assert.AreEqual(dbg39, expr39.DebugView().ToString());
+            Assert.AreEqual(dbg40, expr40.DebugView().ToString());
         }
 
-        private Expression expr40 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int))));
-        private string dbg40 = @"<CSharpForEach Type=""System.Void"">
+        private Expression expr41 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int))));
+        private string dbg41 = @"<CSharpForEach Type=""System.Void"">
   <Variable>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Variable>
@@ -831,13 +854,13 @@ namespace Tests
 </CSharpForEach>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test40()
+        public void CSharp_DebugView_Test41()
         {
-            Assert.AreEqual(dbg40, expr40.DebugView().ToString());
+            Assert.AreEqual(dbg41, expr41.DebugView().ToString());
         }
 
-        private Expression expr41 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"));
-        private string dbg41 = @"<CSharpSwitch Type=""System.Void"">
+        private Expression expr42 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"));
+        private string dbg42 = @"<CSharpSwitch Type=""System.Void"">
   <SwitchValue>
     <Default Type=""System.Int32"" />
   </SwitchValue>
@@ -848,13 +871,13 @@ namespace Tests
 </CSharpSwitch>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test41()
+        public void CSharp_DebugView_Test42()
         {
-            Assert.AreEqual(dbg41, expr41.DebugView().ToString());
+            Assert.AreEqual(dbg42, expr42.DebugView().ToString());
         }
 
-        private Expression expr42 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Empty()), CSharpStatement.SwitchCaseDefault(Expression.Empty()));
-        private string dbg42 = @"<CSharpSwitch Type=""System.Void"">
+        private Expression expr43 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Empty()), CSharpStatement.SwitchCaseDefault(Expression.Empty()));
+        private string dbg43 = @"<CSharpSwitch Type=""System.Void"">
   <SwitchValue>
     <Default Type=""System.Int32"" />
   </SwitchValue>
@@ -876,13 +899,13 @@ namespace Tests
 </CSharpSwitch>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test42()
+        public void CSharp_DebugView_Test43()
         {
-            Assert.AreEqual(dbg42, expr42.DebugView().ToString());
+            Assert.AreEqual(dbg43, expr43.DebugView().ToString());
         }
 
-        private Expression expr43 = CSharpStatement.Switch(Expression.Default(typeof(string)), Expression.Label("break"), new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { "bar", "foo", "this is a \"quoted\" string", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Empty()) });
-        private string dbg43 = @"<CSharpSwitch Type=""System.Void"">
+        private Expression expr44 = CSharpStatement.Switch(Expression.Default(typeof(string)), Expression.Label("break"), new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { "bar", "foo", "this is a \"quoted\" string", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Empty()) });
+        private string dbg44 = @"<CSharpSwitch Type=""System.Void"">
   <SwitchValue>
     <Default Type=""System.String"" />
   </SwitchValue>
@@ -902,26 +925,17 @@ namespace Tests
 </CSharpSwitch>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test43()
-        {
-            Assert.AreEqual(dbg43, expr43.DebugView().ToString());
-        }
-
-        private Expression expr44 = CSharpStatement.GotoLabel(Expression.Label());
-        private string dbg44 = @"<CSharpGoto Type=""System.Void"">
-  <Target>
-    <LabelTarget Type=""System.Void"" Id=""0"" />
-  </Target>
-</CSharpGoto>";
-
-        [TestMethod]
         public void CSharp_DebugView_Test44()
         {
             Assert.AreEqual(dbg44, expr44.DebugView().ToString());
         }
 
-        private Expression expr45 = CSharpStatement.GotoCase(1);
-        private string dbg45 = @"<CSharpGoto Type=""System.Void"" Value=""1"" />";
+        private Expression expr45 = CSharpStatement.GotoLabel(Expression.Label());
+        private string dbg45 = @"<CSharpGoto Type=""System.Void"">
+  <Target>
+    <LabelTarget Type=""System.Void"" Id=""0"" />
+  </Target>
+</CSharpGoto>";
 
         [TestMethod]
         public void CSharp_DebugView_Test45()
@@ -929,8 +943,8 @@ namespace Tests
             Assert.AreEqual(dbg45, expr45.DebugView().ToString());
         }
 
-        private Expression expr46 = CSharpStatement.GotoDefault();
-        private string dbg46 = @"<CSharpGoto Type=""System.Void"" />";
+        private Expression expr46 = CSharpStatement.GotoCase(1);
+        private string dbg46 = @"<CSharpGoto Type=""System.Void"" Value=""1"" />";
 
         [TestMethod]
         public void CSharp_DebugView_Test46()
@@ -938,8 +952,17 @@ namespace Tests
             Assert.AreEqual(dbg46, expr46.DebugView().ToString());
         }
 
-        private Expression expr47 = CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Empty());
-        private string dbg47 = @"<CSharpLock Type=""System.Void"">
+        private Expression expr47 = CSharpStatement.GotoDefault();
+        private string dbg47 = @"<CSharpGoto Type=""System.Void"" />";
+
+        [TestMethod]
+        public void CSharp_DebugView_Test47()
+        {
+            Assert.AreEqual(dbg47, expr47.DebugView().ToString());
+        }
+
+        private Expression expr48 = CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Empty());
+        private string dbg48 = @"<CSharpLock Type=""System.Void"">
   <Expression>
     <Default Type=""System.Object"" />
   </Expression>
@@ -949,32 +972,13 @@ namespace Tests
 </CSharpLock>";
 
         [TestMethod]
-        public void CSharp_DebugView_Test47()
-        {
-            Assert.AreEqual(dbg47, expr47.DebugView().ToString());
-        }
-
-        private Expression expr48 = CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Empty());
-        private string dbg48 = @"<CSharpUsing Type=""System.Void"">
-  <Resource>
-    <Default Type=""System.IDisposable"" />
-  </Resource>
-  <Body>
-    <Default Type=""System.Void"" />
-  </Body>
-</CSharpUsing>";
-
-        [TestMethod]
         public void CSharp_DebugView_Test48()
         {
             Assert.AreEqual(dbg48, expr48.DebugView().ToString());
         }
 
-        private Expression expr49 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Empty());
+        private Expression expr49 = CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Empty());
         private string dbg49 = @"<CSharpUsing Type=""System.Void"">
-  <Variable>
-    <Parameter Type=""System.IDisposable"" Id=""0"" />
-  </Variable>
   <Resource>
     <Default Type=""System.IDisposable"" />
   </Resource>
@@ -987,6 +991,25 @@ namespace Tests
         public void CSharp_DebugView_Test49()
         {
             Assert.AreEqual(dbg49, expr49.DebugView().ToString());
+        }
+
+        private Expression expr50 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Empty());
+        private string dbg50 = @"<CSharpUsing Type=""System.Void"">
+  <Variable>
+    <Parameter Type=""System.IDisposable"" Id=""0"" />
+  </Variable>
+  <Resource>
+    <Default Type=""System.IDisposable"" />
+  </Resource>
+  <Body>
+    <Default Type=""System.Void"" />
+  </Body>
+</CSharpUsing>";
+
+        [TestMethod]
+        public void CSharp_DebugView_Test50()
+        {
+            Assert.AreEqual(dbg50, expr50.DebugView().ToString());
         }
 
     }

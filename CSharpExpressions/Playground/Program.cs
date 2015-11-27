@@ -17,18 +17,18 @@ namespace Playground
     {
         static void Main()
         {
-            Call();
-            Invoke();
-            New();
-            Index();
-            NewMultidimensionalArrayInit();
-            AsyncLambda();
-            Switch();
-            While();
-            DoWhile();
-            Using();
-            ForEach();
-            For();
+            //Call();
+            //Invoke();
+            //New();
+            //Index();
+            //NewMultidimensionalArrayInit();
+            //AsyncLambda();
+            //Switch();
+            //While();
+            //DoWhile();
+            //Using();
+            //ForEach();
+            //For();
             Conditional();
             ConditionalMember();
             ConditionalCall();

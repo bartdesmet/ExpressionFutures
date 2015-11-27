@@ -571,7 +571,7 @@ namespace System.Linq.Expressions
             return node;
         }
 
-        protected int MakeInstanceId(object o)
+        public int MakeInstanceId(object o)
         {
             var id = default(int);
             if (!_instanceIds.TryGetValue(o, out id))

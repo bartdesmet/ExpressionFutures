@@ -28,6 +28,7 @@ var exprs = new string[]
     "CSharpExpression.ConditionalInvoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod(\"Invoke\").GetParameters()[0], Expression.Constant(42)))",
     "CSharpExpression.ConditionalIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty(\"Item\"), CSharpExpression.Bind(typeof(List<int>).GetProperty(\"Item\").GetIndexParameters()[0], Expression.Constant(42)))",
     "CSharpExpression.ConditionalProperty(Expression.Default(typeof(string)), typeof(string).GetProperty(\"Length\"))",
+    "CSharpExpression.ConditionalAccess(Expression.Default(typeof(string)), CSharpExpression.ConditionalReceiver(typeof(string)), Expression.Property(CSharpExpression.ConditionalReceiver(typeof(string)), \"Length\"))",
     
     "DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2))",
     "DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext)",

@@ -54,5 +54,12 @@ namespace System.Linq.Expressions
         /// <param name="switchCase">The switch case to get a debug view for.</param>
         /// <returns>Debug view for the specified switch case.</returns>
         XNode GetDebugView(SwitchCase switchCase);
+
+        /// <summary>
+        /// Gets a unique instance identifier for the specified object.
+        /// </summary>
+        /// <param name="value">The object to get an instance identifier for.</param>
+        /// <returns>A unique instance identifier for the specified object.</returns>
+        int MakeInstanceId(object value);
     }
 }
