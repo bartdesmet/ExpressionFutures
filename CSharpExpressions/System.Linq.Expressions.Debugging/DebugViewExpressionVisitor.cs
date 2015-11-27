@@ -405,7 +405,7 @@ namespace System.Linq.Expressions
                 args.Add(new XElement(nameof(node.DefaultValue), Visit(node.DefaultValue)));
             }
 
-            return Push(node);
+            return Push(node, args);
         }
 
         protected override LabelTarget VisitLabelTarget(LabelTarget node)

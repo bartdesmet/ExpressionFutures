@@ -3450,7 +3450,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_AA02() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_BBBC_A048()
+        public void CompilerTest_BBBC_6128()
         {
             // (Expression<Action>)(() => { goto A; A: Console.Write('A'); })
             var actual = GetDebugView(@"(Expression<Action>)(() => { goto A; A: Console.Write('A'); })");
@@ -3465,7 +3465,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             <LabelTarget Type=""System.Void"" Id=""0"" Name=""A"" />
           </Target>
         </CSharpGoto>
-        <Label Type=""System.Void"" />
+        <Label Type=""System.Void"">
+          <Target>
+            <LabelTarget Type=""System.Void"" Id=""0"" Name=""A"" />
+          </Target>
+        </Label>
         <Call Type=""System.Void"" Method=""Void Write(Char)"">
           <Arguments>
             <Constant Type=""System.Char"" Value=""A"" />
@@ -3479,13 +3483,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_BBBC_A048();
+            Verify.CompilerTest_BBBC_6128();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BBBC_A048() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BBBC_6128() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_6FC7_B707()
+        public void CompilerTest_6FC7_B4A6()
         {
             // (Expression<Action>)(() => { A: Console.Write('A'); goto A; })
             var actual = GetDebugView(@"(Expression<Action>)(() => { A: Console.Write('A'); goto A; })");
@@ -3495,7 +3499,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   <Body>
     <Block Type=""System.Void"">
       <Expressions>
-        <Label Type=""System.Void"" />
+        <Label Type=""System.Void"">
+          <Target>
+            <LabelTarget Type=""System.Void"" Id=""0"" Name=""A"" />
+          </Target>
+        </Label>
         <Call Type=""System.Void"" Method=""Void Write(Char)"">
           <Arguments>
             <Constant Type=""System.Char"" Value=""A"" />
@@ -3511,10 +3519,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_6FC7_B707();
+            Verify.CompilerTest_6FC7_B4A6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6FC7_B707() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6FC7_B4A6() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_F94F_A97B()
@@ -6342,8 +6350,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6102_7F8E => OK();
             public override void CompilerTest_AEF8_9F07 => OK();
             public override void CompilerTest_7381_AA02 => OK();
-            public override void CompilerTest_BBBC_A048 => OK();
-            public override void CompilerTest_6FC7_B707 => OK();
+            public override void CompilerTest_BBBC_6128 => OK();
+            public override void CompilerTest_6FC7_B4A6 => OK();
             public override void CompilerTest_F94F_A97B => OK();
             public override void CompilerTest_044F_6ED6 => OK();
             public override void CompilerTest_094E_A851 => OK();

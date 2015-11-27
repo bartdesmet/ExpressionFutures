@@ -149,8 +149,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_7381_AA02() => INCONCLUSIVE(); // TODO: Degenerates into an expression body
 
             // Label/Goto
-            public override void CompilerTest_BBBC_A048() => INCONCLUSIVE(); // TODO: Misses label name
-            public override void CompilerTest_6FC7_B707() => INCONCLUSIVE(); // TODO: Misses label name
+            public override void CompilerTest_BBBC_6128() => OK();
+            public override void CompilerTest_6FC7_B4A6() => OK();
 
             // Assignments
             public override void CompilerTest_F94F_A97B() => OK();

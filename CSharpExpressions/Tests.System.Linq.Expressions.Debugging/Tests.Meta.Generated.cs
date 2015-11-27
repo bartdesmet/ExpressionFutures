@@ -520,7 +520,11 @@ namespace Tests
         }
 
         private Expression expr31 = Expression.Label(Expression.Label());
-        private string dbg31 = @"<Label Type=""System.Void"" />";
+        private string dbg31 = @"<Label Type=""System.Void"">
+  <Target>
+    <LabelTarget Type=""System.Void"" Id=""0"" />
+  </Target>
+</Label>";
 
         [TestMethod]
         public void DebugView_Test31()
@@ -529,7 +533,14 @@ namespace Tests
         }
 
         private Expression expr32 = Expression.Label(Expression.Label(typeof(int)), Expression.Default(typeof(int)));
-        private string dbg32 = @"<Label Type=""System.Int32"" />";
+        private string dbg32 = @"<Label Type=""System.Int32"">
+  <Target>
+    <LabelTarget Type=""System.Int32"" Id=""0"" />
+  </Target>
+  <DefaultValue>
+    <Default Type=""System.Int32"" />
+  </DefaultValue>
+</Label>";
 
         [TestMethod]
         public void DebugView_Test32()
@@ -538,7 +549,14 @@ namespace Tests
         }
 
         private Expression expr33 = Expression.Label(Expression.Label(typeof(int), "foo"), Expression.Default(typeof(int)));
-        private string dbg33 = @"<Label Type=""System.Int32"" />";
+        private string dbg33 = @"<Label Type=""System.Int32"">
+  <Target>
+    <LabelTarget Type=""System.Int32"" Id=""0"" Name=""foo"" />
+  </Target>
+  <DefaultValue>
+    <Default Type=""System.Int32"" />
+  </DefaultValue>
+</Label>";
 
         [TestMethod]
         public void DebugView_Test33()
