@@ -25,9 +25,6 @@ var exprs = new[]
     "(Expression<Func<int>>)(() => 42)",
     "(Expression<Func<string, int>>)(s => s.Length)",
     
-    // NB: Right now, the below will fail, because we're running with C# 6.0 RTM compiler binaries.
-    //     Once we plug in our custom build of the compiler, we should be able to run this.
-
     // Multi-dimensional array initializer
     "(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })",
 	"(Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })",
