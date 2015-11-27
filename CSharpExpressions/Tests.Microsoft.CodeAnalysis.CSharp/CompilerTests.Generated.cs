@@ -303,20 +303,67 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4C39_BCFC() => INCONCLUSIVE(); }
 
-        [Ignore]
-        // Unable to cast object of type 'System.Reflection.RuntimeConstructorInfo' to type 'System.Reflection.MethodInfo'.
         [TestMethod]
-        public void CompilerTest_DC07_B7BA()
+        public void CompilerTest_00C1_AE5C()
         {
-            // /* !!!BUG!!! */(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))
-            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))");
+            // (Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))
+            var actual = GetDebugView(@"(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))");
             var expected = @"
-???";
+<Lambda Type=""System.Func`1[System.TimeSpan]"">
+  <Parameters />
+  <Body>
+    <CSharpNew Type=""System.TimeSpan"" Constructor=""Void .ctor(Int64)"">
+      <Arguments>
+        <ParameterAssignment Parameter=""Int64 ticks"">
+          <Expression>
+            <Constant Type=""System.Int64"" Value=""42"" />
+          </Expression>
+        </ParameterAssignment>
+      </Arguments>
+    </CSharpNew>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_DC07_B7BA();
+            Verify.CompilerTest_00C1_AE5C();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DC07_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_00C1_AE5C() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_D9CA_6B19()
+        {
+            // (Expression<Func<TimeSpan>>)(() => new TimeSpan(seconds: 3, minutes: 2, hours: 1))
+            var actual = GetDebugView(@"(Expression<Func<TimeSpan>>)(() => new TimeSpan(seconds: 3, minutes: 2, hours: 1))");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.TimeSpan]"">
+  <Parameters />
+  <Body>
+    <CSharpNew Type=""System.TimeSpan"" Constructor=""Void .ctor(Int32, Int32, Int32)"">
+      <Arguments>
+        <ParameterAssignment Parameter=""Int32 seconds"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""3"" />
+          </Expression>
+        </ParameterAssignment>
+        <ParameterAssignment Parameter=""Int32 minutes"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""2"" />
+          </Expression>
+        </ParameterAssignment>
+        <ParameterAssignment Parameter=""Int32 hours"">
+          <Expression>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Expression>
+        </ParameterAssignment>
+      </Arguments>
+    </CSharpNew>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_D9CA_6B19();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D9CA_6B19() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_EDEC_D0C9()
@@ -6203,7 +6250,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_4EB1_83FD => OK();
             public override void CompilerTest_C437_AA4C => OK();
             public override void CompilerTest_4C39_BCFC => OK();
-            public override void CompilerTest_DC07_B7BA => OK();
+            public override void CompilerTest_00C1_AE5C => OK();
+            public override void CompilerTest_D9CA_6B19 => OK();
             public override void CompilerTest_EDEC_D0C9 => OK();
             public override void CompilerTest_6271_EABC => OK();
             public override void CompilerTest_053A_671C => OK();

@@ -41,7 +41,8 @@ var exprs = new[]
     // TODO: ref/out
 
     // Named parameters for constructors
-    "/* !!!BUG!!! */(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
+    "(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
+	"(Expression<Func<TimeSpan>>)(() => new TimeSpan(seconds: 3, minutes: 2, hours: 1))",
     // TODO: ref/out
 
     // Named parameters for indexers
