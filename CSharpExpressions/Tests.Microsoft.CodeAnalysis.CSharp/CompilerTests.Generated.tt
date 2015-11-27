@@ -108,9 +108,14 @@ var exprs = new[]
 
 	// Dynamic index
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
-
-	// Dynamic index
-    "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
+	"(Expression<Func<dynamic, dynamic>>)(x => x[1])",
+	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[a: 1])",
+	"(Expression<Func<dynamic, dynamic>>)(x => x[a: 1])",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[y])",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[y])",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[a: y])",
+	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[a: y])",
+	"(Expression<Func<string, dynamic, dynamic>>)((s, i) => s[i])",
 
 	// Dynamic invoke constructor
 	"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",

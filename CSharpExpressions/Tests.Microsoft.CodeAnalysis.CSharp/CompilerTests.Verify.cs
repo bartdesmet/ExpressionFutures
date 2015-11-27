@@ -86,6 +86,17 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_7349_817B() => OK(); // REVIEW: Is UseCompileTimeType expected?
             public override void CompilerTest_76D5_13EF() => OK(); // REVIEW: Is UseCompileTimeType expected?
 
+            // Dynamic index
+            public override void CompilerTest_55B7_3EFA() => OK();
+            public override void CompilerTest_7760_936B() => OK();
+            public override void CompilerTest_7FDD_6511() => OK();
+            public override void CompilerTest_D809_C13E() => OK();
+            public override void CompilerTest_9998_022C() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_F77D_040F() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_604B_718E() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_D83C_2D6C() => OK(); // REVIEW: Is UseCompileTimeType expected?
+            public override void CompilerTest_F586_7D7E() => OK(); // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument (compile-time type comes to mind)?
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
