@@ -50,16 +50,34 @@ var exprs = new[]
 
 	// TODO: optional parameters
 	 
-    // Dynamic
+    // Dynamic unary
+	"(Expression<Func<dynamic, dynamic>>)(x => +x)",
     "(Expression<Func<dynamic, dynamic>>)(x => -x)",
+	"(Expression<Func<dynamic, dynamic>>)(x => !x)",
+	"(Expression<Func<dynamic, dynamic>>)(x => ~x)",
+	"(Expression<Func<dynamic, dynamic>>)(x => checked(-x))",
+
+	// Dynamic binary
     "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
+
+	// Dynamic convert
     "(Expression<Func<dynamic, int>>)(x => (int)x)",
+
+	// Dynamic get member
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
+
+	// Dynamic invoke member
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1))",
-    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
-    "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
 	// !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
-    "(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
+
+	// Dynamic index
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
+
+	// Dynamic index
+    "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
+
+	// Dynamic invoke constructor
+	"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
 	 
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
