@@ -36,7 +36,28 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_8E43_6B25() => OK();
             public override void CompilerTest_CE27_211A() => OK();
             public override void CompilerTest_EA86_0AAE() => OK();
-            public override void CompilerTest_7005_E877() => OK();
+            public override void CompilerTest_7005_E877() => OK(); // DESIGN: Uses Subtract, not SubtractChecked; Flags contains CheckedContext
+
+            // Dynamic binary
+            public override void CompilerTest_775D_E1DB() => OK();
+            public override void CompilerTest_84B6_6376() => OK();
+            public override void CompilerTest_754C_C121() => OK();
+            public override void CompilerTest_6E28_DBCA() => OK();
+            public override void CompilerTest_A085_4C3D() => OK();
+            public override void CompilerTest_DE17_40A5() => OK();
+            public override void CompilerTest_5CD0_0AE2() => OK();
+            public override void CompilerTest_0C84_0C91() => OK();
+            public override void CompilerTest_FF88_BC1C() => OK();
+            public override void CompilerTest_F2A3_DCF3() => OK();
+            public override void CompilerTest_3DBC_7187() => OK();
+            public override void CompilerTest_5002_22B5() => OK();
+            public override void CompilerTest_1A1B_4504() => OK();
+            public override void CompilerTest_8DF7_1EFB() => OK();
+            public override void CompilerTest_5F46_EC7B() => OK();
+            public override void CompilerTest_106F_B1CC() => OK();
+            public override void CompilerTest_2275_966C() => OK(); // DESIGN: Uses And, not AndAlso; Flags contains BinaryOperationLogical
+            public override void CompilerTest_FB20_C3F6() => OK(); // DESIGN: Uses Or, not OrElse; Flags contains BinaryOperationLogical
+            public override void CompilerTest_191C_CEEB() => OK(); // DESIGN: Uses Add, not AddChecked; Flags contains CheckedContext
 
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda

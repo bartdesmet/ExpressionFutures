@@ -58,7 +58,25 @@ var exprs = new[]
 	"(Expression<Func<dynamic, dynamic>>)(x => checked(-x))",
 
 	// Dynamic binary
-    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a + b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a - b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a * b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a / b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a % b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a & b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a | b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a ^ b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a < b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a <= b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a > b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >= b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a == b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a != b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a << b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >> b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a && b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a || b)",
+	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
 
 	// Dynamic convert
     "(Expression<Func<dynamic, int>>)(x => (int)x)",
