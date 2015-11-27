@@ -197,6 +197,14 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { --x; })",
     "(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
     "(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
+	"(Expression<Action<int>>)(x => { checked { x += 1; } })",
+	"(Expression<Action<int>>)(x => { checked { x -= 1; } })",
+    "(Expression<Action<int>>)(x => { checked { x *= 1; } })",
+	"(Expression<Action<int>>)(x => { checked { x++; } })",
+	"(Expression<Action<int>>)(x => { checked { x--; } })",
+	"(Expression<Action<int>>)(x => { checked { ++x; } })",
+	"(Expression<Action<int>>)(x => { checked { --x; } })",
+	"(Expression<Action<int?>>)(x => { x += 1; })",
     "/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
 
     // If
