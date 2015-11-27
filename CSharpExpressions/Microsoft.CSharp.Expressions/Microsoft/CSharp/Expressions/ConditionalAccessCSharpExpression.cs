@@ -157,6 +157,8 @@ namespace Microsoft.CSharp.Expressions
 
             protected internal override Expression VisitConditionalReceiver(ConditionalReceiver node)
             {
+                // TODO: We could check that we find the receiver exactly once.
+
                 if (node == _receiver)
                 {
                     return _nonNull;
