@@ -112,6 +112,7 @@ var exprs = new[]
 	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))",
 	// !!!BUG!!! "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))", // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument (compile-time type comes to mind)?
 	// !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
+	// TODO: tests for discard result behavior
 
 	// Dynamic invoke
 	"(Expression<Func<dynamic, dynamic>>)(f => f())",
@@ -171,6 +172,26 @@ var exprs = new[]
     "(Expression<Action>)(() => { goto A; A: Console.Write('A'); })",
     "(Expression<Action>)(() => { A: Console.Write('A'); goto A; })",
 	 
+	// Assignments
+	"(Expression<Action<int>>)(x => { var y = x; })",
+	"(Expression<Action<int>>)(x => { x += 1; })",
+	"(Expression<Action<int>>)(x => { x -= 1; })",
+	"(Expression<Action<int>>)(x => { x *= 1; })",
+	"(Expression<Action<int>>)(x => { x /= 1; })",
+	"(Expression<Action<int>>)(x => { x %= 1; })",
+	"(Expression<Action<int>>)(x => { x &= 1; })",
+	"(Expression<Action<int>>)(x => { x |= 1; })",
+	"(Expression<Action<int>>)(x => { x ^= 1; })",
+	"(Expression<Action<int>>)(x => { x <<= 1; })",
+	"(Expression<Action<int>>)(x => { x >>= 1; })",
+	"(Expression<Action<int>>)(x => { x++; })",
+	"(Expression<Action<int>>)(x => { x--; })",
+	"(Expression<Action<int>>)(x => { ++x; })",
+	"(Expression<Action<int>>)(x => { --x; })",
+	"(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
+	"(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
+	// !!!BUG!!! "(Expression<Action<string>>)(s => { s += \"!\"; })",
+
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
 	 
