@@ -104,7 +104,7 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalArrayIndexCSharpExpression ConditionalArrayIndex(Expression array, IEnumerable<Expression> indexes)
         {
             RequiresCanRead(array, nameof(array));
-            ContractUtils.RequiresNotNull(indexes, "indexes");
+            ContractUtils.RequiresNotNull(indexes, nameof(indexes));
 
             if (!array.Type.IsArray)
             {

@@ -28,10 +28,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         Expression.Throw(err), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
                         Expression.Call(
                             Expression.Call(
-                                typeof(ExceptionDispatchInfo).GetMethod("Capture", BindingFlags.Public | BindingFlags.Static),
+                                typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Capture), BindingFlags.Public | BindingFlags.Static),
                                 exStronglyTyped
                             ),
-                            typeof(ExceptionDispatchInfo).GetMethod("Throw", BindingFlags.Public | BindingFlags.Instance)
+                            typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Throw), BindingFlags.Public | BindingFlags.Instance)
                         )
                     ),
                     Expression.Assign(err, Expression.Default(err.Type))

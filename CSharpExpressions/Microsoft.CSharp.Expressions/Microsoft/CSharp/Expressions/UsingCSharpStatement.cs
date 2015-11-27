@@ -109,7 +109,7 @@ namespace Microsoft.CSharp.Expressions
             else
             {
                 variable = Variable ?? Expression.Parameter(typeof(IDisposable));
-                cleanup = Expression.Call(variable, typeof(IDisposable).GetMethod("Dispose"));
+                cleanup = Expression.Call(variable, typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose)));
                 checkNull = true;
             }
 
