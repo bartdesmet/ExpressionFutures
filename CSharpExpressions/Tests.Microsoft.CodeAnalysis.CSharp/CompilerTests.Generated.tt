@@ -131,6 +131,9 @@ var exprs = new[]
 
 	// Dynamic invoke constructor
 	"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
+	"(Expression<Func<dynamic, int, dynamic, TimeSpan>>)((x, y, z) => new TimeSpan(x, y, z))",
+	"(Expression<Func<dynamic, List<int>>>)(x => new List<int>(x))",
+	"(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
 	 
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
