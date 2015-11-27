@@ -138,6 +138,7 @@ public static class {typeName}
 
             var typ = asm.GetType(typeName);
             var prp = typ.GetProperty(propName);
+
             var exp = (Expression)prp.GetValue(null);
             return exp.DebugView().ToString();
         }

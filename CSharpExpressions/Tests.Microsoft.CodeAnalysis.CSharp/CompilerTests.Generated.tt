@@ -13,10 +13,11 @@
 <#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="$(SolutionDir)\Tests.Microsoft.CodeAnalysis.CSharp.Helpers\bin\$(Configuration)\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.dll" #>
+<#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Tests.Microsoft.CodeAnalysis.CSharp" #>
 <#@ output extension=".cs" #>
 <#
@@ -40,7 +41,7 @@ var exprs = new[]
 	// TODO: ref/out
 
 	// Named parameters for constructors
-    // !!!BUG!!! "(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
+    "/* !!!BUG!!! */(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
 	// TODO: ref/out
 
 	// Named parameters for indexers
@@ -190,7 +191,7 @@ var exprs = new[]
 	"(Expression<Action<int>>)(x => { --x; })",
 	"(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
 	"(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
-	// !!!BUG!!! "(Expression<Action<string>>)(s => { s += \"!\"; })",
+	"/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
 
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
@@ -205,7 +206,7 @@ var exprs = new[]
     // ForEach
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     "(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
-	// !!!BUG!!! "(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+	"/* !!!BUG!!! */(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
 	 
     // Using
     "(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
@@ -313,6 +314,11 @@ foreach (var expr in exprs)
         dbgTest = "???";
         ignore = ex.Message;
     }
+	catch (TargetInvocationException ex)
+	{
+		dbgTest = "???";
+		ignore = ex.InnerException.Message;
+	}
 
     var cost = sw.Elapsed - before;
     if (ignore != null)
