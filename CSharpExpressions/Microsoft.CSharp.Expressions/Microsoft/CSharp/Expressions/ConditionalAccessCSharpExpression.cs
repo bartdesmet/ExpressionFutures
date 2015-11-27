@@ -1,233 +1,225 @@
 ﻿// Prototyping extended expression trees for C#.
 //
-// bartde - October 2015
+// bartde - November 2015
 
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // DESIGN: We have a few options to model the conditional access operators. Starting from the Roslyn
-    //         approach (cf. BoundConditionalAccess), there's a bit of a mismatch with the philosophy of
-    //         the expression APIs where we've modeled nodes like Call as having a receiver *as well as* 
-    //         parameter bindings. Conditional accesses in Roslyn rely on member bindings which include
-    //         the target member and the argument list (if any). In some way, the non-conditional nodes
-    //         in the expression API bundle such a member binding with a receiver and flatten it into a
-    //         single object. The conditional nodes in Roslyn rely on the two being separate so they can
-    //         be composed in a ConditionalAccessExpression.
-    //
-    //         Options to get a familiar expression API are:
-    //
-    //         - extend the existing non-conditional nodes with an IsLiftedToNull property; if set true,
-    //           behavior becomes conditional (borrowing the "lifted" terminology from Binary and Unary)
-    //         - have parallel node types for conditional variants, e.g. ConditionalCall, with the same
-    //           properties but a different node type; variants could derive from a common base class
-    //         - introduce a single ConditionalAccess node type which wraps any node that supports the
-    //           conditional access pattern, i.e. any expression with a receiver
-    //
-    //         While the third approach is tempting, it's plagued with some issues. In particular, the
-    //         type of such a node would be the nullable equivalent of the underlying node's type, which
-    //         means it doesn't compose well with other existing expressions (e.g. a Call on a nullable
-    //         value type won't accept methods for the underlying non-null type). As such, we're giving
-    //         the second approach a try now. It has the benefit of still having one node per construct
-    //         as is appears in the user surface, meaning that expressions see a form that's close to
-    //         what the user wrote. During the Reduce step, we can optimize the generated code by using
-    //         branches rather than a bunch of nested if-else nodes.
-    //
-    //         Note that the third approach could be made to work if we'd extend existing nodes to have
-    //         an option to be "lifted over null" upon construction. The factories would simply check
-    //         whether that flag is set in order to de-nullify the receiver type prior to checking for
-    //         compatibility with the specified member. The compilation of such nodes would have to be
-    //         changed to take this new null-lifted mode into account. Even though the default setting
-    //         for the flag would be backwards compatible, it would still break custom visitors that
-    //         didn't know about the null-lifting properties and inspect the tree without taking this
-    //         into account (rewrites with Update would still work fine though). This, too, seems to
-    //         suggest that option two is the better one to pursue, short of modeling the construct in
-    //         a way closer to Roslyn, possibly at the cost of familiarity.
-
     /// <summary>
-    /// Base class for conditional access (null-propagating) expressions.
+    /// Represents a null-conditional access operation.
     /// </summary>
-    public abstract partial class OldConditionalAccessCSharpExpression : CSharpExpression
+    public sealed partial class ConditionalAccessCSharpExpression : CSharpExpression
     {
-        /// <summary>
-        /// Creates a new conditional access expression.
-        /// </summary>
-        /// <param name="expression">The expression to access conditionally.</param>
-        protected OldConditionalAccessCSharpExpression(Expression expression)
+        internal ConditionalAccessCSharpExpression(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
         {
-            Expression = expression;
+            Receiver = receiver;
+            NonNullReceiver = nonNullReceiver;
+            WhenNotNull = whenNotNull;
         }
 
         /// <summary>
         /// Gets the <see cref="System.Linq.Expressions.Expression"/> representing the conditionally accessed receiver.
         /// </summary>
-        public Expression Expression
-        {
-            get;
-        }
+        public Expression Receiver { get; }
+
+        /// <summary>
+        /// Gets the <see cref="ConditionalReceiver"/> representing the non-null receiver referenced in <see cref="WhenNotNull"/>.
+        /// </summary>
+        public ConditionalReceiver NonNullReceiver { get; }
+
+        /// <summary>
+        /// Gets the <see cref="System.Linq.Expressions.Expression"/> representing the operation to carry out on the <see cref="NonNullReceiver"/>.
+        /// </summary>
+        public Expression WhenNotNull { get; }
 
         /// <summary>
         /// Gets the static type of the expression that this <see cref="System.Linq.Expressions.Expression" /> represents. (Inherited from <see cref="System.Linq.Expressions.Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public sealed override Type Type => UnderlyingType.GetConditionalType();
+        public override Type Type => WhenNotNull.Type.GetConditionalType();
 
         /// <summary>
-        /// Gets the result type of the underlying access.
+        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
         /// </summary>
-        protected abstract Type UnderlyingType { get; }
+        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
+        public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalAccess;
+
+        /// <summary>
+        /// Dispatches to the specific visit method for this node type.
+        /// </summary>
+        /// <param name="visitor">The visitor to visit this node with.</param>
+        /// <returns>The result of visiting this node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
+        {
+            return visitor.VisitConditionalAccess(this);
+        }
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+        /// </summary>
+        /// <param name="receiver">The <see cref="Receiver" /> property of the result.</param>
+        /// <param name="nonNullReceiver">The <see cref="NonNullReceiver" /> property of the result.</param>
+        /// <param name="whenNotNull">The <see cref="WhenNotNull" /> property of the result.</param>
+        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        public ConditionalAccessCSharpExpression Update(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+        {
+            if (receiver == this.Receiver && nonNullReceiver == this.NonNullReceiver && whenNotNull == this.WhenNotNull)
+            {
+                return this;
+            }
+
+            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, WhenNotNull);
+        }
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
-        public sealed override Expression Reduce()
+        public override Expression Reduce()
         {
-            // NB: We optimize for cases where the receiver is a conditional access itself.
-            //
-            //     For example, consider the following expression:
-            //
-            //       x?.Y?.Z
-            //
-            //     We want to turn this into a series of nested conditionals, like this:
-            //
-            //       var result = default(T);
-            //
-            //       var t0 = x;
-            //       if (t0 != null)
-            //       {
-            //         var t1 = t0.Y;
-            //         if (t1 != null)
-            //         {
-            //           var t2 = t1.Z;
-            //           result = t2;
-            //         }
-            //       }
-            //
-            //       return result;
-            //
-            //     In order to achieve this, we'll build up the resulting expression inside-out by
-            //     checking for the Expression being a ConditionalAccess node itself.
+            var resultType = Type;
+
+            var receiverType = Receiver.Type;
+
+            var receiver = Expression.Parameter(receiverType);
+            var evalReceiver = Expression.Assign(receiver, Receiver);
+
+            var nonNullCheck = default(Expression);
+            var nonNull = default(Expression);
+
+            if (receiverType.IsNullableType())
+            {
+                nonNullCheck = Expression.Property(receiver, "HasValue");
+                nonNull = Expression.Property(receiver, "Value");
+            }
+            else
+            {
+                nonNullCheck = Expression.NotEqual(receiver, Expression.Default(receiverType));
+                nonNull = receiver;
+            }
+
+            var whenNotNull = new SubstituteConditionalReceiver(NonNullReceiver, nonNull).Visit(WhenNotNull);
 
             var res = default(Expression);
 
-            var resultType = Type;
-            var resultVariable = default(ParameterExpression);
-
-            var i = 0;
-            var variable = default(ParameterExpression);
-
             if (resultType != typeof(void))
             {
-                resultVariable = Expression.Parameter(resultType, "__result");
-                variable = Expression.Parameter(resultType, "__temp" + i++);
-                res = Expression.Assign(resultVariable, variable);
-            }
-            else
-            {
-                res = Expression.Empty();
-            }
+                var result = Expression.Parameter(resultType);
 
-            var current = this;
-            var expression = default(Expression);
-
-            while (current != null)
-            {
-                expression = current.Expression;
-                var expressionType = expression.Type;
-
-                var newVariable = Expression.Parameter(expressionType, "__temp" + i++);
-
-                var nonNullCheck = default(Expression);
-                var nonNull = default(Expression);
-
-                if (expressionType.IsNullableType())
+                if (whenNotNull.Type != result.Type)
                 {
-                    nonNullCheck = Expression.Property(newVariable, "HasValue");
-                    nonNull = Expression.Property(newVariable, "Value");
-                }
-                else
-                {
-                    nonNullCheck = Expression.NotEqual(newVariable, Expression.Default(expressionType));
-                    nonNull = newVariable;
+                    whenNotNull = Expression.Convert(whenNotNull, resultType);
                 }
 
-                var eval = current.ReduceAccess(nonNull);
-
-                var whenNotNull = default(Expression);
-
-                if (eval.Type != typeof(void))
-                {
-                    if (eval.Type != variable.Type)
-                    {
-                        eval = Expression.Convert(eval, variable.Type);
-                    }
-
-                    eval = Expression.Assign(variable, eval);
-
-                    whenNotNull =
-                        Expression.Block(
-                            new[] { variable },
-                            eval,
-                            res
-                        );
-                }
-                else
-                {
-                    whenNotNull =
-                        Expression.Block(
-                            eval,
-                            res
-                        );
-                }
-
-                res =
-                    Expression.IfThen(
-                        nonNullCheck,
-                        whenNotNull
-                    );
-
-                variable = newVariable;
-
-                current = expression as OldConditionalAccessCSharpExpression;
-            }
-
-            if (resultVariable != null)
-            {
                 res =
                     Expression.Block(
-                        new[] { resultVariable, variable },
-                        Expression.Assign(variable, expression),
-                        res,
-                        resultVariable
+                        new[] { receiver, result },
+                        evalReceiver,
+                        Expression.IfThen(
+                            nonNullCheck,
+                            Expression.Assign(result, whenNotNull)
+                        ),
+                        result
                     );
             }
             else
             {
                 res =
                     Expression.Block(
-                        new[] { variable },
-                        Expression.Assign(variable, expression),
-                        res
+                        new[] { receiver },
+                        evalReceiver,
+                        Expression.IfThen(
+                            nonNullCheck,
+                            whenNotNull
+                        )
                     );
             }
-
-            // NB: We could save on temporary locals for the left-most Expression if it's a pure
-            //     expression (e.g. a Constant or a Parameter). Similarly, we could save on a
-            //     temporary local for the result. However, it may be better to implement this as
-            //     a general-purpose optimizer (cf. the Optimizer class) such that other reductions
-            //     can benefit from it as well.
 
             return res;
         }
 
+        class SubstituteConditionalReceiver : CSharpExpressionVisitor
+        {
+            private readonly ConditionalReceiver _receiver;
+            private readonly Expression _nonNull;
+
+            public SubstituteConditionalReceiver(ConditionalReceiver receiver, Expression nonNull)
+            {
+                _receiver = receiver;
+                _nonNull = nonNull;
+            }
+
+            protected internal override Expression VisitConditionalReceiver(ConditionalReceiver node)
+            {
+                if (node == _receiver)
+                {
+                    return _nonNull;
+                }
+
+                return base.VisitConditionalReceiver(node);
+            }
+
+            protected internal override Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
+            {
+                if (node.NonNullReceiver == _receiver)
+                {
+                    var receiver = Visit(node.Receiver);
+                    return node.Update(receiver, node.NonNullReceiver, node.WhenNotNull);
+                }
+
+                return base.VisitConditionalAccess(node);
+            }
+        }
+    }
+
+    partial class CSharpExpressionVisitor
+    {
         /// <summary>
-        /// Reduces the expression to an unconditional non-null access on the specified expression.
+        /// Visits the children of the <see cref="ConditionalAccessCSharpExpression" />.
         /// </summary>
-        /// <param name="nonNull">Non-null expression to apply the access to.</param>
-        /// <returns>The reduced expression.</returns>
-        protected abstract Expression ReduceAccess(Expression nonNull);
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal virtual Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
+        {
+            return node.Update(Visit(node.Receiver), VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)), Visit(node.WhenNotNull));
+        }
+    }
+
+    partial class CSharpExpression
+    {
+        /// <summary>
+        /// Creates a <see cref="ConditionalAccessCSharpExpression"/> representing a null-conditional access operation.
+        /// </summary>
+        /// <param name="receiver">The receiver to access conditionally.</param>
+        /// <param name="nonNullReceiver">The non-null receiver used in the <paramref name="whenNotNull"/> expression.</param>
+        /// <param name="whenNotNull">The operation to apply to the receiver when it's non-null.</param>
+        /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReciever" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
+        public static ConditionalAccessCSharpExpression ConditionalAccess(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+        {
+            RequiresCanRead(receiver, nameof(receiver));
+            RequiresNotNull(nonNullReceiver, nameof(nonNullReceiver));
+            RequiresCanRead(whenNotNull, nameof(whenNotNull));
+
+            var receiverType = receiver.Type;
+            if (receiverType.IsValueType && !receiverType.IsNullableType())
+            {
+                throw Error.ConditionalReceiverExpressionShouldBeNullable(receiverType);
+            }
+
+            var nonNullReceiverType = receiverType.GetNonNullReceiverType();
+            if (nonNullReceiverType != nonNullReceiver.Type)
+            {
+                throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType);
+            }
+
+            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
     }
 }
