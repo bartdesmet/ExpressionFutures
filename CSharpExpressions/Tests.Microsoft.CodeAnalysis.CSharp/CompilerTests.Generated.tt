@@ -23,222 +23,222 @@
 <#
 var exprs = new[]
 {
-	// C# 3.0 supported expressions
+    // C# 3.0 supported expressions
     "(Expression<Func<int>>)(() => 42)",
     "(Expression<Func<string, int>>)(s => s.Length)",
-    
+
     // Multi-dimensional array initializers
     "(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })",
-	"(Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })",
-	"(Expression<Func<int[,]>>)(() => new int[2, 1] { { 42 }, { 43 } })",
-	"(Expression<Func<int[,]>>)(() => new int[2, 2] { { 41, 42 }, { 43, 44 } })",
-	 
+    "(Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })",
+    "(Expression<Func<int[,]>>)(() => new int[2, 1] { { 42 }, { 43 } })",
+    "(Expression<Func<int[,]>>)(() => new int[2, 2] { { 41, 42 }, { 43, 44 } })",
+
     // Named parameters for calls
     "(Expression<Func<int>>)(() => Math.Abs(value: 42))",
-	"(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42))",
-	"(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42, length: 43))",
-	"(Expression<Func<string, string>>)(s => s.Substring(length: 43, startIndex: 42))",
-	// TODO: ref/out
+    "(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42))",
+    "(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42, length: 43))",
+    "(Expression<Func<string, string>>)(s => s.Substring(length: 43, startIndex: 42))",
+    // TODO: ref/out
 
-	// Named parameters for constructors
+    // Named parameters for constructors
     "/* !!!BUG!!! */(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
-	// TODO: ref/out
+    // TODO: ref/out
 
-	// Named parameters for indexers
+    // Named parameters for indexers
     "(Expression<Func<List<int>, int>>)(xs => xs[index: 42])",
-	// TODO: ref/out
+    // TODO: ref/out
 
-	// Named parameters for invocations
+    // Named parameters for invocations
     "(Expression<Action<Action<int>>>)(a => a(obj: 42))",
-	"(Expression<Action<Action<string, int, bool>>>)(a => a(arg2: 42, arg1: \"foo\", arg3: false))",
-	// TODO: ref/out
+    "(Expression<Action<Action<string, int, bool>>>)(a => a(arg2: 42, arg1: \"foo\", arg3: false))",
+    // TODO: ref/out
 
-	// TODO: optional parameters
-	 
+    // TODO: optional parameters
+
     // Dynamic unary
-	"(Expression<Func<dynamic, dynamic>>)(x => +x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => +x)",
     "(Expression<Func<dynamic, dynamic>>)(x => -x)",
-	"(Expression<Func<dynamic, dynamic>>)(x => !x)",
-	"(Expression<Func<dynamic, dynamic>>)(x => ~x)",
-	"(Expression<Func<dynamic, dynamic>>)(x => checked(-x))",
+    "(Expression<Func<dynamic, dynamic>>)(x => !x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => ~x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => checked(-x))",
 
-	// Dynamic binary
+    // Dynamic binary
     "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a + b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a - b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a * b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a / b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a % b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a & b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a | b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a ^ b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a < b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a <= b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a > b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >= b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a == b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a != b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a << b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >> b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a && b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a || b)",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a - b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a * b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a / b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a % b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a & b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a | b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a ^ b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a < b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a <= b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a > b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >= b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a == b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a != b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a << b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >> b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a && b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a || b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
 
-	// Dynamic convert
+    // Dynamic convert
     "(Expression<Func<dynamic, int>>)(x => (int)x)",
-	"(Expression<Func<dynamic, string>>)(x => (string)x)",
-	"(Expression<Func<dynamic, object>>)(x => (object)x)", // NB: gets erased
+    "(Expression<Func<dynamic, string>>)(x => (string)x)",
+    "(Expression<Func<dynamic, object>>)(x => (object)x)", // NB: gets erased
 
-	// TODO: support for dynamic set member and set index?
+    // TODO: support for dynamic set member and set index?
 
-	// Dynamic get member
+    // Dynamic get member
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
 
-	// Dynamic invoke member
-	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo())",
+    // Dynamic invoke member
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo())",
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1, 2))",
-	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo(x: 1, y: 2))",
-	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int>())",
-	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int, bool>())",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y))",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y: y))",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(ref y))",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: ref y))",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(out y))",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: out y))",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y))",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y: y))",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(ref y))",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))",
-	"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))",
-	// !!!BUG!!! "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))", // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument (compile-time type comes to mind)?
-	// !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
-	// TODO: tests for discard result behavior
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(x: 1, y: 2))",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int>())",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int, bool>())",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y: y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(ref y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: ref y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(out y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: out y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y: y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(ref y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))",
+    // !!!BUG!!! "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))", // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument (compile-time type comes to mind)?
+    // !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
+    // TODO: tests for discard result behavior
 
-	// Dynamic invoke
-	"(Expression<Func<dynamic, dynamic>>)(f => f())",
-	"(Expression<Func<dynamic, dynamic>>)(f => f(1, 2))",
-	"(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
-	"(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: d, b: x))",
-	"(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: ref d, b: out x))",
-	"(Expression<Func<Func<int, int, int>, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
+    // Dynamic invoke
+    "(Expression<Func<dynamic, dynamic>>)(f => f())",
+    "(Expression<Func<dynamic, dynamic>>)(f => f(1, 2))",
+    "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
+    "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: d, b: x))",
+    "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: ref d, b: out x))",
+    "(Expression<Func<Func<int, int, int>, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
 
-	// Dynamic index
+    // Dynamic index
     "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
-	"(Expression<Func<dynamic, dynamic>>)(x => x[1])",
-	"(Expression<Func<dynamic, dynamic>>)(x => x.Foo[a: 1])",
-	"(Expression<Func<dynamic, dynamic>>)(x => x[a: 1])",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[y])",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[y])",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[a: y])",
-	"(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[a: y])",
-	"(Expression<Func<dynamic, int, dynamic, dynamic>>)((x, y, z) => x[a: ref y, b: out z])",
-	"(Expression<Func<string, dynamic, dynamic>>)((s, i) => s[i])",
+    "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[a: 1])",
+    "(Expression<Func<dynamic, dynamic>>)(x => x[a: 1])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[y])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[y])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[a: y])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[a: y])",
+    "(Expression<Func<dynamic, int, dynamic, dynamic>>)((x, y, z) => x[a: ref y, b: out z])",
+    "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s[i])",
 
-	// Dynamic invoke constructor
-	"(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
-	"(Expression<Func<dynamic, int, dynamic, TimeSpan>>)((x, y, z) => new TimeSpan(x, y, z))",
-	"(Expression<Func<dynamic, List<int>>>)(x => new List<int>(x))",
-	"(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
-	// TODO: ref/out
-	 
+    // Dynamic invoke constructor
+    "(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
+    "(Expression<Func<dynamic, int, dynamic, TimeSpan>>)((x, y, z) => new TimeSpan(x, y, z))",
+    "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(x))",
+    "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
+    // TODO: ref/out
+
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))",
     "(Expression<Func<dynamic, Task<dynamic>>>)(async d => await d)",
-	"(Expression<Func<dynamic, Task<object>>>)(async d => await d)",
-	"(Expression<Func<dynamic, Task<int>>>)(async d => await d)",
-	 
+    "(Expression<Func<dynamic, Task<object>>>)(async d => await d)",
+    "(Expression<Func<dynamic, Task<int>>>)(async d => await d)",
+
     // Conditional access
     "(Expression<Func<string, int?>>)(s => s?.Length)",
-	"(Expression<Func<string, int?>>)(s => s?.ToUpper()?.Length)",
+    "(Expression<Func<string, int?>>)(s => s?.ToUpper()?.Length)",
     "(Expression<Func<string, string>>)(s => s?.ToUpper())",
-	"(Expression<Func<string, string>>)(s => s?.Substring(1)?.ToUpper())",
-	"(Expression<Func<DateTimeOffset?, TimeSpan?>>)(d => d?.Offset)",
-	"(Expression<Func<DateTimeOffset?, int?>>)(d => (d?.Offset)?.Hours)",
-	// !!!BUG!!! "(Expression<Func<DateTimeOffset?, int?>>)(d => d?.Offset.Hours)",
-    // !!!BUG!!! "(Expression<Func<string, char?>>)(s => s?[42])",
+    "(Expression<Func<string, string>>)(s => s?.Substring(1)?.ToUpper())",
+    "(Expression<Func<DateTimeOffset?, TimeSpan?>>)(d => d?.Offset)",
+    "(Expression<Func<DateTimeOffset?, int?>>)(d => (d?.Offset)?.Hours)",
+    "(Expression<Func<DateTimeOffset?, int?>>)(d => d?.Offset.Hours)",
+    //"(Expression<Func<string, char?>>)(s => s?[42])",
     "(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))",
-	 
+
     // Block
     "(Expression<Action>)(() => { })",
-	"(Expression<Action>)(() => { int x; x = 5; })",
-	"(Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })",
-	 
+    "(Expression<Action>)(() => { int x; x = 5; })",
+    "(Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })",
+         
     // Empty
     "(Expression<Action>)(() => { ; })",
-	"(Expression<Action>)(() => { ;; })",
-	 
+    "(Expression<Action>)(() => { ;; })",
+     
     // Return
     "(Expression<Action>)(() => { return; })",
-	"(Expression<Func<int>>)(() => { int x = 42; return x; })",
+    "(Expression<Func<int>>)(() => { int x = 42; return x; })",
     "(Expression<Func<int>>)(() => { return 42; })",
-	 
+     
     // Label/Goto
     "(Expression<Action>)(() => { goto A; A: Console.Write('A'); })",
     "(Expression<Action>)(() => { A: Console.Write('A'); goto A; })",
-	 
-	// Assignments
-	"(Expression<Action<int>>)(x => { var y = x; })",
-	"(Expression<Action<int>>)(x => { x += 1; })",
-	"(Expression<Action<int>>)(x => { x -= 1; })",
-	"(Expression<Action<int>>)(x => { x *= 1; })",
-	"(Expression<Action<int>>)(x => { x /= 1; })",
-	"(Expression<Action<int>>)(x => { x %= 1; })",
-	"(Expression<Action<int>>)(x => { x &= 1; })",
-	"(Expression<Action<int>>)(x => { x |= 1; })",
-	"(Expression<Action<int>>)(x => { x ^= 1; })",
-	"(Expression<Action<int>>)(x => { x <<= 1; })",
-	"(Expression<Action<int>>)(x => { x >>= 1; })",
-	"(Expression<Action<int>>)(x => { x++; })",
-	"(Expression<Action<int>>)(x => { x--; })",
-	"(Expression<Action<int>>)(x => { ++x; })",
-	"(Expression<Action<int>>)(x => { --x; })",
-	"(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
-	"(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
-	"/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
+     
+    // Assignments
+    "(Expression<Action<int>>)(x => { var y = x; })",
+    "(Expression<Action<int>>)(x => { x += 1; })",
+    "(Expression<Action<int>>)(x => { x -= 1; })",
+    "(Expression<Action<int>>)(x => { x *= 1; })",
+    "(Expression<Action<int>>)(x => { x /= 1; })",
+    "(Expression<Action<int>>)(x => { x %= 1; })",
+    "(Expression<Action<int>>)(x => { x &= 1; })",
+    "(Expression<Action<int>>)(x => { x |= 1; })",
+    "(Expression<Action<int>>)(x => { x ^= 1; })",
+    "(Expression<Action<int>>)(x => { x <<= 1; })",
+    "(Expression<Action<int>>)(x => { x >>= 1; })",
+    "(Expression<Action<int>>)(x => { x++; })",
+    "(Expression<Action<int>>)(x => { x--; })",
+    "(Expression<Action<int>>)(x => { ++x; })",
+    "(Expression<Action<int>>)(x => { --x; })",
+    "(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
+    "(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
+    "/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
 
-	// If
-	"(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); })",
-	"(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); else Console.Write('F'); })",
-	"(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } })",
-	"(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else { Console.Write('F'); } })",
-	"(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else if (x < 5) { Console.Write('E'); } else { Console.Write('F'); } })",
-	
+    // If
+    "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); })",
+    "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); else Console.Write('F'); })",
+    "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } })",
+    "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else { Console.Write('F'); } })",
+    "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else if (x < 5) { Console.Write('E'); } else { Console.Write('F'); } })",
+    
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
-	"(Expression<Action>)(() => { while (true) { Console.Write('.'); } })",
-	"(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
-	 
+    "(Expression<Action>)(() => { while (true) { Console.Write('.'); } })",
+    "(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
+     
     // Do
     "(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
-	"(Expression<Action>)(() => { int i = 0; do { if (i == 5) continue; if (i == 8) break; i++; } while (i < 10); })",
-	 
+    "(Expression<Action>)(() => { int i = 0; do { if (i == 5) continue; if (i == 8) break; i++; } while (i < 10); })",
+     
     // For
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
     "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
-	// TODO: break/continue
-	// TODO: for with many declarators
-	// TODO: for with initializer statement
-	 
+    // TODO: break/continue
+    // TODO: for with many declarators
+    // TODO: for with initializer statement
+     
     // ForEach
-	"(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })",
+    "(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })",
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     "(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
-	"/* !!!BUG!!! */(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
-	// TODO: break/continue
-	// TODO: dynamic
-	 
+    "/* !!!BUG!!! */(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    // TODO: break/continue
+    // TODO: dynamic
+     
     // Using
     "(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
-	"(Expression<Action<IDisposable>>)(d => { using (d) { Console.Write('.'); } })",
+    "(Expression<Action<IDisposable>>)(d => { using (d) { Console.Write('.'); } })",
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })",
-	"(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })",
-	// TODO: nested
+    "(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })",
+    // TODO: nested
 
     // Lock
     "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
-	 
+     
     // Try
     "(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })",
@@ -247,9 +247,9 @@ var exprs = new[]
     // !!!BUG!!! "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
-	 
-	// Throw
-	// TODO: throw, rethrow
+     
+    // Throw
+    // TODO: throw, rethrow
 
     // Switch
     "(Expression<Action<int>>)(x => { switch (x) {} })",
@@ -341,11 +341,11 @@ foreach (var expr in exprs)
         dbgTest = "???";
         ignore = ex.Message;
     }
-	catch (TargetInvocationException ex)
-	{
-		dbgTest = "???";
-		ignore = ex.InnerException.Message;
-	}
+    catch (TargetInvocationException ex)
+    {
+        dbgTest = "???";
+        ignore = ex.InnerException.Message;
+    }
 
     var cost = sw.Elapsed - before;
     if (ignore != null)
