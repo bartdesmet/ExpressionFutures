@@ -29,6 +29,7 @@ namespace Playground
             Using();
             ForEach();
             For();
+            Conditional();
             ConditionalMember();
             ConditionalCall();
             ConditionalIndex();
@@ -1318,6 +1319,157 @@ namespace Playground
                 )
             );
             loop.Compile()();
+        }
+
+        static void Conditional()
+        {
+            Conditional_Member1();
+            Conditional_Member2();
+            Conditional_Member3();
+            Conditional_Member4();
+            Conditional_Call1();
+            Conditional_Call2();
+            Conditional_Call3();
+            Conditional_Call4();
+            Conditional_Index1();
+            Conditional_Invoke1();
+        }
+
+        static void Conditional_Member1()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(TimeSpan?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(TimeSpan));
+            var e = Expression.Lambda<Func<TimeSpan?, int?>>(CSharpExpression.ConditionalAccess(p, n, Expression.Property(n, "Seconds")), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(TimeSpan.FromSeconds(42)));
+        }
+
+        static void Conditional_Member2()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(string));
+            var n = CSharpExpression.ConditionalReceiver(typeof(string));
+            var e = Expression.Lambda<Func<string, int?>>(CSharpExpression.ConditionalAccess(p, n, Expression.Property(n, "Length")), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f("bar"));
+        }
+
+        static void Conditional_Member3()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTimeOffset));
+            var e = Expression.Lambda<Func<DateTimeOffset?, int?>>(CSharpExpression.ConditionalAccess(p, n, Expression.Property(Expression.Property(n, "Offset"), "Hours")), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTimeOffset.Now));
+        }
+
+        static void Conditional_Member4()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(DateTimeOffset?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTimeOffset));
+            var m = CSharpExpression.ConditionalReceiver(typeof(TimeSpan));
+            var e = Expression.Lambda<Func<DateTimeOffset?, int?>>(CSharpExpression.ConditionalAccess(CSharpExpression.ConditionalAccess(p, n, Expression.Property(n, "Offset")), m, Expression.Property(m, "Hours")), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTimeOffset.Now));
+        }
+
+        static void Conditional_Call1()
+        {
+            Title();
+
+            var addYears = MethodInfoOf((DateTime dt) => dt.AddYears(default(int)));
+            var p0 = addYears.GetParameters()[0];
+
+            var p = Expression.Parameter(typeof(DateTime?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTime));
+            var e = Expression.Lambda<Func<DateTime?, DateTime?>>(CSharpExpression.ConditionalAccess(p, n, CSharpExpression.Call(n, addYears, CSharpExpression.Bind(p0, Expression.Constant(1)))), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTime.Now));
+        }
+
+        static void Conditional_Call2()
+        {
+            Title();
+
+            var toString = MethodInfoOf((DateTime dt) => dt.ToString());
+
+            var p = Expression.Parameter(typeof(DateTime?));
+            var n = CSharpExpression.ConditionalReceiver(typeof(DateTime));
+            var e = Expression.Lambda<Func<DateTime?, string>>(CSharpExpression.ConditionalAccess(p, n, Expression.Call(n, toString)), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(DateTime.Now));
+        }
+
+        static void Conditional_Call3()
+        {
+            Title();
+
+            var toUpper = MethodInfoOf((string s) => s.ToUpper());
+            var toLower = MethodInfoOf((string s) => s.ToLower());
+
+            var p = Expression.Parameter(typeof(string));
+            var n = CSharpExpression.ConditionalReceiver(typeof(string));
+            var e = Expression.Lambda<Func<string, string>>(CSharpExpression.ConditionalAccess(p, n, Expression.Call(Expression.Call(n, toUpper), toLower)), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f("bar"));
+
+        }
+
+        static void Conditional_Call4()
+        {
+            Title();
+
+            var toUpper = MethodInfoOf((string s) => s.ToUpper());
+            var toLower = MethodInfoOf((string s) => s.ToLower());
+
+            var p = Expression.Parameter(typeof(string));
+            var n = CSharpExpression.ConditionalReceiver(typeof(string));
+            var m = CSharpExpression.ConditionalReceiver(typeof(string));
+            var e = Expression.Lambda<Func<string, string>>(CSharpExpression.ConditionalAccess(CSharpExpression.ConditionalAccess(p, n, Expression.Call(n, toUpper)), m, Expression.Call(m, toLower)), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f("bar"));
+        }
+
+        static void Conditional_Index1()
+        {
+            Title();
+
+            var index = PropertyInfoOf((List<int> xs) => xs[default(int)]);
+            var p0 = index.GetIndexParameters()[0];
+
+            var p = Expression.Parameter(typeof(List<int>));
+            var n = CSharpExpression.ConditionalReceiver(typeof(List<int>));
+            var e = Expression.Lambda<Func<List<int>, int?>>(CSharpExpression.ConditionalAccess(p, n, CSharpExpression.Index(n, index, CSharpExpression.Bind(p0, Expression.Constant(0)))), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(new List<int> { 42 }));
+        }
+
+        static void Conditional_Invoke1()
+        {
+            Title();
+
+            var p = Expression.Parameter(typeof(Func<int>));
+            var n = CSharpExpression.ConditionalReceiver(typeof(Func<int>));
+            var e = Expression.Lambda<Func<Func<int>, int?>>(CSharpExpression.ConditionalAccess(p, n, Expression.Invoke(n)), p);
+            var f = e.Compile();
+            Console.WriteLine(f(null));
+            Console.WriteLine(f(() => 42));
         }
 
         static void ConditionalMember()

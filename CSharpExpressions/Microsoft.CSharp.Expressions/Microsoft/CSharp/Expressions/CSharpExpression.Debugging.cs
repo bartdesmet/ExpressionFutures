@@ -52,6 +52,7 @@ namespace Microsoft.CSharp.Expressions
     {
         private readonly IDebugViewExpressionVisitor _parent;
         private readonly Stack<XNode> _nodes = new Stack<XNode>();
+        private readonly IDictionary<object, int> _instanceIds = new Dictionary<object, int>();
 
         public CSharpDebugViewExpressionVisitor()
             : this(new DebugViewExpressionVisitor())
@@ -622,6 +623,22 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
+        {
+            return base.VisitConditionalAccess(node);
+        }
+
+        protected internal override Expression VisitConditionalReceiver(ConditionalReceiver node)
+        {
+            var id = MakeInstanceId(node);
+
+            var res = new XElement(nameof(ConditionalReceiver), new XAttribute("Id", id), new XAttribute(nameof(node.Type), node.Type));
+            _nodes.Push(res);
+
+            return node;
+        }
+
         private XNode Visit(ParameterAssignment node)
         {
             VisitParameterAssignment(node);
@@ -637,6 +654,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(CSharpSwitchCase node)
         {
             VisitSwitchCase(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(ConditionalReceiver node)
+        {
+            VisitConditionalReceiver(node);
             return _nodes.Pop();
         }
 
@@ -674,6 +697,17 @@ namespace Microsoft.CSharp.Expressions
         {
             _nodes.Push(new XElement("CSharp" + node.CSharpNodeType.ToString(), new XAttribute(nameof(node.Type), node.Type), content));
             return node;
+        }
+
+        protected int MakeInstanceId(object o)
+        {
+            var id = default(int);
+            if (!_instanceIds.TryGetValue(o, out id))
+            {
+                _instanceIds[o] = id = _instanceIds.Count;
+            }
+
+            return id;
         }
     }
 }

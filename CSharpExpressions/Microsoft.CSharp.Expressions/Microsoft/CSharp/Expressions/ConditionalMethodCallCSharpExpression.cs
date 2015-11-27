@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
-    public abstract partial class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression
+    public abstract partial class ConditionalMethodCallCSharpExpression : OldConditionalAccessCSharpExpression
     {
         internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
             : base(expression)
@@ -67,7 +67,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="expression">The <see cref="ConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
+        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConditionalMethodCallCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)

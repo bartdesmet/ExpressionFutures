@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) access to an array.
     /// </summary>
-    public sealed partial class ConditionalArrayIndexCSharpExpression : ConditionalAccessCSharpExpression
+    public sealed partial class ConditionalArrayIndexCSharpExpression : OldConditionalAccessCSharpExpression
     {
         internal ConditionalArrayIndexCSharpExpression(Expression array, ReadOnlyCollection<Expression> indexes)
             : base(array)

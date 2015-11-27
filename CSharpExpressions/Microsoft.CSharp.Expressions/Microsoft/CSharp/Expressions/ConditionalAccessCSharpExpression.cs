@@ -49,13 +49,13 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for conditional access (null-propagating) expressions.
     /// </summary>
-    public abstract partial class ConditionalAccessCSharpExpression : CSharpExpression
+    public abstract partial class OldConditionalAccessCSharpExpression : CSharpExpression
     {
         /// <summary>
         /// Creates a new conditional access expression.
         /// </summary>
         /// <param name="expression">The expression to access conditionally.</param>
-        protected ConditionalAccessCSharpExpression(Expression expression)
+        protected OldConditionalAccessCSharpExpression(Expression expression)
         {
             Expression = expression;
         }
@@ -191,7 +191,7 @@ namespace Microsoft.CSharp.Expressions
 
                 variable = newVariable;
 
-                current = expression as ConditionalAccessCSharpExpression;
+                current = expression as OldConditionalAccessCSharpExpression;
             }
 
             if (resultVariable != null)

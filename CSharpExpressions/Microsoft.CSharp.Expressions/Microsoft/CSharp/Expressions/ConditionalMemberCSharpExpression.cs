@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents conditional (null-propagating) access to a member.
     /// </summary>
-    public abstract partial class ConditionalMemberCSharpExpression : ConditionalAccessCSharpExpression
+    public abstract partial class ConditionalMemberCSharpExpression : OldConditionalAccessCSharpExpression
     {
         internal ConditionalMemberCSharpExpression(Expression expression, MemberInfo member)
             : base(expression)
@@ -47,7 +47,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="expression">The <see cref="ConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
+        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConditionalMemberCSharpExpression Update(Expression expression)
         {
@@ -107,7 +107,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="member">The <see cref="MemberInfo" /> representing the member to access conditionally.</param>
-        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="OldConditionalAccessCSharpExpression.Expression" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
         public static ConditionalMemberCSharpExpression MakeConditionalMemberAccess(Expression expression, MemberInfo member)
         {
             ContractUtils.RequiresNotNull(member, nameof(member));
@@ -134,7 +134,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="field">The <see cref="FieldInfo" /> representing the field to access conditionally.</param>
-        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="OldConditionalAccessCSharpExpression.Expression" /> and <see cref="ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalField(Expression expression, FieldInfo field)
         {
@@ -161,7 +161,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="fieldName">The name of the field to access conditionally.</param>
-        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="ConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="FieldInfo" /> that represents the field denoted by <paramref name="fieldName" />.</returns>
+        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="OldConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="FieldInfo" /> that represents the field denoted by <paramref name="fieldName" />.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalField(Expression expression, string fieldName)
         {
@@ -190,7 +190,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> that specifies the instance to access the member of.</param>
         /// <param name="property">The <see cref="PropertyInfo" /> representing the property to access conditionally.</param>
-        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="ConditionalAccessCSharpExpression.Expression" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" /> and the <see cref="OldConditionalAccessCSharpExpression.Expression" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, PropertyInfo property)
         {
@@ -227,7 +227,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> whose <see cref="Expression.Type" /> contains a property named <paramref name="propertyName" />.</param>
         /// <param name="propertyName">The name of a property to be accessed.</param>
-        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="ConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="PropertyInfo" /> that represents the property denoted by <paramref name="propertyName" />.</returns>
+        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="OldConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="PropertyInfo" /> that represents the property denoted by <paramref name="propertyName" />.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, string propertyName)
         {
@@ -256,7 +256,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">An <see cref="Expression" /> to set the <see cref="Expression" /> property equal to. This can be null for static properties.</param>
         /// <param name="propertyAccessor">The <see cref="MethodInfo" /> that represents a property accessor method.</param>
-        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="ConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" /> and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="PropertyInfo" /> that represents the property accessed in <paramref name="propertyAccessor" />.</returns>
+        /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalMemberAccess" />, the <see cref="OldConditionalAccessCSharpExpression.Expression" /> property set to <paramref name="expression" /> and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="PropertyInfo" /> that represents the property accessed in <paramref name="propertyAccessor" />.</returns>
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, MethodInfo propertyAccessor)
         {
             ContractUtils.RequiresNotNull(propertyAccessor, nameof(propertyAccessor));

@@ -125,5 +125,13 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a dynamically bound conversion to a static type.
         /// </summary>
         DynamicConvert,
+        /// <summary>
+        /// A node that represents a conditional access operation.
+        /// </summary>
+        ConditionalAccess,
+        /// <summary>
+        /// A node that represents the receiver of a conditional access operation.
+        /// </summary>
+        ConditionalReciever,
     }
 }
