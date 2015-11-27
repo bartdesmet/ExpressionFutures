@@ -4,6 +4,12 @@
 Obtained by `findstr ExpressionTree` in Compilers\CSharp\Portable\CSharpResources.resx
 See Compilers\CSharp\Portable\Lowering\DiagnosticsPass_ExpressionTrees.cs for usages of these
 
+TODO
+----
+
+* Dynamic SetMember and SetIndex
+* Null-propagating support for dynamic
+
 Open
 ----
 
