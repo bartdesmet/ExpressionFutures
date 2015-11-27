@@ -23,6 +23,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_4EB1_83FD() => OK();
             public override void CompilerTest_C437_AA4C() => OK();
             public override void CompilerTest_4C39_BCFC() => OK();
+
+            // Block
+            public override void CompilerTest_A8D0_49C3() => OK();
+            public override void CompilerTest_197A_9EF8() => OK();
+            public override void CompilerTest_27AA_544E() => OK(); // DESIGN: Use of CSharpBlock versus Block
+
+            // Empty
+            public override void CompilerTest_0BD6_C135() => OK();
+            public override void CompilerTest_7F95_E445() => OK();
+
+            // Return
+            public override void CompilerTest_6102_7F8E() => OK();
+            public override void CompilerTest_AEF8_9F07() => OK();
+            public override void CompilerTest_7381_AA02() => INCONCLUSIVE(); // TODO: Degenerates into an expression body
         }
     }
 }

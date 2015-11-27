@@ -73,17 +73,21 @@ var exprs = new[]
 	 
     // Block
     "(Expression<Action>)(() => { })",
+	"(Expression<Action>)(() => { int x; x = 5; })",
+	"(Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })",
 	 
     // Empty
     "(Expression<Action>)(() => { ; })",
+	"(Expression<Action>)(() => { ;; })",
 	 
     // Return
     "(Expression<Action>)(() => { return; })",
+	"(Expression<Func<int>>)(() => { int x = 42; return x; })",
     "(Expression<Func<int>>)(() => { return 42; })",
 	 
     // Label/Goto
-    "(Expression<Action>)(() => { goto A; A: })",
-    "(Expression<Action>)(() => { A: goto A; })",
+    "(Expression<Action>)(() => { goto A; A: Console.Write('A'); })",
+    "(Expression<Action>)(() => { A: Console.Write('A'); goto A; })",
 	 
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
