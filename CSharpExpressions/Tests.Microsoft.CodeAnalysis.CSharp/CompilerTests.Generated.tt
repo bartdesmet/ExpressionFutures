@@ -217,6 +217,8 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } })",
     "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else { Console.Write('F'); } })",
     "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else if (x < 5) { Console.Write('E'); } else { Console.Write('F'); } })",
+    "(Expression<Action<int>>)(x => { if (x > 0) int.Parse(\"42\"); })",
+    "(Expression<Action<int>>)(x => { if (x > 0) int.Parse(\"42\"); else long.Parse(\"42\"); })",
     
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",

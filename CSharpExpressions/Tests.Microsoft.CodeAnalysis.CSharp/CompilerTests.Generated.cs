@@ -4698,6 +4698,106 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B73D_03FA() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_5419_99E8()
+        {
+            // (Expression<Action<int>>)(x => { if (x > 0) int.Parse("42"); })
+            var actual = GetDebugView(@"(Expression<Action<int>>)(x => { if (x > 0) int.Parse(""42""); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Conditional Type=""System.Void"">
+          <Test>
+            <GreaterThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""0"" />
+              </Right>
+            </GreaterThan>
+          </Test>
+          <IfTrue>
+            <Call Type=""System.Int32"" Method=""Int32 Parse(System.String)"">
+              <Arguments>
+                <Constant Type=""System.String"" Value=""42"" />
+              </Arguments>
+            </Call>
+          </IfTrue>
+          <IfFalse>
+            <Default Type=""System.Void"" />
+          </IfFalse>
+        </Conditional>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5419_99E8();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5419_99E8() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_EB64_66C6()
+        {
+            // (Expression<Action<int>>)(x => { if (x > 0) int.Parse("42"); else long.Parse("42"); })
+            var actual = GetDebugView(@"(Expression<Action<int>>)(x => { if (x > 0) int.Parse(""42""); else long.Parse(""42""); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Conditional Type=""System.Void"">
+          <Test>
+            <GreaterThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""0"" />
+              </Right>
+            </GreaterThan>
+          </Test>
+          <IfTrue>
+            <Call Type=""System.Int32"" Method=""Int32 Parse(System.String)"">
+              <Arguments>
+                <Constant Type=""System.String"" Value=""42"" />
+              </Arguments>
+            </Call>
+          </IfTrue>
+          <IfFalse>
+            <Call Type=""System.Int64"" Method=""Int64 Parse(System.String)"">
+              <Arguments>
+                <Constant Type=""System.String"" Value=""42"" />
+              </Arguments>
+            </Call>
+          </IfFalse>
+        </Conditional>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_EB64_66C6();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EB64_66C6() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_C90B_9C05()
         {
             // (Expression<Action>)(() => { while (true) Console.Write('.'); })
@@ -6383,6 +6483,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6319_CF5C => OK();
             public override void CompilerTest_1D89_F94D => OK();
             public override void CompilerTest_B73D_03FA => OK();
+            public override void CompilerTest_5419_99E8 => OK();
+            public override void CompilerTest_EB64_66C6 => OK();
             public override void CompilerTest_C90B_9C05 => OK();
             public override void CompilerTest_C5C5_4E9F => OK();
             public override void CompilerTest_6C15_3A87 => OK();

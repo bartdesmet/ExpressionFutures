@@ -178,6 +178,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_B58C_4C3B() => INCONCLUSIVE(); // TODO: Support checked context for these
             public override void CompilerTest_2817_005B() => INCONCLUSIVE(); // TODO: Support checked context for these
             public override void CompilerTest_B13A_0402() => OK();
+
+            // If
+            public override void CompilerTest_C043_D2B0() => OK();
+            public override void CompilerTest_2216_A3C9() => OK();
+            public override void CompilerTest_6319_CF5C() => OK();
+            public override void CompilerTest_1D89_F94D() => OK();
+            public override void CompilerTest_B73D_03FA() => OK();
+            public override void CompilerTest_5419_99E8() => OK();
+            public override void CompilerTest_EB64_66C6() => OK();
         }
     }
 }
