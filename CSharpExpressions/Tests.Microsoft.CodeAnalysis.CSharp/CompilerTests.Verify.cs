@@ -27,6 +27,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // Named parameters for indexers
             public override void CompilerTest_EDEC_D0C9() => OK();
 
+            // Named parameters for invocations
+            public override void CompilerTest_6271_EABC() => OK();
+            public override void CompilerTest_053A_671C() => OK();
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda

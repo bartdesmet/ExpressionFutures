@@ -46,6 +46,7 @@ var exprs = new[]
 
 	// Named parameters for invocations
     "(Expression<Action<Action<int>>>)(a => a(obj: 42))",
+	"(Expression<Action<Action<string, int, bool>>>)(a => a(arg2: 42, arg1: \"foo\", arg3: false))",
 
 	// TODO: optional parameters
 	 
