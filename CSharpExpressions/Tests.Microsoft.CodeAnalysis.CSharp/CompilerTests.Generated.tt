@@ -22,20 +22,32 @@
 <#
 var exprs = new[]
 {
+	// C# 3.0 supported expressions
     "(Expression<Func<int>>)(() => 42)",
     "(Expression<Func<string, int>>)(s => s.Length)",
     
-    // Multi-dimensional array initializer
+    // Multi-dimensional array initializers
     "(Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })",
 	"(Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })",
 	"(Expression<Func<int[,]>>)(() => new int[2, 1] { { 42 }, { 43 } })",
 	"(Expression<Func<int[,]>>)(() => new int[2, 2] { { 41, 42 }, { 43, 44 } })",
 	 
-    // Named/optional parameters
+    // Named parameters for calls
     "(Expression<Func<int>>)(() => Math.Abs(value: 42))",
+	"(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42))",
+	"(Expression<Func<string, string>>)(s => s.Substring(startIndex: 42, length: 43))",
+	"(Expression<Func<string, string>>)(s => s.Substring(length: 43, startIndex: 42))",
+
+	// Named parameters for constructors
     // !!!BUG!!! "(Expression<Func<TimeSpan>>)(() => new TimeSpan(ticks: 42L))",
+
+	// Named parameters for indexers
     "(Expression<Func<List<int>, int>>)(xs => xs[index: 42])",
+
+	// Named parameters for invocations
     "(Expression<Action<Action<int>>>)(a => a(obj: 42))",
+
+	// TODO: optional parameters
 	 
     // Dynamic
     "(Expression<Func<dynamic, dynamic>>)(x => -x)",
