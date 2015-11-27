@@ -262,6 +262,7 @@ namespace Playground
         {
             New1();
             New2();
+            New3();
         }
 
         static void New1()
@@ -300,6 +301,27 @@ namespace Playground
             var arg2 = CSharpExpression.Bind(val3, Log(Expression.Constant(3), "C"));
 
             var @new = CSharpExpression.New(ctor, arg0, arg1, arg2);
+
+            var res = Expression.Lambda<Func<TimeSpan>>(@new).Compile()();
+
+            Console.WriteLine(res);
+        }
+
+        static void New3()
+        {
+            Title();
+
+            var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
+
+            var val1 = ctor.GetParameters()[0];
+            var val2 = ctor.GetParameters()[1];
+            var val3 = ctor.GetParameters()[2];
+
+            var arg0 = CSharpExpression.Bind(ctor, "hours", Log(Expression.Constant(1), "A"));
+            var arg1 = CSharpExpression.Bind(ctor, "minutes", Log(Expression.Constant(2), "B"));
+            var arg2 = CSharpExpression.Bind(ctor, "seconds", Log(Expression.Constant(3), "C"));
+
+            var @new = CSharpExpression.New(ctor, arg2, arg0, arg1);
 
             var res = Expression.Lambda<Func<TimeSpan>>(@new).Compile()();
 
