@@ -263,6 +263,7 @@ var exprs = new[]
 };
 #>
 <#
+var includePerf = false;
 var sw = Stopwatch.StartNew();
 var all = new List<string>();
 var toEscapedString = new Func<object, bool, string>((o, multiLine) => "@\"" + (multiLine ? "\r\n" : "") + o.ToString().Replace("\"", "\"\"") + "\"");
@@ -327,9 +328,12 @@ var i = 0;
 foreach (var expr in exprs)
 {
     var before = sw.Elapsed;
+    if (includePerf)
+    {
 #>
         // Elapsed = <#=before#>
 <#
+    }
     var dbgTest = default(string);
     var ignore = default(string);
     try
@@ -372,8 +376,15 @@ foreach (var expr in exprs)
         [TestMethod]
         public void CompilerTest_<#=id#>()
         {
+<#
+    if (includePerf)
+    {
+#>
             // <PERF><#=cost.TotalMilliseconds#>ms</PERF>
 
+<#
+    }
+#>
             // <#=expr#>
             var actual = GetDebugView(<#=toEscapedString(expr, false)#>);
             var expected = <#=toEscapedString(dbgTest, true)#>;
