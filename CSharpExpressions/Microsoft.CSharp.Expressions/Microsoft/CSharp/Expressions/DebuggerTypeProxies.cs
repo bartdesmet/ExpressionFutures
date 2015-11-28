@@ -8,17 +8,17 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
-    [DebuggerTypeProxy(typeof(AsyncLambdaCSharpExpressionProxy))]
-    partial class AsyncLambdaCSharpExpression
+    [DebuggerTypeProxy(typeof(AssignBinaryCSharpExpressionProxy))]
+    partial class AssignBinaryCSharpExpression
     {
     }
 
     [ExcludeFromCodeCoverage]
-    internal class AsyncLambdaCSharpExpressionProxy
+    internal class AssignBinaryCSharpExpressionProxy
     {
-        private readonly AsyncLambdaCSharpExpression _node;
+        private readonly AssignBinaryCSharpExpression _node;
 
-        public AsyncLambdaCSharpExpressionProxy(AsyncLambdaCSharpExpression node)
+        public AssignBinaryCSharpExpressionProxy(AssignBinaryCSharpExpression node)
         {
             _node = node;
         }
@@ -26,11 +26,15 @@ namespace Microsoft.CSharp.Expressions
         public string DebugView => _node.DebugView;
 
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
-        public System.Type Type => _node.Type;
-        public System.Linq.Expressions.Expression Body => _node.Body;
-        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Parameters => _node.Parameters;
+        public System.Reflection.MethodInfo Method => _node.Method;
+        public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
+        public System.Boolean IsLifted => _node.IsLifted;
+        public System.Boolean IsLiftedToNull => _node.IsLiftedToNull;
+        public System.Linq.Expressions.Expression Left => _node.Left;
+        public System.Linq.Expressions.Expression Right => _node.Right;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
     }
 
     [DebuggerTypeProxy(typeof(CSharpExpressionProxy))]
@@ -54,6 +58,31 @@ namespace Microsoft.CSharp.Expressions
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(AsyncLambdaCSharpExpressionProxy))]
+    partial class AsyncLambdaCSharpExpression
+    {
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal class AsyncLambdaCSharpExpressionProxy
+    {
+        private readonly AsyncLambdaCSharpExpression _node;
+
+        public AsyncLambdaCSharpExpressionProxy(AsyncLambdaCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Parameters => _node.Parameters;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
     }
 
     [DebuggerTypeProxy(typeof(AwaitCSharpExpressionProxy))]
@@ -1146,6 +1175,31 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+    }
+
+    [DebuggerTypeProxy(typeof(BinaryCSharpExpressionProxy))]
+    partial class BinaryCSharpExpression
+    {
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal class BinaryCSharpExpressionProxy
+    {
+        private readonly BinaryCSharpExpression _node;
+
+        public BinaryCSharpExpressionProxy(BinaryCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.Expression Left => _node.Left;
+        public System.Linq.Expressions.Expression Right => _node.Right;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
     }
 
 }

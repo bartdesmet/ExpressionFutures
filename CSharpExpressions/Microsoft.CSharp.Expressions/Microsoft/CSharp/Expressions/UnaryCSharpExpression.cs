@@ -21,5 +21,8 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <returns>An <see cref="Expression" /> that represents the operand of the unary operation.</returns>
         public Expression Operand { get; }
+
+        // DESIGN: Add other properties a la LINQ? E.g. Method would make sense for our Await node even.
+        //         Sticking with a class hierarchy with more layers of specialization for now.
     }
 }

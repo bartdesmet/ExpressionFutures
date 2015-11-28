@@ -636,6 +636,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, receiver, nonNullReceiver, whenNotNull);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalReceiver(ConditionalReceiver node)
         {
             var id = _parent.MakeInstanceId(node);
@@ -644,6 +645,52 @@ namespace Microsoft.CSharp.Expressions
             _nodes.Push(res);
 
             return node;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitBinaryAssign(AssignBinaryCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.IsLifted)
+            {
+                args.Add(new XAttribute(nameof(node.IsLifted), node.IsLifted));
+            }
+
+            if (node.IsLiftedToNull)
+            {
+                args.Add(new XAttribute(nameof(node.IsLiftedToNull), node.IsLiftedToNull));
+            }
+
+            if (node.Method != null)
+            {
+                args.Add(new XAttribute(nameof(node.Method), node.Method));
+            }
+
+            args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
+            args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
+
+            if (node.Conversion != null)
+            {
+                args.Add(new XElement(nameof(node.Conversion), Visit(node.Conversion)));
+            }
+
+            return Push(node, args);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitUnaryAssign(AssignUnaryCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.Method != null)
+            {
+                args.Add(new XAttribute(nameof(node.Method), node.Method));
+            }
+
+            args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
+
+            return Push(node, args);
         }
 
         private XNode Visit(ParameterAssignment node)

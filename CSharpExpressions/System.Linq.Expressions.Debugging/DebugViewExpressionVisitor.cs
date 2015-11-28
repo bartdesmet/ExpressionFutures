@@ -118,6 +118,16 @@ namespace System.Linq.Expressions
                 args.Add(new XAttribute(nameof(node.Method), node.Method));
             }
 
+            if (node.IsLifted)
+            {
+                args.Add(new XAttribute(nameof(node.IsLifted), node.IsLifted));
+            }
+
+            if (node.IsLiftedToNull)
+            {
+                args.Add(new XAttribute(nameof(node.IsLiftedToNull), node.IsLiftedToNull));
+            }
+
             args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
             args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
 
@@ -136,6 +146,16 @@ namespace System.Linq.Expressions
             if (node.Method != null)
             {
                 args.Add(new XAttribute(nameof(node.Method), node.Method));
+            }
+
+            if (node.IsLifted)
+            {
+                args.Add(new XAttribute(nameof(node.IsLifted), node.IsLifted));
+            }
+
+            if (node.IsLiftedToNull)
+            {
+                args.Add(new XAttribute(nameof(node.IsLiftedToNull), node.IsLiftedToNull));
             }
 
             if (node.Operand != null)

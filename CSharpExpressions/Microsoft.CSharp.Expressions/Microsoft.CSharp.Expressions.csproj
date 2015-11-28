@@ -42,6 +42,18 @@
   <ItemGroup>
     <Compile Include="Friends.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.cs">
+      <DependentUpon>AssignUnaryCSharpExpression.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssignBinaryCSharpExpression.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Include="Microsoft\CSharp\Expressions\AsyncLambdaCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\AssignmentPercolator.cs" />
@@ -117,6 +129,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\ShallowVisitor.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Spiller.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\TypedLabelRewriter.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\BinaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DoCSharpStatement.cs" />
@@ -144,6 +157,14 @@
   <ItemGroup>
     <CodeAnalysisDictionary Include="CodeAnalysis.xml" />
     <Content Include="gaps.txt" />
+    <Content Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignUnaryCSharpExpression.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignBinaryCSharpExpression.Generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Microsoft\CSharp\Expressions\DebuggerTypeProxies.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DebuggerTypeProxies.cs</LastGenOutput>

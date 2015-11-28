@@ -136,8 +136,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             // Block
             public override void CompilerTest_A8D0_49C3() => OK();
-            public override void CompilerTest_197A_9EF8() => OK();
-            public override void CompilerTest_27AA_544E() => OK(); // DESIGN: Use of CSharpBlock versus Block
+            public override void CompilerTest_197A_C7FA() => OK();
+            public override void CompilerTest_27AA_4144() => OK(); // DESIGN: Use of CSharpBlock versus Block
 
             // Empty
             public override void CompilerTest_0BD6_C135() => OK();
@@ -145,39 +145,42 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             // Return
             public override void CompilerTest_6102_7F8E() => OK();
-            public override void CompilerTest_AEF8_9F07() => OK();
+            public override void CompilerTest_AEF8_BB4B() => OK();
             public override void CompilerTest_7381_AA02() => INCONCLUSIVE(); // TODO: Degenerates into an expression body
 
             // Label/Goto
             public override void CompilerTest_BBBC_6128() => OK();
             public override void CompilerTest_6FC7_B4A6() => OK();
 
-            // Assignments
-            public override void CompilerTest_F94F_A97B() => OK();
-            public override void CompilerTest_044F_6ED6() => OK();
-            public override void CompilerTest_094E_A851() => OK();
-            public override void CompilerTest_8BE1_04ED() => OK();
-            public override void CompilerTest_F3D0_97F8() => OK();
-            public override void CompilerTest_EB02_F71B() => OK();
-            public override void CompilerTest_6EC4_0F59() => OK();
-            public override void CompilerTest_7D09_63FA() => OK();
-            public override void CompilerTest_ED89_1B0F() => OK();
-            public override void CompilerTest_6090_812C() => OK();
-            public override void CompilerTest_D47A_575C() => OK();
-            public override void CompilerTest_00CF_17E1() => OK();
-            public override void CompilerTest_9C51_A6DD() => OK();
-            public override void CompilerTest_2115_6DDA() => OK();
-            public override void CompilerTest_09D9_BA1D() => OK();
-            public override void CompilerTest_60B4_0590() => OK();
-            public override void CompilerTest_2DAA_5251() => OK();
-            public override void CompilerTest_7F56_8429() => OK();
-            public override void CompilerTest_27E3_D12F() => OK();
-            public override void CompilerTest_467C_6F72() => OK();
-            public override void CompilerTest_C9BD_1C8D() => INCONCLUSIVE(); // TODO: Support checked context for these
-            public override void CompilerTest_1C12_BEFA() => INCONCLUSIVE(); // TODO: Support checked context for these
-            public override void CompilerTest_B58C_4C3B() => INCONCLUSIVE(); // TODO: Support checked context for these
-            public override void CompilerTest_2817_005B() => INCONCLUSIVE(); // TODO: Support checked context for these
-            public override void CompilerTest_B13A_0402() => OK();
+            // Assignments binary
+            public override void CompilerTest_F94F_ACD8() => OK();
+            public override void CompilerTest_044F_75C3() => OK();
+            public override void CompilerTest_094E_50F3() => OK();
+            public override void CompilerTest_8BE1_F8B3() => OK();
+            public override void CompilerTest_F3D0_9CC6() => OK();
+            public override void CompilerTest_EB02_125F() => OK();
+            public override void CompilerTest_6EC4_3570() => OK();
+            public override void CompilerTest_7D09_CB1F() => OK();
+            public override void CompilerTest_ED89_FB15() => OK();
+            public override void CompilerTest_6090_2158() => OK();
+            public override void CompilerTest_60B4_667C() => OK();
+            public override void CompilerTest_2DAA_E873() => OK();
+            public override void CompilerTest_7F56_2B0B() => OK();
+            public override void CompilerTest_27E3_F016() => OK();
+            public override void CompilerTest_467C_C565() => OK();
+            public override void CompilerTest_B13A_1A72() => OK();
+            public override void CompilerTest_EE3F_1481() => OK();
+
+            // Assignments unary
+            public override void CompilerTest_D47A_F8E7() => OK();
+            public override void CompilerTest_00CF_77BB() => OK();
+            public override void CompilerTest_9C51_C4A7() => OK();
+            public override void CompilerTest_2115_438C() => OK();
+            public override void CompilerTest_09D9_B341() => OK();
+            public override void CompilerTest_C9BD_E678() => OK();
+            public override void CompilerTest_1C12_48DE() => OK();
+            public override void CompilerTest_B58C_6908() => OK();
+            public override void CompilerTest_2817_C567() => OK();
 
             // If
             public override void CompilerTest_C043_D2B0() => OK();

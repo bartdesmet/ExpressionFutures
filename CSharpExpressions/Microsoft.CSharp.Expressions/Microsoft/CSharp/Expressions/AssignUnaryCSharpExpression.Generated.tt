@@ -1,0 +1,100 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var nodes = new[] { "PreIncrementAssign", "PreDecrementAssign", "PostIncrementAssign", "PostDecrementAssign" };
+var checkedNodes = new[] { "PreIncrementCheckedAssign", "PreDecrementCheckedAssign", "PostIncrementCheckedAssign", "PostDecrementCheckedAssign" };
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+using System.Dynamic.Utils;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace Microsoft.CSharp.Expressions
+{
+	partial class AssignUnaryCSharpExpression
+	{
+        private static CSharpExpressionType ConvertNodeType(ExpressionType nodeType)
+        {
+			switch (nodeType)
+			{
+<#
+foreach (var node in nodes)
+{
+#>
+				case ExpressionType.<#=node#>: return CSharpExpressionType.<#=node#>;
+<#
+}
+#>
+				default:
+					throw ContractUtils.Unreachable;
+			}
+        }
+	}
+
+	partial class CSharpExpression
+	{
+<#
+foreach (var node in nodes)
+{
+#>
+		/// <summary>
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+		/// </summary>
+		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="AssignUnaryCSharpExpression.Operand" /> property equal to.</param>
+		public static new AssignUnaryCSharpExpression <#=node#>(Expression operand)
+		{
+			return <#=node#>(operand, null);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+		/// </summary>
+		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="AssignUnaryCSharpExpression.Operand" /> property equal to.</param>
+		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
+		public static new AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
+		{
+			return MakeUnaryAssign(Expression.<#=node#>, operand, method);
+		}
+
+<#
+}
+#>
+<#
+foreach (var node in checkedNodes)
+{
+#>
+		/// <summary>
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+		/// </summary>
+		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="AssignUnaryCSharpExpression.Operand" /> property equal to.</param>
+		public static AssignUnaryCSharpExpression <#=node#>(Expression operand)
+		{
+			return <#=node#>(operand, null);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+		/// </summary>
+		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="AssignUnaryCSharpExpression.Operand" /> property equal to.</param>
+		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
+		public static AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
+		{
+			return MakeUnaryAssignChecked(CSharpExpressionType.<#=node#>, Expression.<#=node.Replace("Checked", "")#>, operand, method);
+		}
+
+<#
+}
+#>
+	}
+}

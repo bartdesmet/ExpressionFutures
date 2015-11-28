@@ -183,7 +183,7 @@ var exprs = new[]
     "(Expression<Action>)(() => { goto A; A: Console.Write('A'); })",
     "(Expression<Action>)(() => { A: Console.Write('A'); goto A; })",
      
-    // Assignments
+    // Assignments binary
     "(Expression<Action<int>>)(x => { var y = x; })",
     "(Expression<Action<int>>)(x => { x += 1; })",
     "(Expression<Action<int>>)(x => { x -= 1; })",
@@ -195,21 +195,25 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { x ^= 1; })",
     "(Expression<Action<int>>)(x => { x <<= 1; })",
     "(Expression<Action<int>>)(x => { x >>= 1; })",
-    "(Expression<Action<int>>)(x => { x++; })",
-    "(Expression<Action<int>>)(x => { x--; })",
-    "(Expression<Action<int>>)(x => { ++x; })",
-    "(Expression<Action<int>>)(x => { --x; })",
     "(Expression<Action<TimeSpan>>)(t => { t += TimeSpan.Zero; })",
     "(Expression<Action<DateTime>>)(d => { d -= TimeSpan.Zero; })",
     "(Expression<Action<int>>)(x => { checked { x += 1; } })",
     "(Expression<Action<int>>)(x => { checked { x -= 1; } })",
     "(Expression<Action<int>>)(x => { checked { x *= 1; } })",
+    "(Expression<Action<int?>>)(x => { x += 1; })",
+	"(Expression<Action<StrongBox<int>>>)(xs => { xs.Value += 1; })",
+	// !!!BUG!!! "(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })",
+    "/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
+
+	// Assignments unary
+    "(Expression<Action<int>>)(x => { x++; })",
+    "(Expression<Action<int>>)(x => { x--; })",
+    "(Expression<Action<int>>)(x => { ++x; })",
+    "(Expression<Action<int>>)(x => { --x; })",
     "(Expression<Action<int>>)(x => { checked { x++; } })",
     "(Expression<Action<int>>)(x => { checked { x--; } })",
     "(Expression<Action<int>>)(x => { checked { ++x; } })",
     "(Expression<Action<int>>)(x => { checked { --x; } })",
-    "(Expression<Action<int?>>)(x => { x += 1; })",
-    "/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
 
     // If
     "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); })",
