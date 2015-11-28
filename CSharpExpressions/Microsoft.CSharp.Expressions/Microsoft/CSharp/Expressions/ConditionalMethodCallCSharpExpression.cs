@@ -18,6 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
+#if OLD_CONDITIONAL
     public abstract partial class ConditionalMethodCallCSharpExpression : OldConditionalAccessCSharpExpression
     {
         internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
@@ -125,7 +126,89 @@ namespace Microsoft.CSharp.Expressions
             }
         }
     }
+#else
+    public sealed partial class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression<MethodCallCSharpExpression>
+    {
+        internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+            : this(expression, MakeReceiver(expression), method, arguments)
+        {
+        }
 
+        private ConditionalMethodCallCSharpExpression(Expression expression, ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+            : base(expression, receiver, MakeAccess(receiver, method, arguments))
+        {
+        }
+
+        private static MethodCallCSharpExpression MakeAccess(ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+        {
+            if (method.IsStatic && method.IsDefined(typeof(ExtensionAttribute)))
+            {
+                var thisPar = method.GetParametersCached()[0];
+                var thisArg = CSharpExpression.Bind(thisPar, receiver);
+
+                var newArgs = new ParameterAssignment[arguments.Count + 1];
+                newArgs[0] = thisArg;
+
+                var i = 1;
+                foreach (var arg in arguments)
+                {
+                    newArgs[i++] = arg;
+                }
+
+                var newArguments = new TrueReadOnlyCollection<ParameterAssignment>(newArgs);
+                
+                return CSharpExpression.Call(null, method, newArguments); // TODO: call ctor directly
+            }
+            else
+            {
+                return CSharpExpression.Call(receiver, method, arguments); // TODO: call ctor directly
+            }
+        }
+
+        internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+        {
+            return new ConditionalMethodCallCSharpExpression(expression, method, arguments); // TODO: remove layer of indirection if not needed
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Expression" /> that represents the instance whose method is called.
+        /// </summary>
+        public Expression Expression => Receiver; // TODO: Remove in favor of Object
+
+        /// <summary>
+        /// Gets the <see cref="Expression" /> that represents the instance accessed by the method call.
+        /// </summary>
+        public Expression Object => Receiver; // NB: Just an alias for familiarity with MethodCallExpression
+
+        /// <summary>
+        /// Gets the method to be called.
+        /// </summary>
+        public MethodInfo Method => WhenNotNull.Method;
+
+        /// <summary>
+        /// Gets a collection of argument assignments.
+        /// </summary>
+        public ReadOnlyCollection<ParameterAssignment> Arguments => WhenNotNull.Arguments;
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+        /// </summary>
+        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
+        /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
+        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        public ConditionalMethodCallCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
+        {
+            if (expression == Expression && arguments == Arguments)
+            {
+                return this;
+            }
+
+            return CSharpExpression.ConditionalCall(expression, Method, arguments);
+        }
+
+        // TODO: Rewrite virtual
+    }
+#endif
     partial class CSharpExpression
     {
         /// <summary>
@@ -233,7 +316,7 @@ namespace Microsoft.CSharp.Expressions
             return ConditionalMethodCallCSharpExpression.Make(instance, method, argList);
         }
     }
-
+#if OLD_CONDITIONAL
     partial class CSharpExpressionVisitor
     {
         /// <summary>
@@ -247,4 +330,5 @@ namespace Microsoft.CSharp.Expressions
             return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
         }
     }
+#endif
 }

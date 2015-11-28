@@ -14,6 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents conditional (null-propagating) access to a member.
     /// </summary>
+#if OLD_CONDITIONAL
     public abstract partial class ConditionalMemberCSharpExpression : OldConditionalAccessCSharpExpression
     {
         internal ConditionalMemberCSharpExpression(Expression expression, MemberInfo member)
@@ -99,7 +100,57 @@ namespace Microsoft.CSharp.Expressions
             protected override Type UnderlyingType => ((PropertyInfo)Member).PropertyType;
         }
     }
+#else
+    public sealed partial class ConditionalMemberCSharpExpression : ConditionalAccessCSharpExpression<MemberExpression>
+    {
+        internal ConditionalMemberCSharpExpression(Expression expression, MemberInfo member)
+            : this(expression, MakeReceiver(expression), member)
+        {
+        }
 
+        private ConditionalMemberCSharpExpression(Expression expression, ConditionalReceiver receiver, MemberInfo member)
+            : base(expression, receiver, MakeAccess(receiver, member))
+        {
+        }
+
+        private static MemberExpression MakeAccess(ConditionalReceiver receiver, MemberInfo member)
+        {
+            return Expression.MakeMemberAccess(receiver, member); // TODO: call ctor directly
+        }
+
+        internal static ConditionalMemberCSharpExpression Make(Expression expression, MemberInfo member)
+        {
+            return new ConditionalMemberCSharpExpression(expression, member); // TODO: remove layer of indirection if not needed
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Expression" /> that represents the instance whose member is accessed.
+        /// </summary>
+        public Expression Expression => Receiver;
+
+        /// <summary>
+        /// Gets the field or property to be accessed.
+        /// </summary>
+        public MemberInfo Member => WhenNotNull.Member;
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+        /// </summary>
+        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
+        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        public ConditionalMemberCSharpExpression Update(Expression expression)
+        {
+            if (expression == Expression)
+            {
+                return this;
+            }
+
+            return CSharpExpression.MakeConditionalMemberAccess(expression, Member);
+        }
+
+        // TODO: Rewrite virtual
+    }
+#endif
     partial class CSharpExpression
     {
         /// <summary>
@@ -268,7 +319,7 @@ namespace Microsoft.CSharp.Expressions
         
         // TODO: Add PropertyOrField equivalent?
     }
-
+#if OLD_CONDITIONAL
     partial class CSharpExpressionVisitor
     {
         /// <summary>
@@ -282,4 +333,5 @@ namespace Microsoft.CSharp.Expressions
             return node.Update(Visit(node.Expression));
         }
     }
+#endif
 }

@@ -13,9 +13,22 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a null-conditional access operation.
     /// </summary>
-    public sealed partial class ConditionalAccessCSharpExpression : CSharpExpression
+    public partial class ConditionalAccessCSharpExpression : ConditionalAccessCSharpExpression<Expression>
     {
         internal ConditionalAccessCSharpExpression(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+            : base(receiver, nonNullReceiver, whenNotNull)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Represents a null-conditional access operation.
+    /// </summary>
+    /// <typeparam name="TExpression">The type of the expression performed when the accessed receiver is non-null.</typeparam>
+    public partial class ConditionalAccessCSharpExpression<TExpression> : CSharpExpression
+        where TExpression : Expression
+    {
+        internal ConditionalAccessCSharpExpression(Expression receiver, ConditionalReceiver nonNullReceiver, TExpression whenNotNull)
         {
             Receiver = receiver;
             NonNullReceiver = nonNullReceiver;
@@ -35,7 +48,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="System.Linq.Expressions.Expression"/> representing the operation to carry out on the <see cref="NonNullReceiver"/>.
         /// </summary>
-        public Expression WhenNotNull { get; }
+        public TExpression WhenNotNull { get; }
 
         /// <summary>
         /// Gets the static type of the expression that this <see cref="System.Linq.Expressions.Expression" /> represents. (Inherited from <see cref="System.Linq.Expressions.Expression"/>.)
@@ -67,14 +80,14 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="nonNullReceiver">The <see cref="NonNullReceiver" /> property of the result.</param>
         /// <param name="whenNotNull">The <see cref="WhenNotNull" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ConditionalAccessCSharpExpression Update(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+        public ConditionalAccessCSharpExpression<TExpression> Update(Expression receiver, ConditionalReceiver nonNullReceiver, TExpression whenNotNull)
         {
             if (receiver == this.Receiver && nonNullReceiver == this.NonNullReceiver && whenNotNull == this.WhenNotNull)
             {
                 return this;
             }
 
-            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+            return new ConditionalAccessCSharpExpression<TExpression>(receiver, nonNullReceiver, whenNotNull);
         }
 
         /// <summary>
@@ -167,7 +180,7 @@ namespace Microsoft.CSharp.Expressions
                 return base.VisitConditionalReceiver(node);
             }
 
-            protected internal override Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
+            protected internal override Expression VisitConditionalAccess<TWhenNotNull>(ConditionalAccessCSharpExpression<TWhenNotNull> node)
             {
                 if (node.NonNullReceiver == _receiver)
                 {
@@ -177,6 +190,11 @@ namespace Microsoft.CSharp.Expressions
 
                 return base.VisitConditionalAccess(node);
             }
+        }
+
+        internal static ConditionalReceiver MakeReceiver(Expression receiver)
+        {
+            return CSharpExpression.ConditionalReceiver(receiver.Type.GetNonNullableType());
         }
     }
 
@@ -188,9 +206,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
+        protected internal virtual Expression VisitConditionalAccess<TExpression>(ConditionalAccessCSharpExpression<TExpression> node)
+            where TExpression : Expression
         {
-            return node.Update(Visit(node.Receiver), VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)), Visit(node.WhenNotNull));
+            return node.Update(Visit(node.Receiver), VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)), VisitAndConvert(node.WhenNotNull, nameof(VisitConditionalAccess)));
         }
     }
 
@@ -221,6 +240,10 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType);
             }
 
+            // DESIGN: We could make instances of type ConditionalAccessCSharpExpression<TExpression> and/or specialized subtypes
+            //         if we decide to keep those. However, it may look strange if `whenNotNull` is not just a single access but
+            //         consists of a 'chain' of operations. Right now, the idea is to have the specialized subtypes merely as a
+            //         convenience when using factories by hand, but we could scrap it all and just stick with the primitive node.
             return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
         }
     }

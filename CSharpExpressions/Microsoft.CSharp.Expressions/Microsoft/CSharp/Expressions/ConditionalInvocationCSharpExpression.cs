@@ -20,6 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that applies a delegate or lambda expression to a list of argument expressions.
     /// </summary>
+#if OLD_CONDITIONAL
     public sealed partial class ConditionalInvocationCSharpExpression : OldConditionalAccessCSharpExpression
     {
         private readonly MethodInfo _invokeMethod;
@@ -81,7 +82,53 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Invoke(nonNull, Arguments);
     }
+#else
+    public sealed partial class ConditionalInvocationCSharpExpression : ConditionalAccessCSharpExpression<InvocationCSharpExpression>
+    {
+        internal ConditionalInvocationCSharpExpression(Expression expression, ReadOnlyCollection<ParameterAssignment> arguments, MethodInfo invokeMethod)
+            : this(expression, MakeReceiver(expression), arguments)
+        {
+        }
 
+        private ConditionalInvocationCSharpExpression(Expression expression, ConditionalReceiver receiver, ReadOnlyCollection<ParameterAssignment> arguments)
+            : base(expression, receiver, MakeAccess(receiver, arguments))
+        {
+        }
+
+        private static InvocationCSharpExpression MakeAccess(ConditionalReceiver receiver, ReadOnlyCollection<ParameterAssignment> arguments)
+        {
+            return CSharpExpression.Invoke(receiver, arguments); // TODO: call ctor directly
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Expression" /> that represents the instance for instance method calls or null for static method calls.
+        /// </summary>
+        public Expression Expression => Receiver;
+
+        /// <summary>
+        /// Gets a collection of argument assignments.
+        /// </summary>
+        public ReadOnlyCollection<ParameterAssignment> Arguments => WhenNotNull.Arguments;
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+        /// </summary>
+        /// <param name="expression">The <see cref="Expression" /> property of the result.</param>
+        /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
+        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        public ConditionalInvocationCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
+        {
+            if (expression == Expression && arguments == Arguments)
+            {
+                return this;
+            }
+
+            return CSharpExpression.ConditionalInvoke(expression, arguments);
+        }
+
+        // TODO: Rewrite virtual
+    }
+#endif
     partial class CSharpExpression
     {
         /// <summary>
@@ -156,7 +203,7 @@ namespace Microsoft.CSharp.Expressions
             return new ConditionalInvocationCSharpExpression(expression, argList, method);
         }
     }
-
+#if OLD_CONDITIONAL
     partial class CSharpExpressionVisitor
     {
         /// <summary>
@@ -170,4 +217,5 @@ namespace Microsoft.CSharp.Expressions
             return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
         }
     }
+#endif
 }

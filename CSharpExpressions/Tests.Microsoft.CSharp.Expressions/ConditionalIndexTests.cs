@@ -121,7 +121,9 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, item, new[] { argp }.AsEnumerable()),
             })
             {
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalIndex, e.CSharpNodeType);
+#endif
                 Assert.AreSame(obj, e.Object);
                 Assert.AreEqual(item, e.Indexer);
                 Assert.AreEqual(typeof(bool?), e.Type);
@@ -134,7 +136,9 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, getter, new[] { argm }.AsEnumerable())
             })
             {
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalIndex, e.CSharpNodeType);
+#endif
                 Assert.AreSame(obj, e.Object);
                 Assert.AreEqual(item, e.Indexer);
                 Assert.AreEqual(typeof(bool?), e.Type);
@@ -242,7 +246,7 @@ namespace Tests
 
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
-
+#if OLD_CONDITIONAL
         [TestMethod]
         public void ConditionalIndex_Visitor()
         {
@@ -267,7 +271,7 @@ namespace Tests
                 return base.VisitConditionalIndex(node);
             }
         }
-
+#endif
         class Bar
         {
             public bool this[int x] { get { return false; } }

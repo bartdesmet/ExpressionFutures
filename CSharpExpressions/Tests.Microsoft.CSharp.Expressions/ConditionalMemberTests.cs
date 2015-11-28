@@ -87,7 +87,9 @@ namespace Tests
                 Assert.AreSame(expr, e.Expression);
                 Assert.AreEqual(fieldInfo, e.Member);
                 Assert.AreEqual(typeof(int?), e.Type);
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalMemberAccess, e.CSharpNodeType);
+#endif
             }
 
             foreach (var e in new[]
@@ -101,7 +103,9 @@ namespace Tests
                 Assert.AreSame(expr, e.Expression);
                 Assert.AreEqual(propInfo, e.Member);
                 Assert.AreEqual(typeof(int?), e.Type);
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalMemberAccess, e.CSharpNodeType);
+#endif
             }
         }
 
@@ -239,7 +243,7 @@ namespace Tests
             Assert.AreEqual("bar", d3(q));
             Assert.IsNull(d3(null));
         }
-
+#if OLD_CONDITIONAL
         [TestMethod]
         public void ConditionalMember_Visitor()
         {
@@ -263,7 +267,7 @@ namespace Tests
                 return base.VisitConditionalMember(node);
             }
         }
-
+#endif
 #pragma warning disable CS0649
         class Bar
         {

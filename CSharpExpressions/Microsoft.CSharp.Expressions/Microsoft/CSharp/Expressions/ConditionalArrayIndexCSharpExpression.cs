@@ -17,6 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) access to an array.
     /// </summary>
+#if OLD_CONDITIONAL
     public sealed partial class ConditionalArrayIndexCSharpExpression : OldConditionalAccessCSharpExpression
     {
         internal ConditionalArrayIndexCSharpExpression(Expression array, ReadOnlyCollection<Expression> indexes)
@@ -80,7 +81,53 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceAccess(Expression nonNull) => Indexes.Count > 1 ? (Expression)CSharpExpression.ArrayIndex(nonNull, Indexes) : (Expression)CSharpExpression.ArrayIndex(nonNull, Indexes[0]);
     }
+#else
+    public sealed partial class ConditionalArrayIndexCSharpExpression : ConditionalAccessCSharpExpression<IndexExpression>
+    {
+        internal ConditionalArrayIndexCSharpExpression(Expression array, ReadOnlyCollection<Expression> indexes)
+            : this(array, MakeReceiver(array), indexes)
+        {
+        }
 
+        private ConditionalArrayIndexCSharpExpression(Expression array, ConditionalReceiver receiver, ReadOnlyCollection<Expression> indexes)
+            : base(array, receiver, MakeAccess(receiver, indexes))
+        {
+        }
+
+        private static IndexExpression MakeAccess(ConditionalReceiver receiver, ReadOnlyCollection<Expression> indexes)
+        {
+            return Expression.ArrayAccess(receiver, indexes); // TODO: call ctor directly
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Expression" /> that represents the array to index.
+        /// </summary>
+        public Expression Array => Receiver; // NB: Just an alias
+
+        /// <summary>
+        /// Gets a collection of argument assignments.
+        /// </summary>
+        public ReadOnlyCollection<Expression> Indexes => WhenNotNull.Arguments;
+
+        /// <summary>
+        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+        /// </summary>
+        /// <param name="array">The <see cref="Array" /> property of the result.</param>
+        /// <param name="indexes">The <see cref="Indexes" /> property of the result.</param>
+        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
+        public ConditionalArrayIndexCSharpExpression Update(Expression array, IEnumerable<Expression> indexes)
+        {
+            if (array == Array && indexes == Indexes)
+            {
+                return this;
+            }
+
+            return CSharpExpression.ConditionalArrayIndex(array, indexes);
+        }
+
+        // TODO: Rewrite virtual
+    }
+#endif
     partial class CSharpExpression
     {
         /// <summary>
@@ -131,7 +178,7 @@ namespace Microsoft.CSharp.Expressions
             return new ConditionalArrayIndexCSharpExpression(array, indexList);
         }
     }
-
+#if OLD_CONDITIONAL
     partial class CSharpExpressionVisitor
     {
         /// <summary>
@@ -145,4 +192,5 @@ namespace Microsoft.CSharp.Expressions
             return node.Update(Visit(node.Array), Visit(node.Indexes));
         }
     }
+#endif
 }

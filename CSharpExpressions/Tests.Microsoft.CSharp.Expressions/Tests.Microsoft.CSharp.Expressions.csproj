@@ -124,10 +124,10 @@
       <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Tests.Meta.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Tests.Meta.tt</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Tests.Meta.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Tests.Meta.tt">

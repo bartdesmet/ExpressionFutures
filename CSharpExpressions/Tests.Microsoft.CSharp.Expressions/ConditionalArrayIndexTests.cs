@@ -53,7 +53,9 @@ namespace Tests
                 CSharpExpression.ConditionalArrayIndex(array, indexes.AsEnumerable()),
             })
             {
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalArrayIndex, e.CSharpNodeType);
+#endif
                 Assert.AreSame(array, e.Array);
                 Assert.AreEqual(typeof(string), e.Type);
                 Assert.IsTrue(e.Indexes.SequenceEqual(indexes));
@@ -132,7 +134,7 @@ namespace Tests
 
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
-
+#if OLD_CONDITIONAL
         [TestMethod]
         public void ConditionalArrayIndex_Visitor()
         {
@@ -156,5 +158,6 @@ namespace Tests
                 return base.VisitConditionalArrayIndex(node);
             }
         }
+#endif
     }
 }

@@ -90,8 +90,9 @@ namespace Tests
 
             {
                 var res = CSharpExpression.ConditionalInvoke(function, arg0, arg1);
-
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalInvoke, res.CSharpNodeType);
+#endif
                 Assert.AreSame(function, res.Expression);
                 Assert.AreEqual(typeof(int?), res.Type);
                 Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
@@ -99,8 +100,9 @@ namespace Tests
 
             {
                 var res = CSharpExpression.ConditionalInvoke(function, new[] { arg0, arg1 }.AsEnumerable());
-
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalInvoke, res.CSharpNodeType);
+#endif
                 Assert.AreSame(function, res.Expression);
                 Assert.AreEqual(typeof(int?), res.Type);
                 Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
@@ -162,7 +164,7 @@ namespace Tests
 
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
-
+#if OLD_CONDITIONAL
         [TestMethod]
         public void ConditionalInvoke_Visitor()
         {
@@ -196,7 +198,7 @@ namespace Tests
                 return base.VisitConditionalInvocation(node);
             }
         }
-
+#endif
         delegate int D(int arg1, int arg2 = 42);
     }
 }

@@ -122,7 +122,9 @@ namespace Tests
                 CSharpExpression.ConditionalCall(obj, baz, new[] { arg }.AsEnumerable()),
             })
             {
+#if OLD_CONDITIONAL
                 Assert.AreEqual(CSharpExpressionType.ConditionalCall, e.CSharpNodeType);
+#endif
                 Assert.AreSame(obj, e.Object);
                 Assert.AreEqual(baz, e.Method);
                 Assert.AreEqual(typeof(int?), e.Type);
@@ -254,7 +256,7 @@ namespace Tests
 
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
-
+#if OLD_CONDITIONAL
         [TestMethod]
         public void ConditionalCall_Visitor()
         {
@@ -278,7 +280,7 @@ namespace Tests
                 return base.VisitConditionalMethodCall(node);
             }
         }
-
+#endif
         class Bar
         {
             public int Foo() { return 0; }

@@ -73,6 +73,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a goto statement.
         /// </summary>
         Goto,
+#if OLD_CONDITIONAL
         /// <summary>
         /// A node that represents a conditional property or field access.
         /// </summary>
@@ -93,6 +94,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a conditional delegate invocation.
         /// </summary>
         ConditionalInvoke,
+#endif
         /// <summary>
         /// A node that represents a dynamically bound unary operation.
         /// </summary>
