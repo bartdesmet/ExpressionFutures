@@ -192,7 +192,15 @@ namespace System.Linq.Expressions
             var obj = Visit(node.Object);
             var args = Visit(nameof(node.Arguments), node.Arguments);
 
-            return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
+            if (node.Indexer != null)
+            {
+                return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
+            }
+            else
+            {
+                // NB: This is the case for arrays
+                return Push(node, new XElement(nameof(node.Object), obj), args);
+            }
         }
 
         protected override Expression VisitInvocation(InvocationExpression node)
