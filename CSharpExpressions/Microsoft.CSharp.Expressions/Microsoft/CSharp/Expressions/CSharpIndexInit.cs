@@ -85,15 +85,13 @@ namespace Microsoft.CSharp.Expressions
             var argList = arguments.Concat(new[] { value }).ToReadOnly();
             RequiresCanRead(argList, nameof(arguments));
 
-            ValidateIndexer(indexer);
-
             var setter = indexer.GetSetMethod(true);
             if (setter == null)
             {
                 throw Error.PropertyDoesNotHaveSetAccessor(indexer);
             }
 
-            ValidateIndexerAccessor(indexer, setter);
+            ValidateIndexer(indexer.DeclaringType, indexer);
 
             var parameters = setter.GetParameters();
 

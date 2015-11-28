@@ -1183,14 +1183,31 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_9 = s_mtds["GetInvokeMethod"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression) }));
+        private static readonly MethodInfo s_9 = s_mtds["ValidateIndexedProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.Reflection.PropertyInfo), typeof(System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression>).MakeByRefType() }));
+
+        public static void ValidateIndexedProperty(System.Linq.Expressions.Expression instance, System.Reflection.PropertyInfo property, ref System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> argList)
+        {
+            try
+            {
+                var args = new object[] { instance, property, argList };
+                var res = s_9.Invoke(null, args);
+                argList = (System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression>)args[2];
+                
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_10 = s_mtds["GetInvokeMethod"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression) }));
 
         public static System.Reflection.MethodInfo GetInvokeMethod(System.Linq.Expressions.Expression expression)
         {
             try
             {
                 var args = new object[] { expression };
-                var res = s_9.Invoke(null, args);
+                var res = s_10.Invoke(null, args);
                 return (System.Reflection.MethodInfo)res;
             }
             catch (TargetInvocationException ex)
@@ -1199,14 +1216,14 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_10 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+        private static readonly MethodInfo s_11 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
 
         public static void ValidateMethodInfo(System.Reflection.MethodInfo method)
         {
             try
             {
                 var args = new object[] { method };
-                var res = s_10.Invoke(null, args);
+                var res = s_11.Invoke(null, args);
                 
             }
             catch (TargetInvocationException ex)

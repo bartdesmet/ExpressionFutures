@@ -10,7 +10,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using static System.Linq.Expressions.ExpressionStubs;
 using static Microsoft.CSharp.Expressions.Helpers;
-using LinqError = System.Linq.Expressions.Error;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -287,7 +288,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
         {
-            ValidateIndexer(indexer);
+            ValidateIndexer(instanceType, indexer);
 
             // We ignore validating the setter. C# has no assignment expression support yet and the LINQ API
             // won't consider our node as assignable, so it can't occur in assignment targets. As such, the
@@ -300,37 +301,36 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.PropertyDoesNotHaveGetAccessor(indexer);
             }
 
-            ValidateCallInstanceType(instanceType, getter);
-
-            ValidateIndexerAccessor(indexer, getter);
-
             ValidateParameterBindings(getter, parameters, argList);
         }
 
-        private static void ValidateIndexer(PropertyInfo indexer)
+        private static void ValidateIndexer(Type instanceType, PropertyInfo indexer)
         {
-            if (indexer.PropertyType.IsByRef) throw LinqError.PropertyCannotHaveRefType();
-            if (indexer.PropertyType == typeof(void)) throw LinqError.PropertyTypeCannotBeVoid();
-        }
+            // NB: We rely on the LINQ API to do validation of the indexer, including the setter (if any). We
+            //     have to validate the setter as well because this node could reduce into an assignment when
+            //     used in combination with C# assignment expressions. Note that the LINQ API won't treat our
+            //     node as assignable when used with LINQ assignment expressions. Our reduction of assignment
+            //     will properly call the setter, thus we have to make sure things are well-typed.
 
-        private static void ValidateIndexerAccessor(PropertyInfo indexer, MethodInfo accessor)
-        {
-            if (accessor.IsStatic)
+            var parameters = indexer.GetIndexParameters();
+
+            var n = parameters.Length;
+            var args = new Expression[n];
+            for (var i = 0; i < n; i++)
             {
-                throw Error.AccessorCannotBeStatic(indexer);
+                // NB: This is just a trick to be compatible with the signature of ValidateIndexeProperty but
+                //     we could change the LINQ APIs to have a variant that just takes in types. Shouldn't be
+                //     a big deal though, given that most indexers only have a few parameters.
+                args[i] = Expression.Default(parameters[i].ParameterType);
             }
 
-            ValidateMethodInfo(accessor);
+            var original = new TrueReadOnlyCollection<Expression>(args);
+            var argList = (ReadOnlyCollection<Expression>)original;
+            ValidateIndexedProperty(Expression.Default(instanceType), indexer, ref argList);
 
-            var parameters = accessor.GetParametersCached();
-
-            foreach (var parameter in parameters)
-            {
-                if (parameter.ParameterType.IsByRef)
-                {
-                    throw LinqError.AccessorsCannotHaveByRefArgs();
-                }
-            }
+            // NB: We don't expect mutations because all expressions match the corresponding indexer parameter
+            //     type. As such, we shouldn't end up quoting any argument.
+            Debug.Assert(argList == original);
         }
     }
 
