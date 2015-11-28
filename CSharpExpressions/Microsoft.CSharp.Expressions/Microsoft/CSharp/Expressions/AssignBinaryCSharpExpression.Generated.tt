@@ -63,7 +63,7 @@ foreach (var node in nodes)
 		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right)
 		{
-			return <#=node#>(left, right);
+			return <#=node#>(left, right, null, null);
 		}
 
 		/// <summary>
