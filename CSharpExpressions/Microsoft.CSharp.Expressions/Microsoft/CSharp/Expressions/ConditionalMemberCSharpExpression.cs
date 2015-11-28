@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -14,93 +13,6 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents conditional (null-propagating) access to a member.
     /// </summary>
-#if OLD_CONDITIONAL
-    public abstract partial class ConditionalMemberCSharpExpression : OldConditionalAccessCSharpExpression
-    {
-        internal ConditionalMemberCSharpExpression(Expression expression, MemberInfo member)
-            : base(expression)
-        {
-            Member = member;
-        }
-
-        /// <summary>
-        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
-        /// </summary>
-        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalMemberAccess;
-
-        /// <summary>
-        /// Gets the field or property to be accessed.
-        /// </summary>
-        public MemberInfo Member { get; }
-
-        /// <summary>
-        /// Dispatches to the specific visit method for this node type.
-        /// </summary>
-        /// <param name="visitor">The visitor to visit this node with.</param>
-        /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalMember(this);
-        }
-
-        /// <summary>
-        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
-        /// </summary>
-        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
-        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ConditionalMemberCSharpExpression Update(Expression expression)
-        {
-            if (expression == Expression)
-            {
-                return this;
-            }
-
-            return CSharpExpression.MakeConditionalMemberAccess(expression, Member);
-        }
-
-        /// <summary>
-        /// Reduces the expression to an unconditional non-null access on the specified expression.
-        /// </summary>
-        /// <param name="nonNull">Non-null expression to apply the access to.</param>
-        /// <returns>The reduced expression.</returns>
-        protected override Expression ReduceAccess(Expression nonNull) => Expression.MakeMemberAccess(nonNull, Member);
-
-        internal static ConditionalMemberCSharpExpression Make(Expression expression, MemberInfo member)
-        {
-            var field = member as FieldInfo;
-            if (field != null)
-            {
-                return new FieldExpression(expression, field);
-            }
-            else
-            {
-                return new PropertyExpression(expression, (PropertyInfo)member);
-            }
-        }
-
-        class FieldExpression : ConditionalMemberCSharpExpression
-        {
-            public FieldExpression(Expression receiver, MemberInfo member)
-                : base(receiver, member)
-            {
-            }
-
-            protected override Type UnderlyingType => ((FieldInfo)Member).FieldType;
-        }
-
-        class PropertyExpression : ConditionalMemberCSharpExpression
-        {
-            public PropertyExpression(Expression receiver, MemberInfo member)
-                : base(receiver, member)
-            {
-            }
-
-            protected override Type UnderlyingType => ((PropertyInfo)Member).PropertyType;
-        }
-    }
-#else
     public sealed partial class ConditionalMemberCSharpExpression : ConditionalAccessCSharpExpression<MemberExpression>
     {
         internal ConditionalMemberCSharpExpression(Expression expression, MemberInfo member)
@@ -150,7 +62,7 @@ namespace Microsoft.CSharp.Expressions
 
         // TODO: Rewrite virtual
     }
-#endif
+
     partial class CSharpExpression
     {
         /// <summary>
@@ -319,19 +231,4 @@ namespace Microsoft.CSharp.Expressions
         
         // TODO: Add PropertyOrField equivalent?
     }
-#if OLD_CONDITIONAL
-    partial class CSharpExpressionVisitor
-    {
-        /// <summary>
-        /// Visits the children of the <see cref="ConditionalMemberCSharpExpression" />.
-        /// </summary>
-        /// <param name="node">The expression to visit.</param>
-        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression));
-        }
-    }
-#endif
 }

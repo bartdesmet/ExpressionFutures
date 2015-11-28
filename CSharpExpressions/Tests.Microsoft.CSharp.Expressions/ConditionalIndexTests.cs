@@ -121,9 +121,7 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, item, new[] { argp }.AsEnumerable()),
             })
             {
-#if OLD_CONDITIONAL
-                Assert.AreEqual(CSharpExpressionType.ConditionalIndex, e.CSharpNodeType);
-#endif
+                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
                 Assert.AreSame(obj, e.Object);
                 Assert.AreEqual(item, e.Indexer);
                 Assert.AreEqual(typeof(bool?), e.Type);
@@ -136,9 +134,7 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, getter, new[] { argm }.AsEnumerable())
             })
             {
-#if OLD_CONDITIONAL
-                Assert.AreEqual(CSharpExpressionType.ConditionalIndex, e.CSharpNodeType);
-#endif
+                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
                 Assert.AreSame(obj, e.Object);
                 Assert.AreEqual(item, e.Indexer);
                 Assert.AreEqual(typeof(bool?), e.Type);
@@ -246,32 +242,7 @@ namespace Tests
 
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
-#if OLD_CONDITIONAL
-        [TestMethod]
-        public void ConditionalIndex_Visitor()
-        {
-            var expr = Expression.Default(typeof(Bar));
-            var prop = expr.Type.GetProperty("Item");
-            var arg = CSharpExpression.Bind(prop.GetIndexParameters()[0], Expression.Constant(0));
-            var res = CSharpExpression.ConditionalIndex(expr, prop, arg);
 
-            var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
-        }
-
-        class V : CSharpExpressionVisitor
-        {
-            public bool Visited = false;
-
-            protected internal override Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
-            {
-                Visited = true;
-
-                return base.VisitConditionalIndex(node);
-            }
-        }
-#endif
         class Bar
         {
             public bool this[int x] { get { return false; } }

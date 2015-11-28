@@ -122,9 +122,7 @@ namespace Tests
                 CSharpExpression.ConditionalCall(obj, baz, new[] { arg }.AsEnumerable()),
             })
             {
-#if OLD_CONDITIONAL
-                Assert.AreEqual(CSharpExpressionType.ConditionalCall, e.CSharpNodeType);
-#endif
+                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
                 Assert.AreSame(obj, e.Object);
                 Assert.AreEqual(baz, e.Method);
                 Assert.AreEqual(typeof(int?), e.Type);
@@ -256,31 +254,7 @@ namespace Tests
 
         // TODO: tests to assert args are not evaluated if receiver is null
         // TODO: tests to assert receiver is only evaluated once
-#if OLD_CONDITIONAL
-        [TestMethod]
-        public void ConditionalCall_Visitor()
-        {
-            var expr = Expression.Default(typeof(Bar));
-            var method = expr.Type.GetMethod("Foo");
-            var res = CSharpExpression.ConditionalCall(expr, method);
 
-            var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
-        }
-
-        class V : CSharpExpressionVisitor
-        {
-            public bool Visited = false;
-
-            protected internal override Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
-            {
-                Visited = true;
-
-                return base.VisitConditionalMethodCall(node);
-            }
-        }
-#endif
         class Bar
         {
             public int Foo() { return 0; }

@@ -2,11 +2,9 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -18,115 +16,6 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
-#if OLD_CONDITIONAL
-    public abstract partial class ConditionalMethodCallCSharpExpression : OldConditionalAccessCSharpExpression
-    {
-        internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-            : base(expression)
-        {
-            Method = method;
-            Arguments = arguments;
-        }
-
-        /// <summary>
-        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
-        /// </summary>
-        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalCall;
-
-        /// <summary>
-        /// Gets the <see cref="Expression" /> that represents the instance accessed by the method call.
-        /// </summary>
-        public Expression Object => Expression; // NB: Just an alias for familiarity with MethodCallExpression
-
-        /// <summary>
-        /// Gets the method to be called.
-        /// </summary>
-        public MethodInfo Method { get; }
-
-        /// <summary>
-        /// Gets a collection of argument assignments.
-        /// </summary>
-        public ReadOnlyCollection<ParameterAssignment> Arguments { get; }
-
-        /// <summary>
-        /// Gets the result type of the underlying access.
-        /// </summary>
-        protected override Type UnderlyingType => Method.ReturnType;
-
-        /// <summary>
-        /// Dispatches to the specific visit method for this node type.
-        /// </summary>
-        /// <param name="visitor">The visitor to visit this node with.</param>
-        /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalMethodCall(this);
-        }
-
-        /// <summary>
-        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
-        /// </summary>
-        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
-        /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
-        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ConditionalMethodCallCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
-        {
-            if (expression == Expression && arguments == Arguments)
-            {
-                return this;
-            }
-
-            return CSharpExpression.ConditionalCall(expression, Method, arguments);
-        }
-
-        class InstanceMethodCall : ConditionalMethodCallCSharpExpression
-        {
-            internal InstanceMethodCall(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-                : base(expression, method, arguments)
-            {
-            }
-
-            protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Call(nonNull, Method, Arguments);
-        }
-
-        class ExtensionMethodCall : ConditionalMethodCallCSharpExpression
-        {
-            internal ExtensionMethodCall(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-                : base(expression, method, arguments)
-            {
-            }
-
-            // DESIGN: Unlike LINQ's MethodCallExpression, the Object property won't be null for a static extension method.
-            //         We could make it more similar by making the Object property virtual and returning null. We'd also have
-            //         to mask the underlying Arguments so it includes a binding for the "this" parameter. Finally, the logic
-            //         in the visitor would have to be revisited so the duplication of the binding for "this" in the Expression
-            //         property and the Arguments collection doesn't result in an error (we could use a Rewrite pattern a la
-            //         BlockExpression in lieu of an Update).
-
-            protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Call(Method, new[] { BindThis(nonNull) }.Concat(Arguments));
-
-            private ParameterAssignment BindThis(Expression expression)
-            {
-                var thisParameter = Method.GetParametersCached()[0];
-                return CSharpExpression.Bind(thisParameter, expression);
-            }
-        }
-
-        internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-        {
-            if (method.IsStatic)
-            {
-                return new ExtensionMethodCall(expression, method, arguments);
-            }
-            else
-            {
-                return new InstanceMethodCall(expression, method, arguments);
-            }
-        }
-    }
-#else
     public sealed partial class ConditionalMethodCallCSharpExpression : ConditionalAccessCSharpExpression<MethodCallCSharpExpression>
     {
         internal ConditionalMethodCallCSharpExpression(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
@@ -208,7 +97,7 @@ namespace Microsoft.CSharp.Expressions
 
         // TODO: Rewrite virtual
     }
-#endif
+
     partial class CSharpExpression
     {
         /// <summary>
@@ -316,19 +205,4 @@ namespace Microsoft.CSharp.Expressions
             return ConditionalMethodCallCSharpExpression.Make(instance, method, argList);
         }
     }
-#if OLD_CONDITIONAL
-    partial class CSharpExpressionVisitor
-    {
-        /// <summary>
-        /// Visits the children of the <see cref="ConditionalMethodCallCSharpExpression" />.
-        /// </summary>
-        /// <param name="node">The expression to visit.</param>
-        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
-        }
-    }
-#endif
 }

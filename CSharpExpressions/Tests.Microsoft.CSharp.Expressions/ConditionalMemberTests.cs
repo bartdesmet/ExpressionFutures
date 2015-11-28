@@ -87,9 +87,7 @@ namespace Tests
                 Assert.AreSame(expr, e.Expression);
                 Assert.AreEqual(fieldInfo, e.Member);
                 Assert.AreEqual(typeof(int?), e.Type);
-#if OLD_CONDITIONAL
-                Assert.AreEqual(CSharpExpressionType.ConditionalMemberAccess, e.CSharpNodeType);
-#endif
+                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
             }
 
             foreach (var e in new[]
@@ -103,9 +101,7 @@ namespace Tests
                 Assert.AreSame(expr, e.Expression);
                 Assert.AreEqual(propInfo, e.Member);
                 Assert.AreEqual(typeof(int?), e.Type);
-#if OLD_CONDITIONAL
-                Assert.AreEqual(CSharpExpressionType.ConditionalMemberAccess, e.CSharpNodeType);
-#endif
+                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
             }
         }
 
@@ -243,31 +239,7 @@ namespace Tests
             Assert.AreEqual("bar", d3(q));
             Assert.IsNull(d3(null));
         }
-#if OLD_CONDITIONAL
-        [TestMethod]
-        public void ConditionalMember_Visitor()
-        {
-            var expr = Expression.Default(typeof(Bar));
-            var prop = expr.Type.GetProperty("P");
-            var res = CSharpExpression.ConditionalProperty(expr, prop);
 
-            var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
-        }
-
-        class V : CSharpExpressionVisitor
-        {
-            public bool Visited = false;
-
-            protected internal override Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
-            {
-                Visited = true;
-
-                return base.VisitConditionalMember(node);
-            }
-        }
-#endif
 #pragma warning disable CS0649
         class Bar
         {

@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -16,87 +15,6 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a conditional (null-propagating) access to an indexer.
     /// </summary>
-#if OLD_CONDITIONAL
-    public sealed partial class ConditionalIndexCSharpExpression : OldConditionalAccessCSharpExpression
-    {
-        private readonly MethodInfo _method;
-
-        internal ConditionalIndexCSharpExpression(Expression expression, PropertyInfo indexer, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-            : base(expression)
-        {
-            Indexer = indexer;
-            Arguments = arguments;
-            _method = method;
-        }
-
-        /// <summary>
-        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
-        /// </summary>
-        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalIndex;
-
-        /// <summary>
-        /// Gets the <see cref="Expression" /> that represents the object to index.
-        /// </summary>
-        public Expression Object => Expression; // NB: Just an alias for familiarity with IndexExpression
-
-        /// <summary>
-        /// Gets the <see cref="PropertyInfo" /> for the indexer property.
-        /// </summary>
-        public PropertyInfo Indexer { get; }
-
-        /// <summary>
-        /// Gets a collection of argument assignments.
-        /// </summary>
-        public ReadOnlyCollection<ParameterAssignment> Arguments { get; }
-
-        /// <summary>
-        /// Gets the result type of the underlying access.
-        /// </summary>
-        protected override Type UnderlyingType => Indexer.PropertyType;
-
-        /// <summary>
-        /// Dispatches to the specific visit method for this node type.
-        /// </summary>
-        /// <param name="visitor">The visitor to visit this node with.</param>
-        /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalIndex(this);
-        }
-
-        /// <summary>
-        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
-        /// </summary>
-        /// <param name="object">The <see cref="Object" /> property of the result.</param>
-        /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
-        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ConditionalIndexCSharpExpression Update(Expression @object, IEnumerable<ParameterAssignment> arguments)
-        {
-            if (@object == Object && arguments == Arguments)
-            {
-                return this;
-            }
-
-            if (_method != null)
-            {
-                return CSharpExpression.ConditionalIndex(@object, _method, arguments);
-            }
-            else
-            {
-                return CSharpExpression.ConditionalIndex(@object, Indexer, arguments);
-            }
-        }
-
-        /// <summary>
-        /// Reduces the expression to an unconditional non-null access on the specified expression.
-        /// </summary>
-        /// <param name="nonNull">Non-null expression to apply the access to.</param>
-        /// <returns>The reduced expression.</returns>
-        protected override Expression ReduceAccess(Expression nonNull) => _method != null ? CSharpExpression.Index(nonNull, _method, Arguments) : CSharpExpression.Index(nonNull, Indexer, Arguments);
-    }
-#else
     public abstract partial class ConditionalIndexCSharpExpression : ConditionalAccessCSharpExpression<IndexCSharpExpression>
     {
         internal ConditionalIndexCSharpExpression(Expression expression, ConditionalReceiver receiver, IndexCSharpExpression access)
@@ -188,7 +106,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
     }
-#endif
+
     partial class CSharpExpression
     {
         /// <summary>
@@ -340,19 +258,4 @@ namespace Microsoft.CSharp.Expressions
             }
         }
     }
-#if OLD_CONDITIONAL
-    partial class CSharpExpressionVisitor
-    {
-        /// <summary>
-        /// Visits the children of the <see cref="ConditionalIndexCSharpExpression" />.
-        /// </summary>
-        /// <param name="node">The expression to visit.</param>
-        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
-        {
-            return node.Update(Visit(node.Object), Visit(node.Arguments, VisitParameterAssignment));
-        }
-    }
-#endif
 }

@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -20,69 +19,6 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an expression that applies a delegate or lambda expression to a list of argument expressions.
     /// </summary>
-#if OLD_CONDITIONAL
-    public sealed partial class ConditionalInvocationCSharpExpression : OldConditionalAccessCSharpExpression
-    {
-        private readonly MethodInfo _invokeMethod;
-
-        internal ConditionalInvocationCSharpExpression(Expression expression, ReadOnlyCollection<ParameterAssignment> arguments, MethodInfo invokeMethod)
-            : base(expression)
-        {
-            Arguments = arguments;
-            _invokeMethod = invokeMethod;
-        }
-
-        /// <summary>
-        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
-        /// </summary>
-        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalInvoke;
-
-        /// <summary>
-        /// Gets the result type of the underlying access.
-        /// </summary>
-        protected override Type UnderlyingType => _invokeMethod.ReturnType;
-
-        /// <summary>
-        /// Gets a collection of argument assignments.
-        /// </summary>
-        public ReadOnlyCollection<ParameterAssignment> Arguments { get; }
-
-        /// <summary>
-        /// Dispatches to the specific visit method for this node type.
-        /// </summary>
-        /// <param name="visitor">The visitor to visit this node with.</param>
-        /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalInvocation(this);
-        }
-
-        /// <summary>
-        /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
-        /// </summary>
-        /// <param name="expression">The <see cref="Expression" /> property of the result.</param>
-        /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
-        /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ConditionalInvocationCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
-        {
-            if (expression == Expression && arguments == Arguments)
-            {
-                return this;
-            }
-
-            return CSharpExpression.ConditionalInvoke(expression, arguments);
-        }
-
-        /// <summary>
-        /// Reduces the expression to an unconditional non-null access on the specified expression.
-        /// </summary>
-        /// <param name="nonNull">Non-null expression to apply the access to.</param>
-        /// <returns>The reduced expression.</returns>
-        protected override Expression ReduceAccess(Expression nonNull) => CSharpExpression.Invoke(nonNull, Arguments);
-    }
-#else
     public sealed partial class ConditionalInvocationCSharpExpression : ConditionalAccessCSharpExpression<InvocationCSharpExpression>
     {
         internal ConditionalInvocationCSharpExpression(Expression expression, ReadOnlyCollection<ParameterAssignment> arguments, MethodInfo invokeMethod)
@@ -128,7 +64,7 @@ namespace Microsoft.CSharp.Expressions
 
         // TODO: Rewrite virtual
     }
-#endif
+
     partial class CSharpExpression
     {
         /// <summary>
@@ -203,19 +139,4 @@ namespace Microsoft.CSharp.Expressions
             return new ConditionalInvocationCSharpExpression(expression, argList, method);
         }
     }
-#if OLD_CONDITIONAL
-    partial class CSharpExpressionVisitor
-    {
-        /// <summary>
-        /// Visits the children of the <see cref="ConditionalInvocationCSharpExpression" />.
-        /// </summary>
-        /// <param name="node">The expression to visit.</param>
-        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
-        }
-    }
-#endif
 }
