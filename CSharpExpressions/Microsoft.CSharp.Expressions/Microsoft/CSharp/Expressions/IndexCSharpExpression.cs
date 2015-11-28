@@ -17,12 +17,11 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents indexing a property.
     /// </summary>
-    public sealed partial class IndexCSharpExpression : CSharpExpression
+    public abstract partial class IndexCSharpExpression : CSharpExpression
     {
-        internal IndexCSharpExpression(Expression @object, PropertyInfo indexer, ReadOnlyCollection<ParameterAssignment> arguments)
+        internal IndexCSharpExpression(Expression @object, ReadOnlyCollection<ParameterAssignment> arguments)
         {
             Object = @object;
-            Indexer = indexer;
             Arguments = arguments;
         }
 
@@ -46,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="PropertyInfo" /> for the indexer property.
         /// </summary>
-        public PropertyInfo Indexer { get; }
+        public abstract PropertyInfo Indexer { get; }
 
         /// <summary>
         /// Gets a collection of argument assignments.
@@ -80,6 +79,8 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.Index(@object, Indexer, arguments);
         }
 
+        internal abstract IndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments);
+
         /// <summary>
         /// Reduces the expression node to a simpler expression.
         /// </summary>
@@ -92,6 +93,40 @@ namespace Microsoft.CSharp.Expressions
             var res = BindArguments((obj, args) => Expression.Property(obj, Indexer, args), Object, parameters, Arguments);
 
             return res;
+        }
+
+        internal class MethodBased : IndexCSharpExpression
+        {
+            private readonly MethodInfo _method;
+
+            public MethodBased(Expression @object, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
+                : base(@object, arguments)
+            {
+                _method = method;
+            }
+
+            public override PropertyInfo Indexer => GetProperty(_method);
+
+            internal override IndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments)
+            {
+                return CSharpExpression.Index(@object, _method, arguments);
+            }
+        }
+
+        internal class PropertyBased : IndexCSharpExpression
+        {
+            public PropertyBased(Expression @object, PropertyInfo indexer, ReadOnlyCollection<ParameterAssignment> arguments)
+                : base(@object, arguments)
+            {
+                Indexer = indexer;
+            }
+
+            public override PropertyInfo Indexer { get; }
+
+            internal override IndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments)
+            {
+                return CSharpExpression.Index(@object, Indexer, arguments);
+            }
         }
     }
 
@@ -122,7 +157,7 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
             var property = GetProperty(indexer);
-            return IndexCore(instance, property, indexer.GetParametersCached(), arguments);
+            return IndexCore(instance, property, indexer, indexer.GetParametersCached(), arguments);
         }
 
         /// <summary>
@@ -147,7 +182,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, IEnumerable<ParameterAssignment> arguments)
         {
-            return IndexCore(instance, indexer, null, arguments);
+            return IndexCore(instance, indexer, null, null, arguments);
         }
 
         /// <summary>
@@ -176,7 +211,7 @@ namespace Microsoft.CSharp.Expressions
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
             var property = GetProperty(indexer);
-            return IndexCore(instance, property, indexer.GetParametersCached(), arguments);
+            return IndexCore(instance, property, indexer, indexer.GetParametersCached(), arguments);
         }
 
         /// <summary>
@@ -202,20 +237,20 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments)
         {
-            return IndexCore(instance, indexer, null, arguments);
+            return IndexCore(instance, indexer, null, null, arguments);
         }
 
-        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
         {
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
 
             parameters = GetParameters(indexer, parameters);
 
-            return MakeIndex(instance, indexer, parameters, arguments);
+            return MakeIndex(instance, indexer, method, parameters, arguments);
         }
 
-        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
+        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
         {
             ContractUtils.RequiresNotNull(instance, nameof(instance));
             ContractUtils.RequiresNotNull(indexer, nameof(indexer));
@@ -224,10 +259,10 @@ namespace Microsoft.CSharp.Expressions
 
             var bindings = GetParameterBindings(parameters, arguments);
 
-            return MakeIndex(instance, indexer, parameters, bindings);
+            return MakeIndex(instance, indexer, method, parameters, bindings);
         }
 
-        private static IndexCSharpExpression MakeIndex(Expression instance, PropertyInfo indexer, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        private static IndexCSharpExpression MakeIndex(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
         {
             RequiresCanRead(instance, nameof(instance));
 
@@ -235,7 +270,14 @@ namespace Microsoft.CSharp.Expressions
 
             ValidateIndexer(instance.Type, indexer, parameters, argList);
 
-            return new IndexCSharpExpression(instance, indexer, argList);
+            if (method != null)
+            {
+                return new IndexCSharpExpression.MethodBased(instance, method, argList);
+            }
+            else
+            {
+                return new IndexCSharpExpression.PropertyBased(instance, indexer, argList);
+            }
         }
 
         private static ParameterInfo[] GetParameters(PropertyInfo indexer, ParameterInfo[] parameters)
