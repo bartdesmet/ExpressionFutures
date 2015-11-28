@@ -19,13 +19,18 @@ namespace Microsoft.CSharp.Expressions
             : base(receiver, nonNullReceiver, whenNotNull)
         {
         }
+
+        internal override ConditionalAccessCSharpExpression<Expression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+        {
+            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
     }
 
     /// <summary>
     /// Represents a null-conditional access operation.
     /// </summary>
     /// <typeparam name="TExpression">The type of the expression performed when the accessed receiver is non-null.</typeparam>
-    public partial class ConditionalAccessCSharpExpression<TExpression> : CSharpExpression
+    public abstract partial class ConditionalAccessCSharpExpression<TExpression> : CSharpExpression
         where TExpression : Expression
     {
         // DESIGN: This node exposes the access expression in a strongly-typed manner which can make it easier to consume,
@@ -112,8 +117,12 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return new ConditionalAccessCSharpExpression<TExpression>(receiver, nonNullReceiver, whenNotNull);
+            CheckConditionalAccess(receiver, nonNullReceiver, whenNotNull);
+
+            return Rewrite(receiver, nonNullReceiver, whenNotNull);
         }
+
+        internal abstract ConditionalAccessCSharpExpression<TExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, TExpression whenNotNull);
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.
@@ -249,21 +258,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReciever" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
         public static ConditionalAccessCSharpExpression ConditionalAccess(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
         {
-            RequiresCanRead(receiver, nameof(receiver));
-            RequiresNotNull(nonNullReceiver, nameof(nonNullReceiver));
-            RequiresCanRead(whenNotNull, nameof(whenNotNull));
-
-            var receiverType = receiver.Type;
-            if (receiverType == typeof(void) || receiverType.IsByRef || (receiverType.IsValueType && !receiverType.IsNullableType()))
-            {
-                throw Error.InvalidConditionalReceiverExpressionType(receiverType);
-            }
-
-            var nonNullReceiverType = receiverType.GetNonNullReceiverType();
-            if (nonNullReceiverType != nonNullReceiver.Type)
-            {
-                throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType);
-            }
+            CheckConditionalAccess(receiver, nonNullReceiver, whenNotNull);
 
             // TODO: More elaborate checking of `whenNotNull` would be possible, in particular to check the following:
             //
@@ -332,6 +327,25 @@ namespace Microsoft.CSharp.Expressions
             //         consists of a 'chain' of operations. Right now, the idea is to have the specialized subtypes merely as a
             //         convenience when using factories by hand, but we could scrap it all and just stick with the primitive node.
             return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
+
+        internal static void CheckConditionalAccess(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+        {
+            RequiresCanRead(receiver, nameof(receiver));
+            RequiresNotNull(nonNullReceiver, nameof(nonNullReceiver));
+            RequiresCanRead(whenNotNull, nameof(whenNotNull));
+
+            var receiverType = receiver.Type;
+            if (receiverType == typeof(void) || receiverType.IsByRef || (receiverType.IsValueType && !receiverType.IsNullableType()))
+            {
+                throw Error.InvalidConditionalReceiverExpressionType(receiverType);
+            }
+
+            var nonNullReceiverType = receiverType.GetNonNullReceiverType();
+            if (nonNullReceiverType != nonNullReceiver.Type)
+            {
+                throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType);
+            }
         }
     }
 }

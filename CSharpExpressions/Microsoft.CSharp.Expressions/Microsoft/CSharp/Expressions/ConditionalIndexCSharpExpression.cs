@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -55,8 +56,6 @@ namespace Microsoft.CSharp.Expressions
 
         internal abstract ConditionalIndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments);
 
-        // TODO: Rewrite virtual
-
         internal class MethodBased : ConditionalIndexCSharpExpression
         {
             private readonly MethodInfo _method;
@@ -67,9 +66,14 @@ namespace Microsoft.CSharp.Expressions
             }
 
             private MethodBased(Expression @object, ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-                : base(@object, receiver, MakeAccess(receiver, method, arguments))
+                : this(@object, receiver, MakeAccess(receiver, method, arguments))
             {
                 _method = method;
+            }
+
+            private MethodBased(Expression @object, ConditionalReceiver receiver, IndexCSharpExpression access)
+                : base(@object, receiver, access)
+            {
             }
 
             private static IndexCSharpExpression MakeAccess(ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
@@ -81,6 +85,11 @@ namespace Microsoft.CSharp.Expressions
             {
                 return CSharpExpression.ConditionalIndex(@object, _method, arguments);
             }
+
+            internal override ConditionalAccessCSharpExpression<IndexCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexCSharpExpression whenNotNull)
+            {
+                return new MethodBased(receiver, nonNullReceiver, whenNotNull);   
+            }
         }
 
         internal class PropertyBased : ConditionalIndexCSharpExpression
@@ -91,7 +100,12 @@ namespace Microsoft.CSharp.Expressions
             }
 
             private PropertyBased(Expression @object, ConditionalReceiver receiver, PropertyInfo indexer, ReadOnlyCollection<ParameterAssignment> arguments)
-                : base(@object, receiver, MakeAccess(receiver, indexer, arguments))
+                : this(@object, receiver, MakeAccess(receiver, indexer, arguments))
+            {
+            }
+
+            private PropertyBased(Expression @object, ConditionalReceiver receiver, IndexCSharpExpression access)
+                : base(@object, receiver, access)
             {
             }
 
@@ -103,6 +117,11 @@ namespace Microsoft.CSharp.Expressions
             internal override ConditionalIndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments)
             {
                 return CSharpExpression.ConditionalIndex(@object, Indexer, arguments);
+            }
+
+            internal override ConditionalAccessCSharpExpression<IndexCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexCSharpExpression whenNotNull)
+            {
+                return new PropertyBased(receiver, nonNullReceiver, whenNotNull);
             }
         }
     }

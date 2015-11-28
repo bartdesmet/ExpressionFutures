@@ -27,7 +27,12 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private ConditionalInvocationCSharpExpression(Expression expression, ConditionalReceiver receiver, ReadOnlyCollection<ParameterAssignment> arguments)
-            : base(expression, receiver, MakeAccess(receiver, arguments))
+            : this(expression, receiver, MakeAccess(receiver, arguments))
+        {
+        }
+
+        private ConditionalInvocationCSharpExpression(Expression expression, ConditionalReceiver receiver, InvocationCSharpExpression access)
+            : base(expression, receiver, access)
         {
         }
 
@@ -62,7 +67,10 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalInvoke(expression, arguments);
         }
 
-        // TODO: Rewrite virtual
+        internal override ConditionalAccessCSharpExpression<InvocationCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, InvocationCSharpExpression whenNotNull)
+        {
+            return new ConditionalInvocationCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
     }
 
     partial class CSharpExpression

@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using static Microsoft.CSharp.Expressions.Helpers;
 using static System.Linq.Expressions.ExpressionStubs;
+using System;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -24,7 +25,12 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private ConditionalMethodCallCSharpExpression(Expression expression, ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-            : base(expression, receiver, MakeAccess(receiver, method, arguments))
+            : this(expression, receiver, MakeAccess(receiver, method, arguments))
+        {
+        }
+
+        private ConditionalMethodCallCSharpExpression(Expression expression, ConditionalReceiver receiver, MethodCallCSharpExpression access)
+            : base(expression, receiver, access)
         {
         }
 
@@ -95,7 +101,10 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalCall(expression, Method, arguments);
         }
 
-        // TODO: Rewrite virtual
+        internal override ConditionalAccessCSharpExpression<MethodCallCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MethodCallCSharpExpression whenNotNull)
+        {
+            return new ConditionalMethodCallCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
     }
 
     partial class CSharpExpression

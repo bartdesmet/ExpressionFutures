@@ -24,7 +24,12 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private ConditionalArrayIndexCSharpExpression(Expression array, ConditionalReceiver receiver, ReadOnlyCollection<Expression> indexes)
-            : base(array, receiver, MakeAccess(receiver, indexes))
+            : this(array, receiver, MakeAccess(receiver, indexes))
+        {
+        }
+
+        private ConditionalArrayIndexCSharpExpression(Expression array, ConditionalReceiver receiver, IndexExpression access)
+            : base(array, receiver, access)
         {
         }
 
@@ -59,7 +64,10 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalArrayIndex(array, indexes);
         }
 
-        // TODO: Rewrite virtual
+        internal override ConditionalAccessCSharpExpression<IndexExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexExpression whenNotNull)
+        {
+            return new ConditionalArrayIndexCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
     }
 
     partial class CSharpExpression

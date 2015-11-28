@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -21,7 +22,12 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private ConditionalMemberCSharpExpression(Expression expression, ConditionalReceiver receiver, MemberInfo member)
-            : base(expression, receiver, MakeAccess(receiver, member))
+            : this(expression, receiver, MakeAccess(receiver, member))
+        {
+        }
+
+        private ConditionalMemberCSharpExpression(Expression expression, ConditionalReceiver receiver, MemberExpression access)
+            : base(expression, receiver, access)
         {
         }
 
@@ -60,7 +66,10 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.MakeConditionalMemberAccess(expression, Member);
         }
 
-        // TODO: Rewrite virtual
+        internal override ConditionalAccessCSharpExpression<MemberExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MemberExpression whenNotNull)
+        {
+            return new ConditionalMemberCSharpExpression(receiver, nonNullReceiver, whenNotNull);
+        }
     }
 
     partial class CSharpExpression
