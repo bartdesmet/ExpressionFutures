@@ -54,6 +54,12 @@ namespace Microsoft.CSharp.Expressions
             return Rewrite(@object, arguments);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
+        {
+            return visitor.VisitConditionalIndex(this);
+        }
+
         internal abstract ConditionalIndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments);
 
         internal class MethodBased : ConditionalIndexCSharpExpression
@@ -275,6 +281,20 @@ namespace Microsoft.CSharp.Expressions
             {
                 return new ConditionalIndexCSharpExpression.PropertyBased(instance, indexer, argList);
             }
+        }
+    }
+
+    partial class CSharpExpressionVisitor
+    {
+        /// <summary>
+        /// Visits the children of the <see cref="ConditionalIndexCSharpExpression" />.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal virtual Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
+        {
+            return node.Update(Visit(node.Object), Visit(node.Arguments, VisitParameterAssignment));
         }
     }
 }

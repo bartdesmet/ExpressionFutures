@@ -146,7 +146,8 @@ namespace Microsoft.CSharp.Expressions
         //         the specialized conditional node types. We could keep the factories as a convenience to construct the
         //         underyling ConditionalAccess construct.
 
-        private Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
         {
             var array = Visit(node.Array);
             var args = Visit(nameof(node.Indexes), node.Indexes);
@@ -154,7 +155,8 @@ namespace Microsoft.CSharp.Expressions
             return Push("CSharpConditionalArrayIndex", node, new XElement(nameof(node.Array), array), args);
         }
 
-        private Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitConditionalIndex(ConditionalIndexCSharpExpression node)
         {
             var obj = Visit(node.Object);
             var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
@@ -162,7 +164,8 @@ namespace Microsoft.CSharp.Expressions
             return Push("CSharpConditionalIndex", node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
         }
 
-        private Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
         {
             var expr = Visit(node.Expression);
             var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
@@ -170,14 +173,16 @@ namespace Microsoft.CSharp.Expressions
             return Push("CSharpConditionalInvoke", node, new XElement(nameof(node.Expression), expr), args);
         }
 
-        private Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
         {
             var expr = Visit(node.Expression);
 
             return Push("CSharpConditionalMemberAccess", node, new XAttribute(nameof(node.Member), node.Member), new XElement(nameof(node.Expression), expr));
         }
 
-        private Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
         {
             var obj = Visit(node.Object);
             var args = Visit(nameof(node.Arguments), node.Arguments, Visit);
@@ -622,48 +627,8 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
-        protected internal override Expression VisitConditionalAccess<TExpression>(ConditionalAccessCSharpExpression<TExpression> node)
+        protected internal override Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
         {
-            // DESIGN: We can do away with those if we decide to scrap ConditionalAccessCSharpExpression<TExpression> and/or
-            //         the specialized conditional node types. We could keep the factories as a convenience to construct the
-            //         underyling ConditionalAccess construct.
-
-            if (node.GetType() != typeof(ConditionalAccessCSharpExpression))
-            {
-                // NB: Double-dispatch would be a possibility, but trying to keep the nodes inaware of the DebugView support,
-                //     so we can make the debugging support optional (maybe in a separate assembly).
-
-                var member = node as ConditionalMemberCSharpExpression;
-                if (member != null)
-                {
-                    return VisitConditionalMember(member);
-                }
-
-                var call = node as ConditionalMethodCallCSharpExpression;
-                if (call != null)
-                {
-                    return VisitConditionalMethodCall(call);
-                }
-
-                var invoke = node as ConditionalInvocationCSharpExpression;
-                if (invoke != null)
-                {
-                    return VisitConditionalInvocation(invoke);
-                }
-
-                var index = node as ConditionalIndexCSharpExpression;
-                if (index != null)
-                {
-                    return VisitConditionalIndex(index);
-                }
-
-                var arrayIndex = node as ConditionalArrayIndexCSharpExpression;
-                if (arrayIndex != null)
-                {
-                    return VisitConditionalArrayIndex(arrayIndex);
-                }
-            }
-
             var receiver = new XElement(nameof(node.Receiver), Visit(node.Receiver));
             var nonNullReceiver = new XElement(nameof(node.NonNullReceiver), Visit(node.NonNullReceiver));
             var whenNotNull = new XElement(nameof(node.WhenNotNull), Visit(node.WhenNotNull));

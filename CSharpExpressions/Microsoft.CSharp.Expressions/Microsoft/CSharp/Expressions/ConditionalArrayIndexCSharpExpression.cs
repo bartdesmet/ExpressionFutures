@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -64,6 +65,12 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalArrayIndex(array, indexes);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
+        {
+            return visitor.VisitConditionalArrayIndex(this);
+        }
+
         internal override ConditionalAccessCSharpExpression<IndexExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexExpression whenNotNull)
         {
             return new ConditionalArrayIndexCSharpExpression(receiver, nonNullReceiver, whenNotNull);
@@ -118,6 +125,20 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return new ConditionalArrayIndexCSharpExpression(array, indexList);
+        }
+    }
+
+    partial class CSharpExpressionVisitor
+    {
+        /// <summary>
+        /// Visits the children of the <see cref="ConditionalArrayIndexCSharpExpression" />.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal virtual Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
+        {
+            return node.Update(Visit(node.Array), Visit(node.Indexes));
         }
     }
 }

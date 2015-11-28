@@ -20,6 +20,12 @@ namespace Microsoft.CSharp.Expressions
         {
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
+        {
+            return visitor.VisitConditionalAccess(this);
+        }
+
         internal override ConditionalAccessCSharpExpression<Expression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
         {
             return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
@@ -122,6 +128,7 @@ namespace Microsoft.CSharp.Expressions
             return Rewrite(receiver, nonNullReceiver, whenNotNull);
         }
 
+        internal abstract Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor);
         internal abstract ConditionalAccessCSharpExpression<TExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, TExpression whenNotNull);
 
         /// <summary>
@@ -237,13 +244,29 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Visits the children of the <see cref="ConditionalAccessCSharpExpression" />.
         /// </summary>
+        /// <typeparam name="TExpression">The type of the expression performed when the accessed receiver is non-null.</typeparam>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitConditionalAccess<TExpression>(ConditionalAccessCSharpExpression<TExpression> node)
             where TExpression : Expression
         {
-            return node.Update(Visit(node.Receiver), VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)), VisitAndConvert(node.WhenNotNull, nameof(VisitConditionalAccess)));
+            // DESIGN: We can do away with this if we decide to scrap ConditionalAccessCSharpExpression<TExpression> and/or
+            //         the specialized conditional node types. We could keep the factories as a convenience to construct the
+            //         underyling ConditionalAccess construct.
+
+            return node.AcceptConditionalAccess(this);
+        }
+
+        /// <summary>
+        /// Visits the children of the <see cref="ConditionalAccessCSharpExpression" />.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal virtual Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
+        {
+            return node.Update(Visit(node.Receiver), VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)), Visit(node.WhenNotNull));
         }
     }
 

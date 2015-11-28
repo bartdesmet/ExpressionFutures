@@ -67,6 +67,12 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalInvoke(expression, arguments);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
+        {
+            return visitor.VisitConditionalInvocation(this);
+        }
+
         internal override ConditionalAccessCSharpExpression<InvocationCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, InvocationCSharpExpression whenNotNull)
         {
             return new ConditionalInvocationCSharpExpression(receiver, nonNullReceiver, whenNotNull);
@@ -145,6 +151,20 @@ namespace Microsoft.CSharp.Expressions
             ValidateParameterBindings(method, argList);
 
             return new ConditionalInvocationCSharpExpression(expression, argList, method);
+        }
+    }
+
+    partial class CSharpExpressionVisitor
+    {
+        /// <summary>
+        /// Visits the children of the <see cref="ConditionalInvocationCSharpExpression" />.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
+        protected internal virtual Expression VisitConditionalInvocation(ConditionalInvocationCSharpExpression node)
+        {
+            return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
         }
     }
 }
