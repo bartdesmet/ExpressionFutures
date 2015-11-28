@@ -578,5 +578,23 @@ namespace Microsoft.CSharp.Expressions
         {
             return o ?? s_null;
         }
+
+        public static Expression GetLhs(Expression expression, string paramName)
+        {
+            var lhs = expression;
+
+            var index = expression as IndexCSharpExpression;
+            if (index != null)
+            {
+                if (!index.Indexer.CanWrite)
+                {
+                    throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+                }
+
+                lhs = Expression.Parameter(expression.Type);
+            }
+
+            return lhs;
+        }
     }
 }

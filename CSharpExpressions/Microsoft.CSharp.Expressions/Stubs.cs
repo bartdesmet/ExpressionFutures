@@ -1789,6 +1789,34 @@ namespace System.Linq.Expressions
 
     }
 }
+namespace System.Linq.Expressions
+{
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
+    static partial class Strings
+    {
+        private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+        private static Type s_typ = s_asm.GetType("System.Linq.Expressions.Strings");
+        private static ILookup<string, MethodInfo> s_mtds = s_typ.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).ToLookup(m => m.Name);
+
+        private static readonly PropertyInfo s_0 = s_typ.GetProperty("ExpressionMustBeWriteable", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+        public static System.String ExpressionMustBeWriteable
+        {
+            get
+            {
+                try
+                {
+                    return (System.String)s_0.GetValue(null);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+        }
+    }
+}
 namespace System.Linq.Expressions.Compiler
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]

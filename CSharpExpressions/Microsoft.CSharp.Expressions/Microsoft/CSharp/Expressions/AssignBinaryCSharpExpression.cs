@@ -6,6 +6,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinqError = System.Linq.Expressions.Error;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -92,7 +93,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            if (Left is IndexCSharpExpression)
+            var index = Left as IndexCSharpExpression;
+            if (index != null)
             {
                 throw new NotImplementedException(); // TODO
             }
@@ -142,14 +144,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignBinaryCSharpExpression MakeBinaryAssign(BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
         {
-            var lhs = left;
-
-            var index = left as IndexCSharpExpression;
-            if (index != null)
-            {
-                // TODO: check indexer has setter
-                lhs = Expression.Parameter(left.Type);
-            }
+            var lhs = GetLhs(left, nameof(left));
 
             // NB: We could return a BinaryExpression in case the lhs is not one of our index nodes, but it'd change
             //     the return type to Expression which isn't nice to consume. Also, the Update method would either

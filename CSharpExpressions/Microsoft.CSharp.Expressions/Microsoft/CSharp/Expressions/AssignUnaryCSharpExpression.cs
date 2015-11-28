@@ -7,6 +7,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinqError = System.Linq.Expressions.Error;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -195,7 +196,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignUnaryCSharpExpression MakeUnaryAssign(UnaryAssignFactory factory, Expression operand, MethodInfo method)
         {
-            var lhs = GetLhs(operand);
+            var lhs = GetLhs(operand, nameof(operand));
 
             // NB: We could return a UnaryExpression in case the lhs is not one of our index nodes, but it'd change
             //     the return type to Expression which isn't nice to consume. Also, the Update method would either
@@ -214,26 +215,11 @@ namespace Microsoft.CSharp.Expressions
                 return MakeUnaryAssign(factory, operand, method);
             }
 
-            var lhs = GetLhs(operand);
-
-            // NB: This has the side-effect of performing type checks
+            // NB: This has the side-effect of performing typing and assignability checks
+            var lhs = GetLhs(operand, nameof(operand));
             factory(lhs, null);
 
             return new AssignUnaryCSharpExpression.Checked(unaryType, operand);
-        }
-
-        private static Expression GetLhs(Expression operand)
-        {
-            var lhs = operand;
-
-            var index = operand as IndexCSharpExpression;
-            if (index != null)
-            {
-                // TODO: check indexer has setter
-                lhs = Expression.Parameter(operand.Type);
-            }
-
-            return lhs;
         }
 
         delegate UnaryExpression UnaryAssignFactory(Expression operand, MethodInfo method);
