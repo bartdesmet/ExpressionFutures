@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using static Tests.ReflectionUtils;
+using static Tests.TestHelpers;
 
 namespace Tests
 {
@@ -102,11 +103,70 @@ namespace Tests
             }
         }
 
+        [TestMethod]
+        public void AssignBinary_Parameter_Compile()
+        {
+            var toString = MethodInfoOf((int a) => a.ToString());
+
+            AssertCompile((log, append) =>
+            {
+                var x = Expression.Parameter(typeof(int));
+                var y = Expression.Parameter(typeof(int));
+
+                return
+                    Expression.Block(
+                        new[] { x, y },
+                        Expression.Assign(x, Expression.Constant(41)),
+                        Expression.Assign(y, CSharpExpression.AddAssign(x, Expression.Block(log("V"), Expression.Constant(1)))),
+                        Expression.Invoke(append, Expression.Call(x, toString)),
+                        Expression.Invoke(append, Expression.Call(y, toString))
+                    );
+            }, new LogAndResult<object> { Log = { "V", "42", "42" } });
+        }
+
+        [TestMethod]
+        public void AssignBinary_Index_Compile()
+        {
+            var toString = MethodInfoOf((int a) => a.ToString());
+
+            AssertCompile((log, append) =>
+            {
+                var y = Expression.Parameter(typeof(int));
+
+                var item = typeof(List<int>).GetProperty("Item");
+
+                var index =
+                    CSharpExpression.Index(
+                        Expression.Block(
+                            log("L"),
+                            Expression.Constant(new List<int> { -1, 41 })
+                        ),
+                        item,
+                        CSharpExpression.Bind(
+                            item.GetIndexParameters()[0],
+                            Expression.Block(
+                                log("I"),
+                                Expression.Constant(1)
+                            )
+                        )
+                    );
+
+                return
+                    Expression.Block(
+                        new[] { y },
+                        Expression.Assign(y, CSharpExpression.AddAssign(index, Expression.Block(log("V"), Expression.Constant(1)))),
+                        Expression.Invoke(append, Expression.Call(y, toString))
+                    );
+            }, new LogAndResult<object> { Log = { "L", "I", "V", "42" } });
+
+            // TODO: tests with multiple indexer parameters out of order
+        }
+
         private static int Op(int x, int y)
         {
             throw new NotImplementedException();
         }
-        
+
         private static IEnumerable<Expression> GetLhs()
         {
             yield return Expression.Parameter(typeof(int));
@@ -114,6 +174,12 @@ namespace Tests
             yield return Expression.MakeIndex(Expression.Parameter(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(0) });
             yield return Expression.ArrayAccess(Expression.Parameter(typeof(int[])), Expression.Constant(0));
             yield return CSharpExpression.Index(Expression.Parameter(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(0)));
+        }
+
+        private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
+        {
+            var res = WithLog(createExpression).Compile()();
+            Assert.AreEqual(expected, res);
         }
     }
 }
