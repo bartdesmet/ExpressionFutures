@@ -96,6 +96,17 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
+        internal Expression ReduceAssign(Func<Expression, Expression> assign)
+        {
+            var method = Indexer.GetGetMethod(true);
+            var parameters = method.GetParametersCached();
+
+            // TODO: Check all writeback cases with mutable structs.
+            var res = BindArguments((obj, args) => assign(Expression.Property(obj, Indexer, args)), Object, parameters, Arguments, needTemps: true);
+
+            return res;
+        }
+
         internal class MethodBased : IndexCSharpExpression
         {
             private readonly MethodInfo _method;

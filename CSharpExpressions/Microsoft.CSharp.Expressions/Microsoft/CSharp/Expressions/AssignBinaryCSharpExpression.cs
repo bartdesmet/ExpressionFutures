@@ -96,7 +96,7 @@ namespace Microsoft.CSharp.Expressions
             var index = Left as IndexCSharpExpression;
             if (index != null)
             {
-                throw new NotImplementedException(); // TODO
+                return index.ReduceAssign(left => _expression.Update(left, _expression.Conversion, _expression.Right));
             }
 
             return _expression;

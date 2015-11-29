@@ -13,10 +13,17 @@ using static Playground.ReflectionUtils;
 
 namespace Playground
 {
+    class V : ExpressionVisitor
+    {
+    }
+
     class Program
     {
         static void Main()
         {
+            Assign();
+            return;
+
             Call();
             Invoke();
             New();
@@ -35,6 +42,81 @@ namespace Playground
             ConditionalIndex();
             ConditionalInvoke();
             Dynamic();
+        }
+
+        static void Assign()
+        {
+            Assign1();
+            Assign2();
+            Assign3();
+            Assign4();
+            Assign5();
+        }
+
+        static void Assign1()
+        {
+            Title();
+
+            var par = Expression.Parameter(typeof(int));
+            var asg = CSharpExpression.AddAssign(par, Expression.Constant(1));
+            var res = Expression.Lambda<Func<int, int>>(asg, par).Compile()(41);
+
+            Console.WriteLine(res);
+        }
+
+        static void Assign2()
+        {
+            Title();
+
+            var lst = new List<int> { 2, 3, 5 };
+            var obj = Log(Expression.Constant(lst), "List");
+            var itm = lst.GetType().GetProperty("Item");
+            var arg = CSharpExpression.Bind(itm.GetIndexParameters()[0], Log(Expression.Constant(1), "Index"));
+            var ixd = CSharpExpression.Index(obj, itm, arg);
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.AddAssign(ixd, Log(Expression.Constant(39), "Value"))).Compile()();
+
+            Console.WriteLine($"{res} == (3 += 39) --> {lst[1]}");
+        }
+
+        static void Assign3()
+        {
+            Title();
+
+            var lst = new List<int> { 2, 3, 5 };
+            var obj = Log(Expression.Constant(lst), "List");
+            var itm = lst.GetType().GetProperty("Item");
+            var arg = CSharpExpression.Bind(itm.GetIndexParameters()[0], Log(Expression.Constant(1), "Index"));
+            var ixd = CSharpExpression.Index(obj, itm, arg);
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.PostIncrementCheckedAssign(ixd)).Compile()();
+
+            Console.WriteLine($"{res} == (3++) --> {lst[1]}");
+        }
+
+        static void Assign4()
+        {
+            Title();
+
+            var lst = new List<int> { 2, 3, 5 };
+            var obj = Log(Expression.Constant(lst), "List");
+            var itm = lst.GetType().GetProperty("Item");
+            var arg = CSharpExpression.Bind(itm.GetIndexParameters()[0], Log(Expression.Constant(1), "Index"));
+            var ixd = CSharpExpression.Index(obj, itm, arg);
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.PreDecrementCheckedAssign(ixd)).Compile()();
+
+            Console.WriteLine($"{res} == (--3) --> {lst[1]}");
+        }
+
+        static void Assign5()
+        {
+            Title();
+
+            var box = new StrongBox<int> { Value = 3 };
+            var obj = Log(Expression.Constant(box), "Box");
+            var val = box.GetType().GetField("Value");
+            var fld = Expression.Field(obj, val);
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.PreIncrementCheckedAssign(fld)).Compile()();
+
+            Console.WriteLine($"{res} == (++3) --> {box.Value}");
         }
 
         static void Call()

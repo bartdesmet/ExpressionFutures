@@ -187,13 +187,13 @@ namespace Microsoft.CSharp.Expressions
             return type.IsArray && type.GetElementType().MakeArrayType() == type;
         }
 
-        public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings)
+        public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings, bool needTemps = false)
         {
             var res = default(Expression);
 
             var arguments = new Expression[parameters.Length];
 
-            if (CheckArgumentsInOrder(bindings))
+            if (!needTemps && CheckArgumentsInOrder(bindings))
             {
                 foreach (var binding in bindings)
                 {

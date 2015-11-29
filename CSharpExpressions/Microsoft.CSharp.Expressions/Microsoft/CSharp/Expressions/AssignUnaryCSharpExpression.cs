@@ -6,8 +6,9 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
-using LinqError = System.Linq.Expressions.Error;
+using System.Runtime.CompilerServices;
 using static Microsoft.CSharp.Expressions.Helpers;
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -69,9 +70,10 @@ namespace Microsoft.CSharp.Expressions
 
             public override Expression Reduce()
             {
-                if (Operand is IndexCSharpExpression)
+                var index = Operand as IndexCSharpExpression;
+                if (index != null)
                 {
-                    throw new NotImplementedException(); // TODO
+                    return index.ReduceAssign(operand => _expression.Update(operand));
                 }
 
                 return _expression;
@@ -105,23 +107,51 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            private ExpressionType FunctionalOp
+            private Expression FunctionalOp(Expression operand)
             {
-                get
+                var one = GetConstantOne(operand.Type);
+
+                switch (CSharpNodeType)
                 {
-                    switch (CSharpNodeType)
-                    {
-                        case CSharpExpressionType.PreIncrementCheckedAssign:
-                        case CSharpExpressionType.PostIncrementCheckedAssign:
-                            return ExpressionType.AddChecked;
+                    case CSharpExpressionType.PreIncrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                        return Expression.AddChecked(operand, one);
 
-                        case CSharpExpressionType.PreDecrementCheckedAssign:
-                        case CSharpExpressionType.PostDecrementCheckedAssign:
-                            return ExpressionType.SubtractChecked;
+                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                        return Expression.SubtractChecked(operand, one);
 
-                        default:
-                            throw ContractUtils.Unreachable;
-                    }
+                    default:
+                        throw ContractUtils.Unreachable;
+                }
+            }
+
+            private Expression GetConstantOne(Type type)
+            {
+                switch (type.GetNonNullableType().GetTypeCode())
+                {
+                    case TypeCode.Byte:
+                        return Expression.Constant((byte)1, type);
+                    case TypeCode.UInt16:
+                        return Expression.Constant((ushort)1, type);
+                    case TypeCode.UInt32:
+                        return Expression.Constant((uint)1, type);
+                    case TypeCode.UInt64:
+                        return Expression.Constant((ulong)1, type);
+                    case TypeCode.SByte:
+                        return Expression.Constant((sbyte)1, type);
+                    case TypeCode.Int16:
+                        return Expression.Constant((short)1, type);
+                    case TypeCode.Int32:
+                        return Helpers.CreateConstantInt32(1);
+                    case TypeCode.Int64:
+                        return Expression.Constant((long)1, type);
+                    case TypeCode.Single:
+                        return Expression.Constant((float)1, type);
+                    case TypeCode.Double:
+                        return Expression.Constant((double)1, type);
+                    default:
+                        throw ContractUtils.Unreachable;
                 }
             }
 
@@ -137,9 +167,10 @@ namespace Microsoft.CSharp.Expressions
                         return ReduceVariable();
                 }
 
-                if (Operand is IndexCSharpExpression)
+                var index = Operand as IndexCSharpExpression;
+                if (index != null)
                 {
-                    return ReduceIndexCSharp();
+                    return ReduceIndexCSharp(index);
                 }
 
                 throw ContractUtils.Unreachable;
@@ -147,22 +178,122 @@ namespace Microsoft.CSharp.Expressions
 
             private Expression ReduceMember()
             {
-                throw new NotImplementedException(); // TODO
+                var res = default(Expression);
+
+                var member = (MemberExpression)Operand;
+
+                if (member.Expression == null)
+                {
+                    res = ReduceVariable();
+                }
+                else
+                {
+                    var lhsTemp = Expression.Parameter(member.Expression.Type);
+                    var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
+                    member = member.Update(lhsTemp);
+
+                    if (IsPrefix)
+                    {
+                        res =
+                            Expression.Block(
+                                new[] { lhsTemp },
+                                lhsAssign,
+                                Expression.Assign(member, FunctionalOp(member))
+                            );
+                    }
+                    else
+                    {
+                        var temp = Expression.Parameter(member.Type);
+
+                        res =
+                            Expression.Block(
+                                new[] { lhsTemp, temp },
+                                lhsAssign,
+                                Expression.Assign(temp, member),
+                                Expression.Assign(member, FunctionalOp(temp)),
+                                temp
+                            );
+                    }
+                }
+
+                return res;
             }
 
             private Expression ReduceIndex()
             {
-                throw new NotImplementedException(); // TODO
+                var index = (IndexExpression)Operand;
+
+                var prefix = IsPrefix;
+
+                var n = index.Arguments.Count;
+                var args = new Expression[n];
+                var block = new Expression[n + (prefix ? 2 : 4)];
+                var temps = new ParameterExpression[n + (prefix ? 1 : 2)];
+
+                var i = 0;
+                temps[i] = Expression.Parameter(index.Object.Type);
+                block[i] = Expression.Assign(temps[i], index.Object);
+
+                while (i < n)
+                {
+                    var arg = index.Arguments[i - 1];
+                    args[i - 1] = temps[i] = Expression.Parameter(arg.Type);
+                    block[i] = Expression.Assign(temps[i], arg);
+                    i++;
+                }
+
+                index = index.Update(temps[0], new TrueReadOnlyCollection<Expression>(args));
+
+                if (prefix)
+                {
+                    block[i++] = Expression.Assign(index, FunctionalOp(index));
+                }
+                else
+                {
+                    var lastTemp = temps[i] = Expression.Parameter(index.Type);
+
+                    block[i] = Expression.Assign(temps[i], index);
+                    i++;
+
+                    block[i++] = Expression.Assign(index, FunctionalOp(lastTemp));
+                    block[i++] = lastTemp;
+                }
+
+                var res = Expression.Block(temps, block);
+                return res;
             }
 
             private Expression ReduceVariable()
             {
-                throw new NotImplementedException(); // TODO
+                return ReduceVariable(Operand);
             }
 
-            private Expression ReduceIndexCSharp()
+            private Expression ReduceVariable(Expression operand)
             {
-                throw new NotImplementedException(); // TODO
+                var res = default(Expression);
+
+                if (IsPrefix)
+                {
+                    res = Expression.Assign(operand, FunctionalOp(operand));
+                }
+                else
+                {
+                    var temp = Expression.Parameter(operand.Type);
+                    res =
+                        Expression.Block(
+                            new[] { temp },
+                            Expression.Assign(temp, operand),
+                            Expression.Assign(operand, FunctionalOp(temp)),
+                            temp
+                        );
+                }
+
+                return res;
+            }
+
+            private Expression ReduceIndexCSharp(IndexCSharpExpression index)
+            {
+                return index.ReduceAssign(ReduceVariable);
             }
         }
     }
