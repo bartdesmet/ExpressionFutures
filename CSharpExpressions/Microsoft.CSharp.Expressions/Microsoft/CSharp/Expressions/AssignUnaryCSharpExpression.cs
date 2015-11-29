@@ -44,7 +44,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">The <see cref="Operand" /> property of the result. </param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public Expression Update(Expression operand)
+        public AssignUnaryCSharpExpression Update(Expression operand)
         {
             if (operand == base.Operand)
             {
@@ -78,6 +78,17 @@ namespace Microsoft.CSharp.Expressions
 
                 return _expression;
             }
+        }
+
+        internal class UncheckedWithNodeType : Unchecked
+        {
+            public UncheckedWithNodeType(UnaryExpression expression, Expression operand, CSharpExpressionType nodeType)
+                : base(expression, operand)
+            {
+                CSharpNodeType = nodeType;
+            }
+
+            public override CSharpExpressionType CSharpNodeType { get; }
         }
 
         internal class Checked : AssignUnaryCSharpExpression
@@ -341,16 +352,19 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignUnaryCSharpExpression MakeUnaryAssignChecked(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
         {
+            var lhs = GetLhs(operand, nameof(operand));
+            var assign = factory(lhs, method);
+
             if (method != null)
             {
-                return MakeUnaryAssign(factory, operand, method);
+                // NB: If a method is specified, the underlying operation won't be checked, but we still need
+                //     to surface the original node type, so we have a little special node to do that.
+                return new AssignUnaryCSharpExpression.UncheckedWithNodeType(assign, operand, unaryType);
             }
-
-            // NB: This has the side-effect of performing typing and assignability checks
-            var lhs = GetLhs(operand, nameof(operand));
-            factory(lhs, null);
-
-            return new AssignUnaryCSharpExpression.Checked(unaryType, operand);
+            else
+            {
+                return new AssignUnaryCSharpExpression.Checked(unaryType, operand);
+            }
         }
 
         delegate UnaryExpression UnaryAssignFactory(Expression operand, MethodInfo method);

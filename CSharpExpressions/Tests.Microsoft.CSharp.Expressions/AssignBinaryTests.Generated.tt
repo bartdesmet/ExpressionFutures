@@ -1,0 +1,87 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var nodes = new[] { "AddAssign", "SubtractAssign", "MultiplyAssign", "DivideAssign", "ModuloAssign", "AndAssign", "OrAssign", "ExclusiveOrAssign", "LeftShiftAssign", "RightShiftAssign", "AddAssignChecked", "MultiplyAssignChecked", "SubtractAssignChecked" };
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+using Microsoft.CSharp.Expressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq.Expressions;
+using static Tests.ReflectionUtils;
+
+namespace Tests
+{
+    partial class AssignBinaryTests
+    {
+<#
+foreach (var node in nodes)
+{
+#>
+        [TestMethod]
+        public void AssignBinary_Factory_<#=node#>()
+        {
+            var a = Expression.Parameter(typeof(int));
+            var b = Expression.Constant(1);
+            var x = Expression.Parameter(typeof(int));
+            var z = Expression.Lambda(x, x);
+
+            foreach (var l in GetLhs())
+            {
+                var r = Expression.Constant(2);
+                var m = MethodInfoOf(() => Op(0, 0));
+                var c = Expression.Lambda(x, x);
+
+                var a1 = CSharpExpression.<#=node#>(l, r);
+                Assert.AreSame(l, a1.Left);
+                Assert.AreSame(r, a1.Right);
+                Assert.IsNull(a1.Method);
+                Assert.IsNull(a1.Conversion);
+
+                var a2 = CSharpExpression.<#=node#>(l, r, m);
+                Assert.AreSame(l, a2.Left);
+                Assert.AreSame(r, a2.Right);
+                Assert.AreSame(m, a2.Method);
+                Assert.IsNull(a2.Conversion);
+
+                var a3 = CSharpExpression.<#=node#>(l, r, m, c);
+                Assert.AreSame(l, a3.Left);
+                Assert.AreSame(r, a3.Right);
+                Assert.AreSame(m, a3.Method);
+                Assert.AreSame(c, a3.Conversion);
+
+                var a4 = a3.Update(l, c, r);
+                Assert.AreSame(a4, a3);
+
+                var a5 = a3.Update(a, c, r);
+                Assert.AreSame(a, a5.Left);
+                Assert.AreSame(r, a5.Right);
+                Assert.AreSame(c, a5.Conversion);
+                Assert.AreSame(m, a5.Method);
+
+                var a6 = a3.Update(l, z, r);
+                Assert.AreSame(l, a6.Left);
+                Assert.AreSame(r, a6.Right);
+                Assert.AreSame(z, a6.Conversion);
+                Assert.AreSame(m, a6.Method);
+
+                var a7 = a3.Update(l, c, b);
+                Assert.AreSame(l, a7.Left);
+                Assert.AreSame(b, a7.Right);
+                Assert.AreSame(c, a7.Conversion);
+                Assert.AreSame(m, a7.Method);
+            }
+        }
+
+<#
+}
+#>
+    }
+}

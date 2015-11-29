@@ -1,0 +1,58 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var nodes = new[] { "PreIncrementAssign", "PreDecrementAssign", "PostIncrementAssign", "PostDecrementAssign", "PreIncrementCheckedAssign", "PreDecrementCheckedAssign", "PostIncrementCheckedAssign", "PostDecrementCheckedAssign" };
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+using Microsoft.CSharp.Expressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq.Expressions;
+using static Tests.ReflectionUtils;
+
+namespace Tests
+{
+    partial class AssignUnaryTests
+    {
+<#
+foreach (var node in nodes)
+{
+#>
+        [TestMethod]
+        public void AssignUnary_Factory_<#=node#>()
+        {
+            var a = Expression.Parameter(typeof(int));
+
+            foreach (var o in GetLhs())
+            {
+                var m = MethodInfoOf(() => Op(0));
+
+                var a1 = CSharpExpression.<#=node#>(o);
+                Assert.AreSame(o, a1.Operand);
+                Assert.IsNull(a1.Method);
+
+                var a2 = CSharpExpression.<#=node#>(o, m);
+                Assert.AreSame(o, a2.Operand);
+                Assert.AreSame(m, a2.Method);
+
+                var a3 = a2.Update(o);
+                Assert.AreSame(a3, a2);
+
+                var a4 = a2.Update(a);
+                Assert.AreSame(a, a4.Operand);
+                Assert.AreSame(m, a4.Method);
+            }
+        }
+
+<#
+}
+#>
+    }
+}

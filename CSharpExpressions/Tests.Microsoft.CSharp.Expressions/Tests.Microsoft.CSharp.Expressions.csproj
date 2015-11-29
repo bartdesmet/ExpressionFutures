@@ -55,7 +55,19 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AssignUnaryTests.Generated.cs">
+      <DependentUpon>AssignUnaryTests.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="AssignUnaryTests.cs" />
+    <Compile Include="AssignBinaryTests.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssignBinaryTests.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Include="AssignmentPercolatorTests.cs" />
+    <Compile Include="AssignBinaryTests.cs" />
     <Compile Include="BlockTests.cs" />
     <Compile Include="DynamicAwaitTests.cs" />
     <Compile Include="ConditionalArrayIndexTests.cs" />
@@ -119,6 +131,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AssignUnaryTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignUnaryTests.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="AssignBinaryTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignBinaryTests.Generated.cs</LastGenOutput>
+    </Content>
     <Content Include="DynamicTests.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>

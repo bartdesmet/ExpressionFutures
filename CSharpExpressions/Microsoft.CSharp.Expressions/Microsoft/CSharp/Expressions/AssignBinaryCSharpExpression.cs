@@ -77,7 +77,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The <see cref="Conversion" /> property of the result.</param>
         /// <param name="right">The <see cref="Right" /> property of the result. </param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public Expression Update(Expression left, LambdaExpression conversion, Expression right)
+        public AssignBinaryCSharpExpression Update(Expression left, LambdaExpression conversion, Expression right)
         {
             if (left == base.Left && conversion == this.Conversion && right == base.Right)
             {
@@ -105,6 +105,15 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        /// <summary>
+        /// Creates an expression representing the binary assignment operation.
+        /// </summary>
+        /// <param name="binaryType">The type of assignment represented.</param>
+        /// <param name="left">The left operand of the assignment operation, i.e. the assignment target.</param>
+        /// <param name="right">The right operation of the assignment operation.</param>
+        /// <param name="method">The method implementing the assignment operation.</param>
+        /// <param name="conversion">The conversion function used by the compound assignment.</param>
+        /// <returns>A new <see cref="AssignBinaryCSharpExpression"/> instance representing the binary assignment.</returns>
         public static AssignBinaryCSharpExpression MakeBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
         {
             switch (binaryType)
