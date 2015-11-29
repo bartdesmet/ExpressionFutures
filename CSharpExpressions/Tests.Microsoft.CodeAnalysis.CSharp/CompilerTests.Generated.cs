@@ -4174,6 +4174,326 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD1D_B7BA() => INCONCLUSIVE(); }
 
+        [Ignore]
+        // The binary operator AddAssign is not defined for the types 'System.Byte' and 'System.Int32'.
+        [TestMethod]
+        public void CompilerTest_CAAC_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<byte, byte>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<byte, byte>>)((x, y) => { x += y; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_CAAC_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CAAC_B7BA() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The binary operator AddAssign is not defined for the types 'System.SByte' and 'System.Int32'.
+        [TestMethod]
+        public void CompilerTest_061B_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<sbyte, sbyte>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<sbyte, sbyte>>)((x, y) => { x += y; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_061B_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_061B_B7BA() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The binary operator AddAssign is not defined for the types 'System.Int16' and 'System.Int32'.
+        [TestMethod]
+        public void CompilerTest_C787_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<short, short>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<short, short>>)((x, y) => { x += y; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C787_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C787_B7BA() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The binary operator AddAssign is not defined for the types 'System.UInt16' and 'System.Int32'.
+        [TestMethod]
+        public void CompilerTest_E673_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<ushort, ushort>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<ushort, ushort>>)((x, y) => { x += y; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_E673_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E673_B7BA() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The binary operator AddAssign is not defined for the types 'System.Char' and 'System.Int32'.
+        [TestMethod]
+        public void CompilerTest_F6B8_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<char, char>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<char, char>>)((x, y) => { x += y; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_F6B8_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F6B8_B7BA() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_C8F7_C9E3()
+        {
+            // (Expression<Action<int, int>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<int, int>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Int32,System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.Int32"">
+          <Left>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C8F7_C9E3();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C8F7_C9E3() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_3859_A369()
+        {
+            // (Expression<Action<uint, uint>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<uint, uint>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.UInt32,System.UInt32]"">
+  <Parameters>
+    <Parameter Type=""System.UInt32"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.UInt32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.UInt32"">
+          <Left>
+            <Parameter Type=""System.UInt32"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.UInt32"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_3859_A369();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3859_A369() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_3AC9_62A5()
+        {
+            // (Expression<Action<long, long>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<long, long>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Int64,System.Int64]"">
+  <Parameters>
+    <Parameter Type=""System.Int64"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int64"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.Int64"">
+          <Left>
+            <Parameter Type=""System.Int64"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.Int64"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_3AC9_62A5();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3AC9_62A5() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_93FC_34D5()
+        {
+            // (Expression<Action<ulong, ulong>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<ulong, ulong>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.UInt64,System.UInt64]"">
+  <Parameters>
+    <Parameter Type=""System.UInt64"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.UInt64"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.UInt64"">
+          <Left>
+            <Parameter Type=""System.UInt64"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.UInt64"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_93FC_34D5();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_93FC_34D5() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_1D2F_75F1()
+        {
+            // (Expression<Action<float, float>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<float, float>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Single,System.Single]"">
+  <Parameters>
+    <Parameter Type=""System.Single"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Single"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.Single"">
+          <Left>
+            <Parameter Type=""System.Single"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.Single"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_1D2F_75F1();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1D2F_75F1() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_1EDE_AB2B()
+        {
+            // (Expression<Action<double, double>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<double, double>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Double,System.Double]"">
+  <Parameters>
+    <Parameter Type=""System.Double"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Double"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.Double"">
+          <Left>
+            <Parameter Type=""System.Double"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.Double"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_1EDE_AB2B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1EDE_AB2B() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_A171_21C8()
+        {
+            // (Expression<Action<decimal, decimal>>)((x, y) => { x += y; })
+            var actual = GetDebugView(@"(Expression<Action<decimal, decimal>>)((x, y) => { x += y; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Decimal,System.Decimal]"">
+  <Parameters>
+    <Parameter Type=""System.Decimal"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Decimal"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.Decimal"" Method=""System.Decimal op_Addition(System.Decimal, System.Decimal)"">
+          <Left>
+            <Parameter Type=""System.Decimal"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Parameter Type=""System.Decimal"" Id=""1"" Name=""y"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_A171_21C8();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A171_21C8() => INCONCLUSIVE(); }
+
         [TestMethod]
         public void CompilerTest_00CF_77BB()
         {
@@ -4437,6 +4757,299 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2817_C567() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The unary operator PostIncrementAssign is not defined for the type 'System.Byte'.
+        [TestMethod]
+        public void CompilerTest_B445_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<byte>>)(x => { x++; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<byte>>)(x => { x++; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B445_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B445_B7BA() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The unary operator PostIncrementAssign is not defined for the type 'System.SByte'.
+        [TestMethod]
+        public void CompilerTest_7DF7_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<sbyte>>)(x => { x++; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<sbyte>>)(x => { x++; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7DF7_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7DF7_B7BA() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_F997_C02C()
+        {
+            // (Expression<Action<short>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<short>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int16]"">
+  <Parameters>
+    <Parameter Type=""System.Int16"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.Int16"">
+          <Operand>
+            <Parameter Type=""System.Int16"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_F997_C02C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F997_C02C() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_C633_A890()
+        {
+            // (Expression<Action<ushort>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<ushort>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.UInt16]"">
+  <Parameters>
+    <Parameter Type=""System.UInt16"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.UInt16"">
+          <Operand>
+            <Parameter Type=""System.UInt16"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C633_A890();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C633_A890() => INCONCLUSIVE(); }
+
+        [Ignore]
+        // The unary operator PostIncrementAssign is not defined for the type 'System.Char'.
+        [TestMethod]
+        public void CompilerTest_D1AA_B7BA()
+        {
+            // /* !!!BUG!!! */(Expression<Action<char>>)(x => { x++; })
+            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<char>>)(x => { x++; })");
+            var expected = @"
+???";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_D1AA_B7BA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D1AA_B7BA() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_893C_377B()
+        {
+            // (Expression<Action<uint>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<uint>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.UInt32]"">
+  <Parameters>
+    <Parameter Type=""System.UInt32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.UInt32"">
+          <Operand>
+            <Parameter Type=""System.UInt32"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_893C_377B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_893C_377B() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_A586_1339()
+        {
+            // (Expression<Action<long>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<long>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int64]"">
+  <Parameters>
+    <Parameter Type=""System.Int64"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.Int64"">
+          <Operand>
+            <Parameter Type=""System.Int64"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_A586_1339();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A586_1339() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_B251_4951()
+        {
+            // (Expression<Action<ulong>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<ulong>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.UInt64]"">
+  <Parameters>
+    <Parameter Type=""System.UInt64"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.UInt64"">
+          <Operand>
+            <Parameter Type=""System.UInt64"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B251_4951();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B251_4951() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_98BA_B755()
+        {
+            // (Expression<Action<float>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<float>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Single]"">
+  <Parameters>
+    <Parameter Type=""System.Single"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.Single"">
+          <Operand>
+            <Parameter Type=""System.Single"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_98BA_B755();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_98BA_B755() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_5002_1E6C()
+        {
+            // (Expression<Action<double>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<double>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Double]"">
+  <Parameters>
+    <Parameter Type=""System.Double"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.Double"">
+          <Operand>
+            <Parameter Type=""System.Double"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5002_1E6C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5002_1E6C() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_2E6E_C166()
+        {
+            // (Expression<Action<decimal>>)(x => { x++; })
+            var actual = GetDebugView(@"(Expression<Action<decimal>>)(x => { x++; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Decimal]"">
+  <Parameters>
+    <Parameter Type=""System.Decimal"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpPostIncrementAssign Type=""System.Decimal"" Method=""System.Decimal op_Increment(System.Decimal)"">
+          <Operand>
+            <Parameter Type=""System.Decimal"" Id=""0"" Name=""x"" />
+          </Operand>
+        </CSharpPostIncrementAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2E6E_C166();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2E6E_C166() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_C043_D2B0()
@@ -6509,6 +7122,18 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_B13A_1A72 => OK();
             public override void CompilerTest_EE3F_1481 => OK();
             public override void CompilerTest_AD1D_B7BA => OK();
+            public override void CompilerTest_CAAC_B7BA => OK();
+            public override void CompilerTest_061B_B7BA => OK();
+            public override void CompilerTest_C787_B7BA => OK();
+            public override void CompilerTest_E673_B7BA => OK();
+            public override void CompilerTest_F6B8_B7BA => OK();
+            public override void CompilerTest_C8F7_C9E3 => OK();
+            public override void CompilerTest_3859_A369 => OK();
+            public override void CompilerTest_3AC9_62A5 => OK();
+            public override void CompilerTest_93FC_34D5 => OK();
+            public override void CompilerTest_1D2F_75F1 => OK();
+            public override void CompilerTest_1EDE_AB2B => OK();
+            public override void CompilerTest_A171_21C8 => OK();
             public override void CompilerTest_00CF_77BB => OK();
             public override void CompilerTest_9C51_C4A7 => OK();
             public override void CompilerTest_2115_438C => OK();
@@ -6517,6 +7142,17 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1C12_48DE => OK();
             public override void CompilerTest_B58C_6908 => OK();
             public override void CompilerTest_2817_C567 => OK();
+            public override void CompilerTest_B445_B7BA => OK();
+            public override void CompilerTest_7DF7_B7BA => OK();
+            public override void CompilerTest_F997_C02C => OK();
+            public override void CompilerTest_C633_A890 => OK();
+            public override void CompilerTest_D1AA_B7BA => OK();
+            public override void CompilerTest_893C_377B => OK();
+            public override void CompilerTest_A586_1339 => OK();
+            public override void CompilerTest_B251_4951 => OK();
+            public override void CompilerTest_98BA_B755 => OK();
+            public override void CompilerTest_5002_1E6C => OK();
+            public override void CompilerTest_2E6E_C166 => OK();
             public override void CompilerTest_C043_D2B0 => OK();
             public override void CompilerTest_2216_A3C9 => OK();
             public override void CompilerTest_6319_CF5C => OK();

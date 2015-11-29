@@ -170,6 +170,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_467C_C565() => OK();
             public override void CompilerTest_B13A_1A72() => OK();
             public override void CompilerTest_EE3F_1481() => OK();
+            public override void CompilerTest_C8F7_C9E3() => OK();
+            public override void CompilerTest_3859_A369() => OK();
+            public override void CompilerTest_3AC9_62A5() => OK();
+            public override void CompilerTest_93FC_34D5() => OK();
+            public override void CompilerTest_1D2F_75F1() => OK();
+            public override void CompilerTest_1EDE_AB2B() => OK();
+            public override void CompilerTest_A171_21C8() => OK();
 
             // Assignments unary
             public override void CompilerTest_D47A_F8E7() => OK();
@@ -181,6 +188,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1C12_48DE() => OK();
             public override void CompilerTest_B58C_6908() => OK();
             public override void CompilerTest_2817_C567() => OK();
+            public override void CompilerTest_F997_C02C() => OK();
+            public override void CompilerTest_C633_A890() => OK();
+            public override void CompilerTest_893C_377B() => OK();
+            public override void CompilerTest_A586_1339() => OK();
+            public override void CompilerTest_B251_4951() => OK();
+            public override void CompilerTest_98BA_B755() => OK();
+            public override void CompilerTest_5002_1E6C() => OK();
+            public override void CompilerTest_2E6E_C166() => OK();
+
 
             // If
             public override void CompilerTest_C043_D2B0() => OK();
