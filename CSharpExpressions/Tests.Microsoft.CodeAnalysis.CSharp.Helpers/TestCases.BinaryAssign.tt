@@ -1,0 +1,86 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var types = new[] { "byte", "sbyte", "short", "ushort", "char", "int", "uint", "long", "ulong", "float", "double", "decimal" };
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+using System;
+using System.Collections.Generic;
+
+namespace Tests.Microsoft.CodeAnalysis.CSharp
+{
+    public static partial class TestCases
+    {
+        // TODO: use these in the compiler tests
+        public static IEnumerable<string> BinaryAssign
+        {
+            get
+            {
+#pragma warning disable 0675
+
+<#
+foreach (var type in types)
+{
+    var func = "Func<" + type + ", " + type + ", " + type + ">";
+
+    var exprs = new List<string>
+    {
+        "(x, y) => {0}x += y{1}",
+        "(x, y) => {0}x -= y{1}",
+        "(x, y) => {0}x *= y{1}",
+        "(x, y) => {0}x /= y{1}",
+        "(x, y) => {0}x %= y{1}",
+    };
+
+    if (type != "float" && type != "double" && type != "decimal")
+    {
+        exprs.AddRange(new[]
+        {
+            "(x, y) => {0}x &= y{1}",
+            "(x, y) => {0}x |= y{1}",
+            "(x, y) => {0}x ^= y{1}",
+        });
+    }
+
+    var lambdas =
+        exprs.Select(e => string.Format(e, "", "")).Concat(
+        exprs.Where(e => e.Contains("+") || e.Contains("-") || e.Contains("*")).Select(e => string.Format(e, "checked(", ")")));
+
+    foreach (var lambda in lambdas)
+    {
+#>
+                { var f = (<#=func#>)(<#=lambda#>); }
+                yield return "(Expression<<#=func#>>)(<#=lambda#>)";
+
+<#
+    }
+
+    if (type == "uint" || type == "int" || type == "ulong" || type == "long")
+    {
+        var shiftFunc = "Func<" + type + ", int, " + type + ">";
+
+        var shiftLambdas = new[] { "(x, y) => x <<= y", "(x, y) => x >>= y" };
+
+        foreach (var shiftLambda in shiftLambdas)
+        {
+#>
+                { var f = (<#=shiftFunc#>)(<#=shiftLambda#>); }
+                yield return "(Expression<<#=shiftFunc#>>)(<#=shiftLambda#>)";
+
+<#
+        }
+    }
+}
+#>
+#pragma warning restore 0675
+            }
+        }
+    }
+}

@@ -52,6 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestCases.BinaryAssign.cs">
+      <DependentUpon>TestCases.BinaryAssign.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TestCases.UnaryAssign.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestCases.UnaryAssign.tt</DependentUpon>
+    </Compile>
     <Compile Include="TestUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +73,19 @@
       <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
       <Name>System.Linq.Expressions.Debugging</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestCases.BinaryAssign.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TestCases.BinaryAssign.cs</LastGenOutput>
+    </Content>
+    <Content Include="TestCases.UnaryAssign.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TestCases.UnaryAssign.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
