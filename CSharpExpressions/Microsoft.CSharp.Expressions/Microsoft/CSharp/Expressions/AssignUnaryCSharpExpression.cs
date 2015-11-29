@@ -12,6 +12,10 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    // TODO: C# spec 7.6.9
+    //       - check support for char, decimal, enum
+    //       - fix support for byte, sbyte given that LINQ factories don't accept those
+    
     /// <summary>
     /// Represents a unary assignment operation.
     /// </summary>
@@ -244,8 +248,9 @@ namespace Microsoft.CSharp.Expressions
                 var i = 0;
                 temps[i] = Expression.Parameter(index.Object.Type);
                 block[i] = Expression.Assign(temps[i], index.Object);
+                i++;
 
-                while (i < n)
+                while (i <= n)
                 {
                     var arg = index.Arguments[i - 1];
                     args[i - 1] = temps[i] = Expression.Parameter(arg.Type);
