@@ -36,6 +36,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtResult = new System.Windows.Forms.TextBox();
             this.btnEval = new System.Windows.Forms.Button();
+            this.btnReduce = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -51,6 +52,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnReduce);
             this.splitContainer1.Panel1.Controls.Add(this.btnEval);
             this.splitContainer1.Panel1.Controls.Add(this.cmbProgs);
             this.splitContainer1.Panel1.Controls.Add(this.btnCompile);
@@ -137,6 +139,18 @@
             this.btnEval.UseVisualStyleBackColor = true;
             this.btnEval.Click += new System.EventHandler(this.btnEval_Click);
             // 
+            // btnReduce
+            // 
+            this.btnReduce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReduce.Enabled = false;
+            this.btnReduce.Location = new System.Drawing.Point(788, 199);
+            this.btnReduce.Name = "btnReduce";
+            this.btnReduce.Size = new System.Drawing.Size(98, 35);
+            this.btnReduce.TabIndex = 5;
+            this.btnReduce.Text = "Reduce";
+            this.btnReduce.UseVisualStyleBackColor = true;
+            this.btnReduce.Click += new System.EventHandler(this.btnReduce_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -166,6 +180,7 @@
         private System.Windows.Forms.TextBox txtResult;
         private System.Windows.Forms.ComboBox cmbProgs;
         private System.Windows.Forms.Button btnEval;
+        private System.Windows.Forms.Button btnReduce;
     }
 }
 

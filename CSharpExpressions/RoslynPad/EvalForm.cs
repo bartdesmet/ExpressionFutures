@@ -116,22 +116,19 @@ namespace RoslynPad
             var task = res as Task;
             if (task != null)
             {
-                if (!task.IsCompleted)
+                txtResult.Text = "Awaiting task...";
+
+                try
                 {
-                    txtResult.Text = "Awaiting task...";
+                    await task;
 
-                    try
-                    {
-                        await task;
-
-                        var txt = ObjectDumper.Write(res);
-                        txtResult.Text = "Awaiting task... Done!\r\n" + txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}");
-                        return;
-                    }
+                    var txt = ObjectDumper.Write(res);
+                    txtResult.Text = "Awaiting task... Done!\r\n" + txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}");
+                    return;
                 }
             }
             else

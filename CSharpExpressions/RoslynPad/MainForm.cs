@@ -88,6 +88,39 @@ namespace RoslynPad
 })"
             },
             {
+                "Primes async",
+                @"(Expression<Func<int, Task<List<int>>>>)(async max =>
+{
+  var res = new List<int>();
+
+  for (var i = 2; i <= max; i++)
+  {
+    await Task.Delay(10);
+    Console.Write(i);
+
+    var hasDiv = false;
+
+    for (var d = 2; d <= Math.Sqrt(i); d++)
+    {
+      if (i % d == 0)
+      {
+        Console.WriteLine($"" has divisor {d}"");
+        hasDiv = true;
+        break;
+      }
+    }
+
+    if (!hasDiv)
+    {
+      Console.WriteLine("" is prime"");
+      res.Add(i);
+    }
+  }
+
+  return res;
+})"
+            },
+            {
                 "Dynamic",
                 @"(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)"
             }
@@ -104,7 +137,7 @@ namespace RoslynPad
 
         private void btnCompile_Click(object sender, EventArgs e)
         {
-            btnEval.Enabled = false;
+            btnEval.Enabled = btnReduce.Enabled = false;
             txtResult.Text = "";
 
             try
@@ -112,7 +145,7 @@ namespace RoslynPad
                 txtResult.ForeColor = Color.Black;
                 _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text);
                 txtResult.Text = _eval.DebugView().ToString();
-                btnEval.Enabled = true;
+                btnEval.Enabled = btnReduce.Enabled = true;
             }
             catch (InvalidProgramException ex)
             {
@@ -138,7 +171,7 @@ namespace RoslynPad
             if (_programs.TryGetValue(txt, out expr))
             {
                 txtCode.Text = expr;
-                btnEval.Enabled = false;
+                btnEval.Enabled = btnReduce.Enabled = false;
             }
         }
 
@@ -161,6 +194,24 @@ namespace RoslynPad
                 e.Handled = true;
                 e.SuppressKeyPress = true; // disables the annoying sound effect
             }
+        }
+
+        private void btnReduce_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var reduced = new Reducer().Visit(_eval).DebugView();
+                txtResult.Text = reduced.ToString();
+            }
+            catch (Exception ex)
+            {
+                txtResult.ForeColor = Color.Red;
+                txtResult.Text = ex.ToString();
+            }
+        }
+
+        class Reducer : ExpressionVisitor
+        {
         }
     }
 }
