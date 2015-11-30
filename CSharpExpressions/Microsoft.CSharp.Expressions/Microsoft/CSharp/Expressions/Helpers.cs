@@ -140,7 +140,7 @@ namespace Microsoft.CSharp.Expressions
 
         public static MethodInfo GetNonGenericMethod(this Type type, string name, BindingFlags flags, Type[] types)
         {
-            var candidates = type.GetMethods(flags).Where(m => !m.IsGenericMethod && m.Name == name && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(types)).ToArray();
+            var candidates = GetTypeAndBase(type).SelectMany(t => t.GetMethods(flags)).Where(m => !m.IsGenericMethod && m.Name == name && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(types)).ToArray();
 
             var res = default(MethodInfo);
 
@@ -165,6 +165,19 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return res;
+        }
+
+        private static IEnumerable<Type> GetTypeAndBase(Type type)
+        {
+            yield return type;
+
+            if (type.IsInterface)
+            {
+                foreach (var i in type.GetInterfaces())
+                {
+                    yield return i;
+                }
+            }
         }
 
         public static MethodInfo FindDisposeMethod(this Type type)
