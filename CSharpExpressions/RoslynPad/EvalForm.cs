@@ -53,6 +53,8 @@ namespace RoslynPad
 
         private async void btnEval_Click(object sender, EventArgs e)
         {
+            txtResult.Text = "";
+
             var options =
                 ScriptOptions.Default
                     .WithImports(
@@ -93,7 +95,7 @@ namespace RoslynPad
             }
 
             var res = default(object);
-            var cout = new StringWriter();
+            var cout = new StringWriter(); // TODO: Maybe have a TextWriter that dumps to the UI in real time.
             try
             {
                 Console.SetOut(cout);

@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EvalForm));
             this.dgvParams = new System.Windows.Forms.DataGridView();
             this.btnEval = new System.Windows.Forms.Button();
+            this.txtResult = new System.Windows.Forms.TextBox();
             this.Parameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtResult = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvParams)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,21 +63,6 @@
             this.btnEval.UseVisualStyleBackColor = true;
             this.btnEval.Click += new System.EventHandler(this.btnEval_Click);
             // 
-            // Parameter
-            // 
-            this.Parameter.DataPropertyName = "Parameter";
-            this.Parameter.HeaderText = "Parameter";
-            this.Parameter.Name = "Parameter";
-            this.Parameter.ReadOnly = true;
-            this.Parameter.Width = 150;
-            // 
-            // Value
-            // 
-            this.Value.DataPropertyName = "Value";
-            this.Value.HeaderText = "Value";
-            this.Value.Name = "Value";
-            this.Value.Width = 300;
-            // 
             // txtResult
             // 
             this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -89,6 +74,20 @@
             this.txtResult.Name = "txtResult";
             this.txtResult.Size = new System.Drawing.Size(654, 223);
             this.txtResult.TabIndex = 2;
+            // 
+            // Parameter
+            // 
+            this.Parameter.DataPropertyName = "Parameter";
+            this.Parameter.HeaderText = "Parameter";
+            this.Parameter.Name = "Parameter";
+            this.Parameter.ReadOnly = true;
+            // 
+            // Value
+            // 
+            this.Value.DataPropertyName = "Value";
+            this.Value.HeaderText = "Value";
+            this.Value.Name = "Value";
+            this.Value.Width = 250;
             // 
             // EvalForm
             // 
@@ -113,8 +112,8 @@
 
         private System.Windows.Forms.DataGridView dgvParams;
         private System.Windows.Forms.Button btnEval;
+        private System.Windows.Forms.TextBox txtResult;
         private System.Windows.Forms.DataGridViewTextBoxColumn Parameter;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
-        private System.Windows.Forms.TextBox txtResult;
     }
 }

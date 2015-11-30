@@ -105,6 +105,7 @@ namespace RoslynPad
         private void btnCompile_Click(object sender, EventArgs e)
         {
             btnEval.Enabled = false;
+            txtResult.Text = "";
 
             try
             {
