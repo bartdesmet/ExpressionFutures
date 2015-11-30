@@ -37,6 +37,7 @@
             this.txtResult = new System.Windows.Forms.TextBox();
             this.btnEval = new System.Windows.Forms.Button();
             this.btnReduce = new System.Windows.Forms.Button();
+            this.chkModern = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -52,6 +53,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.chkModern);
             this.splitContainer1.Panel1.Controls.Add(this.btnReduce);
             this.splitContainer1.Panel1.Controls.Add(this.btnEval);
             this.splitContainer1.Panel1.Controls.Add(this.cmbProgs);
@@ -134,7 +136,7 @@
             this.btnEval.Location = new System.Drawing.Point(892, 199);
             this.btnEval.Name = "btnEval";
             this.btnEval.Size = new System.Drawing.Size(98, 35);
-            this.btnEval.TabIndex = 4;
+            this.btnEval.TabIndex = 6;
             this.btnEval.Text = "Evaluate";
             this.btnEval.UseVisualStyleBackColor = true;
             this.btnEval.Click += new System.EventHandler(this.btnEval_Click);
@@ -150,6 +152,19 @@
             this.btnReduce.Text = "Reduce";
             this.btnReduce.UseVisualStyleBackColor = true;
             this.btnReduce.Click += new System.EventHandler(this.btnReduce_Click);
+            // 
+            // chkModern
+            // 
+            this.chkModern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkModern.AutoSize = true;
+            this.chkModern.Checked = true;
+            this.chkModern.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkModern.Location = new System.Drawing.Point(136, 205);
+            this.chkModern.Name = "chkModern";
+            this.chkModern.Size = new System.Drawing.Size(304, 24);
+            this.chkModern.TabIndex = 4;
+            this.chkModern.Text = "Include Microsoft.CSharp.Expressions";
+            this.chkModern.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -181,6 +196,7 @@
         private System.Windows.Forms.ComboBox cmbProgs;
         private System.Windows.Forms.Button btnEval;
         private System.Windows.Forms.Button btnReduce;
+        private System.Windows.Forms.CheckBox chkModern;
     }
 }
 

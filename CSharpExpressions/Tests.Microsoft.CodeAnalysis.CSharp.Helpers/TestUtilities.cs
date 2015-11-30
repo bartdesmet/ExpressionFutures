@@ -76,7 +76,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             return exp.DebugView().ToString();
         }
 
-        public static object Eval(string expr)
+        public static object Eval(string expr, bool includingExpressions = true)
         {
             // TODO: Investigate using the scripting APIs here instead.
 
@@ -110,7 +110,7 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
 
                 // Our custom assembly
-                .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location))
+                .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
 
                 // Support for dynamic
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))

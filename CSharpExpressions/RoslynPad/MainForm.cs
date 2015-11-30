@@ -143,7 +143,7 @@ namespace RoslynPad
             try
             {
                 txtResult.ForeColor = Color.Black;
-                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text);
+                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, chkModern.Checked);
                 txtResult.Text = _eval.DebugView().ToString();
                 btnEval.Enabled = btnReduce.Enabled = true;
             }
