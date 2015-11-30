@@ -286,7 +286,7 @@ var exprs = new[]
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })",
-    // !!!BUG!!! "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
      
@@ -299,7 +299,7 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })",
     "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })",
-    // !!!BUG!!! "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
 };

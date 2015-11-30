@@ -6570,6 +6570,71 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F63E_8707() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_02EE_D49C()
+        {
+            // (Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""T"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <Handlers>
+            <CatchBlock>
+              <Variable>
+                <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+              </Variable>
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Call Type=""System.Void"" Method=""Void WriteLine(System.Object)"">
+                      <Arguments>
+                        <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+                      </Arguments>
+                    </Call>
+                  </Expressions>
+                </Block>
+              </Body>
+              <Filter>
+                <NotEqual Type=""System.Boolean"">
+                  <Left>
+                    <Parameter Type=""System.Exception"" Id=""0"" Name=""e"" />
+                  </Left>
+                  <Right>
+                    <Constant Type=""System.Object"" Value=""null"" />
+                  </Right>
+                </NotEqual>
+              </Filter>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_02EE_D49C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_02EE_D49C() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_1C02_6E0D()
         {
             // (Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })
@@ -6950,6 +7015,61 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_8D77() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_1754_2D1D()
+        {
+            // (Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })
+            var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Nullable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""0"">
+              <Statements>
+                <CSharpGoto Type=""System.Void"" Value=""null"" />
+              </Statements>
+            </CSharpSwitchCase>
+            <CSharpSwitchCase TestValues=""null"">
+              <Statements>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""N"" />
+                  </Arguments>
+                </Call>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_1754_2D1D();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_2D1D() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_AD7C_9EAF()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
@@ -7268,6 +7388,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_19B3_485B => OK();
             public override void CompilerTest_0662_485B => OK();
             public override void CompilerTest_F63E_8707 => OK();
+            public override void CompilerTest_02EE_D49C => OK();
             public override void CompilerTest_1C02_6E0D => OK();
             public override void CompilerTest_744C_C5E7 => OK();
             public override void CompilerTest_2156_D7F7 => OK();
@@ -7275,6 +7396,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6832_C62D => OK();
             public override void CompilerTest_4E9F_42FD => OK();
             public override void CompilerTest_30E5_8D77 => OK();
+            public override void CompilerTest_1754_2D1D => OK();
             public override void CompilerTest_AD7C_9EAF => OK();
             public override void CompilerTest_3E56_D0C6 => OK();
         }

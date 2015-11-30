@@ -446,7 +446,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
         {
-            return Push(node, new XAttribute(nameof(node.Value), node.Value));
+            return Push(node, new XAttribute(nameof(node.Value), node.Value ?? "null"));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]

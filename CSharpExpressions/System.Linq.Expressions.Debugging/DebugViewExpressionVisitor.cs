@@ -77,7 +77,7 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            return Push(node, new XAttribute(nameof(node.Value), node.Value));
+            return Push(node, new XAttribute(nameof(node.Value), node.Value ?? "null"));
         }
 
         protected override Expression VisitDefault(DefaultExpression node)
