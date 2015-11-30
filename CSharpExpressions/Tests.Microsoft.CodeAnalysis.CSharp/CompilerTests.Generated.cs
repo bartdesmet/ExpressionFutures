@@ -7703,6 +7703,121 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_744C_C5E7() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_9329_A4F3()
+        {
+            // (Expression<Action>)(() => { throw new Exception(); })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { throw new Exception(); })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <Throw Type=""System.Void"">
+          <Operand>
+            <New Type=""System.Exception"" Constructor=""Void .ctor()"">
+              <Arguments />
+            </New>
+          </Operand>
+        </Throw>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_9329_A4F3();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9329_A4F3() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_F778_9166()
+        {
+            // (Expression<Action>)(() => { try { } catch { throw; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { try { } catch { throw; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Default Type=""System.Void"" />
+          </Body>
+          <Handlers>
+            <CatchBlock Test=""System.Exception"">
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Throw Type=""System.Void"" />
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_F778_9166();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F778_9166() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_34FC_99EF()
+        {
+            // (Expression<Action>)(() => { try { } catch (Exception ex) { throw ex; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { try { } catch (Exception ex) { throw ex; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Try Type=""System.Void"">
+          <Body>
+            <Default Type=""System.Void"" />
+          </Body>
+          <Handlers>
+            <CatchBlock>
+              <Variable>
+                <Parameter Type=""System.Exception"" Id=""0"" Name=""ex"" />
+              </Variable>
+              <Body>
+                <Block Type=""System.Void"">
+                  <Expressions>
+                    <Throw Type=""System.Void"">
+                      <Operand>
+                        <Parameter Type=""System.Exception"" Id=""0"" Name=""ex"" />
+                      </Operand>
+                    </Throw>
+                  </Expressions>
+                </Block>
+              </Body>
+            </CatchBlock>
+          </Handlers>
+        </Try>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_34FC_99EF();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34FC_99EF() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_2156_D7F7()
         {
             // (Expression<Action<int>>)(x => { switch (x) {} })
@@ -8342,6 +8457,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_02EE_D49C => OK();
             public override void CompilerTest_1C02_6E0D => OK();
             public override void CompilerTest_744C_C5E7 => OK();
+            public override void CompilerTest_9329_A4F3 => OK();
+            public override void CompilerTest_F778_9166 => OK();
+            public override void CompilerTest_34FC_99EF => OK();
             public override void CompilerTest_2156_D7F7 => OK();
             public override void CompilerTest_FCA9_3B3F => OK();
             public override void CompilerTest_6832_C62D => OK();

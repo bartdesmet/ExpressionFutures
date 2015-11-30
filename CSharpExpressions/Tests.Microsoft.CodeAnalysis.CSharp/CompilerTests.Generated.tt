@@ -302,7 +302,9 @@ var exprs = new[]
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
     
     // Throw
-    // TODO: throw, rethrow
+    "(Expression<Action>)(() => { throw new Exception(); })",
+    "(Expression<Action>)(() => { try { } catch { throw; } })",
+    "(Expression<Action>)(() => { try { } catch (Exception ex) { throw ex; } })",
 
     // Switch
     "(Expression<Action<int>>)(x => { switch (x) {} })",
