@@ -131,6 +131,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_F165_9386() => OK();
             public override void CompilerTest_2462_8DFD() => OK();
             public override void CompilerTest_3041_FAE0() => OK();
+            public override void CompilerTest_CB0C_60AB() => OK();
             public override void CompilerTest_CF40_3D45() => OK(); // DESIGN: Should we emit InvocationExpression here?
             public override void CompilerTest_4241_E360() => OK();
 
@@ -170,6 +171,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_467C_C565() => OK();
             public override void CompilerTest_B13A_1A72() => OK();
             public override void CompilerTest_EE3F_1481() => OK();
+            public override void CompilerTest_79AE_726E() => OK();
             public override void CompilerTest_C8F7_C9E3() => OK();
             public override void CompilerTest_3859_A369() => OK();
             public override void CompilerTest_3AC9_62A5() => OK();

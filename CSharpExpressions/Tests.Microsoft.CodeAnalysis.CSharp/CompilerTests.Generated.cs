@@ -3086,6 +3086,47 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3041_FAE0() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_CB0C_60AB()
+        {
+            // (Expression<Func<string, char?>>)(s => s?[42])
+            var actual = GetDebugView(@"(Expression<Func<string, char?>>)(s => s?[42])");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.String,System.Nullable`1[System.Char]]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpConditionalAccess Type=""System.Nullable`1[System.Char]"">
+      <Receiver>
+        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+      </Receiver>
+      <NonNullReceiver>
+        <ConditionalReceiver Id=""1"" Type=""System.String"" />
+      </NonNullReceiver>
+      <WhenNotNull>
+        <CSharpIndex Type=""System.Char"" Indexer=""Char Chars [Int32]"">
+          <Object>
+            <ConditionalReceiver Id=""1"" Type=""System.String"" />
+          </Object>
+          <Arguments>
+            <ParameterAssignment Parameter=""Int32 index"">
+              <Expression>
+                <Constant Type=""System.Int32"" Value=""42"" />
+              </Expression>
+            </ParameterAssignment>
+          </Arguments>
+        </CSharpIndex>
+      </WhenNotNull>
+    </CSharpConditionalAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_CB0C_60AB();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CB0C_60AB() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_CF40_3D45()
         {
             // (Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))
@@ -4158,6 +4199,51 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EE3F_1481() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_79AE_726E()
+        {
+            // (Expression<Action<List<int>>>)(xs => { xs[0] += 1; })
+            var actual = GetDebugView(@"(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Collections.Generic.List`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.Int32"">
+          <Left>
+            <CSharpIndex Type=""System.Int32"" Indexer=""Int32 Item [Int32]"">
+              <Object>
+                <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+              </Object>
+              <Arguments>
+                <ParameterAssignment Parameter=""Int32 index"">
+                  <Expression>
+                    <Constant Type=""System.Int32"" Value=""0"" />
+                  </Expression>
+                </ParameterAssignment>
+              </Arguments>
+            </CSharpIndex>
+          </Left>
+          <Right>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_79AE_726E();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_79AE_726E() => INCONCLUSIVE(); }
 
         [Ignore]
         // The binary operator AddAssign is not defined for the types 'System.String' and 'System.String'.
@@ -7091,6 +7177,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_F165_9386 => OK();
             public override void CompilerTest_2462_8DFD => OK();
             public override void CompilerTest_3041_FAE0 => OK();
+            public override void CompilerTest_CB0C_60AB => OK();
             public override void CompilerTest_CF40_3D45 => OK();
             public override void CompilerTest_4241_E360 => OK();
             public override void CompilerTest_A8D0_49C3 => OK();
@@ -7121,6 +7208,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_467C_C565 => OK();
             public override void CompilerTest_B13A_1A72 => OK();
             public override void CompilerTest_EE3F_1481 => OK();
+            public override void CompilerTest_79AE_726E => OK();
             public override void CompilerTest_AD1D_B7BA => OK();
             public override void CompilerTest_CAAC_B7BA => OK();
             public override void CompilerTest_061B_B7BA => OK();

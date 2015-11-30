@@ -161,7 +161,7 @@ var exprs = new[]
     "(Expression<Func<DateTimeOffset?, TimeSpan?>>)(d => d?.Offset)",
     "(Expression<Func<DateTimeOffset?, int?>>)(d => (d?.Offset)?.Hours)",
     "(Expression<Func<DateTimeOffset?, int?>>)(d => d?.Offset.Hours)",
-    // !!!BUG!!! "(Expression<Func<string, char?>>)(s => s?[42])",
+    "(Expression<Func<string, char?>>)(s => s?[42])",
     "(Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))",
     "(Expression<Func<string, string>>)(s => s?.Substring(length: 1, startIndex: 0).ToUpper()?.ToLower())",
 
@@ -202,7 +202,7 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { checked { x *= 1; } })",
     "(Expression<Action<int?>>)(x => { x += 1; })",
     "(Expression<Action<StrongBox<int>>>)(xs => { xs.Value += 1; })",
-    // !!!BUG!!! "(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })",
+    "(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })",
     "/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += \"!\"; })",
     "/* !!!BUG!!! */(Expression<Action<byte, byte>>)((x, y) => { x += y; })",
     "/* !!!BUG!!! */(Expression<Action<sbyte, sbyte>>)((x, y) => { x += y; })",
