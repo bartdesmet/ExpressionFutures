@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.cmbProgs = new System.Windows.Forms.ComboBox();
             this.btnCompile = new System.Windows.Forms.Button();
@@ -60,7 +61,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtResult);
             this.splitContainer1.Size = new System.Drawing.Size(1002, 712);
-            this.splitContainer1.SplitterDistance = 236;
+            this.splitContainer1.SplitterDistance = 248;
             this.splitContainer1.TabIndex = 0;
             // 
             // cmbProgs
@@ -78,7 +79,7 @@
             // btnCompile
             // 
             this.btnCompile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCompile.Location = new System.Drawing.Point(16, 187);
+            this.btnCompile.Location = new System.Drawing.Point(16, 199);
             this.btnCompile.Name = "btnCompile";
             this.btnCompile.Size = new System.Drawing.Size(98, 35);
             this.btnCompile.TabIndex = 3;
@@ -95,9 +96,12 @@
             this.txtCode.Location = new System.Drawing.Point(16, 46);
             this.txtCode.Multiline = true;
             this.txtCode.Name = "txtCode";
-            this.txtCode.Size = new System.Drawing.Size(974, 131);
+            this.txtCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtCode.Size = new System.Drawing.Size(974, 143);
             this.txtCode.TabIndex = 2;
             this.txtCode.Text = "(Expression<Func<int>>)(() => 42)";
+            this.txtCode.WordWrap = false;
+            this.txtCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCode_KeyDown);
             // 
             // label1
             // 
@@ -117,7 +121,7 @@
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(1002, 472);
+            this.txtResult.Size = new System.Drawing.Size(1002, 460);
             this.txtResult.TabIndex = 0;
             this.txtResult.WordWrap = false;
             // 
@@ -125,7 +129,7 @@
             // 
             this.btnEval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEval.Enabled = false;
-            this.btnEval.Location = new System.Drawing.Point(892, 187);
+            this.btnEval.Location = new System.Drawing.Point(892, 199);
             this.btnEval.Name = "btnEval";
             this.btnEval.Size = new System.Drawing.Size(98, 35);
             this.btnEval.TabIndex = 4;
@@ -139,6 +143,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1002, 712);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "RoslynPad";
             this.Load += new System.EventHandler(this.MainForm_Load);

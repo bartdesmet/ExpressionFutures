@@ -15,6 +15,9 @@ namespace RoslynPad
 {
     public partial class MainForm : Form
     {
+        // TODO: Add features to automatically generate tests and repro cases from the tool's input
+        //       and the outcome of the evaluation (maybe just generate a file with code fragments).
+
         private IDictionary<string, string> _programs = new Dictionary<string, string>
         {
             {
@@ -60,12 +63,15 @@ namespace RoslynPad
 
   for (var i = 2; i <= max; i++)
   {
+    Console.Write(i);
+
     var hasDiv = false;
 
     for (var d = 2; d <= Math.Sqrt(i); d++)
     {
       if (i % d == 0)
       {
+        Console.WriteLine($"" has divisor {d}"");
         hasDiv = true;
         break;
       }
@@ -73,12 +79,17 @@ namespace RoslynPad
 
     if (!hasDiv)
     {
+      Console.WriteLine("" is prime"");
       res.Add(i);
     }
   }
 
   return res;
 })"
+            },
+            {
+                "Dynamic",
+                @"(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)"
             }
         };
 
@@ -138,6 +149,17 @@ namespace RoslynPad
         private void MainForm_Load(object sender, EventArgs e)
         {
             cmbProgs.SelectedIndex = 0;
+        }
+
+        private void txtCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                txtCode.SelectAll();
+
+                e.Handled = true;
+                e.SuppressKeyPress = true; // disables the annoying sound effect
+            }
         }
     }
 }

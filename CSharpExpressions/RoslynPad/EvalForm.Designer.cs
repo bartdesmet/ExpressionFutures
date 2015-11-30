@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EvalForm));
             this.dgvParams = new System.Windows.Forms.DataGridView();
             this.btnEval = new System.Windows.Forms.Button();
             this.Parameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -97,6 +98,7 @@
             this.Controls.Add(this.txtResult);
             this.Controls.Add(this.btnEval);
             this.Controls.Add(this.dgvParams);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EvalForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Expression evaluator";
