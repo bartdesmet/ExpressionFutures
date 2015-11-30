@@ -110,8 +110,8 @@ var exprs = new[]
     "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))",
     "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))",
     "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))",
-    // !!!BUG!!! "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))", // REVIEW: Do we have all the info needed about the target which has no CSharpDynamicArgument (compile-time type comes to mind)?
-    // !!!BUG!!! "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
+    "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))",
+    "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
     // TODO: tests for discard result behavior
 
     // Dynamic invoke

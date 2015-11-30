@@ -1920,6 +1920,70 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_76D5_13EF() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_8619_DB42()
+        {
+            // (Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))
+            var actual = GetDebugView(@"(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.String,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""i"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicInvokeMember Type=""System.Object"" Name=""Substring"" Context=""Expressions"">
+      <Object>
+        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+      </Object>
+      <Arguments>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""i"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Arguments>
+    </CSharpDynamicInvokeMember>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_8619_DB42();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8619_DB42() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_4B4B_894F()
+        {
+            // (Expression<Func<dynamic, int>>)(x => int.Parse(x))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, int>>)(x => int.Parse(x))");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicConvert Type=""System.Int32"" Context=""Expressions"">
+      <Expression>
+        <CSharpDynamicInvokeMember Type=""System.Object"" Target=""System.Int32"" Name=""Parse"" Context=""Expressions"">
+          <Arguments>
+            <DynamicCSharpArgument>
+              <Expression>
+                <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+              </Expression>
+            </DynamicCSharpArgument>
+          </Arguments>
+        </CSharpDynamicInvokeMember>
+      </Expression>
+    </CSharpDynamicConvert>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_4B4B_894F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4B4B_894F() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_B5A3_A9EE()
         {
             // (Expression<Func<dynamic, dynamic>>)(f => f())
@@ -8317,6 +8381,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_EEB8_ED24 => OK();
             public override void CompilerTest_7349_817B => OK();
             public override void CompilerTest_76D5_13EF => OK();
+            public override void CompilerTest_8619_DB42 => OK();
+            public override void CompilerTest_4B4B_894F => OK();
             public override void CompilerTest_B5A3_A9EE => OK();
             public override void CompilerTest_CFDD_AFEF => OK();
             public override void CompilerTest_F090_0B2E => OK();
