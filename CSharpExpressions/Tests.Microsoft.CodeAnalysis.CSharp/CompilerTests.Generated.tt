@@ -250,17 +250,23 @@ var exprs = new[]
     // While
     "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
     "(Expression<Action>)(() => { while (true) { Console.Write('.'); } })",
+    "(Expression<Action>)(() => { while (true) { break; } })",
+    "(Expression<Action>)(() => { while (true) { continue; } })",
+    "(Expression<Action>)(() => { while (true) { return; } })",
     "(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
+    "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })",
+    "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })",
      
     // Do
     "(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
     "(Expression<Action>)(() => { int i = 0; do { if (i == 5) continue; if (i == 8) break; i++; } while (i < 10); })",
      
     // For
-    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
     "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
-    // TODO: break/continue
-    // TODO: for with many declarators
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { Console.Write(i); } })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })",
+    "(Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })",
     // TODO: for with initializer statement
      
     // ForEach
@@ -268,7 +274,10 @@ var exprs = new[]
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     "(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
     "(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
-    // TODO: break/continue
+    "(Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })",
+    "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })",
     // TODO: dynamic
      
     // Using

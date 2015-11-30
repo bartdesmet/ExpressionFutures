@@ -208,6 +208,36 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_B73D_03FA() => OK();
             public override void CompilerTest_5419_99E8() => OK();
             public override void CompilerTest_EB64_66C6() => OK();
+
+            // While
+            public override void CompilerTest_C90B_9C05() => OK(); // REVIEW: Infinite loop, so no CSharpBlock at the top level?
+            public override void CompilerTest_C5C5_4E9F() => OK(); // REVIEW: Infinite loop, so no CSharpBlock at the top level?
+            public override void CompilerTest_7D34_66D1() => OK();
+            public override void CompilerTest_40EC_DA92() => OK(); // REVIEW: Infinite loop, so no CSharpBlock at the top level?
+            public override void CompilerTest_FC9A_C797() => OK();
+            public override void CompilerTest_6C15_9FA8() => OK();
+            public override void CompilerTest_242C_68A7() => OK();
+            public override void CompilerTest_2503_AEF6() => OK();
+
+            // Do
+            public override void CompilerTest_6674_1E31() => OK(); // REVIEW: Infinite loop, so no CSharpBlock at the top level?
+            public override void CompilerTest_B6D5_79C3() => OK();
+
+            // For
+            public override void CompilerTest_25E2_35E6() => OK(); // REVIEW: Infinite loop, so no CSharpBlock at the top level?
+            public override void CompilerTest_AD48_86CB() => OK();
+            public override void CompilerTest_5EF7_9418() => OK();
+            public override void CompilerTest_26D5_E9FE() => OK();
+            public override void CompilerTest_F7F3_AD6D() => OK();
+
+            // ForEach
+            public override void CompilerTest_DA7B_B67A() => OK();
+            public override void CompilerTest_34B8_D672() => OK();
+            public override void CompilerTest_3958_5948() => OK();
+            public override void CompilerTest_1525_79A2() => OK(); // REVIEW: Rely on runtime library to infer the right GetEnumerator method, or pass it to the factory method? (NB: No extension methods are considered, so should be able to guarantee that we can find it at runtime.)
+            public override void CompilerTest_720D_1B2C() => OK();
+            public override void CompilerTest_0041_AAB8() => OK();
+            public override void CompilerTest_AE67_91A3() => OK();
         }
     }
 }

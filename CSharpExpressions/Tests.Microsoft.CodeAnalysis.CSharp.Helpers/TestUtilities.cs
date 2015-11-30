@@ -87,6 +87,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             var tree = CSharpSyntaxTree.ParseText($@"
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;

@@ -5617,6 +5617,141 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C5C5_4E9F() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_7D34_66D1()
+        {
+            // (Expression<Action>)(() => { while (true) { break; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) { break; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpWhile Type=""System.Void"">
+          <Test>
+            <Constant Type=""System.Boolean"" Value=""true"" />
+          </Test>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""0"" />
+                  </Target>
+                </Goto>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7D34_66D1();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7D34_66D1() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_40EC_DA92()
+        {
+            // (Expression<Action>)(() => { while (true) { continue; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) { continue; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <CSharpWhile Type=""System.Void"">
+          <Test>
+            <Constant Type=""System.Boolean"" Value=""true"" />
+          </Test>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Goto Type=""System.Void"" Kind=""Continue"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""0"" />
+                  </Target>
+                </Goto>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_40EC_DA92();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_40EC_DA92() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_FC9A_C797()
+        {
+            // (Expression<Action>)(() => { while (true) { return; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { while (true) { return; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpWhile Type=""System.Void"">
+          <Test>
+            <Constant Type=""System.Boolean"" Value=""true"" />
+          </Test>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Goto Type=""System.Void"" Kind=""Return"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""0"" />
+                  </Target>
+                </Goto>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_FC9A_C797();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FC9A_C797() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_6C15_9FA8()
         {
             // (Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })
@@ -5723,6 +5858,176 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6C15_9FA8() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_242C_68A7()
+        {
+            // (Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })
+            var actual = GetDebugView(@"(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Int32,System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpWhile Type=""System.Void"">
+          <Test>
+            <LessThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""1"" />
+              </Right>
+            </LessThan>
+          </Test>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <CSharpWhile Type=""System.Void"">
+                  <Test>
+                    <LessThan Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+                      </Left>
+                      <Right>
+                        <Constant Type=""System.Int32"" Value=""2"" />
+                      </Right>
+                    </LessThan>
+                  </Test>
+                  <Body>
+                    <Block Type=""System.Void"">
+                      <Expressions>
+                        <Goto Type=""System.Void"" Kind=""Break"">
+                          <Target>
+                            <LabelTarget Type=""System.Void"" Id=""2"" />
+                          </Target>
+                        </Goto>
+                      </Expressions>
+                    </Block>
+                  </Body>
+                  <BreakLabel>
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
+                  </BreakLabel>
+                  <ContinueLabel>
+                    <LabelTarget Type=""System.Void"" Id=""3"" />
+                  </ContinueLabel>
+                </CSharpWhile>
+                <Goto Type=""System.Void"" Kind=""Continue"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""4"" />
+                  </Target>
+                </Goto>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""5"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""4"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""6"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_242C_68A7();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_242C_68A7() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_2503_AEF6()
+        {
+            // (Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })
+            var actual = GetDebugView(@"(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Int32,System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpWhile Type=""System.Void"">
+          <Test>
+            <LessThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""1"" />
+              </Right>
+            </LessThan>
+          </Test>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <CSharpWhile Type=""System.Void"">
+                  <Test>
+                    <LessThan Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Int32"" Id=""1"" Name=""y"" />
+                      </Left>
+                      <Right>
+                        <Constant Type=""System.Int32"" Value=""2"" />
+                      </Right>
+                    </LessThan>
+                  </Test>
+                  <Body>
+                    <Block Type=""System.Void"">
+                      <Expressions>
+                        <Goto Type=""System.Void"" Kind=""Continue"">
+                          <Target>
+                            <LabelTarget Type=""System.Void"" Id=""2"" />
+                          </Target>
+                        </Goto>
+                      </Expressions>
+                    </Block>
+                  </Body>
+                  <BreakLabel>
+                    <LabelTarget Type=""System.Void"" Id=""3"" />
+                  </BreakLabel>
+                  <ContinueLabel>
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
+                  </ContinueLabel>
+                </CSharpWhile>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""4"" />
+                  </Target>
+                </Goto>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""4"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""5"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""6"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2503_AEF6();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2503_AEF6() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_6674_1E31()
@@ -5876,6 +6181,42 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B6D5_79C3() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_25E2_35E6()
+        {
+            // (Expression<Action>)(() => { for (;;) Console.Write('.'); })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { for (;;) Console.Write('.'); })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <Block Type=""System.Void"">
+      <Expressions>
+        <CSharpFor Type=""System.Void"">
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Char)"">
+              <Arguments>
+                <Constant Type=""System.Char"" Value=""."" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </ContinueLabel>
+        </CSharpFor>
+      </Expressions>
+    </Block>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_25E2_35E6();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_35E6() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_AD48_86CB()
         {
             // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })
@@ -5945,17 +6286,252 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD48_86CB() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_25E2_35E6()
+        public void CompilerTest_5EF7_9418()
         {
-            // (Expression<Action>)(() => { for (;;) Console.Write('.'); })
-            var actual = GetDebugView(@"(Expression<Action>)(() => { for (;;) Console.Write('.'); })");
+            // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) { Console.Write(i); } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { Console.Write(i); } })");
             var expected = @"
 <Lambda Type=""System.Action"">
   <Parameters />
   <Body>
-    <Block Type=""System.Void"">
-      <Expressions>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
         <CSharpFor Type=""System.Void"">
+          <Variables>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+          </Variables>
+          <Initializers>
+            <CSharpAssign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""0"" />
+              </Right>
+            </CSharpAssign>
+          </Initializers>
+          <Test>
+            <LessThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""10"" />
+              </Right>
+            </LessThan>
+          </Test>
+          <Iterators>
+            <CSharpPostIncrementAssign Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Operand>
+            </CSharpPostIncrementAssign>
+          </Iterators>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+                  <Arguments>
+                    <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </ContinueLabel>
+        </CSharpFor>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""3"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5EF7_9418();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5EF7_9418() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_26D5_E9FE()
+        {
+            // (Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpFor Type=""System.Void"">
+          <Variables>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+          </Variables>
+          <Initializers>
+            <CSharpAssign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""0"" />
+              </Right>
+            </CSharpAssign>
+          </Initializers>
+          <Test>
+            <LessThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""10"" />
+              </Right>
+            </LessThan>
+          </Test>
+          <Iterators>
+            <CSharpPostIncrementAssign Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Operand>
+            </CSharpPostIncrementAssign>
+          </Iterators>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Conditional Type=""System.Void"">
+                  <Test>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+                      </Left>
+                      <Right>
+                        <Constant Type=""System.Int32"" Value=""5"" />
+                      </Right>
+                    </Equal>
+                  </Test>
+                  <IfTrue>
+                    <Goto Type=""System.Void"" Kind=""Continue"">
+                      <Target>
+                        <LabelTarget Type=""System.Void"" Id=""1"" />
+                      </Target>
+                    </Goto>
+                  </IfTrue>
+                  <IfFalse>
+                    <Default Type=""System.Void"" />
+                  </IfFalse>
+                </Conditional>
+                <Conditional Type=""System.Void"">
+                  <Test>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+                      </Left>
+                      <Right>
+                        <Constant Type=""System.Int32"" Value=""8"" />
+                      </Right>
+                    </Equal>
+                  </Test>
+                  <IfTrue>
+                    <Goto Type=""System.Void"" Kind=""Break"">
+                      <Target>
+                        <LabelTarget Type=""System.Void"" Id=""2"" />
+                      </Target>
+                    </Goto>
+                  </IfTrue>
+                  <IfFalse>
+                    <Default Type=""System.Void"" />
+                  </IfFalse>
+                </Conditional>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </ContinueLabel>
+        </CSharpFor>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""3"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_26D5_E9FE();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_26D5_E9FE() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_F7F3_AD6D()
+        {
+            // (Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpFor Type=""System.Void"">
+          <Variables>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""j"" />
+          </Variables>
+          <Initializers>
+            <CSharpAssign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""1"" />
+              </Right>
+            </CSharpAssign>
+            <CSharpAssign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""j"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""2"" />
+              </Right>
+            </CSharpAssign>
+          </Initializers>
+          <Test>
+            <LessThan Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""3"" />
+              </Right>
+            </LessThan>
+          </Test>
+          <Iterators>
+            <CSharpAddAssign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""0"" Name=""i"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""4"" />
+              </Right>
+            </CSharpAddAssign>
+            <CSharpSubtractAssign Type=""System.Int32"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""j"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.Int32"" Value=""5"" />
+              </Right>
+            </CSharpSubtractAssign>
+          </Iterators>
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Char)"">
               <Arguments>
@@ -5964,21 +6540,24 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""0"" />
+            <LabelTarget Type=""System.Void"" Id=""2"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""3"" />
           </ContinueLabel>
         </CSharpFor>
-      </Expressions>
-    </Block>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_25E2_35E6();
+            Verify.CompilerTest_F7F3_AD6D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_25E2_35E6() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F7F3_AD6D() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_245A_DA7A()
@@ -6181,6 +6760,251 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_5948() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_1525_79A2()
+        {
+            // (Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
+            var actual = GetDebugView(@"(Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Collections.Generic.List`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Collection>
+            <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_1525_79A2();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1525_79A2() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_720D_1B2C()
+        {
+            // (Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
+            var actual = GetDebugView(@"(Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Collections.Generic.IList`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.Generic.IList`1[System.Int32]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Collection>
+            <Parameter Type=""System.Collections.Generic.IList`1[System.Int32]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_720D_1B2C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_1B2C() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_0041_AAB8()
+        {
+            // (Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })
+            var actual = GetDebugView(@"(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Collections.ArrayList]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.ArrayList"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Conversion>
+            <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+              <Parameters>
+                <Parameter Type=""System.Object"" Id=""2"" />
+              </Parameters>
+              <Body>
+                <Convert Type=""System.Int32"">
+                  <Operand>
+                    <Parameter Type=""System.Object"" Id=""2"" />
+                  </Operand>
+                </Convert>
+              </Body>
+            </Lambda>
+          </Conversion>
+          <Collection>
+            <Parameter Type=""System.Collections.ArrayList"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""4"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""5"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_0041_AAB8();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_AAB8() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_AE67_91A3()
+        {
+            // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })
+            var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32[]]"">
+  <Parameters>
+    <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Collection>
+            <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Conditional Type=""System.Void"">
+                  <Test>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                      </Left>
+                      <Right>
+                        <Constant Type=""System.Int32"" Value=""5"" />
+                      </Right>
+                    </Equal>
+                  </Test>
+                  <IfTrue>
+                    <Goto Type=""System.Void"" Kind=""Continue"">
+                      <Target>
+                        <LabelTarget Type=""System.Void"" Id=""2"" />
+                      </Target>
+                    </Goto>
+                  </IfTrue>
+                  <IfFalse>
+                    <Default Type=""System.Void"" />
+                  </IfFalse>
+                </Conditional>
+                <Conditional Type=""System.Void"">
+                  <Test>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                      </Left>
+                      <Right>
+                        <Constant Type=""System.Int32"" Value=""8"" />
+                      </Right>
+                    </Equal>
+                  </Test>
+                  <IfTrue>
+                    <Goto Type=""System.Void"" Kind=""Break"">
+                      <Target>
+                        <LabelTarget Type=""System.Void"" Id=""3"" />
+                      </Target>
+                    </Goto>
+                  </IfTrue>
+                  <IfFalse>
+                    <Default Type=""System.Void"" />
+                  </IfFalse>
+                </Conditional>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_AE67_91A3();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AE67_91A3() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_5598_03A6()
@@ -7402,15 +8226,27 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_EB64_66C6 => OK();
             public override void CompilerTest_C90B_9C05 => OK();
             public override void CompilerTest_C5C5_4E9F => OK();
+            public override void CompilerTest_7D34_66D1 => OK();
+            public override void CompilerTest_40EC_DA92 => OK();
+            public override void CompilerTest_FC9A_C797 => OK();
             public override void CompilerTest_6C15_9FA8 => OK();
+            public override void CompilerTest_242C_68A7 => OK();
+            public override void CompilerTest_2503_AEF6 => OK();
             public override void CompilerTest_6674_1E31 => OK();
             public override void CompilerTest_B6D5_79C3 => OK();
-            public override void CompilerTest_AD48_86CB => OK();
             public override void CompilerTest_25E2_35E6 => OK();
+            public override void CompilerTest_AD48_86CB => OK();
+            public override void CompilerTest_5EF7_9418 => OK();
+            public override void CompilerTest_26D5_E9FE => OK();
+            public override void CompilerTest_F7F3_AD6D => OK();
             public override void CompilerTest_245A_DA7A => OK();
             public override void CompilerTest_DA7B_B67A => OK();
             public override void CompilerTest_34B8_D672 => OK();
             public override void CompilerTest_3958_5948 => OK();
+            public override void CompilerTest_1525_79A2 => OK();
+            public override void CompilerTest_720D_1B2C => OK();
+            public override void CompilerTest_0041_AAB8 => OK();
+            public override void CompilerTest_AE67_91A3 => OK();
             public override void CompilerTest_5598_03A6 => OK();
             public override void CompilerTest_62CA_03A6 => OK();
             public override void CompilerTest_BB7C_2A2A => OK();
