@@ -99,7 +99,7 @@ namespace RoslynPad
             catch (TargetInvocationException ex)
             {
                 txtResult.ForeColor = Color.Red;
-                txtResult.Text = ex.Message;
+                txtResult.Text = ex.InnerException.Message;
                 return;
             }
             catch (Exception ex)
