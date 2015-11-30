@@ -6135,20 +6135,52 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D672() => INCONCLUSIVE(); }
 
-        [Ignore]
-        // Enumerator type 'System.Collections.Generic.IEnumerator`1[System.Int32]' should have a 'MoveNext' method with a 'Boolean' return type
         [TestMethod]
-        public void CompilerTest_07FE_B7BA()
+        public void CompilerTest_3958_5948()
         {
-            // /* !!!BUG!!! */(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
-            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
+            // (Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
+            var actual = GetDebugView(@"(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
             var expected = @"
-???";
+<Lambda Type=""System.Action`1[System.Collections.Generic.IEnumerable`1[System.Int32]]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.Generic.IEnumerable`1[System.Int32]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Variable>
+          <Collection>
+            <Parameter Type=""System.Collections.Generic.IEnumerable`1[System.Int32]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_07FE_B7BA();
+            Verify.CompilerTest_3958_5948();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_07FE_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_5948() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_5598_03A6()
@@ -7378,7 +7410,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_245A_DA7A => OK();
             public override void CompilerTest_DA7B_B67A => OK();
             public override void CompilerTest_34B8_D672 => OK();
-            public override void CompilerTest_07FE_B7BA => OK();
+            public override void CompilerTest_3958_5948 => OK();
             public override void CompilerTest_5598_03A6 => OK();
             public override void CompilerTest_62CA_03A6 => OK();
             public override void CompilerTest_BB7C_2A2A => OK();

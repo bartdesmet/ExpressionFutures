@@ -267,7 +267,7 @@ var exprs = new[]
     "(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })",
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     "(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
-    "/* !!!BUG!!! */(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     // TODO: break/continue
     // TODO: dynamic
      
