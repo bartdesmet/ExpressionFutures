@@ -4309,20 +4309,157 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_79AE_726E() => INCONCLUSIVE(); }
 
-        [Ignore]
-        // The binary operator AddAssign is not defined for the types 'System.String' and 'System.String'.
         [TestMethod]
-        public void CompilerTest_AD1D_B7BA()
+        public void CompilerTest_A709_4D47()
         {
-            // /* !!!BUG!!! */(Expression<Action<string>>)(s => { s += "!"; })
-            var actual = GetDebugView(@"/* !!!BUG!!! */(Expression<Action<string>>)(s => { s += ""!""; })");
+            // (Expression<Action<string>>)(s => { s += "!"; })
+            var actual = GetDebugView(@"(Expression<Action<string>>)(s => { s += ""!""; })");
             var expected = @"
-???";
+<Lambda Type=""System.Action`1[System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.String"" Method=""System.String Concat(System.String, System.String)"">
+          <Left>
+            <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+          </Left>
+          <Right>
+            <Constant Type=""System.String"" Value=""!"" />
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AD1D_B7BA();
+            Verify.CompilerTest_A709_4D47();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD1D_B7BA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A709_4D47() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_8CA7_C849()
+        {
+            // (Expression<Action<string>>)(s => { s += 0; })
+            var actual = GetDebugView(@"(Expression<Action<string>>)(s => { s += 0; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAddAssign Type=""System.String"" Method=""System.String Concat(System.Object, System.Object)"">
+          <Left>
+            <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+          </Left>
+          <Right>
+            <Convert Type=""System.Object"">
+              <Operand>
+                <Constant Type=""System.Int32"" Value=""0"" />
+              </Operand>
+            </Convert>
+          </Right>
+        </CSharpAddAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_8CA7_C849();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8CA7_C849() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_8BFE_5348()
+        {
+            // (Expression<Action<string>>)(s => { checked { s += "!"; } })
+            var actual = GetDebugView(@"(Expression<Action<string>>)(s => { checked { s += ""!""; } })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Block Type=""System.String"">
+          <Expressions>
+            <CSharpAddAssign Type=""System.String"" Method=""System.String Concat(System.String, System.String)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.String"" Value=""!"" />
+              </Right>
+            </CSharpAddAssign>
+          </Expressions>
+        </Block>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_8BFE_5348();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8BFE_5348() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_18CC_52FA()
+        {
+            // (Expression<Action<string>>)(s => { checked { s += 0; } })
+            var actual = GetDebugView(@"(Expression<Action<string>>)(s => { checked { s += 0; } })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Block Type=""System.String"">
+          <Expressions>
+            <CSharpAddAssign Type=""System.String"" Method=""System.String Concat(System.Object, System.Object)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+              </Left>
+              <Right>
+                <Convert Type=""System.Object"">
+                  <Operand>
+                    <Constant Type=""System.Int32"" Value=""0"" />
+                  </Operand>
+                </Convert>
+              </Right>
+            </CSharpAddAssign>
+          </Expressions>
+        </Block>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_18CC_52FA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_18CC_52FA() => INCONCLUSIVE(); }
 
         [Ignore]
         // The binary operator AddAssign is not defined for the types 'System.Byte' and 'System.Int32'.
@@ -8447,7 +8584,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_B13A_1A72 => OK();
             public override void CompilerTest_EE3F_1481 => OK();
             public override void CompilerTest_79AE_726E => OK();
-            public override void CompilerTest_AD1D_B7BA => OK();
+            public override void CompilerTest_A709_4D47 => OK();
+            public override void CompilerTest_8CA7_C849 => OK();
+            public override void CompilerTest_8BFE_5348 => OK();
+            public override void CompilerTest_18CC_52FA => OK();
             public override void CompilerTest_CAAC_B7BA => OK();
             public override void CompilerTest_061B_B7BA => OK();
             public override void CompilerTest_C787_B7BA => OK();

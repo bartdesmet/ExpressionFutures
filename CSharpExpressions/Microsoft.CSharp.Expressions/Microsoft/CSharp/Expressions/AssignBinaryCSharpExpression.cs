@@ -151,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
             throw LinqError.UnhandledBinary(binaryType);
         }
 
-        private static AssignBinaryCSharpExpression MakeBinaryAssign(BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
+        private static AssignBinaryCSharpExpression MakeBinaryAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
         {
             var lhs = GetLhs(left, nameof(left));
 
@@ -160,6 +160,13 @@ namespace Microsoft.CSharp.Expressions
             //     have to change to return Expression or we should have an AssignBinary node to hold a Binary node
             //     underneath it. This said, a specialized layout for the case where the custom node trivially wraps
             //     a LINQ node could be useful (just make Left virtual).
+
+            if (binaryType == ExpressionType.AddAssign && left.Type == typeof(string) && method == null)
+            {
+                // NB: It looks like GetMethod supports contravariant parameters. E.g. if right.Type is object, the
+                //     following returns the Concat(object, object) overload even though typeof(string) is specified.
+                method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), right.Type });
+            }
 
             var assign = factory(lhs, right, method, conversion);
             return new AssignBinaryCSharpExpression(assign, left);

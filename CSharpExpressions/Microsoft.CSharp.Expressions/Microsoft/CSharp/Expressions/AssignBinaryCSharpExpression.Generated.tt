@@ -88,7 +88,7 @@ foreach (var node in nodes)
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.Conversion" /> property equal to.</param></param>
 		public static new AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
 		{
-			return MakeBinaryAssign(Expression.<#=node#>, left, right, method, conversion);
+			return MakeBinaryAssign(ExpressionType.<#=node#>, Expression.<#=node#>, left, right, method, conversion);
 		}
 
 <#
