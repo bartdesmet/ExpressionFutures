@@ -271,13 +271,25 @@ error CS8072: An expression tree lambda may not contain a null propagating opera
 
 Null-propagation is supported for method invocation, member access, and indexing operations in C#. Delegate invocation using null-propagation is not supported due to syntactic ambiguities by can be achieved by using method invocation syntax to call `Invoke`.
 
-In order to support null-propagating operators, we have a few options. One is to introduce one new node type to perform conditional access to a receiver when performing an operation such as `Call`, `Member`, or `Index`. This would effectively wrap existing nodes in a null-conditional access node. While this approach is tempting, it doesn't compose well with existing node types which expect their input to be non-nullable. One way to make this work would be to refactor the existing node types to separate their receiver (e.g. `MethodCallExpression.Object`) from their target (e.g. `MethodCallExpression.Method`) and arguments (e.g. `MethodCallExpression.Arguments`).
+Note that null-propagating operators have a right associative nature in C#, an example of which is shown below:
 
-Rather than going down the path of wrapping existing nodes, we chose to model each null-propagating operator as its own new node type. Those node types are `ConditionalMemberAccess`, `ConditionalCall`, `ConditionalIndex`, and `ConditionalInvoke`. Note that the latter node type is strictly speaking not needed due to the syntactic limitation imposed by the C# language; nonetheless, we added a null-propagating invocation which could be emitted for `d?.Invoke()` where `d` is a delegate.
+```csharp
+Func<DateTimeOffset?, int> f = dto => dto?.Offset.Hours;
+```
 
-Each null-propagating operator derives from `ConditionalAccessCSharpExpression` which has an `Expression` property representing the conditionally accessed receiver of the operation. The `Type` of the node is the type of the underlying operation but lifted over null. A protected virtual `ReduceAccess` method is used by the `Reduce` method to emit an expression representing the underlying operation after checking the `Expression` for a `null` value.
+This cannot be rewritten by inserting left-most parentheses, e.g.:
 
-An example of using those node types is shown below:
+```csharp
+Func<DateTimeOffset?, int> f = dto => (dto?.Offset).Hours;   // `TimeSpan?` doesn't have a property `Hours`
+```
+
+Therefore we need to support 'chains' of operations (i.e. `.Offset.Hours` in the example above) that are conditionally accessed based on whether the receiver is null (i.e. `dto?` in the example above).
+
+In order to support null-propagating operators, we introduce a `ConditionalAccessCSharpExpression` which has three properties. The first property, `Receiver`, contains a reference to an `Expression` describing the conditionally accessed receiver which should have a reference type or a nullable value type. The `NonNullReceiver` property is of type `ConditionalReceiver` and provides an object that can be referred to within `WhenNotNull` which is an `Expression` denoting the conditionally performed operation(s).
+
+The `ConditionalAccessCSharpExpression` is derived from `ConditionalAccessCSharpExpression<TExpression>` which allows for strong typing of the `WhenNotNull` to a more derived expression type. This is merely a convenience enabling factory methods to create commonly used conditional access nodes which involve only a single operation. Nesting these effectively results in a left-associative chain of conditional access operations. The general-purpose `ConditionalAccessCSharpExpression` node closes `TExpression` over `Expression`.
+
+An example of using a convenience factory is shown below:
 
 ```csharp
 CSharpExpression.ConditionalProperty(
@@ -286,9 +298,21 @@ CSharpExpression.ConditionalProperty(
 )
 ```
 
-The reduction of null-propagating operators emits a `Block` expression with an `Assign` binary expression to assign the result of evaluating the `Expression` to a `Variable` parameter expression. Next, an `IfThen` conditional expression is used to check the variable against a null value. If the variable is not null, the underlying operation is invoked by obtaining the expression from `ReduceAccess`. The result of the underlying operation is lifted to null using a `Convert` unary expression if necessary.
+This factory call returns a `ConditionalMemberCSharpExpression` which inherits from `ConditionalAccessCSharpExpression<MemberExpression>`. This is merely shorthand for the creation of a `ConditionalReceiver` and a `ConditionalAccess` as shown below:
 
-When the receiver of a null-propagating operator is such an operator itself, the emitted code is optimized to nest a series of `IfThen` nodes in order to avoid a bunch of intermediate null checks if any null-propagating operation returned a null value.
+```csharp
+var sNotNull = CSharpExpression.ConditionalReceiver(typeof(string));
+var expr = CSharpExpression.ConditionalAccess(
+  s,
+  sNotNull,
+  Expression.Property(
+    sNotNull,
+	typeof(string).GetProperty("Length")
+  )
+);
+```
+
+The reduction of null-propagating operators emits a `Block` expression with an `Assign` binary expression to assign the result of evaluating the `Receiver` to a `Variable` parameter expression. Next, an `IfThen` conditional expression is used to check the variable against a null value. If the variable is not null, the underlying operation is invoked by substituting references to `NonNullReceiver` in `WhenNotNull` for the created variable. The result of the underlying operation is lifted to null using a `Convert` unary expression if necessary.
 
 ##### Indexer Initializers
 
