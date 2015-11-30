@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -92,8 +93,10 @@ namespace RoslynPad
             }
 
             var res = default(object);
+            var cout = new StringWriter();
             try
             {
+                Console.SetOut(cout);
                 res = f.DynamicInvoke(args);
             }
             catch (TargetInvocationException ex)
@@ -120,7 +123,7 @@ namespace RoslynPad
                         await task;
 
                         var txt = ObjectDumper.Write(res);
-                        txtResult.Text = "Awaiting task... Done!\r\n" + txt;
+                        txtResult.Text = "Awaiting task... Done!\r\n" + txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
                     }
                     catch (Exception ex)
                     {
@@ -134,7 +137,7 @@ namespace RoslynPad
                 var txt = ObjectDumper.Write(res);
 
                 txtResult.ForeColor = Color.Black;
-                txtResult.Text = txt;
+                txtResult.Text = txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
             }
         }
 
