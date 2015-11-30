@@ -7177,6 +7177,45 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_51A3_E043() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_57C3_49DB()
+        {
+            // (Expression<Action>)(() => { using (var fs = File.OpenRead("foo.txt")) { } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { using (var fs = File.OpenRead(""foo.txt"")) { } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpUsing Type=""System.Void"">
+          <Variable>
+            <Parameter Type=""System.IO.FileStream"" Id=""0"" Name=""fs"" />
+          </Variable>
+          <Resource>
+            <Call Type=""System.IO.FileStream"" Method=""System.IO.FileStream OpenRead(System.String)"">
+              <Arguments>
+                <Constant Type=""System.String"" Value=""foo.txt"" />
+              </Arguments>
+            </Call>
+          </Resource>
+          <Body>
+            <Default Type=""System.Void"" />
+          </Body>
+        </CSharpUsing>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_57C3_49DB();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_57C3_49DB() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_2CF2_18B2()
         {
             // (Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })
@@ -7217,6 +7256,48 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CF2_18B2() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_CD60_A086()
+        {
+            // (Expression<Action>)(() => { lock (new object()) { Console.Write('.'); } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { lock (new object()) { Console.Write('.'); } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpLock Type=""System.Void"">
+          <Expression>
+            <New Type=""System.Object"" Constructor=""Void .ctor()"">
+              <Arguments />
+            </New>
+          </Expression>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void Write(Char)"">
+                  <Arguments>
+                    <Constant Type=""System.Char"" Value=""."" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+        </CSharpLock>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_CD60_A086();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CD60_A086() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_880F_A24B()
@@ -8251,7 +8332,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_62CA_03A6 => OK();
             public override void CompilerTest_BB7C_2A2A => OK();
             public override void CompilerTest_51A3_E043 => OK();
+            public override void CompilerTest_57C3_49DB => OK();
             public override void CompilerTest_2CF2_18B2 => OK();
+            public override void CompilerTest_CD60_A086 => OK();
             public override void CompilerTest_880F_A24B => OK();
             public override void CompilerTest_19B3_485B => OK();
             public override void CompilerTest_0662_485B => OK();

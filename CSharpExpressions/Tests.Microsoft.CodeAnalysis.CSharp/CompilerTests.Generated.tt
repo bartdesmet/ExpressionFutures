@@ -169,16 +169,16 @@ var exprs = new[]
     "(Expression<Action>)(() => { })",
     "(Expression<Action>)(() => { int x; x = 5; })",
     "(Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })",
-         
+    
     // Empty
     "(Expression<Action>)(() => { ; })",
     "(Expression<Action>)(() => { ;; })",
-     
+    
     // Return
     "(Expression<Action>)(() => { return; })",
     "(Expression<Func<int>>)(() => { int x = 42; return x; })",
     "(Expression<Func<int>>)(() => { return 42; })",
-     
+    
     // Label/Goto
     "(Expression<Action>)(() => { goto A; A: Console.Write('A'); })",
     "(Expression<Action>)(() => { A: Console.Write('A'); goto A; })",
@@ -256,11 +256,11 @@ var exprs = new[]
     "(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
     "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })",
     "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })",
-     
+    
     // Do
     "(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
     "(Expression<Action>)(() => { int i = 0; do { if (i == 5) continue; if (i == 8) break; i++; } while (i < 10); })",
-     
+    
     // For
     "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
@@ -268,7 +268,7 @@ var exprs = new[]
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })",
     "(Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })",
     // TODO: for with initializer statement
-     
+    
     // ForEach
     "(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })",
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
@@ -279,17 +279,19 @@ var exprs = new[]
     "(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })",
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })",
     // TODO: dynamic
-     
+    
     // Using
     "(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
     "(Expression<Action<IDisposable>>)(d => { using (d) { Console.Write('.'); } })",
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })",
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })",
+    "(Expression<Action>)(() => { using (var fs = File.OpenRead(\"foo.txt\")) { } })",
     // TODO: nested
 
     // Lock
     "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
-     
+    "(Expression<Action>)(() => { lock (new object()) { Console.Write('.'); } })",
+    
     // Try
     "(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })",
@@ -298,7 +300,7 @@ var exprs = new[]
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
-     
+    
     // Throw
     // TODO: throw, rethrow
 

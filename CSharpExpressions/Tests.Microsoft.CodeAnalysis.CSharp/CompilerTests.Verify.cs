@@ -238,6 +238,17 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_720D_1B2C() => OK();
             public override void CompilerTest_0041_AAB8() => OK();
             public override void CompilerTest_AE67_91A3() => OK();
+
+            // Using
+            public override void CompilerTest_5598_03A6() => OK();
+            public override void CompilerTest_62CA_03A6() => OK();
+            public override void CompilerTest_BB7C_2A2A() => OK();
+            public override void CompilerTest_51A3_E043() => OK();
+            public override void CompilerTest_57C3_49DB() => OK();
+
+            // Lock
+            public override void CompilerTest_2CF2_18B2() => OK();
+            public override void CompilerTest_CD60_A086() => OK();
         }
     }
 }
