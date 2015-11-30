@@ -8067,7 +8067,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_8D77() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_1754_2D1D()
+        public void CompilerTest_1754_0766()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })");
@@ -8086,7 +8086,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Cases>
             <CSharpSwitchCase TestValues=""0"">
               <Statements>
-                <CSharpGoto Type=""System.Void"" Value=""null"" />
+                <CSharpGotoCase Type=""System.Void"" Value=""null"" />
               </Statements>
             </CSharpSwitchCase>
             <CSharpSwitchCase TestValues=""null"">
@@ -8116,13 +8116,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_1754_2D1D();
+            Verify.CompilerTest_1754_0766();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_2D1D() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_0766() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_AD7C_9EAF()
+        public void CompilerTest_AD7C_C86B()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })");
@@ -8155,7 +8155,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             </CSharpSwitchCase>
             <CSharpSwitchCase TestValues=""null"">
               <Statements>
-                <CSharpGoto Type=""System.Void"" Value=""0"" />
+                <CSharpGotoCase Type=""System.Void"" Value=""0"" />
               </Statements>
             </CSharpSwitchCase>
           </Cases>
@@ -8171,13 +8171,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AD7C_9EAF();
+            Verify.CompilerTest_AD7C_C86B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_9EAF() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_C86B() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_3E56_D0C6()
+        public void CompilerTest_3E56_6022()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })");
@@ -8196,7 +8196,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Cases>
             <CSharpSwitchCase TestValues=""null"">
               <Statements>
-                <CSharpGoto Type=""System.Void"" />
+                <CSharpGotoDefault Type=""System.Void"" />
               </Statements>
             </CSharpSwitchCase>
             <CSharpSwitchCase TestValues=""default"">
@@ -8226,10 +8226,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_3E56_D0C6();
+            Verify.CompilerTest_3E56_6022();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_D0C6() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_6022() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -8465,9 +8465,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6832_C62D => OK();
             public override void CompilerTest_4E9F_42FD => OK();
             public override void CompilerTest_30E5_8D77 => OK();
-            public override void CompilerTest_1754_2D1D => OK();
-            public override void CompilerTest_AD7C_9EAF => OK();
-            public override void CompilerTest_3E56_D0C6 => OK();
+            public override void CompilerTest_1754_0766 => OK();
+            public override void CompilerTest_AD7C_C86B => OK();
+            public override void CompilerTest_3E56_6022 => OK();
         }
     }
 }

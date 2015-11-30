@@ -986,7 +986,7 @@ namespace Tests
         }
 
         private Expression expr49 = CSharpStatement.GotoCase(1);
-        private string dbg49 = @"<CSharpGoto Type=""System.Void"" Value=""1"" />";
+        private string dbg49 = @"<CSharpGotoCase Type=""System.Void"" Value=""1"" />";
 
         [TestMethod]
         public void CSharp_DebugView_Test49()
@@ -995,7 +995,7 @@ namespace Tests
         }
 
         private Expression expr50 = CSharpStatement.GotoDefault();
-        private string dbg50 = @"<CSharpGoto Type=""System.Void"" />";
+        private string dbg50 = @"<CSharpGotoDefault Type=""System.Void"" />";
 
         [TestMethod]
         public void CSharp_DebugView_Test50()

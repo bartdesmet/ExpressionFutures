@@ -231,6 +231,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_F7F3_AD6D() => OK();
 
             // ForEach
+            public override void CompilerTest_245A_DA7A() => OK();
             public override void CompilerTest_DA7B_B67A() => OK();
             public override void CompilerTest_34B8_D672() => OK();
             public override void CompilerTest_3958_5948() => OK();
@@ -263,6 +264,16 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_9329_A4F3() => OK();
             public override void CompilerTest_F778_9166() => OK();
             public override void CompilerTest_34FC_99EF() => OK();
+
+            // Switch
+            public override void CompilerTest_2156_D7F7() => OK();
+            public override void CompilerTest_FCA9_3B3F() => OK();
+            public override void CompilerTest_6832_C62D() => OK();
+            public override void CompilerTest_4E9F_42FD() => OK();
+            public override void CompilerTest_30E5_8D77() => OK();
+            public override void CompilerTest_1754_0766() => OK();
+            public override void CompilerTest_AD7C_C86B() => OK();
+            public override void CompilerTest_3E56_6022() => OK();
         }
     }
 }
