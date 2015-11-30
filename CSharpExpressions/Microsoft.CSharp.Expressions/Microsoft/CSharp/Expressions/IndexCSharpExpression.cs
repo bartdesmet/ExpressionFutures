@@ -77,7 +77,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.Index(@object, Indexer, arguments);
+            return Rewrite(@object, arguments);
         }
 
         internal abstract IndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments);
