@@ -38,7 +38,7 @@ namespace RoslynPad
             },
             {
                 "Named parameters",
-                "(Expression<Func<string, int, int, int>>)((s, i, j) => s.Substring(length: j, startIndex: i))"
+                "(Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(length: j, startIndex: i))"
             },
             {
                 "Block",
