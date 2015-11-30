@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Forms;
 using Tests.Microsoft.CodeAnalysis.CSharp;
@@ -21,10 +22,34 @@ namespace RoslynPad
                 "(Expression<Func<int>>)(() => 42)"
             },
             {
+                "Arithmetic",
+                "(Expression<Func<int, int>>)(x => x * 2 + 1)"
+            },
+            {
+                "Anonymous object",
+                "(Expression<Func<object>>)(() => new { a = 1, b = 2 })"
+            },
+            {
+                "Conditional access",
+                "(Expression<Func<DateTimeOffset?, int?>>)(dt => dt?.Offset.Hours)"
+            },
+            {
+                "Named parameters",
+                "(Expression<Func<string, int, int, int>>)((s, i, j) => s.Substring(length: j, startIndex: i))"
+            },
+            {
                 "Block",
                 @"(Expression<Action>)(() =>
 {
   // Add statements here
+})"
+            },
+            {
+                "Async",
+                @"(Expression<Func<int, Task<int>>>)(async x =>
+{
+  await Task.Delay(1000);
+  return 2 * await Task.FromResult(x);
 })"
             },
             {
@@ -57,6 +82,8 @@ namespace RoslynPad
             }
         };
 
+        private LambdaExpression _eval;
+
         public MainForm()
         {
             InitializeComponent();
@@ -64,12 +91,16 @@ namespace RoslynPad
             cmbProgs.Items.AddRange(_programs.Keys.ToArray());
         }
 
-        private void btnEval_Click(object sender, EventArgs e)
+        private void btnCompile_Click(object sender, EventArgs e)
         {
+            btnEval.Enabled = false;
+
             try
             {
                 txtResult.ForeColor = Color.Black;
-                txtResult.Text = TestUtilities.GetDebugView(txtCode.Text);
+                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text);
+                txtResult.Text = _eval.DebugView().ToString();
+                btnEval.Enabled = true;
             }
             catch (InvalidProgramException ex)
             {
@@ -95,7 +126,18 @@ namespace RoslynPad
             if (_programs.TryGetValue(txt, out expr))
             {
                 txtCode.Text = expr;
+                btnEval.Enabled = false;
             }
+        }
+
+        private void btnEval_Click(object sender, EventArgs e)
+        {
+            new EvalForm(_eval).ShowDialog(this);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            cmbProgs.SelectedIndex = 0;
         }
     }
 }

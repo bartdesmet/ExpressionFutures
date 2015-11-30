@@ -72,6 +72,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         private static string GetDebugViewCore(string expr)
         {
+            var exp = (Expression)Eval(expr);
+            return exp.DebugView().ToString();
+        }
+
+        public static object Eval(string expr)
+        {
             // TODO: Investigate using the scripting APIs here instead.
 
             var typeName = "Expressions";
@@ -140,8 +146,7 @@ public static class {typeName}
             var typ = asm.GetType(typeName);
             var prp = typ.GetProperty(propName);
 
-            var exp = (Expression)prp.GetValue(null);
-            return exp.DebugView().ToString();
+            return prp.GetValue(null);
         }
     }
 }
