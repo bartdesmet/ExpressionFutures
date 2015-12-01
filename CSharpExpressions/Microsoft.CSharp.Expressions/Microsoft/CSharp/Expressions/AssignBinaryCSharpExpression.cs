@@ -325,6 +325,19 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignBinaryCSharpExpression MakeBinaryAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
         {
+            if (binaryType == ExpressionType.Assign)
+            {
+                var assign = factory(left, right, method, finalConversion);
+                return new AssignBinaryCSharpExpression.Primitive(assign, left);
+            }
+            else
+            {
+                return MakeBinaryCompoundAssign(binaryType, factory, left, right, method, finalConversion, leftConversion);
+            }
+        }
+
+        private static AssignBinaryCSharpExpression MakeBinaryCompoundAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
+        {
             var lhs = GetLhs(left, nameof(left));
 
             // NB: We could return a BinaryExpression in case the lhs is not one of our index nodes, but it'd change
