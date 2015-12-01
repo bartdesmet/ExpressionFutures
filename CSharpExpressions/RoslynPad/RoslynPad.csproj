@@ -110,6 +110,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj">
+      <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
+      <Name>Microsoft.CSharp.Expressions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
       <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
       <Name>System.Linq.Expressions.Debugging</Name>
