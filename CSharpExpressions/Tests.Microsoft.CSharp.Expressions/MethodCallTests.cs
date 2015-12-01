@@ -702,6 +702,28 @@ namespace Tests
             );
         }
 
+        [TestMethod]
+        public void MethodCall_Compile_EvalOrder()
+        {
+            var a = Expression.Parameter(typeof(int));
+            var m = MethodInfoOf(() => G(0, 0, 0));
+            var ps = m.GetParameters();
+
+            var a1 = CSharpExpression.Bind(ps[1], Expression.Assign(a, Expression.Constant(1)));
+            var a2 = CSharpExpression.Bind(ps[0], a);
+            var a3 = CSharpExpression.Bind(ps[2], Expression.Assign(a, Expression.Constant(2)));
+
+            var e =
+                Expression.Block(
+                    new[] { a },
+                    // G(y: a = 1, x: a, z: a = 2)
+                    CSharpExpression.Call(null, m, a1, a2, a3)
+                );
+
+            var res = Expression.Lambda<Func<string>>(e).Compile()();
+            Assert.AreEqual("1,1,2", res);
+        }
+
         // TODO: tests that assert no re-evaluation of writeback arguments
 
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
@@ -726,6 +748,11 @@ namespace Tests
         static int F(int x, int y, int z = 42)
         {
             return x * y + z;
+        }
+
+        static string G(int x, int y, int z)
+        {
+            return $"{x},{y},{z}";
         }
 
         class V : CSharpExpressionVisitor

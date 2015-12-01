@@ -295,15 +295,28 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
-                    var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                    variables.Add(var);
+                    var isByRef = parameter.IsByRefParameter();
 
-                    if (parameter.IsByRefParameter())
+                    var var = expression as ParameterExpression;
+
+                    // REVIEW: We don't want to create a copy of a variable in a local if it's passed by
+                    //         ref because it'd break atomicity. Note that Block doesn't support locals
+                    //         which are ByRef types, so we can't store the reference.
+                    //
+                    //         See MakeArguments in LocalRewriter_Call.cs in Roslyn for cases to review.
+
+                    if (var == null || !isByRef)
                     {
-                        EnsureWriteback(var, ref expression, variables, statements, ref writebackList);
-                    }
+                        var = Expression.Parameter(argument.Expression.Type, parameter.Name);
+                        variables.Add(var);
 
-                    statements.Add(Expression.Assign(var, expression));
+                        if (isByRef)
+                        {
+                            EnsureWriteback(var, ref expression, variables, statements, ref writebackList);
+                        }
+
+                        statements.Add(Expression.Assign(var, expression));
+                    }
 
                     arguments[parameter.Position] = var;
                 }
@@ -333,7 +346,7 @@ namespace Microsoft.CSharp.Expressions
             switch (expression.NodeType)
             {
                 case ExpressionType.Default:
-                case ExpressionType.Parameter:
+                //case ExpressionType.Parameter: // NB: Can observe prior assignments
                 case ExpressionType.Constant:
                 case ExpressionType.Unbox:
                 case ExpressionType.Lambda:
@@ -350,11 +363,15 @@ namespace Microsoft.CSharp.Expressions
 
             switch (expression.NodeType)
             {
-                // NB: Should not encounter Parameter or Unbox; those are considered pure and will be passed straight on
-
                 // TODO: Add support for our new C# indexer node type as well? Note that C# doesn't have this type of by-ref passing anyway, 
                 //       but for equivalent VB APIs we'd need it. We could dispatch to a helper method on the node type in order to reuse
                 //       its Reduce logic in emitting the required locals and updated node that supports write-back.
+
+                case ExpressionType.Parameter:
+                    {
+                        writeback = Expression.Assign(expression, variable);
+                    }
+                    break;
 
                 case ExpressionType.Index:
                     {
