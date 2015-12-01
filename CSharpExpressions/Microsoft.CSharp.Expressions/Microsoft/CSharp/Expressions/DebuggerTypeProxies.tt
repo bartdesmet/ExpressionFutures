@@ -51,7 +51,7 @@ if (File.Exists(path))
 
         var asm = Assembly.LoadFile(pathLocal);
         var types = asm.GetTypes();
-        foreach (var type in types)
+        foreach (var type in types.OrderBy(t => t.Name))
         {
             if (type.IsPublic && !type.IsGenericType && !type.IsEnum && type.FullName.StartsWith("Microsoft.CSharp.Expressions") && type.GetProperty("DebugView", BindingFlags.NonPublic | BindingFlags.Instance) != null)
             {
@@ -81,7 +81,7 @@ if (File.Exists(path))
 }
 #>
 <#
-foreach (var property in type.GetProperties().Where(p => !p.GetGetMethod().IsStatic))
+foreach (var property in type.GetProperties().Where(p => !p.GetGetMethod().IsStatic).OrderBy(p => p.Name))
 {
 #>
         public <#=toCSharp(property.PropertyType)#> <#=property.Name#> => _node.<#=property.Name#>;
