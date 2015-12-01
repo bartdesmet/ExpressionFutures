@@ -609,5 +609,190 @@ namespace Microsoft.CSharp.Expressions
 
             return lhs;
         }
+
+        public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression leftConversion = null)
+        {
+            switch (lhs.NodeType)
+            {
+                case ExpressionType.MemberAccess:
+                    return ReduceMember(lhs, functionalOp, prefix, leftConversion);
+                case ExpressionType.Index:
+                    return ReduceIndex(lhs, functionalOp, prefix, leftConversion);
+                case ExpressionType.Parameter:
+                    return ReduceVariable(lhs, functionalOp, prefix, leftConversion);
+            }
+
+            var index = lhs as IndexCSharpExpression;
+            if (index != null)
+            {
+                return ReduceIndexCSharp(index, functionalOp, prefix, leftConversion);
+            }
+
+            throw ContractUtils.Unreachable;
+        }
+
+        private static Expression ReduceMember(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        {
+            var res = default(Expression);
+
+            var member = (MemberExpression)lhs;
+
+            if (member.Expression == null)
+            {
+                res = ReduceVariable(lhs, functionalOp, prefix, leftConversion);
+            }
+            else
+            {
+                var lhsTemp = Expression.Parameter(member.Expression.Type);
+                var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
+                member = member.Update(lhsTemp);
+
+                if (prefix)
+                {
+                    res =
+                        Expression.Block(
+                            new[] { lhsTemp },
+                            lhsAssign,
+                            Expression.Assign(member, functionalOp(WithLeftConversion(member, leftConversion)))
+                        );
+                }
+                else
+                {
+                    Debug.Assert(leftConversion == null);
+
+                    var temp = Expression.Parameter(member.Type);
+
+                    res =
+                        Expression.Block(
+                            new[] { lhsTemp, temp },
+                            lhsAssign,
+                            Expression.Assign(temp, member),
+                            Expression.Assign(member, functionalOp(temp)),
+                            temp
+                        );
+                }
+            }
+
+            return res;
+        }
+
+        private static Expression ReduceIndex(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        {
+            var index = (IndexExpression)lhs;
+
+            var n = index.Arguments.Count;
+            var args = new Expression[n];
+            var block = new Expression[n + (prefix ? 2 : 4)];
+            var temps = new ParameterExpression[n + (prefix ? 1 : 2)];
+
+            var i = 0;
+            temps[i] = Expression.Parameter(index.Object.Type);
+            block[i] = Expression.Assign(temps[i], index.Object);
+            i++;
+
+            while (i <= n)
+            {
+                var arg = index.Arguments[i - 1];
+                args[i - 1] = temps[i] = Expression.Parameter(arg.Type);
+                block[i] = Expression.Assign(temps[i], arg);
+                i++;
+            }
+
+            index = index.Update(temps[0], new TrueReadOnlyCollection<Expression>(args));
+
+            if (prefix)
+            {
+                block[i++] = Expression.Assign(index, functionalOp(WithLeftConversion(index, leftConversion)));
+            }
+            else
+            {
+                Debug.Assert(leftConversion == null);
+
+                var lastTemp = temps[i] = Expression.Parameter(index.Type);
+
+                block[i] = Expression.Assign(temps[i], index);
+                i++;
+
+                block[i++] = Expression.Assign(index, functionalOp(lastTemp));
+                block[i++] = lastTemp;
+            }
+
+            var res = Expression.Block(temps, block);
+            return res;
+        }
+
+        private static Expression ReduceVariable(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        {
+            var res = default(Expression);
+
+            if (prefix)
+            {
+                res = Expression.Assign(lhs, functionalOp(WithLeftConversion(lhs, leftConversion)));
+            }
+            else
+            {
+                Debug.Assert(leftConversion == null);
+
+                var temp = Expression.Parameter(lhs.Type);
+                res =
+                    Expression.Block(
+                        new[] { temp },
+                        Expression.Assign(temp, lhs),
+                        Expression.Assign(lhs, functionalOp(temp)),
+                        temp
+                    );
+            }
+
+            return res;
+        }
+
+        private static Expression ReduceIndexCSharp(IndexCSharpExpression index, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        {
+            return index.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
+        }
+
+        private static Expression WithLeftConversion(Expression expression, LambdaExpression leftConversion)
+        {
+            if (leftConversion != null)
+            {
+                expression = Apply(leftConversion, expression);
+            }
+
+            return expression;
+        }
+
+        public static Expression Apply(LambdaExpression lambda, Expression expression)
+        {
+            // TODO: We can beta reduce the lambda explicitly here, iff the specified expression is pure
+            //       or is used exactly once in the lambda before any other observable side-effect (i.e.
+            //       don't cause re-evalation or out-of-order evaluation of e.g. an indexer or member).
+            //
+            //       The code below does a basic version of this, well-suited for the conversions that
+            //       get generated by the compound assignment factories. See a DESIGN note in BinaryAssign
+            //       for considerations on not using a lambda for that case.
+            //
+            //       Note that the LINQ expression compiler also inlines Invoke(Lambda, args) expressions
+            //       so this optimization is mostly to make Reduce return a nicer form.
+
+            if (lambda.Parameters.Count == 1)
+            {
+                var parameter = lambda.Parameters[0];
+                var body = lambda.Body;
+
+                switch (body.NodeType)
+                {
+                    case ExpressionType.Convert:
+                    case ExpressionType.ConvertChecked:
+                        var convert = (UnaryExpression)body;
+                        if (convert.Operand == parameter)
+                        {
+                            return convert.Update(expression);
+                        }
+                        break;
+                }
+            }
+
+            return Expression.Invoke(lambda, expression);
+        }
     }
 }
