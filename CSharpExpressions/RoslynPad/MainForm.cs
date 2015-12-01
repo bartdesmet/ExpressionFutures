@@ -2,6 +2,11 @@
 //
 // bartde - November 2015
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis.Host;
+using Microsoft.CodeAnalysis.Host.Mef;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.Expressions;
 using System;
 using System.Collections;
@@ -13,6 +18,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Forms;
 using Tests.Microsoft.CodeAnalysis.CSharp;
+using System.Collections.Immutable;
 
 namespace RoslynPad
 {
@@ -143,13 +149,16 @@ namespace RoslynPad
             btnEval.Enabled = btnReduce.Enabled = false;
             txtResult.Text = "";
             trvExpr.Nodes.Clear();
+            rtf.Clear();
+            _diags = _diags.Clear();
             prgNode.SelectedObject = null;
             txtNode.Text = "";
 
+            var sem = default(SemanticModel);
             try
             {
                 txtResult.ForeColor = Color.Black;
-                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, chkModern.Checked);
+                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, out sem, includingExpressions: chkModern.Checked, trimCR: true);
                 UpdateExpression(_eval);
                 btnEval.Enabled = btnReduce.Enabled = true;
             }
@@ -167,6 +176,58 @@ namespace RoslynPad
             {
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = "COMPILER ERROR:\r\n\r\n" + ex.ToString();
+            }
+
+            if (sem != null)
+            {
+                Highlight(sem);
+            }
+        }
+
+        private void Highlight(SemanticModel sem)
+        {
+            var ws = new AdhocWorkspace();
+
+            var txt = sem.SyntaxTree.GetText();
+            var src = txt.ToString();
+
+            rtf.AppendText(src);
+
+            var start = 0;
+            var length = src.Length;
+
+            var res = Classifier.GetClassifiedSpans(sem, TextSpan.FromBounds(start, start + length), ws).ToArray();
+
+            foreach (var span in res)
+            {
+                rtf.Select(span.TextSpan.Start - start, span.TextSpan.Length);
+                if (span.ClassificationType == "keyword")
+                {
+                    rtf.SelectionColor = Color.Blue;
+                }
+                else if (span.ClassificationType.EndsWith("name"))
+                {
+                    rtf.SelectionColor = Color.DarkCyan;
+                }
+                else if (span.ClassificationType.StartsWith("string"))
+                {
+                    rtf.SelectionColor = Color.DarkRed;
+                }
+                else if (span.ClassificationType == "comment")
+                {
+                    rtf.SelectionColor = Color.DarkGreen;
+                }
+            }
+
+            _diags = sem.GetDiagnostics();
+            foreach (var diag in _diags)
+            {
+                if (diag.Severity == DiagnosticSeverity.Error)
+                {
+                    var span = diag.Location.SourceSpan;
+                    rtf.Select(span.Start - start, span.Length);
+                    rtf.SelectionColor = Color.Red;
+                }
             }
         }
 
@@ -262,6 +323,7 @@ namespace RoslynPad
         {
             { CSharpExpressionType.AsyncLambda, Color.DarkRed },
             { CSharpExpressionType.Block, Color.DarkMagenta },
+            { CSharpExpressionType.Await, Color.DarkOrange },
         };
 
         private void Expand(TreeNode node, object o)
@@ -432,9 +494,9 @@ namespace RoslynPad
             { "Arguments", 1 },
 
             // Try
-            { "Handlers", 0 },
-            { "Finally", 1 },
-            { "Fault", 2 },
+            { "Handlers", 5 }, // > Body
+            { "Finally", 6 },
+            { "Fault", 7 },
 
             // Block
             { "ReturnLabel", -1 },
@@ -483,6 +545,8 @@ namespace RoslynPad
             { "NonNullReceiver", 1 },
             { "WhenNotNull", 2 },
         };
+
+        private ImmutableArray<Diagnostic> _diags;
 
         private static int Rank(string name)
         {
@@ -595,6 +659,22 @@ namespace RoslynPad
                 foreach (TreeNode child in node.Nodes)
                 {
                     nodes.Enqueue(child);
+                }
+            }
+        }
+
+        private void rtf_MouseMove(object sender, MouseEventArgs e)
+        {
+            var i = rtf.GetCharIndexFromPosition(e.Location);
+            if (i >= 0)
+            {
+                if (!_diags.IsDefaultOrEmpty)
+                {
+                    var diags = _diags.Where(d => d.Location.SourceSpan.Contains(i)).ToArray();
+                    if (diags.Length > 0)
+                    {
+                        toolTip.Show(string.Join("\r\n", diags.Select(d => d.ToString())), rtf);
+                    }
                 }
             }
         }

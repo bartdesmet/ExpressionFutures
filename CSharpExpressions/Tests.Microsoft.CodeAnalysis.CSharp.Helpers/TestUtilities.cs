@@ -78,6 +78,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         public static object Eval(string expr, bool includingExpressions = true)
         {
+            var sem = default(SemanticModel);
+            return Eval(expr, out sem, includingExpressions);
+        }
+
+        public static object Eval(string expr, out SemanticModel sem, bool includingExpressions = true, bool trimCR = false)
+        {
             // TODO: Investigate using the scripting APIs here instead.
 
             var typeName = "Expressions";
@@ -85,7 +91,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             var exprProp = $"    public static Expression {propName} => {expr};";
 
-            var tree = CSharpSyntaxTree.ParseText($@"
+            var src = $@"
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -99,7 +105,15 @@ public static class {typeName}
 {{
 {exprProp}
 }}
-");
+".Trim('\r', '\n');
+
+            if (trimCR)
+            {
+                src = src.Replace("\r\n", "\n");
+            }
+
+            var tree = CSharpSyntaxTree.ParseText(src);
+
             var csc = CSharpCompilation
                 // A class library `Expressions` which will be emitted in memory
                 .Create("Expressions")
@@ -128,6 +142,7 @@ public static class {typeName}
                 {
                     // NB: This can fail because we're testing custom builds of the compiler.
                     res = csc.Emit(ms);
+                    sem = csc.GetSemanticModel(tree, false);
                 }
                 catch (Exception ex)
                 {

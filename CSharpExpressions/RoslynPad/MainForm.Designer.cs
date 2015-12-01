@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.chkModern = new System.Windows.Forms.CheckBox();
@@ -46,6 +47,9 @@
             this.pnlDetail = new System.Windows.Forms.SplitContainer();
             this.prgNode = new System.Windows.Forms.PropertyGrid();
             this.txtNode = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.rtf = new System.Windows.Forms.RichTextBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -61,6 +65,7 @@
             this.pnlDetail.Panel1.SuspendLayout();
             this.pnlDetail.Panel2.SuspendLayout();
             this.pnlDetail.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -174,6 +179,7 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -191,7 +197,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(994, 427);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Code";
+            this.tabPage1.Text = "Debug View";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // txtResult
@@ -286,6 +292,32 @@
             this.txtNode.TabIndex = 0;
             this.txtNode.WordWrap = false;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.rtf);
+            this.tabPage3.Location = new System.Drawing.Point(4, 29);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(994, 427);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Code";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // rtf
+            // 
+            this.rtf.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtf.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtf.Location = new System.Drawing.Point(0, 0);
+            this.rtf.Name = "rtf";
+            this.rtf.ReadOnly = true;
+            this.rtf.Size = new System.Drawing.Size(994, 427);
+            this.rtf.TabIndex = 8;
+            this.rtf.Text = "";
+            this.rtf.MouseMove += new System.Windows.Forms.MouseEventHandler(this.rtf_MouseMove);
+            // 
+            // toolTip
+            // 
+            this.toolTip.ForeColor = System.Drawing.Color.Red;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -314,6 +346,7 @@
             this.pnlDetail.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlDetail)).EndInit();
             this.pnlDetail.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -337,6 +370,9 @@
         private System.Windows.Forms.SplitContainer pnlDetail;
         private System.Windows.Forms.PropertyGrid prgNode;
         private System.Windows.Forms.TextBox txtNode;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.RichTextBox rtf;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 
