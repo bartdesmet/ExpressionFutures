@@ -670,9 +670,14 @@ namespace Microsoft.CSharp.Expressions
             args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
             args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
 
-            if (node.Conversion != null)
+            if (node.LeftConversion != null)
             {
-                args.Add(new XElement(nameof(node.Conversion), Visit(node.Conversion)));
+                args.Add(new XElement(nameof(node.LeftConversion), Visit(node.LeftConversion)));
+            }
+
+            if (node.FinalConversion != null)
+            {
+                args.Add(new XElement(nameof(node.FinalConversion), Visit(node.FinalConversion)));
             }
 
             return Push(node, args);

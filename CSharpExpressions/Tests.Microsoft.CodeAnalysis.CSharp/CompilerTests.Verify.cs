@@ -23,6 +23,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_4EB1_83FD() => OK();
             public override void CompilerTest_C437_AA4C() => OK();
             public override void CompilerTest_4C39_BCFC() => OK();
+            public override void CompilerTest_7E8C_AA4C() => OK(); // DESIGN: Is it ok to infer the name of parameters even though the user didn't specify them explicitly?
 
             // Named parameters for constructors
             public override void CompilerTest_00C1_AE5C() => OK();
@@ -178,6 +179,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_8CA7_C849() => OK();
             public override void CompilerTest_8BFE_5348() => OK();
             public override void CompilerTest_18CC_52FA() => OK();
+            public override void CompilerTest_7492_5840() => OK();
+            public override void CompilerTest_6A94_11A1() => OK();
+            public override void CompilerTest_2F5D_7729() => OK();
+            public override void CompilerTest_EAFD_0780() => OK();
+            public override void CompilerTest_AC8A_E7E8() => OK();
             public override void CompilerTest_C8F7_C9E3() => OK();
             public override void CompilerTest_3859_A369() => OK();
             public override void CompilerTest_3AC9_62A5() => OK();
@@ -185,6 +191,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1D2F_75F1() => OK();
             public override void CompilerTest_1EDE_AB2B() => OK();
             public override void CompilerTest_A171_21C8() => OK();
+            public override void CompilerTest_E00F_72CF() => OK();
+            public override void CompilerTest_1D70_B253() => OK();
 
             // Assignments unary
             public override void CompilerTest_D47A_F8E7() => OK();

@@ -61,6 +61,8 @@ var errors = new[]
 	new { Name = "InvalidConditionalReceiverType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for a conditional receiver." },
 	new { Name = "InvalidConditionalReceiverExpressionType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for a receiver in a conditional access expression." },
 	new { Name = "ConditionalReceiverTypeMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver." },
+	new { Name = "InvalidCompoundAssignment", ExceptionType = "ArgumentException", Args = 2, Message = "Compound assignment operation '{0}' is not supported for type '{1}'." },
+	new { Name = "InvalidCompoundAssignmentWithOperands", ExceptionType = "ArgumentException", Args = 3, Message = "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));
