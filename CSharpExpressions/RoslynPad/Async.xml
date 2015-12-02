@@ -1,22 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Expressions>
   <Expression Name="Async - Void">
-    <Code>
-      <![CDATA[(Expression<Action>)(async () =>
+    <Code><![CDATA[(Expression<Action>)(async () =>
 {
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Async - Task">
-    <Code>
-      <![CDATA[(Expression<Func<Task>>)(async () =>
+    <Code><![CDATA[(Expression<Func<Task>>)(async () =>
 {
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Async - TryFinally - Sync">
-    <Code>
-      <![CDATA[(Expression<Func<Task>>)(async () =>
+    <Code><![CDATA[(Expression<Func<Task>>)(async () =>
 {
   try
   {
@@ -26,12 +21,10 @@
   {
     Console.WriteLine("Finally");
   }
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Async - TryFinally - Async Try">
-    <Code>
-    <![CDATA[(Expression<Func<Task>>)(async () =>
+    <Code><![CDATA[(Expression<Func<Task>>)(async () =>
 {
   try
   {
@@ -43,12 +36,10 @@
   {
     Console.WriteLine("Finally");
   }
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Async - TryFinally - Async Finally">
-    <Code>
-    <![CDATA[(Expression<Func<Task>>)(async () =>
+    <Code><![CDATA[(Expression<Func<Task>>)(async () =>
 {
   try
   {
@@ -60,12 +51,10 @@
     await Task.Delay(1000);
     Console.WriteLine(" Done.");
   }
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Async - TryFinally - Async Try and Finally">
-    <Code>
-    <![CDATA[(Expression<Func<Task>>)(async () =>
+    <Code><![CDATA[(Expression<Func<Task>>)(async () =>
 {
   try
   {
@@ -79,7 +68,18 @@
     await Task.Delay(1000);
     Console.WriteLine(" Done.");
   }
-})]]>
-    </Code>
+})]]></Code>
+  </Expression>
+  <Expression Name="Async - Task&lt;int&gt; - Return">
+    <Code><![CDATA[(Expression<Func<Task<int>>>)(async () =>
+{
+  return 42;
+})]]></Code>
+  </Expression>
+  <Expression Name="Async - Task&lt;int&gt; - Await">
+    <Code><![CDATA[(Expression<Func<Task<int>>>)(async () =>
+{
+  return await Task.FromResult(42);
+})]]></Code>
   </Expression>
 </Expressions>
