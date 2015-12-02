@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text;
 
 namespace RoslynPad
 {
@@ -95,16 +96,23 @@ namespace RoslynPad
             }
 
             var res = default(object);
-            var cout = new StringWriter(); // TODO: Maybe have a TextWriter that dumps to the UI in real time.
+            var cout = new StringWriter();
+            var dbg = new DebugWriter(cout, AppendLive);
             try
             {
-                Console.SetOut(cout);
+                Console.SetOut(dbg);
                 res = f.DynamicInvoke(args);
             }
             catch (TargetInvocationException ex)
             {
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.InnerException.Message;
+
+                _done = true;
+                tabControl1.SelectedTab = tabResult;
+                txtResult.SelectionStart = txtResult.SelectionStart = 0;
+                txtResult.ScrollToCaret();
+
                 return;
             }
             catch (Exception ex)
@@ -124,6 +132,11 @@ namespace RoslynPad
 
                     var txt = ObjectDumper.Write(res);
                     txtResult.Text = "Awaiting task... Done!\r\n" + txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
+
+                    _done = true;
+                    tabControl1.SelectedTab = tabResult;
+                    txtResult.SelectionStart = txtResult.SelectionStart = 0;
+                    txtResult.ScrollToCaret();
                 }
                 catch (Exception ex)
                 {
@@ -137,7 +150,27 @@ namespace RoslynPad
 
                 txtResult.ForeColor = Color.Black;
                 txtResult.Text = txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
+
+                _done = true;
+                tabControl1.SelectedTab = tabResult;
+                txtResult.SelectionStart = txtResult.SelectionStart = 0;
+                txtResult.ScrollToCaret();
             }
+        }
+
+        private bool _done;
+
+        private void AppendLive(string value)
+        {
+            this.BeginInvoke(new Action(() =>
+            {
+                if (!_done && tabControl1.SelectedTab != tabConsole)
+                {
+                    tabControl1.SelectedTab = tabConsole;
+                }
+
+                txtLive.AppendText(value);
+            }));
         }
 
         private static string ToCSharp(Type type)
@@ -158,6 +191,43 @@ namespace RoslynPad
             {
                 return type.FullName;
             }
+        }
+    }
+
+    class DebugWriter : TextWriter
+    {
+        private readonly StringWriter _sw;
+        private readonly Action<string> _append;
+
+        public DebugWriter(StringWriter sw, Action<string> append)
+        {
+            _sw = sw;
+            _append = append;
+        }
+
+        public override Encoding Encoding => Console.Out.Encoding;
+
+        public override void Write(char value)
+        {
+            _sw.Write(value);
+            Append(value.ToString());
+        }
+
+        public override void Write(string value)
+        {
+            _sw.Write(value);
+            Append(value);
+        }
+
+        public override void Write(char[] buffer, int index, int count)
+        {
+            _sw.Write(buffer, index, count);
+            Append(new string(buffer, index, count));
+        }
+
+        private void Append(string value)
+        {
+            _append(value);
         }
     }
 }
