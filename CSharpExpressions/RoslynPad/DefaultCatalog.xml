@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--TODO: Could make a hierarchical "project" to allow for better organization-->
+<Expressions>
+  <Expression Name="Constant">
+    <Code>
+      <![CDATA[(Expression<Func<int>>)(() => 42)]]>
+    </Code>
+  </Expression>
+  <Expression Name="Arithmetic">
+    <Code>
+      <![CDATA[(Expression<Func<int, int>>)(x => x * 2 + 1)]]>
+    </Code>
+  </Expression>
+  <Expression Name="Anonymous object">
+    <Code>
+      <![CDATA[(Expression<Func<object>>)(() => new { a = 1, b = 2 })]]>
+    </Code>
+  </Expression>
+  <Expression Name="Conditional access">
+    <Code>
+      <![CDATA[(Expression<Func<DateTimeOffset?, int?>>)(dt => dt?.Offset.Hours)]]>
+    </Code>
+  </Expression>
+  <Expression Name="Named parameters">
+    <Code>
+      <![CDATA[(Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(length: j, startIndex: i))]]>
+    </Code>
+  </Expression>
+  <Expression Name="Block">
+    <Code>
+      <![CDATA[(Expression<Action>)(() =>
+{
+  // Add statements here
+})]]>
+    </Code>
+  </Expression>
+  <Expression Name="Async">
+    <Code>
+      <![CDATA[(Expression<Func<int, Task<int>>>)(async x =>
+{
+  await Task.Delay(1000);
+  return 2 * await Task.FromResult(x);
+})]]>
+    </Code>
+  </Expression>
+  <Expression Name="Primes">
+    <Code>
+      <![CDATA[(Expression<Func<int, List<int>>>)(max =>
+{
+  var res = new List<int>();
+
+  for (var i = 2; i <= max; i++)
+  {
+    Console.Write(i);
+
+    var hasDiv = false;
+
+    for (var d = 2; d <= Math.Sqrt(i); d++)
+    {
+      if (i % d == 0)
+      {
+        Console.WriteLine($" has divisor {d}");
+        hasDiv = true;
+        break;
+      }
+    }
+
+    if (!hasDiv)
+    {
+      Console.WriteLine(" is prime");
+      res.Add(i);
+    }
+  }
+
+  return res;
+})]]>
+    </Code>
+  </Expression>
+  <Expression Name="Primes async">
+    <Code>
+      <![CDATA[(Expression<Func<int, Task<List<int>>>>)(async max =>
+{
+  var res = new List<int>();
+
+  for (var i = 2; i <= max; i++)
+  {
+    await Task.Delay(10);
+    Console.Write(i);
+
+    var hasDiv = false;
+
+    for (var d = 2; d <= Math.Sqrt(i); d++)
+    {
+      if (i % d == 0)
+      {
+        Console.WriteLine($" has divisor {d}");
+        hasDiv = true;
+        break;
+      }
+    }
+
+    if (!hasDiv)
+    {
+      Console.WriteLine(" is prime");
+      res.Add(i);
+    }
+  }
+
+  return res;
+})]]>
+    </Code>
+  </Expression>
+  <Expression Name="Dynamic">
+    <Code>
+      <![CDATA[(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)]]>
+    </Code>
+  </Expression>
+</Expressions>

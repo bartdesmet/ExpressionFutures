@@ -12,10 +12,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Tests.Microsoft.CodeAnalysis.CSharp;
 
 namespace RoslynPad
@@ -25,134 +27,42 @@ namespace RoslynPad
         // TODO: Add features to automatically generate tests and repro cases from the tool's input
         //       and the outcome of the evaluation (maybe just generate a file with code fragments).
 
-        private IDictionary<string, string> _programs = new Dictionary<string, string>
-        {
-            {
-                "Constant",
-                "(Expression<Func<int>>)(() => 42)"
-            },
-            {
-                "Arithmetic",
-                "(Expression<Func<int, int>>)(x => x * 2 + 1)"
-            },
-            {
-                "Anonymous object",
-                "(Expression<Func<object>>)(() => new { a = 1, b = 2 })"
-            },
-            {
-                "Conditional access",
-                "(Expression<Func<DateTimeOffset?, int?>>)(dt => dt?.Offset.Hours)"
-            },
-            {
-                "Named parameters",
-                "(Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(length: j, startIndex: i))"
-            },
-            {
-                "Block",
-                @"(Expression<Action>)(() =>
-{
-  // Add statements here
-})"
-            },
-            {
-                "Async",
-                @"(Expression<Func<int, Task<int>>>)(async x =>
-{
-  await Task.Delay(1000);
-  return 2 * await Task.FromResult(x);
-})"
-            },
-            {
-                "Primes",
-                @"(Expression<Func<int, List<int>>>)(max =>
-{
-  var res = new List<int>();
-
-  for (var i = 2; i <= max; i++)
-  {
-    Console.Write(i);
-
-    var hasDiv = false;
-
-    for (var d = 2; d <= Math.Sqrt(i); d++)
-    {
-      if (i % d == 0)
-      {
-        Console.WriteLine($"" has divisor {d}"");
-        hasDiv = true;
-        break;
-      }
-    }
-
-    if (!hasDiv)
-    {
-      Console.WriteLine("" is prime"");
-      res.Add(i);
-    }
-  }
-
-  return res;
-})"
-            },
-            {
-                "Primes async",
-                @"(Expression<Func<int, Task<List<int>>>>)(async max =>
-{
-  var res = new List<int>();
-
-  for (var i = 2; i <= max; i++)
-  {
-    await Task.Delay(10);
-    Console.Write(i);
-
-    var hasDiv = false;
-
-    for (var d = 2; d <= Math.Sqrt(i); d++)
-    {
-      if (i % d == 0)
-      {
-        Console.WriteLine($"" has divisor {d}"");
-        hasDiv = true;
-        break;
-      }
-    }
-
-    if (!hasDiv)
-    {
-      Console.WriteLine("" is prime"");
-      res.Add(i);
-    }
-  }
-
-  return res;
-})"
-            },
-            {
-                "Dynamic",
-                @"(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)"
-            }
-        };
-
+        private IDictionary<string, string> _programs = new Dictionary<string, string>();
         private LambdaExpression _eval;
 
         public MainForm()
         {
             InitializeComponent();
 
+            RefreshCatalog();
+        }
+
+        private void RefreshCatalog()
+        {
+            txtCode.Clear();
+            ClearAll();
+
+            cmbProgs.Items.Clear();
             cmbProgs.Items.AddRange(_programs.Keys.ToArray());
         }
 
-        private void btnCompile_Click(object sender, EventArgs e)
+        private void ClearAll()
         {
             btnEval.Enabled = btnReduce.Enabled = false;
             txtResult.Text = "";
             trvExpr.Nodes.Clear();
             rtf.Clear();
-            _diags = _diags.Clear();
             prgNode.SelectedObject = null;
             txtNode.Text = "";
 
             _sem = default(SemanticModel);
+            _diags = _diags.Clear();
+        }
+
+        private void btnCompile_Click(object sender, EventArgs e)
+        {
+            ClearAll();
+
             try
             {
                 txtResult.ForeColor = Color.Black;
@@ -250,7 +160,15 @@ namespace RoslynPad
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            cmbProgs.SelectedIndex = 0;
+            if (File.Exists("DefaultCatalog.xml"))
+            {
+                LoadCatalog("DefaultCatalog.xml");
+            }
+
+            if (cmbProgs.Items.Count > 0)
+            {
+                cmbProgs.SelectedIndex = 0;
+            }
 
             var treeWidth = pnlTree.Width;
             pnlTree.SplitterDistance = treeWidth / 2;
@@ -706,6 +624,55 @@ namespace RoslynPad
                 txtNode.Font = frm.DebugViewFont;
                 trvExpr.Font = frm.TreeFont;
                 Highlight();
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                var file = openFile.FileName;
+                if (File.Exists(file))
+                {
+                    LoadCatalog(file, reportError: true);
+                }
+            }
+        }
+
+        private void LoadCatalog(string file, bool reportError = false)
+        {
+            try
+            {
+                var fragments = new Dictionary<string, string>();
+
+                var doc = XDocument.Load(file);
+                var root = doc.Element("Expressions");
+                if (root != null)
+                {
+                    foreach (var expression in root.Elements("Expression"))
+                    {
+                        var name = expression.Attribute("Name")?.Value;
+                        var code = expression.Element("Code");
+
+                        if (name != null && code != null)
+                        {
+                            var csharp = (code.Value ?? "").Replace("\n", "\r\n");
+                            fragments.Add(name, csharp);
+                        }
+                    }
+                }
+
+                _programs.Clear();
+                _programs = fragments;
+
+                RefreshCatalog();
+            }
+            catch (Exception ex)
+            {
+                if (reportError)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }
