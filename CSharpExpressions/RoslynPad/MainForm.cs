@@ -48,7 +48,9 @@ namespace RoslynPad
 
         private void ClearAll()
         {
-            btnEval.Enabled = btnReduce.Enabled = false;
+            btnReduce.Enabled = mnuReduce.Enabled = false;
+            btnEval.Enabled = mnuEvaluate.Enabled = false;
+
             txtResult.Text = "";
             trvExpr.Nodes.Clear();
             rtf.Clear();
@@ -61,6 +63,11 @@ namespace RoslynPad
 
         private void btnCompile_Click(object sender, EventArgs e)
         {
+            Compile();
+        }
+
+        private void Compile()
+        {
             ClearAll();
 
             try
@@ -68,22 +75,32 @@ namespace RoslynPad
                 txtResult.ForeColor = Color.Black;
                 _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, out _sem, includingExpressions: chkModern.Checked, trimCR: true);
                 UpdateExpression(_eval);
-                btnEval.Enabled = btnReduce.Enabled = true;
+                btnReduce.Enabled = mnuReduce.Enabled = true;
+                btnEval.Enabled = mnuEvaluate.Enabled = true;
             }
             catch (InvalidProgramException ex)
             {
+                tabMain.SelectedTab = tabDebug;
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.Message;
+                txtResult.SelectionStart = txtResult.SelectionLength = 0;
+                txtResult.ScrollToCaret();
             }
             catch (TargetInvocationException ex)
             {
+                tabMain.SelectedTab = tabDebug;
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = "LIBRARY ERROR:\r\n\r\n" + ex.InnerException.Message;
+                txtResult.SelectionStart = txtResult.SelectionLength = 0;
+                txtResult.ScrollToCaret();
             }
             catch (Exception ex)
             {
+                tabMain.SelectedTab = tabDebug;
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = "COMPILER ERROR:\r\n\r\n" + ex.ToString();
+                txtResult.SelectionStart = txtResult.SelectionLength = 0;
+                txtResult.ScrollToCaret();
             }
 
             Highlight();
@@ -149,11 +166,17 @@ namespace RoslynPad
             if (_programs.TryGetValue(txt, out expr))
             {
                 txtCode.Text = expr;
-                btnEval.Enabled = btnReduce.Enabled = false;
+                btnReduce.Enabled = mnuReduce.Enabled = false;
+                btnEval.Enabled = mnuEvaluate.Enabled = false;
             }
         }
 
         private void btnEval_Click(object sender, EventArgs e)
+        {
+            Evaluate();
+        }
+
+        private void Evaluate()
         {
             new EvalForm(_eval).ShowDialog(this);
         }
@@ -189,6 +212,11 @@ namespace RoslynPad
         }
 
         private void btnReduce_Click(object sender, EventArgs e)
+        {
+            Reduce();
+        }
+
+        private void Reduce()
         {
             try
             {
@@ -673,6 +701,31 @@ namespace RoslynPad
                 {
                     MessageBox.Show(ex.Message);
                 }
+            }
+        }
+
+        private void mnuEvaluate_Click(object sender, EventArgs e)
+        {
+            Evaluate();
+        }
+
+        private void mnuReduce_Click(object sender, EventArgs e)
+        {
+            Reduce();
+        }
+
+        private void mnuCompile_Click(object sender, EventArgs e)
+        {
+            Compile();
+        }
+
+        private void mnuRun_Click(object sender, EventArgs e)
+        {
+            Compile();
+
+            if (btnEval.Enabled)
+            {
+                Evaluate();
             }
         }
     }
