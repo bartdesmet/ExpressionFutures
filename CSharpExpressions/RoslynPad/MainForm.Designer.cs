@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.chkModern = new System.Windows.Forms.CheckBox();
             this.btnReduce = new System.Windows.Forms.Button();
             this.btnEval = new System.Windows.Forms.Button();
@@ -55,16 +56,15 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuRun = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuCompile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuReduce = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEvaluate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRun = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuCompile = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEvaluate = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuReduce = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -108,6 +108,18 @@
             this.splitContainer1.Size = new System.Drawing.Size(1002, 679);
             this.splitContainer1.SplitterDistance = 236;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.AutoSize = true;
+            this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
+            this.btnAdd.Location = new System.Drawing.Point(751, 12);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(34, 29);
+            this.btnAdd.TabIndex = 7;
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // chkModern
             // 
@@ -378,38 +390,6 @@
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.optionsToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
-            this.toolsToolStripMenuItem.Text = "&Tools";
-            // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
-            this.optionsToolStripMenuItem.Text = "&Options...";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
-            // openFile
-            // 
-            this.openFile.FileName = "DefaultCatalog.xml";
-            this.openFile.Filter = "Catalogs|*.xml";
-            this.openFile.Title = "Select a catalog";
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.AutoSize = true;
-            this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
-            this.btnAdd.Location = new System.Drawing.Point(751, 12);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(34, 29);
-            this.btnAdd.TabIndex = 7;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            // 
             // actionsToolStripMenuItem
             // 
             this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -430,6 +410,11 @@
             this.mnuRun.Text = "&Run...";
             this.mnuRun.Click += new System.EventHandler(this.mnuRun_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
+            // 
             // mnuCompile
             // 
             this.mnuCompile.Name = "mnuCompile";
@@ -437,15 +422,6 @@
             this.mnuCompile.Size = new System.Drawing.Size(215, 30);
             this.mnuCompile.Text = "&Compile";
             this.mnuCompile.Click += new System.EventHandler(this.mnuCompile_Click);
-            // 
-            // mnuEvaluate
-            // 
-            this.mnuEvaluate.Enabled = false;
-            this.mnuEvaluate.Name = "mnuEvaluate";
-            this.mnuEvaluate.ShortcutKeys = System.Windows.Forms.Keys.F11;
-            this.mnuEvaluate.Size = new System.Drawing.Size(215, 30);
-            this.mnuEvaluate.Text = "&Evaluate...";
-            this.mnuEvaluate.Click += new System.EventHandler(this.mnuEvaluate_Click);
             // 
             // mnuReduce
             // 
@@ -456,10 +432,35 @@
             this.mnuReduce.Text = "Re&duce";
             this.mnuReduce.Click += new System.EventHandler(this.mnuReduce_Click);
             // 
-            // toolStripSeparator2
+            // mnuEvaluate
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
+            this.mnuEvaluate.Enabled = false;
+            this.mnuEvaluate.Name = "mnuEvaluate";
+            this.mnuEvaluate.ShortcutKeys = System.Windows.Forms.Keys.F11;
+            this.mnuEvaluate.Size = new System.Drawing.Size(215, 30);
+            this.mnuEvaluate.Text = "&Evaluate...";
+            this.mnuEvaluate.Click += new System.EventHandler(this.mnuEvaluate_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(173, 30);
+            this.optionsToolStripMenuItem.Text = "&Options...";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            // 
+            // openFile
+            // 
+            this.openFile.FileName = "DefaultCatalog.xml";
+            this.openFile.Filter = "Catalogs|*.xml";
+            this.openFile.Title = "Select a catalog";
             // 
             // MainForm
             // 

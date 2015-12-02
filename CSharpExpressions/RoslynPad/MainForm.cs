@@ -728,5 +728,28 @@ namespace RoslynPad
                 Evaluate();
             }
         }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            var dlg = new AddSnippetDialog(_programs);
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                if (!_programs.ContainsKey(dlg.SnippetName))
+                {
+                    _programs.Add(dlg.SnippetName, txtCode.Text);
+                    var i = cmbProgs.Items.Add(dlg.SnippetName);
+                    cmbProgs.SelectedIndex = i;
+                }
+                else
+                {
+                    _programs[dlg.SnippetName] = txtCode.Text;
+                }
+                
+                _dirty = true;
+            }
+        }
+
+        private bool _dirty;
     }
 }

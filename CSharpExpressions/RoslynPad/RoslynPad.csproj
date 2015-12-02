@@ -84,6 +84,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddSnippetDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddSnippetDialog.Designer.cs">
+      <DependentUpon>AddSnippetDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="EvalForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +117,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddSnippetDialog.resx">
+      <DependentUpon>AddSnippetDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EvalForm.resx">
       <DependentUpon>EvalForm.cs</DependentUpon>
     </EmbeddedResource>
