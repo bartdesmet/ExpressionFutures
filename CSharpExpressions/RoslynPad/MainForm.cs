@@ -37,13 +37,23 @@ namespace RoslynPad
             RefreshCatalog();
         }
 
+        private bool _userEditMode = true;
+
         private void RefreshCatalog()
         {
+            _userEditMode = false;
+
+            _current = null;
+            _isNew = _isEditing = false;
+
             txtCode.Clear();
             ClearAll();
 
             cmbProgs.Items.Clear();
+            cmbProgs.Items.Add(NewItem);
             cmbProgs.Items.AddRange(_programs.Keys.ToArray());
+
+            _userEditMode = true;
         }
 
         private void ClearAll()
@@ -59,6 +69,7 @@ namespace RoslynPad
 
             _sem = default(SemanticModel);
             _diags = _diags.Clear();
+            _lastTooltipPosition = -1;
         }
 
         private void btnCompile_Click(object sender, EventArgs e)
@@ -157,19 +168,82 @@ namespace RoslynPad
                     rtf.SelectionColor = Color.Red;
                 }
             }
+
+            _lastTooltipPosition = -1;
         }
 
+        private bool _ignoreIndexChange;
+        
         private void cmbProgs_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_ignoreIndexChange)
+            {
+                return;
+            }
+
+            _userEditMode = false;
+
             var txt = (string)cmbProgs.SelectedItem;
             var expr = default(string);
             if (_programs.TryGetValue(txt, out expr))
             {
+                if (_isEditing && _current != null)
+                {
+                    var res = MessageBox.Show("Save edits to the current code fragment?", this.Text, MessageBoxButtons.YesNoCancel);
+                    if (res == DialogResult.Cancel)
+                    {
+                        _ignoreIndexChange = true;
+                        cmbProgs.SelectedItem = _current;
+                        _ignoreIndexChange = false;
+                        return;
+                    }
+
+                    if (res == DialogResult.Yes)
+                    {
+                        _programs[_current] = txtCode.Text;
+                        _dirty = true;
+                    }
+                }
+
+                if (_isNew && txtCode.Text != "")
+                {
+                    var res = MessageBox.Show("Save the current code fragment?", this.Text, MessageBoxButtons.YesNoCancel);
+                    if (res == DialogResult.Cancel)
+                    {
+                        _ignoreIndexChange = true;
+                        cmbProgs.SelectedItem = _current;
+                        _ignoreIndexChange = false;
+                        return;
+                    }
+
+                    if (res == DialogResult.Yes)
+                    {
+                        AddFragment(dontSelect: true);
+                    }
+                }
+
                 txtCode.Text = expr;
                 btnReduce.Enabled = mnuReduce.Enabled = false;
                 btnEval.Enabled = mnuEvaluate.Enabled = false;
+
+                _isNew = false;
+                _isEditing = false;
             }
+            else if (txt == NewItem)
+            {
+                txtCode.Text = "";
+                btnReduce.Enabled = mnuReduce.Enabled = false;
+                btnEval.Enabled = mnuEvaluate.Enabled = false;
+
+                _isEditing = false;
+                _isNew = true;
+            }
+
+            _userEditMode = true;
+            _current = txt;
         }
+
+        private string _current;
 
         private void btnEval_Click(object sender, EventArgs e)
         {
@@ -613,6 +687,8 @@ namespace RoslynPad
             }
         }
 
+        private int _lastTooltipPosition;
+
         private void rtf_MouseMove(object sender, MouseEventArgs e)
         {
             var i = rtf.GetCharIndexFromPosition(e.Location);
@@ -623,7 +699,18 @@ namespace RoslynPad
                     var diags = _diags.Where(d => d.Location.SourceSpan.Contains(i)).ToArray();
                     if (diags.Length > 0)
                     {
-                        toolTip.Show(string.Join("\r\n", diags.Select(d => d.ToString())), rtf);
+                        if (_lastTooltipPosition != i)
+                        {
+                            _lastTooltipPosition = i;
+                            toolTip.Active = true;
+                            toolTip.Show(string.Join("\r\n", diags.Select(d => d.ToString())), rtf);
+                        }
+                    }
+                    else
+                    {
+                        _lastTooltipPosition = -1;
+                        toolTip.Active = false;
+                        toolTip.Hide(this);
                     }
                 }
             }
@@ -731,6 +818,11 @@ namespace RoslynPad
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            AddFragment();
+        }
+
+        private void AddFragment(bool dontSelect = false)
+        {
             var dlg = new AddSnippetDialog(_programs);
 
             if (dlg.ShowDialog() == DialogResult.OK)
@@ -738,8 +830,19 @@ namespace RoslynPad
                 if (!_programs.ContainsKey(dlg.SnippetName))
                 {
                     _programs.Add(dlg.SnippetName, txtCode.Text);
+
+                    _current = dlg.SnippetName;
+                    _isEditing = false;
+                    _isNew = false;
+
                     var i = cmbProgs.Items.Add(dlg.SnippetName);
-                    cmbProgs.SelectedIndex = i;
+
+                    if (!dontSelect)
+                    {
+                        _ignoreIndexChange = true;
+                        cmbProgs.SelectedIndex = i;
+                        _ignoreIndexChange = false;
+                    }
                 }
                 else
                 {
@@ -751,5 +854,21 @@ namespace RoslynPad
         }
 
         private bool _dirty;
+
+        private void txtCode_TextChanged(object sender, EventArgs e)
+        {
+            if (_userEditMode)
+            {
+                if ((string)cmbProgs.SelectedItem != NewItem)
+                {
+                    _isEditing = true;
+                }
+            }
+        }
+
+        private bool _isEditing;
+        private bool _isNew;
+
+        private const string NewItem = "(New)";
     }
 }

@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.chkModern = new System.Windows.Forms.CheckBox();
             this.btnReduce = new System.Windows.Forms.Button();
             this.btnEval = new System.Windows.Forms.Button();
@@ -65,6 +64,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
+            this.btnAdd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -108,18 +108,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(1002, 679);
             this.splitContainer1.SplitterDistance = 236;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.AutoSize = true;
-            this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
-            this.btnAdd.Location = new System.Drawing.Point(751, 12);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(34, 29);
-            this.btnAdd.TabIndex = 7;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // chkModern
             // 
@@ -195,6 +183,7 @@
             this.txtCode.TabIndex = 2;
             this.txtCode.Text = "(Expression<Func<int>>)(() => 42)";
             this.txtCode.WordWrap = false;
+            this.txtCode.TextChanged += new System.EventHandler(this.txtCode_TextChanged);
             this.txtCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCode_KeyDown);
             // 
             // label1
@@ -461,6 +450,18 @@
             this.openFile.FileName = "DefaultCatalog.xml";
             this.openFile.Filter = "Catalogs|*.xml";
             this.openFile.Title = "Select a catalog";
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.AutoSize = true;
+            this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
+            this.btnAdd.Location = new System.Drawing.Point(751, 12);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(34, 29);
+            this.btnAdd.TabIndex = 7;
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // MainForm
             // 
