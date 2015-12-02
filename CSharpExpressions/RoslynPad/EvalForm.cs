@@ -78,7 +78,7 @@ namespace RoslynPad
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error when compiling value for parameter '{arg.Parameter}':\r\n\r\n{ex.Message}");
+                    MessageBox.Show($"Error when compiling value for parameter '{arg.Parameter}':\r\n\r\n{ex.Message}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -90,7 +90,7 @@ namespace RoslynPad
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error when compiling expression:\r\n\r\n{ex.Message}");
+                MessageBox.Show($"Error when compiling expression:\r\n\r\n{ex.Message}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -109,7 +109,7 @@ namespace RoslynPad
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}");
+                MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace RoslynPad
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}");
+                    MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
