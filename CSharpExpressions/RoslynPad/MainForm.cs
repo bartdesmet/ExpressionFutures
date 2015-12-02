@@ -54,6 +54,11 @@ namespace RoslynPad
             cmbProgs.Items.Add(NewItem);
             cmbProgs.Items.AddRange(_programs.Keys.ToArray());
 
+            if (cmbProgs.Items.Count > 0)
+            {
+                cmbProgs.SelectedIndex = 0;
+            }
+
             _userEditMode = true;
         }
 
@@ -261,11 +266,6 @@ namespace RoslynPad
             if (File.Exists("DefaultCatalog.xml"))
             {
                 LoadCatalog("DefaultCatalog.xml");
-            }
-
-            if (cmbProgs.Items.Count > 0)
-            {
-                cmbProgs.SelectedIndex = 0;
             }
 
             var treeWidth = pnlTree.Width;
@@ -811,7 +811,7 @@ namespace RoslynPad
         {
             try
             {
-                var exprs = _programs.Select(kv => new XElement("Expression", new XAttribute("Name", kv.Key), new XCData(kv.Value)));
+                var exprs = _programs.Select(kv => new XElement("Expression", new XAttribute("Name", kv.Key), new XElement("Code", new XCData(kv.Value))));
                 var root = new XElement("Expressions", exprs);
                 var doc = new XDocument(root);
                 doc.Save(file);

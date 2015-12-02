@@ -156,9 +156,9 @@
             this.cmbProgs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProgs.DropDownWidth = 200;
             this.cmbProgs.FormattingEnabled = true;
-            this.cmbProgs.Location = new System.Drawing.Point(791, 12);
+            this.cmbProgs.Location = new System.Drawing.Point(647, 12);
             this.cmbProgs.Name = "cmbProgs";
-            this.cmbProgs.Size = new System.Drawing.Size(199, 28);
+            this.cmbProgs.Size = new System.Drawing.Size(343, 28);
             this.cmbProgs.TabIndex = 1;
             this.cmbProgs.SelectedIndexChanged += new System.EventHandler(this.cmbProgs_SelectedIndexChanged);
             // 
@@ -464,7 +464,7 @@
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAdd.AutoSize = true;
             this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
-            this.btnAdd.Location = new System.Drawing.Point(751, 12);
+            this.btnAdd.Location = new System.Drawing.Point(607, 12);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(34, 29);
             this.btnAdd.TabIndex = 7;
