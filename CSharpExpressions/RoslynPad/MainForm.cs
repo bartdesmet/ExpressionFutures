@@ -29,6 +29,7 @@ namespace RoslynPad
 
         private IDictionary<string, string> _programs = new Dictionary<string, string>();
         private LambdaExpression _eval;
+        private string _currentCatalog;
 
         public MainForm()
         {
@@ -744,6 +745,11 @@ namespace RoslynPad
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!CheckSave())
+            {
+                return;
+            }
+
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 var file = openFile.FileName;
@@ -752,6 +758,71 @@ namespace RoslynPad
                     LoadCatalog(file, reportError: true);
                 }
             }
+        }
+
+        private bool CheckSave()
+        {
+            if (_dirty)
+            {
+                var res = MessageBox.Show("Save changes to current catalog?", this.Text, MessageBoxButtons.YesNoCancel);
+                if (res == DialogResult.Yes)
+                {
+                    return Save();
+                }
+                else if (res == DialogResult.Cancel)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool Save()
+        {
+            if (_currentCatalog != null)
+            {
+                return SaveToFile(_currentCatalog);
+            }
+            else
+            {
+                return SaveAs();
+            }
+        }
+
+        private bool SaveAs()
+        {
+            if (saveFile.ShowDialog() == DialogResult.OK)
+            {
+                var res = SaveToFile(saveFile.FileName);
+
+                if (res)
+                {
+                    _currentCatalog = saveFile.FileName;
+                }
+
+                return res;
+            }
+
+            return false;
+        }
+
+        private bool SaveToFile(string file)
+        {
+            try
+            {
+                var exprs = _programs.Select(kv => new XElement("Expression", new XAttribute("Name", kv.Key), new XCData(kv.Value)));
+                var root = new XElement("Expressions", exprs);
+                var doc = new XDocument(root);
+                doc.Save(file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
         }
 
         private void LoadCatalog(string file, bool reportError = false)
@@ -781,12 +852,14 @@ namespace RoslynPad
                 _programs = fragments;
 
                 RefreshCatalog();
+
+                _currentCatalog = file;
             }
             catch (Exception ex)
             {
                 if (reportError)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -870,5 +943,30 @@ namespace RoslynPad
         private bool _isNew;
 
         private const string NewItem = "(New)";
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!CheckSave())
+            {
+                return;
+            }
+
+            _programs.Clear();
+            RefreshCatalog();
+            cmbProgs.SelectedIndex = 0;
+
+            _dirty = false;
+            _currentCatalog = null;
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
+        private void saveasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
     }
 }
