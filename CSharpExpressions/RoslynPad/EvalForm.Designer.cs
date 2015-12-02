@@ -133,6 +133,7 @@
             // txtLive
             // 
             this.txtLive.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtLive.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLive.Location = new System.Drawing.Point(3, 3);
             this.txtLive.Multiline = true;
             this.txtLive.Name = "txtLive";
