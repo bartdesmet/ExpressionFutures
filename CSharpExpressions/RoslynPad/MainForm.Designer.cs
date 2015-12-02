@@ -39,6 +39,8 @@
             this.txtCode = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.rtf = new System.Windows.Forms.RichTextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.txtResult = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -47,14 +49,18 @@
             this.pnlDetail = new System.Windows.Forms.SplitContainer();
             this.prgNode = new System.Windows.Forms.PropertyGrid();
             this.txtNode = new System.Windows.Forms.TextBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.rtf = new System.Windows.Forms.RichTextBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlTree)).BeginInit();
@@ -65,13 +71,13 @@
             this.pnlDetail.Panel1.SuspendLayout();
             this.pnlDetail.Panel2.SuspendLayout();
             this.pnlDetail.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 33);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -88,8 +94,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1002, 712);
-            this.splitContainer1.SplitterDistance = 248;
+            this.splitContainer1.Size = new System.Drawing.Size(1002, 679);
+            this.splitContainer1.SplitterDistance = 236;
             this.splitContainer1.TabIndex = 0;
             // 
             // chkModern
@@ -98,7 +104,7 @@
             this.chkModern.AutoSize = true;
             this.chkModern.Checked = true;
             this.chkModern.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkModern.Location = new System.Drawing.Point(136, 205);
+            this.chkModern.Location = new System.Drawing.Point(136, 193);
             this.chkModern.Name = "chkModern";
             this.chkModern.Size = new System.Drawing.Size(304, 24);
             this.chkModern.TabIndex = 4;
@@ -109,7 +115,7 @@
             // 
             this.btnReduce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnReduce.Enabled = false;
-            this.btnReduce.Location = new System.Drawing.Point(788, 199);
+            this.btnReduce.Location = new System.Drawing.Point(788, 187);
             this.btnReduce.Name = "btnReduce";
             this.btnReduce.Size = new System.Drawing.Size(98, 35);
             this.btnReduce.TabIndex = 5;
@@ -121,7 +127,7 @@
             // 
             this.btnEval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEval.Enabled = false;
-            this.btnEval.Location = new System.Drawing.Point(892, 199);
+            this.btnEval.Location = new System.Drawing.Point(892, 187);
             this.btnEval.Name = "btnEval";
             this.btnEval.Size = new System.Drawing.Size(98, 35);
             this.btnEval.TabIndex = 6;
@@ -144,7 +150,7 @@
             // btnCompile
             // 
             this.btnCompile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCompile.Location = new System.Drawing.Point(16, 199);
+            this.btnCompile.Location = new System.Drawing.Point(16, 187);
             this.btnCompile.Name = "btnCompile";
             this.btnCompile.Size = new System.Drawing.Size(98, 35);
             this.btnCompile.TabIndex = 3;
@@ -162,7 +168,7 @@
             this.txtCode.Multiline = true;
             this.txtCode.Name = "txtCode";
             this.txtCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtCode.Size = new System.Drawing.Size(974, 143);
+            this.txtCode.Size = new System.Drawing.Size(974, 131);
             this.txtCode.TabIndex = 2;
             this.txtCode.Text = "(Expression<Func<int>>)(() => 42)";
             this.txtCode.WordWrap = false;
@@ -186,8 +192,30 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1002, 460);
+            this.tabControl1.Size = new System.Drawing.Size(1002, 439);
             this.tabControl1.TabIndex = 1;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.rtf);
+            this.tabPage3.Location = new System.Drawing.Point(4, 29);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(994, 406);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Code";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // rtf
+            // 
+            this.rtf.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtf.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtf.Location = new System.Drawing.Point(0, 0);
+            this.rtf.Name = "rtf";
+            this.rtf.ReadOnly = true;
+            this.rtf.Size = new System.Drawing.Size(994, 406);
+            this.rtf.TabIndex = 8;
+            this.rtf.Text = "";
+            this.rtf.MouseMove += new System.Windows.Forms.MouseEventHandler(this.rtf_MouseMove);
             // 
             // tabPage1
             // 
@@ -195,7 +223,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(994, 427);
+            this.tabPage1.Size = new System.Drawing.Size(994, 406);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Debug View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -209,7 +237,7 @@
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(988, 421);
+            this.txtResult.Size = new System.Drawing.Size(988, 400);
             this.txtResult.TabIndex = 1;
             this.txtResult.WordWrap = false;
             this.txtResult.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCode_KeyDown);
@@ -220,7 +248,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(994, 427);
+            this.tabPage2.Size = new System.Drawing.Size(994, 406);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Tree";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -238,7 +266,7 @@
             // pnlTree.Panel2
             // 
             this.pnlTree.Panel2.Controls.Add(this.pnlDetail);
-            this.pnlTree.Size = new System.Drawing.Size(988, 421);
+            this.pnlTree.Size = new System.Drawing.Size(988, 400);
             this.pnlTree.SplitterDistance = 512;
             this.pnlTree.TabIndex = 1;
             // 
@@ -247,7 +275,7 @@
             this.trvExpr.Dock = System.Windows.Forms.DockStyle.Fill;
             this.trvExpr.Location = new System.Drawing.Point(0, 0);
             this.trvExpr.Name = "trvExpr";
-            this.trvExpr.Size = new System.Drawing.Size(512, 421);
+            this.trvExpr.Size = new System.Drawing.Size(512, 400);
             this.trvExpr.TabIndex = 1;
             this.trvExpr.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvExpr_AfterSelect);
             // 
@@ -265,8 +293,8 @@
             // pnlDetail.Panel2
             // 
             this.pnlDetail.Panel2.Controls.Add(this.txtNode);
-            this.pnlDetail.Size = new System.Drawing.Size(472, 421);
-            this.pnlDetail.SplitterDistance = 210;
+            this.pnlDetail.Size = new System.Drawing.Size(472, 400);
+            this.pnlDetail.SplitterDistance = 199;
             this.pnlDetail.TabIndex = 1;
             // 
             // prgNode
@@ -276,7 +304,7 @@
             this.prgNode.HelpVisible = false;
             this.prgNode.Location = new System.Drawing.Point(0, 0);
             this.prgNode.Name = "prgNode";
-            this.prgNode.Size = new System.Drawing.Size(472, 210);
+            this.prgNode.Size = new System.Drawing.Size(472, 199);
             this.prgNode.TabIndex = 1;
             this.prgNode.ToolbarVisible = false;
             // 
@@ -288,35 +316,55 @@
             this.txtNode.Multiline = true;
             this.txtNode.Name = "txtNode";
             this.txtNode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtNode.Size = new System.Drawing.Size(472, 207);
+            this.txtNode.Size = new System.Drawing.Size(472, 197);
             this.txtNode.TabIndex = 0;
             this.txtNode.WordWrap = false;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.rtf);
-            this.tabPage3.Location = new System.Drawing.Point(4, 29);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(994, 427);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Code";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // rtf
-            // 
-            this.rtf.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtf.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtf.Location = new System.Drawing.Point(0, 0);
-            this.rtf.Name = "rtf";
-            this.rtf.ReadOnly = true;
-            this.rtf.Size = new System.Drawing.Size(994, 427);
-            this.rtf.TabIndex = 8;
-            this.rtf.Text = "";
-            this.rtf.MouseMove += new System.Windows.Forms.MouseEventHandler(this.rtf_MouseMove);
             // 
             // toolTip
             // 
             this.toolTip.ForeColor = System.Drawing.Color.Red;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1002, 33);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
+            this.optionsToolStripMenuItem.Text = "&Options...";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -324,7 +372,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1002, 712);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "RoslynPad";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -334,6 +384,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
@@ -346,8 +397,10 @@
             this.pnlDetail.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlDetail)).EndInit();
             this.pnlDetail.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -373,6 +426,11 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.RichTextBox rtf;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
     }
 }
 

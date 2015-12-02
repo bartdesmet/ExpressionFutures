@@ -4,13 +4,12 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
-using Microsoft.CodeAnalysis.Host;
-using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.Expressions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
@@ -18,7 +17,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Forms;
 using Tests.Microsoft.CodeAnalysis.CSharp;
-using System.Collections.Immutable;
 
 namespace RoslynPad
 {
@@ -154,11 +152,11 @@ namespace RoslynPad
             prgNode.SelectedObject = null;
             txtNode.Text = "";
 
-            var sem = default(SemanticModel);
+            _sem = default(SemanticModel);
             try
             {
                 txtResult.ForeColor = Color.Black;
-                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, out sem, includingExpressions: chkModern.Checked, trimCR: true);
+                _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, out _sem, includingExpressions: chkModern.Checked, trimCR: true);
                 UpdateExpression(_eval);
                 btnEval.Enabled = btnReduce.Enabled = true;
             }
@@ -178,25 +176,28 @@ namespace RoslynPad
                 txtResult.Text = "COMPILER ERROR:\r\n\r\n" + ex.ToString();
             }
 
-            if (sem != null)
-            {
-                Highlight(sem);
-            }
+            Highlight();
         }
 
-        private void Highlight(SemanticModel sem)
+        private void Highlight()
         {
+            if (_sem == null)
+            {
+                return;
+            }
+
             var ws = new AdhocWorkspace();
 
-            var txt = sem.SyntaxTree.GetText();
+            var txt = _sem.SyntaxTree.GetText();
             var src = txt.ToString();
 
+            rtf.Clear();
             rtf.AppendText(src);
 
             var start = 0;
             var length = src.Length;
 
-            var res = Classifier.GetClassifiedSpans(sem, TextSpan.FromBounds(start, start + length), ws).ToArray();
+            var res = Classifier.GetClassifiedSpans(_sem, TextSpan.FromBounds(start, start + length), ws).ToArray();
 
             foreach (var span in res)
             {
@@ -219,7 +220,7 @@ namespace RoslynPad
                 }
             }
 
-            _diags = sem.GetDiagnostics();
+            _diags = _sem.GetDiagnostics();
             foreach (var diag in _diags)
             {
                 if (diag.Severity == DiagnosticSeverity.Error)
@@ -549,6 +550,7 @@ namespace RoslynPad
         };
 
         private ImmutableArray<Diagnostic> _diags;
+        private SemanticModel _sem;
 
         private static int Rank(string name)
         {
@@ -678,6 +680,32 @@ namespace RoslynPad
                         toolTip.Show(string.Join("\r\n", diags.Select(d => d.ToString())), rtf);
                     }
                 }
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var frm = new OptionsForm
+            {
+                EditorFont = txtCode.Font,
+                SyntaxFont = rtf.Font,
+                DebugViewFont = txtResult.Font,
+                TreeFont = trvExpr.Font,
+            };
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                txtCode.Font = frm.EditorFont;
+                rtf.Font = frm.SyntaxFont;
+                txtResult.Font = frm.DebugViewFont;
+                txtNode.Font = frm.DebugViewFont;
+                trvExpr.Font = frm.TreeFont;
+                Highlight();
             }
         }
     }
