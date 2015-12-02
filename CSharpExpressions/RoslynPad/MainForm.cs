@@ -389,6 +389,8 @@ namespace RoslynPad
                 ConcatIf<InvokeMemberDynamicCSharpExpression>(o, node, d => d.Name);
                 ConcatIf<InvokeConstructorDynamicCSharpExpression>(o, node, d => d.Type.Name);
                 ConcatIf<ConstantExpression>(o, node, d => d.Value?.ToString() ?? "null");
+                ConcatIf<GotoExpression>(o, node, g => g.Kind.ToString());
+                ConcatIf<GotoCSharpStatement>(o, node, g => g.Kind.ToString());
 
                 if (o is ParameterExpression || o is LabelTarget || o is ConditionalReceiver)
                 {
