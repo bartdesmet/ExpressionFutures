@@ -195,7 +195,7 @@ namespace RoslynPad
             {
                 if (_isEditing && _current != null)
                 {
-                    var res = MessageBox.Show("Save edits to the current code fragment?", this.Text, MessageBoxButtons.YesNoCancel);
+                    var res = MessageBox.Show("Save edits to the current code fragment?", this.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (res == DialogResult.Cancel)
                     {
                         _ignoreIndexChange = true;
@@ -213,7 +213,7 @@ namespace RoslynPad
 
                 if (_isNew && txtCode.Text != "")
                 {
-                    var res = MessageBox.Show("Save the current code fragment?", this.Text, MessageBoxButtons.YesNoCancel);
+                    var res = MessageBox.Show("Save the current code fragment?", this.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (res == DialogResult.Cancel)
                     {
                         _ignoreIndexChange = true;
@@ -764,7 +764,7 @@ namespace RoslynPad
         {
             if (_dirty)
             {
-                var res = MessageBox.Show("Save changes to current catalog?", this.Text, MessageBoxButtons.YesNoCancel);
+                var res = MessageBox.Show("Save changes to current catalog?", this.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (res == DialogResult.Yes)
                 {
                     return Save();
@@ -967,6 +967,14 @@ namespace RoslynPad
         private void saveasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveAs();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!CheckSave())
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
