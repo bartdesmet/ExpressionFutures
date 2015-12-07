@@ -13,17 +13,11 @@ using static Playground.ReflectionUtils;
 
 namespace Playground
 {
-    class V : ExpressionVisitor
-    {
-    }
-
     class Program
     {
         static void Main()
         {
             Assign();
-            return;
-
             Call();
             Invoke();
             New();
@@ -1887,5 +1881,9 @@ namespace Playground
         {
             Console.WriteLine("D");
         }
+    }
+
+    class V : ExpressionVisitor
+    {
     }
 }
