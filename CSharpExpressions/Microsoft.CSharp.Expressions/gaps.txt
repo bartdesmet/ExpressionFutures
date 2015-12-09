@@ -8,7 +8,8 @@ TODO
 ----
 
 * Dynamic SetMember and SetIndex
-* Null-propagating support for dynamic
+* Dynamic assignments
+* Unary [post|pre]increment[checked] operators with more primitive types
 
 Open
 ----
