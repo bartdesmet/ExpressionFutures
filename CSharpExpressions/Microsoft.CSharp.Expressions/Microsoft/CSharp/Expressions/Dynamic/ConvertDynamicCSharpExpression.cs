@@ -26,7 +26,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Gets the <see cref="Type" /> to convert to.
+        /// Gets the <see cref="System.Type" /> to convert to.
         /// </summary>
         public override Type Type { get; }
 
