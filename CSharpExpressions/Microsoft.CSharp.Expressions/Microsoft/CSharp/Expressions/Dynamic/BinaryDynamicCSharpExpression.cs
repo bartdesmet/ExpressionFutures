@@ -53,6 +53,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
         protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
+            // TODO: AndAlso and OrElse need IsFalse and IsTrue unary operations as well
+
             binder = Binder.BinaryOperation(Flags, OperationNodeType, Context, new[] { Left.ArgumentInfo, Right.ArgumentInfo });
             arguments = new[] { Left.Expression, Right.Expression };
             argumentTypes = null;
@@ -150,6 +152,10 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.MultiplyAssignChecked:
                 case ExpressionType.SubtractAssignChecked:
                     binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
+                case ExpressionType.AndAlso:
+                case ExpressionType.OrElse:
+                    binderFlags |= CSharpBinderFlags.BinaryOperationLogical;
                     break;
             }
 
