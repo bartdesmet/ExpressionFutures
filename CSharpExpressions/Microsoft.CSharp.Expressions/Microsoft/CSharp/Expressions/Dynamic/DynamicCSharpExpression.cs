@@ -12,7 +12,6 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // TODO: Dynamic conditional access nodes
     // TODO: Support for assignments, setter operations, and need for IsEvent
 
     /// <summary>
