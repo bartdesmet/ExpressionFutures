@@ -1748,6 +1748,11 @@ namespace System.Linq.Expressions
 
         public override Expression Visit(Expression node)
         {
+            if (node == null)
+            {
+                return null;
+            }
+
             switch (node.NodeType)
             {
                 case ExpressionType.Add:
