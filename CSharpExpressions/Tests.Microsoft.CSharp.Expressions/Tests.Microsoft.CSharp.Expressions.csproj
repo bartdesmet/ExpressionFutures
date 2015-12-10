@@ -105,6 +105,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
     </Compile>
+    <Compile Include="ToCSharp.Meta.Generated.cs">
+      <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="TypedLabelRewriterTests.cs" />
     <Compile Include="WhileTests.cs" />
     <Compile Include="InvocationTests.cs" />
@@ -153,6 +158,17 @@
     <Content Include="Tests.Meta.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Tests.Meta.Generated.tt</LastGenOutput>
+    </Content>
+    <Content Include="ToCSharp.Meta.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ToCSharp.Meta.tt</DependentUpon>
+      <LastGenOutput>ToCSharp.Meta.Generated.cs</LastGenOutput>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Content>
+    <Content Include="ToCSharp.Meta.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ToCSharp.Meta.Generated.tt</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
