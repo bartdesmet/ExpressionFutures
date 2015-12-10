@@ -43,7 +43,6 @@ var bts = new[]
     // ExpressionType.ModuloAssign,
     // ExpressionType.MultiplyAssign,
     // ExpressionType.OrAssign,
-    // ExpressionType.PowerAssign,
     // ExpressionType.RightShiftAssign,
     // ExpressionType.SubtractAssign,
     // ExpressionType.AddAssignChecked,
@@ -54,6 +53,7 @@ var bts = new[]
     // ExpressionType.Assign,
 	// ExpressionType.Power,
 	// ExpressionType.Coalesce,
+	// ExpressionType.PowerAssign,
 };
 
 var uts = new[]
@@ -69,6 +69,7 @@ var uts = new[]
     ExpressionType.IsFalse,
 
     // TODO, enable more of these when we decide to support assignments
+	// TODO, add checked variants for these
     // ExpressionType.PreIncrementAssign,
     // ExpressionType.PreDecrementAssign,
     // ExpressionType.PostIncrementAssign,
