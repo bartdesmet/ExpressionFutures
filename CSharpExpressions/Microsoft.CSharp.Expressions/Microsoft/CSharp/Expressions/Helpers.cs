@@ -616,15 +616,33 @@ namespace Microsoft.CSharp.Expressions
             var index = expression as IndexCSharpExpression;
             if (index != null)
             {
-                if (!index.Indexer.CanWrite)
-                {
-                    throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
-                }
+                EnsureCanWrite(index, paramName);
 
                 lhs = Expression.Parameter(expression.Type, "__lhs");
             }
 
             return lhs;
+        }
+
+        public static void RequiresCanWrite(Expression expression, string paramName)
+        {
+            var index = expression as IndexCSharpExpression;
+            if (index != null)
+            {
+                EnsureCanWrite(index, paramName);
+            }
+            else
+            {
+                ExpressionStubs.RequiresCanWrite(expression, paramName);
+            }
+        }
+
+        private static void EnsureCanWrite(IndexCSharpExpression index, string paramName)
+        {
+            if (!index.Indexer.CanWrite)
+            {
+                throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+            }
         }
 
         public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression leftConversion = null)
@@ -675,8 +693,6 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
-                    Debug.Assert(leftConversion == null);
-
                     var temp = Expression.Parameter(member.Type, "__temp");
 
                     res =
@@ -684,7 +700,7 @@ namespace Microsoft.CSharp.Expressions
                             new[] { lhsTemp, temp },
                             lhsAssign,
                             Expression.Assign(temp, member),
-                            Expression.Assign(member, functionalOp(temp)),
+                            Expression.Assign(member, functionalOp(WithLeftConversion(temp, leftConversion))),
                             temp
                         );
                 }
@@ -723,14 +739,12 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                Debug.Assert(leftConversion == null);
-
                 var lastTemp = temps[i] = Expression.Parameter(index.Type, "__index");
 
                 block[i] = Expression.Assign(temps[i], index);
                 i++;
 
-                block[i++] = Expression.Assign(index, functionalOp(lastTemp));
+                block[i++] = Expression.Assign(index, functionalOp(WithLeftConversion(lastTemp, leftConversion)));
                 block[i++] = lastTemp;
             }
 
@@ -748,14 +762,12 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                Debug.Assert(leftConversion == null);
-
                 var temp = Expression.Parameter(lhs.Type, "__temp");
                 res =
                     Expression.Block(
                         new[] { temp },
                         Expression.Assign(temp, lhs),
-                        Expression.Assign(lhs, functionalOp(temp)),
+                        Expression.Assign(lhs, functionalOp(WithLeftConversion(temp, leftConversion))),
                         temp
                     );
             }

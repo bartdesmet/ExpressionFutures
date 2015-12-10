@@ -6,15 +6,14 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using static Microsoft.CSharp.Expressions.Helpers;
+using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
     // TODO: C# spec 7.6.9
-    //       - check support for char, decimal, enum
-    //       - fix support for byte, sbyte given that LINQ factories don't accept those
+    //       - check support for decimal, enum
     
     /// <summary>
     /// Represents a unary assignment operation.
@@ -95,9 +94,9 @@ namespace Microsoft.CSharp.Expressions
             public override CSharpExpressionType CSharpNodeType { get; }
         }
 
-        internal class Checked : AssignUnaryCSharpExpression
+        internal class Custom : AssignUnaryCSharpExpression
         {
-            public Checked(CSharpExpressionType unaryType, Expression operand)
+            public Custom(CSharpExpressionType unaryType, Expression operand)
                 : base(operand)
             {
                 CSharpNodeType = unaryType;
@@ -113,8 +112,27 @@ namespace Microsoft.CSharp.Expressions
                 {
                     switch (CSharpNodeType)
                     {
+                        case CSharpExpressionType.PreIncrementAssign:
+                        case CSharpExpressionType.PreDecrementAssign:
                         case CSharpExpressionType.PreIncrementCheckedAssign:
                         case CSharpExpressionType.PreDecrementCheckedAssign:
+                            return true;
+                    }
+
+                    return false;
+                }
+            }
+
+            private bool IsChecked
+            {
+                get
+                {
+                    switch (CSharpNodeType)
+                    {
+                        case CSharpExpressionType.PreIncrementCheckedAssign:
+                        case CSharpExpressionType.PreDecrementCheckedAssign:
+                        case CSharpExpressionType.PostIncrementCheckedAssign:
+                        case CSharpExpressionType.PostDecrementCheckedAssign:
                             return true;
                     }
 
@@ -136,6 +154,14 @@ namespace Microsoft.CSharp.Expressions
                     case CSharpExpressionType.PostDecrementCheckedAssign:
                         return Expression.SubtractChecked(operand, one);
 
+                    case CSharpExpressionType.PreIncrementAssign:
+                    case CSharpExpressionType.PostIncrementAssign:
+                        return Expression.Add(operand, one);
+
+                    case CSharpExpressionType.PreDecrementAssign:
+                    case CSharpExpressionType.PostDecrementAssign:
+                        return Expression.Subtract(operand, one);
+
                     default:
                         throw ContractUtils.Unreachable;
                 }
@@ -145,16 +171,12 @@ namespace Microsoft.CSharp.Expressions
             {
                 switch (type.GetNonNullableType().GetTypeCode())
                 {
-                    case TypeCode.Byte:
-                        return Expression.Constant((byte)1, type);
                     case TypeCode.UInt16:
                         return Expression.Constant((ushort)1, type);
                     case TypeCode.UInt32:
                         return Expression.Constant((uint)1, type);
                     case TypeCode.UInt64:
                         return Expression.Constant((ulong)1, type);
-                    case TypeCode.SByte:
-                        return Expression.Constant((sbyte)1, type);
                     case TypeCode.Int16:
                         return Expression.Constant((short)1, type);
                     case TypeCode.Int32:
@@ -172,8 +194,39 @@ namespace Microsoft.CSharp.Expressions
 
             public override Expression Reduce()
             {
-                return ReduceAssignment(Operand, FunctionalOp, IsPrefix);
+                var operandType = Operand.Type;
+
+                if (IsCSharpSpecificUnaryAssignNumeric(operandType))
+                {
+                    var operandParameter = Expression.Parameter(operandType, "__operand");
+                    var int32Type = operandType.IsNullableType() ? typeof(int?) : typeof(int);
+                    var convertOperand = IsChecked ? Expression.ConvertChecked(operandParameter, int32Type) : Expression.Convert(operandParameter, int32Type);
+                    var operandConversion = Expression.Lambda(convertOperand, operandParameter);
+
+                    var functionalOp = new Func<Expression, Expression>(lhs =>
+                    {
+                        var res = FunctionalOp(lhs);
+
+                        res = IsChecked ? Expression.ConvertChecked(res, operandType) : Expression.Convert(res, operandType);
+
+                        return res;
+                    });
+
+                    return ReduceAssignment(Operand, functionalOp, IsPrefix, operandConversion);
+                }
+                else
+                {
+                    return ReduceAssignment(Operand, FunctionalOp, IsPrefix);
+                }
             }
+        }
+
+        internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand)
+        {
+            RequiresCanRead(operand, nameof(operand));
+            Helpers.RequiresCanWrite(operand, nameof(operand));
+
+            return new Custom(unaryType, operand);
         }
     }
 
@@ -204,8 +257,13 @@ namespace Microsoft.CSharp.Expressions
             throw LinqError.UnhandledUnary(unaryType);
         }
 
-        private static AssignUnaryCSharpExpression MakeUnaryAssign(UnaryAssignFactory factory, Expression operand, MethodInfo method)
+        private static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
         {
+            if (IsCSharpSpecificUnaryAssignNumeric(operand.Type) && method == null)
+            {
+                return AssignUnaryCSharpExpression.Make(unaryType, operand);
+            }
+
             var lhs = GetLhs(operand, nameof(operand));
 
             // NB: We could return a UnaryExpression in case the lhs is not one of our index nodes, but it'd change
@@ -220,6 +278,11 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignUnaryCSharpExpression MakeUnaryAssignChecked(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
         {
+            if (IsCSharpSpecificUnaryAssignNumeric(operand.Type) && method == null)
+            {
+                return AssignUnaryCSharpExpression.Make(unaryType, operand);
+            }
+
             var lhs = GetLhs(operand, nameof(operand));
             var assign = factory(lhs, method);
 
@@ -231,7 +294,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                return new AssignUnaryCSharpExpression.Checked(unaryType, operand);
+                return new AssignUnaryCSharpExpression.Custom(unaryType, operand);
             }
         }
 

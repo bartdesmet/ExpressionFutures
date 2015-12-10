@@ -61,7 +61,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PreIncrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(Expression.PreIncrementAssign, operand, method);
+			return MakeUnaryAssign(CSharpExpressionType.PreIncrementAssign, Expression.PreIncrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PreDecrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(Expression.PreDecrementAssign, operand, method);
+			return MakeUnaryAssign(CSharpExpressionType.PreDecrementAssign, Expression.PreDecrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PostIncrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(Expression.PostIncrementAssign, operand, method);
+			return MakeUnaryAssign(CSharpExpressionType.PostIncrementAssign, Expression.PostIncrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PostDecrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(Expression.PostDecrementAssign, operand, method);
+			return MakeUnaryAssign(CSharpExpressionType.PostDecrementAssign, Expression.PostDecrementAssign, operand, method);
 		}
 
 		/// <summary>

@@ -418,7 +418,7 @@ namespace Microsoft.CSharp.Expressions
                     if (finalConversion == null)
                     {
                         var resultParameter = Expression.Parameter(typeof(Delegate), "__result");
-                        var convertResult = Expression.Convert(resultParameter, left.Type);
+                        var convertResult = Expression.Convert(resultParameter, leftType);
                         finalConversion = Expression.Lambda(convertResult, resultParameter);
                     }
                 }
@@ -440,7 +440,7 @@ namespace Microsoft.CSharp.Expressions
                     leftConversion = Expression.Lambda(convertLeft, leftParameter);
 
                     var resultParameter = Expression.Parameter(int32Type, "__result");
-                    var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, left.Type) : Expression.Convert(resultParameter, left.Type);
+                    var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, leftType) : Expression.Convert(resultParameter, leftType);
                     finalConversion = Expression.Lambda(convertResult, resultParameter);
                 }
 
@@ -468,6 +468,24 @@ namespace Microsoft.CSharp.Expressions
                     case TypeCode.SByte:
                     case TypeCode.Int16:
                     case TypeCode.UInt16:
+                    case TypeCode.Char:
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool IsCSharpSpecificUnaryAssignNumeric(Type type)
+        {
+            type = type.GetNonNullableType();
+
+            if (!type.IsEnum)
+            {
+                switch (type.GetTypeCode())
+                {
+                    case TypeCode.Byte:
+                    case TypeCode.SByte:
                     case TypeCode.Char:
                         return true;
                 }

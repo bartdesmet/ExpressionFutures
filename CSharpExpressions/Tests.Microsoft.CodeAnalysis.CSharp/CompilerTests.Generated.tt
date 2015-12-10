@@ -232,17 +232,25 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { checked { x--; } })",
     "(Expression<Action<int>>)(x => { checked { ++x; } })",
     "(Expression<Action<int>>)(x => { checked { --x; } })",
-    "/* !!!BUG!!! */(Expression<Action<byte>>)(x => { x++; })",
-    "/* !!!BUG!!! */(Expression<Action<sbyte>>)(x => { x++; })",
+    "(Expression<Action<byte>>)(x => { x++; })",
+    "(Expression<Action<sbyte>>)(x => { x++; })",
     "(Expression<Action<short>>)(x => { x++; })",
     "(Expression<Action<ushort>>)(x => { x++; })",
-    "/* !!!BUG!!! */(Expression<Action<char>>)(x => { x++; })",
+    "(Expression<Action<char>>)(x => { x++; })",
     "(Expression<Action<uint>>)(x => { x++; })",
     "(Expression<Action<long>>)(x => { x++; })",
     "(Expression<Action<ulong>>)(x => { x++; })",
     "(Expression<Action<float>>)(x => { x++; })",
     "(Expression<Action<double>>)(x => { x++; })",
     "(Expression<Action<decimal>>)(x => { x++; })",
+	"(Expression<Action<StrongBox<byte>>>)(x => { x.Value++; })",
+	"(Expression<Action<StrongBox<byte>>>)(x => { ++x.Value; })",
+	"(Expression<Action<StrongBox<byte>>>)(x => { x.Value--; })",
+	"(Expression<Action<StrongBox<byte>>>)(x => { --x.Value; })",
+	"(Expression<Func<List<byte>, byte>>)(x => checked(x[0]++))",
+	"(Expression<Func<List<byte>, byte>>)(x => checked(++x[0]))",
+	"(Expression<Func<List<byte>, byte>>)(x => checked(x[0]--))",
+	"(Expression<Func<List<byte>, byte>>)(x => checked(--x[0]))",
 
     // If
     "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); })",
@@ -489,7 +497,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 foreach (var test in all)
 {
 #>
-            public override void CompilerTest_<#=test#> => OK();
+            public override void CompilerTest_<#=test#>() => OK();
 <#
 }
 #>
