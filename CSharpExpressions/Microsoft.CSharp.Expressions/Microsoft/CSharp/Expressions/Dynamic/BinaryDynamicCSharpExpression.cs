@@ -46,6 +46,23 @@ namespace Microsoft.CSharp.Expressions
         public DynamicCSharpArgument Right { get; }
 
         /// <summary>
+        /// Reduces the expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public override Expression Reduce()
+        {
+            switch (OperationNodeType)
+            {
+                case ExpressionType.AndAlso:
+                    return ReduceLogical(isAndAlso: true);
+                case ExpressionType.OrElse:
+                    return ReduceLogical(isAndAlso: false);
+            }
+
+            return base.Reduce();
+        }
+
+        /// <summary>
         /// Reduces the dynamic expression to a binder and a set of arguments to apply the operation to.
         /// </summary>
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
@@ -53,8 +70,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
         protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
-            // TODO: AndAlso and OrElse need IsFalse and IsTrue unary operations as well
-
             var nodeType = OperationNodeType;
 
             switch (nodeType)
@@ -79,6 +94,49 @@ namespace Microsoft.CSharp.Expressions
             binder = Binder.BinaryOperation(Flags, nodeType, Context, new[] { Left.ArgumentInfo, Right.ArgumentInfo });
             arguments = new[] { Left.Expression, Right.Expression };
             argumentTypes = null;
+        }
+
+        private Expression ReduceLogical(bool isAndAlso)
+        {
+            var leftVariable = Expression.Parameter(Type);
+            var resultVariable = Expression.Parameter(Type);
+            var left = Left.Update(leftVariable);
+
+            var check = default(Expression);
+            var underlyingOperation = default(ExpressionType);
+
+            if (isAndAlso)
+            {
+                check = DynamicCSharpExpression.DynamicIsFalse(left, CSharpBinderFlags.None, Context);
+                underlyingOperation = ExpressionType.And;
+            }
+            else
+            {
+                check = DynamicCSharpExpression.DynamicIsTrue(left, CSharpBinderFlags.None, Context);
+                underlyingOperation = ExpressionType.Or;
+            }
+
+            var flags = Flags & ~CSharpBinderFlags.BinaryOperationLogical;
+
+            var operation = DynamicCSharpExpression.MakeDynamicBinary(underlyingOperation, left, Right, flags, Context);
+
+            var body =
+                Expression.IfThenElse(
+                    check,
+                    Expression.Assign(resultVariable, leftVariable),
+                    Expression.Assign(resultVariable, operation)
+                );
+
+            var res =
+                Expression.Block(
+                    Type,
+                    new[] { leftVariable, resultVariable },
+                    Expression.Assign(leftVariable, Left.Expression),
+                    body,
+                    resultVariable
+                );
+
+            return res;
         }
 
         /// <summary>

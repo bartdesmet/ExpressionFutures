@@ -412,6 +412,19 @@ namespace Tests
                     AssertBinary(ExpressionType.NotEqual, x, y, x != y);
                 }
             }
+
+            var bools = new[] { false, true };
+
+            foreach (var l in bools)
+            {
+                foreach (var r in bools)
+                {
+                    AssertBinary(ExpressionType.And, l, r, l & r);
+                    AssertBinary(ExpressionType.Or, l, r, l | r);
+                    AssertBinary(ExpressionType.AndAlso, l, r, l && r);
+                    AssertBinary(ExpressionType.OrElse, l, r, l || r);
+                }
+            }
         }
 
         private void AssertBinary(ExpressionType nodeType, object l, object r, object expected)
