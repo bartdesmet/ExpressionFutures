@@ -47,7 +47,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
         protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
         {
-            binder = Binder.UnaryOperation(Flags, OperationNodeType, Context, new[] { Operand.ArgumentInfo });
+            var nodeType = OperationNodeType;
+
+            switch (nodeType)
+            {
+                case ExpressionType.NegateChecked:
+                    nodeType = ExpressionType.Negate;
+                    break;
+            }
+
+            binder = Binder.UnaryOperation(Flags, nodeType, Context, new[] { Operand.ArgumentInfo });
             arguments = new[] { Operand.Expression };
             argumentTypes = null;
         }
@@ -132,11 +141,6 @@ namespace Microsoft.CSharp.Expressions
             switch (unaryType)
             {
                 case ExpressionType.NegateChecked:
-                    unaryType = ExpressionType.Negate;
-                    binderFlags |= CSharpBinderFlags.CheckedContext;
-                    break;
-                case ExpressionType.ConvertChecked:
-                    unaryType = ExpressionType.Convert;
                     binderFlags |= CSharpBinderFlags.CheckedContext;
                     break;
             }

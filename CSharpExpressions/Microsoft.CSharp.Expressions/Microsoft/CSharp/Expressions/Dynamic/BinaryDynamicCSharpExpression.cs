@@ -55,7 +55,28 @@ namespace Microsoft.CSharp.Expressions
         {
             // TODO: AndAlso and OrElse need IsFalse and IsTrue unary operations as well
 
-            binder = Binder.BinaryOperation(Flags, OperationNodeType, Context, new[] { Left.ArgumentInfo, Right.ArgumentInfo });
+            var nodeType = OperationNodeType;
+
+            switch (nodeType)
+            {
+                case ExpressionType.AddChecked:
+                    nodeType = ExpressionType.Add;
+                    break;
+                case ExpressionType.MultiplyChecked:
+                    nodeType = ExpressionType.Multiply;
+                    break;
+                case ExpressionType.SubtractChecked:
+                    nodeType = ExpressionType.Subtract;
+                    break;
+                case ExpressionType.AndAlso:
+                    nodeType = ExpressionType.And;
+                    break;
+                case ExpressionType.OrElse:
+                    nodeType = ExpressionType.Or;
+                    break;
+            }
+
+            binder = Binder.BinaryOperation(Flags, nodeType, Context, new[] { Left.ArgumentInfo, Right.ArgumentInfo });
             arguments = new[] { Left.Expression, Right.Expression };
             argumentTypes = null;
         }
@@ -146,35 +167,12 @@ namespace Microsoft.CSharp.Expressions
             switch (binaryType)
             {
                 case ExpressionType.AddChecked:
-                    binaryType = ExpressionType.Add;
-                    binderFlags |= CSharpBinderFlags.CheckedContext;
-                    break;
                 case ExpressionType.MultiplyChecked:
-                    binaryType = ExpressionType.Multiply;
-                    binderFlags |= CSharpBinderFlags.CheckedContext;
-                    break;
                 case ExpressionType.SubtractChecked:
-                    binaryType = ExpressionType.Subtract;
-                    binderFlags |= CSharpBinderFlags.CheckedContext;
-                    break;
-                case ExpressionType.AddAssignChecked:
-                    binaryType = ExpressionType.AddAssign;
-                    binderFlags |= CSharpBinderFlags.CheckedContext;
-                    break;
-                case ExpressionType.MultiplyAssignChecked:
-                    binaryType = ExpressionType.MultiplyAssign;
-                    binderFlags |= CSharpBinderFlags.CheckedContext;
-                    break;
-                case ExpressionType.SubtractAssignChecked:
-                    binaryType = ExpressionType.SubtractAssign;
                     binderFlags |= CSharpBinderFlags.CheckedContext;
                     break;
                 case ExpressionType.AndAlso:
-                    binaryType = ExpressionType.And;
-                    binderFlags |= CSharpBinderFlags.BinaryOperationLogical;
-                    break;
                 case ExpressionType.OrElse:
-                    binaryType = ExpressionType.Or;
                     binderFlags |= CSharpBinderFlags.BinaryOperationLogical;
                     break;
             }

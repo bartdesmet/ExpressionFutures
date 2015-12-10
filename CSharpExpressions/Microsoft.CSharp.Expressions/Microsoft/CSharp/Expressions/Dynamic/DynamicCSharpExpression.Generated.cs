@@ -208,55 +208,6 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'ArrayIndex' operation.
-        /// </summary>
-        /// <param name="left">The expression representing the left operand of the operation.</param>
-        /// <param name="right">The expression representing the right operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'ArrayIndex' operation.</returns>
-        public static BinaryDynamicCSharpExpression DynamicArrayIndex(Expression left, Expression right)
-        {
-            return MakeDynamicBinary(ExpressionType.ArrayIndex, left, right);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'ArrayIndex' operation.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'ArrayIndex' operation.</returns>
-        public static BinaryDynamicCSharpExpression DynamicArrayIndex(DynamicCSharpArgument left, DynamicCSharpArgument right)
-        {
-            return MakeDynamicBinary(ExpressionType.ArrayIndex, left, right);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'ArrayIndex' operation with the specified binder flags.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'ArrayIndex' operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression DynamicArrayIndex(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicBinary(ExpressionType.ArrayIndex, left, right, binderFlags);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'ArrayIndex' operation with the specified binder flags and the specified type context.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'ArrayIndex' operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression DynamicArrayIndex(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
-        {
-            return MakeDynamicBinary(ExpressionType.ArrayIndex, left, right, binderFlags, context);
-        }
-
-        /// <summary>
         /// Creates a new expression representing a dynamically bound binary 'Coalesce' operation.
         /// </summary>
         /// <param name="left">The expression representing the left operand of the operation.</param>
@@ -992,55 +943,6 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Power' operation.
-        /// </summary>
-        /// <param name="left">The expression representing the left operand of the operation.</param>
-        /// <param name="right">The expression representing the right operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Power' operation.</returns>
-        public static BinaryDynamicCSharpExpression DynamicPower(Expression left, Expression right)
-        {
-            return MakeDynamicBinary(ExpressionType.Power, left, right);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Power' operation.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Power' operation.</returns>
-        public static BinaryDynamicCSharpExpression DynamicPower(DynamicCSharpArgument left, DynamicCSharpArgument right)
-        {
-            return MakeDynamicBinary(ExpressionType.Power, left, right);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Power' operation with the specified binder flags.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Power' operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression DynamicPower(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicBinary(ExpressionType.Power, left, right, binderFlags);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Power' operation with the specified binder flags and the specified type context.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Power' operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression DynamicPower(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
-        {
-            return MakeDynamicBinary(ExpressionType.Power, left, right, binderFlags, context);
-        }
-
-        /// <summary>
         /// Creates a new expression representing a dynamically bound binary 'RightShift' operation.
         /// </summary>
         /// <param name="left">The expression representing the left operand of the operation.</param>
@@ -1600,7 +1502,6 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.AddChecked:
                 case ExpressionType.And:
                 case ExpressionType.AndAlso:
-                case ExpressionType.ArrayIndex:
                 case ExpressionType.Coalesce:
                 case ExpressionType.Divide:
                 case ExpressionType.Equal:
@@ -1616,7 +1517,6 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.NotEqual:
                 case ExpressionType.Or:
                 case ExpressionType.OrElse:
-                case ExpressionType.Power:
                 case ExpressionType.RightShift:
                 case ExpressionType.Subtract:
                 case ExpressionType.SubtractChecked:

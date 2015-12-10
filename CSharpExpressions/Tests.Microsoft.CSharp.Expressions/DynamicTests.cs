@@ -286,6 +286,46 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Dynamic_Unary_Compile()
+        {
+            // TODO: assignment nodes
+
+            var vals = new[] { 1, 2, 3, 4, 5 }; // TODO: include exceptional cases
+
+            foreach (var x in vals)
+            {
+                AssertUnary(ExpressionType.OnesComplement, x, ~x);
+                AssertUnary(ExpressionType.UnaryPlus, x, +x);
+                AssertUnary(ExpressionType.Negate, x, -x);
+                AssertUnary(ExpressionType.NegateChecked, x, checked(-x));
+                AssertUnary(ExpressionType.Increment, x, x + 1);
+                AssertUnary(ExpressionType.Decrement, x, x - 1);
+            }
+
+            var bools = new[] { false, true };
+
+            foreach (var b in bools)
+            {
+                AssertUnary(ExpressionType.Not, b, !b);
+
+                // BUG
+                //AssertUnary(ExpressionType.IsTrue, b, b == true);
+                //AssertUnary(ExpressionType.IsFalse, b, b == false);
+            }
+        }
+
+        private void AssertUnary(ExpressionType nodeType, object o, object expected)
+        {
+            var p = Expression.Parameter(typeof(object));
+
+            var d = DynamicCSharpExpression.MakeDynamicUnary(nodeType, p);
+
+            var e = Expression.Lambda<Func<object, object>>(d, p);
+            var f = e.Compile();
+            Assert.AreEqual(expected, f(o));
+        }
+
+        [TestMethod]
         public void Dynamic_Unary_Factory_ArgumentChecking()
         {
             AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Add, Expression.Constant(0)));
@@ -335,6 +375,52 @@ namespace Tests
             Assert.AreEqual(3, f(1, 2));
             Assert.AreEqual("ab", f("a", "b"));
             Assert.AreEqual(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 10), TimeSpan.FromDays(1)));
+        }
+
+        [TestMethod]
+        public void Dynamic_Binary_Compile()
+        {
+            // TODO: assignment nodes
+
+            var vals = new[] { 1, 2, 3, 4, 5 }; // TODO: include exceptional cases
+            
+            foreach (var x in vals)
+            {
+                foreach (var y in vals)
+                {
+                    AssertBinary(ExpressionType.Add, x, y, x + y);
+                    AssertBinary(ExpressionType.AddChecked, x, y, checked(x + y));
+                    AssertBinary(ExpressionType.Subtract, x, y, x - y);
+                    AssertBinary(ExpressionType.SubtractChecked, x, y, checked(x - y));
+                    AssertBinary(ExpressionType.Multiply, x, y, x * y);
+                    AssertBinary(ExpressionType.MultiplyChecked, x, y, checked(x * y));
+                    AssertBinary(ExpressionType.Divide, x, y, x / y);
+                    AssertBinary(ExpressionType.Modulo, x, y, x % y);
+                    AssertBinary(ExpressionType.LeftShift, x, y, x << y);
+                    AssertBinary(ExpressionType.RightShift, x, y, x >> y);
+                    AssertBinary(ExpressionType.And, x, y, x & y);
+                    AssertBinary(ExpressionType.Or, x, y, x | y);
+                    AssertBinary(ExpressionType.ExclusiveOr, x, y, x ^ y);
+                    AssertBinary(ExpressionType.LessThan, x, y, x < y);
+                    AssertBinary(ExpressionType.LessThanOrEqual, x, y, x <= y);
+                    AssertBinary(ExpressionType.GreaterThan, x, y, x > y);
+                    AssertBinary(ExpressionType.GreaterThanOrEqual, x, y, x >= y);
+                    AssertBinary(ExpressionType.Equal, x, y, x == y);
+                    AssertBinary(ExpressionType.NotEqual, x, y, x != y);
+                }
+            }
+        }
+
+        private void AssertBinary(ExpressionType nodeType, object l, object r, object expected)
+        {
+            var p = Expression.Parameter(typeof(object));
+            var q = Expression.Parameter(typeof(object));
+
+            var d = DynamicCSharpExpression.MakeDynamicBinary(nodeType, p, q);
+
+            var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
+            var f = e.Compile();
+            Assert.AreEqual(expected, f(l, r));
         }
 
         [TestMethod]
