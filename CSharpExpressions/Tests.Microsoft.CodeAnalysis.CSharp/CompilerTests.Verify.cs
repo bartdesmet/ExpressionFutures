@@ -179,11 +179,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_8CA7_C849() => OK();
             public override void CompilerTest_8BFE_5348() => OK();
             public override void CompilerTest_18CC_52FA() => OK();
-            public override void CompilerTest_7492_5840() => OK();
-            public override void CompilerTest_6A94_11A1() => OK();
-            public override void CompilerTest_2F5D_7729() => OK();
-            public override void CompilerTest_EAFD_0780() => OK();
-            public override void CompilerTest_AC8A_E7E8() => OK();
+            public override void CompilerTest_7492_BDF3() => OK();
+            public override void CompilerTest_6A94_43E9() => OK();
+            public override void CompilerTest_2F5D_6848() => OK();
+            public override void CompilerTest_EAFD_1495() => OK();
+            public override void CompilerTest_AC8A_6853() => OK();
             public override void CompilerTest_C8F7_C9E3() => OK();
             public override void CompilerTest_3859_A369() => OK();
             public override void CompilerTest_3AC9_62A5() => OK();
@@ -191,8 +191,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1D2F_75F1() => OK();
             public override void CompilerTest_1EDE_AB2B() => OK();
             public override void CompilerTest_A171_21C8() => OK();
-            public override void CompilerTest_E00F_72CF() => OK();
-            public override void CompilerTest_1D70_B253() => OK();
+            public override void CompilerTest_E00F_CAB4() => OK();
+            public override void CompilerTest_1D70_2F15() => OK();
 
             // Assignments unary
             public override void CompilerTest_D47A_F8E7() => OK();
@@ -247,11 +247,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // ForEach
             public override void CompilerTest_245A_DA7A() => OK();
             public override void CompilerTest_DA7B_B67A() => OK();
-            public override void CompilerTest_34B8_D672() => OK();
+            public override void CompilerTest_34B8_6522() => OK();
             public override void CompilerTest_3958_5948() => OK();
             public override void CompilerTest_1525_79A2() => OK(); // REVIEW: Rely on runtime library to infer the right GetEnumerator method, or pass it to the factory method? (NB: No extension methods are considered, so should be able to guarantee that we can find it at runtime.)
             public override void CompilerTest_720D_1B2C() => OK();
-            public override void CompilerTest_0041_AAB8() => OK();
+            public override void CompilerTest_0041_C3E9() => OK();
             public override void CompilerTest_AE67_91A3() => OK();
 
             // Using

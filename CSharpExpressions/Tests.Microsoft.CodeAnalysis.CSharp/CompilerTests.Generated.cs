@@ -4498,7 +4498,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_18CC_52FA() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_7492_5840()
+        public void CompilerTest_7492_BDF3()
         {
             // (Expression<Action<byte, byte>>)((x, y) => { x += y; })
             var actual = GetDebugView(@"(Expression<Action<byte, byte>>)((x, y) => { x += y; })");
@@ -4525,12 +4525,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <LeftConversion>
             <Lambda Type=""System.Func`2[System.Byte,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Byte"" Id=""2"" />
+                <Parameter Type=""System.Byte"" Id=""2"" Name=""__left"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Byte"" Id=""2"" />
+                    <Parameter Type=""System.Byte"" Id=""2"" Name=""__left"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4539,12 +4539,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <FinalConversion>
             <Lambda Type=""System.Func`2[System.Int32,System.Byte]"">
               <Parameters>
-                <Parameter Type=""System.Int32"" Id=""3"" />
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Byte"">
                   <Operand>
-                    <Parameter Type=""System.Int32"" Id=""3"" />
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4559,13 +4559,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_7492_5840();
+            Verify.CompilerTest_7492_BDF3();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7492_5840() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7492_BDF3() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_6A94_11A1()
+        public void CompilerTest_6A94_43E9()
         {
             // (Expression<Action<sbyte, sbyte>>)((x, y) => { x += y; })
             var actual = GetDebugView(@"(Expression<Action<sbyte, sbyte>>)((x, y) => { x += y; })");
@@ -4592,12 +4592,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <LeftConversion>
             <Lambda Type=""System.Func`2[System.SByte,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.SByte"" Id=""2"" />
+                <Parameter Type=""System.SByte"" Id=""2"" Name=""__left"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.SByte"" Id=""2"" />
+                    <Parameter Type=""System.SByte"" Id=""2"" Name=""__left"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4606,12 +4606,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <FinalConversion>
             <Lambda Type=""System.Func`2[System.Int32,System.SByte]"">
               <Parameters>
-                <Parameter Type=""System.Int32"" Id=""3"" />
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.SByte"">
                   <Operand>
-                    <Parameter Type=""System.Int32"" Id=""3"" />
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4626,13 +4626,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_6A94_11A1();
+            Verify.CompilerTest_6A94_43E9();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6A94_11A1() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6A94_43E9() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_2F5D_7729()
+        public void CompilerTest_2F5D_6848()
         {
             // (Expression<Action<short, short>>)((x, y) => { x += y; })
             var actual = GetDebugView(@"(Expression<Action<short, short>>)((x, y) => { x += y; })");
@@ -4659,12 +4659,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <LeftConversion>
             <Lambda Type=""System.Func`2[System.Int16,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Int16"" Id=""2"" />
+                <Parameter Type=""System.Int16"" Id=""2"" Name=""__left"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Int16"" Id=""2"" />
+                    <Parameter Type=""System.Int16"" Id=""2"" Name=""__left"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4673,12 +4673,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <FinalConversion>
             <Lambda Type=""System.Func`2[System.Int32,System.Int16]"">
               <Parameters>
-                <Parameter Type=""System.Int32"" Id=""3"" />
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int16"">
                   <Operand>
-                    <Parameter Type=""System.Int32"" Id=""3"" />
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4693,13 +4693,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_2F5D_7729();
+            Verify.CompilerTest_2F5D_6848();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2F5D_7729() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2F5D_6848() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_EAFD_0780()
+        public void CompilerTest_EAFD_1495()
         {
             // (Expression<Action<ushort, ushort>>)((x, y) => { x += y; })
             var actual = GetDebugView(@"(Expression<Action<ushort, ushort>>)((x, y) => { x += y; })");
@@ -4726,12 +4726,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <LeftConversion>
             <Lambda Type=""System.Func`2[System.UInt16,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.UInt16"" Id=""2"" />
+                <Parameter Type=""System.UInt16"" Id=""2"" Name=""__left"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.UInt16"" Id=""2"" />
+                    <Parameter Type=""System.UInt16"" Id=""2"" Name=""__left"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4740,12 +4740,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <FinalConversion>
             <Lambda Type=""System.Func`2[System.Int32,System.UInt16]"">
               <Parameters>
-                <Parameter Type=""System.Int32"" Id=""3"" />
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.UInt16"">
                   <Operand>
-                    <Parameter Type=""System.Int32"" Id=""3"" />
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4760,13 +4760,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_EAFD_0780();
+            Verify.CompilerTest_EAFD_1495();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EAFD_0780() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EAFD_1495() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_AC8A_E7E8()
+        public void CompilerTest_AC8A_6853()
         {
             // (Expression<Action<char, char>>)((x, y) => { x += y; })
             var actual = GetDebugView(@"(Expression<Action<char, char>>)((x, y) => { x += y; })");
@@ -4793,12 +4793,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <LeftConversion>
             <Lambda Type=""System.Func`2[System.Char,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Char"" Id=""2"" />
+                <Parameter Type=""System.Char"" Id=""2"" Name=""__left"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Char"" Id=""2"" />
+                    <Parameter Type=""System.Char"" Id=""2"" Name=""__left"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4807,12 +4807,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <FinalConversion>
             <Lambda Type=""System.Func`2[System.Int32,System.Char]"">
               <Parameters>
-                <Parameter Type=""System.Int32"" Id=""3"" />
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Char"">
                   <Operand>
-                    <Parameter Type=""System.Int32"" Id=""3"" />
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""__result"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -4827,10 +4827,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AC8A_E7E8();
+            Verify.CompilerTest_AC8A_6853();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AC8A_E7E8() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AC8A_6853() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_C8F7_C9E3()
@@ -5078,7 +5078,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A171_21C8() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_E00F_72CF()
+        public void CompilerTest_E00F_CAB4()
         {
             // (Expression<Func<Action, Action, Action>>)((a, b) => a += b)
             var actual = GetDebugView(@"(Expression<Func<Action, Action, Action>>)((a, b) => a += b)");
@@ -5099,12 +5099,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
       <FinalConversion>
         <Lambda Type=""System.Func`2[System.Delegate,System.Action]"">
           <Parameters>
-            <Parameter Type=""System.Delegate"" Id=""2"" />
+            <Parameter Type=""System.Delegate"" Id=""2"" Name=""__result"" />
           </Parameters>
           <Body>
             <Convert Type=""System.Action"">
               <Operand>
-                <Parameter Type=""System.Delegate"" Id=""2"" />
+                <Parameter Type=""System.Delegate"" Id=""2"" Name=""__result"" />
               </Operand>
             </Convert>
           </Body>
@@ -5114,13 +5114,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_E00F_72CF();
+            Verify.CompilerTest_E00F_CAB4();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E00F_72CF() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E00F_CAB4() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_1D70_B253()
+        public void CompilerTest_1D70_2F15()
         {
             // (Expression<Func<Action, Action, Action>>)((a, b) => a -= b)
             var actual = GetDebugView(@"(Expression<Func<Action, Action, Action>>)((a, b) => a -= b)");
@@ -5141,12 +5141,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
       <FinalConversion>
         <Lambda Type=""System.Func`2[System.Delegate,System.Action]"">
           <Parameters>
-            <Parameter Type=""System.Delegate"" Id=""2"" />
+            <Parameter Type=""System.Delegate"" Id=""2"" Name=""__result"" />
           </Parameters>
           <Body>
             <Convert Type=""System.Action"">
               <Operand>
-                <Parameter Type=""System.Delegate"" Id=""2"" />
+                <Parameter Type=""System.Delegate"" Id=""2"" Name=""__result"" />
               </Operand>
             </Convert>
           </Body>
@@ -5156,10 +5156,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_1D70_B253();
+            Verify.CompilerTest_1D70_2F15();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1D70_B253() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1D70_2F15() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_00CF_77BB()
@@ -7235,7 +7235,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B67A() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_34B8_D672()
+        public void CompilerTest_34B8_6522()
         {
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -7254,12 +7254,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Object"" Id=""2"" />
+                <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Object"" Id=""2"" />
+                    <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -7290,10 +7290,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_34B8_D672();
+            Verify.CompilerTest_34B8_6522();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D672() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_6522() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_3958_5948()
@@ -7437,7 +7437,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_1B2C() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_0041_AAB8()
+        public void CompilerTest_0041_C3E9()
         {
             // (Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -7456,12 +7456,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Object"" Id=""2"" />
+                <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Object"" Id=""2"" />
+                    <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -7492,10 +7492,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_0041_AAB8();
+            Verify.CompilerTest_0041_C3E9();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_AAB8() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_C3E9() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_AE67_91A3()
@@ -8969,11 +8969,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_8CA7_C849 => OK();
             public override void CompilerTest_8BFE_5348 => OK();
             public override void CompilerTest_18CC_52FA => OK();
-            public override void CompilerTest_7492_5840 => OK();
-            public override void CompilerTest_6A94_11A1 => OK();
-            public override void CompilerTest_2F5D_7729 => OK();
-            public override void CompilerTest_EAFD_0780 => OK();
-            public override void CompilerTest_AC8A_E7E8 => OK();
+            public override void CompilerTest_7492_BDF3 => OK();
+            public override void CompilerTest_6A94_43E9 => OK();
+            public override void CompilerTest_2F5D_6848 => OK();
+            public override void CompilerTest_EAFD_1495 => OK();
+            public override void CompilerTest_AC8A_6853 => OK();
             public override void CompilerTest_C8F7_C9E3 => OK();
             public override void CompilerTest_3859_A369 => OK();
             public override void CompilerTest_3AC9_62A5 => OK();
@@ -8981,8 +8981,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1D2F_75F1 => OK();
             public override void CompilerTest_1EDE_AB2B => OK();
             public override void CompilerTest_A171_21C8 => OK();
-            public override void CompilerTest_E00F_72CF => OK();
-            public override void CompilerTest_1D70_B253 => OK();
+            public override void CompilerTest_E00F_CAB4 => OK();
+            public override void CompilerTest_1D70_2F15 => OK();
             public override void CompilerTest_00CF_77BB => OK();
             public override void CompilerTest_9C51_C4A7 => OK();
             public override void CompilerTest_2115_438C => OK();
@@ -9026,11 +9026,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_F7F3_AD6D => OK();
             public override void CompilerTest_245A_DA7A => OK();
             public override void CompilerTest_DA7B_B67A => OK();
-            public override void CompilerTest_34B8_D672 => OK();
+            public override void CompilerTest_34B8_6522 => OK();
             public override void CompilerTest_3958_5948 => OK();
             public override void CompilerTest_1525_79A2 => OK();
             public override void CompilerTest_720D_1B2C => OK();
-            public override void CompilerTest_0041_AAB8 => OK();
+            public override void CompilerTest_0041_C3E9 => OK();
             public override void CompilerTest_AE67_91A3 => OK();
             public override void CompilerTest_5598_03A6 => OK();
             public override void CompilerTest_62CA_03A6 => OK();
