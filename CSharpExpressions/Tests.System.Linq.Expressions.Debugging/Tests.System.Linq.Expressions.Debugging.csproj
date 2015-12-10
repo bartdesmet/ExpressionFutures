@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -59,6 +60,11 @@
       <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToCSharp.Meta.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
@@ -67,6 +73,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ToCSharp.Meta.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ToCSharp.Meta.tt</DependentUpon>
+      <LastGenOutput>ToCSharp.Meta.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="ToCSharp.Meta.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ToCSharp.Meta.Generated.tt</LastGenOutput>
+    </Content>
     <Content Include="Tests.Meta.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <AutoGen>True</AutoGen>

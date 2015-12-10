@@ -1,0 +1,317 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - December 2015
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.CSharp" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension="Generated.tt" #>
+<#
+var exprs = new string[]
+{
+	"Expression.Parameter(typeof(int))",
+	"Expression.Parameter(typeof(int), \"\")",
+	"Expression.Parameter(typeof(int), \" \")",
+	"Expression.Parameter(typeof(int), \"_Bar_123\")",
+	"Expression.Parameter(typeof(int), \"@bar\")",
+	"Expression.Parameter(typeof(int), \"class\")",
+	"Expression.Parameter(typeof(int), \"not valid\")",
+	"Expression.Label(Expression.Label(typeof(void)))",
+	"Expression.Label(Expression.Label(typeof(void), \"\"))",
+	"Expression.Label(Expression.Label(typeof(void), \" \"))",
+	"Expression.Label(Expression.Label(typeof(void), \"_Bar_123\"))",
+	"Expression.Label(Expression.Label(typeof(void), \"@bar\"))",
+	"Expression.Label(Expression.Label(typeof(void), \"this\"))",
+
+	"Expression.Property(Expression.Default(typeof(string)), \"Length\")",
+	"Expression.Call(Expression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod(\"ToUpper\", new Type[0])), typeof(string).GetMethod(\"ToLower\", new Type[0]))",
+
+    "Expression.Default(typeof(int))",
+    "Expression.Default(typeof(string))",
+	"Expression.Default(typeof(int[]))",
+	"Expression.Default(typeof(int[,]))",
+	"Expression.Default(typeof(int?))",
+	"Expression.Default(typeof(Dictionary<List<int>, bool?[]>))",
+	"Expression.Default(typeof(void))",
+
+	"Expression.Constant(42)",
+	"Expression.Constant(42L)",
+	"Expression.Constant(42UL)",
+	"Expression.Constant(42.0)",
+	"Expression.Constant(42.0f)",
+	"Expression.Constant(42.0m)",
+	"Expression.Constant((byte)42)",
+	"Expression.Constant((sbyte)42)",
+	"Expression.Constant((short)42)",
+	"Expression.Constant((ushort)42)",
+	"Expression.Constant((uint)42)",
+	"Expression.Constant(null, typeof(object))",
+	"Expression.Constant(null, typeof(string))",
+	"Expression.Constant(null, typeof(int?))",
+
+	"Expression.Constant(ConsoleColor.Red)",
+	"Expression.Constant(System.IO.FileAccess.Read | System.IO.FileAccess.Write)",
+	"Expression.Constant(System.IO.FileShare.Read | System.IO.FileShare.Write | System.IO.FileShare.Delete)",
+	
+	"Expression.Constant(DateTime.Now)",
+	"Expression.Constant(DateTime.Now, typeof(object))",
+
+	"Expression.Constant('\"')",
+	"Expression.Constant('x')",
+
+	"Expression.Constant(\"bar\")",
+	"Expression.Constant(\"bar\tfoo\")",
+	"Expression.Constant(\"bar\afoo\")",
+	"Expression.Constant(\"bar\ffoo\")",
+	"Expression.Constant(\"bar\bfoo\")",
+	"Expression.Constant(\"bar\vfoo\")",
+	"Expression.Constant(\"bar\\\\foo\")",
+	"Expression.Constant(\"bar\'foo\")",
+
+	"Expression.Add(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.AddChecked(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.Subtract(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.SubtractChecked(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.Multiply(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.MultiplyChecked(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.Divide(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.Modulo(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.And(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.Or(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.ExclusiveOr(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.Equal(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.NotEqual(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.LessThan(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.LessThanOrEqual(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.GreaterThan(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.GreaterThanOrEqual(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.LeftShift(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.RightShift(Expression.Constant(1), Expression.Constant(2))",
+	"Expression.AndAlso(Expression.Constant(true), Expression.Constant(false))",
+	"Expression.OrElse(Expression.Constant(true), Expression.Constant(false))",
+	"Expression.Coalesce(Expression.Constant(null, typeof(string)), Expression.Constant(\"null\"))",
+	"Expression.Power(Expression.Constant(1.0), Expression.Constant(2.0))",
+	"Expression.Assign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.AddAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.SubtractAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.MultiplyAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.AddAssignChecked(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.SubtractAssignChecked(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.MultiplyAssignChecked(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.DivideAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.ModuloAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.AndAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.OrAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.ExclusiveOrAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.LeftShiftAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.RightShiftAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+	"Expression.PowerAssign(Expression.Parameter(typeof(double)), Expression.Constant(1.0))",
+
+	"Expression.Add(Expression.Constant(1.0), Expression.Constant(2.0), typeof(Math).GetMethod(\"Pow\", new[] { typeof(double), typeof(double) }))",
+
+	"Expression.Add(Expression.Add(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.Add(Expression.Constant(1), Expression.Add(Expression.Constant(2), Expression.Constant(3)))",
+	"Expression.Add(Expression.Subtract(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.Add(Expression.Constant(1), Expression.Subtract(Expression.Constant(2), Expression.Constant(3)))",
+	"Expression.Add(Expression.Multiply(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.Add(Expression.Constant(1), Expression.Multiply(Expression.Constant(2), Expression.Constant(3)))",
+	"Expression.Multiply(Expression.Constant(1), Expression.Subtract(Expression.Constant(2), Expression.Constant(3)))",
+	"Expression.Multiply(Expression.Subtract(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.Subtract(Expression.Constant(1), Expression.Subtract(Expression.Constant(2), Expression.Constant(3)))",
+	"Expression.Subtract(Expression.Subtract(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.And(Expression.And(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.And(Expression.Or(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+	"Expression.Or(Expression.And(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+
+	"Expression.NegateChecked(Expression.Add(Expression.Constant(1), Expression.Constant(2)))",
+	"Expression.AddChecked(Expression.Add(Expression.Constant(1), Expression.Constant(2)), Expression.Constant(3))",
+
+	"Expression.Negate(Expression.Constant(1))",
+	"Expression.NegateChecked(Expression.Constant(1))",
+	"Expression.Negate(Expression.Negate(Expression.Parameter(typeof(int))))",
+	"Expression.UnaryPlus(Expression.Constant(1))",
+	"Expression.UnaryPlus(Expression.UnaryPlus(Expression.Parameter(typeof(int))))",
+	"Expression.OnesComplement(Expression.Constant(1))",
+	"Expression.Not(Expression.Constant(true))",
+	"Expression.Not(Expression.Constant(1))",
+	"Expression.Convert(Expression.Parameter(typeof(object), \"o\"), typeof(int))",
+	"Expression.ConvertChecked(Expression.Parameter(typeof(long), \"o\"), typeof(int))",
+	"Expression.TypeAs(Expression.Parameter(typeof(object), \"o\"), typeof(string))",
+	"Expression.ArrayLength(Expression.Parameter(typeof(int[])))",
+	"Expression.PreIncrementAssign(Expression.Parameter(typeof(int)))",
+	"Expression.PreDecrementAssign(Expression.Parameter(typeof(int)))",
+	"Expression.PostIncrementAssign(Expression.Parameter(typeof(int)))",
+	"Expression.PostDecrementAssign(Expression.Parameter(typeof(int)))",
+	"Expression.IsTrue(Expression.Parameter(typeof(bool)))",
+	"Expression.IsFalse(Expression.Parameter(typeof(bool)))",
+	"Expression.Increment(Expression.Parameter(typeof(int)))",
+	"Expression.Decrement(Expression.Parameter(typeof(int)))",
+	"Expression.Unbox(Expression.Parameter(typeof(object), \"o\"), typeof(int))",
+
+	"Expression.Negate(Expression.Constant(1), typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }))",
+	"Expression.Convert(Expression.Constant(1), typeof(int), typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }))",
+	"Expression.ConvertChecked(Expression.Constant(1), typeof(int), typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }))",
+	"/* BUG */ Expression.PostIncrementAssign(Expression.Parameter(typeof(int)), typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }))",
+	"/* BUG */ Expression.PostDecrementAssign(Expression.Parameter(typeof(int)), typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }))",
+
+	"Expression.Condition(Expression.Constant(true), Expression.Constant(1), Expression.Constant(2))",
+
+	"Expression.Property(null, typeof(DateTime).GetProperty(\"Now\"))",
+	"Expression.Property(Expression.Constant(\"bar\"), typeof(string).GetProperty(\"Length\"))",
+
+	"Expression.Call(Expression.Constant(\"bar\"), typeof(string).GetMethod(\"Substring\", new Type[] { typeof(int), typeof(int) }), Expression.Constant(0), Expression.Constant(1))",
+	"Expression.Call(null, typeof(Activator).GetMethod(\"CreateInstance\", new Type[0]).MakeGenericMethod(typeof(string)))",
+	"Expression.Call(null, typeof(int).GetMethod(\"TryParse\", new Type[] { typeof(string), typeof(int).MakeByRefType() }), Expression.Constant(\"bar\"), Expression.Parameter(typeof(int), \"res\"))",
+	"Expression.Call(null, typeof(System.Threading.Interlocked).GetMethod(\"Exchange\", new Type[] { typeof(int).MakeByRefType(), typeof(int) }), Expression.Parameter(typeof(int), \"x\"), Expression.Constant(1))",
+
+	"Expression.New(typeof(List<int>).GetConstructor(new Type[0]))",
+	"Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) }), Expression.Constant(0), Expression.Constant(1), Expression.Constant(2))",
+	"((Expression<Func<object>>)(() => new {})).Body",
+	"((Expression<Func<object>>)(() => new { a = 1, b = true })).Body",
+
+	"((Expression<Func<object>>)(() => new int[1, 2])).Body",
+	"((Expression<Func<object>>)(() => new int[] { 2, 3, 5 })).Body",
+
+	"((Expression<Func<int[], int>>)(xs => xs[0])).Body",
+	"((Expression<Func<List<int>, int>>)(xs => xs[0])).Body /* TODO: decompile? */",
+	"Expression.MakeIndex(Expression.Parameter(typeof(List<int>), \"xs\"), typeof(List<int>).GetProperty(\"Item\"), new[] { Expression.Constant(0) })",
+
+	"((Expression<Func<Func<int>, int>>)(f => f())).Body",
+	"((Expression<Func<Func<int, int>, int>>)(f => f(42))).Body",
+
+	"((Expression<Func<List<int>>>)(() => new List<int> { 2, 3, 5 })).Body",
+	"((Expression<Func<Dictionary<int, bool>>>)(() => new Dictionary<int, bool> { { 2, true }, { 3, false } })).Body",
+	
+	"((Expression<Func<object>>)(() => new AppDomainSetup { ApplicationBase = \"bar\", ApplicationName = \"foo\" })).Body",
+	"((Expression<Func<object>>)(() => new StrongBox<AppDomainSetup> { Value = { ApplicationBase = \"bar\", ApplicationName = \"foo\" } })).Body",
+	"((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body",
+	"((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body",
+	"((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body",
+	
+	"Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int))",
+	"Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int))",
+
+	"Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"true\")))",
+	"Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"true\")), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"false\")))",
+	"Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty()))",
+	"Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty()))",
+	
+	"((Expression<Func<int>>)(() => 42))",
+	"((Expression<Func<int, int>>)(x => x))",
+	"((Expression<Func<string, int, bool>>)((s, x) => s.Length == x))",
+	"Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void))))",
+	"Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType()))",
+
+	"Expression.Rethrow()",
+	"Expression.Throw(Expression.Parameter(typeof(Exception), \"ex\"))",
+
+	"Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), \"ex\")))",
+	"Expression.Block(Expression.Empty(), Expression.Empty())",
+	"Expression.Block(Expression.Empty(), Expression.Constant(42))",
+	"Expression.Block(new[] { Expression.Parameter(typeof(int), \"x\"), Expression.Parameter(typeof(int), \"y\"), Expression.Parameter(typeof(string), \"s\") }, Expression.Empty())",
+
+	"Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"try\")), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"finally\")))",
+	"Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"try\")), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"fault\")))",
+	"Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"try\")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"catch\"))))",
+	"Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"try\")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"catch\"))))",
+	"Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"try\")), Expression.Catch(Expression.Parameter(typeof(Exception), \"ex\"), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"catch\"))))",
+	"Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"try\")), Expression.Catch(Expression.Parameter(typeof(Exception), \"ex\"), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"catch\")), Expression.Constant(true)))",
+	
+	"Expression.Loop(Expression.Empty())",
+	"Expression.Loop(Expression.Block(Expression.Empty()))",
+	"Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2)",
+	"Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2)",
+	"Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2)",
+	"Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2)",
+	"Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2)",
+
+	"Expression.Break(_lbl1)",
+	"Expression.Continue(_lbl1)",
+	"Expression.Return(_lbl1)",
+	"Expression.Break(_lbl3, Expression.Constant(1))",
+	"Expression.Return(_lbl3, Expression.Constant(1))",
+
+	"Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"case 2\")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"case 3 & 4\")), Expression.Constant(3), Expression.Constant(4)))",
+	"Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"default\")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"case 2\")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"case 3 & 4\")), Expression.Constant(3), Expression.Constant(4)))",
+	"Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"case 2\")), Expression.UnaryPlus(Expression.Constant(2))))",
+
+	"Expression.ClearDebugInfo(Expression.SymbolDocument(\"foo\"))",
+	"Expression.DebugInfo(Expression.SymbolDocument(\"foo\"), 1, 2, 3, 4)",
+
+	"Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int)))",
+
+	"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, \"foo\", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1))",
+	"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2))",
+
+	"((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)))",
+	"((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })))",
+
+	"Expression.Lambda(Expression.Block(Expression.Empty()))",
+	"Expression.Lambda(Expression.Block(Expression.Constant(1)))",
+	"Expression.Lambda(Expression.Block(Expression.Return(_lbl1)))",
+	"Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1))))",
+};
+#>
+\<#@ template debug="false" hostspecific="false" language="C#" \#>
+\<#@ assembly name="System.Core" \#>
+\<#@ assembly name="Microsoft.CSharp" \#>
+\<#@ import namespace="System" \#>
+\<#@ import namespace="System.Linq" \#>
+\<#@ import namespace="System.Linq.Expressions" \#>
+\<#@ import namespace="System.Text" \#>
+\<#@ import namespace="System.Collections.Generic" \#>
+\<#@ import namespace="System.Runtime.CompilerServices" \#>
+\<#@ assembly name="System.Xml" \#>
+\<#@ assembly name="System.Xml.Linq" \#>
+\<#@ assembly name="$(SolutionDir)\System.Linq.Expressions.Debugging\bin\$(Configuration)\System.Linq.Expressions.Debugging.dll" \#>
+\<#
+var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace("\"", "\"\"") + "\"");
+var _lbl1 = Expression.Label();
+var _lbl2 = Expression.Label();
+var _lbl3 = Expression.Label(typeof(int));
+\#>
+// NOTE: These tests are auto-generated and can *never* fail because they assert the outcome of DebugView()
+//       at runtime against the outcome obtained at compile time. However, a human should read through the
+//       cases to assert the outcome is as expected.
+//
+//       Regressions can still be caught given that the T4 won't be re-run unless it gets saved in the IDE.
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+
+namespace Tests
+{
+    [TestClass]
+    public class ToCSharpTests
+    {
+		private static LabelTarget _lbl1 = Expression.Label();
+		private static LabelTarget _lbl2 = Expression.Label();
+		private static LabelTarget _lbl3 = Expression.Label(typeof(int));
+
+<#
+var i = 0;
+foreach (var expr in exprs)
+{
+#>
+        private Expression expr<#=i#> = <#=expr#>;
+        private string dbg<#=i#> = \<#=toEscapedString(<#=expr#>.ToCSharp())\#>;
+
+        [TestMethod]
+        public void ToCSharp_Test<#=i#>()
+        {
+            Assert.AreEqual(dbg<#=i#>, expr<#=i#>.ToCSharp());
+        }
+
+<#
+i++;
+}
+#>
+    }
+}
