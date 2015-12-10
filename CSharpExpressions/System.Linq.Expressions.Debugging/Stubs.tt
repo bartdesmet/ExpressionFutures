@@ -1,0 +1,270 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - October 2015
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#
+var types = new[]
+{
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeUtils", Members = new[] { "HasReferenceConversion" }, Suffix = "2", Partial = false },
+};
+#>
+using System;
+using System.Linq;
+using System.Reflection;
+
+// NOTE: Code generated in this file is not product code; it unblocks using existing APIs that are not
+//       visible to the prototype.
+
+<#
+var toCSharp = default(Func<Type, string>);
+toCSharp = t =>
+{
+    if (t == typeof(void))
+    {
+        return "void";
+    }
+
+    if (t.IsArray)
+    {
+        return toCSharp(t.GetElementType()) + "[]"; // NB: doesn't deal with multi-dimensional arrays
+    }
+    else if (t.IsGenericParameter)
+    {
+        return t.Name;
+    }
+    else if (t.IsGenericType)
+    {
+        if (t.IsGenericTypeDefinition)
+        {
+            var gtd = t.FullName;
+            gtd = gtd.Substring(0, gtd.IndexOf("`"));
+            return gtd;
+        }
+        else
+        {
+            var gtd = toCSharp(t.GetGenericTypeDefinition());
+            return gtd + "<" + string.Join(", ", t.GetGenericArguments().Select(toCSharp)) + ">";
+        }
+    }
+    else if (t.IsByRef)
+    {
+        return toCSharp(t.GetElementType());
+    }
+
+    return t.FullName;
+};
+
+foreach (var t in types)
+{
+    var type = t.Assembly.GetType(t.Type);
+    var typeMods = type.IsValueType ? "struct" : "class"; // NB: not dealing with enums, delegates, etc.
+    if (t.Partial)
+    {
+        typeMods = "partial " + typeMods;
+    }
+    if (type.IsAbstract && type.IsSealed && !type.IsValueType)
+    {
+        typeMods = "static " + typeMods;
+    }
+#>
+namespace <#=type.Namespace#>
+{
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("Stub generator", "1.0")]
+    <#=typeMods#> <#=type.Name + t.Suffix#>
+    {
+        private static Assembly s_asm = Assembly.Load("<#=t.Assembly#>");
+        private static Type s_typ = s_asm.GetType("<#=type.FullName#>");
+        private static ILookup<string, MethodInfo> s_mtds = s_typ.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).ToLookup(m => m.Name);
+
+<#
+    var i = 0;
+    
+    var members = type.GetTypeInfo().DeclaredMembers;
+
+    if (t.Members != null)
+    {
+        members = members.Where(m => t.Members.Contains(m.Name));
+    }
+
+    foreach (var m in members)
+    {
+        if (m.Name.StartsWith("get_") || m.Name.StartsWith("set_")) // NB: quick-n-dirty; not dealing with events etc.
+            continue;
+
+        var prop = m as PropertyInfo;
+        if (prop != null)
+        {
+            var propInfoName = "s_" + i++;
+            var propInfoGet = "s_typ.GetProperty(\"" + prop.Name + "\", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance)";
+            var ret = toCSharp(prop.PropertyType);
+
+            var mods = "";
+            var obj = "";
+            var propMtd = prop.GetMethod ?? prop.SetMethod;
+            if (propMtd.IsStatic)
+            {
+                mods = "static ";
+                obj = "null";
+            }
+            else
+            {
+#>
+        // Omitted instance property <#=prop.Name#>
+
+<#
+                continue; // NB: no extension properties; can make into get/set method pair on extension class
+            }
+#>
+        private static readonly PropertyInfo <#=propInfoName#> = <#=propInfoGet#>;
+
+        public <#=mods#><#=ret#> <#=prop.Name#>
+        {
+<#
+if (prop.GetMethod != null)
+{
+#>
+            get
+            {
+                try
+                {
+                    return (<#=ret#>)<#=propInfoName#>.GetValue(<#=obj#>);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+<#
+}
+if (prop.SetMethod != null)
+{
+#>
+            set
+            {
+                try
+                {
+                    <#=propInfoName#>.SetValue(<#=obj#>, new object[] { value });
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+<#
+}
+#>
+        }
+<#
+        }
+
+        var mtd = m as MethodInfo;
+        if (mtd != null)
+        {
+            var mtdInfoName = "s_" + i++;
+            var ret = toCSharp(mtd.ReturnType);
+
+            var mods = "";
+            var obj = "";
+            var pars = "";
+            var filters = new List<string>();
+            if (mtd.IsStatic)
+            {
+                mods = "static ";
+                obj = "null";
+                if (mtd.IsDefined(typeof(System.Runtime.CompilerServices.ExtensionAttribute)))
+                {
+                    var pt0 = mtd.GetParameters()[0].ParameterType;
+                    if (pt0.IsGenericType && pt0.GetGenericTypeDefinition() == typeof(IEnumerable<>) && typeof(Enumerable).GetMethods().Any(mo => mo.Name == mtd.Name))
+                    {
+#>
+        // Omitted LINQ method <#=mtd#>
+
+<#
+                        continue;
+                    }
+
+                    pars = "this ";
+                }
+
+                filters.Add("m.IsStatic");
+            }
+            else
+            {
+#>
+        // Omitted instance method <#=mtd#>
+
+<#
+                continue; // NB: no extension properties; can make into get/set method pair on extension class
+            }
+
+            if (mtd.IsGenericMethodDefinition)
+            {
+                filters.Add("m.IsGenericMethodDefinition");
+                filters.Add("m.GetGenericArguments().Length == " + mtd.GetGenericArguments().Length);
+                // TODO: add more conditions to match parameters; not needed to unblock right now
+            }
+            else
+            {
+                var parTypes = string.Join(", ", mtd.GetParameters().Select(p => "typeof(" + toCSharp(p.ParameterType) + ")" + (p.ParameterType.IsByRef ? ".MakeByRefType()" : "")));
+                filters.Add("m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { " + parTypes + " })");
+            }
+
+            var filter = string.Join(" && ", filters);
+            var mtdInfoGet = "s_mtds[\"" + mtd.Name + "\"].Single(m => " + filter + ")";
+
+            pars += string.Join(", ", mtd.GetParameters().Select(p => (p.IsOut ? "out " : (p.ParameterType.IsByRef ? "ref " : "")) + toCSharp(p.ParameterType) + " " + p.Name)); // NB: no support for params
+            var args = string.Join(", ", mtd.GetParameters().Select(p => p.Name));
+
+            var genArgs = "";
+            var closeGen = "";
+            if (mtd.IsGenericMethodDefinition)
+            {
+                genArgs = "<" + string.Join(", ", mtd.GetGenericArguments().Select(toCSharp)) + ">";
+                closeGen = ".MakeGenericMethod(" + string.Join(", ", mtd.GetGenericArguments().Select(a => "typeof(" + toCSharp(a) + ")")) + ")";
+            }
+#>
+        private static readonly MethodInfo <#=mtdInfoName#> = <#=mtdInfoGet#>;
+
+        public <#=mods#><#=ret#> <#=mtd.Name#><#=genArgs#>(<#=pars#>)
+        {
+            try
+            {
+                var args = new object[] { <#=args#> };
+                var res = <#=mtdInfoName#><#=closeGen#>.Invoke(<#=obj#>, args);
+<#
+foreach (var p in mtd.GetParameters())
+{
+    if (p.IsOut || p.ParameterType.IsByRef)
+    {
+#>
+                <#=p.Name#> = (<#=toCSharp(p.ParameterType)#>)args[<#=p.Position#>];
+<#
+    }
+}
+#>
+                <#=mtd.ReturnType == typeof(void) ? "" : "return (" + ret + ")res;"#>
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+<#
+        }
+    }
+#>
+    }
+}
+<#
+}
+#>
