@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     //         similar to the one used here in order to dispatch into extension nodes, but likely without using
     //         System.Xml.Linq APIs to reduce the dependency cost.
 
-    partial class CSharpExpression : IDebugViewExpression
+    partial class CSharpExpression : IDebugViewExpression, ICSharpPrintableExpression
     {
         /// <summary>
         /// Dispatches the current node to the specified visitor.

@@ -36,6 +36,24 @@ foreach (var node in nodes)
 					throw ContractUtils.Unreachable;
 			}
         }
+
+		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
+        {
+			switch (nodeType)
+			{
+				case CSharpExpressionType.Assign: return ExpressionType.Assign;
+<#
+foreach (var node in nodes)
+{
+#>
+				case CSharpExpressionType.<#=node#>: return ExpressionType.<#=node#>;
+<#
+}
+#>
+				default:
+					throw ContractUtils.Unreachable;
+			}
+        }
 	}
 
 	partial class CSharpExpression

@@ -32,6 +32,29 @@ namespace Microsoft.CSharp.Expressions
 					throw ContractUtils.Unreachable;
 			}
         }
+
+		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
+        {
+			switch (nodeType)
+			{
+				case CSharpExpressionType.Assign: return ExpressionType.Assign;
+				case CSharpExpressionType.AddAssign: return ExpressionType.AddAssign;
+				case CSharpExpressionType.SubtractAssign: return ExpressionType.SubtractAssign;
+				case CSharpExpressionType.MultiplyAssign: return ExpressionType.MultiplyAssign;
+				case CSharpExpressionType.DivideAssign: return ExpressionType.DivideAssign;
+				case CSharpExpressionType.ModuloAssign: return ExpressionType.ModuloAssign;
+				case CSharpExpressionType.AndAssign: return ExpressionType.AndAssign;
+				case CSharpExpressionType.OrAssign: return ExpressionType.OrAssign;
+				case CSharpExpressionType.ExclusiveOrAssign: return ExpressionType.ExclusiveOrAssign;
+				case CSharpExpressionType.LeftShiftAssign: return ExpressionType.LeftShiftAssign;
+				case CSharpExpressionType.RightShiftAssign: return ExpressionType.RightShiftAssign;
+				case CSharpExpressionType.AddAssignChecked: return ExpressionType.AddAssignChecked;
+				case CSharpExpressionType.MultiplyAssignChecked: return ExpressionType.MultiplyAssignChecked;
+				case CSharpExpressionType.SubtractAssignChecked: return ExpressionType.SubtractAssignChecked;
+				default:
+					throw ContractUtils.Unreachable;
+			}
+        }
 	}
 
 	partial class CSharpExpression

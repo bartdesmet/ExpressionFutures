@@ -22,6 +22,23 @@ namespace Microsoft.CSharp.Expressions
 					throw ContractUtils.Unreachable;
 			}
         }
+
+		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
+        {
+			switch (nodeType)
+			{
+				case CSharpExpressionType.PreIncrementAssign: return ExpressionType.PreIncrementAssign;
+				case CSharpExpressionType.PreIncrementCheckedAssign: return ExpressionType.PreIncrementAssign;
+				case CSharpExpressionType.PreDecrementAssign: return ExpressionType.PreDecrementAssign;
+				case CSharpExpressionType.PreDecrementCheckedAssign: return ExpressionType.PreDecrementAssign;
+				case CSharpExpressionType.PostIncrementAssign: return ExpressionType.PostIncrementAssign;
+				case CSharpExpressionType.PostIncrementCheckedAssign: return ExpressionType.PostIncrementAssign;
+				case CSharpExpressionType.PostDecrementAssign: return ExpressionType.PostDecrementAssign;
+				case CSharpExpressionType.PostDecrementCheckedAssign: return ExpressionType.PostDecrementAssign;
+				default:
+					throw ContractUtils.Unreachable;
+			}
+        }
 	}
 
 	partial class CSharpExpression
