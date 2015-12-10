@@ -17,12 +17,6 @@ namespace Playground
     {
         static void Main()
         {
-            var d = DynamicCSharpExpression.DynamicIsTrue(Expression.Constant(true, typeof(object)));
-            var f = Expression.Lambda<Func<bool>>(d);
-            var g = f.Compile();
-            var z = g();
-            var r = new V().Visit(d);
-            return;
             Assign();
             Call();
             Invoke();
