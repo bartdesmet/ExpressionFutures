@@ -68,6 +68,7 @@ namespace RoslynPad
             btnEval.Enabled = mnuEvaluate.Enabled = false;
 
             txtResult.Text = "";
+            txtCSharp.Text = "";
             trvExpr.Nodes.Clear();
             rtf.Clear();
             prgNode.SelectedObject = null;
@@ -179,7 +180,7 @@ namespace RoslynPad
         }
 
         private bool _ignoreIndexChange;
-        
+
         private void cmbProgs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_ignoreIndexChange)
@@ -302,6 +303,7 @@ namespace RoslynPad
             {
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
+                txtCSharp.Text = "";
             }
         }
 
@@ -312,6 +314,17 @@ namespace RoslynPad
             _ids.Clear();
             txtNode.Text = "";
             txtResult.Text = expr.DebugView().ToString();
+
+            try
+            {
+                txtCSharp.ForeColor = Color.Black;
+                txtCSharp.Text = expr.ToCSharp(); // TODO: specify namespaces
+            }
+            catch (Exception ex)
+            {
+                txtCSharp.ForeColor = Color.Red;
+                txtCSharp.Text = ex.ToString();
+            }
 
             var root = new TreeNode();
             Expand(root, expr);
@@ -680,7 +693,7 @@ namespace RoslynPad
             {
                 var node = nodes.Dequeue();
                 visit(node);
-                
+
                 foreach (TreeNode child in node.Nodes)
                 {
                     nodes.Enqueue(child);
@@ -736,6 +749,7 @@ namespace RoslynPad
             {
                 txtCode.Font = frm.EditorFont;
                 rtf.Font = frm.SyntaxFont;
+                txtCSharp.Font = frm.SyntaxFont;
                 txtResult.Font = frm.DebugViewFont;
                 txtNode.Font = frm.DebugViewFont;
                 trvExpr.Font = frm.TreeFont;
@@ -921,7 +935,7 @@ namespace RoslynPad
                 {
                     _programs[dlg.SnippetName] = txtCode.Text;
                 }
-                
+
                 _dirty = true;
             }
         }

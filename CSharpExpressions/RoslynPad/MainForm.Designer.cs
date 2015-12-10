@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.chkModern = new System.Windows.Forms.CheckBox();
             this.btnReduce = new System.Windows.Forms.Button();
             this.btnEval = new System.Windows.Forms.Button();
@@ -52,7 +53,10 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,11 +68,9 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
+            this.tabCSharp = new System.Windows.Forms.TabPage();
+            this.txtCSharp = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -86,6 +88,7 @@
             this.pnlDetail.Panel2.SuspendLayout();
             this.pnlDetail.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.tabCSharp.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -112,6 +115,18 @@
             this.splitContainer1.Size = new System.Drawing.Size(1002, 679);
             this.splitContainer1.SplitterDistance = 236;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.AutoSize = true;
+            this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
+            this.btnAdd.Location = new System.Drawing.Point(607, 12);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(34, 29);
+            this.btnAdd.TabIndex = 7;
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // chkModern
             // 
@@ -204,6 +219,7 @@
             this.tabMain.Controls.Add(this.tabCode);
             this.tabMain.Controls.Add(this.tabDebug);
             this.tabMain.Controls.Add(this.tabTree);
+            this.tabMain.Controls.Add(this.tabCSharp);
             this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabMain.Location = new System.Drawing.Point(0, 0);
             this.tabMain.Name = "tabMain";
@@ -366,6 +382,14 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
             this.fileToolStripMenuItem.Text = "&File";
             // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.newToolStripMenuItem.Text = "&New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
@@ -373,6 +397,21 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.saveToolStripMenuItem.Text = "&Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveasToolStripMenuItem
+            // 
+            this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
+            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.saveasToolStripMenuItem.Text = "Save &as...";
+            this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -459,47 +498,35 @@
             this.openFile.Filter = "Catalogs|*.xml";
             this.openFile.Title = "Select a catalog";
             // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.AutoSize = true;
-            this.btnAdd.Image = global::RoslynPad.Properties.Resources.AddItemstoFolder_13217_32;
-            this.btnAdd.Location = new System.Drawing.Point(607, 12);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(34, 29);
-            this.btnAdd.TabIndex = 7;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
-            this.newToolStripMenuItem.Text = "&New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
-            this.saveToolStripMenuItem.Text = "&Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // saveasToolStripMenuItem
-            // 
-            this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
-            this.saveasToolStripMenuItem.Text = "Save &as...";
-            this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
-            // 
             // saveFile
             // 
             this.saveFile.DefaultExt = "xml";
             this.saveFile.FileName = "MyCatalog.xml";
             this.saveFile.Filter = "Catalogs|*.xml";
             this.saveFile.Title = "Save catalog";
+            // 
+            // tabCSharp
+            // 
+            this.tabCSharp.Controls.Add(this.txtCSharp);
+            this.tabCSharp.Location = new System.Drawing.Point(4, 29);
+            this.tabCSharp.Name = "tabCSharp";
+            this.tabCSharp.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCSharp.Size = new System.Drawing.Size(994, 406);
+            this.tabCSharp.TabIndex = 3;
+            this.tabCSharp.Text = "C# Decompiled";
+            this.tabCSharp.UseVisualStyleBackColor = true;
+            // 
+            // txtCSharp
+            // 
+            this.txtCSharp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCSharp.Font = new System.Drawing.Font("Consolas", 8F);
+            this.txtCSharp.Location = new System.Drawing.Point(3, 3);
+            this.txtCSharp.Multiline = true;
+            this.txtCSharp.Name = "txtCSharp";
+            this.txtCSharp.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtCSharp.Size = new System.Drawing.Size(988, 400);
+            this.txtCSharp.TabIndex = 0;
+            this.txtCSharp.WordWrap = false;
             // 
             // MainForm
             // 
@@ -535,6 +562,8 @@
             this.pnlDetail.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.tabCSharp.ResumeLayout(false);
+            this.tabCSharp.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -581,6 +610,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveasToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFile;
+        private System.Windows.Forms.TabPage tabCSharp;
+        private System.Windows.Forms.TextBox txtCSharp;
     }
 }
 
