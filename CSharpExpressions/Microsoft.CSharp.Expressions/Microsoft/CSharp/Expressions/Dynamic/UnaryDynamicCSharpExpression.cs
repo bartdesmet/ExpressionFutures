@@ -40,6 +40,25 @@ namespace Microsoft.CSharp.Expressions
         public DynamicCSharpArgument Operand { get; }
 
         /// <summary>
+        /// Gets the static type of the expression that this <see cref="System.Linq.Expressions.Expression" /> represents. (Inherited from <see cref="System.Linq.Expressions.Expression"/>.)
+        /// </summary>
+        /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
+        public override Type Type
+        {
+            get
+            {
+                switch (OperationNodeType)
+                {
+                    case ExpressionType.IsTrue:
+                    case ExpressionType.IsFalse:
+                        return typeof(bool);
+                }
+
+                return typeof(object);
+            }
+        }
+
+        /// <summary>
         /// Reduces the dynamic expression to a binder and a set of arguments to apply the operation to.
         /// </summary>
         /// <param name="binder">The binder used to perform the dynamic operation.</param>

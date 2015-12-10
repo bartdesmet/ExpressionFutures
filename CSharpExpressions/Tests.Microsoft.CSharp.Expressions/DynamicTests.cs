@@ -307,20 +307,23 @@ namespace Tests
             foreach (var b in bools)
             {
                 AssertUnary(ExpressionType.Not, b, !b);
-
-                // BUG
-                //AssertUnary(ExpressionType.IsTrue, b, b == true);
-                //AssertUnary(ExpressionType.IsFalse, b, b == false);
+                AssertUnary<bool>(ExpressionType.IsTrue, b, b == true);
+                AssertUnary<bool>(ExpressionType.IsFalse, b, b == false);
             }
         }
 
         private void AssertUnary(ExpressionType nodeType, object o, object expected)
         {
+            AssertUnary<object>(nodeType, o, expected);
+        }
+
+        private void AssertUnary<R>(ExpressionType nodeType, object o, object expected)
+        {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.MakeDynamicUnary(nodeType, p);
 
-            var e = Expression.Lambda<Func<object, object>>(d, p);
+            var e = Expression.Lambda<Func<object, R>>(d, p);
             var f = e.Compile();
             Assert.AreEqual(expected, f(o));
         }
