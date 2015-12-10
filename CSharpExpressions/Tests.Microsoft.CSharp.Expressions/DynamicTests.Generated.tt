@@ -16,7 +16,6 @@ var bts = new[]
     ExpressionType.AddChecked,
     ExpressionType.And,
     ExpressionType.AndAlso,
-    ExpressionType.Coalesce,
     ExpressionType.Divide,
     ExpressionType.Equal,
     ExpressionType.ExclusiveOr,
@@ -53,6 +52,8 @@ var bts = new[]
     
     // NB, The following are not supported by design
     // ExpressionType.Assign,
+	// ExpressionType.Power,
+	// ExpressionType.Coalesce,
 };
 
 var uts = new[]

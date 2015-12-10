@@ -208,55 +208,6 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Coalesce' operation.
-        /// </summary>
-        /// <param name="left">The expression representing the left operand of the operation.</param>
-        /// <param name="right">The expression representing the right operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Coalesce' operation.</returns>
-        public static BinaryDynamicCSharpExpression DynamicCoalesce(Expression left, Expression right)
-        {
-            return MakeDynamicBinary(ExpressionType.Coalesce, left, right);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Coalesce' operation.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Coalesce' operation.</returns>
-        public static BinaryDynamicCSharpExpression DynamicCoalesce(DynamicCSharpArgument left, DynamicCSharpArgument right)
-        {
-            return MakeDynamicBinary(ExpressionType.Coalesce, left, right);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Coalesce' operation with the specified binder flags.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Coalesce' operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression DynamicCoalesce(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicBinary(ExpressionType.Coalesce, left, right, binderFlags);
-        }
-
-        /// <summary>
-        /// Creates a new expression representing a dynamically bound binary 'Coalesce' operation with the specified binder flags and the specified type context.
-        /// </summary>
-        /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
-        /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
-        /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound binary 'Coalesce' operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression DynamicCoalesce(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
-        {
-            return MakeDynamicBinary(ExpressionType.Coalesce, left, right, binderFlags, context);
-        }
-
-        /// <summary>
         /// Creates a new expression representing a dynamically bound binary 'Divide' operation.
         /// </summary>
         /// <param name="left">The expression representing the left operand of the operation.</param>
@@ -1502,7 +1453,6 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.AddChecked:
                 case ExpressionType.And:
                 case ExpressionType.AndAlso:
-                case ExpressionType.Coalesce:
                 case ExpressionType.Divide:
                 case ExpressionType.Equal:
                 case ExpressionType.ExclusiveOr:
