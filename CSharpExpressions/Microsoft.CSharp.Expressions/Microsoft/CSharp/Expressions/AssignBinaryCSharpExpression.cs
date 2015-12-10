@@ -327,7 +327,8 @@ namespace Microsoft.CSharp.Expressions
         {
             if (binaryType == ExpressionType.Assign)
             {
-                var assign = factory(left, right, method, finalConversion);
+                var lhs = GetLhs(left, nameof(left));
+                var assign = factory(lhs, right, method, finalConversion);
                 return new AssignBinaryCSharpExpression.Primitive(assign, left);
             }
             else
