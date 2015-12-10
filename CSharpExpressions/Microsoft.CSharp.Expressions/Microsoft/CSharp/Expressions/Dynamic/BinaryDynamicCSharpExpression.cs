@@ -146,15 +146,35 @@ namespace Microsoft.CSharp.Expressions
             switch (binaryType)
             {
                 case ExpressionType.AddChecked:
+                    binaryType = ExpressionType.Add;
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
                 case ExpressionType.MultiplyChecked:
+                    binaryType = ExpressionType.Multiply;
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
                 case ExpressionType.SubtractChecked:
+                    binaryType = ExpressionType.Subtract;
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
                 case ExpressionType.AddAssignChecked:
+                    binaryType = ExpressionType.AddAssign;
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
                 case ExpressionType.MultiplyAssignChecked:
+                    binaryType = ExpressionType.MultiplyAssign;
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
                 case ExpressionType.SubtractAssignChecked:
+                    binaryType = ExpressionType.SubtractAssign;
                     binderFlags |= CSharpBinderFlags.CheckedContext;
                     break;
                 case ExpressionType.AndAlso:
+                    binaryType = ExpressionType.And;
+                    binderFlags |= CSharpBinderFlags.BinaryOperationLogical;
+                    break;
                 case ExpressionType.OrElse:
+                    binaryType = ExpressionType.Or;
                     binderFlags |= CSharpBinderFlags.BinaryOperationLogical;
                     break;
             }

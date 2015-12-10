@@ -132,7 +132,11 @@ namespace Microsoft.CSharp.Expressions
             switch (unaryType)
             {
                 case ExpressionType.NegateChecked:
+                    unaryType = ExpressionType.Negate;
+                    binderFlags |= CSharpBinderFlags.CheckedContext;
+                    break;
                 case ExpressionType.ConvertChecked:
+                    unaryType = ExpressionType.Convert;
                     binderFlags |= CSharpBinderFlags.CheckedContext;
                     break;
             }
