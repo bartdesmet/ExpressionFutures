@@ -57,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
-            var @break = BreakLabel ?? Expression.Label();
+            var @break = BreakLabel ?? Expression.Label("__break");
             var @continue = ContinueLabel;
 
             var loop =

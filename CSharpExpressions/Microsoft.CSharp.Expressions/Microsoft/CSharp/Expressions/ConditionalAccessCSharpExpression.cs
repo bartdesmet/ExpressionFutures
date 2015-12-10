@@ -141,7 +141,7 @@ namespace Microsoft.CSharp.Expressions
 
             var receiverType = Receiver.Type;
 
-            var receiver = Expression.Parameter(receiverType);
+            var receiver = Expression.Parameter(receiverType, "__receiver");
             var evalReceiver = Expression.Assign(receiver, Receiver);
 
             var nonNullCheck = default(Expression);
@@ -164,7 +164,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (resultType != typeof(void))
             {
-                var result = Expression.Parameter(resultType);
+                var result = Expression.Parameter(resultType, "__result");
 
                 if (whenNotNull.Type != result.Type)
                 {

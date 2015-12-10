@@ -286,7 +286,7 @@ namespace Microsoft.CSharp.Expressions
             var governingType = SwitchValue.Type;
             var governingTypeNonNull = governingType.GetNonNullableType();
 
-            var valueLocal = Expression.Parameter(governingType);
+            var valueLocal = Expression.Parameter(governingType, "__value");
             var vars = new[] { valueLocal };
 
             var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
@@ -334,7 +334,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (defaultBody != null)
                 {
-                    var defaultLabel = Expression.Label();
+                    var defaultLabel = Expression.Label("__default");
 
                     var @switch = Expression.Switch(value, Expression.Goto(defaultLabel), null, lowered.Cases);
 

@@ -115,7 +115,7 @@ namespace Microsoft.CSharp.Expressions
             var n = Expressions.Count;
             var rank = _bounds.Length;
 
-            var res = Expression.Parameter(Type);
+            var res = Expression.Parameter(Type, "__array");
             var exprs = new Expression[n + 2];
 
             // NB: We need the bounds to NewArrayBounds and all values from 0 to each bound for ArrayAccess.

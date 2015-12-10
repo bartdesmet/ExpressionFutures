@@ -41,8 +41,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             newHandlers.Clear();
                         }
 
-                        var catchExceptionVariable = Expression.Parameter(handler.Test);
-                        var exceptionVariable = handler.Variable ?? Expression.Parameter(handler.Test);
+                        var catchExceptionVariable = Expression.Parameter(handler.Test, "__caughtException");
+                        var exceptionVariable = handler.Variable ?? Expression.Parameter(handler.Test, "__exception");
 
                         var handlerBody =
                             Expression.Block(
@@ -65,7 +65,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                         if (newTry.Type != typeof(void))
                         {
-                            var tryResult = Expression.Parameter(newTry.Type);
+                            var tryResult = Expression.Parameter(newTry.Type, "__tryValue");
 
                             res =
                                 Expression.Block(

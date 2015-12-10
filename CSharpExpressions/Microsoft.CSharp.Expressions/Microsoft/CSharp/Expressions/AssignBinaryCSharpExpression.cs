@@ -238,8 +238,8 @@ namespace Microsoft.CSharp.Expressions
             // NB: We can't have it check the final conversion, because it doesn't allow these without the use of
             //     a custom method, so we check that ourselves further down.
 
-            var leftDummy = Expression.Parameter(leftType);
-            var rightDummy = Expression.Parameter(rightType);
+            var leftDummy = Expression.Parameter(leftType, "__left");
+            var rightDummy = Expression.Parameter(rightType, "__right");
             var functionalOp = WithConversions.FunctionalOp(binaryType, leftDummy, rightDummy, method);
 
             var resultType = functionalOp.Type;
@@ -417,7 +417,7 @@ namespace Microsoft.CSharp.Expressions
 
                     if (finalConversion == null)
                     {
-                        var resultParameter = Expression.Parameter(typeof(Delegate));
+                        var resultParameter = Expression.Parameter(typeof(Delegate), "__result");
                         var convertResult = Expression.Convert(resultParameter, left.Type);
                         finalConversion = Expression.Lambda(convertResult, resultParameter);
                     }
@@ -434,12 +434,12 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var isChecked = IsChecked(binaryType);
 
-                    var leftParameter = Expression.Parameter(leftType);
+                    var leftParameter = Expression.Parameter(leftType, "__left");
                     var int32Type = leftType.IsNullableType() ? typeof(int?) : typeof(int);
                     var convertLeft = isChecked ? Expression.ConvertChecked(leftParameter, int32Type) : Expression.Convert(leftParameter, int32Type);
                     leftConversion = Expression.Lambda(convertLeft, leftParameter);
 
-                    var resultParameter = Expression.Parameter(int32Type);
+                    var resultParameter = Expression.Parameter(int32Type, "__result");
                     var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, left.Type) : Expression.Convert(resultParameter, left.Type);
                     finalConversion = Expression.Lambda(convertResult, resultParameter);
                 }

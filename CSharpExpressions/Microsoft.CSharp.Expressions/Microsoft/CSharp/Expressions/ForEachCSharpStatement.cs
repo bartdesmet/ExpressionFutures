@@ -194,7 +194,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else if (!AreReferenceAssignable(variableType, elementType))
             {
-                var element = Expression.Parameter(elementType);
+                var element = Expression.Parameter(elementType, "__element");
 
                 // NB: The LINQ factory will perform the necessary checks.
                 // NB: If checked conversion is needed, one should explicitly specify a conversion lambda.
@@ -213,17 +213,17 @@ namespace Microsoft.CSharp.Expressions
 
             protected override Expression ReduceCore()
             {
-                var collection = Expression.Parameter(Collection.Type);
+                var collection = Expression.Parameter(Collection.Type, "__collection");
                 var variable = Variable;
 
-                var index = Expression.Parameter(typeof(int));
+                var index = Expression.Parameter(typeof(int), "__index");
                 var length = Expression.Property(collection, "Length"); // NB: The C# compiler invokes Length over and over; could we store it in a local?
 
-                var @break = BreakLabel ?? Expression.Label();
-                var @continue = ContinueLabel ?? Expression.Label();
+                var @break = BreakLabel ?? Expression.Label("__break");
+                var @continue = ContinueLabel ?? Expression.Label("__continue");
 
-                var check = Expression.Label();
-                var iterate = Expression.Label();
+                var check = Expression.Label("__check");
+                var iterate = Expression.Label("__iterate");
 
                 var indexer = typeof(string).GetProperty("Chars");
 
@@ -261,17 +261,17 @@ namespace Microsoft.CSharp.Expressions
 
             protected override Expression ReduceCore()
             {
-                var collection = Expression.Parameter(Collection.Type);
+                var collection = Expression.Parameter(Collection.Type, "__collection");
                 var variable = Variable;
 
-                var index = Expression.Parameter(typeof(int));
+                var index = Expression.Parameter(typeof(int), "__index");
                 var length = Expression.ArrayLength(collection); // NB: The C# compiler executes `ldlen` over and over; could we store it in a local?
 
-                var @break = BreakLabel ?? Expression.Label();
-                var @continue = ContinueLabel ?? Expression.Label();
+                var @break = BreakLabel ?? Expression.Label("__break");
+                var @continue = ContinueLabel ?? Expression.Label("__continue");
 
-                var check = Expression.Label();
-                var iterate = Expression.Label();
+                var check = Expression.Label("__check");
+                var iterate = Expression.Label("__iterate");
 
                 var res =
                     Expression.Block(
@@ -359,7 +359,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var getEnumerator = Expression.Call(Collection, _getEnumerator);
                 var enumeratorType = getEnumerator.Type;
-                var enumeratorVariable = Expression.Parameter(enumeratorType);
+                var enumeratorVariable = Expression.Parameter(enumeratorType, "__enumerator");
 
                 var moveNext = Expression.Call(enumeratorVariable, _moveNext);
                 var current = (Expression)Expression.Property(enumeratorVariable, _current);
@@ -369,8 +369,8 @@ namespace Microsoft.CSharp.Expressions
                     current = Expression.Invoke(Conversion, current);
                 }
 
-                var @break = BreakLabel ?? Expression.Label();
-                var @continue = ContinueLabel ?? Expression.Label();
+                var @break = BreakLabel ?? Expression.Label("__break");
+                var @continue = ContinueLabel ?? Expression.Label("__continue");
 
                 var cleanup = (Expression)Expression.Empty();
                 if (typeof(IDisposable).IsAssignableFrom(enumeratorType))
@@ -398,7 +398,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else if (!enumeratorType.IsSealed)
                 {
-                    var d = Expression.Parameter(typeof(IDisposable));
+                    var d = Expression.Parameter(typeof(IDisposable), "__disposable");
                     cleanup =
                         Expression.Block(
                             new[] { d },

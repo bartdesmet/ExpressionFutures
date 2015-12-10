@@ -260,7 +260,7 @@ namespace Microsoft.CSharp.Expressions
             var bright = AliasEliminator.Eliminate(lowered);
             var spilled = Spiller.Spill(bright);
 
-            var localStateVar = Expression.Parameter(typeof(int));
+            var localStateVar = Expression.Parameter(typeof(int), "__localState");
             var awaitRewriter = new AwaitRewriter(localStateVar, stateVar, getVariable, onCompletedFactory, exit);
             var rewrittenBody = awaitRewriter.Visit(spilled);
 

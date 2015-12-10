@@ -98,8 +98,8 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceLogical(bool isAndAlso)
         {
-            var leftVariable = Expression.Parameter(Type);
-            var resultVariable = Expression.Parameter(Type);
+            var leftVariable = Expression.Parameter(Type, "__left");
+            var resultVariable = Expression.Parameter(Type, "__result");
             var left = Left.Update(leftVariable);
 
             var check = default(Expression);

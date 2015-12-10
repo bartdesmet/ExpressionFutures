@@ -234,7 +234,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (expr.Type != typeof(void))
                     {
-                        var resultVariable = Expression.Parameter(expr.Type);
+                        var resultVariable = Expression.Parameter(expr.Type, "__result");
                         variables.Add(resultVariable);
 
                         statements.Add(Expression.Assign(resultVariable, expr));
@@ -385,7 +385,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(ParameterExpression);
                             if (obj != null)
                             {
-                                newObj = Expression.Parameter(obj.Type);
+                                newObj = Expression.Parameter(obj.Type, "__object");
                                 variables.Add(newObj);
                                 statements.Add(Expression.Assign(newObj, obj));
                             }
@@ -396,7 +396,7 @@ namespace Microsoft.CSharp.Expressions
                             for (var i = 0; i < n; i++)
                             {
                                 var arg = args[i];
-                                var newArg = Expression.Parameter(arg.Type);
+                                var newArg = Expression.Parameter(arg.Type, "__arg" + i);
                                 newArgs[i] = newArg;
                                 variables.Add(newArg);
                                 statements.Add(Expression.Assign(newArg, arg));
@@ -439,7 +439,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(ParameterExpression);
                             if (obj != null)
                             {
-                                newObj = Expression.Parameter(obj.Type);
+                                newObj = Expression.Parameter(obj.Type, "__object");
                                 variables.Add(newObj);
                                 statements.Add(Expression.Assign(newObj, obj));
                             }
@@ -458,12 +458,12 @@ namespace Microsoft.CSharp.Expressions
                         Debug.Assert(binary.Conversion == null);
 
                         var left = binary.Left;
-                        var newLeft = Expression.Parameter(left.Type);
+                        var newLeft = Expression.Parameter(left.Type, "__array");
                         variables.Add(newLeft);
                         statements.Add(Expression.Assign(newLeft, left));
 
                         var right = binary.Right;
-                        var newRight = Expression.Parameter(right.Type);
+                        var newRight = Expression.Parameter(right.Type, "__index");
                         variables.Add(newRight);
                         statements.Add(Expression.Assign(newRight, right));
 
@@ -486,7 +486,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(ParameterExpression);
                             if (obj != null)
                             {
-                                newObj = Expression.Parameter(obj.Type);
+                                newObj = Expression.Parameter(obj.Type, "__object");
                                 variables.Add(newObj);
                                 statements.Add(Expression.Assign(newObj, obj));
                             }
@@ -497,7 +497,7 @@ namespace Microsoft.CSharp.Expressions
                             for (var i = 0; i < n; i++)
                             {
                                 var arg = args[i];
-                                var newArg = Expression.Parameter(arg.Type);
+                                var newArg = Expression.Parameter(arg.Type, "__arg" + i);
                                 newArgs[i] = newArg;
                                 variables.Add(newArg);
                                 statements.Add(Expression.Assign(newArg, arg));
@@ -621,7 +621,7 @@ namespace Microsoft.CSharp.Expressions
                     throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
                 }
 
-                lhs = Expression.Parameter(expression.Type);
+                lhs = Expression.Parameter(expression.Type, "__lhs");
             }
 
             return lhs;
@@ -660,7 +660,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var lhsTemp = Expression.Parameter(member.Expression.Type);
+                var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
                 var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
                 member = member.Update(lhsTemp);
 
@@ -677,7 +677,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     Debug.Assert(leftConversion == null);
 
-                    var temp = Expression.Parameter(member.Type);
+                    var temp = Expression.Parameter(member.Type, "__temp");
 
                     res =
                         Expression.Block(
@@ -703,14 +703,14 @@ namespace Microsoft.CSharp.Expressions
             var temps = new ParameterExpression[n + (prefix ? 1 : 2)];
 
             var i = 0;
-            temps[i] = Expression.Parameter(index.Object.Type);
+            temps[i] = Expression.Parameter(index.Object.Type, "__object");
             block[i] = Expression.Assign(temps[i], index.Object);
             i++;
 
             while (i <= n)
             {
                 var arg = index.Arguments[i - 1];
-                args[i - 1] = temps[i] = Expression.Parameter(arg.Type);
+                args[i - 1] = temps[i] = Expression.Parameter(arg.Type, "__arg" + i);
                 block[i] = Expression.Assign(temps[i], arg);
                 i++;
             }
@@ -725,7 +725,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 Debug.Assert(leftConversion == null);
 
-                var lastTemp = temps[i] = Expression.Parameter(index.Type);
+                var lastTemp = temps[i] = Expression.Parameter(index.Type, "__index");
 
                 block[i] = Expression.Assign(temps[i], index);
                 i++;
@@ -750,7 +750,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 Debug.Assert(leftConversion == null);
 
-                var temp = Expression.Parameter(lhs.Type);
+                var temp = Expression.Parameter(lhs.Type, "__temp");
                 res =
                     Expression.Block(
                         new[] { temp },

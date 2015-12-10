@@ -16,7 +16,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     {
         public static Expression Rewrite(Expression expression, out LabelTarget exitLabel, out ParameterExpression pendingBranch, out IDictionary<LabelTarget, LeaveLabelData> leaveLabels)
         {
-            pendingBranch = Expression.Parameter(typeof(int));
+            pendingBranch = Expression.Parameter(typeof(int), "__pendingBranch");
             exitLabel = Expression.Label("__leave");
 
             var labelScanner = new LabelScanner();
@@ -96,7 +96,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                         if (target.Type != typeof(void))
                         {
-                            parameter = Expression.Parameter(target.Type);
+                            parameter = Expression.Parameter(target.Type, $"__goto{LeaveLabels.Count}");
                         }
 
                         data = new LeaveLabelData

@@ -95,10 +95,10 @@ namespace Microsoft.CSharp.Expressions
 
             var n = initializerCount + 1 /* goto test */ + 1 /* begin label */ + 1 /* body */ + 1 /* continue label */ + iteratorCount + 1 /* test label */ + 1 /* test */ + 1 /* break label */;
 
-            var @break = BreakLabel ?? Expression.Label();
-            var @continue = ContinueLabel ?? Expression.Label();
-            var begin = Expression.Label();
-            var test = Test != null ? Expression.Label() : null;
+            var @break = BreakLabel ?? Expression.Label("__break");
+            var @continue = ContinueLabel ?? Expression.Label("__continue");
+            var begin = Expression.Label("__begin");
+            var test = Test != null ? Expression.Label("__test") : null;
 
             if (test == null)
             {

@@ -94,13 +94,13 @@ namespace Microsoft.CSharp.Expressions
 
                 if (resourceType.IsNullableType())
                 {
-                    variable = Variable ?? Expression.Parameter(resourceType);
+                    variable = Variable ?? Expression.Parameter(resourceType, "__resource");
                     variableValue = Expression.Property(variable, "Value");
                     checkNull = true;
                 }
                 else
                 {
-                    variable = Variable ?? Expression.Parameter(resourceType);
+                    variable = Variable ?? Expression.Parameter(resourceType, "__resource");
                     variableValue = variable;
                 }
 
@@ -109,7 +109,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                variable = Variable ?? Expression.Parameter(typeof(IDisposable));
+                variable = Variable ?? Expression.Parameter(typeof(IDisposable), "__resource");
 
                 // NB: This optimization would be more effective if the expression compiler would emit a `call` instruction,
                 //     but the JIT may still optimize it if it realizes the `callvirt` to the resource is predicated by a
@@ -168,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
                 //     well when it exhibits patterns like this; additional Blocks seems common when
                 //     generating code from extension nodes of a higher abstraction kind).
 
-                temp = Expression.Parameter(variable.Type);
+                temp = Expression.Parameter(variable.Type, "__temp");
                 resource = temp;
             }
             else
