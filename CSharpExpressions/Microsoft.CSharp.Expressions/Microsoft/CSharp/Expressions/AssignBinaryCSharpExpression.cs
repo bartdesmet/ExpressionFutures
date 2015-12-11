@@ -11,6 +11,9 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    // TODO: C# spec 7.6.9
+    //       - check support for enum
+
     // DESIGN: Does FinalConversion leak too many C# details that are hard to make sense of by the user?
     //         For one thing, the node is losely mirrored to the BoundNodes in Roslyn, which could be the
     //         strategy for expression tree APIs going forward. Also, 7.17.2 is pretty clear about the use

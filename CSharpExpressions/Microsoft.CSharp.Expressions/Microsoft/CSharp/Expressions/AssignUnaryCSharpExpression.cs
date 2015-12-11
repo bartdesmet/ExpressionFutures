@@ -13,7 +13,7 @@ using LinqError = System.Linq.Expressions.Error;
 namespace Microsoft.CSharp.Expressions
 {
     // TODO: C# spec 7.6.9
-    //       - check support for decimal, enum
+    //       - check support for enum
     
     /// <summary>
     /// Represents a unary assignment operation.

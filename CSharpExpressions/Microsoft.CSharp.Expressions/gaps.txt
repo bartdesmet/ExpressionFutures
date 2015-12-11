@@ -9,7 +9,6 @@ TODO
 
 * Dynamic SetMember and SetIndex
 * Dynamic assignments
-* Unary [post|pre]increment[checked] operators with more primitive types
 
 Open
 ----
