@@ -11,9 +11,6 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // TODO: C# spec 7.6.9
-    //       - check support for enum
-
     // DESIGN: Does FinalConversion leak too many C# details that are hard to make sense of by the user?
     //         For one thing, the node is losely mirrored to the BoundNodes in Roslyn, which could be the
     //         strategy for expression tree APIs going forward. Also, 7.17.2 is pretty clear about the use
@@ -437,12 +434,16 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var isChecked = IsChecked(binaryType);
 
+                    var isNullabeLeftType = leftType.IsNullableType();
+                    var nonNullLeftType = leftType.GetNonNullableType();
+                    var intermediateType = nonNullLeftType.IsEnum ? nonNullLeftType.GetEnumUnderlyingType() : typeof(int);
+
                     var leftParameter = Expression.Parameter(leftType, "__left");
-                    var int32Type = leftType.IsNullableType() ? typeof(int?) : typeof(int);
-                    var convertLeft = isChecked ? Expression.ConvertChecked(leftParameter, int32Type) : Expression.Convert(leftParameter, int32Type);
+                    var convertType = isNullabeLeftType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
+                    var convertLeft = isChecked ? Expression.ConvertChecked(leftParameter, convertType) : Expression.Convert(leftParameter, convertType);
                     leftConversion = Expression.Lambda(convertLeft, leftParameter);
 
-                    var resultParameter = Expression.Parameter(int32Type, "__result");
+                    var resultParameter = Expression.Parameter(convertType, "__result");
                     var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, leftType) : Expression.Convert(resultParameter, leftType);
                     finalConversion = Expression.Lambda(convertResult, resultParameter);
                 }
@@ -475,23 +476,9 @@ namespace Microsoft.CSharp.Expressions
                         return true;
                 }
             }
-
-            return false;
-        }
-
-        internal static bool IsCSharpSpecificUnaryAssignNumeric(Type type)
-        {
-            type = type.GetNonNullableType();
-
-            if (!type.IsEnum)
+            else
             {
-                switch (type.GetTypeCode())
-                {
-                    case TypeCode.Byte:
-                    case TypeCode.SByte:
-                    case TypeCode.Char:
-                        return true;
-                }
+                return true;
             }
 
             return false;

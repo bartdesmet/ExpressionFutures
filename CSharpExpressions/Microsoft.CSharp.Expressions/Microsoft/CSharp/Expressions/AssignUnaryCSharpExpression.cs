@@ -12,9 +12,6 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // TODO: C# spec 7.6.9
-    //       - check support for enum
-    
     /// <summary>
     /// Represents a unary assignment operation.
     /// </summary>
@@ -198,9 +195,13 @@ namespace Microsoft.CSharp.Expressions
 
                 if (IsCSharpSpecificUnaryAssignNumeric(operandType))
                 {
+                    var isNullableOperandType = operandType.IsNullableType();
+                    var nonNullOperandType = operandType.GetNonNullableType();
+                    var intermediateType = nonNullOperandType.IsEnum ? nonNullOperandType.GetEnumUnderlyingType() : typeof(int);
+
                     var operandParameter = Expression.Parameter(operandType, "__operand");
-                    var int32Type = operandType.IsNullableType() ? typeof(int?) : typeof(int);
-                    var convertOperand = IsChecked ? Expression.ConvertChecked(operandParameter, int32Type) : Expression.Convert(operandParameter, int32Type);
+                    var convertType = isNullableOperandType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
+                    var convertOperand = IsChecked ? Expression.ConvertChecked(operandParameter, convertType) : Expression.Convert(operandParameter, convertType);
                     var operandConversion = Expression.Lambda(convertOperand, operandParameter);
 
                     var functionalOp = new Func<Expression, Expression>(lhs =>
@@ -296,6 +297,28 @@ namespace Microsoft.CSharp.Expressions
             {
                 return new AssignUnaryCSharpExpression.Custom(unaryType, operand);
             }
+        }
+
+        internal static bool IsCSharpSpecificUnaryAssignNumeric(Type type)
+        {
+            type = type.GetNonNullableType();
+
+            if (!type.IsEnum)
+            {
+                switch (type.GetTypeCode())
+                {
+                    case TypeCode.Byte:
+                    case TypeCode.SByte:
+                    case TypeCode.Char:
+                        return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
         }
 
         delegate UnaryExpression UnaryAssignFactory(Expression operand, MethodInfo method);

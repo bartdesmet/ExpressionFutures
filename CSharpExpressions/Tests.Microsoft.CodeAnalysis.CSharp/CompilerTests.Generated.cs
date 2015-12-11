@@ -5162,6 +5162,234 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1D70_2F15() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_530B_F222()
+        {
+            // (Expression<Func<ConsoleColor, ConsoleColor>>)(c => c += 1)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => c += 1)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ConsoleColor,System.ConsoleColor]"">
+  <Parameters>
+    <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpAddAssign Type=""System.ConsoleColor"">
+      <Left>
+        <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+      </Left>
+      <Right>
+        <Constant Type=""System.Int32"" Value=""1"" />
+      </Right>
+      <LeftConversion>
+        <Lambda Type=""System.Func`2[System.ConsoleColor,System.Int32]"">
+          <Parameters>
+            <Parameter Type=""System.ConsoleColor"" Id=""1"" Name=""__left"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.ConsoleColor"" Id=""1"" Name=""__left"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </LeftConversion>
+      <FinalConversion>
+        <Lambda Type=""System.Func`2[System.Int32,System.ConsoleColor]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""__result"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.ConsoleColor"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""__result"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </FinalConversion>
+    </CSharpAddAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_530B_F222();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_530B_F222() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_C266_EBD1()
+        {
+            // (Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c += 1)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c += 1)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Nullable`1[System.ConsoleColor],System.Nullable`1[System.ConsoleColor]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpAddAssign Type=""System.Nullable`1[System.ConsoleColor]"" IsLifted=""true"" IsLiftedToNull=""true"">
+      <Left>
+        <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+      </Left>
+      <Right>
+        <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
+          <Operand>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Operand>
+        </Convert>
+      </Right>
+      <LeftConversion>
+        <Lambda Type=""System.Func`2[System.Nullable`1[System.ConsoleColor],System.Nullable`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""1"" Name=""__left"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
+              <Operand>
+                <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""1"" Name=""__left"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </LeftConversion>
+      <FinalConversion>
+        <Lambda Type=""System.Func`2[System.Nullable`1[System.Int32],System.Nullable`1[System.ConsoleColor]]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""__result"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Nullable`1[System.ConsoleColor]"" IsLifted=""true"" IsLiftedToNull=""true"">
+              <Operand>
+                <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""__result"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </FinalConversion>
+    </CSharpAddAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C266_EBD1();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C266_EBD1() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_E15F_B595()
+        {
+            // (Expression<Func<ConsoleColor, ConsoleColor>>)(c => c -= 1)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => c -= 1)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ConsoleColor,System.ConsoleColor]"">
+  <Parameters>
+    <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpSubtractAssign Type=""System.ConsoleColor"">
+      <Left>
+        <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+      </Left>
+      <Right>
+        <Constant Type=""System.Int32"" Value=""1"" />
+      </Right>
+      <LeftConversion>
+        <Lambda Type=""System.Func`2[System.ConsoleColor,System.Int32]"">
+          <Parameters>
+            <Parameter Type=""System.ConsoleColor"" Id=""1"" Name=""__left"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.ConsoleColor"" Id=""1"" Name=""__left"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </LeftConversion>
+      <FinalConversion>
+        <Lambda Type=""System.Func`2[System.Int32,System.ConsoleColor]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""__result"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.ConsoleColor"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""__result"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </FinalConversion>
+    </CSharpSubtractAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_E15F_B595();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E15F_B595() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_2C91_A398()
+        {
+            // (Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c -= 1)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c -= 1)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Nullable`1[System.ConsoleColor],System.Nullable`1[System.ConsoleColor]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpSubtractAssign Type=""System.Nullable`1[System.ConsoleColor]"" IsLifted=""true"" IsLiftedToNull=""true"">
+      <Left>
+        <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+      </Left>
+      <Right>
+        <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
+          <Operand>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Operand>
+        </Convert>
+      </Right>
+      <LeftConversion>
+        <Lambda Type=""System.Func`2[System.Nullable`1[System.ConsoleColor],System.Nullable`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""1"" Name=""__left"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
+              <Operand>
+                <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""1"" Name=""__left"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </LeftConversion>
+      <FinalConversion>
+        <Lambda Type=""System.Func`2[System.Nullable`1[System.Int32],System.Nullable`1[System.ConsoleColor]]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""__result"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Nullable`1[System.ConsoleColor]"" IsLifted=""true"" IsLiftedToNull=""true"">
+              <Operand>
+                <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""__result"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </FinalConversion>
+    </CSharpSubtractAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2C91_A398();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2C91_A398() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_00CF_77BB()
         {
             // (Expression<Action<int>>)(x => { x++; })
@@ -6045,6 +6273,102 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_859E_ED6C() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_790B_3BA4()
+        {
+            // (Expression<Func<ConsoleColor, ConsoleColor>>)(c => c++)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => c++)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ConsoleColor,System.ConsoleColor]"">
+  <Parameters>
+    <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpPostIncrementAssign Type=""System.ConsoleColor"">
+      <Operand>
+        <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+      </Operand>
+    </CSharpPostIncrementAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_790B_3BA4();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_790B_3BA4() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_5B70_B34F()
+        {
+            // (Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c++)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c++)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Nullable`1[System.ConsoleColor],System.Nullable`1[System.ConsoleColor]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpPostIncrementAssign Type=""System.Nullable`1[System.ConsoleColor]"">
+      <Operand>
+        <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+      </Operand>
+    </CSharpPostIncrementAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5B70_B34F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5B70_B34F() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_09B1_7323()
+        {
+            // (Expression<Func<ConsoleColor, ConsoleColor>>)(c => --c)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => --c)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ConsoleColor,System.ConsoleColor]"">
+  <Parameters>
+    <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpPreDecrementAssign Type=""System.ConsoleColor"">
+      <Operand>
+        <Parameter Type=""System.ConsoleColor"" Id=""0"" Name=""c"" />
+      </Operand>
+    </CSharpPreDecrementAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_09B1_7323();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_09B1_7323() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_361E_5216()
+        {
+            // (Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => --c)
+            var actual = GetDebugView(@"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => --c)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Nullable`1[System.ConsoleColor],System.Nullable`1[System.ConsoleColor]]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpPreDecrementAssign Type=""System.Nullable`1[System.ConsoleColor]"">
+      <Operand>
+        <Parameter Type=""System.Nullable`1[System.ConsoleColor]"" Id=""0"" Name=""c"" />
+      </Operand>
+    </CSharpPreDecrementAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_361E_5216();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_361E_5216() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_C043_D2B0()
@@ -9311,6 +9635,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_A171_21C8() => OK();
             public override void CompilerTest_E00F_CAB4() => OK();
             public override void CompilerTest_1D70_2F15() => OK();
+            public override void CompilerTest_530B_F222() => OK();
+            public override void CompilerTest_C266_EBD1() => OK();
+            public override void CompilerTest_E15F_B595() => OK();
+            public override void CompilerTest_2C91_A398() => OK();
             public override void CompilerTest_00CF_77BB() => OK();
             public override void CompilerTest_9C51_C4A7() => OK();
             public override void CompilerTest_2115_438C() => OK();
@@ -9338,6 +9666,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_8D15_DD9E() => OK();
             public override void CompilerTest_E582_8BFA() => OK();
             public override void CompilerTest_859E_ED6C() => OK();
+            public override void CompilerTest_790B_3BA4() => OK();
+            public override void CompilerTest_5B70_B34F() => OK();
+            public override void CompilerTest_09B1_7323() => OK();
+            public override void CompilerTest_361E_5216() => OK();
             public override void CompilerTest_C043_D2B0() => OK();
             public override void CompilerTest_2216_A3C9() => OK();
             public override void CompilerTest_6319_CF5C() => OK();

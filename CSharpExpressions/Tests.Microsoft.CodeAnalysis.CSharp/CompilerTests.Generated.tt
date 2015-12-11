@@ -222,6 +222,10 @@ var exprs = new[]
     "(Expression<Action<decimal, decimal>>)((x, y) => { x += y; })",
     "(Expression<Func<Action, Action, Action>>)((a, b) => a += b)",
     "(Expression<Func<Action, Action, Action>>)((a, b) => a -= b)",
+	"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => c += 1)",
+	"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c += 1)",
+	"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => c -= 1)",
+	"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c -= 1)",
 
     // Assignments unary
     "(Expression<Action<int>>)(x => { x++; })",
@@ -251,6 +255,10 @@ var exprs = new[]
 	"(Expression<Func<List<byte>, byte>>)(x => checked(++x[0]))",
 	"(Expression<Func<List<byte>, byte>>)(x => checked(x[0]--))",
 	"(Expression<Func<List<byte>, byte>>)(x => checked(--x[0]))",
+	"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => c++)",
+	"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c++)",
+	"(Expression<Func<ConsoleColor, ConsoleColor>>)(c => --c)",
+	"(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => --c)",
 
     // If
     "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); })",
