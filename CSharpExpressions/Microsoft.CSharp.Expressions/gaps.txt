@@ -38,10 +38,6 @@ ERR_ExpressionTreeContainsIndexedProperty
 Statements
 ~~~~~~~~~~
 
-ERR_StatementLambdaToExpressionTree
-- () => { ... }
-- To be revisited if/when we add statement support
-
 ERR_ExpressionTreeContainsAnonymousMethod
 - () => X(delegate { ... })
 - To be revisited if/when we add statement support
@@ -87,6 +83,10 @@ ERR_ExpressionTreeContainsDynamicOperation
 
 ERR_ExpressionTreeContainsAssignment
 - () => a = 42
+- To be revisited if/when we add statement support
+
+ERR_StatementLambdaToExpressionTree
+- () => { ... }
 - To be revisited if/when we add statement support
 
 
