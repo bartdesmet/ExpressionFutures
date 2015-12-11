@@ -42,7 +42,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="operand">The <see cref="Operand" /> property of the result. </param>
+        /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result. </param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AssignUnaryCSharpExpression Update(Expression operand)
         {
@@ -164,7 +164,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            private Expression GetConstantOne(Type type)
+            private static Expression GetConstantOne(Type type)
             {
                 switch (type.GetNonNullableType().GetTypeCode())
                 {
@@ -233,6 +233,13 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        /// <summary>
+        /// Creates an expression representing a unary assignment operation.
+        /// </summary>
+        /// <param name="unaryType">The type of assignment represented.</param>
+        /// <param name="operand">The operand of the assignment operation, i.e. the assignment target.</param>
+        /// <param name="method">The method implementing the assignment operation.</param>
+        /// <returns>A new <see cref="AssignUnaryCSharpExpression"/> instance representing the unary assignment.</returns>
         public static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
         {
             switch (unaryType)

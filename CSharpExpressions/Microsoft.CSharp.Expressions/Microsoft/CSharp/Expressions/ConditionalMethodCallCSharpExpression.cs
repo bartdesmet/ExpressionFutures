@@ -88,7 +88,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="expression">The <see cref="OldConditionalAccessCSharpExpression.Expression" /> property of the result.</param>
+        /// <param name="expression">The <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConditionalMethodCallCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
@@ -121,7 +121,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance to call the method on.</param>
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the call arguments.</param>
-        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalCall" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, params ParameterAssignment[] arguments)
         {
             return ConditionalCall(instance, method, (IEnumerable<ParameterAssignment>)arguments);
@@ -133,7 +133,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance to call the method on.</param>
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> collection.</param>
-        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalCall" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, IEnumerable<ParameterAssignment> arguments)
         {
@@ -148,7 +148,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance to call the method on.</param>
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the call arguments.</param>
-        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalCall" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, Expression[] arguments)
         {
             // NB: no params array to avoid overload resolution ambiguity
@@ -161,7 +161,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="instance">An <see cref="Expression" /> that specifies the instance to call the method on.</param>
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> collection.</param>
-        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalCall" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
+        /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
         {

@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -96,7 +97,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                         if (target.Type != typeof(void))
                         {
-                            parameter = Expression.Parameter(target.Type, $"__goto{LeaveLabels.Count}");
+                            parameter = Expression.Parameter(target.Type, FormattableString.Invariant($"__goto{LeaveLabels.Count}"));
                         }
 
                         data = new LeaveLabelData

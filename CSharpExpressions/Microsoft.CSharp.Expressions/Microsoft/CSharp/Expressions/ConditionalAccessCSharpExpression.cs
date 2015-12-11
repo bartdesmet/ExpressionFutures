@@ -278,7 +278,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="receiver">The receiver to access conditionally.</param>
         /// <param name="nonNullReceiver">The non-null receiver used in the <paramref name="whenNotNull"/> expression.</param>
         /// <param name="whenNotNull">The operation to apply to the receiver when it's non-null.</param>
-        /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReciever" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
+        /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReceiver" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
         public static ConditionalAccessCSharpExpression ConditionalAccess(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
         {
             CheckConditionalAccess(receiver, nonNullReceiver, whenNotNull);

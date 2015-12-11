@@ -63,8 +63,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents an assignment.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression Assign(Expression left, Expression right)
 		{
 			return MakeBinaryAssign(ExpressionType.Assign, (l, r, m, c) => Expression.Assign(l, r), left, right, null, null, null);
@@ -74,8 +74,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AddAssign(Expression left, Expression right)
 		{
 			return AddAssign(left, right, null, null, null);
@@ -85,8 +85,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AddAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -97,8 +97,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AddAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -110,8 +110,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -124,8 +124,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression SubtractAssign(Expression left, Expression right)
 		{
 			return SubtractAssign(left, right, null, null, null);
@@ -135,8 +135,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression SubtractAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -147,8 +147,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression SubtractAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -160,8 +160,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -174,8 +174,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression MultiplyAssign(Expression left, Expression right)
 		{
 			return MultiplyAssign(left, right, null, null, null);
@@ -185,8 +185,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression MultiplyAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -197,8 +197,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression MultiplyAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -210,8 +210,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -224,8 +224,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type DivideAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression DivideAssign(Expression left, Expression right)
 		{
 			return DivideAssign(left, right, null, null, null);
@@ -235,8 +235,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type DivideAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression DivideAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -247,8 +247,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type DivideAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression DivideAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -260,8 +260,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type DivideAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -274,8 +274,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ModuloAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression ModuloAssign(Expression left, Expression right)
 		{
 			return ModuloAssign(left, right, null, null, null);
@@ -285,8 +285,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ModuloAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression ModuloAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -297,8 +297,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ModuloAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression ModuloAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -310,8 +310,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ModuloAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -324,8 +324,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AndAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AndAssign(Expression left, Expression right)
 		{
 			return AndAssign(left, right, null, null, null);
@@ -335,8 +335,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AndAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AndAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -347,8 +347,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AndAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AndAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -360,8 +360,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AndAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -374,8 +374,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type OrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression OrAssign(Expression left, Expression right)
 		{
 			return OrAssign(left, right, null, null, null);
@@ -385,8 +385,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type OrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression OrAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -397,8 +397,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type OrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression OrAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -410,8 +410,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type OrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -424,8 +424,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ExclusiveOrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression ExclusiveOrAssign(Expression left, Expression right)
 		{
 			return ExclusiveOrAssign(left, right, null, null, null);
@@ -435,8 +435,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ExclusiveOrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression ExclusiveOrAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -447,8 +447,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ExclusiveOrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression ExclusiveOrAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -460,8 +460,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type ExclusiveOrAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -474,8 +474,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type LeftShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression LeftShiftAssign(Expression left, Expression right)
 		{
 			return LeftShiftAssign(left, right, null, null, null);
@@ -485,8 +485,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type LeftShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression LeftShiftAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -497,8 +497,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type LeftShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression LeftShiftAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -510,8 +510,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type LeftShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -524,8 +524,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type RightShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression RightShiftAssign(Expression left, Expression right)
 		{
 			return RightShiftAssign(left, right, null, null, null);
@@ -535,8 +535,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type RightShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression RightShiftAssign(Expression left, Expression right, MethodInfo method)
 		{
@@ -547,8 +547,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type RightShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression RightShiftAssign(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -560,8 +560,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type RightShiftAssign.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -574,8 +574,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AddAssignChecked(Expression left, Expression right)
 		{
 			return AddAssignChecked(left, right, null, null, null);
@@ -585,8 +585,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AddAssignChecked(Expression left, Expression right, MethodInfo method)
 		{
@@ -597,8 +597,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression AddAssignChecked(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -610,8 +610,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type AddAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -624,8 +624,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression MultiplyAssignChecked(Expression left, Expression right)
 		{
 			return MultiplyAssignChecked(left, right, null, null, null);
@@ -635,8 +635,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression MultiplyAssignChecked(Expression left, Expression right, MethodInfo method)
 		{
@@ -647,8 +647,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression MultiplyAssignChecked(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -660,8 +660,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type MultiplyAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
@@ -674,8 +674,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression SubtractAssignChecked(Expression left, Expression right)
 		{
 			return SubtractAssignChecked(left, right, null, null, null);
@@ -685,8 +685,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression SubtractAssignChecked(Expression left, Expression right, MethodInfo method)
 		{
@@ -697,8 +697,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression SubtractAssignChecked(Expression left, Expression right, MethodInfo method, LambdaExpression conversion)
@@ -710,8 +710,8 @@ namespace Microsoft.CSharp.Expressions
 		/// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a compound assignment of type SubtractAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="left">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Left" /> property equal to.</param>
-		/// <param name="right">An <see cref="Expression" /> to set the <see cref="AssignBinaryCSharpExpression.Right" /> property equal to.</param>
+		/// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
 		/// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>

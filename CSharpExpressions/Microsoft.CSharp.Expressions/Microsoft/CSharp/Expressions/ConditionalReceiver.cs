@@ -31,7 +31,7 @@ namespace Microsoft.CSharp.Expressions
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
         /// </summary>
         /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalReciever;
+        public override CSharpExpressionType CSharpNodeType => CSharpExpressionType.ConditionalReceiver;
 
         /// <summary>
         /// Gets a value that indicates whether the expression tree node can be reduced. 
@@ -70,7 +70,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> representing the non-null receiver of a null-conditional access operation.
         /// </summary>
         /// <param name="type">The type of the non-null receiver.</param>
-        /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReciever" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
+        /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReceiver" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
         public static ConditionalReceiver ConditionalReceiver(Type type)
         {
             ContractUtils.RequiresNotNull(type, nameof(type));
