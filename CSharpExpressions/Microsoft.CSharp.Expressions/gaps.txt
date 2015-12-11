@@ -22,10 +22,6 @@ ERR_ExtensionCollectionElementInitializerInExpressionTree
 - Can be lifted by adding new nodes; trickiness with ListInit / ElementInit not being extensible
 - C# 6.0 feature addition, but applies to existing parent node types
 
-ERR_ExpressionTreeContainsAssignment
-- () => a = 42
-- To be revisited if/when we add statement support
-
 ERR_ExpressionTreeContainsBadCoalesce
 - () => null ?? "bar"
 - Strange restriction, to be investigated
@@ -88,6 +84,10 @@ ERR_DictionaryInitializerInExpressionTree
 ERR_ExpressionTreeContainsDynamicOperation
 - (dynamic d) => d.Foo()
 - To be revisited if/when we add dynamic support
+
+ERR_ExpressionTreeContainsAssignment
+- () => a = 42
+- To be revisited if/when we add statement support
 
 
 Ignored
