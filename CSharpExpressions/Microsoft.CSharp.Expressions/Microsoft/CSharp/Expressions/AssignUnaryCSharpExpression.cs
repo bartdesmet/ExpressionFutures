@@ -177,7 +177,7 @@ namespace Microsoft.CSharp.Expressions
                     case TypeCode.Int16:
                         return Expression.Constant((short)1, type);
                     case TypeCode.Int32:
-                        return Helpers.CreateConstantInt32(1);
+                        return Expression.Constant(1, type); // NB: We don't have a nullable cached instance
                     case TypeCode.Int64:
                         return Expression.Constant((long)1, type);
                     case TypeCode.Single:
