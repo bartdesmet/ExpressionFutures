@@ -217,8 +217,8 @@ namespace Tests
             Assert.AreEqual(dbg17, expr17.ToCSharp());
         }
 
-        private Expression expr18 = CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[0], Expression.Constant(1)), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[1], Expression.Constant(2)));
-        private string dbg18 = <#=toEscapedString(CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[0], Expression.Constant(1)), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[1], Expression.Constant(2))).ToCSharp())#>;
+        private Expression expr18 = CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[1], Expression.Constant(1)), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[0], Expression.Constant(2)));
+        private string dbg18 = <#=toEscapedString(CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[1], Expression.Constant(1)), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[0], Expression.Constant(2))).ToCSharp())#>;
 
         [TestMethod]
         public void CSharp_ToCSharp_Test18()

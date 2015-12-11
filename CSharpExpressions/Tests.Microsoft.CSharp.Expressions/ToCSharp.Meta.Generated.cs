@@ -192,7 +192,7 @@ namespace Tests
         }
 
         private Expression expr17 = CSharpExpression.Call(typeof(Math).GetMethod("Abs", new[] { typeof(int) }), CSharpExpression.Bind(typeof(Math).GetMethod("Abs", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)));
-        private string dbg17 = @"Math.Abs(value: 42)";
+        private string dbg17 = @"Math.Abs(42)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test17()
@@ -200,8 +200,8 @@ namespace Tests
             Assert.AreEqual(dbg17, expr17.ToCSharp());
         }
 
-        private Expression expr18 = CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[0], Expression.Constant(1)), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[1], Expression.Constant(2)));
-        private string dbg18 = @"default(string).Substring(startIndex: 1, length: 2)";
+        private Expression expr18 = CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[1], Expression.Constant(1)), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int), typeof(int) }).GetParameters()[0], Expression.Constant(2)));
+        private string dbg18 = @"default(string).Substring(length: 1, startIndex: 2)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test18()
@@ -210,7 +210,7 @@ namespace Tests
         }
 
         private Expression expr19 = Expression.Property(CSharpExpression.Call(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42))), "Length");
-        private string dbg19 = @"default(string).Substring(startIndex: 42).Length";
+        private string dbg19 = @"default(string).Substring(42).Length";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test19()
@@ -228,7 +228,7 @@ namespace Tests
         }
 
         private Expression expr21 = CSharpExpression.Invoke(Expression.Default(typeof(Action<int>)), CSharpExpression.Bind(typeof(Action<int>).GetMethod("Invoke").GetParameters()[0], Expression.Constant(42)));
-        private string dbg21 = @"default(Action<int>)(obj: 42)";
+        private string dbg21 = @"default(Action<int>)(42)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test21()
@@ -237,7 +237,7 @@ namespace Tests
         }
 
         private Expression expr22 = CSharpExpression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), CSharpExpression.Bind(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }).GetParameters()[0], Expression.Constant(42L)));
-        private string dbg22 = @"new TimeSpan(ticks: 42L)";
+        private string dbg22 = @"new TimeSpan(42L)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test22()
@@ -246,7 +246,7 @@ namespace Tests
         }
 
         private Expression expr23 = Expression.Property(CSharpExpression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), CSharpExpression.Bind(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }).GetParameters()[0], Expression.Constant(42L))), "Ticks");
-        private string dbg23 = @"new TimeSpan(ticks: 42L).Ticks";
+        private string dbg23 = @"new TimeSpan(42L).Ticks";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test23()
@@ -255,7 +255,7 @@ namespace Tests
         }
 
         private Expression expr24 = CSharpExpression.Index(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(42)));
-        private string dbg24 = @"default(List<int>)[index: 42]";
+        private string dbg24 = @"default(List<int>)[42]";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test24()
@@ -273,7 +273,7 @@ namespace Tests
         }
 
         private Expression expr26 = CSharpExpression.ConditionalCall(Expression.Default(typeof(string)), typeof(string).GetMethod("Substring", new[] { typeof(int) }), CSharpExpression.Bind(typeof(string).GetMethod("Substring", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)));
-        private string dbg26 = @"default(string)?.Substring(startIndex: 42)";
+        private string dbg26 = @"default(string)?.Substring(42)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test26()
@@ -282,7 +282,7 @@ namespace Tests
         }
 
         private Expression expr27 = CSharpExpression.ConditionalIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), CSharpExpression.Bind(typeof(List<int>).GetProperty("Item").GetIndexParameters()[0], Expression.Constant(42)));
-        private string dbg27 = @"default(List<int>)?[index: 42]";
+        private string dbg27 = @"default(List<int>)?[42]";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test27()
