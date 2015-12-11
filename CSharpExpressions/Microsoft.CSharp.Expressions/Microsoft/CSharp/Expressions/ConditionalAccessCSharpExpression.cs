@@ -221,6 +221,7 @@ namespace Microsoft.CSharp.Expressions
                 return base.VisitConditionalReceiver(node);
             }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null.")]
             protected internal override Expression VisitConditionalAccess<TWhenNotNull>(ConditionalAccessCSharpExpression<TWhenNotNull> node)
             {
                 if (node.NonNullReceiver == _receiver)

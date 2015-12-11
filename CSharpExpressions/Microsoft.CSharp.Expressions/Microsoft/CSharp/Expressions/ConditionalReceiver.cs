@@ -67,10 +67,11 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpExpression
     {
         /// <summary>
-        /// Creates a <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> representing the non-null receiver of a null-conditional access operation.
+        /// Creates a <see cref="Expressions.ConditionalReceiver"/> representing the non-null receiver of a null-conditional access operation.
         /// </summary>
         /// <param name="type">The type of the non-null receiver.</param>
-        /// <returns>A <see cref="Microsoft.CSharp.Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReceiver" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
+        /// <returns>A <see cref="Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReceiver" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalReceiver ConditionalReceiver(Type type)
         {
             ContractUtils.RequiresNotNull(type, nameof(type));

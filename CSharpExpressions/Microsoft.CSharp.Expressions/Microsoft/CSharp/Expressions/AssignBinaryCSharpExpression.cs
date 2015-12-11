@@ -337,6 +337,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static AssignBinaryCSharpExpression MakeBinaryCompoundAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
         {
             var lhs = GetLhs(left, nameof(left));
@@ -432,7 +433,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (method == null && leftConversion == null && finalConversion == null)
                 {
-                    var isChecked = IsChecked(binaryType);
+                    var isChecked = IsCheckedBinary(binaryType);
 
                     var isNullabeLeftType = leftType.IsNullableType();
                     var nonNullLeftType = leftType.GetNonNullableType();
@@ -484,7 +485,7 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        private static bool IsChecked(ExpressionType type)
+        private static bool IsCheckedBinary(ExpressionType type)
         {
             switch (type)
             {

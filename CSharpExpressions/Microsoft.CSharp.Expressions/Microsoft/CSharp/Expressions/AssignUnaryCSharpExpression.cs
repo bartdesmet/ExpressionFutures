@@ -120,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            private bool IsChecked
+            private bool IsCheckedUnary
             {
                 get
                 {
@@ -201,14 +201,14 @@ namespace Microsoft.CSharp.Expressions
 
                     var operandParameter = Expression.Parameter(operandType, "__operand");
                     var convertType = isNullableOperandType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
-                    var convertOperand = IsChecked ? Expression.ConvertChecked(operandParameter, convertType) : Expression.Convert(operandParameter, convertType);
+                    var convertOperand = IsCheckedUnary ? Expression.ConvertChecked(operandParameter, convertType) : Expression.Convert(operandParameter, convertType);
                     var operandConversion = Expression.Lambda(convertOperand, operandParameter);
 
                     var functionalOp = new Func<Expression, Expression>(lhs =>
                     {
                         var res = FunctionalOp(lhs);
 
-                        res = IsChecked ? Expression.ConvertChecked(res, operandType) : Expression.Convert(res, operandType);
+                        res = IsCheckedUnary ? Expression.ConvertChecked(res, operandType) : Expression.Convert(res, operandType);
 
                         return res;
                     });

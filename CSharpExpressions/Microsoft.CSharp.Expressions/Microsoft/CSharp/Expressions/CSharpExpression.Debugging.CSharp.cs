@@ -30,7 +30,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The result of visiting the node.</returns>
         void ICSharpPrintableExpression.Accept(ICSharpPrintingVisitor visitor)
         {
-            AcceptCore(visitor);
+            Accept(visitor);
         }
 
         /// <summary>
@@ -38,67 +38,67 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        protected abstract void AcceptCore(ICSharpPrintingVisitor visitor);
+        protected abstract void Accept(ICSharpPrintingVisitor visitor);
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        int ICSharpPrintableExpression.Precedence => PrecedenceCore;
+        int ICSharpPrintableExpression.Precedence => Precedence;
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected abstract int PrecedenceCore { get; }
+        protected abstract int Precedence { get; }
 
         /// <summary>
         /// Gets a value indicating whether the node represents a statement.
         /// </summary>
-        bool ICSharpPrintableExpression.IsStatement => IsStatementCore;
+        bool ICSharpPrintableExpression.IsStatement => IsStatement;
 
         /// <summary>
         /// Gets a value indicating whether the node represents a statement.
         /// </summary>
-        protected virtual bool IsStatementCore => false;
+        protected virtual bool IsStatement => false;
 
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        bool ICSharpPrintableExpression.HasCheckedMode => HasCheckedModeCore;
+        bool ICSharpPrintableExpression.HasCheckedMode => HasCheckedMode;
 
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected virtual bool HasCheckedModeCore => false;
+        protected virtual bool HasCheckedMode => false;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        bool ICSharpPrintableExpression.IsChecked => IsCheckedCore;
+        bool ICSharpPrintableExpression.IsChecked => IsChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected virtual bool IsCheckedCore => false;
+        protected virtual bool IsChecked => false;
 
         /// <summary>
         /// Gets a value indicating whether the node represents a lambda expression.
         /// </summary>
-        bool ICSharpPrintableExpression.IsLambda => IsLambdaCore;
+        bool ICSharpPrintableExpression.IsLambda => IsLambda;
 
         /// <summary>
         /// Gets a value indicating whether the node represents a lambda expression.
         /// </summary>
-        protected virtual bool IsLambdaCore => false;
+        protected virtual bool IsLambda => false;
 
         /// <summary>
         /// Gets a value indicating whether the node represents a block expression.
         /// </summary>
-        bool ICSharpPrintableExpression.IsBlock => IsBlockCore;
+        bool ICSharpPrintableExpression.IsBlock => IsBlock;
 
         /// <summary>
         /// Gets a value indicating whether the node represents a block expression.
         /// </summary>
-        protected virtual bool IsBlockCore => false;
+        protected virtual bool IsBlock => false;
     }
 
     partial class NewMultidimensionalArrayInitCSharpExpression
@@ -106,7 +106,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.NewArrayInit);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.NewArrayInit);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -114,7 +114,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("new ");
             visitor.Out(visitor.ToCSharp(Type.GetElementType()));
@@ -172,7 +172,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Call);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Call);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -180,7 +180,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             if (Object != null)
             {
@@ -213,7 +213,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.New);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.New);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -221,7 +221,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("new ");
             visitor.Out(visitor.ToCSharp(Type));
@@ -241,7 +241,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Index);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Index);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -249,7 +249,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Object);
 
@@ -264,7 +264,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Invoke);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Invoke);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -272,7 +272,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Expression);
 
@@ -287,12 +287,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Block /* a statement */);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Block /* a statement */);
 
         /// <summary>
         /// Gets a value indicating whether the node represents a statement.
         /// </summary>
-        protected override bool IsStatementCore => true;
+        protected override bool IsStatement => true;
     }
 
     partial class WhileCSharpStatement
@@ -303,7 +303,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("while (");
             visitor.VisitExpression(Test);
@@ -321,7 +321,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             // TODO: break/continue label analysis?
 
@@ -344,7 +344,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var hasUniformVariables = true;
             var hasTopLevelBlock = false;
@@ -481,7 +481,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             // TODO: break/continue label analysis?
 
@@ -510,7 +510,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var caseToVariables = new Dictionary<CSharpSwitchCase, List<ParameterExpression>>();
             var hasTopLevelBlock = false;
@@ -725,7 +725,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("using (");
 
@@ -753,7 +753,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("lock (");
             visitor.VisitExpression(Expression);
@@ -771,7 +771,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             switch (Kind)
             {
@@ -798,17 +798,17 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents a block expression.
         /// </summary>
-        protected override bool IsBlockCore => true;
+        protected override bool IsBlock => true;
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Block);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Block);
 
         /// <summary>
         /// Gets a value indicating whether the node represents a statement.
         /// </summary>
-        protected override bool IsStatementCore => true;
+        protected override bool IsStatement => true;
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -816,7 +816,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("{");
             visitor.Indent();
@@ -884,12 +884,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents a lambda expression.
         /// </summary>
-        protected override bool IsLambdaCore => true;
+        protected override bool IsLambda => true;
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Lambda);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Lambda);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -897,7 +897,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             // TODO: No guarantee delegate type can be inferred; add `new` every time or track info?
 
@@ -960,7 +960,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Negate /* another unary operation */);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Negate /* another unary operation */);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -968,7 +968,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("await ");
             visitor.ParenthesizedVisit(this, Operand);
@@ -980,7 +980,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.MemberAccess /* one of the conditionally accessed nodes */);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.MemberAccess /* one of the conditionally accessed nodes */);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -988,7 +988,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             // TODO: ensure parentheses are added if needed
 
@@ -1003,14 +1003,14 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Parameter /* never parenthesized */);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Parameter /* never parenthesized */);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
         }
     }
@@ -1020,7 +1020,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedModeCore
+        protected override bool HasCheckedMode
         {
             get
             {
@@ -1047,7 +1047,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected override bool IsCheckedCore
+        protected override bool IsChecked
         {
             get
             {
@@ -1067,7 +1067,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore
+        protected override int Precedence
         {
             get
             {
@@ -1090,7 +1090,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var nodeType = ConvertNodeType(CSharpNodeType);
             var op = CSharpLanguageHelpers.GetOperatorSyntax(nodeType);
@@ -1190,7 +1190,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedModeCore
+        protected override bool HasCheckedMode
         {
             get
             {
@@ -1215,7 +1215,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected override bool IsCheckedCore
+        protected override bool IsChecked
         {
             get
             {
@@ -1234,7 +1234,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Assign);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Assign);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1242,7 +1242,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var nodeType = ConvertNodeType(CSharpNodeType);
             var op = CSharpLanguageHelpers.GetOperatorSyntax(nodeType);
@@ -1329,7 +1329,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedModeCore
+        protected override bool HasCheckedMode
         {
             get
             {
@@ -1354,12 +1354,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected override bool IsCheckedCore => (Flags & CSharpBinderFlags.CheckedContext) != 0;
+        protected override bool IsChecked => (Flags & CSharpBinderFlags.CheckedContext) != 0;
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(OperationNodeType);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(OperationNodeType);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1367,10 +1367,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(OperationNodeType);
-            var isChecked = IsCheckedCore;
+            var isChecked = IsChecked;
 
             var hasEnteredChecked = false;
 
@@ -1427,7 +1427,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedModeCore
+        protected override bool HasCheckedMode
         {
             get
             {
@@ -1448,12 +1448,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected override bool IsCheckedCore => (Flags & CSharpBinderFlags.CheckedContext) != 0;
+        protected override bool IsChecked => (Flags & CSharpBinderFlags.CheckedContext) != 0;
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(OperationNodeType);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(OperationNodeType);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1461,7 +1461,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(OperationNodeType);
             var isChecked = false;
@@ -1552,7 +1552,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Convert);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Convert);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1560,7 +1560,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             if ((Flags & CSharpBinderFlags.ConvertExplicit) != 0)
             {
@@ -1579,7 +1579,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Index);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Index);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1587,7 +1587,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Object);
 
@@ -1603,7 +1603,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.MemberAccess);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.MemberAccess);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1611,7 +1611,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Object);
 
@@ -1626,7 +1626,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Call);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Call);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1634,7 +1634,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             if (Object == null)
             {
@@ -1668,7 +1668,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Invoke);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Invoke);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1676,7 +1676,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Expression);
 
@@ -1692,7 +1692,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int PrecedenceCore => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.New);
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.New);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1700,7 +1700,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
-        protected override void AcceptCore(ICSharpPrintingVisitor visitor)
+        protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("/*dynamic*/");
             visitor.Out("new ");
