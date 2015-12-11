@@ -1717,6 +1717,7 @@ namespace Microsoft.CSharp.Expressions
     {
         public static void ArgsVisit(this ICSharpPrintingVisitor visitor, IList<ParameterAssignment> args)
         {
+            var requiresNamedArgs = false;
             var n = args.Count;
 
             for (var i = 0; i < n; i++)
@@ -1724,7 +1725,12 @@ namespace Microsoft.CSharp.Expressions
                 var arg = args[i];
                 var par = arg.Parameter;
 
-                visitor.Out(par.Name + ": ");
+                if (requiresNamedArgs || par.Position != i)
+                {
+                    requiresNamedArgs = true;
+
+                    visitor.Out(par.Name + ": ");
+                }
 
                 if (par.ParameterType.IsByRef)
                 {
