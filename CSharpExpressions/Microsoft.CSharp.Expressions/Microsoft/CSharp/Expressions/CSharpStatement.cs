@@ -38,15 +38,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (res.Type != typeof(void))
             {
-                var block = res as BlockExpression;
-                if (block != null)
-                {
-                    res = Expression.Block(typeof(void), block.Variables, block.Expressions);
-                }
-                else
-                {
-                    res = Expression.Block(typeof(void), res);
-                }
+                res = Helpers.CreateVoid(res);
             }
 
             return res;

@@ -130,7 +130,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             }
             else
             {
-                whenFaulted = Expression.Empty();
                 whenDone = handler;
             }
 

@@ -287,19 +287,27 @@ namespace Microsoft.CSharp.Expressions
             var i = 0;
 
             var resumeList = awaitRewriter.ResumeList;
-            var jumpTable =
-                resumeList.Count > 0 ? Expression.Switch(stateVar, resumeList.ToArray()) : (Expression)Expression.Empty();
+
+            if (resumeList.Count > 0)
+            {
+                newBody =
+                    Expression.Block(
+                        typeof(void),
+                        Expression.Switch(stateVar, resumeList.ToArray()),
+                        newBody
+                    );
+            }
+            else
+            {
+                newBody = Helpers.CreateVoid(newBody);
+            }
 
             exprs[i++] =
                 Expression.Assign(localStateVar, stateVar);
 
             exprs[i++] =
                 Expression.TryCatch(
-                    Expression.Block(
-                        typeof(void),
-                        jumpTable,
-                        newBody
-                    ),
+                    newBody,
                     Expression.Catch(ex,
                         Expression.Block(
                             Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2)),

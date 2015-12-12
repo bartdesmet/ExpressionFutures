@@ -99,7 +99,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitAwait(AwaitCSharpExpression node)
         {
-            const int ExprCount = 1 /* GetAwaiter */ + 1 /* IsCompleted */ + 1 /* Label */ + 1 /* GetResult */ + 2 /* Cleanup */ + 1 /* Result */;
+            var exprCount = 1 /* GetAwaiter */ + 1 /* IsCompleted */ + 1 /* Label */ + 1 /* GetResult */ + 2 /* Cleanup */;
 
             if (_awaitInBlock.Count > 0)
             {
@@ -111,8 +111,13 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var isCompleted = node.ReduceIsCompleted(awaiterVar);
             var getResult = node.ReduceGetResult(awaiterVar);
 
+            if (getResult.Type != typeof(void))
+            {
+                exprCount++;
+            }
+
             var vars = Array.Empty<ParameterExpression>();
-            var exprs = new Expression[ExprCount];
+            var exprs = new Expression[exprCount];
 
             if (getResult.Type != typeof(void))
             {
@@ -120,10 +125,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 getResult = Expression.Assign(resultVar, getResult);
                 vars = new[] { resultVar };
                 exprs[exprs.Length - 1] = resultVar;
-            }
-            else
-            {
-                exprs[exprs.Length - 1] = Expression.Empty();
             }
 
             var continueLabel = GetLabel();
@@ -149,7 +150,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             exprs[i++] =
                 UpdateState(-1);
 
-            var res = Expression.Block(vars, exprs);
+            var res = Expression.Block(getResult.Type, vars, exprs);
             return res;
         }
 

@@ -425,30 +425,9 @@ namespace Microsoft.CSharp.Expressions
             return Expression.SwitchCase(MakeBlock(@case.Statements), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
         }
 
-        private static Expression MakeBlock(ReadOnlyCollection<Expression> expressions)
+        private static Expression MakeBlock(IList<Expression> expressions)
         {
-            if (expressions == null)
-            {
-                return null;
-            }
-
-            var n = expressions.Count;
-
-            if (n == 0)
-            {
-                return Expression.Empty();
-            }
-            else
-            {
-                if (expressions[n - 1].Type != typeof(void))
-                {
-                    return Expression.Block(typeof(void), expressions);
-                }
-                else
-                {
-                    return Expression.Block(expressions);
-                }
-            }
+            return Helpers.CreateVoid(expressions);
         }
 
         class ShallowSwitchCSharpExpressionVisitor : CSharpExpressionVisitor
@@ -586,14 +565,7 @@ namespace Microsoft.CSharp.Expressions
                         }
                     }
 
-                    if (exprs.Length == 1 && exprs[0].Type == typeof(void))
-                    {
-                        return exprs[0];
-                    }
-                    else
-                    {
-                        return Expression.Block(typeof(void), exprs);
-                    }
+                    return Helpers.CreateVoid(exprs);
                 }
             }
         }
