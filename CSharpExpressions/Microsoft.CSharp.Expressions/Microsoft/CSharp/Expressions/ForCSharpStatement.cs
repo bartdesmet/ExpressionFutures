@@ -93,10 +93,18 @@ namespace Microsoft.CSharp.Expressions
             var initializerCount = Initializers.Count;
             var iteratorCount = Iterators.Count;
 
-            var n = initializerCount + 1 /* goto test */ + 1 /* begin label */ + 1 /* body */ + 1 /* continue label */ + iteratorCount + 1 /* test label */ + 1 /* test */ + 1 /* break label */;
+            var n = initializerCount + 1 /* goto test */ + 1 /* begin label */ + 1 /* body */ + iteratorCount + 1 /* test label */ + 1 /* test */;
 
-            var @break = BreakLabel ?? Expression.Label("__break");
-            var @continue = ContinueLabel ?? Expression.Label("__continue");
+            if (BreakLabel != null)
+            {
+                n++;
+            }
+
+            if (ContinueLabel != null)
+            {
+                n++;
+            }
+
             var begin = Expression.Label("__begin");
             var test = Test != null ? Expression.Label("__test") : null;
 
@@ -121,7 +129,11 @@ namespace Microsoft.CSharp.Expressions
 
             expressions[j++] = Expression.Label(begin);
             expressions[j++] = Body;
-            expressions[j++] = Expression.Label(@continue);
+
+            if (ContinueLabel != null)
+            {
+                expressions[j++] = Expression.Label(ContinueLabel);
+            }
 
             for (var i = 0; i < iteratorCount; i++)
             {
@@ -138,7 +150,10 @@ namespace Microsoft.CSharp.Expressions
                 expressions[j++] = Expression.Goto(begin);
             }
 
-            expressions[j++] = Expression.Label(@break);
+            if (BreakLabel != null)
+            {
+                expressions[j++] = Expression.Label(BreakLabel);
+            }
 
             // NB: The scoping of the variables here could be considered to be in conflict with
             //     C# spec section 8.8.3 when interpreted wearing an Expression API hat:
