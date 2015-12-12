@@ -57,21 +57,51 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
-            var @break = BreakLabel ?? Expression.Label("__break");
-            var @continue = ContinueLabel ?? Expression.Label("__continue");
+            var n = 1 /* begin */ + 1 /* Body */ + 1 /* if */;
+
+            if (BreakLabel != null)
+            {
+                n++;
+            }
+
+            if (ContinueLabel != null)
+            {
+                n++;
+            }
+
+            var exprs = new Expression[n];
+
+            var i = 0;
+
             var begin = Expression.Label("__begin");
+
+            exprs[i++] =
+                Expression.Label(begin);
+            exprs[i++] =
+                Body;
+
+            if (ContinueLabel != null)
+            {
+                exprs[i++] =
+                    Expression.Label(ContinueLabel);
+            }
+
+            exprs[i++] =
+                Expression.IfThen(
+                    Test,
+                    Expression.Goto(begin)
+                );
+
+            if (BreakLabel != null)
+            {
+                exprs[i++] =
+                    Expression.Label(BreakLabel);
+            }
 
             var loop =
                 Expression.Block(
                     typeof(void),
-                    Expression.Label(begin),
-                    Body,
-                    Expression.Label(@continue),
-                    Expression.IfThen(
-                        Test,
-                        Expression.Goto(begin)
-                    ),
-                    Expression.Label(@break)
+                    exprs
                 );
 
             return loop;
