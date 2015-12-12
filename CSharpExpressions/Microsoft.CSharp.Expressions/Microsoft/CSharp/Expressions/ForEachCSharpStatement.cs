@@ -219,31 +219,66 @@ namespace Microsoft.CSharp.Expressions
                 var index = Expression.Parameter(typeof(int), "__index");
                 var length = Expression.Property(collection, "Length"); // NB: The C# compiler invokes Length over and over; could we store it in a local?
 
-                var @break = BreakLabel ?? Expression.Label("__break");
-                var @continue = ContinueLabel ?? Expression.Label("__continue");
+                var n = 1 /* collection */ + 1 /* index */ + 1 /* goto check */ + 1 /* iterate */ + 1 /* element */ + 1 /* body */ + 1 /* index++ */ + 1 /* check */ + 1 /* test */;
+
+                if (BreakLabel != null)
+                {
+                    n++;
+                }
+
+                if (ContinueLabel != null)
+                {
+                    n++;
+                }
+
+                var exprs = new Expression[n];
+
+                var i = 0;
 
                 var check = Expression.Label("__check");
                 var iterate = Expression.Label("__iterate");
 
                 var indexer = typeof(string).GetProperty("Chars");
 
+                exprs[i++] =
+                    Expression.Assign(collection, Collection);
+                exprs[i++] =
+                    Expression.Assign(index, Helpers.CreateConstantInt32(0));
+                exprs[i++] =
+                    Expression.Goto(check);
+                exprs[i++] =
+                    Expression.Label(iterate);
+                exprs[i++] =
+                    Expression.Assign(variable, Expression.MakeIndex(collection, indexer, new[] { index }));
+                exprs[i++] =
+                    Body;
+
+                if (ContinueLabel != null)
+                {
+                    exprs[i++] =
+                        Expression.Label(ContinueLabel);
+                }
+
+                exprs[i++] =
+                    Expression.PostIncrementAssign(index);
+                exprs[i++] =
+                    Expression.Label(check);
+                exprs[i++] =
+                    Expression.IfThen(
+                        Expression.LessThan(index, length),
+                        Expression.Goto(iterate)
+                    );
+
+                if (BreakLabel != null)
+                {
+                    exprs[i++] =
+                        Expression.Label(BreakLabel);
+                }
+
                 var res =
                     Expression.Block(
                         new[] { collection, index, variable },
-                        Expression.Assign(collection, Collection),
-                        Expression.Assign(index, Helpers.CreateConstantInt32(0)),
-                        Expression.Goto(check),
-                        Expression.Label(iterate),
-                        Expression.Assign(variable, Expression.MakeIndex(collection, indexer, new[] { index })),
-                        Body,
-                        Expression.Label(@continue),
-                        Expression.PostIncrementAssign(index),
-                        Expression.Label(check),
-                        Expression.IfThen(
-                            Expression.LessThan(index, length),
-                            Expression.Goto(iterate)
-                        ),
-                        Expression.Label(@break)
+                        exprs
                     );
 
                 return res;
@@ -267,29 +302,64 @@ namespace Microsoft.CSharp.Expressions
                 var index = Expression.Parameter(typeof(int), "__index");
                 var length = Expression.ArrayLength(collection); // NB: The C# compiler executes `ldlen` over and over; could we store it in a local?
 
-                var @break = BreakLabel ?? Expression.Label("__break");
-                var @continue = ContinueLabel ?? Expression.Label("__continue");
+                var n = 1 /* collection */ + 1 /* index */ + 1 /* goto check */ + 1 /* iterate */ + 1 /* element */ + 1 /* body */ + 1 /* index++ */ + 1 /* check */ + 1 /* test */;
+
+                if (BreakLabel != null)
+                {
+                    n++;
+                }
+
+                if (ContinueLabel != null)
+                {
+                    n++;
+                }
+
+                var exprs = new Expression[n];
+
+                var i = 0;
 
                 var check = Expression.Label("__check");
                 var iterate = Expression.Label("__iterate");
 
+                exprs[i++] =
+                    Expression.Assign(collection, Collection);
+                exprs[i++] =
+                    Expression.Assign(index, Helpers.CreateConstantInt32(0));
+                exprs[i++] =
+                    Expression.Goto(check);
+                exprs[i++] =
+                    Expression.Label(iterate);
+                exprs[i++] =
+                    Expression.Assign(variable, CreateConvert(Expression.ArrayIndex(collection, index)));
+                exprs[i++] =
+                    Body;
+
+                if (ContinueLabel != null)
+                {
+                    exprs[i++] =
+                        Expression.Label(ContinueLabel);
+                }
+
+                exprs[i++] =
+                    Expression.PostIncrementAssign(index);
+                exprs[i++] =
+                    Expression.Label(check);
+                exprs[i++] =
+                    Expression.IfThen(
+                        Expression.LessThan(index, length),
+                        Expression.Goto(iterate)
+                    );
+
+                if (BreakLabel != null)
+                {
+                    exprs[i++] =
+                        Expression.Label(BreakLabel);
+                }
+
                 var res =
                     Expression.Block(
                         new[] { collection, index, variable },
-                        Expression.Assign(collection, Collection),
-                        Expression.Assign(index, Helpers.CreateConstantInt32(0)),
-                        Expression.Goto(check),
-                        Expression.Label(iterate),
-                        Expression.Assign(variable, CreateConvert(Expression.ArrayIndex(collection, index))),
-                        Body,
-                        Expression.Label(@continue),
-                        Expression.PostIncrementAssign(index),
-                        Expression.Label(check),
-                        Expression.IfThen(
-                            Expression.LessThan(index, length),
-                            Expression.Goto(iterate)
-                        ),
-                        Expression.Label(@break)
+                        exprs
                     );
 
                 return res;
@@ -369,9 +439,6 @@ namespace Microsoft.CSharp.Expressions
                     current = Expression.Invoke(Conversion, current);
                 }
 
-                var @break = BreakLabel ?? Expression.Label("__break");
-                var @continue = ContinueLabel ?? Expression.Label("__continue");
-
                 var cleanup = (Expression)Expression.Empty();
                 if (typeof(IDisposable).IsAssignableFrom(enumeratorType))
                 {
@@ -423,8 +490,8 @@ namespace Microsoft.CSharp.Expressions
                                     Expression.Assign(Variable, current),
                                     Body
                                 ),
-                                @break,
-                                @continue
+                                BreakLabel,
+                                ContinueLabel
                             ),
                             cleanup
                         )
