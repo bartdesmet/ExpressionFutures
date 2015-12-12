@@ -73,6 +73,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         private static string GetDebugViewCore(string expr)
         {
             var exp = (Expression)Eval(expr);
+
+            Reducer.Instance.Visit(exp); // NB: This is used to detect unexpected reduction failures
+
             return exp.DebugView().ToString();
         }
 
@@ -164,6 +167,11 @@ public static class {typeName}
             var prp = typ.GetProperty(propName);
 
             return prp.GetValue(null);
+        }
+
+        class Reducer : ExpressionVisitor
+        {
+            public static readonly Reducer Instance = new Reducer();
         }
     }
 }

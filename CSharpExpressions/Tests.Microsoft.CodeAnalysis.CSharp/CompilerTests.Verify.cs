@@ -306,6 +306,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1754_0766() => OK();
             public override void CompilerTest_AD7C_C86B() => OK();
             public override void CompilerTest_3E56_6022() => OK();
+            public override void CompilerTest_6D08_923C() => OK();
+            public override void CompilerTest_205E_7D00() => OK();
+            public override void CompilerTest_A00C_0847() => OK();
         }
     }
 }

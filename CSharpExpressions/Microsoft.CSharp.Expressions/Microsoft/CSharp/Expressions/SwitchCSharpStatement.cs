@@ -270,7 +270,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var lowered = LowerSwitchStatement(analysis, SwitchValue.Type, hoistNull: false);
 
-            var @switch = Expression.Switch(SwitchValue, lowered.DefaultCase, null, lowered.Cases);
+            var @switch = lowered.Make(SwitchValue, lowered.DefaultCase);
 
             var exprs = new Expression[]
             {
@@ -307,7 +307,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var lowered = LowerSwitchStatement(analysis, governingTypeNonNull, hoistNull: true);
 
-                    var @switch = Expression.Switch(value, lowered.DefaultCase, null, lowered.Cases);
+                    var @switch = lowered.Make(value, lowered.DefaultCase);
 
                     body = Expression.IfThenElse(hasValue, @switch, lowered.NullCase);
                 }
@@ -318,7 +318,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var lowered = LowerSwitchStatement(analysis, governingType, hoistNull: false);
 
-                    body = Expression.Switch(valueLocal, lowered.DefaultCase, null, lowered.Cases);
+                    body = lowered.Make(valueLocal, lowered.DefaultCase);
                 }
             }
             else
@@ -336,7 +336,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var defaultLabel = Expression.Label("__default");
 
-                    var @switch = Expression.Switch(value, Expression.Goto(defaultLabel), null, lowered.Cases);
+                    var @switch = lowered.Make(value, Expression.Goto(defaultLabel));
 
                     var defaultCase = Expression.Block(Expression.Label(defaultLabel), defaultBody);
 
@@ -344,7 +344,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
-                    var @switch = Expression.Switch(value, null, null, lowered.Cases);
+                    var @switch = lowered.Make(value, null);
 
                     body = Expression.IfThen(hasValue, @switch);
                 }
@@ -549,6 +549,53 @@ namespace Microsoft.CSharp.Expressions
             public IList<SwitchCase> Cases;
             public Expression NullCase;
             public Expression DefaultCase;
+
+            public Expression Make(Expression switchValue, Expression defaultBody)
+            {
+                if (Cases.Count > 0)
+                {
+                    return Expression.Switch(switchValue, defaultBody, null, Cases);
+                }
+                else
+                {
+                    var canDropSwitchValue = switchValue.IsPure(readOnly: true);
+                    var hasDefaultBody = defaultBody != null;
+
+                    var exprs = default(Expression[]);
+
+                    if (canDropSwitchValue)
+                    {
+                        if (hasDefaultBody)
+                        {
+                            exprs = new[] { defaultBody };
+                        }
+                        else
+                        {
+                            return Expression.Empty();
+                        }
+                    }
+                    else
+                    {
+                        if (hasDefaultBody)
+                        {
+                            exprs = new[] { switchValue, defaultBody };
+                        }
+                        else
+                        {
+                            exprs = new[] { switchValue };
+                        }
+                    }
+
+                    if (exprs.Length == 1 && exprs[0].Type == typeof(void))
+                    {
+                        return exprs[0];
+                    }
+                    else
+                    {
+                        return Expression.Block(typeof(void), exprs);
+                    }
+                }
+            }
         }
 
         class SwitchAnalysis

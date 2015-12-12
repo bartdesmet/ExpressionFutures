@@ -339,19 +339,25 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static bool IsPure(this Expression expression)
+        public static bool IsPure(this Expression expression, bool readOnly = false)
         {
             // TODO: Convert and ConvertChecked can be pure under certain circumstances as well
 
             switch (expression.NodeType)
             {
                 case ExpressionType.Default:
-                //case ExpressionType.Parameter: // NB: Can observe prior assignments
                 case ExpressionType.Constant:
                 case ExpressionType.Unbox:
                 case ExpressionType.Lambda:
                 case ExpressionType.Quote:
                     return true;
+                    
+                // NB: Parameters are only pure if used in a read-only setting, i.e. they can be dropped without
+                //     loss of side-effects. If they can be assigned to, e.g. in the context of named parameter
+                //     analysis where a parameter occurs in an argument and may get assigned to, it is unsafe to
+                //     consider them pure for that purpose.
+                case ExpressionType.Parameter:
+                    return readOnly;
             }
 
             return false;

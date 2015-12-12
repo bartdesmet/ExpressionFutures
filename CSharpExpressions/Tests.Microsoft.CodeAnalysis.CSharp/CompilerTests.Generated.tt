@@ -337,6 +337,9 @@ var exprs = new[]
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { default: break; } })",
+	"(Expression<Action>)(() => { switch (int.Parse(\"1\")) { } })",
+    "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { default: break; } })",
 };
 #>
 <#

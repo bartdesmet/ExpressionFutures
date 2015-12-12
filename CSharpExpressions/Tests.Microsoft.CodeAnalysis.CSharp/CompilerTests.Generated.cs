@@ -9464,6 +9464,135 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_6022() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_6D08_923C()
+        {
+            // (Expression<Action<int>>)(x => { switch (x) { default: break; } })
+            var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { default: break; } })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""default"">
+              <Statements>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""1"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_6D08_923C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6D08_923C() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_205E_7D00()
+        {
+            // (Expression<Action>)(() => { switch (int.Parse("1")) { } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { switch (int.Parse(""1"")) { } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Call Type=""System.Int32"" Method=""Int32 Parse(System.String)"">
+              <Arguments>
+                <Constant Type=""System.String"" Value=""1"" />
+              </Arguments>
+            </Call>
+          </SwitchValue>
+          <Cases />
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_205E_7D00();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_205E_7D00() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_A00C_0847()
+        {
+            // (Expression<Action>)(() => { switch (int.Parse("1")) { default: break; } })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { switch (int.Parse(""1"")) { default: break; } })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpSwitch Type=""System.Void"">
+          <SwitchValue>
+            <Call Type=""System.Int32"" Method=""Int32 Parse(System.String)"">
+              <Arguments>
+                <Constant Type=""System.String"" Value=""1"" />
+              </Arguments>
+            </Call>
+          </SwitchValue>
+          <Cases>
+            <CSharpSwitchCase TestValues=""default"">
+              <Statements>
+                <Goto Type=""System.Void"" Kind=""Break"">
+                  <Target>
+                    <LabelTarget Type=""System.Void"" Id=""0"" />
+                  </Target>
+                </Goto>
+              </Statements>
+            </CSharpSwitchCase>
+          </Cases>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </BreakLabel>
+        </CSharpSwitch>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_A00C_0847();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A00C_0847() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -9725,6 +9854,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1754_0766() => OK();
             public override void CompilerTest_AD7C_C86B() => OK();
             public override void CompilerTest_3E56_6022() => OK();
+            public override void CompilerTest_6D08_923C() => OK();
+            public override void CompilerTest_205E_7D00() => OK();
+            public override void CompilerTest_A00C_0847() => OK();
         }
     }
 }
