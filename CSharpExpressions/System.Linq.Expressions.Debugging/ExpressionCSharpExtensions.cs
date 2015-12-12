@@ -313,6 +313,10 @@ namespace System.Linq.Expressions
 
                     if (!asMethod && mtd != null && node.Method != null)
                     {
+                        // TODO: can suppress method rendering when it involves String.Concat, Delegate.Combine, etc.
+                        //       - for String.Concat we can take away spurious argument conversions as well
+                        //       - for Delegate.* we can't easily get rid of the parent node's conversion to the delegate type unless we peek from VisitUnary
+
                         if (node.Method.Name != mtd) // TODO: check declaring type
                         {
                             asMethod = true;
