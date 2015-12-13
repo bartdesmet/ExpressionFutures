@@ -260,7 +260,7 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 exprs[i++] =
-                    Expression.PostIncrementAssign(index);
+                    Expression.PreIncrementAssign(index); // NB: Less locals than PostIncrementAssign upon reduction.
                 exprs[i++] =
                     Expression.Label(check);
                 exprs[i++] =
@@ -341,7 +341,7 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 exprs[i++] =
-                    Expression.PostIncrementAssign(index);
+                    Expression.PreIncrementAssign(index); // NB: Less locals than PostIncrementAssign upon reduction.
                 exprs[i++] =
                     Expression.Label(check);
                 exprs[i++] =
