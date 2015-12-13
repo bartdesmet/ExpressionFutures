@@ -1448,9 +1448,7 @@ namespace Tests
 
         private Expression expr158 = Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")));
         private string dbg158 = @"if (true)
-{
     Console.WriteLine(""true"");
-}
 ";
 
         [TestMethod]
@@ -1461,13 +1459,9 @@ namespace Tests
 
         private Expression expr159 = Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false")));
         private string dbg159 = @"if (true)
-{
     Console.WriteLine(""true"");
-}
 else
-{
     Console.WriteLine(""false"");
-}
 ";
 
         [TestMethod]
@@ -1725,9 +1719,7 @@ catch (Exception ex) when (true)
 
         private Expression expr179 = Expression.Loop(Expression.Empty());
         private string dbg179 = @"while (true)
-{
     ;
-}
 ";
 
         [TestMethod]
@@ -1751,9 +1743,7 @@ catch (Exception ex) when (true)
 
         private Expression expr181 = Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2);
         private string dbg181 = @"while (true)
-{
     break;
-}
 ";
 
         [TestMethod]
@@ -1764,9 +1754,7 @@ catch (Exception ex) when (true)
 
         private Expression expr182 = Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2);
         private string dbg182 = @"while (true)
-{
     continue;
-}
 ";
 
         [TestMethod]
@@ -1780,9 +1768,7 @@ catch (Exception ex) when (true)
 {
     L0 /*(null)*/:
     while (true)
-    {
         goto L1;
-    }
     
 }
 L1 /*(null)*/:";
@@ -2040,6 +2026,38 @@ L1 /*(null)*/:";
         public void ToCSharp_Test204()
         {
             Assert.AreEqual(dbg204, expr204.ToCSharp());
+        }
+
+        private Expression expr205 = Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!"))));
+        private string dbg205 = @"if (true)
+    if (true)
+        Console.WriteLine(""if/if"");
+    else
+        Console.WriteLine(""I'm not a dangler!"");
+    
+";
+
+        [TestMethod]
+        public void ToCSharp_Test205()
+        {
+            Assert.AreEqual(dbg205, expr205.ToCSharp());
+        }
+
+        private Expression expr206 = Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!")));
+        private string dbg206 = @"if (true)
+{
+    if (true)
+        Console.WriteLine(""if/if"");
+    
+}
+else
+    Console.WriteLine(""don't dangle me!"");
+";
+
+        [TestMethod]
+        public void ToCSharp_Test206()
+        {
+            Assert.AreEqual(dbg206, expr206.ToCSharp());
         }
 
     }

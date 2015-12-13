@@ -253,6 +253,9 @@ var exprs = new string[]
 	"Expression.Lambda(Expression.Block(Expression.Constant(1)))",
 	"Expression.Lambda(Expression.Block(Expression.Return(_lbl1)))",
 	"Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1))))",
+
+    "Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"if/if\")), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"I'm not a dangler!\"))))",
+    "Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"if/if\"))), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"don't dangle me!\")))",
 };
 #>
 \<#@ template debug="false" hostspecific="false" language="C#" \#>

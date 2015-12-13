@@ -545,9 +545,32 @@ namespace System.Linq.Expressions
                     VisitExpression(node.Test);
                     Out(")");
 
-                    VisitBlockLike(node.IfTrue);
+                    var hasElse = node.IfFalse.NodeType != ExpressionType.Default;
 
-                    if (node.IfFalse.NodeType != ExpressionType.Default)
+                    var ifTrueNeedsCurly = false;
+
+                    //
+                    // We require curly braces around the IfTrue branch if we could fall vicitim to
+                    // the dangling else problem:
+                    //
+                    //   if (a)
+                    //     if (b)
+                    //       ...
+                    //   else
+                    //     ...
+                    //
+                    if (hasElse && node.IfTrue.NodeType == ExpressionType.Conditional)
+                    {
+                        var nested = (ConditionalExpression)node.IfTrue;
+                        if (nested.IfFalse.NodeType == ExpressionType.Default)
+                        {
+                            ifTrueNeedsCurly = true;
+                        }
+                    }
+
+                    VisitBlockLike(node.IfTrue, ifTrueNeedsCurly);
+
+                    if (hasElse)
                     {
                         Out("else");
 
@@ -945,7 +968,7 @@ namespace System.Linq.Expressions
             {
                 Out("try");
 
-                VisitBlockLike(node.Body);
+                VisitBlockLike(node.Body, needsCurlies: true);
 
                 foreach (var h in node.Handlers)
                 {
@@ -955,13 +978,13 @@ namespace System.Linq.Expressions
                 if (node.Finally != null)
                 {
                     Out("finally");
-                    VisitBlockLike(node.Finally);
+                    VisitBlockLike(node.Finally, needsCurlies: true);
                 }
 
                 if (node.Fault != null) // NB: This is not valid C#.
                 {
                     Out("fault");
-                    VisitBlockLike(node.Fault);
+                    VisitBlockLike(node.Fault, needsCurlies: true);
                 }
 
                 return node;
@@ -987,7 +1010,7 @@ namespace System.Linq.Expressions
                     Out(")");
                 }
 
-                VisitBlockLike(node.Body);
+                VisitBlockLike(node.Body, needsCurlies: true);
 
                 return node;
             }
@@ -1444,26 +1467,34 @@ namespace System.Linq.Expressions
                 }
             }
 
-            public void VisitBlockLike(Expression node)
+            public void VisitBlockLike(Expression node, bool needsCurlies = false)
             {
-                NewLine();
-
                 if (node.NodeType != ExpressionType.Block)
                 {
-                    Out("{");
+                    if (needsCurlies)
+                    {
+                        NewLine();
+                        Out("{");
+                    }
+
                     Indent();
                     NewLine();
                     Visit(node);
                     Dedent();
                     NewLine();
-                    Out("}");
+
+                    if (needsCurlies)
+                    {
+                        Out("}");
+                        NewLine();
+                    }
                 }
                 else
                 {
+                    NewLine();
                     Visit(node);
+                    NewLine();
                 }
-
-                NewLine();
             }
 
             private static bool NeedsParentheses(Expression parent, Expression child)

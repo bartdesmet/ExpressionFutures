@@ -76,7 +76,8 @@ namespace System.Linq.Expressions
         /// Visits the specified expression tree node ensuring the emission of curly braces if it's not a block.
         /// </summary>
         /// <param name="node">The expression tree node to visit.</param>
-        void VisitBlockLike(Expression node);
+        /// <param name="needsCurlies">Indicates whether emission of curly braces around the node is required.</param>
+        void VisitBlockLike(Expression node, bool needsCurlies = false);
 
         /// <summary>
         /// Visits the specified expression tree node and introduces parentheses if needed.

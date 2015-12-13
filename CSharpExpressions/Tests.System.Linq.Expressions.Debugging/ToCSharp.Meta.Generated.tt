@@ -1887,5 +1887,23 @@ namespace Tests
             Assert.AreEqual(dbg204, expr204.ToCSharp());
         }
 
+        private Expression expr205 = Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!"))));
+        private string dbg205 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!")))).ToCSharp())#>;
+
+        [TestMethod]
+        public void ToCSharp_Test205()
+        {
+            Assert.AreEqual(dbg205, expr205.ToCSharp());
+        }
+
+        private Expression expr206 = Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!")));
+        private string dbg206 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!"))).ToCSharp())#>;
+
+        [TestMethod]
+        public void ToCSharp_Test206()
+        {
+            Assert.AreEqual(dbg206, expr206.ToCSharp());
+        }
+
     }
 }
