@@ -1448,8 +1448,7 @@ namespace Tests
 
         private Expression expr158 = Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")));
         private string dbg158 = @"if (true)
-    Console.WriteLine(""true"");
-";
+    Console.WriteLine(""true"");";
 
         [TestMethod]
         public void ToCSharp_Test158()
@@ -1461,8 +1460,7 @@ namespace Tests
         private string dbg159 = @"if (true)
     Console.WriteLine(""true"");
 else
-    Console.WriteLine(""false"");
-";
+    Console.WriteLine(""false"");";
 
         [TestMethod]
         public void ToCSharp_Test159()
@@ -1474,8 +1472,7 @@ else
         private string dbg160 = @"if (true)
 {
     ;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test160()
@@ -1491,8 +1488,7 @@ else
 else
 {
     ;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test161()
@@ -1623,8 +1619,7 @@ else
 finally
 {
     Console.WriteLine(""finally"");
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test173()
@@ -1640,8 +1635,7 @@ finally
 fault
 {
     Console.WriteLine(""fault"");
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test174()
@@ -1657,8 +1651,7 @@ fault
 catch
 {
     Console.WriteLine(""catch"");
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test175()
@@ -1674,8 +1667,7 @@ catch
 catch (Exception)
 {
     Console.WriteLine(""catch"");
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test176()
@@ -1691,8 +1683,7 @@ catch (Exception)
 catch (Exception ex)
 {
     Console.WriteLine(""catch"");
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test177()
@@ -1708,8 +1699,7 @@ catch (Exception ex)
 catch (Exception ex) when (true)
 {
     Console.WriteLine(""catch"");
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test178()
@@ -1719,8 +1709,7 @@ catch (Exception ex) when (true)
 
         private Expression expr179 = Expression.Loop(Expression.Empty());
         private string dbg179 = @"while (true)
-    ;
-";
+    ;";
 
         [TestMethod]
         public void ToCSharp_Test179()
@@ -1732,8 +1721,7 @@ catch (Exception ex) when (true)
         private string dbg180 = @"while (true)
 {
     ;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test180()
@@ -1743,8 +1731,7 @@ catch (Exception ex) when (true)
 
         private Expression expr181 = Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2);
         private string dbg181 = @"while (true)
-    break;
-";
+    break;";
 
         [TestMethod]
         public void ToCSharp_Test181()
@@ -1754,8 +1741,7 @@ catch (Exception ex) when (true)
 
         private Expression expr182 = Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2);
         private string dbg182 = @"while (true)
-    continue;
-";
+    continue;";
 
         [TestMethod]
         public void ToCSharp_Test182()
@@ -1769,7 +1755,6 @@ catch (Exception ex) when (true)
     L0 /*(null)*/:
     while (true)
         goto L1;
-    
 }
 L1 /*(null)*/:";
 
@@ -1787,7 +1772,6 @@ L1 /*(null)*/:";
     {
         goto L0;
     }
-    
 }
 L1 /*(null)*/:";
 
@@ -1805,7 +1789,6 @@ L1 /*(null)*/:";
     {
         goto L0;
     }
-    
 }
 L1 /*(null)*/:";
 
@@ -2033,9 +2016,7 @@ L1 /*(null)*/:";
     if (true)
         Console.WriteLine(""if/if"");
     else
-        Console.WriteLine(""I'm not a dangler!"");
-    
-";
+        Console.WriteLine(""I'm not a dangler!"");";
 
         [TestMethod]
         public void ToCSharp_Test205()
@@ -2048,11 +2029,9 @@ L1 /*(null)*/:";
 {
     if (true)
         Console.WriteLine(""if/if"");
-    
 }
 else
-    Console.WriteLine(""don't dangle me!"");
-";
+    Console.WriteLine(""don't dangle me!"");";
 
         [TestMethod]
         public void ToCSharp_Test206()

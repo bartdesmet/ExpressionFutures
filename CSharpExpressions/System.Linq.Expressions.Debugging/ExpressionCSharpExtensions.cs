@@ -572,6 +572,7 @@ namespace System.Linq.Expressions
 
                     if (hasElse)
                     {
+                        NewLine();
                         Out("else");
 
                         VisitBlockLike(node.IfFalse);
@@ -977,12 +978,14 @@ namespace System.Linq.Expressions
 
                 if (node.Finally != null)
                 {
+                    NewLine();
                     Out("finally");
                     VisitBlockLike(node.Finally, needsCurlies: true);
                 }
 
                 if (node.Fault != null) // NB: This is not valid C#.
                 {
+                    NewLine();
                     Out("fault");
                     VisitBlockLike(node.Fault, needsCurlies: true);
                 }
@@ -992,6 +995,7 @@ namespace System.Linq.Expressions
 
             protected override CatchBlock VisitCatchBlock(CatchBlock node)
             {
+                NewLine();
                 Out("catch");
 
                 if (node.Variable != null)
@@ -1192,6 +1196,7 @@ namespace System.Linq.Expressions
 
                 if (analysis.HasNonLocalJump && node.BreakLabel != null)
                 {
+                    NewLine();
                     Visit(Expression.Label(node.BreakLabel));
                 }
 
@@ -1481,19 +1486,19 @@ namespace System.Linq.Expressions
                     NewLine();
                     Visit(node);
                     Dedent();
-                    NewLine();
 
                     if (needsCurlies)
                     {
-                        Out("}");
                         NewLine();
+                        Out("}");
+                        //NewLine();
                     }
                 }
                 else
                 {
                     NewLine();
                     Visit(node);
-                    NewLine();
+                    //NewLine();
                 }
             }
 

@@ -512,8 +512,7 @@ while (true);";
 
         private Expression expr50 = CSharpStatement.While(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg50 = @"while (true)
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test50()
@@ -523,8 +522,7 @@ while (true);";
 
         private Expression expr51 = CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg51 = @"for (;;)
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test51()
@@ -534,8 +532,7 @@ while (true);";
 
         private Expression expr52 = CSharpStatement.For(new[] { _par1 }, new[] { Expression.Assign(_par1, Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg52 = @"for (int p0 = 1; p1 < 10; p0++)
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test52()
@@ -548,7 +545,6 @@ while (true);";
     int p0 /*(null)*/;
     for (p0 = 1, p0 = 2; p1 < 10; p0++)
         Console.WriteLine(""body"");
-    
 }";
 
         [TestMethod]
@@ -559,8 +555,7 @@ while (true);";
 
         private Expression expr54 = CSharpStatement.For(new[] { _par1 }, new[] { CSharpExpression.Assign(_par1, Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg54 = @"for (int p0 = 1; p1 < 10; p0++)
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test54()
@@ -570,8 +565,7 @@ while (true);";
 
         private Expression expr55 = CSharpStatement.For(new[] { _par1, _par2 }, new[] { Expression.Assign(_par1, Expression.Constant(0)), Expression.Assign(_par2, Expression.Constant(10)) }, Expression.LessThan(_par1, _par2), new[] { Expression.PostIncrementAssign(_par1), Expression.PreDecrementAssign(_par2) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg55 = @"for (int p0 = 0, p1 = 10; p0 < p1; p0++, --p1)
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test55()
@@ -584,7 +578,6 @@ while (true);";
     int p0 /*(null)*/;
     for (; p1 < 10; p0++)
         Console.WriteLine(""body"");
-    
 }";
 
         [TestMethod]
@@ -599,7 +592,6 @@ while (true);";
     long p1 /*(null)*/;
     for (p0 = 0, p1 = 10L; p0 < p2; p0++, --p2)
         Console.WriteLine(""body"");
-    
 }";
 
         [TestMethod]
@@ -610,8 +602,7 @@ while (true);";
 
         private Expression expr58 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg58 = @"foreach (int p0 /*(null)*/ in default(int[]))
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test58()
@@ -753,8 +744,7 @@ while (true);";
 
         private Expression expr68 = CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg68 = @"lock (default(object))
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test68()
@@ -764,8 +754,7 @@ while (true);";
 
         private Expression expr69 = CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg69 = @"using (default(IDisposable))
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test69()
@@ -775,8 +764,7 @@ while (true);";
 
         private Expression expr70 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
         private string dbg70 = @"using (IDisposable p0 /*(null)*/ = default(IDisposable))
-    Console.WriteLine(""body"");
-";
+    Console.WriteLine(""body"");";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test70()

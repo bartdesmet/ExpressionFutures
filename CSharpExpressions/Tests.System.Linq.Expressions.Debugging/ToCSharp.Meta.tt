@@ -248,7 +248,7 @@ var exprs = new string[]
 
 	"((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)))",
 	"((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })))",
-
+	
 	"Expression.Lambda(Expression.Block(Expression.Empty()))",
 	"Expression.Lambda(Expression.Block(Expression.Constant(1)))",
 	"Expression.Lambda(Expression.Block(Expression.Return(_lbl1)))",

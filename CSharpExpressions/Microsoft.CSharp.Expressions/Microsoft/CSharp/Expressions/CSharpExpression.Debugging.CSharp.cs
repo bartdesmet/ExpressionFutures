@@ -327,8 +327,9 @@ namespace Microsoft.CSharp.Expressions
 
             visitor.Out("do");
 
-            visitor.VisitLoopBody(this);
+            visitor.VisitLoopBody(this, needsCurlies: true);
 
+            visitor.NewLine();
             visitor.Out("while (");
             visitor.VisitExpression(Test);
             visitor.Out(");");
@@ -1785,12 +1786,12 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        public static void VisitLoopBody(this ICSharpPrintingVisitor visitor, LoopCSharpStatement loop)
+        public static void VisitLoopBody(this ICSharpPrintingVisitor visitor, LoopCSharpStatement loop, bool needsCurlies = false)
         {
             visitor.PushBreak(loop.BreakLabel);
             visitor.PushContinue(loop.ContinueLabel);
 
-            visitor.VisitBlockLike(loop.Body);
+            visitor.VisitBlockLike(loop.Body, needsCurlies);
 
             visitor.PopContinue();
             visitor.PopBreak();
