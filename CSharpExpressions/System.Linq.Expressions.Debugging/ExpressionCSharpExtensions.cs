@@ -922,20 +922,7 @@ namespace System.Linq.Expressions
 
                 Out(") =>");
 
-                var isBlock = false;
-
-                if (node.Body.NodeType == ExpressionType.Block)
-                {
-                    isBlock = true;
-                }
-                else
-                {
-                    var csharp = node.Body as ICSharpPrintableExpression;
-                    if (csharp != null && csharp.IsBlock)
-                    {
-                        isBlock = true;
-                    }
-                }
+                var isBlock = Helpers.IsBlock(node.Body);
 
                 if (isBlock)
                 {
@@ -1947,14 +1934,14 @@ namespace System.Linq.Expressions
                 case ExpressionType.DebugInfo:           // NB: never rendered, so don't want parens
                     return 160;
 
-                // NB: these are statements
-                //case ExpressionType.Block:
-                //case ExpressionType.Goto:
-                //case ExpressionType.Label:
-                //case ExpressionType.Loop:
-                //case ExpressionType.Switch:
-                //case ExpressionType.Try:
-                //    break;
+                    // NB: these are statements
+                    //case ExpressionType.Block:
+                    //case ExpressionType.Goto:
+                    //case ExpressionType.Label:
+                    //case ExpressionType.Loop:
+                    //case ExpressionType.Switch:
+                    //case ExpressionType.Try:
+                    //    break;
             }
         }
 
@@ -2304,6 +2291,27 @@ namespace System.Linq.Expressions
 
             result = value;
             return true;
+        }
+    }
+
+    static class Helpers
+    {
+        public static bool IsBlock(Expression node)
+        {
+            if (node.NodeType == ExpressionType.Block)
+            {
+                return true;
+            }
+            else
+            {
+                var csharp = node as ICSharpPrintableExpression;
+                if (csharp != null && csharp.IsBlock)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
