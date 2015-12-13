@@ -123,5 +123,19 @@ namespace System.Linq.Expressions
         /// Pops the last continue label from the break label stack used for Goto statement analysis.
         /// </summary>
         void PopContinue();
+
+        /// <summary>
+        /// Gets a value indicating whether the specified expression tree node represents a block.
+        /// </summary>
+        /// <param name="node">The expression tree node to check.</param>
+        /// <returns>true if the specified expression tree node represents a block; otherwise, false.</returns>
+        bool IsBlock(Expression node);
+
+        /// <summary>
+        /// Gets a value indicating whether the specified expression tree node represents a statement.
+        /// </summary>
+        /// <param name="node">The expression tree node to check.</param>
+        /// <returns>true if the specified expression tree node represents a statement; otherwise, false.</returns>
+        bool IsStatement(Expression node);
     }
 }

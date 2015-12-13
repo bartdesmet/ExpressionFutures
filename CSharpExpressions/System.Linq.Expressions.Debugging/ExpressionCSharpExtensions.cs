@@ -121,7 +121,7 @@ namespace System.Linq.Expressions
                 return res;
             }
 
-            protected virtual bool IsStatement(Expression node)
+            public bool IsStatement(Expression node)
             {
                 // TODO: refine
                 switch (node.NodeType)
@@ -149,6 +149,24 @@ namespace System.Linq.Expressions
                 return false;
             }
 
+            public bool IsBlock(Expression node)
+            {
+                if (node.NodeType == ExpressionType.Block)
+                {
+                    return true;
+                }
+                else
+                {
+                    var csharp = node as ICSharpPrintableExpression;
+                    if (csharp != null && csharp.IsBlock)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             protected override Expression VisitConstant(ConstantExpression node)
             {
                 var value = node.Value;
@@ -163,6 +181,8 @@ namespace System.Linq.Expressions
 
             private void Literal(object value, Type type, bool allowCast)
             {
+                // TODO: support printing nullable values types
+
                 var needCast = false;
                 var res = default(string);
 
@@ -922,22 +942,16 @@ namespace System.Linq.Expressions
 
                 Out(") =>");
 
-                var isBlock = Helpers.IsBlock(node.Body);
+                var isStatementLambda = IsBlock(node.Body) || IsStatement(node.Body);
 
-                if (isBlock)
+                if (isStatementLambda)
                 {
-                    NewLine();
+                    VisitBlockLike(node.Body, needsCurlies: true);
                 }
                 else
                 {
                     Out(" ");
-                }
-
-                Visit(node.Body);
-
-                if (isBlock)
-                {
-                    NewLine();
+                    Visit(node.Body);
                 }
 
                 return node;
@@ -1461,7 +1475,7 @@ namespace System.Linq.Expressions
 
             public void VisitBlockLike(Expression node, bool needsCurlies = false)
             {
-                if (node.NodeType != ExpressionType.Block)
+                if (!IsBlock(node))
                 {
                     if (needsCurlies)
                     {
@@ -1469,23 +1483,26 @@ namespace System.Linq.Expressions
                         Out("{");
                     }
 
-                    Indent();
-                    NewLine();
-                    Visit(node);
-                    Dedent();
+                    var isEmpty = node.Type == typeof(void) && node.NodeType == ExpressionType.Default;
+
+                    if (!isEmpty || !needsCurlies)
+                    {
+                        Indent();
+                        NewLine();
+                        Visit(node);
+                        Dedent();
+                    }
 
                     if (needsCurlies)
                     {
                         NewLine();
                         Out("}");
-                        //NewLine();
                     }
                 }
                 else
                 {
                     NewLine();
                     Visit(node);
-                    //NewLine();
                 }
             }
 
@@ -2291,27 +2308,6 @@ namespace System.Linq.Expressions
 
             result = value;
             return true;
-        }
-    }
-
-    static class Helpers
-    {
-        public static bool IsBlock(Expression node)
-        {
-            if (node.NodeType == ExpressionType.Block)
-            {
-                return true;
-            }
-            else
-            {
-                var csharp = node as ICSharpPrintableExpression;
-                if (csharp != null && csharp.IsBlock)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

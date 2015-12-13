@@ -1527,8 +1527,7 @@ else
         private string dbg165 = @"() =>
 {
     ;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test165()
@@ -1963,8 +1962,7 @@ L1 /*(null)*/:";
         private string dbg201 = @"() =>
 {
     ;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test201()
@@ -1976,8 +1974,7 @@ L1 /*(null)*/:";
         private string dbg202 = @"() =>
 {
     return 1;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test202()
@@ -1989,8 +1986,7 @@ L1 /*(null)*/:";
         private string dbg203 = @"() =>
 {
     return;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test203()
@@ -2002,8 +1998,7 @@ L1 /*(null)*/:";
         private string dbg204 = @"() =>
 {
     return 1;
-}
-";
+}";
 
         [TestMethod]
         public void ToCSharp_Test204()

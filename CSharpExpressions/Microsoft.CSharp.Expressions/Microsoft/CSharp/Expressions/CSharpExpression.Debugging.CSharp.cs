@@ -923,35 +923,16 @@ namespace Microsoft.CSharp.Expressions
 
             visitor.Out(") =>");
 
-            var isBlock = false;
+            var isStatementLambda = visitor.IsBlock(Body) || visitor.IsStatement(Body);
 
-            if (Body.NodeType == ExpressionType.Block)
+            if (isStatementLambda)
             {
-                isBlock = true;
-            }
-            else
-            {
-                var csharp = Body as ICSharpPrintableExpression;
-                if (csharp != null && csharp.IsBlock)
-                {
-                    isBlock = true;
-                }
-            }
-
-            if (isBlock)
-            {
-                visitor.NewLine();
+                visitor.VisitBlockLike(Body, needsCurlies: true);
             }
             else
             {
                 visitor.Out(" ");
-            }
-
-            visitor.Visit(Body);
-
-            if (isBlock)
-            {
-                visitor.NewLine();
+                visitor.Visit(Body);
             }
         }
     }

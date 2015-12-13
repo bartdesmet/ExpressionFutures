@@ -160,8 +160,7 @@ namespace Tests
         private string dbg14 = @"async () =>
 {
     return await default(Task<int>);
-}
-";
+}";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test14()
@@ -173,8 +172,7 @@ namespace Tests
         private string dbg15 = @"async () =>
 {
     return await default(Task<int>);
-}
-";
+}";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test15()
@@ -488,8 +486,7 @@ namespace Tests
         private string dbg48 = @"() =>
 {
     Console.WriteLine(""body"");
-}
-";
+}";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test48()
