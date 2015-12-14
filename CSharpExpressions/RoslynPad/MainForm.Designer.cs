@@ -50,6 +50,8 @@
             this.pnlDetail = new System.Windows.Forms.SplitContainer();
             this.prgNode = new System.Windows.Forms.PropertyGrid();
             this.txtNode = new System.Windows.Forms.TextBox();
+            this.tabCSharp = new System.Windows.Forms.TabPage();
+            this.txtCSharp = new System.Windows.Forms.TextBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,8 +71,8 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
-            this.tabCSharp = new System.Windows.Forms.TabPage();
-            this.txtCSharp = new System.Windows.Forms.TextBox();
+            this.btnOptimize = new System.Windows.Forms.Button();
+            this.mnuOptimize = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -87,8 +89,8 @@
             this.pnlDetail.Panel1.SuspendLayout();
             this.pnlDetail.Panel2.SuspendLayout();
             this.pnlDetail.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.tabCSharp.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -100,6 +102,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnOptimize);
             this.splitContainer1.Panel1.Controls.Add(this.btnAdd);
             this.splitContainer1.Panel1.Controls.Add(this.chkModern);
             this.splitContainer1.Panel1.Controls.Add(this.btnReduce);
@@ -352,6 +355,29 @@
             this.txtNode.TabIndex = 0;
             this.txtNode.WordWrap = false;
             // 
+            // tabCSharp
+            // 
+            this.tabCSharp.Controls.Add(this.txtCSharp);
+            this.tabCSharp.Location = new System.Drawing.Point(4, 29);
+            this.tabCSharp.Name = "tabCSharp";
+            this.tabCSharp.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCSharp.Size = new System.Drawing.Size(994, 406);
+            this.tabCSharp.TabIndex = 3;
+            this.tabCSharp.Text = "C# Decompiled";
+            this.tabCSharp.UseVisualStyleBackColor = true;
+            // 
+            // txtCSharp
+            // 
+            this.txtCSharp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCSharp.Font = new System.Drawing.Font("Consolas", 8F);
+            this.txtCSharp.Location = new System.Drawing.Point(3, 3);
+            this.txtCSharp.Multiline = true;
+            this.txtCSharp.Name = "txtCSharp";
+            this.txtCSharp.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtCSharp.Size = new System.Drawing.Size(988, 400);
+            this.txtCSharp.TabIndex = 0;
+            this.txtCSharp.WordWrap = false;
+            // 
             // toolTip
             // 
             this.toolTip.ForeColor = System.Drawing.Color.Red;
@@ -431,6 +457,7 @@
             this.mnuRun,
             this.toolStripSeparator2,
             this.mnuCompile,
+            this.mnuOptimize,
             this.mnuReduce,
             this.mnuEvaluate});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
@@ -487,7 +514,7 @@
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(173, 30);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
             this.optionsToolStripMenuItem.Text = "&Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
@@ -505,28 +532,26 @@
             this.saveFile.Filter = "Catalogs|*.xml";
             this.saveFile.Title = "Save catalog";
             // 
-            // tabCSharp
+            // btnOptimize
             // 
-            this.tabCSharp.Controls.Add(this.txtCSharp);
-            this.tabCSharp.Location = new System.Drawing.Point(4, 29);
-            this.tabCSharp.Name = "tabCSharp";
-            this.tabCSharp.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCSharp.Size = new System.Drawing.Size(994, 406);
-            this.tabCSharp.TabIndex = 3;
-            this.tabCSharp.Text = "C# Decompiled";
-            this.tabCSharp.UseVisualStyleBackColor = true;
+            this.btnOptimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOptimize.Enabled = false;
+            this.btnOptimize.Location = new System.Drawing.Point(684, 187);
+            this.btnOptimize.Name = "btnOptimize";
+            this.btnOptimize.Size = new System.Drawing.Size(98, 35);
+            this.btnOptimize.TabIndex = 8;
+            this.btnOptimize.Text = "Optimize";
+            this.btnOptimize.UseVisualStyleBackColor = true;
+            this.btnOptimize.Click += new System.EventHandler(this.btnOptimize_Click);
             // 
-            // txtCSharp
+            // mnuOptimize
             // 
-            this.txtCSharp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCSharp.Font = new System.Drawing.Font("Consolas", 8F);
-            this.txtCSharp.Location = new System.Drawing.Point(3, 3);
-            this.txtCSharp.Multiline = true;
-            this.txtCSharp.Name = "txtCSharp";
-            this.txtCSharp.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtCSharp.Size = new System.Drawing.Size(988, 400);
-            this.txtCSharp.TabIndex = 0;
-            this.txtCSharp.WordWrap = false;
+            this.mnuOptimize.Enabled = false;
+            this.mnuOptimize.Name = "mnuOptimize";
+            this.mnuOptimize.ShortcutKeys = System.Windows.Forms.Keys.F8;
+            this.mnuOptimize.Size = new System.Drawing.Size(215, 30);
+            this.mnuOptimize.Text = "&Optimize";
+            this.mnuOptimize.Click += new System.EventHandler(this.mnuOptimize_Click);
             // 
             // MainForm
             // 
@@ -560,10 +585,10 @@
             this.pnlDetail.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlDetail)).EndInit();
             this.pnlDetail.ResumeLayout(false);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.tabCSharp.ResumeLayout(false);
             this.tabCSharp.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -612,6 +637,8 @@
         private System.Windows.Forms.SaveFileDialog saveFile;
         private System.Windows.Forms.TabPage tabCSharp;
         private System.Windows.Forms.TextBox txtCSharp;
+        private System.Windows.Forms.Button btnOptimize;
+        private System.Windows.Forms.ToolStripMenuItem mnuOptimize;
     }
 }
 

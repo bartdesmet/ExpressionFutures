@@ -10,6 +10,14 @@ TODO
 * Dynamic SetMember and SetIndex
 * Dynamic assignments
 
+* Should we have interfaces in a LINQ companion assembly to provide semantic insight in extension nodes?
+  - Scoped constructions, e.g. using/for/foreach/block which need scope tracking during visits
+  - Block constructions, e.g. to perform optimizations that can unflatten these
+  - Lambda functions, e.g. to reason about closure boundaries
+  - Pure nodes, e.g. custom lambda nodes, so optimizations can reason about those
+  - Checked behavior, e.g. for checked/unchecked scope tracking in printers
+  These can be used for optimizers, pretty printers, etc. and make extension nodes less opaque.
+
 Open
 ----
 

@@ -65,6 +65,7 @@ namespace RoslynPad
         private void ClearAll()
         {
             btnReduce.Enabled = mnuReduce.Enabled = false;
+            btnOptimize.Enabled = mnuOptimize.Enabled = false;
             btnEval.Enabled = mnuEvaluate.Enabled = false;
 
             txtResult.Text = "";
@@ -94,6 +95,7 @@ namespace RoslynPad
                 _eval = (LambdaExpression)TestUtilities.Eval(txtCode.Text, out _sem, includingExpressions: chkModern.Checked, trimCR: true);
                 UpdateExpression(_eval);
                 btnReduce.Enabled = mnuReduce.Enabled = true;
+                btnOptimize.Enabled = mnuOptimize.Enabled = true;
                 btnEval.Enabled = mnuEvaluate.Enabled = true;
             }
             catch (InvalidProgramException ex)
@@ -231,6 +233,7 @@ namespace RoslynPad
 
                 txtCode.Text = expr;
                 btnReduce.Enabled = mnuReduce.Enabled = false;
+                btnOptimize.Enabled = mnuOptimize.Enabled = false;
                 btnEval.Enabled = mnuEvaluate.Enabled = false;
 
                 _isNew = false;
@@ -240,6 +243,7 @@ namespace RoslynPad
             {
                 txtCode.Text = "";
                 btnReduce.Enabled = mnuReduce.Enabled = false;
+                btnOptimize.Enabled = mnuOptimize.Enabled = false;
                 btnEval.Enabled = mnuEvaluate.Enabled = false;
 
                 _isEditing = false;
@@ -296,8 +300,10 @@ namespace RoslynPad
         {
             try
             {
-                var reduced = new Reducer().Visit(_eval);
-                UpdateExpression(reduced);
+                // NB: Substituting in order to make subsequent Optimize operate on the reduced
+                //     expression (until Reduce implies optimization in future iterations).
+                _eval = new Reducer().VisitAndConvert(_eval, nameof(Reduce));
+                UpdateExpression(_eval);
             }
             catch (Exception ex)
             {
@@ -988,6 +994,33 @@ namespace RoslynPad
             if (!CheckSave())
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void btnOptimize_Click(object sender, EventArgs e)
+        {
+            Optimize();
+        }
+
+        private void mnuOptimize_Click(object sender, EventArgs e)
+        {
+            Optimize();
+        }
+
+        private void Optimize()
+        {
+            try
+            {
+                // NB: Substituting in order to make subsequent Reduce operate on the optimized
+                //     expression (until Reduce implies optimization in future iterations).
+                _eval = (LambdaExpression)_eval.Optimize();
+                UpdateExpression(_eval);
+            }
+            catch (Exception ex)
+            {
+                txtResult.ForeColor = Color.Red;
+                txtResult.Text = ex.ToString();
+                txtCSharp.Text = "";
             }
         }
     }

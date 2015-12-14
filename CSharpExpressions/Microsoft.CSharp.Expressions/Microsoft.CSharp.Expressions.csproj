@@ -121,6 +121,11 @@
     <Compile Include="Microsoft\CSharp\Expressions\NewCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\NewMultidimensionalArrayInitCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Optimizer.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpression.Optimize.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Blocks.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Try.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Loops.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ParameterAssignment.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
