@@ -891,6 +891,7 @@ namespace Tests
 
             var es = new[]
             {
+                DynamicCSharpExpression.DynamicAssign(p, x),
                 DynamicCSharpExpression.DynamicAddAssign(p, x),
                 DynamicCSharpExpression.DynamicAddAssignChecked(p, x),
                 DynamicCSharpExpression.DynamicSubtractAssign(p, x),
@@ -1038,6 +1039,103 @@ namespace Tests
                 o.Do();
                 Assert.AreEqual(1, i);
             }
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_Assign_DynamicMember()
+        {
+            var p = Expression.Parameter(typeof(object));
+
+            var v = typeof(StrongBox<int>).GetField("Value");
+            var m = Expression.Convert(Expression.Field(Expression.Convert(p, v.DeclaringType), v), typeof(object));
+            var c = Expression.New(typeof(StrongBox<int>));
+            var a = Expression.Assign(p, c);
+
+            var z = DynamicCSharpExpression.DynamicGetMember(p, "Value");
+            var i = DynamicCSharpExpression.DynamicAssign(z, Expression.Constant(42));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string>>(b);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f());
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_Assign_Member()
+        {
+            var p = Expression.Parameter(typeof(StrongBox<int>));
+
+            var v = typeof(StrongBox<int>).GetField("Value");
+            var x = Expression.Field(p, v);
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.New(typeof(StrongBox<int>));
+            var a = Expression.Assign(p, c);
+
+            var i = DynamicCSharpExpression.DynamicAssign(x, Expression.Constant(42, typeof(object)));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string>>(b);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f());
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_Assign_DynamicIndex()
+        {
+            var p = Expression.Parameter(typeof(object));
+
+            var v = typeof(List<int>).GetProperty("Item");
+            var x = Expression.Property(Expression.Convert(p, v.DeclaringType), v, Expression.Constant(0));
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.New(typeof(List<int>).GetConstructor(new[] { typeof(IEnumerable<int>) }), Expression.Constant(new[] { 0 }));
+            var a = Expression.Assign(p, c);
+
+            var z = DynamicCSharpExpression.DynamicGetIndex(p, Expression.Constant(0));
+            var i = DynamicCSharpExpression.DynamicAssign(z, Expression.Constant(42));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string>>(b);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f());
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_Assign_Index()
+        {
+            var p = Expression.Parameter(typeof(List<int>));
+
+            var v = typeof(List<int>).GetProperty("Item");
+            var x = Expression.Property(p, v, Expression.Constant(0));
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.New(typeof(List<int>).GetConstructor(new[] { typeof(IEnumerable<int>) }), Expression.Constant(new[] { 0 }));
+            var a = Expression.Assign(p, c);
+
+            var i = DynamicCSharpExpression.DynamicAssign(x, Expression.Constant(42, typeof(object)));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string>>(b);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f());
         }
 
         private void Dynamic_BinaryAssign_Compile_Variable<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)

@@ -20,330 +20,355 @@ namespace Tests
             var ld = DynamicCSharpExpression.DynamicArgument(le);
             var rd = DynamicCSharpExpression.DynamicArgument(re);
 
-            var be0 = DynamicCSharpExpression.DynamicAddAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.AddAssign, be0.OperationNodeType);
+            var be0 = DynamicCSharpExpression.DynamicAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.Assign, be0.OperationNodeType);
             Assert.AreSame(le, be0.Left.Expression);
             Assert.AreSame(re, be0.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be0.Flags);
 
-            var bd0 = DynamicCSharpExpression.DynamicAddAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.AddAssign, bd0.OperationNodeType);
+            var bd0 = DynamicCSharpExpression.DynamicAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.Assign, bd0.OperationNodeType);
             Assert.AreSame(ld, bd0.Left);
             Assert.AreSame(rd, bd0.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd0.Flags);
 
-            var bf0 = DynamicCSharpExpression.DynamicAddAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.AddAssign, bf0.OperationNodeType);
+            var bf0 = DynamicCSharpExpression.DynamicAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.Assign, bf0.OperationNodeType);
             Assert.AreSame(ld, bf0.Left);
             Assert.AreSame(rd, bf0.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf0.Flags);
 
-            var bc0 = DynamicCSharpExpression.DynamicAddAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.AddAssign, bc0.OperationNodeType);
+            var bc0 = DynamicCSharpExpression.DynamicAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.Assign, bc0.OperationNodeType);
             Assert.AreSame(ld, bc0.Left);
             Assert.AreSame(rd, bc0.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc0.Flags);
             Assert.AreEqual(typeof(int), bc0.Context);
 
-            var be1 = DynamicCSharpExpression.DynamicAndAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.AndAssign, be1.OperationNodeType);
+            var be1 = DynamicCSharpExpression.DynamicAddAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.AddAssign, be1.OperationNodeType);
             Assert.AreSame(le, be1.Left.Expression);
             Assert.AreSame(re, be1.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be1.Flags);
 
-            var bd1 = DynamicCSharpExpression.DynamicAndAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.AndAssign, bd1.OperationNodeType);
+            var bd1 = DynamicCSharpExpression.DynamicAddAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.AddAssign, bd1.OperationNodeType);
             Assert.AreSame(ld, bd1.Left);
             Assert.AreSame(rd, bd1.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd1.Flags);
 
-            var bf1 = DynamicCSharpExpression.DynamicAndAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.AndAssign, bf1.OperationNodeType);
+            var bf1 = DynamicCSharpExpression.DynamicAddAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.AddAssign, bf1.OperationNodeType);
             Assert.AreSame(ld, bf1.Left);
             Assert.AreSame(rd, bf1.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf1.Flags);
 
-            var bc1 = DynamicCSharpExpression.DynamicAndAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.AndAssign, bc1.OperationNodeType);
+            var bc1 = DynamicCSharpExpression.DynamicAddAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.AddAssign, bc1.OperationNodeType);
             Assert.AreSame(ld, bc1.Left);
             Assert.AreSame(rd, bc1.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc1.Flags);
             Assert.AreEqual(typeof(int), bc1.Context);
 
-            var be2 = DynamicCSharpExpression.DynamicDivideAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.DivideAssign, be2.OperationNodeType);
+            var be2 = DynamicCSharpExpression.DynamicAndAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.AndAssign, be2.OperationNodeType);
             Assert.AreSame(le, be2.Left.Expression);
             Assert.AreSame(re, be2.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be2.Flags);
 
-            var bd2 = DynamicCSharpExpression.DynamicDivideAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.DivideAssign, bd2.OperationNodeType);
+            var bd2 = DynamicCSharpExpression.DynamicAndAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.AndAssign, bd2.OperationNodeType);
             Assert.AreSame(ld, bd2.Left);
             Assert.AreSame(rd, bd2.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd2.Flags);
 
-            var bf2 = DynamicCSharpExpression.DynamicDivideAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.DivideAssign, bf2.OperationNodeType);
+            var bf2 = DynamicCSharpExpression.DynamicAndAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.AndAssign, bf2.OperationNodeType);
             Assert.AreSame(ld, bf2.Left);
             Assert.AreSame(rd, bf2.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf2.Flags);
 
-            var bc2 = DynamicCSharpExpression.DynamicDivideAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.DivideAssign, bc2.OperationNodeType);
+            var bc2 = DynamicCSharpExpression.DynamicAndAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.AndAssign, bc2.OperationNodeType);
             Assert.AreSame(ld, bc2.Left);
             Assert.AreSame(rd, bc2.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc2.Flags);
             Assert.AreEqual(typeof(int), bc2.Context);
 
-            var be3 = DynamicCSharpExpression.DynamicExclusiveOrAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, be3.OperationNodeType);
+            var be3 = DynamicCSharpExpression.DynamicDivideAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.DivideAssign, be3.OperationNodeType);
             Assert.AreSame(le, be3.Left.Expression);
             Assert.AreSame(re, be3.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be3.Flags);
 
-            var bd3 = DynamicCSharpExpression.DynamicExclusiveOrAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, bd3.OperationNodeType);
+            var bd3 = DynamicCSharpExpression.DynamicDivideAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.DivideAssign, bd3.OperationNodeType);
             Assert.AreSame(ld, bd3.Left);
             Assert.AreSame(rd, bd3.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd3.Flags);
 
-            var bf3 = DynamicCSharpExpression.DynamicExclusiveOrAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, bf3.OperationNodeType);
+            var bf3 = DynamicCSharpExpression.DynamicDivideAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.DivideAssign, bf3.OperationNodeType);
             Assert.AreSame(ld, bf3.Left);
             Assert.AreSame(rd, bf3.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf3.Flags);
 
-            var bc3 = DynamicCSharpExpression.DynamicExclusiveOrAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, bc3.OperationNodeType);
+            var bc3 = DynamicCSharpExpression.DynamicDivideAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.DivideAssign, bc3.OperationNodeType);
             Assert.AreSame(ld, bc3.Left);
             Assert.AreSame(rd, bc3.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc3.Flags);
             Assert.AreEqual(typeof(int), bc3.Context);
 
-            var be4 = DynamicCSharpExpression.DynamicLeftShiftAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, be4.OperationNodeType);
+            var be4 = DynamicCSharpExpression.DynamicExclusiveOrAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, be4.OperationNodeType);
             Assert.AreSame(le, be4.Left.Expression);
             Assert.AreSame(re, be4.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be4.Flags);
 
-            var bd4 = DynamicCSharpExpression.DynamicLeftShiftAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, bd4.OperationNodeType);
+            var bd4 = DynamicCSharpExpression.DynamicExclusiveOrAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, bd4.OperationNodeType);
             Assert.AreSame(ld, bd4.Left);
             Assert.AreSame(rd, bd4.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd4.Flags);
 
-            var bf4 = DynamicCSharpExpression.DynamicLeftShiftAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, bf4.OperationNodeType);
+            var bf4 = DynamicCSharpExpression.DynamicExclusiveOrAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, bf4.OperationNodeType);
             Assert.AreSame(ld, bf4.Left);
             Assert.AreSame(rd, bf4.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf4.Flags);
 
-            var bc4 = DynamicCSharpExpression.DynamicLeftShiftAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, bc4.OperationNodeType);
+            var bc4 = DynamicCSharpExpression.DynamicExclusiveOrAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.ExclusiveOrAssign, bc4.OperationNodeType);
             Assert.AreSame(ld, bc4.Left);
             Assert.AreSame(rd, bc4.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc4.Flags);
             Assert.AreEqual(typeof(int), bc4.Context);
 
-            var be5 = DynamicCSharpExpression.DynamicModuloAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.ModuloAssign, be5.OperationNodeType);
+            var be5 = DynamicCSharpExpression.DynamicLeftShiftAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, be5.OperationNodeType);
             Assert.AreSame(le, be5.Left.Expression);
             Assert.AreSame(re, be5.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be5.Flags);
 
-            var bd5 = DynamicCSharpExpression.DynamicModuloAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.ModuloAssign, bd5.OperationNodeType);
+            var bd5 = DynamicCSharpExpression.DynamicLeftShiftAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, bd5.OperationNodeType);
             Assert.AreSame(ld, bd5.Left);
             Assert.AreSame(rd, bd5.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd5.Flags);
 
-            var bf5 = DynamicCSharpExpression.DynamicModuloAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.ModuloAssign, bf5.OperationNodeType);
+            var bf5 = DynamicCSharpExpression.DynamicLeftShiftAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, bf5.OperationNodeType);
             Assert.AreSame(ld, bf5.Left);
             Assert.AreSame(rd, bf5.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf5.Flags);
 
-            var bc5 = DynamicCSharpExpression.DynamicModuloAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.ModuloAssign, bc5.OperationNodeType);
+            var bc5 = DynamicCSharpExpression.DynamicLeftShiftAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.LeftShiftAssign, bc5.OperationNodeType);
             Assert.AreSame(ld, bc5.Left);
             Assert.AreSame(rd, bc5.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc5.Flags);
             Assert.AreEqual(typeof(int), bc5.Context);
 
-            var be6 = DynamicCSharpExpression.DynamicMultiplyAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, be6.OperationNodeType);
+            var be6 = DynamicCSharpExpression.DynamicModuloAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.ModuloAssign, be6.OperationNodeType);
             Assert.AreSame(le, be6.Left.Expression);
             Assert.AreSame(re, be6.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be6.Flags);
 
-            var bd6 = DynamicCSharpExpression.DynamicMultiplyAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, bd6.OperationNodeType);
+            var bd6 = DynamicCSharpExpression.DynamicModuloAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.ModuloAssign, bd6.OperationNodeType);
             Assert.AreSame(ld, bd6.Left);
             Assert.AreSame(rd, bd6.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd6.Flags);
 
-            var bf6 = DynamicCSharpExpression.DynamicMultiplyAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, bf6.OperationNodeType);
+            var bf6 = DynamicCSharpExpression.DynamicModuloAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.ModuloAssign, bf6.OperationNodeType);
             Assert.AreSame(ld, bf6.Left);
             Assert.AreSame(rd, bf6.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf6.Flags);
 
-            var bc6 = DynamicCSharpExpression.DynamicMultiplyAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, bc6.OperationNodeType);
+            var bc6 = DynamicCSharpExpression.DynamicModuloAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.ModuloAssign, bc6.OperationNodeType);
             Assert.AreSame(ld, bc6.Left);
             Assert.AreSame(rd, bc6.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc6.Flags);
             Assert.AreEqual(typeof(int), bc6.Context);
 
-            var be7 = DynamicCSharpExpression.DynamicOrAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.OrAssign, be7.OperationNodeType);
+            var be7 = DynamicCSharpExpression.DynamicMultiplyAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, be7.OperationNodeType);
             Assert.AreSame(le, be7.Left.Expression);
             Assert.AreSame(re, be7.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be7.Flags);
 
-            var bd7 = DynamicCSharpExpression.DynamicOrAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.OrAssign, bd7.OperationNodeType);
+            var bd7 = DynamicCSharpExpression.DynamicMultiplyAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, bd7.OperationNodeType);
             Assert.AreSame(ld, bd7.Left);
             Assert.AreSame(rd, bd7.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd7.Flags);
 
-            var bf7 = DynamicCSharpExpression.DynamicOrAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.OrAssign, bf7.OperationNodeType);
+            var bf7 = DynamicCSharpExpression.DynamicMultiplyAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, bf7.OperationNodeType);
             Assert.AreSame(ld, bf7.Left);
             Assert.AreSame(rd, bf7.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf7.Flags);
 
-            var bc7 = DynamicCSharpExpression.DynamicOrAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.OrAssign, bc7.OperationNodeType);
+            var bc7 = DynamicCSharpExpression.DynamicMultiplyAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssign, bc7.OperationNodeType);
             Assert.AreSame(ld, bc7.Left);
             Assert.AreSame(rd, bc7.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc7.Flags);
             Assert.AreEqual(typeof(int), bc7.Context);
 
-            var be8 = DynamicCSharpExpression.DynamicRightShiftAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, be8.OperationNodeType);
+            var be8 = DynamicCSharpExpression.DynamicOrAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.OrAssign, be8.OperationNodeType);
             Assert.AreSame(le, be8.Left.Expression);
             Assert.AreSame(re, be8.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be8.Flags);
 
-            var bd8 = DynamicCSharpExpression.DynamicRightShiftAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, bd8.OperationNodeType);
+            var bd8 = DynamicCSharpExpression.DynamicOrAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.OrAssign, bd8.OperationNodeType);
             Assert.AreSame(ld, bd8.Left);
             Assert.AreSame(rd, bd8.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd8.Flags);
 
-            var bf8 = DynamicCSharpExpression.DynamicRightShiftAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, bf8.OperationNodeType);
+            var bf8 = DynamicCSharpExpression.DynamicOrAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.OrAssign, bf8.OperationNodeType);
             Assert.AreSame(ld, bf8.Left);
             Assert.AreSame(rd, bf8.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf8.Flags);
 
-            var bc8 = DynamicCSharpExpression.DynamicRightShiftAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, bc8.OperationNodeType);
+            var bc8 = DynamicCSharpExpression.DynamicOrAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.OrAssign, bc8.OperationNodeType);
             Assert.AreSame(ld, bc8.Left);
             Assert.AreSame(rd, bc8.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc8.Flags);
             Assert.AreEqual(typeof(int), bc8.Context);
 
-            var be9 = DynamicCSharpExpression.DynamicSubtractAssign(le, re);
-            Assert.AreEqual(CSharpExpressionType.SubtractAssign, be9.OperationNodeType);
+            var be9 = DynamicCSharpExpression.DynamicRightShiftAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, be9.OperationNodeType);
             Assert.AreSame(le, be9.Left.Expression);
             Assert.AreSame(re, be9.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.None, be9.Flags);
 
-            var bd9 = DynamicCSharpExpression.DynamicSubtractAssign(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.SubtractAssign, bd9.OperationNodeType);
+            var bd9 = DynamicCSharpExpression.DynamicRightShiftAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, bd9.OperationNodeType);
             Assert.AreSame(ld, bd9.Left);
             Assert.AreSame(rd, bd9.Right);
 			Assert.AreEqual(CSharpBinderFlags.None, bd9.Flags);
 
-            var bf9 = DynamicCSharpExpression.DynamicSubtractAssign(ld, rd, CSharpBinderFlags.None);
-            Assert.AreEqual(CSharpExpressionType.SubtractAssign, bf9.OperationNodeType);
+            var bf9 = DynamicCSharpExpression.DynamicRightShiftAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, bf9.OperationNodeType);
             Assert.AreSame(ld, bf9.Left);
             Assert.AreSame(rd, bf9.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bf9.Flags);
 
-            var bc9 = DynamicCSharpExpression.DynamicSubtractAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.SubtractAssign, bc9.OperationNodeType);
+            var bc9 = DynamicCSharpExpression.DynamicRightShiftAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.RightShiftAssign, bc9.OperationNodeType);
             Assert.AreSame(ld, bc9.Left);
             Assert.AreSame(rd, bc9.Right);
             Assert.AreEqual(CSharpBinderFlags.None, bc9.Flags);
             Assert.AreEqual(typeof(int), bc9.Context);
 
-            var be10 = DynamicCSharpExpression.DynamicAddAssignChecked(le, re);
-            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, be10.OperationNodeType);
+            var be10 = DynamicCSharpExpression.DynamicSubtractAssign(le, re);
+            Assert.AreEqual(CSharpExpressionType.SubtractAssign, be10.OperationNodeType);
             Assert.AreSame(le, be10.Left.Expression);
             Assert.AreSame(re, be10.Right.Expression);
-			Assert.AreEqual(CSharpBinderFlags.CheckedContext, be10.Flags);
+			Assert.AreEqual(CSharpBinderFlags.None, be10.Flags);
 
-            var bd10 = DynamicCSharpExpression.DynamicAddAssignChecked(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, bd10.OperationNodeType);
+            var bd10 = DynamicCSharpExpression.DynamicSubtractAssign(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.SubtractAssign, bd10.OperationNodeType);
             Assert.AreSame(ld, bd10.Left);
             Assert.AreSame(rd, bd10.Right);
-			Assert.AreEqual(CSharpBinderFlags.CheckedContext, bd10.Flags);
+			Assert.AreEqual(CSharpBinderFlags.None, bd10.Flags);
 
-            var bf10 = DynamicCSharpExpression.DynamicAddAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, bf10.OperationNodeType);
+            var bf10 = DynamicCSharpExpression.DynamicSubtractAssign(ld, rd, CSharpBinderFlags.None);
+            Assert.AreEqual(CSharpExpressionType.SubtractAssign, bf10.OperationNodeType);
             Assert.AreSame(ld, bf10.Left);
             Assert.AreSame(rd, bf10.Right);
-            Assert.AreEqual(CSharpBinderFlags.CheckedContext, bf10.Flags);
+            Assert.AreEqual(CSharpBinderFlags.None, bf10.Flags);
 
-            var bc10 = DynamicCSharpExpression.DynamicAddAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, bc10.OperationNodeType);
+            var bc10 = DynamicCSharpExpression.DynamicSubtractAssign(ld, rd, CSharpBinderFlags.None, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.SubtractAssign, bc10.OperationNodeType);
             Assert.AreSame(ld, bc10.Left);
             Assert.AreSame(rd, bc10.Right);
-            Assert.AreEqual(CSharpBinderFlags.CheckedContext, bc10.Flags);
+            Assert.AreEqual(CSharpBinderFlags.None, bc10.Flags);
             Assert.AreEqual(typeof(int), bc10.Context);
 
-            var be11 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(le, re);
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, be11.OperationNodeType);
+            var be11 = DynamicCSharpExpression.DynamicAddAssignChecked(le, re);
+            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, be11.OperationNodeType);
             Assert.AreSame(le, be11.Left.Expression);
             Assert.AreSame(re, be11.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, be11.Flags);
 
-            var bd11 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, bd11.OperationNodeType);
+            var bd11 = DynamicCSharpExpression.DynamicAddAssignChecked(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, bd11.OperationNodeType);
             Assert.AreSame(ld, bd11.Left);
             Assert.AreSame(rd, bd11.Right);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, bd11.Flags);
 
-            var bf11 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, bf11.OperationNodeType);
+            var bf11 = DynamicCSharpExpression.DynamicAddAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, bf11.OperationNodeType);
             Assert.AreSame(ld, bf11.Left);
             Assert.AreSame(rd, bf11.Right);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, bf11.Flags);
 
-            var bc11 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, bc11.OperationNodeType);
+            var bc11 = DynamicCSharpExpression.DynamicAddAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.AddAssignChecked, bc11.OperationNodeType);
             Assert.AreSame(ld, bc11.Left);
             Assert.AreSame(rd, bc11.Right);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, bc11.Flags);
             Assert.AreEqual(typeof(int), bc11.Context);
 
-            var be12 = DynamicCSharpExpression.DynamicSubtractAssignChecked(le, re);
-            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, be12.OperationNodeType);
+            var be12 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(le, re);
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, be12.OperationNodeType);
             Assert.AreSame(le, be12.Left.Expression);
             Assert.AreSame(re, be12.Right.Expression);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, be12.Flags);
 
-            var bd12 = DynamicCSharpExpression.DynamicSubtractAssignChecked(ld, rd);
-            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, bd12.OperationNodeType);
+            var bd12 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, bd12.OperationNodeType);
             Assert.AreSame(ld, bd12.Left);
             Assert.AreSame(rd, bd12.Right);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, bd12.Flags);
 
-            var bf12 = DynamicCSharpExpression.DynamicSubtractAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, bf12.OperationNodeType);
+            var bf12 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, bf12.OperationNodeType);
             Assert.AreSame(ld, bf12.Left);
             Assert.AreSame(rd, bf12.Right);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, bf12.Flags);
 
-            var bc12 = DynamicCSharpExpression.DynamicSubtractAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, bc12.OperationNodeType);
+            var bc12 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.MultiplyAssignChecked, bc12.OperationNodeType);
             Assert.AreSame(ld, bc12.Left);
             Assert.AreSame(rd, bc12.Right);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, bc12.Flags);
             Assert.AreEqual(typeof(int), bc12.Context);
+
+            var be13 = DynamicCSharpExpression.DynamicSubtractAssignChecked(le, re);
+            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, be13.OperationNodeType);
+            Assert.AreSame(le, be13.Left.Expression);
+            Assert.AreSame(re, be13.Right.Expression);
+			Assert.AreEqual(CSharpBinderFlags.CheckedContext, be13.Flags);
+
+            var bd13 = DynamicCSharpExpression.DynamicSubtractAssignChecked(ld, rd);
+            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, bd13.OperationNodeType);
+            Assert.AreSame(ld, bd13.Left);
+            Assert.AreSame(rd, bd13.Right);
+			Assert.AreEqual(CSharpBinderFlags.CheckedContext, bd13.Flags);
+
+            var bf13 = DynamicCSharpExpression.DynamicSubtractAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, bf13.OperationNodeType);
+            Assert.AreSame(ld, bf13.Left);
+            Assert.AreSame(rd, bf13.Right);
+            Assert.AreEqual(CSharpBinderFlags.CheckedContext, bf13.Flags);
+
+            var bc13 = DynamicCSharpExpression.DynamicSubtractAssignChecked(ld, rd, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.SubtractAssignChecked, bc13.OperationNodeType);
+            Assert.AreSame(ld, bc13.Left);
+            Assert.AreSame(rd, bc13.Right);
+            Assert.AreEqual(CSharpBinderFlags.CheckedContext, bc13.Flags);
+            Assert.AreEqual(typeof(int), bc13.Context);
 
         }
 

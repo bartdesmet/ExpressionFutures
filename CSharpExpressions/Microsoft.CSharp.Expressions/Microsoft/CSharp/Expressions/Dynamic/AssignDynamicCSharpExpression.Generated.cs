@@ -1012,6 +1012,7 @@ namespace Microsoft.CSharp.Expressions
         {
             switch (binaryType)
             {
+                case CSharpExpressionType.Assign:
                 case CSharpExpressionType.AddAssign:
                 case CSharpExpressionType.AndAssign:
                 case CSharpExpressionType.DivideAssign:

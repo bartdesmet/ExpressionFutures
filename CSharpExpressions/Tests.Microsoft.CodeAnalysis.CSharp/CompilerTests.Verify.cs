@@ -119,6 +119,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_2CE0_A2D8() => OK();
             public override void CompilerTest_D55B_C6C6() => OK();
 
+            // Dynamic set index
+            public override void CompilerTest_2844_F51E() => OK();
+            public override void CompilerTest_9F3A_BDCA() => OK();
+            public override void CompilerTest_C18D_37B8() => OK();
+
+            // Dynamic set member
+            public override void CompilerTest_AC33_4E06() => OK();
+            public override void CompilerTest_7E7C_70FE() => OK();
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda

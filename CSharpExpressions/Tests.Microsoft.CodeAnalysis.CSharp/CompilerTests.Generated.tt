@@ -142,10 +142,14 @@ var exprs = new[]
     "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
     // TODO: ref/out
 
-    // TODO: support for dynamic set member and set index?
-    // !!!BUG!!! "(Expression<Action<dynamic>>)(x => { x[1] = 42; })",
-    // !!!BUG!!! "(Expression<Action<dynamic>>)(x => { x.Foo = 42; })",
-    // !!!BUG!!! "(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })",
+	// Dynamic set index
+    "(Expression<Action<dynamic>>)(x => { x[1] = 42; })",
+	"(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })",
+	"(Expression<Action<List<int>, dynamic>>)((xs, x) => { xs[0] = x; })",
+
+	// Dynamic set member
+    "(Expression<Action<dynamic>>)(x => { x.Foo = 42; })",
+	"(Expression<Action<StrongBox<int>, dynamic>>)((b, x) => { b.Value = x; })",
 
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",

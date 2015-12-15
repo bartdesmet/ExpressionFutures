@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using static Microsoft.CSharp.Expressions.DynamicHelpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -195,11 +196,10 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound unary assignment operation.</returns>
         public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(operand, nameof(operand));
+            RequiresCanRead(operand.Expression, nameof(operand));
+            RequiresCanWrite(operand.Expression, nameof(operand));
 
             CheckUnaryAssign(unaryType);
-
-            DynamicHelpers.RequiresCanWrite(operand.Expression, nameof(operand));
 
             switch (unaryType)
             {

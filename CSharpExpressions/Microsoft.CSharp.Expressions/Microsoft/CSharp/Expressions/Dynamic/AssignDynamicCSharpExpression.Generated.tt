@@ -163,6 +163,7 @@ foreach (var et in uts)
         {
             switch (binaryType)
             {
+                case CSharpExpressionType.Assign:
 <#
 foreach (var et in bts)
 {

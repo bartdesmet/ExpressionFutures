@@ -2695,6 +2695,255 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D55B_C6C6() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_2844_F51E()
+        {
+            // (Expression<Action<dynamic>>)(x => { x[1] = 42; })
+            var actual = GetDebugView(@"(Expression<Action<dynamic>>)(x => { x[1] = 42; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""Assign"">
+          <Left>
+            <DynamicCSharpArgument>
+              <Expression>
+                <CSharpDynamicGetIndex Type=""System.Object"" Context=""Expressions"">
+                  <Object>
+                    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+                  </Object>
+                  <Arguments>
+                    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+                      <Expression>
+                        <Constant Type=""System.Int32"" Value=""1"" />
+                      </Expression>
+                    </DynamicCSharpArgument>
+                  </Arguments>
+                </CSharpDynamicGetIndex>
+              </Expression>
+            </DynamicCSharpArgument>
+          </Left>
+          <Right>
+            <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+              <Expression>
+                <Constant Type=""System.Int32"" Value=""42"" />
+              </Expression>
+            </DynamicCSharpArgument>
+          </Right>
+        </CSharpDynamicBinaryAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2844_F51E();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2844_F51E() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_9F3A_BDCA()
+        {
+            // (Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })
+            var actual = GetDebugView(@"(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""Assign"">
+          <Left>
+            <DynamicCSharpArgument>
+              <Expression>
+                <CSharpDynamicGetIndex Type=""System.Object"" Context=""Expressions"">
+                  <Object>
+                    <CSharpDynamicGetMember Type=""System.Object"" Name=""Foo"" Flags=""ResultIndexed"" Context=""Expressions"">
+                      <Object>
+                        <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+                      </Object>
+                    </CSharpDynamicGetMember>
+                  </Object>
+                  <Arguments>
+                    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+                      <Expression>
+                        <Constant Type=""System.Int32"" Value=""1"" />
+                      </Expression>
+                    </DynamicCSharpArgument>
+                  </Arguments>
+                </CSharpDynamicGetIndex>
+              </Expression>
+            </DynamicCSharpArgument>
+          </Left>
+          <Right>
+            <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+              <Expression>
+                <Constant Type=""System.Int32"" Value=""42"" />
+              </Expression>
+            </DynamicCSharpArgument>
+          </Right>
+        </CSharpDynamicBinaryAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_9F3A_BDCA();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9F3A_BDCA() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_C18D_37B8()
+        {
+            // (Expression<Action<List<int>, dynamic>>)((xs, x) => { xs[0] = x; })
+            var actual = GetDebugView(@"(Expression<Action<List<int>, dynamic>>)((xs, x) => { xs[0] = x; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Collections.Generic.List`1[System.Int32],System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAssign Type=""System.Int32"">
+          <Left>
+            <CSharpIndex Type=""System.Int32"" Indexer=""Int32 Item [Int32]"">
+              <Object>
+                <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
+              </Object>
+              <Arguments>
+                <ParameterAssignment Parameter=""Int32 index"">
+                  <Expression>
+                    <Constant Type=""System.Int32"" Value=""0"" />
+                  </Expression>
+                </ParameterAssignment>
+              </Arguments>
+            </CSharpIndex>
+          </Left>
+          <Right>
+            <CSharpDynamicConvert Type=""System.Int32"" Context=""Expressions"">
+              <Expression>
+                <Parameter Type=""System.Object"" Id=""1"" Name=""x"" />
+              </Expression>
+            </CSharpDynamicConvert>
+          </Right>
+        </CSharpAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C18D_37B8();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C18D_37B8() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_AC33_4E06()
+        {
+            // (Expression<Action<dynamic>>)(x => { x.Foo = 42; })
+            var actual = GetDebugView(@"(Expression<Action<dynamic>>)(x => { x.Foo = 42; })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""Assign"">
+          <Left>
+            <DynamicCSharpArgument>
+              <Expression>
+                <CSharpDynamicGetMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+                  <Object>
+                    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+                  </Object>
+                </CSharpDynamicGetMember>
+              </Expression>
+            </DynamicCSharpArgument>
+          </Left>
+          <Right>
+            <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+              <Expression>
+                <Constant Type=""System.Int32"" Value=""42"" />
+              </Expression>
+            </DynamicCSharpArgument>
+          </Right>
+        </CSharpDynamicBinaryAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_AC33_4E06();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AC33_4E06() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_7E7C_70FE()
+        {
+            // (Expression<Action<StrongBox<int>, dynamic>>)((b, x) => { b.Value = x; })
+            var actual = GetDebugView(@"(Expression<Action<StrongBox<int>, dynamic>>)((b, x) => { b.Value = x; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[System.Runtime.CompilerServices.StrongBox`1[System.Int32],System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Runtime.CompilerServices.StrongBox`1[System.Int32]"" Id=""0"" Name=""b"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpAssign Type=""System.Int32"">
+          <Left>
+            <MemberAccess Type=""System.Int32"" Member=""Int32 Value"">
+              <Expression>
+                <Parameter Type=""System.Runtime.CompilerServices.StrongBox`1[System.Int32]"" Id=""0"" Name=""b"" />
+              </Expression>
+            </MemberAccess>
+          </Left>
+          <Right>
+            <CSharpDynamicConvert Type=""System.Int32"" Context=""Expressions"">
+              <Expression>
+                <Parameter Type=""System.Object"" Id=""1"" Name=""x"" />
+              </Expression>
+            </CSharpDynamicConvert>
+          </Right>
+        </CSharpAssign>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7E7C_70FE();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7E7C_70FE() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_0FFA_7AF2()
         {
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
@@ -9702,6 +9951,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_29E3_8116() => OK();
             public override void CompilerTest_2CE0_A2D8() => OK();
             public override void CompilerTest_D55B_C6C6() => OK();
+            public override void CompilerTest_2844_F51E() => OK();
+            public override void CompilerTest_9F3A_BDCA() => OK();
+            public override void CompilerTest_C18D_37B8() => OK();
+            public override void CompilerTest_AC33_4E06() => OK();
+            public override void CompilerTest_7E7C_70FE() => OK();
             public override void CompilerTest_0FFA_7AF2() => OK();
             public override void CompilerTest_83AE_26E4() => OK();
             public override void CompilerTest_4DC5_243C() => OK();

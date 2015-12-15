@@ -136,6 +136,8 @@ namespace Microsoft.CSharp.Expressions
 
         public static void RequiresCanWrite(Expression expression, string paramName)
         {
+            ContractUtils.RequiresNotNull(expression, paramName);
+
             if (expression is GetIndexDynamicCSharpExpression)
             {
                 return;
@@ -147,6 +149,11 @@ namespace Microsoft.CSharp.Expressions
             }
 
             Helpers.RequiresCanWrite(expression, paramName);
+        }
+
+        public static void RequiresCanRead(Expression expression, string paramName)
+        {
+            ExpressionStubs.RequiresCanRead(expression, paramName);
         }
     }
 }

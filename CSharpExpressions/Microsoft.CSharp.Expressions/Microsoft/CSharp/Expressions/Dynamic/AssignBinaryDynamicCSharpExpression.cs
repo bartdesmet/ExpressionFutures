@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using static Microsoft.CSharp.Expressions.DynamicHelpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -58,6 +59,11 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            if (OperationNodeType == CSharpExpressionType.Assign)
+            {
+                return ReduceAssign();
+            }
+
             var candidateAccessor = default(string);
 
             switch (OperationNodeType)
@@ -291,10 +297,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
         public static AssignBinaryDynamicCSharpExpression MakeDynamicBinaryAssign(CSharpExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(left, nameof(left));
-            ContractUtils.RequiresNotNull(right, nameof(right));
-
-            DynamicHelpers.RequiresCanWrite(left.Expression, nameof(left));
+            RequiresCanWrite(left.Expression, nameof(left));
+            RequiresCanRead(right.Expression, nameof(right));
 
             CheckBinaryAssign(binaryType);
 

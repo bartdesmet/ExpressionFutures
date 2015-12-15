@@ -85,6 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.cs">
       <DependentUpon>AssignDynamicCSharpExpression.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>

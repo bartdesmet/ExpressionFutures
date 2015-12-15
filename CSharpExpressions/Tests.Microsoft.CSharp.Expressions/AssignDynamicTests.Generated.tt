@@ -12,6 +12,7 @@
 <#
 var bts = new[]
 {
+    "Assign",
     "AddAssign",
     "AndAssign",
     "DivideAssign",
