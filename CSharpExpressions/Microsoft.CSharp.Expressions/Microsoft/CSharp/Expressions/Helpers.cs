@@ -684,6 +684,10 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                // ISSUE: If member.Expression is a value type, we're creating a copy here. How do we capture it
+                //        as a `ref` instead? See https://github.com/dotnet/corefx/issues/4984 for this issue
+                //        in the LINQ API as well.
+
                 var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
                 var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
                 member = member.Update(lhsTemp);
@@ -723,6 +727,10 @@ namespace Microsoft.CSharp.Expressions
             var args = new Expression[n];
             var block = new Expression[n + (prefix ? 2 : 4)];
             var temps = new ParameterExpression[n + (prefix ? 1 : 2)];
+
+            // ISSUE: If index.Object is a value type, we're creating a copy here. How do we capture it
+            //        as a `ref` instead? See https://github.com/dotnet/corefx/issues/4984 for this issue
+            //        in the LINQ API as well.
 
             var i = 0;
             temps[i] = Expression.Parameter(index.Object.Type, "__object");
