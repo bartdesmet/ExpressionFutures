@@ -28,13 +28,13 @@ namespace Microsoft.CSharp.Expressions
 			switch (nodeType)
 			{
 				case CSharpExpressionType.PreIncrementAssign: return ExpressionType.PreIncrementAssign;
-				case CSharpExpressionType.PreIncrementCheckedAssign: return ExpressionType.PreIncrementAssign;
+				case CSharpExpressionType.PreIncrementAssignChecked: return ExpressionType.PreIncrementAssign;
 				case CSharpExpressionType.PreDecrementAssign: return ExpressionType.PreDecrementAssign;
-				case CSharpExpressionType.PreDecrementCheckedAssign: return ExpressionType.PreDecrementAssign;
+				case CSharpExpressionType.PreDecrementAssignChecked: return ExpressionType.PreDecrementAssign;
 				case CSharpExpressionType.PostIncrementAssign: return ExpressionType.PostIncrementAssign;
-				case CSharpExpressionType.PostIncrementCheckedAssign: return ExpressionType.PostIncrementAssign;
+				case CSharpExpressionType.PostIncrementAssignChecked: return ExpressionType.PostIncrementAssign;
 				case CSharpExpressionType.PostDecrementAssign: return ExpressionType.PostDecrementAssign;
-				case CSharpExpressionType.PostDecrementCheckedAssign: return ExpressionType.PostDecrementAssign;
+				case CSharpExpressionType.PostDecrementAssignChecked: return ExpressionType.PostDecrementAssign;
 				default:
 					throw ContractUtils.Unreachable;
 			}
@@ -128,87 +128,87 @@ namespace Microsoft.CSharp.Expressions
 		}
 
 		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreIncrementCheckedAssign.
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreIncrementAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
 		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PreIncrementCheckedAssign(Expression operand)
+		public static AssignUnaryCSharpExpression PreIncrementAssignChecked(Expression operand)
 		{
-			return PreIncrementCheckedAssign(operand, null);
+			return PreIncrementAssignChecked(operand, null);
 		}
 
 		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreIncrementCheckedAssign.
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreIncrementAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
 		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PreIncrementCheckedAssign(Expression operand, MethodInfo method)
+		public static AssignUnaryCSharpExpression PreIncrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PreIncrementCheckedAssign, Expression.PreIncrementAssign, operand, method);
+			return MakeUnaryAssignChecked(CSharpExpressionType.PreIncrementAssignChecked, Expression.PreIncrementAssign, operand, method);
 		}
 
 		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreDecrementCheckedAssign.
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreDecrementAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
 		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PreDecrementCheckedAssign(Expression operand)
+		public static AssignUnaryCSharpExpression PreDecrementAssignChecked(Expression operand)
 		{
-			return PreDecrementCheckedAssign(operand, null);
+			return PreDecrementAssignChecked(operand, null);
 		}
 
 		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreDecrementCheckedAssign.
-		/// </summary>
-		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PreDecrementCheckedAssign(Expression operand, MethodInfo method)
-		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PreDecrementCheckedAssign, Expression.PreDecrementAssign, operand, method);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostIncrementCheckedAssign.
-		/// </summary>
-		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PostIncrementCheckedAssign(Expression operand)
-		{
-			return PostIncrementCheckedAssign(operand, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostIncrementCheckedAssign.
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PreDecrementAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
 		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PostIncrementCheckedAssign(Expression operand, MethodInfo method)
+		public static AssignUnaryCSharpExpression PreDecrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PostIncrementCheckedAssign, Expression.PostIncrementAssign, operand, method);
+			return MakeUnaryAssignChecked(CSharpExpressionType.PreDecrementAssignChecked, Expression.PreDecrementAssign, operand, method);
 		}
 
 		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostDecrementCheckedAssign.
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostIncrementAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
 		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PostDecrementCheckedAssign(Expression operand)
+		public static AssignUnaryCSharpExpression PostIncrementAssignChecked(Expression operand)
 		{
-			return PostDecrementCheckedAssign(operand, null);
+			return PostIncrementAssignChecked(operand, null);
 		}
 
 		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostDecrementCheckedAssign.
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostIncrementAssignChecked.
 		/// </summary>
 		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
 		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression PostDecrementCheckedAssign(Expression operand, MethodInfo method)
+		public static AssignUnaryCSharpExpression PostIncrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PostDecrementCheckedAssign, Expression.PostDecrementAssign, operand, method);
+			return MakeUnaryAssignChecked(CSharpExpressionType.PostIncrementAssignChecked, Expression.PostIncrementAssign, operand, method);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostDecrementAssignChecked.
+		/// </summary>
+		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
+		public static AssignUnaryCSharpExpression PostDecrementAssignChecked(Expression operand)
+		{
+			return PostDecrementAssignChecked(operand, null);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type PostDecrementAssignChecked.
+		/// </summary>
+		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
+		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
+		public static AssignUnaryCSharpExpression PostDecrementAssignChecked(Expression operand, MethodInfo method)
+		{
+			return MakeUnaryAssignChecked(CSharpExpressionType.PostDecrementAssignChecked, Expression.PostDecrementAssign, operand, method);
 		}
 
 	}

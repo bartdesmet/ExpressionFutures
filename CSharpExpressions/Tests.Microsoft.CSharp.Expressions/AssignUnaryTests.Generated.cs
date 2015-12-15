@@ -117,7 +117,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AssignUnary_Factory_PreIncrementCheckedAssign()
+        public void AssignUnary_Factory_PreIncrementAssignChecked()
         {
             var a = Expression.Parameter(typeof(int));
 
@@ -125,11 +125,11 @@ namespace Tests
             {
                 var m = MethodInfoOf(() => Op(0));
 
-                var a1 = CSharpExpression.PreIncrementCheckedAssign(o);
+                var a1 = CSharpExpression.PreIncrementAssignChecked(o);
                 Assert.AreSame(o, a1.Operand);
                 Assert.IsNull(a1.Method);
 
-                var a2 = CSharpExpression.PreIncrementCheckedAssign(o, m);
+                var a2 = CSharpExpression.PreIncrementAssignChecked(o, m);
                 Assert.AreSame(o, a2.Operand);
                 Assert.AreSame(m, a2.Method);
 
@@ -143,7 +143,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AssignUnary_Factory_PreDecrementCheckedAssign()
+        public void AssignUnary_Factory_PreDecrementAssignChecked()
         {
             var a = Expression.Parameter(typeof(int));
 
@@ -151,11 +151,11 @@ namespace Tests
             {
                 var m = MethodInfoOf(() => Op(0));
 
-                var a1 = CSharpExpression.PreDecrementCheckedAssign(o);
+                var a1 = CSharpExpression.PreDecrementAssignChecked(o);
                 Assert.AreSame(o, a1.Operand);
                 Assert.IsNull(a1.Method);
 
-                var a2 = CSharpExpression.PreDecrementCheckedAssign(o, m);
+                var a2 = CSharpExpression.PreDecrementAssignChecked(o, m);
                 Assert.AreSame(o, a2.Operand);
                 Assert.AreSame(m, a2.Method);
 
@@ -169,7 +169,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AssignUnary_Factory_PostIncrementCheckedAssign()
+        public void AssignUnary_Factory_PostIncrementAssignChecked()
         {
             var a = Expression.Parameter(typeof(int));
 
@@ -177,11 +177,11 @@ namespace Tests
             {
                 var m = MethodInfoOf(() => Op(0));
 
-                var a1 = CSharpExpression.PostIncrementCheckedAssign(o);
+                var a1 = CSharpExpression.PostIncrementAssignChecked(o);
                 Assert.AreSame(o, a1.Operand);
                 Assert.IsNull(a1.Method);
 
-                var a2 = CSharpExpression.PostIncrementCheckedAssign(o, m);
+                var a2 = CSharpExpression.PostIncrementAssignChecked(o, m);
                 Assert.AreSame(o, a2.Operand);
                 Assert.AreSame(m, a2.Method);
 
@@ -195,7 +195,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AssignUnary_Factory_PostDecrementCheckedAssign()
+        public void AssignUnary_Factory_PostDecrementAssignChecked()
         {
             var a = Expression.Parameter(typeof(int));
 
@@ -203,11 +203,11 @@ namespace Tests
             {
                 var m = MethodInfoOf(() => Op(0));
 
-                var a1 = CSharpExpression.PostDecrementCheckedAssign(o);
+                var a1 = CSharpExpression.PostDecrementAssignChecked(o);
                 Assert.AreSame(o, a1.Operand);
                 Assert.IsNull(a1.Method);
 
-                var a2 = CSharpExpression.PostDecrementCheckedAssign(o, m);
+                var a2 = CSharpExpression.PostDecrementAssignChecked(o, m);
                 Assert.AreSame(o, a2.Operand);
                 Assert.AreSame(m, a2.Method);
 

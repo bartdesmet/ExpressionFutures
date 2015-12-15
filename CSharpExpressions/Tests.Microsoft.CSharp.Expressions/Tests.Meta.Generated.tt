@@ -48,8 +48,8 @@ namespace Tests
             Assert.AreEqual(dbg0, expr0.DebugView().ToString());
         }
 
-        private Expression expr1 = CSharpExpression.PreDecrementCheckedAssign(Expression.Parameter(typeof(int)));
-        private string dbg1 = <#=toEscapedString(CSharpExpression.PreDecrementCheckedAssign(Expression.Parameter(typeof(int))).DebugView())#>;
+        private Expression expr1 = CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int)));
+        private string dbg1 = <#=toEscapedString(CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int))).DebugView())#>;
 
         [TestMethod]
         public void CSharp_DebugView_Test1()

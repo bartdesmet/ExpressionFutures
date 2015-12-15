@@ -111,8 +111,8 @@ namespace Microsoft.CSharp.Expressions
                     {
                         case CSharpExpressionType.PreIncrementAssign:
                         case CSharpExpressionType.PreDecrementAssign:
-                        case CSharpExpressionType.PreIncrementCheckedAssign:
-                        case CSharpExpressionType.PreDecrementCheckedAssign:
+                        case CSharpExpressionType.PreIncrementAssignChecked:
+                        case CSharpExpressionType.PreDecrementAssignChecked:
                             return true;
                     }
 
@@ -126,10 +126,10 @@ namespace Microsoft.CSharp.Expressions
                 {
                     switch (CSharpNodeType)
                     {
-                        case CSharpExpressionType.PreIncrementCheckedAssign:
-                        case CSharpExpressionType.PreDecrementCheckedAssign:
-                        case CSharpExpressionType.PostIncrementCheckedAssign:
-                        case CSharpExpressionType.PostDecrementCheckedAssign:
+                        case CSharpExpressionType.PreIncrementAssignChecked:
+                        case CSharpExpressionType.PreDecrementAssignChecked:
+                        case CSharpExpressionType.PostIncrementAssignChecked:
+                        case CSharpExpressionType.PostDecrementAssignChecked:
                             return true;
                     }
 
@@ -143,12 +143,12 @@ namespace Microsoft.CSharp.Expressions
 
                 switch (CSharpNodeType)
                 {
-                    case CSharpExpressionType.PreIncrementCheckedAssign:
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
                         return Expression.AddChecked(operand, one);
 
-                    case CSharpExpressionType.PreDecrementCheckedAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
                         return Expression.SubtractChecked(operand, one);
 
                     case CSharpExpressionType.PreIncrementAssign:
@@ -246,20 +246,20 @@ namespace Microsoft.CSharp.Expressions
             {
                 case CSharpExpressionType.PreIncrementAssign:
                     return PreIncrementAssign(operand, method);
-                case CSharpExpressionType.PreIncrementCheckedAssign:
-                    return PreIncrementCheckedAssign(operand, method);
+                case CSharpExpressionType.PreIncrementAssignChecked:
+                    return PreIncrementAssignChecked(operand, method);
                 case CSharpExpressionType.PreDecrementAssign:
                     return PreDecrementAssign(operand, method);
-                case CSharpExpressionType.PreDecrementCheckedAssign:
-                    return PreDecrementCheckedAssign(operand, method);
+                case CSharpExpressionType.PreDecrementAssignChecked:
+                    return PreDecrementAssignChecked(operand, method);
                 case CSharpExpressionType.PostIncrementAssign:
                     return PostIncrementAssign(operand, method);
-                case CSharpExpressionType.PostIncrementCheckedAssign:
-                    return PostIncrementCheckedAssign(operand, method);
+                case CSharpExpressionType.PostIncrementAssignChecked:
+                    return PostIncrementAssignChecked(operand, method);
                 case CSharpExpressionType.PostDecrementAssign:
                     return PostDecrementAssign(operand, method);
-                case CSharpExpressionType.PostDecrementCheckedAssign:
-                    return PostDecrementCheckedAssign(operand, method);
+                case CSharpExpressionType.PostDecrementAssignChecked:
+                    return PostDecrementAssignChecked(operand, method);
             }
 
             throw LinqError.UnhandledUnary(unaryType);

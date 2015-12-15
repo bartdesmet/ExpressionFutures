@@ -6,7 +6,7 @@
 <#@ output extension=".cs" #>
 <#
 var nodes = new[] { "PreIncrementAssign", "PreDecrementAssign", "PostIncrementAssign", "PostDecrementAssign" };
-var checkedNodes = new[] { "PreIncrementCheckedAssign", "PreDecrementCheckedAssign", "PostIncrementCheckedAssign", "PostDecrementCheckedAssign" };
+var checkedNodes = new[] { "PreIncrementAssignChecked", "PreDecrementAssignChecked", "PostIncrementAssignChecked", "PostDecrementAssignChecked" };
 #>
 // Prototyping extended expression trees for C#.
 //

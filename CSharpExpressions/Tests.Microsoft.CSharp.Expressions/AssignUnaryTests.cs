@@ -34,13 +34,13 @@ namespace Tests
                 foreach (var n in new[]
                 {
                     CSharpExpressionType.PreIncrementAssign,
-                    CSharpExpressionType.PreIncrementCheckedAssign,
+                    CSharpExpressionType.PreIncrementAssignChecked,
                     CSharpExpressionType.PreDecrementAssign,
-                    CSharpExpressionType.PreDecrementCheckedAssign,
+                    CSharpExpressionType.PreDecrementAssignChecked,
                     CSharpExpressionType.PostIncrementAssign,
-                    CSharpExpressionType.PostIncrementCheckedAssign,
+                    CSharpExpressionType.PostIncrementAssignChecked,
                     CSharpExpressionType.PostDecrementAssign,
-                    CSharpExpressionType.PostDecrementCheckedAssign,
+                    CSharpExpressionType.PostDecrementAssignChecked,
                 })
                 {
                     var a1 = CSharpExpression.MakeUnaryAssign(n, o, m);
@@ -66,13 +66,13 @@ namespace Tests
             foreach (var n in new[]
             {
                 CSharpExpressionType.PreIncrementAssign,
-                CSharpExpressionType.PreIncrementCheckedAssign,
+                CSharpExpressionType.PreIncrementAssignChecked,
                 CSharpExpressionType.PreDecrementAssign,
-                CSharpExpressionType.PreDecrementCheckedAssign,
+                CSharpExpressionType.PreDecrementAssignChecked,
                 CSharpExpressionType.PostIncrementAssign,
-                CSharpExpressionType.PostIncrementCheckedAssign,
+                CSharpExpressionType.PostIncrementAssignChecked,
                 CSharpExpressionType.PostDecrementAssign,
-                CSharpExpressionType.PostDecrementCheckedAssign,
+                CSharpExpressionType.PostDecrementAssignChecked,
             })
             {
                 var inc = n.ToString().Contains("Inc");
@@ -108,13 +108,13 @@ namespace Tests
             foreach (var n in new[]
             {
                 CSharpExpressionType.PreIncrementAssign,
-                CSharpExpressionType.PreIncrementCheckedAssign,
+                CSharpExpressionType.PreIncrementAssignChecked,
                 CSharpExpressionType.PreDecrementAssign,
-                CSharpExpressionType.PreDecrementCheckedAssign,
+                CSharpExpressionType.PreDecrementAssignChecked,
                 CSharpExpressionType.PostIncrementAssign,
-                CSharpExpressionType.PostIncrementCheckedAssign,
+                CSharpExpressionType.PostIncrementAssignChecked,
                 CSharpExpressionType.PostDecrementAssign,
-                CSharpExpressionType.PostDecrementCheckedAssign,
+                CSharpExpressionType.PostDecrementAssignChecked,
             })
             {
                 var inc = n.ToString().Contains("Inc");
@@ -151,13 +151,13 @@ namespace Tests
             foreach (var n in new[]
             {
                 CSharpExpressionType.PreIncrementAssign,
-                CSharpExpressionType.PreIncrementCheckedAssign,
+                CSharpExpressionType.PreIncrementAssignChecked,
                 CSharpExpressionType.PreDecrementAssign,
-                CSharpExpressionType.PreDecrementCheckedAssign,
+                CSharpExpressionType.PreDecrementAssignChecked,
                 CSharpExpressionType.PostIncrementAssign,
-                CSharpExpressionType.PostIncrementCheckedAssign,
+                CSharpExpressionType.PostIncrementAssignChecked,
                 CSharpExpressionType.PostDecrementAssign,
-                CSharpExpressionType.PostDecrementCheckedAssign,
+                CSharpExpressionType.PostDecrementAssignChecked,
             })
             {
                 var inc = n.ToString().Contains("Inc");
@@ -196,13 +196,13 @@ namespace Tests
             foreach (var n in new[]
             {
                 CSharpExpressionType.PreIncrementAssign,
-                CSharpExpressionType.PreIncrementCheckedAssign,
+                CSharpExpressionType.PreIncrementAssignChecked,
                 CSharpExpressionType.PreDecrementAssign,
-                CSharpExpressionType.PreDecrementCheckedAssign,
+                CSharpExpressionType.PreDecrementAssignChecked,
                 CSharpExpressionType.PostIncrementAssign,
-                CSharpExpressionType.PostIncrementCheckedAssign,
+                CSharpExpressionType.PostIncrementAssignChecked,
                 CSharpExpressionType.PostDecrementAssign,
-                CSharpExpressionType.PostDecrementCheckedAssign,
+                CSharpExpressionType.PostDecrementAssignChecked,
             })
             {
                 var inc = n.ToString().Contains("Inc");
@@ -251,13 +251,13 @@ namespace Tests
             foreach (var n in new[]
             {
                 CSharpExpressionType.PreIncrementAssign,
-                CSharpExpressionType.PreIncrementCheckedAssign,
+                CSharpExpressionType.PreIncrementAssignChecked,
                 CSharpExpressionType.PreDecrementAssign,
-                CSharpExpressionType.PreDecrementCheckedAssign,
+                CSharpExpressionType.PreDecrementAssignChecked,
                 CSharpExpressionType.PostIncrementAssign,
-                CSharpExpressionType.PostIncrementCheckedAssign,
+                CSharpExpressionType.PostIncrementAssignChecked,
                 CSharpExpressionType.PostDecrementAssign,
-                CSharpExpressionType.PostDecrementCheckedAssign,
+                CSharpExpressionType.PostDecrementAssignChecked,
             })
             {
                 var inc = n.ToString().Contains("Inc");
@@ -307,22 +307,22 @@ namespace Tests
             var x = Expression.Parameter(typeof(int));
 
             {
-                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostIncrementCheckedAssign(x), x).Compile();
+                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostIncrementAssignChecked(x), x).Compile();
                 AssertEx.Throws<OverflowException>(() => f(int.MaxValue));
             }
 
             {
-                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PreIncrementCheckedAssign(x), x).Compile();
+                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PreIncrementAssignChecked(x), x).Compile();
                 AssertEx.Throws<OverflowException>(() => f(int.MaxValue));
             }
 
             {
-                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostDecrementCheckedAssign(x), x).Compile();
+                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostDecrementAssignChecked(x), x).Compile();
                 AssertEx.Throws<OverflowException>(() => f(int.MinValue));
             }
 
             {
-                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostDecrementCheckedAssign(x), x).Compile();
+                var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostDecrementAssignChecked(x), x).Compile();
                 AssertEx.Throws<OverflowException>(() => f(int.MinValue));
             }
         }
@@ -352,7 +352,7 @@ namespace Tests
                     Expression.Block(
                         new[] { v },
                         Expression.Assign(v, Expression.Constant(value)),
-                        CSharpExpression.PreIncrementCheckedAssign(v)
+                        CSharpExpression.PreIncrementAssignChecked(v)
                     )
                 ).Compile();
             Assert.AreEqual(plusOne, f());

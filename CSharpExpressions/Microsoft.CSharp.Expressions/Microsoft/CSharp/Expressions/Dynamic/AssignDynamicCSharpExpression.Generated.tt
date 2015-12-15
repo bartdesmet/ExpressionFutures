@@ -33,10 +33,10 @@ var uts = new[]
     "PreDecrementAssign",
     "PostIncrementAssign",
     "PostDecrementAssign",
-    "PreIncrementCheckedAssign",
-    "PreDecrementCheckedAssign",
-    "PostIncrementCheckedAssign",
-    "PostDecrementCheckedAssign",
+    "PreIncrementAssignChecked",
+    "PreDecrementAssignChecked",
+    "PostIncrementAssignChecked",
+    "PostDecrementAssignChecked",
 };
 #>
 // Prototyping extended expression trees for C#.

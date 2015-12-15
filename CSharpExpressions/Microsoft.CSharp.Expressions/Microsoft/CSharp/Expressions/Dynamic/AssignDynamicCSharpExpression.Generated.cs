@@ -829,183 +829,183 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The expression representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementCheckedAssign(Expression operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssignChecked(Expression operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementCheckedAssign(DynamicCSharpArgument operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssignChecked(DynamicCSharpArgument operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation with the specified binder flags.
+        /// Creates a new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation with the specified binder flags.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
+        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementCheckedAssign, operand, binderFlags);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementAssignChecked, operand, binderFlags);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation with the specified binder flags and the specified type context.
+        /// Creates a new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation with the specified binder flags and the specified type context.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
+        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementCheckedAssign, operand, binderFlags, context);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementAssignChecked, operand, binderFlags, context);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The expression representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementCheckedAssign(Expression operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssignChecked(Expression operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementCheckedAssign(DynamicCSharpArgument operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssignChecked(DynamicCSharpArgument operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation with the specified binder flags.
+        /// Creates a new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation with the specified binder flags.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
+        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementCheckedAssign, operand, binderFlags);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementAssignChecked, operand, binderFlags);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation with the specified binder flags and the specified type context.
+        /// Creates a new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation with the specified binder flags and the specified type context.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
+        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementCheckedAssign, operand, binderFlags, context);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementAssignChecked, operand, binderFlags, context);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The expression representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementCheckedAssign(Expression operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssignChecked(Expression operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementCheckedAssign(DynamicCSharpArgument operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssignChecked(DynamicCSharpArgument operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation with the specified binder flags.
+        /// Creates a new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation with the specified binder flags.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
+        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementCheckedAssign, operand, binderFlags);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementAssignChecked, operand, binderFlags);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation with the specified binder flags and the specified type context.
+        /// Creates a new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation with the specified binder flags and the specified type context.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
+        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementCheckedAssign, operand, binderFlags, context);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementAssignChecked, operand, binderFlags, context);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The expression representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementCheckedAssign(Expression operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssignChecked(Expression operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation.
+        /// Creates a new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementCheckedAssign(DynamicCSharpArgument operand)
+        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.</returns>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssignChecked(DynamicCSharpArgument operand)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementCheckedAssign, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementAssignChecked, operand);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation with the specified binder flags.
+        /// Creates a new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation with the specified binder flags.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
+        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementCheckedAssign, operand, binderFlags);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementAssignChecked, operand, binderFlags);
         }
 
         /// <summary>
-        /// Creates a new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation with the specified binder flags and the specified type context.
+        /// Creates a new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation with the specified binder flags and the specified type context.
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementCheckedAssign' operation.</returns>
+        /// <returns>A new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementCheckedAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
+        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementCheckedAssign, operand, binderFlags, context);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementAssignChecked, operand, binderFlags, context);
         }
 
         private static void CheckBinaryAssign(CSharpExpressionType binaryType)
@@ -1039,10 +1039,10 @@ namespace Microsoft.CSharp.Expressions
                 case CSharpExpressionType.PreDecrementAssign:
                 case CSharpExpressionType.PostIncrementAssign:
                 case CSharpExpressionType.PostDecrementAssign:
-                case CSharpExpressionType.PreIncrementCheckedAssign:
-                case CSharpExpressionType.PreDecrementCheckedAssign:
-                case CSharpExpressionType.PostIncrementCheckedAssign:
-                case CSharpExpressionType.PostDecrementCheckedAssign:
+                case CSharpExpressionType.PreIncrementAssignChecked:
+                case CSharpExpressionType.PreDecrementAssignChecked:
+                case CSharpExpressionType.PostIncrementAssignChecked:
+                case CSharpExpressionType.PostDecrementAssignChecked:
                     break;
                 default:
                     throw LinqError.NotSupported();

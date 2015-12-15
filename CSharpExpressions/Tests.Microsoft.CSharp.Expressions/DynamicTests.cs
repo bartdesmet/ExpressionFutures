@@ -723,13 +723,13 @@ namespace Tests
             var es = new[]
             {
                 DynamicCSharpExpression.DynamicPostDecrementAssign(p),
-                DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(p),
+                DynamicCSharpExpression.DynamicPostDecrementAssignChecked(p),
                 DynamicCSharpExpression.DynamicPostIncrementAssign(p),
-                DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(p),
+                DynamicCSharpExpression.DynamicPostIncrementAssignChecked(p),
                 DynamicCSharpExpression.DynamicPreDecrementAssign(p),
-                DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(p),
+                DynamicCSharpExpression.DynamicPreDecrementAssignChecked(p),
                 DynamicCSharpExpression.DynamicPreIncrementAssign(p),
-                DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(p),
+                DynamicCSharpExpression.DynamicPreIncrementAssignChecked(p),
             };
 
             foreach (var e in es)
@@ -774,7 +774,7 @@ namespace Tests
             var c = Expression.Convert(Expression.Constant(43), typeof(object));
             var a = Expression.Assign(p, c);
 
-            var i = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(p);
+            var i = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(p);
 
             var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
             var s = Expression.Call(d, i, Expression.Constant(","), p);

@@ -58,15 +58,15 @@ namespace Microsoft.CSharp.Expressions
                 switch (OperationNodeType)
                 {
                     case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreIncrementCheckedAssign:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
                     case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
                         operation = ExpressionType.Increment;
                         break;
                     case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
                     case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
                         operation = ExpressionType.Decrement;
                         break;
 
@@ -102,8 +102,8 @@ namespace Microsoft.CSharp.Expressions
                 {
                     case CSharpExpressionType.PreIncrementAssign:
                     case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreIncrementCheckedAssign:
-                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
                         return true;
                 }
 
@@ -203,10 +203,10 @@ namespace Microsoft.CSharp.Expressions
 
             switch (unaryType)
             {
-                case CSharpExpressionType.PreIncrementCheckedAssign:
-                case CSharpExpressionType.PreDecrementCheckedAssign:
-                case CSharpExpressionType.PostIncrementCheckedAssign:
-                case CSharpExpressionType.PostDecrementCheckedAssign:
+                case CSharpExpressionType.PreIncrementAssignChecked:
+                case CSharpExpressionType.PreDecrementAssignChecked:
+                case CSharpExpressionType.PostIncrementAssignChecked:
+                case CSharpExpressionType.PostDecrementAssignChecked:
                     binderFlags |= CSharpBinderFlags.CheckedContext;
                     break;
             }

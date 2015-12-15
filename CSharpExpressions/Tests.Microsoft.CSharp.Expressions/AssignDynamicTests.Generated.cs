@@ -438,86 +438,86 @@ namespace Tests
             Assert.AreEqual(CSharpBinderFlags.None, uc3.Flags);
             Assert.AreEqual(typeof(int), uc3.Context);
 
-            var ue4 = DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(oe);
-            Assert.AreEqual(CSharpExpressionType.PreIncrementCheckedAssign, ue4.OperationNodeType);
+            var ue4 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(oe);
+            Assert.AreEqual(CSharpExpressionType.PreIncrementAssignChecked, ue4.OperationNodeType);
             Assert.AreSame(oe, ue4.Operand.Expression);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ue4.Flags);
 
-            var ud4 = DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(od);
-            Assert.AreEqual(CSharpExpressionType.PreIncrementCheckedAssign, ud4.OperationNodeType);
+            var ud4 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(od);
+            Assert.AreEqual(CSharpExpressionType.PreIncrementAssignChecked, ud4.OperationNodeType);
             Assert.AreSame(od, ud4.Operand);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ud4.Flags);
 
-            var uf4 = DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(od, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.PreIncrementCheckedAssign, uf4.OperationNodeType);
+            var uf4 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(od, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.PreIncrementAssignChecked, uf4.OperationNodeType);
             Assert.AreSame(od, uf4.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uf4.Flags);
 
-            var uc4 = DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(od, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.PreIncrementCheckedAssign, uc4.OperationNodeType);
+            var uc4 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(od, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.PreIncrementAssignChecked, uc4.OperationNodeType);
             Assert.AreSame(od, uc4.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uc4.Flags);
             Assert.AreEqual(typeof(int), uc4.Context);
 
-            var ue5 = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(oe);
-            Assert.AreEqual(CSharpExpressionType.PreDecrementCheckedAssign, ue5.OperationNodeType);
+            var ue5 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(oe);
+            Assert.AreEqual(CSharpExpressionType.PreDecrementAssignChecked, ue5.OperationNodeType);
             Assert.AreSame(oe, ue5.Operand.Expression);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ue5.Flags);
 
-            var ud5 = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(od);
-            Assert.AreEqual(CSharpExpressionType.PreDecrementCheckedAssign, ud5.OperationNodeType);
+            var ud5 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(od);
+            Assert.AreEqual(CSharpExpressionType.PreDecrementAssignChecked, ud5.OperationNodeType);
             Assert.AreSame(od, ud5.Operand);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ud5.Flags);
 
-            var uf5 = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(od, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.PreDecrementCheckedAssign, uf5.OperationNodeType);
+            var uf5 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(od, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.PreDecrementAssignChecked, uf5.OperationNodeType);
             Assert.AreSame(od, uf5.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uf5.Flags);
 
-            var uc5 = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(od, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.PreDecrementCheckedAssign, uc5.OperationNodeType);
+            var uc5 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(od, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.PreDecrementAssignChecked, uc5.OperationNodeType);
             Assert.AreSame(od, uc5.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uc5.Flags);
             Assert.AreEqual(typeof(int), uc5.Context);
 
-            var ue6 = DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(oe);
-            Assert.AreEqual(CSharpExpressionType.PostIncrementCheckedAssign, ue6.OperationNodeType);
+            var ue6 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(oe);
+            Assert.AreEqual(CSharpExpressionType.PostIncrementAssignChecked, ue6.OperationNodeType);
             Assert.AreSame(oe, ue6.Operand.Expression);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ue6.Flags);
 
-            var ud6 = DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(od);
-            Assert.AreEqual(CSharpExpressionType.PostIncrementCheckedAssign, ud6.OperationNodeType);
+            var ud6 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(od);
+            Assert.AreEqual(CSharpExpressionType.PostIncrementAssignChecked, ud6.OperationNodeType);
             Assert.AreSame(od, ud6.Operand);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ud6.Flags);
 
-            var uf6 = DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(od, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.PostIncrementCheckedAssign, uf6.OperationNodeType);
+            var uf6 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(od, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.PostIncrementAssignChecked, uf6.OperationNodeType);
             Assert.AreSame(od, uf6.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uf6.Flags);
 
-            var uc6 = DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(od, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.PostIncrementCheckedAssign, uc6.OperationNodeType);
+            var uc6 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(od, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.PostIncrementAssignChecked, uc6.OperationNodeType);
             Assert.AreSame(od, uc6.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uc6.Flags);
             Assert.AreEqual(typeof(int), uc6.Context);
 
-            var ue7 = DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(oe);
-            Assert.AreEqual(CSharpExpressionType.PostDecrementCheckedAssign, ue7.OperationNodeType);
+            var ue7 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(oe);
+            Assert.AreEqual(CSharpExpressionType.PostDecrementAssignChecked, ue7.OperationNodeType);
             Assert.AreSame(oe, ue7.Operand.Expression);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ue7.Flags);
 
-            var ud7 = DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(od);
-            Assert.AreEqual(CSharpExpressionType.PostDecrementCheckedAssign, ud7.OperationNodeType);
+            var ud7 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(od);
+            Assert.AreEqual(CSharpExpressionType.PostDecrementAssignChecked, ud7.OperationNodeType);
             Assert.AreSame(od, ud7.Operand);
 			Assert.AreEqual(CSharpBinderFlags.CheckedContext, ud7.Flags);
 
-            var uf7 = DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(od, CSharpBinderFlags.CheckedContext);
-            Assert.AreEqual(CSharpExpressionType.PostDecrementCheckedAssign, uf7.OperationNodeType);
+            var uf7 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(od, CSharpBinderFlags.CheckedContext);
+            Assert.AreEqual(CSharpExpressionType.PostDecrementAssignChecked, uf7.OperationNodeType);
             Assert.AreSame(od, uf7.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uf7.Flags);
 
-            var uc7 = DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(od, CSharpBinderFlags.CheckedContext, typeof(int));
-            Assert.AreEqual(CSharpExpressionType.PostDecrementCheckedAssign, uc7.OperationNodeType);
+            var uc7 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(od, CSharpBinderFlags.CheckedContext, typeof(int));
+            Assert.AreEqual(CSharpExpressionType.PostDecrementAssignChecked, uc7.OperationNodeType);
             Assert.AreSame(od, uc7.Operand);
             Assert.AreEqual(CSharpBinderFlags.CheckedContext, uc7.Flags);
             Assert.AreEqual(typeof(int), uc7.Context);

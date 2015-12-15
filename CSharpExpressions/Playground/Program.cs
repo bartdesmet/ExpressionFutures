@@ -81,7 +81,7 @@ namespace Playground
             var itm = lst.GetType().GetProperty("Item");
             var arg = CSharpExpression.Bind(itm.GetIndexParameters()[0], Log(Expression.Constant(1), "Index"));
             var ixd = CSharpExpression.Index(obj, itm, arg);
-            var res = Expression.Lambda<Func<int>>(CSharpExpression.PostIncrementCheckedAssign(ixd)).Compile()();
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.PostIncrementAssignChecked(ixd)).Compile()();
 
             Console.WriteLine($"{res} == (3++) --> {lst[1]}");
         }
@@ -95,7 +95,7 @@ namespace Playground
             var itm = lst.GetType().GetProperty("Item");
             var arg = CSharpExpression.Bind(itm.GetIndexParameters()[0], Log(Expression.Constant(1), "Index"));
             var ixd = CSharpExpression.Index(obj, itm, arg);
-            var res = Expression.Lambda<Func<int>>(CSharpExpression.PreDecrementCheckedAssign(ixd)).Compile()();
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.PreDecrementAssignChecked(ixd)).Compile()();
 
             Console.WriteLine($"{res} == (--3) --> {lst[1]}");
         }
@@ -108,7 +108,7 @@ namespace Playground
             var obj = Log(Expression.Constant(box), "Box");
             var val = box.GetType().GetField("Value");
             var fld = Expression.Field(obj, val);
-            var res = Expression.Lambda<Func<int>>(CSharpExpression.PreIncrementCheckedAssign(fld)).Compile()();
+            var res = Expression.Lambda<Func<int>>(CSharpExpression.PreIncrementAssignChecked(fld)).Compile()();
 
             Console.WriteLine($"{res} == (++3) --> {box.Value}");
         }

@@ -1011,13 +1011,13 @@ namespace Microsoft.CSharp.Expressions
                 switch (CSharpNodeType)
                 {
                     case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
                     case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
                     case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreIncrementCheckedAssign:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
                     case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
                         res = true;
                         break;
                 }
@@ -1035,10 +1035,10 @@ namespace Microsoft.CSharp.Expressions
             {
                 switch (CSharpNodeType)
                 {
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
-                    case CSharpExpressionType.PreIncrementCheckedAssign:
-                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
                         return true;
                 }
 
@@ -1056,9 +1056,9 @@ namespace Microsoft.CSharp.Expressions
                 switch (CSharpNodeType)
                 {
                     case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
                     case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
                         return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PostDecrementAssign);
                 }
 
@@ -1083,16 +1083,16 @@ namespace Microsoft.CSharp.Expressions
 
             switch (CSharpNodeType)
             {
-                case CSharpExpressionType.PreDecrementCheckedAssign:
-                case CSharpExpressionType.PreIncrementCheckedAssign:
+                case CSharpExpressionType.PreDecrementAssignChecked:
+                case CSharpExpressionType.PreIncrementAssignChecked:
                     isChecked = true;
                     break;
                 case CSharpExpressionType.PostDecrementAssign:
                 case CSharpExpressionType.PostIncrementAssign:
                     isSuffix = true;
                     break;
-                case CSharpExpressionType.PostDecrementCheckedAssign:
-                case CSharpExpressionType.PostIncrementCheckedAssign:
+                case CSharpExpressionType.PostDecrementAssignChecked:
+                case CSharpExpressionType.PostIncrementAssignChecked:
                     isSuffix = true;
                     isChecked = true;
                     break;
@@ -1844,13 +1844,13 @@ namespace Microsoft.CSharp.Expressions
                 switch (OperationNodeType)
                 {
                     case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreIncrementCheckedAssign:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
                     case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
                     case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
                     case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
                         res = true;
                         break;
                 }
@@ -1874,9 +1874,9 @@ namespace Microsoft.CSharp.Expressions
                 switch (CSharpNodeType)
                 {
                     case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
                     case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
                         return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PostDecrementAssign);
                 }
 
@@ -1900,8 +1900,8 @@ namespace Microsoft.CSharp.Expressions
             {
                 case CSharpExpressionType.PostDecrementAssign:
                 case CSharpExpressionType.PostIncrementAssign:
-                case CSharpExpressionType.PostDecrementCheckedAssign:
-                case CSharpExpressionType.PostIncrementCheckedAssign:
+                case CSharpExpressionType.PostDecrementAssignChecked:
+                case CSharpExpressionType.PostIncrementAssignChecked:
                     isSuffix = true;
                     break;
             }
@@ -1963,16 +1963,16 @@ namespace Microsoft.CSharp.Expressions
             switch (type)
             {
                 case CSharpExpressionType.PreIncrementAssign:
-                case CSharpExpressionType.PreIncrementCheckedAssign:
+                case CSharpExpressionType.PreIncrementAssignChecked:
                     return ExpressionType.PreIncrementAssign;
                 case CSharpExpressionType.PreDecrementAssign:
-                case CSharpExpressionType.PreDecrementCheckedAssign:
+                case CSharpExpressionType.PreDecrementAssignChecked:
                     return ExpressionType.PreDecrementAssign;
                 case CSharpExpressionType.PostIncrementAssign:
-                case CSharpExpressionType.PostIncrementCheckedAssign:
+                case CSharpExpressionType.PostIncrementAssignChecked:
                     return ExpressionType.PostIncrementAssign;
                 case CSharpExpressionType.PostDecrementAssign:
-                case CSharpExpressionType.PostDecrementCheckedAssign:
+                case CSharpExpressionType.PostDecrementAssignChecked:
                     return ExpressionType.PostDecrementAssign;
                 default:
                     throw new InvalidOperationException();

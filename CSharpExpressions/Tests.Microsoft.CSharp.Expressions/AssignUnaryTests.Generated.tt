@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#
-var nodes = new[] { "PreIncrementAssign", "PreDecrementAssign", "PostIncrementAssign", "PostDecrementAssign", "PreIncrementCheckedAssign", "PreDecrementCheckedAssign", "PostIncrementCheckedAssign", "PostDecrementCheckedAssign" };
+var nodes = new[] { "PreIncrementAssign", "PreDecrementAssign", "PostIncrementAssign", "PostDecrementAssign", "PreIncrementAssignChecked", "PreDecrementAssignChecked", "PostIncrementAssignChecked", "PostDecrementAssignChecked" };
 #>
 // Prototyping extended expression trees for C#.
 //

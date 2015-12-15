@@ -209,18 +209,18 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// A unary prefix increment, such as (++a), that has overflow checking. The object a should be modified in place.
         /// </summary>
-        PreIncrementCheckedAssign,
+        PreIncrementAssignChecked,
         /// <summary>
         /// A unary prefix decrement, such as (--a), that has overflow checking. The object a should be modified in place.
         /// </summary>
-        PreDecrementCheckedAssign,
+        PreDecrementAssignChecked,
         /// <summary>
         /// A unary postfix increment, such as (a++), that has overflow checking. The object a should be modified in place.
         /// </summary>
-        PostIncrementCheckedAssign,
+        PostIncrementAssignChecked,
         /// <summary>
         /// A unary postfix decrement, such as (a--), that has overflow checking. The object a should be modified in place.
         /// </summary>
-        PostDecrementCheckedAssign,
+        PostDecrementAssignChecked,
     }
 }

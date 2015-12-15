@@ -57,7 +57,7 @@ namespace Tests
             Assert.AreEqual(dbg2, expr2.ToCSharp());
         }
 
-        private Expression expr3 = CSharpExpression.PreDecrementCheckedAssign(Expression.Parameter(typeof(int)));
+        private Expression expr3 = CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int)));
         private string dbg3 = @"checked(--p0)";
 
         [TestMethod]
@@ -558,7 +558,7 @@ namespace Tests
             Assert.AreEqual(dbg57, expr57.ToCSharp());
         }
 
-        private Expression expr58 = DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private Expression expr58 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(Expression.Parameter(typeof(object)));
         private string dbg58 = @"/*dynamic*/++p0";
 
         [TestMethod]
@@ -576,7 +576,7 @@ namespace Tests
             Assert.AreEqual(dbg59, expr59.ToCSharp());
         }
 
-        private Expression expr60 = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private Expression expr60 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(Expression.Parameter(typeof(object)));
         private string dbg60 = @"/*dynamic*/--p0";
 
         [TestMethod]
@@ -594,7 +594,7 @@ namespace Tests
             Assert.AreEqual(dbg61, expr61.ToCSharp());
         }
 
-        private Expression expr62 = DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private Expression expr62 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(Expression.Parameter(typeof(object)));
         private string dbg62 = @"p0/*dynamic*/++";
 
         [TestMethod]
@@ -612,7 +612,7 @@ namespace Tests
             Assert.AreEqual(dbg63, expr63.ToCSharp());
         }
 
-        private Expression expr64 = DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private Expression expr64 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(Expression.Parameter(typeof(object)));
         private string dbg64 = @"p0/*dynamic*/--";
 
         [TestMethod]
@@ -967,7 +967,7 @@ while (true);";
             Assert.AreEqual(dbg92, expr92.ToCSharp());
         }
 
-        private Expression expr93 = Expression.AddChecked(CSharpExpression.PostIncrementCheckedAssign(_par1), Expression.Constant(1));
+        private Expression expr93 = Expression.AddChecked(CSharpExpression.PostIncrementAssignChecked(_par1), Expression.Constant(1));
         private string dbg93 = @"checked(p0++ + 1)";
 
         [TestMethod]
@@ -985,7 +985,7 @@ while (true);";
             Assert.AreEqual(dbg94, expr94.ToCSharp());
         }
 
-        private Expression expr95 = Expression.NegateChecked(CSharpExpression.PostIncrementCheckedAssign(_par1));
+        private Expression expr95 = Expression.NegateChecked(CSharpExpression.PostIncrementAssignChecked(_par1));
         private string dbg95 = @"checked(-p0++)";
 
         [TestMethod]

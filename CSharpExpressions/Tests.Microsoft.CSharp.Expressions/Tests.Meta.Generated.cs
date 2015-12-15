@@ -34,12 +34,12 @@ namespace Tests
             Assert.AreEqual(dbg0, expr0.DebugView().ToString());
         }
 
-        private Expression expr1 = CSharpExpression.PreDecrementCheckedAssign(Expression.Parameter(typeof(int)));
-        private string dbg1 = @"<CSharpPreDecrementCheckedAssign Type=""System.Int32"">
+        private Expression expr1 = CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int)));
+        private string dbg1 = @"<CSharpPreDecrementAssignChecked Type=""System.Int32"">
   <Operand>
     <Parameter Type=""System.Int32"" Id=""0"" />
   </Operand>
-</CSharpPreDecrementCheckedAssign>";
+</CSharpPreDecrementAssignChecked>";
 
         [TestMethod]
         public void CSharp_DebugView_Test1()

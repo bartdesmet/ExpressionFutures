@@ -12,7 +12,7 @@
 var exprs = new string[]
 {
     "CSharpExpression.PostIncrementAssign(Expression.Parameter(typeof(int)))",
-    "CSharpExpression.PreDecrementCheckedAssign(Expression.Parameter(typeof(int)))",
+    "CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int)))",
     "CSharpExpression.AddAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
 
     "CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42))",
