@@ -55,6 +55,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AssignDynamicTests.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssignDynamicTests.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Include="AssignUnaryTests.Generated.cs">
       <DependentUpon>AssignUnaryTests.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -136,6 +141,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AssignDynamicTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignDynamicTests.Generated.cs</LastGenOutput>
+    </Content>
     <Content Include="AssignUnaryTests.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssignUnaryTests.Generated.cs</LastGenOutput>

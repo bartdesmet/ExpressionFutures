@@ -61,6 +61,8 @@ namespace Microsoft.CSharp.Expressions
             var argumentInfos = new CSharpArgumentInfo[n + 1];
             var expressions = new Expression[n + 1];
 
+            // NB: By-ref passing for the receiver seems to be omitted in Roslyn here; see https://github.com/dotnet/roslyn/issues/6818.
+            //     We're choosing to be consistent with that behavior until further notice.
             expressions[0] = Object;
             argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
 
@@ -96,6 +98,40 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return DynamicCSharpExpression.DynamicGetMember(@object, Name, arguments, Flags, Context);
+        }
+
+        internal Expression ReduceAssignment(Expression value, CSharpBinderFlags flags)
+        {
+            var binder = default(CallSiteBinder);
+            var arguments = default(IEnumerable<Expression>);
+            var argumentTypes = default(Type[]);
+            ReduceAssignment(value, flags, out binder, out arguments, out argumentTypes);
+
+            return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
+        }
+
+        private void ReduceAssignment(Expression value, CSharpBinderFlags flags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
+        {
+            var n = Arguments.Count;
+
+            var argumentInfos = new CSharpArgumentInfo[n + 2];
+            var expressions = new Expression[n + 2];
+
+            // NB: By-ref passing for the receiver seems to be omitted in Roslyn here; see https://github.com/dotnet/roslyn/issues/6818.
+            //     We're choosing to be consistent with that behavior until further notice.
+            expressions[0] = Object;
+            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
+
+            argumentTypes = null;
+            CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
+
+            argumentInfos[n + 1] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null); // TODO: check
+            expressions[n + 1] = value;
+
+            flags |= Flags;
+
+            binder = Binder.SetMember(flags, Name, Context, argumentInfos);
+            arguments = expressions;
         }
     }
 

@@ -632,6 +632,11 @@ namespace Microsoft.CSharp.Expressions
 
         public static void RequiresCanWrite(Expression expression, string paramName)
         {
+            // NB: This does not account for dynamic member and index nodes; to make dynamically bound assignments,
+            //     one should use the appropriate methods on DynamicCSharpExpression, which require the use of
+            //     dynamic arguments and also allow to separate the dynamic API from the rest of the nodes without
+            //     having a strange circular dependency.
+
             var index = expression as IndexCSharpExpression;
             if (index != null)
             {

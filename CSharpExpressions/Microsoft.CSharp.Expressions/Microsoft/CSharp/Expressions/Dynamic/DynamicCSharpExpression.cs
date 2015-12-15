@@ -5,9 +5,7 @@
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using System.Linq.Expressions.Compiler;
 using System.Runtime.CompilerServices;
 
 namespace Microsoft.CSharp.Expressions
@@ -52,17 +50,7 @@ namespace Microsoft.CSharp.Expressions
             var argumentTypes = default(Type[]);
             ReduceDynamic(out binder, out arguments, out argumentTypes);
 
-            if (argumentTypes == null)
-            {
-                return Expression.Dynamic(binder, Type, arguments);
-            }
-            else
-            {
-                // NB: This is a trick to leverage MakeCallSiteDelegate; we should refactor it to take in an array of types.
-                var args = argumentTypes.Map(a => (Expression)Expression.Default(a)).ToReadOnly();
-                var delegateType = DelegateHelpers.MakeCallSiteDelegate(args, Type);
-                return Expression.MakeDynamic(delegateType, binder, arguments);
-            }
+            return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
         }
 
         /// <summary>

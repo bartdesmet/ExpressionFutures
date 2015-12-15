@@ -60,7 +60,7 @@ if (File.Exists(path))
     partial class <#=type.Name#>
     {
     }
-
+    
     [ExcludeFromCodeCoverage]
     internal class <#=type.Name#>Proxy
     {

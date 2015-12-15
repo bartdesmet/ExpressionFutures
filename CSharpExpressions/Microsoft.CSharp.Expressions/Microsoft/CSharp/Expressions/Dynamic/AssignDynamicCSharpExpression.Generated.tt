@@ -8,56 +8,40 @@
 <#
 var bts = new[]
 {
-    ExpressionType.Add,
-    ExpressionType.AddChecked,
-    ExpressionType.And,
-    ExpressionType.AndAlso,
-    ExpressionType.Divide,
-    ExpressionType.Equal,
-    ExpressionType.ExclusiveOr,
-    ExpressionType.GreaterThan,
-    ExpressionType.GreaterThanOrEqual,
-    ExpressionType.LeftShift,
-    ExpressionType.LessThan,
-    ExpressionType.LessThanOrEqual,
-    ExpressionType.Modulo,
-    ExpressionType.Multiply,
-    ExpressionType.MultiplyChecked,
-    ExpressionType.NotEqual,
-    ExpressionType.Or,
-    ExpressionType.OrElse,
-    ExpressionType.RightShift,
-    ExpressionType.Subtract,
-    ExpressionType.SubtractChecked,
-    
+    "AddAssign",
+    "AndAssign",
+    "DivideAssign",
+    "ExclusiveOrAssign",
+    "LeftShiftAssign",
+    "ModuloAssign",
+    "MultiplyAssign",
+    "OrAssign",
+    "RightShiftAssign",
+    "SubtractAssign",
+    "AddAssignChecked",
+    "MultiplyAssignChecked",
+    "SubtractAssignChecked",
+
     // NB, The following are not supported by design
-	// ExpressionType.Power,
-	// ExpressionType.Coalesce,
+    // ExpressionType.Assign,
+	// ExpressionType.PowerAssign,
 };
 
 var uts = new[]
 {
-    ExpressionType.Negate,
-    ExpressionType.UnaryPlus,
-    ExpressionType.NegateChecked,
-    ExpressionType.Not,
-    ExpressionType.Decrement,
-    ExpressionType.Increment,
-    ExpressionType.OnesComplement,
-    ExpressionType.IsTrue,
-    ExpressionType.IsFalse,
-    
-    // NB, The following are not supported by design
-    // ExpressionType.Convert,
-    // ExpressionType.ConvertChecked,
-    // ExpressionType.Unbox,
-    // ExpressionType.Quote,
-    // ExpressionType.Throw,
+    "PreIncrementAssign",
+    "PreDecrementAssign",
+    "PostIncrementAssign",
+    "PostDecrementAssign",
+    "PreIncrementCheckedAssign",
+    "PreDecrementCheckedAssign",
+    "PostIncrementCheckedAssign",
+    "PostDecrementCheckedAssign",
 };
 #>
 // Prototyping extended expression trees for C#.
 //
-// bartde - October 2015
+// bartde - December 2015
 
 using Microsoft.CSharp.RuntimeBinder;
 using System;
@@ -78,9 +62,9 @@ foreach (var et in bts)
         /// <param name="left">The expression representing the left operand of the operation.</param>
         /// <param name="right">The expression representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
-        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(Expression left, Expression right)
+        public static AssignBinaryDynamicCSharpExpression Dynamic<#=et#>(Expression left, Expression right)
         {
-            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right);
+            return MakeDynamicBinaryAssign(CSharpExpressionType.<#=et#>, left, right);
         }
 
         /// <summary>
@@ -89,9 +73,9 @@ foreach (var et in bts)
         /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
-        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right)
+        public static AssignBinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right)
         {
-            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right);
+            return MakeDynamicBinaryAssign(CSharpExpressionType.<#=et#>, left, right);
         }
 
         /// <summary>
@@ -102,9 +86,9 @@ foreach (var et in bts)
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
+        public static AssignBinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
         {
-            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right, binderFlags);
+            return MakeDynamicBinaryAssign(CSharpExpressionType.<#=et#>, left, right, binderFlags);
         }
 
         /// <summary>
@@ -116,9 +100,9 @@ foreach (var et in bts)
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary '<#=et#>' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static BinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
+        public static AssignBinaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
-            return MakeDynamicBinary(ExpressionType.<#=et#>, left, right, binderFlags, context);
+            return MakeDynamicBinaryAssign(CSharpExpressionType.<#=et#>, left, right, binderFlags, context);
         }
 
 <#
@@ -132,9 +116,9 @@ foreach (var et in uts)
         /// </summary>
         /// <param name="operand">The expression representing the operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
-        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(Expression operand)
+        public static AssignUnaryDynamicCSharpExpression Dynamic<#=et#>(Expression operand)
         {
-            return MakeDynamicUnary(ExpressionType.<#=et#>, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.<#=et#>, operand);
         }
 
         /// <summary>
@@ -142,9 +126,9 @@ foreach (var et in uts)
         /// </summary>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
-        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand)
+        public static AssignUnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand)
         {
-            return MakeDynamicUnary(ExpressionType.<#=et#>, operand);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.<#=et#>, operand);
         }
 
         /// <summary>
@@ -154,9 +138,9 @@ foreach (var et in uts)
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
+        public static AssignUnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
         {
-            return MakeDynamicUnary(ExpressionType.<#=et#>, operand, binderFlags);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.<#=et#>, operand, binderFlags);
         }
 
         /// <summary>
@@ -167,15 +151,15 @@ foreach (var et in uts)
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary '<#=et#>' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static UnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
+        public static AssignUnaryDynamicCSharpExpression Dynamic<#=et#>(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            return MakeDynamicUnary(ExpressionType.<#=et#>, operand, binderFlags, context);
+            return MakeDynamicUnaryAssign(CSharpExpressionType.<#=et#>, operand, binderFlags, context);
         }
 
 <#
 }
 #>
-        private static void CheckBinary(ExpressionType binaryType)
+        private static void CheckBinaryAssign(CSharpExpressionType binaryType)
         {
             switch (binaryType)
             {
@@ -183,7 +167,7 @@ foreach (var et in uts)
 foreach (var et in bts)
 {
 #>
-                case ExpressionType.<#=et#>:
+                case CSharpExpressionType.<#=et#>:
 <#
 }
 #>
@@ -193,7 +177,7 @@ foreach (var et in bts)
             }
         }
 
-        private static void CheckUnary(ExpressionType unaryType)
+        private static void CheckUnaryAssign(CSharpExpressionType unaryType)
         {
             switch (unaryType)
             {
@@ -201,7 +185,7 @@ foreach (var et in bts)
 foreach (var et in uts)
 {
 #>
-                case ExpressionType.<#=et#>:
+                case CSharpExpressionType.<#=et#>:
 <#
 }
 #>

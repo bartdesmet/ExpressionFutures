@@ -329,14 +329,14 @@ namespace Tests
         private Expression expr18 = DynamicCSharpExpression.DynamicAdd(Expression.Constant(1), Expression.Constant(2));
         private string dbg18 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"">
   <Left>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
     </DynamicCSharpArgument>
   </Left>
   <Right>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""2"" />
       </Expression>
@@ -353,14 +353,14 @@ namespace Tests
         private Expression expr19 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext);
         private string dbg19 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"">
   <Left>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
     </DynamicCSharpArgument>
   </Left>
   <Right>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""2"" />
       </Expression>
@@ -377,14 +377,14 @@ namespace Tests
         private Expression expr20 = DynamicCSharpExpression.DynamicAdd(DynamicCSharpExpression.DynamicArgument(Expression.Constant(1)), DynamicCSharpExpression.DynamicArgument(Expression.Constant(2)), CSharpBinderFlags.CheckedContext, typeof(object));
         private string dbg20 = @"<CSharpDynamicBinary Type=""System.Object"" OperationNodeType=""Add"" Flags=""CheckedContext"" Context=""System.Object"">
   <Left>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
     </DynamicCSharpArgument>
   </Left>
   <Right>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""2"" />
       </Expression>
@@ -401,7 +401,7 @@ namespace Tests
         private Expression expr21 = DynamicCSharpExpression.DynamicNegate(Expression.Constant(1));
         private string dbg21 = @"<CSharpDynamicUnary Type=""System.Object"" OperationNodeType=""Negate"">
   <Operand>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -447,7 +447,7 @@ namespace Tests
     <Default Type=""System.Collections.Generic.List`1[System.Int32]"" />
   </Object>
   <Arguments>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -467,7 +467,7 @@ namespace Tests
     <Default Type=""System.Action`1[System.Int32]"" />
   </Expression>
   <Arguments>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -484,7 +484,7 @@ namespace Tests
         private Expression expr26 = DynamicCSharpExpression.DynamicInvokeMember(typeof(Math), "Abs", Expression.Constant(1));
         private string dbg26 = @"<CSharpDynamicInvokeMember Type=""System.Object"" Target=""System.Math"" Name=""Abs"">
   <Arguments>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -515,7 +515,7 @@ namespace Tests
     <Default Type=""System.String"" />
   </Object>
   <Arguments>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -535,7 +535,7 @@ namespace Tests
     <Default Type=""System.String"" />
   </Object>
   <Arguments>
-    <DynamicCSharpArgument Name=""startIndex"">
+    <DynamicCSharpArgument Name=""startIndex"" Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int32"" Value=""1"" />
       </Expression>
@@ -572,7 +572,7 @@ namespace Tests
         private Expression expr31 = DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), Expression.Constant(1L));
         private string dbg31 = @"<CSharpDynamicInvokeConstructor Type=""System.TimeSpan"">
   <Arguments>
-    <DynamicCSharpArgument>
+    <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
       <Expression>
         <Constant Type=""System.Int64"" Value=""1"" />
       </Expression>

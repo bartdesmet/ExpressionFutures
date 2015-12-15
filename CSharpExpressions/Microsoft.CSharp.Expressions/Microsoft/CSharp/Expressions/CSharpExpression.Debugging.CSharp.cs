@@ -1695,6 +1695,291 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class AssignBinaryDynamicCSharpExpression
+    {
+        /// <summary>
+        /// Gets a value indicating whether the node represents an operation that supports overflow checking.
+        /// </summary>
+        protected override bool HasCheckedMode
+        {
+            get
+            {
+                var res = false;
+
+                switch (OperationNodeType)
+                {
+                    case CSharpExpressionType.AddAssign:
+                    case CSharpExpressionType.AddAssignChecked:
+                    case CSharpExpressionType.SubtractAssign:
+                    case CSharpExpressionType.SubtractAssignChecked:
+                    case CSharpExpressionType.MultiplyAssign:
+                    case CSharpExpressionType.MultiplyAssignChecked:
+                        res = true;
+                        break;
+                }
+
+                return res;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the node performs overflow checking.
+        /// </summary>
+        protected override bool IsChecked => (Flags & CSharpBinderFlags.CheckedContext) != 0;
+
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Assign);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
+            var isChecked = IsChecked;
+
+            var hasEnteredChecked = false;
+
+            if (!visitor.InCheckedContext && isChecked)
+            {
+                var scan = new CSharpCheckedOpScanner();
+
+                scan.Visit(Left.Expression);
+
+                if (!scan.HasUncheckedOperation)
+                {
+                    scan.Visit(Right.Expression);
+                }
+
+                if (!scan.HasUncheckedOperation)
+                {
+                    visitor.InCheckedContext = true;
+                    hasEnteredChecked = true;
+
+                    visitor.Out("checked(");
+                }
+                else
+                {
+                    // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
+                    //     to emit valid C# in this case, at the expense of losing the tree shape.
+                    op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
+                    isChecked = false;
+                }
+            }
+
+            visitor.ParenthesizedVisit(this, Left.Expression);
+
+            // NB: Using a comment as a visual clue for the dynamic operation; variables involved in the
+            //     dynamic operation won't be rendered as `dynamic` due to lack of reflection info. We'd
+            //     have to do an additional pass over the tree to find dynamic use sites of variables to
+            //     turn `object` into `dynamic` at the declaration site.
+            visitor.Out(" ");
+            visitor.Out("/*dynamic*/");
+            visitor.Out(op);
+            visitor.Out(" ");
+
+            visitor.ParenthesizedVisit(this, Right.Expression);
+
+            if (hasEnteredChecked)
+            {
+                visitor.InCheckedContext = false;
+                visitor.Out(")");
+            }
+        }
+
+        private static ExpressionType ToExpressionType(CSharpExpressionType type)
+        {
+            switch (type)
+            {
+                case CSharpExpressionType.Assign:
+                    return ExpressionType.Assign;
+                case CSharpExpressionType.AddAssign:
+                    return ExpressionType.AddAssign;
+                case CSharpExpressionType.AndAssign:
+                    return ExpressionType.AndAssign;
+                case CSharpExpressionType.DivideAssign:
+                    return ExpressionType.DivideAssign;
+                case CSharpExpressionType.ExclusiveOrAssign:
+                    return ExpressionType.ExclusiveOrAssign;
+                case CSharpExpressionType.LeftShiftAssign:
+                    return ExpressionType.LeftShiftAssign;
+                case CSharpExpressionType.ModuloAssign:
+                    return ExpressionType.ModuloAssign;
+                case CSharpExpressionType.MultiplyAssign:
+                    return ExpressionType.MultiplyAssign;
+                case CSharpExpressionType.OrAssign:
+                    return ExpressionType.OrAssign;
+                case CSharpExpressionType.RightShiftAssign:
+                    return ExpressionType.RightShiftAssign;
+                case CSharpExpressionType.SubtractAssign:
+                    return ExpressionType.SubtractAssign;
+                case CSharpExpressionType.AddAssignChecked:
+                    return ExpressionType.AddAssignChecked;
+                case CSharpExpressionType.MultiplyAssignChecked:
+                    return ExpressionType.MultiplyAssignChecked;
+                case CSharpExpressionType.SubtractAssignChecked:
+                    return ExpressionType.SubtractAssignChecked;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+    }
+
+    partial class AssignUnaryDynamicCSharpExpression
+    {
+        /// <summary>
+        /// Gets a value indicating whether the node represents an operation that supports overflow checking.
+        /// </summary>
+        protected override bool HasCheckedMode
+        {
+            get
+            {
+                var res = false;
+
+                switch (OperationNodeType)
+                {
+                    case CSharpExpressionType.PreIncrementAssign:
+                    case CSharpExpressionType.PreIncrementCheckedAssign:
+                    case CSharpExpressionType.PreDecrementAssign:
+                    case CSharpExpressionType.PreDecrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssign:
+                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                    case CSharpExpressionType.PostDecrementAssign:
+                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                        res = true;
+                        break;
+                }
+
+                return res;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the node performs overflow checking.
+        /// </summary>
+        protected override bool IsChecked => (Flags & CSharpBinderFlags.CheckedContext) != 0;
+
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence
+        {
+            get
+            {
+                switch (CSharpNodeType)
+                {
+                    case CSharpExpressionType.PostDecrementAssign:
+                    case CSharpExpressionType.PostDecrementCheckedAssign:
+                    case CSharpExpressionType.PostIncrementAssign:
+                    case CSharpExpressionType.PostIncrementCheckedAssign:
+                        return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PostDecrementAssign);
+                }
+
+                return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PreDecrementAssign);
+            }
+        }
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
+            var isChecked = false;
+            var isSuffix = false;
+
+            switch (OperationNodeType)
+            {
+                case CSharpExpressionType.PostDecrementAssign:
+                case CSharpExpressionType.PostIncrementAssign:
+                case CSharpExpressionType.PostDecrementCheckedAssign:
+                case CSharpExpressionType.PostIncrementCheckedAssign:
+                    isSuffix = true;
+                    break;
+            }
+
+            // NB: Using a comment as a visual clue for the dynamic operation; variables involved in the
+            //     dynamic operation won't be rendered as `dynamic` due to lack of reflection info. We'd
+            //     have to do an additional pass over the tree to find dynamic use sites of variables to
+            //     turn `object` into `dynamic` at the declaration site.
+            op = "/*dynamic*/" + op;
+
+            var hasEnteredChecked = false;
+
+            if (!visitor.InCheckedContext && isChecked)
+            {
+                var scan = new CSharpCheckedOpScanner();
+
+                scan.Visit(Operand.Expression);
+
+                if (!scan.HasUncheckedOperation)
+                {
+                    visitor.InCheckedContext = true;
+                    hasEnteredChecked = true;
+
+                    visitor.Out("checked(");
+                }
+                else
+                {
+                    // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
+                    //     to emit valid C# in this case, at the expense of losing the tree shape.
+                    op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
+                    isChecked = false;
+                }
+
+                // NB: Could produce invalid C# if assign node is used as a statement; need to keep
+                //     track of the parent operation to determine this.
+            }
+
+            if (!isSuffix)
+            {
+                visitor.Out(op);
+            }
+
+            visitor.ParenthesizedVisit(this, Operand.Expression);
+
+            if (isSuffix)
+            {
+                visitor.Out(op);
+            }
+
+            if (hasEnteredChecked)
+            {
+                visitor.InCheckedContext = false;
+                visitor.Out(")");
+            }
+        }
+
+        private static ExpressionType ToExpressionType(CSharpExpressionType type)
+        {
+            switch (type)
+            {
+                case CSharpExpressionType.PreIncrementAssign:
+                case CSharpExpressionType.PreIncrementCheckedAssign:
+                    return ExpressionType.PreIncrementAssign;
+                case CSharpExpressionType.PreDecrementAssign:
+                case CSharpExpressionType.PreDecrementCheckedAssign:
+                    return ExpressionType.PreDecrementAssign;
+                case CSharpExpressionType.PostIncrementAssign:
+                case CSharpExpressionType.PostIncrementCheckedAssign:
+                    return ExpressionType.PostIncrementAssign;
+                case CSharpExpressionType.PostDecrementAssign:
+                case CSharpExpressionType.PostDecrementCheckedAssign:
+                    return ExpressionType.PostDecrementAssign;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+    }
+
     static class CSharpPrintingVisitorExtensions
     {
         public static void ArgsVisit(this ICSharpPrintingVisitor visitor, IList<ParameterAssignment> args)

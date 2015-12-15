@@ -25,10 +25,12 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents an index operation.
         /// </summary>
         Index,
+
         /// <summary>
         /// A node that represents creating a new multi-dimensional array and initializing it from a list of elements.
         /// </summary>
         NewMultidimensionalArrayInit,
+        
         /// <summary>
         /// A node that represents an await operation.
         /// </summary>
@@ -37,6 +39,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents an asynchronous lambda.
         /// </summary>
         AsyncLambda,
+        
         /// <summary>
         /// A node that represents a block.
         /// </summary>
@@ -73,6 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a goto statement.
         /// </summary>
         Goto,
+        
         /// <summary>
         /// A node that represents a dynamically bound unary operation.
         /// </summary>
@@ -105,6 +109,15 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a dynamically bound conversion to a static type.
         /// </summary>
         DynamicConvert,
+        /// <summary>
+        /// A node that represents a dynamically bound unary assignment operation.
+        /// </summary>
+        DynamicUnaryAssign,
+        /// <summary>
+        /// A node that represents a dynamically bound binary assignment operation.
+        /// </summary>
+        DynamicBinaryAssign,
+
         /// <summary>
         /// A node that represents a conditional access operation.
         /// </summary>

@@ -65,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing a dynamically bound argument.</returns>
         public static DynamicCSharpArgument DynamicArgument(Expression expression)
         {
-            return DynamicArgument(expression, null, CSharpArgumentInfoFlags.None);
+            return DynamicArgument(expression, null, GetFlags(expression));
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing a dynamically bound argument.</returns>
         public static DynamicCSharpArgument DynamicArgument(Expression expression, string name)
         {
-            return DynamicArgument(expression, name, CSharpArgumentInfoFlags.None);
+            return DynamicArgument(expression, name, GetFlags(expression));
         }
 
         /// <summary>
@@ -91,6 +91,32 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(expression, nameof(expression));
 
             return new DynamicCSharpArgument(argumentFlags, name, expression);
+        }
+
+        private static CSharpArgumentInfoFlags GetFlags(Expression expression)
+        {
+            // NB: See `GetArgumentInfo` in Roslyn for the rationale.
+
+            var res = CSharpArgumentInfoFlags.None;
+
+            var constExpr = expression as ConstantExpression;
+            if (constExpr != null && constExpr.Value != null)
+            {
+                res |= CSharpArgumentInfoFlags.Constant;
+            }
+
+            // REVIEW: This is a heuristic to detect `dynamic` using `object` as the proxy, but this
+            //         is lossy compared to compile-time info. The only case where it matters today is
+            //         for the dynamic assignment operations where the compiler binds to `Expression`
+            //         overloads, so we (try to) infer this information at runtime. We should likely
+            //         always bind to `DynamicCSharpArgument`-based overloads.
+
+            if (expression != null && expression.Type != typeof(object))
+            {
+                res |= CSharpArgumentInfoFlags.UseCompileTimeType;
+            }
+
+            return res;
         }
     }
 

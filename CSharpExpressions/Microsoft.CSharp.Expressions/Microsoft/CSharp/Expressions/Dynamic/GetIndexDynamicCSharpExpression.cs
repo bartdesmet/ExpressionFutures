@@ -93,6 +93,43 @@ namespace Microsoft.CSharp.Expressions
 
             return DynamicCSharpExpression.DynamicGetIndex(@object, arguments, Flags, Context);
         }
+
+        internal Expression ReduceAssignment(Expression value, CSharpBinderFlags flags)
+        {
+            var binder = default(CallSiteBinder);
+            var arguments = default(IEnumerable<Expression>);
+            var argumentTypes = default(Type[]);
+            ReduceAssignment(value, flags, out binder, out arguments, out argumentTypes);
+
+            return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
+        }
+
+        private void ReduceAssignment(Expression value, CSharpBinderFlags flags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
+        {
+            var n = Arguments.Count;
+
+            var argumentInfos = new CSharpArgumentInfo[n + 2];
+            var expressions = new Expression[n + 2];
+
+            // NB: This is the only place where by-ref passing for the receiver is done in Roslyn; for more
+            //     info about the apparent inconsistency see https://github.com/dotnet/roslyn/issues/6818.
+            //     We're choosing to be consistent with that behavior until further notice.
+            var receiverFlags = IsReceiverByRef(Object) ? CSharpArgumentInfoFlags.IsRef : CSharpArgumentInfoFlags.None;
+
+            expressions[0] = Object;
+            argumentInfos[0] = CSharpArgumentInfo.Create(receiverFlags, null);
+
+            argumentTypes = null;
+            CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
+
+            argumentInfos[n + 1] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null); // TODO: check
+            expressions[n + 1] = value;
+
+            flags |= Flags;
+
+            binder = Binder.SetIndex(flags, Context, argumentInfos);
+            arguments = expressions;
+        }
     }
 
     partial class DynamicCSharpExpression

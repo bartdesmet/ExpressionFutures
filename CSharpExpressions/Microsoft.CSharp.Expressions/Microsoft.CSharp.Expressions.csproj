@@ -85,6 +85,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.cs">
+      <DependentUpon>AssignDynamicCSharpExpression.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignBinaryDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignUnaryDynamicCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicHelpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\GotoCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpIndexInit.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
@@ -174,6 +182,10 @@
     <Content Include="Microsoft\CSharp\Expressions\DebuggerTypeProxies.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DebuggerTypeProxies.cs</LastGenOutput>
+    </Content>
+    <Content Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignDynamicCSharpExpression.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

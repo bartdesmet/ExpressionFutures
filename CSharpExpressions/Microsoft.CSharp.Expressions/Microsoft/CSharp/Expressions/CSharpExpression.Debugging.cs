@@ -374,6 +374,33 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        protected internal override Expression VisitDynamicBinaryAssign(AssignBinaryDynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+
+            VisitDynamicCSharpExpression(node, args);
+
+            args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
+            args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitDynamicUnaryAssign(AssignUnaryDynamicCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+
+            VisitDynamicCSharpExpression(node, args);
+
+            args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
+
+            return Push(node, args);
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {

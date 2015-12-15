@@ -432,10 +432,8 @@ namespace Tests
             Assert.AreEqual(dbg43, expr43.ToCSharp());
         }
 
-        private Expression expr44 = CSharpExpression.Block(new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")) }, Expression.Label());
-        private string dbg44 = @"{
-    Console.WriteLine(""body"");
-}";
+        private Expression expr44 = DynamicCSharpExpression.DynamicAddAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg44 = @"p0 /*dynamic*/+= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test44()
@@ -443,10 +441,8 @@ namespace Tests
             Assert.AreEqual(dbg44, expr44.ToCSharp());
         }
 
-        private Expression expr45 = CSharpExpression.Block(new Expression[] { Expression.Constant(42) }, _lbl3);
-        private string dbg45 = @"{
-    return 42;
-}";
+        private Expression expr45 = DynamicCSharpExpression.DynamicAddAssignChecked(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg45 = @"checked(p0 /*dynamic*/+= 1)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test45()
@@ -454,13 +450,8 @@ namespace Tests
             Assert.AreEqual(dbg45, expr45.ToCSharp());
         }
 
-        private Expression expr46 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt1")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt2")), Expression.Return(_lbl1) }, _lbl1);
-        private string dbg46 = @"{
-    int p0 /*(null)*/;
-    Console.WriteLine(""stmt1"");
-    Console.WriteLine(""stmt2"");
-    return;
-}";
+        private Expression expr46 = DynamicCSharpExpression.DynamicSubtractAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg46 = @"p0 /*dynamic*/-= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test46()
@@ -468,13 +459,8 @@ namespace Tests
             Assert.AreEqual(dbg46, expr46.ToCSharp());
         }
 
-        private Expression expr47 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt1")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt2")), Expression.Return(_lbl3, Expression.Constant(1)) }, _lbl3);
-        private string dbg47 = @"{
-    int p0 /*(null)*/;
-    Console.WriteLine(""stmt1"");
-    Console.WriteLine(""stmt2"");
-    return 1;
-}";
+        private Expression expr47 = DynamicCSharpExpression.DynamicSubtractAssignChecked(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg47 = @"checked(p0 /*dynamic*/-= 1)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test47()
@@ -482,11 +468,8 @@ namespace Tests
             Assert.AreEqual(dbg47, expr47.ToCSharp());
         }
 
-        private Expression expr48 = Expression.Lambda(CSharpExpression.Block(new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")) }, Expression.Label()));
-        private string dbg48 = @"() =>
-{
-    Console.WriteLine(""body"");
-}";
+        private Expression expr48 = DynamicCSharpExpression.DynamicMultiplyAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg48 = @"p0 /*dynamic*/*= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test48()
@@ -494,12 +477,8 @@ namespace Tests
             Assert.AreEqual(dbg48, expr48.ToCSharp());
         }
 
-        private Expression expr49 = CSharpStatement.Do(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")), Expression.Constant(true));
-        private string dbg49 = @"do
-{
-    Console.WriteLine(""body"");
-}
-while (true);";
+        private Expression expr49 = DynamicCSharpExpression.DynamicMultiplyAssignChecked(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg49 = @"checked(p0 /*dynamic*/*= 1)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test49()
@@ -507,9 +486,8 @@ while (true);";
             Assert.AreEqual(dbg49, expr49.ToCSharp());
         }
 
-        private Expression expr50 = CSharpStatement.While(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg50 = @"while (true)
-    Console.WriteLine(""body"");";
+        private Expression expr50 = DynamicCSharpExpression.DynamicDivideAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg50 = @"p0 /*dynamic*//= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test50()
@@ -517,9 +495,8 @@ while (true);";
             Assert.AreEqual(dbg50, expr50.ToCSharp());
         }
 
-        private Expression expr51 = CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg51 = @"for (;;)
-    Console.WriteLine(""body"");";
+        private Expression expr51 = DynamicCSharpExpression.DynamicModuloAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg51 = @"p0 /*dynamic*/%= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test51()
@@ -527,9 +504,8 @@ while (true);";
             Assert.AreEqual(dbg51, expr51.ToCSharp());
         }
 
-        private Expression expr52 = CSharpStatement.For(new[] { _par1 }, new[] { Expression.Assign(_par1, Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg52 = @"for (int p0 = 1; p1 < 10; p0++)
-    Console.WriteLine(""body"");";
+        private Expression expr52 = DynamicCSharpExpression.DynamicAndAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg52 = @"p0 /*dynamic*/&= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test52()
@@ -537,12 +513,8 @@ while (true);";
             Assert.AreEqual(dbg52, expr52.ToCSharp());
         }
 
-        private Expression expr53 = CSharpStatement.For(new[] { _par1 }, new[] { Expression.Assign(_par1, Expression.Constant(1)), Expression.Assign(_par1, Expression.Constant(2)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg53 = @"{
-    int p0 /*(null)*/;
-    for (p0 = 1, p0 = 2; p1 < 10; p0++)
-        Console.WriteLine(""body"");
-}";
+        private Expression expr53 = DynamicCSharpExpression.DynamicOrAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg53 = @"p0 /*dynamic*/|= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test53()
@@ -550,9 +522,8 @@ while (true);";
             Assert.AreEqual(dbg53, expr53.ToCSharp());
         }
 
-        private Expression expr54 = CSharpStatement.For(new[] { _par1 }, new[] { CSharpExpression.Assign(_par1, Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg54 = @"for (int p0 = 1; p1 < 10; p0++)
-    Console.WriteLine(""body"");";
+        private Expression expr54 = DynamicCSharpExpression.DynamicExclusiveOrAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg54 = @"p0 /*dynamic*/^= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test54()
@@ -560,9 +531,8 @@ while (true);";
             Assert.AreEqual(dbg54, expr54.ToCSharp());
         }
 
-        private Expression expr55 = CSharpStatement.For(new[] { _par1, _par2 }, new[] { Expression.Assign(_par1, Expression.Constant(0)), Expression.Assign(_par2, Expression.Constant(10)) }, Expression.LessThan(_par1, _par2), new[] { Expression.PostIncrementAssign(_par1), Expression.PreDecrementAssign(_par2) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg55 = @"for (int p0 = 0, p1 = 10; p0 < p1; p0++, --p1)
-    Console.WriteLine(""body"");";
+        private Expression expr55 = DynamicCSharpExpression.DynamicLeftShiftAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg55 = @"p0 /*dynamic*/<<= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test55()
@@ -570,12 +540,8 @@ while (true);";
             Assert.AreEqual(dbg55, expr55.ToCSharp());
         }
 
-        private Expression expr56 = CSharpStatement.For(new[] { _par1 }, new Expression[0], Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg56 = @"{
-    int p0 /*(null)*/;
-    for (; p1 < 10; p0++)
-        Console.WriteLine(""body"");
-}";
+        private Expression expr56 = DynamicCSharpExpression.DynamicRightShiftAssign(Expression.Parameter(typeof(object)), Expression.Constant(1));
+        private string dbg56 = @"p0 /*dynamic*/>>= 1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test56()
@@ -583,13 +549,8 @@ while (true);";
             Assert.AreEqual(dbg56, expr56.ToCSharp());
         }
 
-        private Expression expr57 = CSharpStatement.For(new[] { _par1, _par3 }, new[] { Expression.Assign(_par1, Expression.Constant(0)), Expression.Assign(_par3, Expression.Constant(10L)) }, Expression.LessThan(_par1, _par2), new[] { Expression.PostIncrementAssign(_par1), Expression.PreDecrementAssign(_par2) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg57 = @"{
-    int p0 /*(null)*/;
-    long p1 /*(null)*/;
-    for (p0 = 0, p1 = 10L; p0 < p2; p0++, --p2)
-        Console.WriteLine(""body"");
-}";
+        private Expression expr57 = DynamicCSharpExpression.DynamicPreIncrementAssign(Expression.Parameter(typeof(object)));
+        private string dbg57 = @"/*dynamic*/++p0";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test57()
@@ -597,9 +558,8 @@ while (true);";
             Assert.AreEqual(dbg57, expr57.ToCSharp());
         }
 
-        private Expression expr58 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg58 = @"foreach (int p0 /*(null)*/ in default(int[]))
-    Console.WriteLine(""body"");";
+        private Expression expr58 = DynamicCSharpExpression.DynamicPreIncrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private string dbg58 = @"/*dynamic*/++p0";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test58()
@@ -607,11 +567,8 @@ while (true);";
             Assert.AreEqual(dbg58, expr58.ToCSharp());
         }
 
-        private Expression expr59 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"));
-        private string dbg59 = @"switch (default(int))
-{
-    
-}";
+        private Expression expr59 = DynamicCSharpExpression.DynamicPreDecrementAssign(Expression.Parameter(typeof(object)));
+        private string dbg59 = @"/*dynamic*/--p0";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test59()
@@ -619,8 +576,240 @@ while (true);";
             Assert.AreEqual(dbg59, expr59.ToCSharp());
         }
 
-        private Expression expr60 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 1,2"))), CSharpStatement.SwitchCaseDefault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default"))));
-        private string dbg60 = @"switch (default(int))
+        private Expression expr60 = DynamicCSharpExpression.DynamicPreDecrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private string dbg60 = @"/*dynamic*/--p0";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test60()
+        {
+            Assert.AreEqual(dbg60, expr60.ToCSharp());
+        }
+
+        private Expression expr61 = DynamicCSharpExpression.DynamicPostIncrementAssign(Expression.Parameter(typeof(object)));
+        private string dbg61 = @"p0/*dynamic*/++";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test61()
+        {
+            Assert.AreEqual(dbg61, expr61.ToCSharp());
+        }
+
+        private Expression expr62 = DynamicCSharpExpression.DynamicPostIncrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private string dbg62 = @"p0/*dynamic*/++";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test62()
+        {
+            Assert.AreEqual(dbg62, expr62.ToCSharp());
+        }
+
+        private Expression expr63 = DynamicCSharpExpression.DynamicPostDecrementAssign(Expression.Parameter(typeof(object)));
+        private string dbg63 = @"p0/*dynamic*/--";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test63()
+        {
+            Assert.AreEqual(dbg63, expr63.ToCSharp());
+        }
+
+        private Expression expr64 = DynamicCSharpExpression.DynamicPostDecrementCheckedAssign(Expression.Parameter(typeof(object)));
+        private string dbg64 = @"p0/*dynamic*/--";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test64()
+        {
+            Assert.AreEqual(dbg64, expr64.ToCSharp());
+        }
+
+        private Expression expr65 = CSharpExpression.Block(new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")) }, Expression.Label());
+        private string dbg65 = @"{
+    Console.WriteLine(""body"");
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test65()
+        {
+            Assert.AreEqual(dbg65, expr65.ToCSharp());
+        }
+
+        private Expression expr66 = CSharpExpression.Block(new Expression[] { Expression.Constant(42) }, _lbl3);
+        private string dbg66 = @"{
+    return 42;
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test66()
+        {
+            Assert.AreEqual(dbg66, expr66.ToCSharp());
+        }
+
+        private Expression expr67 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt1")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt2")), Expression.Return(_lbl1) }, _lbl1);
+        private string dbg67 = @"{
+    int p0 /*(null)*/;
+    Console.WriteLine(""stmt1"");
+    Console.WriteLine(""stmt2"");
+    return;
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test67()
+        {
+            Assert.AreEqual(dbg67, expr67.ToCSharp());
+        }
+
+        private Expression expr68 = CSharpExpression.Block(new[] { Expression.Parameter(typeof(int)) }, new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt1")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("stmt2")), Expression.Return(_lbl3, Expression.Constant(1)) }, _lbl3);
+        private string dbg68 = @"{
+    int p0 /*(null)*/;
+    Console.WriteLine(""stmt1"");
+    Console.WriteLine(""stmt2"");
+    return 1;
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test68()
+        {
+            Assert.AreEqual(dbg68, expr68.ToCSharp());
+        }
+
+        private Expression expr69 = Expression.Lambda(CSharpExpression.Block(new Expression[] { Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")) }, Expression.Label()));
+        private string dbg69 = @"() =>
+{
+    Console.WriteLine(""body"");
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test69()
+        {
+            Assert.AreEqual(dbg69, expr69.ToCSharp());
+        }
+
+        private Expression expr70 = CSharpStatement.Do(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")), Expression.Constant(true));
+        private string dbg70 = @"do
+{
+    Console.WriteLine(""body"");
+}
+while (true);";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test70()
+        {
+            Assert.AreEqual(dbg70, expr70.ToCSharp());
+        }
+
+        private Expression expr71 = CSharpStatement.While(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg71 = @"while (true)
+    Console.WriteLine(""body"");";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test71()
+        {
+            Assert.AreEqual(dbg71, expr71.ToCSharp());
+        }
+
+        private Expression expr72 = CSharpStatement.For(new ParameterExpression[0], new Expression[0], null, new Expression[0], Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg72 = @"for (;;)
+    Console.WriteLine(""body"");";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test72()
+        {
+            Assert.AreEqual(dbg72, expr72.ToCSharp());
+        }
+
+        private Expression expr73 = CSharpStatement.For(new[] { _par1 }, new[] { Expression.Assign(_par1, Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg73 = @"for (int p0 = 1; p1 < 10; p0++)
+    Console.WriteLine(""body"");";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test73()
+        {
+            Assert.AreEqual(dbg73, expr73.ToCSharp());
+        }
+
+        private Expression expr74 = CSharpStatement.For(new[] { _par1 }, new[] { Expression.Assign(_par1, Expression.Constant(1)), Expression.Assign(_par1, Expression.Constant(2)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg74 = @"{
+    int p0 /*(null)*/;
+    for (p0 = 1, p0 = 2; p1 < 10; p0++)
+        Console.WriteLine(""body"");
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test74()
+        {
+            Assert.AreEqual(dbg74, expr74.ToCSharp());
+        }
+
+        private Expression expr75 = CSharpStatement.For(new[] { _par1 }, new[] { CSharpExpression.Assign(_par1, Expression.Constant(1)) }, Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg75 = @"for (int p0 = 1; p1 < 10; p0++)
+    Console.WriteLine(""body"");";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test75()
+        {
+            Assert.AreEqual(dbg75, expr75.ToCSharp());
+        }
+
+        private Expression expr76 = CSharpStatement.For(new[] { _par1, _par2 }, new[] { Expression.Assign(_par1, Expression.Constant(0)), Expression.Assign(_par2, Expression.Constant(10)) }, Expression.LessThan(_par1, _par2), new[] { Expression.PostIncrementAssign(_par1), Expression.PreDecrementAssign(_par2) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg76 = @"for (int p0 = 0, p1 = 10; p0 < p1; p0++, --p1)
+    Console.WriteLine(""body"");";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test76()
+        {
+            Assert.AreEqual(dbg76, expr76.ToCSharp());
+        }
+
+        private Expression expr77 = CSharpStatement.For(new[] { _par1 }, new Expression[0], Expression.LessThan(Expression.Parameter(typeof(int)), Expression.Constant(10)), new[] { Expression.PostIncrementAssign(_par1) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg77 = @"{
+    int p0 /*(null)*/;
+    for (; p1 < 10; p0++)
+        Console.WriteLine(""body"");
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test77()
+        {
+            Assert.AreEqual(dbg77, expr77.ToCSharp());
+        }
+
+        private Expression expr78 = CSharpStatement.For(new[] { _par1, _par3 }, new[] { Expression.Assign(_par1, Expression.Constant(0)), Expression.Assign(_par3, Expression.Constant(10L)) }, Expression.LessThan(_par1, _par2), new[] { Expression.PostIncrementAssign(_par1), Expression.PreDecrementAssign(_par2) }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg78 = @"{
+    int p0 /*(null)*/;
+    long p1 /*(null)*/;
+    for (p0 = 0, p1 = 10L; p0 < p2; p0++, --p2)
+        Console.WriteLine(""body"");
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test78()
+        {
+            Assert.AreEqual(dbg78, expr78.ToCSharp());
+        }
+
+        private Expression expr79 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg79 = @"foreach (int p0 /*(null)*/ in default(int[]))
+    Console.WriteLine(""body"");";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test79()
+        {
+            Assert.AreEqual(dbg79, expr79.ToCSharp());
+        }
+
+        private Expression expr80 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"));
+        private string dbg80 = @"switch (default(int))
+{
+    
+}";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test80()
+        {
+            Assert.AreEqual(dbg80, expr80.ToCSharp());
+        }
+
+        private Expression expr81 = CSharpStatement.Switch(Expression.Default(typeof(int)), Expression.Label("break"), CSharpStatement.SwitchCase(new object[] { 1, 2 }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 1,2"))), CSharpStatement.SwitchCaseDefault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default"))));
+        private string dbg81 = @"switch (default(int))
 {
     case 1:
     case 2:
@@ -632,13 +821,13 @@ while (true);";
 }";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test60()
+        public void CSharp_ToCSharp_Test81()
         {
-            Assert.AreEqual(dbg60, expr60.ToCSharp());
+            Assert.AreEqual(dbg81, expr81.ToCSharp());
         }
 
-        private Expression expr61 = CSharpStatement.Switch(Expression.Default(typeof(string)), _lbl1, new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { "bar", "foo", "this is a \"quoted\" string", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")), Expression.Break(_lbl1)) });
-        private string dbg61 = @"{
+        private Expression expr82 = CSharpStatement.Switch(Expression.Default(typeof(string)), _lbl1, new[] { Expression.Parameter(typeof(int)) }, new[] { CSharpStatement.SwitchCase(new object[] { "bar", "foo", "this is a \"quoted\" string", null, CSharpStatement.SwitchCaseDefaultValue }, Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")), Expression.Break(_lbl1)) });
+        private string dbg82 = @"{
     int p0 /*(null)*/;
     switch (default(string))
     {
@@ -653,13 +842,13 @@ while (true);";
 }";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test61()
+        public void CSharp_ToCSharp_Test82()
         {
-            Assert.AreEqual(dbg61, expr61.ToCSharp());
+            Assert.AreEqual(dbg82, expr82.ToCSharp());
         }
 
-        private Expression expr62 = CSharpStatement.Switch(Expression.Default(typeof(string)), _lbl1, new[] { _par1 }, new[] { CSharpStatement.SwitchCase(new object[] { "bar" }, Expression.Block(typeof(void), Expression.Assign(_par1, Expression.Constant(0))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")), Expression.Break(_lbl1)) });
-        private string dbg62 = @"switch (default(string))
+        private Expression expr83 = CSharpStatement.Switch(Expression.Default(typeof(string)), _lbl1, new[] { _par1 }, new[] { CSharpStatement.SwitchCase(new object[] { "bar" }, Expression.Block(typeof(void), Expression.Assign(_par1, Expression.Constant(0))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")), Expression.Break(_lbl1)) });
+        private string dbg83 = @"switch (default(string))
 {
     case ""bar"":
         int p0 /*(null)*/;
@@ -671,13 +860,13 @@ while (true);";
 }";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test62()
+        public void CSharp_ToCSharp_Test83()
         {
-            Assert.AreEqual(dbg62, expr62.ToCSharp());
+            Assert.AreEqual(dbg83, expr83.ToCSharp());
         }
 
-        private Expression expr63 = CSharpStatement.Switch(Expression.Default(typeof(string)), _lbl1, new[] { _par1 }, new[] { CSharpStatement.SwitchCase(new object[] { "bar" }, Expression.Block(typeof(void), new[] { _par2 }, Expression.Assign(_par1, _par2)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("bar")), Expression.Break(_lbl1)), CSharpStatement.SwitchCase(new object[] { "foo" }, Expression.Block(typeof(void), Expression.Assign(_par1, Expression.Constant(1))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("foo")), Expression.Break(_lbl1)) });
-        private string dbg63 = @"{
+        private Expression expr84 = CSharpStatement.Switch(Expression.Default(typeof(string)), _lbl1, new[] { _par1 }, new[] { CSharpStatement.SwitchCase(new object[] { "bar" }, Expression.Block(typeof(void), new[] { _par2 }, Expression.Assign(_par1, _par2)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("bar")), Expression.Break(_lbl1)), CSharpStatement.SwitchCase(new object[] { "foo" }, Expression.Block(typeof(void), Expression.Assign(_par1, Expression.Constant(1))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("foo")), Expression.Break(_lbl1)) });
+        private string dbg84 = @"{
     int p0 /*(null)*/;
     switch (default(string))
     {
@@ -698,183 +887,183 @@ while (true);";
 }";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test63()
+        public void CSharp_ToCSharp_Test84()
         {
-            Assert.AreEqual(dbg63, expr63.ToCSharp());
+            Assert.AreEqual(dbg84, expr84.ToCSharp());
         }
 
-        private Expression expr64 = CSharpStatement.GotoLabel(Expression.Label());
-        private string dbg64 = @"goto L0;";
+        private Expression expr85 = CSharpStatement.GotoLabel(Expression.Label());
+        private string dbg85 = @"goto L0;";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test64()
+        public void CSharp_ToCSharp_Test85()
         {
-            Assert.AreEqual(dbg64, expr64.ToCSharp());
+            Assert.AreEqual(dbg85, expr85.ToCSharp());
         }
 
-        private Expression expr65 = CSharpStatement.GotoCase(1);
-        private string dbg65 = @"goto case 1;";
+        private Expression expr86 = CSharpStatement.GotoCase(1);
+        private string dbg86 = @"goto case 1;";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test65()
+        public void CSharp_ToCSharp_Test86()
         {
-            Assert.AreEqual(dbg65, expr65.ToCSharp());
+            Assert.AreEqual(dbg86, expr86.ToCSharp());
         }
 
-        private Expression expr66 = CSharpStatement.GotoCase(null);
-        private string dbg66 = @"goto case null;";
+        private Expression expr87 = CSharpStatement.GotoCase(null);
+        private string dbg87 = @"goto case null;";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test66()
+        public void CSharp_ToCSharp_Test87()
         {
-            Assert.AreEqual(dbg66, expr66.ToCSharp());
+            Assert.AreEqual(dbg87, expr87.ToCSharp());
         }
 
-        private Expression expr67 = CSharpStatement.GotoDefault();
-        private string dbg67 = @"goto default;";
+        private Expression expr88 = CSharpStatement.GotoDefault();
+        private string dbg88 = @"goto default;";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test67()
+        public void CSharp_ToCSharp_Test88()
         {
-            Assert.AreEqual(dbg67, expr67.ToCSharp());
+            Assert.AreEqual(dbg88, expr88.ToCSharp());
         }
 
-        private Expression expr68 = CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg68 = @"lock (default(object))
+        private Expression expr89 = CSharpStatement.Lock(Expression.Default(typeof(object)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg89 = @"lock (default(object))
     Console.WriteLine(""body"");";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test68()
+        public void CSharp_ToCSharp_Test89()
         {
-            Assert.AreEqual(dbg68, expr68.ToCSharp());
+            Assert.AreEqual(dbg89, expr89.ToCSharp());
         }
 
-        private Expression expr69 = CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg69 = @"using (default(IDisposable))
+        private Expression expr90 = CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg90 = @"using (default(IDisposable))
     Console.WriteLine(""body"");";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test69()
+        public void CSharp_ToCSharp_Test90()
         {
-            Assert.AreEqual(dbg69, expr69.ToCSharp());
+            Assert.AreEqual(dbg90, expr90.ToCSharp());
         }
 
-        private Expression expr70 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
-        private string dbg70 = @"using (IDisposable p0 /*(null)*/ = default(IDisposable))
+        private Expression expr91 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("body")));
+        private string dbg91 = @"using (IDisposable p0 /*(null)*/ = default(IDisposable))
     Console.WriteLine(""body"");";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test70()
+        public void CSharp_ToCSharp_Test91()
         {
-            Assert.AreEqual(dbg70, expr70.ToCSharp());
+            Assert.AreEqual(dbg91, expr91.ToCSharp());
         }
 
-        private Expression expr71 = Expression.AddChecked(CSharpExpression.PostIncrementAssign(_par1), Expression.Constant(1));
-        private string dbg71 = @"p0++ /*checked(*/+/*)*/ 1";
+        private Expression expr92 = Expression.AddChecked(CSharpExpression.PostIncrementAssign(_par1), Expression.Constant(1));
+        private string dbg92 = @"p0++ /*checked(*/+/*)*/ 1";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test71()
+        public void CSharp_ToCSharp_Test92()
         {
-            Assert.AreEqual(dbg71, expr71.ToCSharp());
+            Assert.AreEqual(dbg92, expr92.ToCSharp());
         }
 
-        private Expression expr72 = Expression.AddChecked(CSharpExpression.PostIncrementCheckedAssign(_par1), Expression.Constant(1));
-        private string dbg72 = @"checked(p0++ + 1)";
+        private Expression expr93 = Expression.AddChecked(CSharpExpression.PostIncrementCheckedAssign(_par1), Expression.Constant(1));
+        private string dbg93 = @"checked(p0++ + 1)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test72()
+        public void CSharp_ToCSharp_Test93()
         {
-            Assert.AreEqual(dbg72, expr72.ToCSharp());
+            Assert.AreEqual(dbg93, expr93.ToCSharp());
         }
 
-        private Expression expr73 = Expression.NegateChecked(CSharpExpression.PostIncrementAssign(_par1));
-        private string dbg73 = @"/*checked(*/-/*)*/p0++";
+        private Expression expr94 = Expression.NegateChecked(CSharpExpression.PostIncrementAssign(_par1));
+        private string dbg94 = @"/*checked(*/-/*)*/p0++";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test73()
+        public void CSharp_ToCSharp_Test94()
         {
-            Assert.AreEqual(dbg73, expr73.ToCSharp());
+            Assert.AreEqual(dbg94, expr94.ToCSharp());
         }
 
-        private Expression expr74 = Expression.NegateChecked(CSharpExpression.PostIncrementCheckedAssign(_par1));
-        private string dbg74 = @"checked(-p0++)";
+        private Expression expr95 = Expression.NegateChecked(CSharpExpression.PostIncrementCheckedAssign(_par1));
+        private string dbg95 = @"checked(-p0++)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test74()
+        public void CSharp_ToCSharp_Test95()
         {
-            Assert.AreEqual(dbg74, expr74.ToCSharp());
+            Assert.AreEqual(dbg95, expr95.ToCSharp());
         }
 
-        private Expression expr75 = Expression.NegateChecked(CSharpExpression.AddAssign(_par1, Expression.Constant(1)));
-        private string dbg75 = @"/*checked(*/-/*)*/(p0 += 1)";
+        private Expression expr96 = Expression.NegateChecked(CSharpExpression.AddAssign(_par1, Expression.Constant(1)));
+        private string dbg96 = @"/*checked(*/-/*)*/(p0 += 1)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test75()
+        public void CSharp_ToCSharp_Test96()
         {
-            Assert.AreEqual(dbg75, expr75.ToCSharp());
+            Assert.AreEqual(dbg96, expr96.ToCSharp());
         }
 
-        private Expression expr76 = Expression.NegateChecked(CSharpExpression.AddAssignChecked(_par1, Expression.Constant(1)));
-        private string dbg76 = @"checked(-(p0 += 1))";
+        private Expression expr97 = Expression.NegateChecked(CSharpExpression.AddAssignChecked(_par1, Expression.Constant(1)));
+        private string dbg97 = @"checked(-(p0 += 1))";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test76()
+        public void CSharp_ToCSharp_Test97()
         {
-            Assert.AreEqual(dbg76, expr76.ToCSharp());
+            Assert.AreEqual(dbg97, expr97.ToCSharp());
         }
 
-        private Expression expr77 = CSharpExpression.AddAssignChecked(_par1, Expression.Negate(Expression.Constant(1)));
-        private string dbg77 = @"p0 /*checked(*/+=/*)*/ -(1)";
+        private Expression expr98 = CSharpExpression.AddAssignChecked(_par1, Expression.Negate(Expression.Constant(1)));
+        private string dbg98 = @"p0 /*checked(*/+=/*)*/ -(1)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test77()
+        public void CSharp_ToCSharp_Test98()
         {
-            Assert.AreEqual(dbg77, expr77.ToCSharp());
+            Assert.AreEqual(dbg98, expr98.ToCSharp());
         }
 
-        private Expression expr78 = CSharpExpression.AddAssignChecked(_par1, Expression.NegateChecked(Expression.Constant(1)));
-        private string dbg78 = @"checked(p0 += -1)";
+        private Expression expr99 = CSharpExpression.AddAssignChecked(_par1, Expression.NegateChecked(Expression.Constant(1)));
+        private string dbg99 = @"checked(p0 += -1)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test78()
+        public void CSharp_ToCSharp_Test99()
         {
-            Assert.AreEqual(dbg78, expr78.ToCSharp());
+            Assert.AreEqual(dbg99, expr99.ToCSharp());
         }
 
-        private Expression expr79 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, _par1), typeof(int)));
-        private string dbg79 = @"/*checked(*/-/*)*/(int)/*dynamic*/-p0";
+        private Expression expr100 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, _par1), typeof(int)));
+        private string dbg100 = @"/*checked(*/-/*)*/(int)/*dynamic*/-p0";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test79()
+        public void CSharp_ToCSharp_Test100()
         {
-            Assert.AreEqual(dbg79, expr79.ToCSharp());
+            Assert.AreEqual(dbg100, expr100.ToCSharp());
         }
 
-        private Expression expr80 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.NegateChecked, _par1), typeof(int)));
-        private string dbg80 = @"checked(-(int)/*dynamic*/-p0)";
+        private Expression expr101 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.NegateChecked, _par1), typeof(int)));
+        private string dbg101 = @"checked(-(int)/*dynamic*/-p0)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test80()
+        public void CSharp_ToCSharp_Test101()
         {
-            Assert.AreEqual(dbg80, expr80.ToCSharp());
+            Assert.AreEqual(dbg101, expr101.ToCSharp());
         }
 
-        private Expression expr81 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, _par1, Expression.Constant(1)), typeof(int)));
-        private string dbg81 = @"/*checked(*/-/*)*/(int)(p0 /*dynamic*/+ 1)";
+        private Expression expr102 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, _par1, Expression.Constant(1)), typeof(int)));
+        private string dbg102 = @"/*checked(*/-/*)*/(int)(p0 /*dynamic*/+ 1)";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test81()
+        public void CSharp_ToCSharp_Test102()
         {
-            Assert.AreEqual(dbg81, expr81.ToCSharp());
+            Assert.AreEqual(dbg102, expr102.ToCSharp());
         }
 
-        private Expression expr82 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.AddChecked, _par1, Expression.Constant(1)), typeof(int)));
-        private string dbg82 = @"checked(-(int)(p0 /*dynamic*/+ 1))";
+        private Expression expr103 = Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.AddChecked, _par1, Expression.Constant(1)), typeof(int)));
+        private string dbg103 = @"checked(-(int)(p0 /*dynamic*/+ 1))";
 
         [TestMethod]
-        public void CSharp_ToCSharp_Test82()
+        public void CSharp_ToCSharp_Test103()
         {
-            Assert.AreEqual(dbg82, expr82.ToCSharp());
+            Assert.AreEqual(dbg103, expr103.ToCSharp());
         }
 
     }
