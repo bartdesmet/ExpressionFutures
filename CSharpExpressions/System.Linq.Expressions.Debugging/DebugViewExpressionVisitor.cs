@@ -2,7 +2,9 @@
 //
 // bartde - November 2015
 
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace System.Linq.Expressions
@@ -502,8 +504,48 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitDynamic(DynamicExpression node)
         {
+            var binderArgs = new List<object>();
+
+            var props = node.Binder.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                if (prop.GetIndexParameters().Length == 0)
+                {
+                    var name = prop.Name;
+                    var lastPart = name.LastIndexOf('.');
+                    if (lastPart >= 0)
+                    {
+                        name = name.Substring(lastPart + 1);
+                    }
+
+                    var value = default(object);
+                    try
+                    {
+                        value = prop.GetValue(node.Binder);
+                    }
+                    catch { }
+
+                    if (value != null)
+                    {
+                        var sequence = value as IEnumerable;
+                        if (sequence != null)
+                        {
+                            binderArgs.Add(new XElement(name, value));
+                        }
+                        else
+                        {
+                            binderArgs.Add(new XAttribute(name, value));
+                        }
+                    }
+                }
+            }
+
+            var binder = new XElement("Binder", binderArgs);
+
             var args = Visit(nameof(node.Arguments), node.Arguments);
-            return Push(node, new XAttribute(nameof(node.Binder), node.Binder), new XAttribute(nameof(node.DelegateType), node.DelegateType), args);
+
+            return Push(node, binder, new XAttribute(nameof(node.DelegateType), node.DelegateType), args);
         }
 
         protected override Expression VisitExtension(Expression node)

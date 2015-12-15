@@ -10,6 +10,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Runtime.CompilerServices" #>
+<#@ assembly name="Microsoft.CSharp" #>
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Xml.Linq" #>
 <#@ assembly name="$(SolutionDir)\System.Linq.Expressions.Debugging\bin\$(Configuration)\System.Linq.Expressions.Debugging.dll" #>
@@ -499,6 +500,15 @@ namespace Tests
         public void DebugView_Test51()
         {
             Assert.AreEqual(dbg51, expr51.DebugView().ToString());
+        }
+
+        private Expression expr52 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1));
+        private string dbg52 = <#=toEscapedString(Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1)).DebugView())#>;
+
+        [TestMethod]
+        public void DebugView_Test52()
+        {
+            Assert.AreEqual(dbg52, expr52.DebugView().ToString());
         }
 
     }

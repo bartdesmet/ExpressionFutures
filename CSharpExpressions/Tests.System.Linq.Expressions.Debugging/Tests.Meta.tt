@@ -4,6 +4,7 @@
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.CSharp" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -85,6 +86,8 @@ var exprs = new string[]
 
     "Expression.ClearDebugInfo(Expression.SymbolDocument(\"foo\"))",
     "Expression.DebugInfo(Expression.SymbolDocument(\"foo\"), 1, 2, 3, 4)",
+
+	"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1))",
 };
 #>
 \<#@ template debug="false" hostspecific="false" language="C#" \#>
@@ -95,6 +98,7 @@ var exprs = new string[]
 \<#@ import namespace="System.Text" \#>
 \<#@ import namespace="System.Collections.Generic" \#>
 \<#@ import namespace="System.Runtime.CompilerServices" \#>
+\<#@ assembly name="Microsoft.CSharp" \#>
 \<#@ assembly name="System.Xml" \#>
 \<#@ assembly name="System.Xml.Linq" \#>
 \<#@ assembly name="$(SolutionDir)\System.Linq.Expressions.Debugging\bin\$(Configuration)\System.Linq.Expressions.Debugging.dll" \#>
