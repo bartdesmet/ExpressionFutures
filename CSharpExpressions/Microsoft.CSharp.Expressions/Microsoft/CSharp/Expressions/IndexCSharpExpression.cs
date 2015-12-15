@@ -5,13 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
-using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
+using static Microsoft.CSharp.Expressions.Helpers;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -88,6 +88,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            // TODO: Throw a proper exception if the indexer is set-only, which can happen when our node is used in
+            //       a LINQ expression where RequiresCanRead just passes fine.
+
             var method = Indexer.GetGetMethod(true);
             var parameters = method.GetParametersCached();
 
@@ -300,6 +303,9 @@ namespace Microsoft.CSharp.Expressions
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
         {
             ValidateIndexer(instanceType, indexer);
+
+            // TODO: Lift this restriction and allow a set-only indexer; also need a custom RequiresCanRead
+            //       for our own checks, and need a proper exception in Reduce.
 
             // We ignore validating the setter. C# has no assignment expression support yet and the LINQ API
             // won't consider our node as assignable, so it can't occur in assignment targets. As such, the
