@@ -186,5 +186,197 @@ namespace Tests
             AssertOptimize(expression, expected);
         }
 
+        [TestMethod]
+        public void Optimizer_Loops_0()
+        {
+            var expression = Expression.Loop(CW);
+            var expected = Expression.Loop(CW);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_1()
+        {
+            var expression = Expression.Loop(CW, BRK);
+            var expected = Expression.Loop(CW);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_2()
+        {
+            var expression = Expression.Loop(CW, BRK, CNT);
+            var expected = Expression.Loop(CW);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_3()
+        {
+            var expression = Expression.Loop(Expression.Block(CW, Expression.Break(BRK)), BRK, CNT);
+            var expected = Expression.Loop(Expression.Block(CW, Expression.Break(BRK)), BRK, null);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_4()
+        {
+            var expression = Expression.Loop(Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT);
+            var expected = Expression.Loop(Expression.Block(CW, Expression.Continue(CNT)), null, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_5()
+        {
+            var expression = Expression.Loop(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = Expression.Loop(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_6()
+        {
+            var expression = CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK)), BRK, CNT);
+            var expected = CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK)), BRK, null);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_7()
+        {
+            var expression = CSharpStatement.While(B, Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.While(B, Expression.Block(CW, Expression.Continue(CNT)), null, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_8()
+        {
+            var expression = CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_9()
+        {
+            var expression = CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK)), B, BRK, CNT);
+            var expected = CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK)), B, BRK, null);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_10()
+        {
+            var expression = CSharpStatement.Do(Expression.Block(CW, Expression.Continue(CNT)), B, BRK, CNT);
+            var expected = CSharpStatement.Do(Expression.Block(CW, Expression.Continue(CNT)), B, null, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_11()
+        {
+            var expression = CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), B, BRK, CNT);
+            var expected = CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), B, BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_12()
+        {
+            var expression = CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK)), BRK, CNT);
+            var expected = CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK)), BRK, null);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_13()
+        {
+            var expression = CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Continue(CNT)), null, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_14()
+        {
+            var expression = CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_15()
+        {
+            var expression = CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK)), BRK, CNT);
+            var expected = CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK)), BRK, null);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_16()
+        {
+            var expression = CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Continue(CNT)), null, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_17()
+        {
+            var expression = CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_18()
+        {
+            var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PostIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_19()
+        {
+            var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { Expression.PostDecrementAssign(P1), CWI(1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { Expression.PreDecrementAssign(P1), CWI(1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_20()
+        {
+            var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PostIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_21()
+        {
+            var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PostDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_22()
+        {
+            var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Loops_23()
+        {
+            var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
     }
 }

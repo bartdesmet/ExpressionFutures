@@ -100,7 +100,109 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 				"CSharpExpression.Block(new[] { P1 }, new[] { CW }, RET)"
 			},
 		}
-	}
+	},
+	{
+		"Loops",
+		new Dictionary<string, string>
+		{
+			{
+				"Expression.Loop(CW)",
+				"Expression.Loop(CW)"
+			},
+			{
+				"Expression.Loop(CW, BRK)",
+				"Expression.Loop(CW)"
+			},
+			{
+				"Expression.Loop(CW, BRK, CNT)",
+				"Expression.Loop(CW)"
+			},
+			{
+				"Expression.Loop(Expression.Block(CW, Expression.Break(BRK)), BRK, CNT)",
+				"Expression.Loop(Expression.Block(CW, Expression.Break(BRK)), BRK, null)"
+			},
+			{
+				"Expression.Loop(Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT)",
+				"Expression.Loop(Expression.Block(CW, Expression.Continue(CNT)), null, CNT)"
+			},
+			{
+				"Expression.Loop(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"Expression.Loop(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK)), BRK, CNT)",
+				"CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK)), BRK, null)"
+			},
+			{
+				"CSharpStatement.While(B, Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.While(B, Expression.Block(CW, Expression.Continue(CNT)), null, CNT)"
+			},
+			{
+				"CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.While(B, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK)), B, BRK, CNT)",
+				"CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK)), B, BRK, null)"
+			},
+			{
+				"CSharpStatement.Do(Expression.Block(CW, Expression.Continue(CNT)), B, BRK, CNT)",
+				"CSharpStatement.Do(Expression.Block(CW, Expression.Continue(CNT)), B, null, CNT)"
+			},
+			{
+				"CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), B, BRK, CNT)",
+				"CSharpStatement.Do(Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), B, BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK)), BRK, CNT)",
+				"CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK)), BRK, null)"
+			},
+			{
+				"CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Continue(CNT)), null, CNT)"
+			},
+			{
+				"CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(null, B, null, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK)), BRK, CNT)",
+				"CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK)), BRK, null)"
+			},
+			{
+				"CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Continue(CNT)), null, CNT)"
+			},
+			{
+				"CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.ForEach(P1, C, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PostIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { Expression.PostDecrementAssign(P1), CWI(1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { Expression.PreDecrementAssign(P1), CWI(1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PostIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PostDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), Expression.PreIncrementAssign(P1) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+			{
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)",
+				"CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT)"
+			},
+		}
+	},
 };
 #>
 // Prototyping extended expression trees for C#.

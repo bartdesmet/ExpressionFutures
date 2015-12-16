@@ -57,7 +57,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var test = Visit(node.Test);
 
-            return node.Update(@break, @continue, test, body);
+            return node.Update(@break, @continue, body, test);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]

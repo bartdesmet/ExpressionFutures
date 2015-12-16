@@ -16,6 +16,10 @@ namespace Tests
         private static readonly ParameterExpression P1 = Expression.Parameter(typeof(int), "x");
         private static readonly ParameterExpression P2 = Expression.Parameter(typeof(int), "y");
         private static readonly LabelTarget RET = Expression.Label(typeof(void), "return");
+        private static readonly LabelTarget BRK = Expression.Label(typeof(void), "break");
+        private static readonly LabelTarget CNT = Expression.Label(typeof(void), "continue");
+        private static readonly Expression B = Expression.Constant(true);
+        private static readonly Expression C = Expression.Constant(new[] { 2, 3, 5 });
 
         [TestMethod]
         public void Optimizer_Null()
