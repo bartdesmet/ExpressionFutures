@@ -43,19 +43,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        public static string GetDebugView(string expr)
+        public static string GetDebugView(string expr, bool reduce = false)
         {
             if (s_roslyn != null)
             {
-                return GetDebugViewMarshal(expr);
+                return GetDebugViewMarshal(expr, reduce);
             }
 
-            return GetDebugViewCore(expr);
+            return GetDebugViewCore(expr, reduce);
         }
 
-        private static string GetDebugViewMarshal(string expr)
+        private static string GetDebugViewMarshal(string expr, bool reduce)
         {
             s_roslyn.SetData("expr", expr);
+            s_roslyn.SetData("reduce", reduce);
 
             s_roslyn.DoCallBack(GetDebugViewCallback);
 
@@ -66,17 +67,70 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         private static void GetDebugViewCallback()
         {
             var expr = (string)AppDomain.CurrentDomain.GetData("expr");
-            var res = GetDebugViewCore(expr);
+            var red = AppDomain.CurrentDomain.GetData("reduce");
+            var reduce = red != null ? (bool)red : false;
+            var res = GetDebugViewCore(expr, reduce);
             AppDomain.CurrentDomain.SetData("debugView", res);
         }
 
-        private static string GetDebugViewCore(string expr)
+        private static string GetDebugViewCore(string expr, bool reduce)
         {
             var exp = (Expression)Eval(expr);
 
-            Reducer.Instance.Visit(exp); // NB: This is used to detect unexpected reduction failures
+            var reduced = Reducer.Instance.Visit(exp); // NB: This is used to detect unexpected reduction failures
 
-            return exp.DebugView().ToString();
+            var res = exp;
+            if (reduce)
+            {
+                res = reduced;
+            }
+
+            return res.DebugView().ToString();
+        }
+
+        public static string ToCSharp(string expr, bool reduce = false)
+        {
+            if (s_roslyn != null)
+            {
+                return ToCSharpMarshal(expr, reduce);
+            }
+
+            return ToCSharpCore(expr, reduce);
+        }
+
+        private static string ToCSharpMarshal(string expr, bool reduce)
+        {
+            s_roslyn.SetData("expr", expr);
+            s_roslyn.SetData("reduce", reduce);
+
+            s_roslyn.DoCallBack(ToCSharpCallback);
+
+            var res = (string)s_roslyn.GetData("csharp");
+            return res;
+        }
+
+        private static void ToCSharpCallback()
+        {
+            var expr = (string)AppDomain.CurrentDomain.GetData("expr");
+            var red = AppDomain.CurrentDomain.GetData("reduce");
+            var reduce = red != null ? (bool)red : false;
+            var res = ToCSharpCore(expr, reduce);
+            AppDomain.CurrentDomain.SetData("csharp", res);
+        }
+
+        private static string ToCSharpCore(string expr, bool reduce)
+        {
+            var exp = (Expression)Eval(expr);
+
+            var reduced = Reducer.Instance.Visit(exp); // NB: This is used to detect unexpected reduction failures
+
+            var res = exp;
+            if (reduce)
+            {
+                res = reduced;
+            }
+
+            return res.ToCSharp().ToString();
         }
 
         public static object Eval(string expr, bool includingExpressions = true)

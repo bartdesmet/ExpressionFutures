@@ -70,6 +70,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CompilerTests.Generated.tt</DependentUpon>
     </Compile>
+    <Compile Include="CompilerTests.Reducing.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CompilerTests.Reducing.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests.Reducing.Verify.cs" />
     <Compile Include="CompilerTests.Verify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -87,6 +93,10 @@
     <Content Include="CompilerTests.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CompilerTests.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests.Reducing.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CompilerTests.Reducing.Generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

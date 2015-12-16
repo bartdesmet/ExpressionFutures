@@ -264,24 +264,21 @@ namespace Microsoft.CSharp.Expressions
 
             if (instance != null)
             {
-                if (instance.IsPure())
-                {
-                    obj = instance;
-                }
-                else
-                {
-                    var var = Expression.Parameter(instance.Type, "obj");
-                    variables.Add(var);
+                obj = instance;
 
+                if (!instance.IsPure())
+                {
                     if (instance.Type.IsValueType && !instance.Type.IsPrimitive /* immutable */)
                     {
-                        // TODO: Use of a write-back approach is not atomic.
-                        EnsureWriteback(var, ref instance, variables, statements, ref writebackList);
+                        RewriteByRefArgument(null, ref obj, variables, statements, ref writebackList);
                     }
-
-                    statements.Add(Expression.Assign(var, instance));
-
-                    obj = var;
+                    else
+                    {
+                        var var = Expression.Parameter(instance.Type, "__obj");
+                        variables.Add(var);
+                        statements.Add(Expression.Assign(var, instance));
+                        obj = var;
+                    }
                 }
             }
 
@@ -306,23 +303,12 @@ namespace Microsoft.CSharp.Expressions
                         //
                         //         See MakeArguments in LocalRewriter_Call.cs in Roslyn for cases to review.
 
-                        if (TryPassByRef(ref expression, variables, statements))
-                        {
-                            arguments[parameter.Position] = expression;
-                        }
-                        else
-                        {
-                            var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                            variables.Add(var);
-                            EnsureWriteback(var, ref expression, variables, statements, ref writebackList);
-                            statements.Add(Expression.Assign(var, expression));
-                            arguments[parameter.Position] = var;
-                        }
+                        RewriteByRefArgument(parameter, ref expression, variables, statements, ref writebackList);
+                        arguments[parameter.Position] = expression;
                     }
                     else
                     {
-                        var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                        variables.Add(var);
+                        var var = CreateTemp(variables, parameter, argument.Expression.Type);
                         statements.Add(Expression.Assign(var, expression));
                         arguments[parameter.Position] = var;
                     }
@@ -330,20 +316,6 @@ namespace Microsoft.CSharp.Expressions
             }
 
             writebacks = writebackList?.ToArray() ?? Array.Empty<Expression>();
-        }
-
-        private static void EnsureWriteback(ParameterExpression variable, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
-        {
-            var writeback = default(Expression);
-            if (TryGetWriteback(variable, ref expression, variables, statements, out writeback))
-            {
-                if (writebackList == null)
-                {
-                    writebackList = new List<Expression>();
-                }
-
-                writebackList.Add(writeback);
-            }
         }
 
         public static bool IsPure(this Expression expression, bool readOnly = false)
@@ -370,7 +342,7 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        private static bool TryPassByRef(ref Expression expression, List<ParameterExpression> variables, List<Expression> statements)
+        private static void RewriteByRefArgument(ParameterInfo parameter, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
         {
             // NB: This deals with ArrayIndex and MemberAccess nodes passed by ref, which are classified as
             //     variables according to the C# language specification, e.g.
@@ -382,52 +354,9 @@ namespace Microsoft.CSharp.Expressions
             //
             //       t1 = A(); t2 = B(); t3 = C();
             //       Interlocked.Exchange(ref t2[t3], t1)
-
-            switch (expression.NodeType)
-            {
-                case ExpressionType.Parameter:
-                    return true;
-                case ExpressionType.ArrayIndex:
-                    {
-                        var binary = (BinaryExpression)expression;
-
-                        Debug.Assert(binary.Conversion == null);
-
-                        var newLeft = StoreIfNeeded(binary.Left, "__array", variables, statements);
-                        var newRight = StoreIfNeeded(binary.Right, "__index", variables, statements);
-
-                        expression = Expression.ArrayAccess(newLeft, newRight);
-                    }
-                    return true;
-                case ExpressionType.MemberAccess:
-                    {
-                        var member = (MemberExpression)expression;
-
-                        var field = member.Member as FieldInfo;
-                        if (field != null && !(field.IsInitOnly || field.IsLiteral))
-                        {
-                            var obj = member.Expression;
-                            if (obj != null)
-                            {
-                                var newObj = StoreIfNeeded(obj, "__object", variables, statements);
-                                expression = member.Update(newObj);
-                            }
-
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-            }
-
-            return false;
-        }
-
-        private static bool TryGetWriteback(ParameterExpression variable, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, out Expression writeback)
-        {
-            writeback = null;
+            //
+            //     Note we'd be better off if we had the ability to store ByRef variables in the Block scope,
+            //     but the LINQ APIs don't support that right now.
 
             switch (expression.NodeType)
             {
@@ -436,16 +365,15 @@ namespace Microsoft.CSharp.Expressions
                 //       its Reduce logic in emitting the required locals and updated node that supports write-back.
 
                 case ExpressionType.Parameter:
-                    {
-                        writeback = Expression.Assign(expression, variable);
-                    }
+                    // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                     break;
-
                 case ExpressionType.Index:
                     {
                         var index = (IndexExpression)expression;
 
-                        if (index.Indexer?.CanWrite ?? true) // NB: no indexer means array access, hence writeable
+                        var isArray = index.Indexer == null; // NB: no indexer means array access, hence writeable
+
+                        if (isArray || index.Indexer.CanWrite)
                         {
                             var obj = index.Object;
                             var args = index.Arguments;
@@ -467,7 +395,10 @@ namespace Microsoft.CSharp.Expressions
                             var newIndex = index.Update(newObj, newArgs);
                             expression = newIndex;
 
-                            writeback = Expression.Assign(newIndex, variable);
+                            if (!isArray)
+                            {
+                                EnsureWriteback(parameter, ref expression, variables, statements, ref writebackList);
+                            }
                         }
                     }
                     break;
@@ -476,6 +407,7 @@ namespace Microsoft.CSharp.Expressions
                         var member = (MemberExpression)expression;
 
                         var writeable = false;
+                        var useWriteback = false;
 
                         var prop = member.Member as PropertyInfo;
                         if (prop != null)
@@ -483,6 +415,7 @@ namespace Microsoft.CSharp.Expressions
                             if (prop.CanWrite)
                             {
                                 writeable = true;
+                                useWriteback = true;
                             }
                         }
                         else
@@ -491,6 +424,8 @@ namespace Microsoft.CSharp.Expressions
                             if (field != null && !(field.IsInitOnly || field.IsLiteral))
                             {
                                 writeable = true;
+
+                                // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                             }
                         }
 
@@ -507,7 +442,10 @@ namespace Microsoft.CSharp.Expressions
                             var newMember = member.Update(newObj);
                             expression = newMember;
 
-                            writeback = Expression.Assign(newMember, variable);
+                            if (useWriteback)
+                            {
+                                EnsureWriteback(parameter, ref expression, variables, statements, ref writebackList);
+                            }
                         }
                     }
                     break;
@@ -523,7 +461,7 @@ namespace Microsoft.CSharp.Expressions
                         var newBinary = Expression.ArrayAccess(newLeft, newRight);
                         expression = newBinary;
 
-                        writeback = Expression.Assign(newBinary, variable);
+                        // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                     }
                     break;
                 case ExpressionType.Call:
@@ -553,15 +491,48 @@ namespace Microsoft.CSharp.Expressions
                             var newCall = Expression.ArrayAccess(newObj, newArgs);
                             expression = newCall;
 
-                            writeback = Expression.Assign(newCall, variable);
+                            // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                         }
                     }
                     break;
+                default:
+                    {
+                        var variable = CreateTemp(variables, parameter, expression.Type);
+                        statements.Add(Expression.Assign(variable, expression));
+                        expression = variable;
+                    }
+                    break;
             }
-
-            return writeback != null;
         }
 
+        private static void EnsureWriteback(ParameterInfo parameter, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
+        {
+            var variable = CreateTemp(variables, parameter, expression.Type);
+            statements.Add(Expression.Assign(variable, expression));
+
+            var writeback = Expression.Assign(expression, variable);
+            AddWriteback(ref writebackList, writeback);
+
+            expression = variable;
+        }
+
+        private static ParameterExpression CreateTemp(List<ParameterExpression> variables, ParameterInfo parameter, Type type)
+        {
+            var var = Expression.Parameter(type, parameter?.Name);
+            variables.Add(var);
+            return var;
+        }
+
+        private static void AddWriteback(ref List<Expression> writebackList, Expression writeback)
+        {
+            if (writebackList == null)
+            {
+                writebackList = new List<Expression>();
+            }
+
+            writebackList.Add(writeback);
+        }
+        
         private static Expression StoreIfNeeded(Expression expression, string name, List<ParameterExpression> variables, List<Expression> statements)
         {
             // TODO: Can avoid introducing a local in some cases.
