@@ -275,6 +275,7 @@ namespace Microsoft.CSharp.Expressions
 
                     if (instance.Type.IsValueType && !instance.Type.IsPrimitive /* immutable */)
                     {
+                        // TODO: Use of a write-back approach is not atomic.
                         EnsureWriteback(var, ref instance, variables, statements, ref writebackList);
                     }
 
@@ -297,28 +298,34 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var isByRef = parameter.IsByRefParameter();
 
-                    var var = expression as ParameterExpression;
-
-                    // REVIEW: We don't want to create a copy of a variable in a local if it's passed by
-                    //         ref because it'd break atomicity. Note that Block doesn't support locals
-                    //         which are ByRef types, so we can't store the reference.
-                    //
-                    //         See MakeArguments in LocalRewriter_Call.cs in Roslyn for cases to review.
-
-                    if (var == null || !isByRef)
+                    if (isByRef)
                     {
-                        var = Expression.Parameter(argument.Expression.Type, parameter.Name);
-                        variables.Add(var);
+                        // REVIEW: We don't want to create a copy of a variable in a local if it's passed by
+                        //         ref because it'd break atomicity. Note that Block doesn't support locals
+                        //         which are ByRef types, so we can't store the reference.
+                        //
+                        //         See MakeArguments in LocalRewriter_Call.cs in Roslyn for cases to review.
 
-                        if (isByRef)
+                        if (TryPassByRef(ref expression, variables, statements))
                         {
-                            EnsureWriteback(var, ref expression, variables, statements, ref writebackList);
+                            arguments[parameter.Position] = expression;
                         }
-
-                        statements.Add(Expression.Assign(var, expression));
+                        else
+                        {
+                            var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
+                            variables.Add(var);
+                            EnsureWriteback(var, ref expression, variables, statements, ref writebackList);
+                            statements.Add(Expression.Assign(var, expression));
+                            arguments[parameter.Position] = var;
+                        }
                     }
-
-                    arguments[parameter.Position] = var;
+                    else
+                    {
+                        var var = Expression.Parameter(argument.Expression.Type, parameter.Name);
+                        variables.Add(var);
+                        statements.Add(Expression.Assign(var, expression));
+                        arguments[parameter.Position] = var;
+                    }
                 }
             }
 
@@ -363,6 +370,61 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
+        private static bool TryPassByRef(ref Expression expression, List<ParameterExpression> variables, List<Expression> statements)
+        {
+            // NB: This deals with ArrayIndex and MemberAccess nodes passed by ref, which are classified as
+            //     variables according to the C# language specification, e.g.
+            //
+            //       Interlocked.Exchange(value: A(), location1: B()[C()])
+            //
+            //     In this case, we don't want a write-back; we want to pass the ArrayIndex in the parameter
+            //     position:
+            //
+            //       t1 = A(); t2 = B(); t3 = C();
+            //       Interlocked.Exchange(ref t2[t3], t1)
+
+            switch (expression.NodeType)
+            {
+                case ExpressionType.Parameter:
+                    return true;
+                case ExpressionType.ArrayIndex:
+                    {
+                        var binary = (BinaryExpression)expression;
+
+                        Debug.Assert(binary.Conversion == null);
+
+                        var newLeft = StoreIfNeeded(binary.Left, "__array", variables, statements);
+                        var newRight = StoreIfNeeded(binary.Right, "__index", variables, statements);
+
+                        expression = Expression.ArrayAccess(newLeft, newRight);
+                    }
+                    return true;
+                case ExpressionType.MemberAccess:
+                    {
+                        var member = (MemberExpression)expression;
+
+                        var field = member.Member as FieldInfo;
+                        if (field != null && !(field.IsInitOnly || field.IsLiteral))
+                        {
+                            var obj = member.Expression;
+                            if (obj != null)
+                            {
+                                var newObj = StoreIfNeeded(obj, "__object", variables, statements);
+                                expression = member.Update(newObj);
+                            }
+
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+            }
+
+            return false;
+        }
+
         private static bool TryGetWriteback(ParameterExpression variable, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, out Expression writeback)
         {
             writeback = null;
@@ -388,24 +450,18 @@ namespace Microsoft.CSharp.Expressions
                             var obj = index.Object;
                             var args = index.Arguments;
 
-                            var newObj = default(ParameterExpression);
+                            var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = Expression.Parameter(obj.Type, "__object");
-                                variables.Add(newObj);
-                                statements.Add(Expression.Assign(newObj, obj));
+                                newObj = StoreIfNeeded(obj, "__object", variables, statements);
                             }
 
                             var n = args.Count;
-                            var newArgs = new ParameterExpression[n];
+                            var newArgs = new Expression[n];
 
                             for (var i = 0; i < n; i++)
                             {
-                                var arg = args[i];
-                                var newArg = Expression.Parameter(arg.Type, "__arg" + i);
-                                newArgs[i] = newArg;
-                                variables.Add(newArg);
-                                statements.Add(Expression.Assign(newArg, arg));
+                                newArgs[i] = StoreIfNeeded(args[i], "__arg" + i, variables, statements);
                             }
 
                             var newIndex = index.Update(newObj, newArgs);
@@ -442,12 +498,10 @@ namespace Microsoft.CSharp.Expressions
                         {
                             var obj = member.Expression;
 
-                            var newObj = default(ParameterExpression);
+                            var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = Expression.Parameter(obj.Type, "__object");
-                                variables.Add(newObj);
-                                statements.Add(Expression.Assign(newObj, obj));
+                                newObj = StoreIfNeeded(obj, "__object", variables, statements);
                             }
 
                             var newMember = member.Update(newObj);
@@ -463,15 +517,8 @@ namespace Microsoft.CSharp.Expressions
 
                         Debug.Assert(binary.Conversion == null);
 
-                        var left = binary.Left;
-                        var newLeft = Expression.Parameter(left.Type, "__array");
-                        variables.Add(newLeft);
-                        statements.Add(Expression.Assign(newLeft, left));
-
-                        var right = binary.Right;
-                        var newRight = Expression.Parameter(right.Type, "__index");
-                        variables.Add(newRight);
-                        statements.Add(Expression.Assign(newRight, right));
+                        var newLeft = StoreIfNeeded(binary.Left, "__array", variables, statements);
+                        var newRight = StoreIfNeeded(binary.Right, "__index", variables, statements);
 
                         var newBinary = Expression.ArrayAccess(newLeft, newRight);
                         expression = newBinary;
@@ -489,24 +536,18 @@ namespace Microsoft.CSharp.Expressions
                         {
                             var args = call.Arguments;
 
-                            var newObj = default(ParameterExpression);
+                            var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = Expression.Parameter(obj.Type, "__object");
-                                variables.Add(newObj);
-                                statements.Add(Expression.Assign(newObj, obj));
+                                newObj = StoreIfNeeded(obj, "__object", variables, statements);
                             }
 
                             var n = args.Count;
-                            var newArgs = new ParameterExpression[n];
+                            var newArgs = new Expression[n];
 
                             for (var i = 0; i < n; i++)
                             {
-                                var arg = args[i];
-                                var newArg = Expression.Parameter(arg.Type, "__arg" + i);
-                                newArgs[i] = newArg;
-                                variables.Add(newArg);
-                                statements.Add(Expression.Assign(newArg, arg));
+                                newArgs[i] = StoreIfNeeded(args[i], "__arg" + i, variables, statements);
                             }
 
                             var newCall = Expression.ArrayAccess(newObj, newArgs);
@@ -519,6 +560,16 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return writeback != null;
+        }
+
+        private static Expression StoreIfNeeded(Expression expression, string name, List<ParameterExpression> variables, List<Expression> statements)
+        {
+            // TODO: Can avoid introducing a local in some cases.
+
+            var var = Expression.Parameter(expression.Type, name);
+            variables.Add(var);
+            statements.Add(Expression.Assign(var, expression));
+            return var;
         }
 
         public static Type GetConditionalType(this Type type)
