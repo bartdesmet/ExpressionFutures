@@ -7,9 +7,6 @@ See Compilers\CSharp\Portable\Lowering\DiagnosticsPass_ExpressionTrees.cs for us
 TODO
 ----
 
-* Dynamic SetMember and SetIndex
-* Dynamic assignments
-
 * Should we have interfaces in a LINQ companion assembly to provide semantic insight in extension nodes?
   - Scoped constructions, e.g. using/for/foreach/block which need scope tracking during visits
   - Block constructions, e.g. to perform optimizations that can unflatten these
