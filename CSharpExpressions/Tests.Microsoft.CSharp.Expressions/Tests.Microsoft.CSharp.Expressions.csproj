@@ -96,6 +96,12 @@
     <Compile Include="HelpersTests.cs" />
     <Compile Include="AliasEliminatorTests.cs" />
     <Compile Include="IndexInitTests.cs" />
+    <Compile Include="OptimizerTests.cs" />
+    <Compile Include="OptimizerTests.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OptimizerTests.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Include="RethrowRewriterTests.cs" />
     <Compile Include="ShadowEliminatorTests.cs" />
     <Compile Include="ParameterSubstitutorTests.cs" />
@@ -156,6 +162,10 @@
     <Content Include="DynamicTests.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="OptimizerTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OptimizerTests.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Tests.Meta.Generated.tt">
       <AutoGen>True</AutoGen>

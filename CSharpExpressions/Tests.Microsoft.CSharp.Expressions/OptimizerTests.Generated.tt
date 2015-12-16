@@ -1,0 +1,44 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var exprs = new Dictionary<string, string>
+{
+	{
+		"Expression.Block(Expression.Empty())",
+		"Expression.Empty()"
+	}
+};
+#>
+// Prototyping extended expression trees for C#.
+//
+// bartde - December 2015
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq.Expressions;
+
+namespace Tests
+{
+    partial class OptimizerTests
+    {
+<#
+var i = 0;
+foreach (var kv in exprs)
+{
+#>
+		[TestMethod]
+		public void Optimizer_<#=i#>()
+		{
+			var expression = <#=kv.Key#>;
+			var expected = <#=kv.Value#>;
+			AssertOptimize(expression, expected);
+		}
+
+<#
+}
+#>
+    }
+}
