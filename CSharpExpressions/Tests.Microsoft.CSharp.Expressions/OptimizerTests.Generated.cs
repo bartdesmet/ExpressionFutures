@@ -3,6 +3,7 @@
 // bartde - December 2015
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq.Expressions;
 using Microsoft.CSharp.Expressions;
 
@@ -13,23 +14,23 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_0()
         {
-            var expression = Expression.Block(Expression.Empty());
-            var expected = Expression.Empty();
+            var expression = Expression.Block(E);
+            var expected = E;
             AssertOptimize(expression, expected);
         }
 
         [TestMethod]
         public void Optimizer_Blocks_1()
         {
-            var expression = Expression.Block(Expression.Empty(), Expression.Empty());
-            var expected = Expression.Empty();
+            var expression = Expression.Block(E, E);
+            var expected = E;
             AssertOptimize(expression, expected);
         }
 
         [TestMethod]
         public void Optimizer_Blocks_2()
         {
-            var expression = Expression.Block(CW, Expression.Empty());
+            var expression = Expression.Block(CW, E);
             var expected = CW;
             AssertOptimize(expression, expected);
         }
@@ -37,7 +38,7 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_3()
         {
-            var expression = Expression.Block(Expression.Empty(), CW);
+            var expression = Expression.Block(E, CW);
             var expected = CW;
             AssertOptimize(expression, expected);
         }
@@ -45,7 +46,7 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_4()
         {
-            var expression = Expression.Block(Expression.Empty(), CW, Expression.Empty());
+            var expression = Expression.Block(E, CW, E);
             var expected = CW;
             AssertOptimize(expression, expected);
         }
@@ -53,7 +54,7 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_5()
         {
-            var expression = Expression.Block(Expression.Empty(), CWI(1), Expression.Empty(), CWI(2), Expression.Empty());
+            var expression = Expression.Block(E, CWI(1), E, CWI(2), E);
             var expected = Expression.Block(CWI(1), CWI(2));
             AssertOptimize(expression, expected);
         }
@@ -93,7 +94,7 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_10()
         {
-            var expression = Expression.Block(Expression.Block(CWI(1), Expression.Empty()), Expression.Empty(), Expression.Block(CWI(2), Expression.Empty()));
+            var expression = Expression.Block(Expression.Block(CWI(1), E), E, Expression.Block(CWI(2), E));
             var expected = Expression.Block(CWI(1), CWI(2));
             AssertOptimize(expression, expected);
         }
@@ -101,8 +102,8 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_11()
         {
-            var expression = Expression.Block(new[] { P1 }, Expression.Empty());
-            var expected = Expression.Block(new[] { P1 }, Expression.Empty());
+            var expression = Expression.Block(new[] { P1 }, E);
+            var expected = Expression.Block(new[] { P1 }, E);
             AssertOptimize(expression, expected);
         }
 
@@ -125,7 +126,7 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_14()
         {
-            var expression = Expression.Block(new[] { P1 }, Expression.Block(CW, Expression.Empty()));
+            var expression = Expression.Block(new[] { P1 }, Expression.Block(CW, E));
             var expected = Expression.Block(new[] { P1 }, CW);
             AssertOptimize(expression, expected);
         }
@@ -141,8 +142,8 @@ namespace Tests
         [TestMethod]
         public void Optimizer_Blocks_16()
         {
-            var expression = CSharpExpression.Block(new[] { Expression.Empty() }, RET);
-            var expected = Expression.Empty();
+            var expression = CSharpExpression.Block(new[] { E }, RET);
+            var expected = E;
             AssertOptimize(expression, expected);
         }
 
@@ -375,6 +376,110 @@ namespace Tests
         {
             var expression = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
             var expected = CSharpStatement.For(new[] { Expression.Assign(P1, Expression.Constant(0)) }, B, new[] { CWI(1), CSharpExpression.PreDecrementAssign(P1), CWI(2) }, Expression.Block(CW, Expression.Break(BRK), Expression.Continue(CNT)), BRK, CNT);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_0()
+        {
+            var expression = Expression.TryFinally(E, E);
+            var expected = E;
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_1()
+        {
+            var expression = Expression.TryFinally(CW, E);
+            var expected = CW;
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_2()
+        {
+            var expression = Expression.TryFinally(CI(1), E);
+            var expected = CI(1);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_3()
+        {
+            var expression = Expression.TryFinally(E, CW);
+            var expected = Expression.TryFinally(E, CW);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_4()
+        {
+            var expression = Expression.TryFault(E, E);
+            var expected = E;
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_5()
+        {
+            var expression = Expression.TryFault(CW, E);
+            var expected = CW;
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_6()
+        {
+            var expression = Expression.TryFault(CI(1), E);
+            var expected = CI(1);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_7()
+        {
+            var expression = Expression.TryFault(E, CW);
+            var expected = Expression.TryFault(E, CW);
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_8()
+        {
+            var expression = Expression.TryCatch(E, Expression.Catch(typeof(Exception), CW));
+            var expected = E;
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_9()
+        {
+            var expression = Expression.TryCatch(CW, Expression.Catch(typeof(Exception), CW));
+            var expected = Expression.TryCatch(CW, Expression.Catch(typeof(Exception), CW));
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_10()
+        {
+            var expression = Expression.TryCatch(CW, Expression.Catch(typeof(Exception), E));
+            var expected = Expression.TryCatch(CW, Expression.Catch(typeof(Exception), E));
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_11()
+        {
+            var expression = Expression.TryCatchFinally(E, E, Expression.Catch(typeof(Exception), CW));
+            var expected = E;
+            AssertOptimize(expression, expected);
+        }
+
+        [TestMethod]
+        public void Optimizer_Try_12()
+        {
+            var expression = Expression.TryCatchFinally(E, CW, Expression.Catch(typeof(Exception), CW));
+            var expected = Expression.TryFinally(E, CW);
             AssertOptimize(expression, expected);
         }
 

@@ -51,7 +51,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 // NB: It's possible it all goes away, so we simply return the body in that case, which
                 //     can be a non-empty pure expression.
 
-                if (handlers == null && @finally == null && fault == null)
+                if ((handlers == null || handlers.Count == 0) && @finally == null && fault == null)
                 {
                     return body;
                 }

@@ -20,6 +20,8 @@ namespace Tests
         private static readonly LabelTarget CNT = Expression.Label(typeof(void), "continue");
         private static readonly Expression B = Expression.Constant(true);
         private static readonly Expression C = Expression.Constant(new[] { 2, 3, 5 });
+        private static readonly Func<int, Expression> CI = i => Expression.Constant(i);
+        private static readonly Expression E = Expression.Empty();
 
         [TestMethod]
         public void Optimizer_Null()

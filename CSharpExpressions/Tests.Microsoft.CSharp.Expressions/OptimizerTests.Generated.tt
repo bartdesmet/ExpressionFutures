@@ -12,27 +12,27 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 		new Dictionary<string, string>
 		{
 			{
-				"Expression.Block(Expression.Empty())",
-				"Expression.Empty()"
+				"Expression.Block(E)",
+				"E"
 			},
 			{
-				"Expression.Block(Expression.Empty(), Expression.Empty())",
-				"Expression.Empty()"
+				"Expression.Block(E, E)",
+				"E"
 			},
 			{
-				"Expression.Block(CW, Expression.Empty())",
+				"Expression.Block(CW, E)",
 				"CW"
 			},
 			{
-				"Expression.Block(Expression.Empty(), CW)",
+				"Expression.Block(E, CW)",
 				"CW"
 			},
 			{
-				"Expression.Block(Expression.Empty(), CW, Expression.Empty())",
+				"Expression.Block(E, CW, E)",
 				"CW"
 			},
 			{
-				"Expression.Block(Expression.Empty(), CWI(1), Expression.Empty(), CWI(2), Expression.Empty())",
+				"Expression.Block(E, CWI(1), E, CWI(2), E)",
 				"Expression.Block(CWI(1), CWI(2))"
 			},
 			{
@@ -52,12 +52,12 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 				"Expression.Block(CWI(1), CWI(2))"
 			},
 			{
-				"Expression.Block(Expression.Block(CWI(1), Expression.Empty()), Expression.Empty(), Expression.Block(CWI(2), Expression.Empty()))",
+				"Expression.Block(Expression.Block(CWI(1), E), E, Expression.Block(CWI(2), E))",
 				"Expression.Block(CWI(1), CWI(2))"
 			},
 			{
-				"Expression.Block(new[] { P1 }, Expression.Empty())",
-				"Expression.Block(new[] { P1 }, Expression.Empty())"
+				"Expression.Block(new[] { P1 }, E)",
+				"Expression.Block(new[] { P1 }, E)"
 			},
 			{
 				"Expression.Block(new[] { P1 }, CW)",
@@ -68,7 +68,7 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 				"Expression.Block(new[] { P1 }, CW)"
 			},
 			{
-				"Expression.Block(new[] { P1 }, Expression.Block(CW, Expression.Empty()))",
+				"Expression.Block(new[] { P1 }, Expression.Block(CW, E))",
 				"Expression.Block(new[] { P1 }, CW)"
 			},
 			{
@@ -76,8 +76,8 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 				"Expression.Block(new[] { P1 }, Expression.Block(new[] { P2 }, CW))"
 			},
 			{
-				"CSharpExpression.Block(new[] { Expression.Empty() }, RET)",
-				"Expression.Empty()"
+				"CSharpExpression.Block(new[] { E }, RET)",
+				"E"
 			},
 			{
 				"CSharpExpression.Block(new[] { Expression.Block(CW) }, RET)",
@@ -203,6 +203,64 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 			},
 		}
 	},
+	{
+		"Try",
+		new Dictionary<string, string>
+		{
+			{
+				"Expression.TryFinally(E, E)",
+				"E"
+			},
+			{
+				"Expression.TryFinally(CW, E)",
+				"CW"
+			},
+			{
+				"Expression.TryFinally(CI(1), E)",
+				"CI(1)"
+			},
+			{
+				"Expression.TryFinally(E, CW)",
+				"Expression.TryFinally(E, CW)"
+			},
+			{
+				"Expression.TryFault(E, E)",
+				"E"
+			},
+			{
+				"Expression.TryFault(CW, E)",
+				"CW"
+			},
+			{
+				"Expression.TryFault(CI(1), E)",
+				"CI(1)"
+			},
+			{
+				"Expression.TryFault(E, CW)",
+				"Expression.TryFault(E, CW)"
+			},
+			{
+				"Expression.TryCatch(E, Expression.Catch(typeof(Exception), CW))",
+				"E"
+			},
+			{
+				"Expression.TryCatch(CW, Expression.Catch(typeof(Exception), CW))",
+				"Expression.TryCatch(CW, Expression.Catch(typeof(Exception), CW))"
+			},
+			{
+				"Expression.TryCatch(CW, Expression.Catch(typeof(Exception), E))",
+				"Expression.TryCatch(CW, Expression.Catch(typeof(Exception), E))"
+			},
+			{
+				"Expression.TryCatchFinally(E, E, Expression.Catch(typeof(Exception), CW))",
+				"E"
+			},
+			{
+				"Expression.TryCatchFinally(E, CW, Expression.Catch(typeof(Exception), CW))",
+				"Expression.TryFinally(E, CW)"
+			},
+		}
+	}
 };
 #>
 // Prototyping extended expression trees for C#.
@@ -210,6 +268,7 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 // bartde - December 2015
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq.Expressions;
 using Microsoft.CSharp.Expressions;
 
