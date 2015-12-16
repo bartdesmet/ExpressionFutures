@@ -2944,6 +2944,292 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7E7C_70FE() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_83CF_2E6D()
+        {
+            // (Expression<Func<dynamic, dynamic>>)(x => x++)
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x++)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicUnaryAssign Type=""System.Object"" OperationNodeType=""PostIncrementAssign"">
+      <Operand>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Operand>
+    </CSharpDynamicUnaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_83CF_2E6D();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83CF_2E6D() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_5A71_E881()
+        {
+            // (Expression<Func<dynamic, dynamic>>)(x => x.Foo++)
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x.Foo++)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicUnaryAssign Type=""System.Object"" OperationNodeType=""PostIncrementAssign"">
+      <Operand>
+        <DynamicCSharpArgument>
+          <Expression>
+            <CSharpDynamicGetMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+              <Object>
+                <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+              </Object>
+            </CSharpDynamicGetMember>
+          </Expression>
+        </DynamicCSharpArgument>
+      </Operand>
+    </CSharpDynamicUnaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5A71_E881();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5A71_E881() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_D153_E7CE()
+        {
+            // (Expression<Func<dynamic, dynamic>>)(x => x[0]++)
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => x[0]++)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicUnaryAssign Type=""System.Object"" OperationNodeType=""PostIncrementAssign"">
+      <Operand>
+        <DynamicCSharpArgument>
+          <Expression>
+            <CSharpDynamicGetIndex Type=""System.Object"" Context=""Expressions"">
+              <Object>
+                <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+              </Object>
+              <Arguments>
+                <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+                  <Expression>
+                    <Constant Type=""System.Int32"" Value=""0"" />
+                  </Expression>
+                </DynamicCSharpArgument>
+              </Arguments>
+            </CSharpDynamicGetIndex>
+          </Expression>
+        </DynamicCSharpArgument>
+      </Operand>
+    </CSharpDynamicUnaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_D153_E7CE();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D153_E7CE() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_38EA_1C46()
+        {
+            // (Expression<Func<dynamic, dynamic>>)(x => checked(--x))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic>>)(x => checked(--x))");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicUnaryAssign Type=""System.Object"" OperationNodeType=""PreDecrementAssignChecked"" Flags=""CheckedContext"">
+      <Operand>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Operand>
+    </CSharpDynamicUnaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_38EA_1C46();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_38EA_1C46() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_D565_C82E()
+        {
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x += y)
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x += y)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""AddAssign"">
+      <Left>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Left>
+      <Right>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Right>
+    </CSharpDynamicBinaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_D565_C82E();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D565_C82E() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_711C_7F96()
+        {
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo += y)
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo += y)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""AddAssign"">
+      <Left>
+        <DynamicCSharpArgument>
+          <Expression>
+            <CSharpDynamicGetMember Type=""System.Object"" Name=""Foo"" Context=""Expressions"">
+              <Object>
+                <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+              </Object>
+            </CSharpDynamicGetMember>
+          </Expression>
+        </DynamicCSharpArgument>
+      </Left>
+      <Right>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Right>
+    </CSharpDynamicBinaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_711C_7F96();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_711C_7F96() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_E835_F8BD()
+        {
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x[0] += y)
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x[0] += y)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""AddAssign"">
+      <Left>
+        <DynamicCSharpArgument>
+          <Expression>
+            <CSharpDynamicGetIndex Type=""System.Object"" Context=""Expressions"">
+              <Object>
+                <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+              </Object>
+              <Arguments>
+                <DynamicCSharpArgument Flags=""UseCompileTimeType, Constant"">
+                  <Expression>
+                    <Constant Type=""System.Int32"" Value=""0"" />
+                  </Expression>
+                </DynamicCSharpArgument>
+              </Arguments>
+            </CSharpDynamicGetIndex>
+          </Expression>
+        </DynamicCSharpArgument>
+      </Left>
+      <Right>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Right>
+    </CSharpDynamicBinaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_E835_F8BD();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E835_F8BD() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_C576_1024()
+        {
+            // (Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => checked(x -= y))
+            var actual = GetDebugView(@"(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => checked(x -= y))");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Object,System.Object,System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+    <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+  </Parameters>
+  <Body>
+    <CSharpDynamicBinaryAssign Type=""System.Object"" OperationNodeType=""SubtractAssignChecked"" Flags=""CheckedContext"">
+      <Left>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""0"" Name=""x"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Left>
+      <Right>
+        <DynamicCSharpArgument>
+          <Expression>
+            <Parameter Type=""System.Object"" Id=""1"" Name=""y"" />
+          </Expression>
+        </DynamicCSharpArgument>
+      </Right>
+    </CSharpDynamicBinaryAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C576_1024();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C576_1024() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_0FFA_7AF2()
         {
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
@@ -9956,6 +10242,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_C18D_37B8() => OK();
             public override void CompilerTest_AC33_4E06() => OK();
             public override void CompilerTest_7E7C_70FE() => OK();
+            public override void CompilerTest_83CF_2E6D() => OK();
+            public override void CompilerTest_5A71_E881() => OK();
+            public override void CompilerTest_D153_E7CE() => OK();
+            public override void CompilerTest_38EA_1C46() => OK();
+            public override void CompilerTest_D565_C82E() => OK();
+            public override void CompilerTest_711C_7F96() => OK();
+            public override void CompilerTest_E835_F8BD() => OK();
+            public override void CompilerTest_C576_1024() => OK();
             public override void CompilerTest_0FFA_7AF2() => OK();
             public override void CompilerTest_83AE_26E4() => OK();
             public override void CompilerTest_4DC5_243C() => OK();

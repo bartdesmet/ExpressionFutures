@@ -142,14 +142,28 @@ var exprs = new[]
     "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
     // TODO: ref/out
 
-	// Dynamic set index
+    // Dynamic set index
     "(Expression<Action<dynamic>>)(x => { x[1] = 42; })",
-	"(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })",
-	"(Expression<Action<List<int>, dynamic>>)((xs, x) => { xs[0] = x; })",
+    "(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })",
+    "(Expression<Action<List<int>, dynamic>>)((xs, x) => { xs[0] = x; })",
 
-	// Dynamic set member
+    // Dynamic set member
     "(Expression<Action<dynamic>>)(x => { x.Foo = 42; })",
-	"(Expression<Action<StrongBox<int>, dynamic>>)((b, x) => { b.Value = x; })",
+    "(Expression<Action<StrongBox<int>, dynamic>>)((b, x) => { b.Value = x; })",
+
+    // Dynamic unary assign
+    "(Expression<Func<dynamic, dynamic>>)(x => x++)",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo++)",
+    "(Expression<Func<dynamic, dynamic>>)(x => x[0]++)",
+    "(Expression<Func<dynamic, dynamic>>)(x => checked(--x))",
+    // TODO: exhaustive set of cases
+
+    // Dynamic binary assign
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x += y)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo += y)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x[0] += y)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => checked(x -= y))",
+    // TODO: exhaustive set of cases
 
     // Async/await
     "(Expression<Func<Task<int>, Task<int>>>)(async t => await t)",
@@ -342,7 +356,7 @@ var exprs = new[]
     "(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
     "(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
     "(Expression<Action<int>>)(x => { switch (x) { default: break; } })",
-	"(Expression<Action>)(() => { switch (int.Parse(\"1\")) { } })",
+    "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { } })",
     "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { default: break; } })",
 };
 #>

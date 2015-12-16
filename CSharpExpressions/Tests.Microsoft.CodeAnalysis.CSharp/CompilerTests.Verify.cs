@@ -128,6 +128,18 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_AC33_4E06() => OK();
             public override void CompilerTest_7E7C_70FE() => OK();
 
+            // Dynamic unary assign
+            public override void CompilerTest_83CF_2E6D() => OK();
+            public override void CompilerTest_5A71_E881() => OK();
+            public override void CompilerTest_D153_E7CE() => OK();
+            public override void CompilerTest_38EA_1C46() => OK();
+
+            // Dynamic binary assign
+            public override void CompilerTest_D565_C82E() => OK();
+            public override void CompilerTest_711C_7F96() => OK();
+            public override void CompilerTest_E835_F8BD() => OK();
+            public override void CompilerTest_C576_1024() => OK();
+
             // Async/await
             public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
             public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
