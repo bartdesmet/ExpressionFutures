@@ -569,38 +569,80 @@ namespace System.Linq.Expressions
 
         protected new XNode Visit(Expression expression)
         {
-            base.Visit(expression);
-            return _nodes.Pop();
+            var res = default(XNode);
+
+            if (expression != null)
+            {
+                base.Visit(expression);
+                res = _nodes.Pop();
+            }
+
+            return res;
         }
 
         protected XNode Visit(LabelTarget node)
         {
-            VisitLabelTarget(node);
-            return _nodes.Pop();
+            var res = default(XNode);
+
+            if (node != null)
+            {
+                VisitLabelTarget(node);
+                res = _nodes.Pop();
+            }
+
+            return res;
         }
 
         protected XNode Visit(MemberBinding node)
         {
-            VisitMemberBinding(node);
-            return _nodes.Pop();
+            var res = default(XNode);
+
+            if (node != null)
+            {
+                VisitMemberBinding(node);
+                res = _nodes.Pop();
+            }
+
+            return res;
         }
 
         protected XNode Visit(ElementInit node)
         {
-            VisitElementInit(node);
-            return _nodes.Pop();
+            var res = default(XNode);
+
+            if (node != null)
+            {
+                VisitElementInit(node);
+                res = _nodes.Pop();
+            }
+
+            return res;
         }
 
         protected XNode Visit(CatchBlock node)
         {
-            VisitCatchBlock(node);
-            return _nodes.Pop();
+            var res = default(XNode);
+
+            if (node != null)
+            {
+                VisitCatchBlock(node);
+                res = _nodes.Pop();
+            }
+
+            return res;
         }
 
         protected XNode Visit(SwitchCase node)
         {
-            VisitSwitchCase(node);
-            return _nodes.Pop();
+            var res = default(XNode);
+
+            if (node != null)
+            {
+                VisitSwitchCase(node);
+                res = _nodes.Pop();
+            }
+
+            return res;
         }
 
         protected XNode Visit(string name, IEnumerable<Expression> expressions)

@@ -18,9 +18,6 @@ namespace System.Linq.Expressions
         /// <returns>An XML node representing the structure of the specified expression.</returns>
         public static XNode DebugView(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-
             return new DebugViewExpressionVisitor().GetDebugView(expression);
         }
     }
