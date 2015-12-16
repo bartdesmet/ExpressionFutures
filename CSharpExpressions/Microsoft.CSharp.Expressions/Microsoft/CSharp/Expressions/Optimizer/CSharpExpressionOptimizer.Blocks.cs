@@ -30,7 +30,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         protected internal override Expression VisitBlock(BlockCSharpExpression node)
         {
-            if (node.Type == typeof(void) && node.Variables.Count == 0)
+            if (CanOptimize(node))
             {
                 return FlattenBlocks(node);
             }
@@ -44,7 +44,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         protected override Expression VisitBlock(BlockExpression node)
         {
-            if (node.Type == typeof(void) && node.Variables.Count == 0)
+            if (CanOptimize(node))
             {
                 return FlattenBlocks(node);
             }
@@ -169,7 +169,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var block = node as BlockExpression;
             if (block != null)
             {
-                if (block.Type == typeof(void) && block.Variables.Count == 0)
+                if (CanOptimize(block))
                 {
                     return block.Expressions.SelectMany(FlattenBlocksCore);
                 }
@@ -179,7 +179,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 var csblock = node as BlockCSharpExpression;
                 if (csblock != null)
                 {
-                    if (node.Type == typeof(void) && csblock.Variables.Count == 0)
+                    if (CanOptimize(csblock))
                     {
                         return csblock.Statements.SelectMany(FlattenBlocksCore);
                     }
@@ -187,6 +187,16 @@ namespace Microsoft.CSharp.Expressions.Compiler
             }
 
             return new[] { Visit(node) };
+        }
+
+        private static bool CanOptimize(BlockExpression block)
+        {
+            return block.Type == typeof(void) && block.Variables.Count == 0;
+        }
+
+        private static bool CanOptimize(BlockCSharpExpression block)
+        {
+            return block.Type == typeof(void) && block.Variables.Count == 0;
         }
     }
 }

@@ -5,11 +5,101 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 <#
-var exprs = new Dictionary<string, string>
+var cases = new Dictionary<string, Dictionary<string, string>>
 {
 	{
-		"Expression.Block(Expression.Empty())",
-		"Expression.Empty()"
+		"Blocks",
+		new Dictionary<string, string>
+		{
+			{
+				"Expression.Block(Expression.Empty())",
+				"Expression.Empty()"
+			},
+			{
+				"Expression.Block(Expression.Empty(), Expression.Empty())",
+				"Expression.Empty()"
+			},
+			{
+				"Expression.Block(CW, Expression.Empty())",
+				"CW"
+			},
+			{
+				"Expression.Block(Expression.Empty(), CW)",
+				"CW"
+			},
+			{
+				"Expression.Block(Expression.Empty(), CW, Expression.Empty())",
+				"CW"
+			},
+			{
+				"Expression.Block(Expression.Empty(), CWI(1), Expression.Empty(), CWI(2), Expression.Empty())",
+				"Expression.Block(CWI(1), CWI(2))"
+			},
+			{
+				"Expression.Block(CWI(1), CWI(2))",
+				"Expression.Block(CWI(1), CWI(2))"
+			},
+			{
+				"Expression.Block(Expression.Block(CWI(1)), CWI(2))",
+				"Expression.Block(CWI(1), CWI(2))"
+			},
+			{
+				"Expression.Block(CWI(1), Expression.Block(CWI(2)))",
+				"Expression.Block(CWI(1), CWI(2))"
+			},
+			{
+				"Expression.Block(Expression.Block(CWI(1), CWI(2)))",
+				"Expression.Block(CWI(1), CWI(2))"
+			},
+			{
+				"Expression.Block(Expression.Block(CWI(1), Expression.Empty()), Expression.Empty(), Expression.Block(CWI(2), Expression.Empty()))",
+				"Expression.Block(CWI(1), CWI(2))"
+			},
+			{
+				"Expression.Block(new[] { P1 }, Expression.Empty())",
+				"Expression.Block(new[] { P1 }, Expression.Empty())"
+			},
+			{
+				"Expression.Block(new[] { P1 }, CW)",
+				"Expression.Block(new[] { P1 }, CW)"
+			},
+			{
+				"Expression.Block(new[] { P1 }, Expression.Block(CW))",
+				"Expression.Block(new[] { P1 }, CW)"
+			},
+			{
+				"Expression.Block(new[] { P1 }, Expression.Block(CW, Expression.Empty()))",
+				"Expression.Block(new[] { P1 }, CW)"
+			},
+			{
+				"Expression.Block(new[] { P1 }, Expression.Block(new[] { P2 }, CW))",
+				"Expression.Block(new[] { P1 }, Expression.Block(new[] { P2 }, CW))"
+			},
+			{
+				"CSharpExpression.Block(new[] { Expression.Empty() }, RET)",
+				"Expression.Empty()"
+			},
+			{
+				"CSharpExpression.Block(new[] { Expression.Block(CW) }, RET)",
+				"CW"
+			},
+			{
+				"Expression.Block(CSharpExpression.Block(new[] { CW }, RET))",
+				"CW"
+			},
+			{
+				"CSharpExpression.Block(new[] { P1 }, new[] { Expression.Block(CW) }, RET)",
+				"CSharpExpression.Block(new[] { P1 }, new[] { CW }, RET)"
+			},
+			{
+				"CSharpExpression.Block(new[] { Expression.Block(new[] { P1 }, CW) }, RET)",
+				"Expression.Block(new[] { P1 }, CW)"
+			},
+			{
+				"Expression.Block(new[] { CSharpExpression.Block(new[] { P1 }, new[] { CW }, RET) })",
+				"CSharpExpression.Block(new[] { P1 }, new[] { CW }, RET)"
+			},
+		}
 	}
 };
 #>
@@ -19,25 +109,30 @@ var exprs = new Dictionary<string, string>
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
+using Microsoft.CSharp.Expressions;
 
 namespace Tests
 {
     partial class OptimizerTests
     {
 <#
-var i = 0;
-foreach (var kv in exprs)
+foreach (var @case in cases)
 {
+	var i = 0;
+	foreach (var kv in @case.Value)
+	{
 #>
-		[TestMethod]
-		public void Optimizer_<#=i#>()
-		{
-			var expression = <#=kv.Key#>;
-			var expected = <#=kv.Value#>;
-			AssertOptimize(expression, expected);
-		}
+        [TestMethod]
+        public void Optimizer_<#=@case.Key#>_<#=i#>()
+        {
+            var expression = <#=kv.Key#>;
+            var expected = <#=kv.Value#>;
+            AssertOptimize(expression, expected);
+        }
 
 <#
+		i++;
+	}
 }
 #>
     }
