@@ -69,7 +69,7 @@ namespace System.Linq.Expressions
             {
                 if (type.IsGenericTypeDefinition)
                 {
-                    var name = type.FullName;
+                    var name = namespaces.Contains(type.Namespace) ? type.Name : type.FullName;
 
                     var tick = name.IndexOf('`');
                     if (tick >= 0)
@@ -77,7 +77,7 @@ namespace System.Linq.Expressions
                         name = name.Substring(0, tick);
                     }
 
-                    return $"{name}<{new string(',', type.GetGenericArguments().Length)}>";
+                    return $"{name}<{new string(',', type.GetGenericArguments().Length - 1)}>";
                 }
                 else if (type.IsGenericParameter)
                 {

@@ -65,6 +65,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
     </Compile>
+    <Compile Include="ToCSharp.Types.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
