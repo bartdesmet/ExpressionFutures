@@ -559,7 +559,7 @@ namespace Tests
         }
 
         private Expression expr58 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(Expression.Parameter(typeof(object)));
-        private string dbg58 = @"/*dynamic*/++p0";
+        private string dbg58 = @"checked(/*dynamic*/++p0)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test58()
@@ -577,7 +577,7 @@ namespace Tests
         }
 
         private Expression expr60 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(Expression.Parameter(typeof(object)));
-        private string dbg60 = @"/*dynamic*/--p0";
+        private string dbg60 = @"checked(/*dynamic*/--p0)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test60()
@@ -595,7 +595,7 @@ namespace Tests
         }
 
         private Expression expr62 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(Expression.Parameter(typeof(object)));
-        private string dbg62 = @"p0/*dynamic*/++";
+        private string dbg62 = @"checked(p0/*dynamic*/++)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test62()
@@ -613,7 +613,7 @@ namespace Tests
         }
 
         private Expression expr64 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(Expression.Parameter(typeof(object)));
-        private string dbg64 = @"p0/*dynamic*/--";
+        private string dbg64 = @"checked(p0/*dynamic*/--)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test64()
@@ -1064,6 +1064,150 @@ while (true);";
         public void CSharp_ToCSharp_Test103()
         {
             Assert.AreEqual(dbg103, expr103.ToCSharp());
+        }
+
+        private Expression expr104 = Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, _par1), typeof(int)));
+        private string dbg104 = @"-(int)/*dynamic*/-p0";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test104()
+        {
+            Assert.AreEqual(dbg104, expr104.ToCSharp());
+        }
+
+        private Expression expr105 = Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.NegateChecked, _par1), typeof(int)));
+        private string dbg105 = @"-(int)checked(/*dynamic*/-p0)";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test105()
+        {
+            Assert.AreEqual(dbg105, expr105.ToCSharp());
+        }
+
+        private Expression expr106 = Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, _par1, Expression.Constant(1)), typeof(int)));
+        private string dbg106 = @"-(int)(p0 /*dynamic*/+ 1)";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test106()
+        {
+            Assert.AreEqual(dbg106, expr106.ToCSharp());
+        }
+
+        private Expression expr107 = Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.AddChecked, _par1, Expression.Constant(1)), typeof(int)));
+        private string dbg107 = @"-(int)(checked(p0 /*dynamic*/+ 1))";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test107()
+        {
+            Assert.AreEqual(dbg107, expr107.ToCSharp());
+        }
+
+        private Expression expr108 = DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Increment, _par1);
+        private string dbg108 = @"p0/*dynamic*/ + 1";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test108()
+        {
+            Assert.AreEqual(dbg108, expr108.ToCSharp());
+        }
+
+        private Expression expr109 = DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Decrement, _par1);
+        private string dbg109 = @"p0/*dynamic*/ - 1";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test109()
+        {
+            Assert.AreEqual(dbg109, expr109.ToCSharp());
+        }
+
+        private Expression expr110 = DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.IsTrue, _par1);
+        private string dbg110 = @"p0/*dynamic*/ == true";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test110()
+        {
+            Assert.AreEqual(dbg110, expr110.ToCSharp());
+        }
+
+        private Expression expr111 = DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.IsFalse, _par1);
+        private string dbg111 = @"p0/*dynamic*/ == false";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test111()
+        {
+            Assert.AreEqual(dbg111, expr111.ToCSharp());
+        }
+
+        private Expression expr112 = DynamicCSharpExpression.DynamicPreIncrementAssign(_par1);
+        private string dbg112 = @"/*dynamic*/++p0";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test112()
+        {
+            Assert.AreEqual(dbg112, expr112.ToCSharp());
+        }
+
+        private Expression expr113 = DynamicCSharpExpression.DynamicPreDecrementAssign(_par1);
+        private string dbg113 = @"/*dynamic*/--p0";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test113()
+        {
+            Assert.AreEqual(dbg113, expr113.ToCSharp());
+        }
+
+        private Expression expr114 = DynamicCSharpExpression.DynamicPostIncrementAssign(_par1);
+        private string dbg114 = @"p0/*dynamic*/++";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test114()
+        {
+            Assert.AreEqual(dbg114, expr114.ToCSharp());
+        }
+
+        private Expression expr115 = DynamicCSharpExpression.DynamicPostDecrementAssign(_par1);
+        private string dbg115 = @"p0/*dynamic*/--";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test115()
+        {
+            Assert.AreEqual(dbg115, expr115.ToCSharp());
+        }
+
+        private Expression expr116 = DynamicCSharpExpression.DynamicPreIncrementAssignChecked(_par1);
+        private string dbg116 = @"checked(/*dynamic*/++p0)";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test116()
+        {
+            Assert.AreEqual(dbg116, expr116.ToCSharp());
+        }
+
+        private Expression expr117 = DynamicCSharpExpression.DynamicPreDecrementAssignChecked(_par1);
+        private string dbg117 = @"checked(/*dynamic*/--p0)";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test117()
+        {
+            Assert.AreEqual(dbg117, expr117.ToCSharp());
+        }
+
+        private Expression expr118 = DynamicCSharpExpression.DynamicPostIncrementAssignChecked(_par1);
+        private string dbg118 = @"checked(p0/*dynamic*/++)";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test118()
+        {
+            Assert.AreEqual(dbg118, expr118.ToCSharp());
+        }
+
+        private Expression expr119 = DynamicCSharpExpression.DynamicPostDecrementAssignChecked(_par1);
+        private string dbg119 = @"checked(p0/*dynamic*/--)";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test119()
+        {
+            Assert.AreEqual(dbg119, expr119.ToCSharp());
         }
 
     }

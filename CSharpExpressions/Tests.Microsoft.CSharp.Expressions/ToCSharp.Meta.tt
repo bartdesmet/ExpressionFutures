@@ -129,6 +129,23 @@ var exprs = new string[]
 	"Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.NegateChecked, _par1), typeof(int)))",
 	"Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, _par1, Expression.Constant(1)), typeof(int)))",
 	"Expression.NegateChecked(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.AddChecked, _par1, Expression.Constant(1)), typeof(int)))",
+	"Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, _par1), typeof(int)))",
+	"Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.NegateChecked, _par1), typeof(int)))",
+	"Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, _par1, Expression.Constant(1)), typeof(int)))",
+	"Expression.Negate(Expression.Convert(DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.AddChecked, _par1, Expression.Constant(1)), typeof(int)))",
+	"DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Increment, _par1)",
+	"DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Decrement, _par1)",
+	"DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.IsTrue, _par1)",
+	"DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.IsFalse, _par1)",
+	
+	"DynamicCSharpExpression.DynamicPreIncrementAssign(_par1)",
+	"DynamicCSharpExpression.DynamicPreDecrementAssign(_par1)",
+	"DynamicCSharpExpression.DynamicPostIncrementAssign(_par1)",
+	"DynamicCSharpExpression.DynamicPostDecrementAssign(_par1)",
+	"DynamicCSharpExpression.DynamicPreIncrementAssignChecked(_par1)",
+	"DynamicCSharpExpression.DynamicPreDecrementAssignChecked(_par1)",
+	"DynamicCSharpExpression.DynamicPostIncrementAssignChecked(_par1)",
+	"DynamicCSharpExpression.DynamicPostDecrementAssignChecked(_par1)",
 };
 #>
 \<#@ template debug="false" hostspecific="false" language="C#" \#>

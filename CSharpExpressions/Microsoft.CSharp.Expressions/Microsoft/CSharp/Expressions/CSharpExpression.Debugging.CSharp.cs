@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     // NB: ToCSharp *tries* to provide a C# fragment that's semantically equivalent to the expression
     //     tree but should be used for debugging purposes *only*. While it tries to do a good job, it's
     //     fundamentally impossible to represent all expression trees as valid C# because they have a
-    //     richer set of operations, so of which cannot be represented in C# without a lowering step
+    //     richer set of operations, some of which cannot be represented in C# without a lowering step
     //     which would take away the original tree shape. For debugging purposes, this is good enough
     //     though, much like Reflector and ILSpy provide a reasonable means to reverse engineer what's
     //     going on. Although these fundamental restrictions exist, we try to do our best to emit good
@@ -1446,7 +1446,7 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(OperationNodeType);
-            var isChecked = false;
+            var isChecked = IsChecked;
             var isSuffix = false;
 
             switch (OperationNodeType)
@@ -1893,7 +1893,7 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
-            var isChecked = false;
+            var isChecked = IsChecked;
             var isSuffix = false;
 
             switch (OperationNodeType)

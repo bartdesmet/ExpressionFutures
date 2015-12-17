@@ -342,6 +342,16 @@ namespace Tests
             AssertPreIncrementChecked<double>(41, 42);
         }
 
+        [TestMethod]
+        public void AssignUnary_Visitor()
+        {
+            var res = CSharpExpression.MakeUnaryAssign(CSharpExpressionType.PostIncrementAssign, Expression.Parameter(typeof(int)), null);
+
+            var v = new V();
+            Assert.AreSame(res, v.Visit(res));
+            Assert.IsTrue(v.Visited);
+        }
+
         private static void AssertPreIncrementChecked<T>(T value, T plusOne)
         {
             var v = Expression.Parameter(typeof(T));
@@ -428,6 +438,18 @@ namespace Tests
                     _append("S");
                     _value = value;
                 }
+            }
+        }
+
+        class V : CSharpExpressionVisitor
+        {
+            public bool Visited = false;
+
+            protected internal override Expression VisitUnaryAssign(AssignUnaryCSharpExpression node)
+            {
+                Visited = true;
+
+                return base.VisitUnaryAssign(node);
             }
         }
     }

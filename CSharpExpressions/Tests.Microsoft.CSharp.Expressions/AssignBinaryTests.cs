@@ -297,11 +297,21 @@ namespace Tests
             // (int res) => (byte)(res / 3)
             var y = Expression.Parameter(typeof(int));
             var d = Expression.Lambda(Expression.Convert(Expression.Divide(y, Expression.Constant(3)), typeof(byte)), y);
-            
+
             // (int lhs) => lhs + 1
             var f = Expression.Lambda<Func<byte, byte>>(CSharpExpression.AddAssign(p, Expression.Constant(1, typeof(int)), null, d, c), p).Compile();
 
             Assert.AreEqual((byte)7, f(10));
+        }
+
+        [TestMethod]
+        public void AssignBinary_Visitor()
+        {
+            var res = CSharpExpression.MakeBinaryAssign(CSharpExpressionType.AddAssign, Expression.Parameter(typeof(int)), Expression.Constant(1), null, null, null);
+
+            var v = new V();
+            Assert.AreSame(res, v.Visit(res));
+            Assert.IsTrue(v.Visited);
         }
 
         private static int Op(int x, int y)
@@ -327,6 +337,18 @@ namespace Tests
         {
             var res = WithLog(createExpression).Compile()();
             Assert.AreEqual(expected, res);
+        }
+
+        class V : CSharpExpressionVisitor
+        {
+            public bool Visited = false;
+
+            protected internal override Expression VisitBinaryAssign(AssignBinaryCSharpExpression node)
+            {
+                Visited = true;
+
+                return base.VisitBinaryAssign(node);
+            }
         }
     }
 }
