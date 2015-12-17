@@ -330,10 +330,8 @@ namespace Tests
         [TestMethod]
         public void AssignUnary_VariousTypes()
         {
-            // TODO: not supported by LINQ APIs but valid in C#
-            //AssertPreIncrement<byte>(41, 42);
-            //AssertPreIncrement<sbyte>(41, 42);
-
+            AssertPreIncrementChecked<byte>(41, 42);
+            AssertPreIncrementChecked<sbyte>(41, 42);
             AssertPreIncrementChecked<short>(41, 42);
             AssertPreIncrementChecked<ushort>(41, 42);
             AssertPreIncrementChecked<int>(41, 42);
