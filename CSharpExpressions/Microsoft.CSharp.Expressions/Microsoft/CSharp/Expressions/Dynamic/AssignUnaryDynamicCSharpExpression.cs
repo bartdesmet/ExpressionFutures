@@ -194,8 +194,11 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary assignment operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
+            ContractUtils.RequiresNotNull(operand, nameof(operand));
+
             RequiresCanRead(operand.Expression, nameof(operand));
             RequiresCanWrite(operand.Expression, nameof(operand));
 

@@ -374,6 +374,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicBinaryAssign(AssignBinaryDynamicCSharpExpression node)
         {
             var args = new List<object>();
@@ -388,6 +389,7 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicUnaryAssign(AssignUnaryDynamicCSharpExpression node)
         {
             var args = new List<object>();
