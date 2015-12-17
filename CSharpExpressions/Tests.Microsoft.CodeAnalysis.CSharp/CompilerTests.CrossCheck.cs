@@ -81,8 +81,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        [Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
-        public void CrossCheck_CompoundAssignment_Issue()
+        //[Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        public void CrossCheck_Issue4984_Binary_Repro1()
         {
             var f = Compile<Func<int, int>>(@"i =>
 {
@@ -91,6 +91,54 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     var res = b.Value += Return(1);
     Log(res);
     return b.Value;
+}");
+            f(0);
+            f(41);
+        }
+
+        [TestMethod]
+        //[Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        public void CrossCheck_Issue4984_Binary_Repro2()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new WeakBox<int>();
+    Log(b[0]);
+    var res = b[0] += Return(1);
+    Log(res);
+    return b[0];
+}");
+            f(0);
+            f(41);
+        }
+
+        [TestMethod]
+        //[Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        public void CrossCheck_Issue4984_Unary_Repro1()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new WeakBox<int>();
+    Log(b.Value);
+    var res = b.Value++;
+    Log(res);
+    return b.Value;
+}");
+            f(0);
+            f(41);
+        }
+
+        [TestMethod]
+        //[Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        public void CrossCheck_Issue4984_Unary_Repro2()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new WeakBox<int>();
+    Log(b[0]);
+    var res = b[0]++;
+    Log(res);
+    return b[0];
 }");
             f(0);
             f(41);

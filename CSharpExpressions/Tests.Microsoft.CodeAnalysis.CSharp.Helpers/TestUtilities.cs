@@ -273,6 +273,12 @@ struct WeakBox<T>
 {{
     public WeakBox(T value) {{ Value = value; }}
 
+    public T this[int ignored]
+    {{
+        get {{ return Value; }}
+        set {{ Value = value; }}
+    }}
+
     public T Value;
 }}
 ";
