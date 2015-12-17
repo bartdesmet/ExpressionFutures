@@ -4,6 +4,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading.Tasks;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -61,6 +62,63 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     }
 
     Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async1()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        await Task.Yield();
+    
+        Log(""B"");
+    
+        return 42;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var res = Return(1) + await Task.FromResult(Return(41));
+    
+        Log(""B"");
+    
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async3()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var res = await Task.FromResult(Return(41)) + Return(1);
+    
+        Log(""B"");
+    
+        return res;
+    });
 }");
             f();
         }

@@ -263,6 +263,11 @@ public static class {typeName}
         return Return<T>(value); // just an alias for now
     }}
 
+    public static T Await<T>(Func<Task<T>> f)
+    {{
+        return f().Result;
+    }}
+
     {exprProp}
     {funcProp}
 }}
