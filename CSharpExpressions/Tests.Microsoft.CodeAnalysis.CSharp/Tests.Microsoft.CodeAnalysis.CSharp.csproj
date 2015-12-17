@@ -66,6 +66,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CompilerTests.CrossCheck.cs" />
+    <Compile Include="CompilerTests.cs" />
     <Compile Include="CompilerTests.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

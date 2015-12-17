@@ -36,8 +36,7 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
-    public partial class CompilerTests
+    partial class CompilerTests
     {
         [TestMethod]
         public void CompilerTest_9D30_AA02()
@@ -10128,18 +10127,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A00C_0847() => INCONCLUSIVE(); }
 
-        partial class Review
-        {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
-        }
-
-        partial class Reviewed : Review
-        {
-            private void OK() {}
-            private void FAIL(string message = "") { Assert.Fail(message); }
-        }
-
-        private Reviewed Verify = new Reviewed();
     }
 
 /*
