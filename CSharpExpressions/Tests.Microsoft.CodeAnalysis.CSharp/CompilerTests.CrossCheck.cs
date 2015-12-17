@@ -20,6 +20,55 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_NullConditional()
+        {
+            var f = Compile<Func<string, int?>>("s => s?.Length");
+            f("bar");
+            f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new StrongBox<int>(1);
+    Log(b.Value);
+    return System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b.Value);
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    for (var i = Return(0); Return(i < 10); Return(i++))
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
         private TDelegate Compile<TDelegate>(string code)
         {
             var res = TestUtilities.FuncEval<TDelegate>(code);
@@ -30,6 +79,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             var invoke = typeof(TDelegate).GetMethod("Invoke");
             var returnType = invoke.ReturnType;
+            var resultType = returnType == typeof(void) ? typeof(object) : returnType;
             var parameters = invoke.GetParameters().Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray();
 
             var evalExp = CreateInvoke<TDelegate>(exp, returnType, parameters, log);
@@ -41,7 +91,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             var evalExpAsg = Expression.Assign(evalExpVar, evalExp);
             var evalFncAsg = Expression.Assign(evalFncVar, evalFnc);
 
-            var assertMethod = typeof(CompilerTests).GetMethod(nameof(CheckResults), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(returnType);
+            var assertMethod = typeof(CompilerTests).GetMethod(nameof(CheckResults), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(resultType);
             var assert = Expression.Call(assertMethod, evalExpVar, evalFncVar);
 
             var returnMethod = evalFnc.Type.GetMethod("Return");
@@ -76,7 +126,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             var ex = Expression.Parameter(typeof(Exception));
             eval = Expression.TryCatch(eval, Expression.Catch(ex, Expression.Block(typeof(void), Expression.Assign(err, ex))));
 
-            var logAndResultType = typeof(LogAndResult<>).MakeGenericType(returnType);
+            var logAndResultType = typeof(LogAndResult<>).MakeGenericType(resultType);
             var logAndResultCtor = logAndResultType.GetConstructors().Single(c => c.GetParameters().Length == 3);
 
             var logValue = Expression.Constant(log);

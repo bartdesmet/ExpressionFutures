@@ -250,12 +250,17 @@ using System.Threading.Tasks;
 
 public static class {typeName}
 {{
-    public static readonly List<string> Log = new List<string>();
+    public static readonly List<string> s_Log = new List<string>();
 
     public static T Return<T>(T value)
     {{
-        Log.Add(value?.ToString());
+        s_Log.Add(value?.ToString());
         return value;
+    }}
+
+    public static T Log<T>(T value)
+    {{
+        return Return<T>(value); // just an alias for now
     }}
 
     {exprProp}
@@ -314,7 +319,7 @@ public static class {typeName}
 
             var exp = typ.GetProperty(exprName);
             var del = typ.GetProperty(funcName);
-            var log = typ.GetField("Log");
+            var log = typ.GetField("s_Log");
 
             return new FuncEval<TDelegate>
             {
