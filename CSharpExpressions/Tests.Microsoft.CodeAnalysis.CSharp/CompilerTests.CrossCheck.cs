@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -67,6 +68,37 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     Log(""After"");
 }");
             f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new StrongBox<int>(i);
+    Log(b.Value);
+    var res = b.Value += Return(1);
+    Log(res);
+    return b.Value;
+}");
+            f(0);
+            f(41);
+        }
+
+        [TestMethod]
+        [Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        public void CrossCheck_CompoundAssignment_Issue()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new WeakBox<int>();
+    Log(b.Value);
+    var res = b.Value += Return(1);
+    Log(res);
+    return b.Value;
+}");
+            f(0);
+            f(41);
         }
 
         private TDelegate Compile<TDelegate>(string code)

@@ -266,6 +266,15 @@ public static class {typeName}
     {exprProp}
     {funcProp}
 }}
+
+// TODO: add these as references rather than burrying them in the string
+
+struct WeakBox<T>
+{{
+    public WeakBox(T value) {{ Value = value; }}
+
+    public T Value;
+}}
 ";
 
             var tree = CSharpSyntaxTree.ParseText(src);
