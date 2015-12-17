@@ -27,9 +27,11 @@ namespace System.Linq.Expressions
     /// </summary>
     public static class ExpressionCSharpExtensions
     {
+        private static readonly string[] s_defaultNamespaces = new string[] { "System", "System.Collections.Generic", "System.Linq", "System.Threading.Tasks" };
+
         public static string ToCSharp(this Expression expression)
         {
-            return ToCSharp(expression, "System", "System.Collections.Generic", "System.Linq", "System.Threading.Tasks");
+            return ToCSharp(expression, s_defaultNamespaces);
         }
 
         public static string ToCSharp(this Expression expression, params string[] namespaces)
@@ -39,6 +41,105 @@ namespace System.Linq.Expressions
             printer.Visit(expression);
             return sw.ToString();
         }
+
+        public static string ToCSharp(this Type type)
+        {
+            return ToCSharp(type, s_defaultNamespaces);
+        }
+
+        public static string ToCSharp(this Type type, params string[] namespaces)
+        {
+            return ToCSharp(type, new HashSet<string>(namespaces ?? Array.Empty<string>()));
+        }
+
+        public static string ToCSharp(this Type type, HashSet<string> namespaces)
+        {
+            if (type == null)
+            {
+                return null;
+            }
+
+            if (type.IsArray)
+            {
+                var elem = ToCSharp(type.GetElementType());
+                var rank = type.GetArrayRank(); // NB: ignores multi-dimensional with rank 1
+                return $"{elem}[{new string(',', rank - 1)}]";
+            }
+            else if (type.IsGenericType)
+            {
+                if (type.IsGenericTypeDefinition)
+                {
+                    var name = type.FullName;
+
+                    var tick = name.IndexOf('`');
+                    if (tick >= 0)
+                    {
+                        name = name.Substring(0, tick);
+                    }
+
+                    return $"{name}<{new string(',', type.GetGenericArguments().Length)}>";
+                }
+                else if (type.IsGenericParameter)
+                {
+                    return type.Name;
+                }
+                else
+                {
+                    var def = type.GetGenericTypeDefinition();
+
+                    if (def == typeof(Nullable<>))
+                    {
+                        var arg = type.GetGenericArguments()[0];
+                        var val = ToCSharp(arg);
+                        return $"{val}?";
+                    }
+                    else
+                    {
+                        var name = namespaces.Contains(def.Namespace) ? def.Name : def.FullName;
+
+                        var tick = name.IndexOf('`');
+                        if (tick >= 0)
+                        {
+                            name = name.Substring(0, tick);
+                        }
+
+                        var args = string.Join(", ", type.GetGenericArguments().Select(ToCSharp));
+
+                        return $"{name}<{args}>";
+                    }
+                }
+            }
+            else
+            {
+                var res = default(string);
+
+                if (s_primitives.TryGetValue(type, out res))
+                {
+                    return res;
+                }
+
+                return namespaces.Contains(type.Namespace) ? type.Name : type.FullName;
+            }
+        }
+
+        private static readonly Dictionary<Type, string> s_primitives = new Dictionary<Type, string>
+        {
+            { typeof(sbyte), "sbyte" },
+            { typeof(byte), "byte" },
+            { typeof(short), "short" },
+            { typeof(ushort), "ushort" },
+            { typeof(int), "int" },
+            { typeof(uint), "uint" },
+            { typeof(long), "long" },
+            { typeof(ulong), "ulong" },
+            { typeof(float), "float" },
+            { typeof(double), "double" },
+            { typeof(decimal), "decimal" },
+            { typeof(bool), "bool" },
+            { typeof(char), "char" },
+            { typeof(string), "string" },
+            { typeof(object), "object" },
+        };
 
         class CSharpPrinter : ExpressionVisitor, ICSharpPrintingVisitor
         {
@@ -1563,90 +1664,6 @@ namespace System.Linq.Expressions
                 _indent = new string(' ', len);
             }
 
-            private static readonly Dictionary<Type, string> s_primitives = new Dictionary<Type, string>
-            {
-                { typeof(sbyte), "sbyte" },
-                { typeof(byte), "byte" },
-                { typeof(short), "short" },
-                { typeof(ushort), "ushort" },
-                { typeof(int), "int" },
-                { typeof(uint), "uint" },
-                { typeof(long), "long" },
-                { typeof(ulong), "ulong" },
-                { typeof(float), "float" },
-                { typeof(double), "double" },
-                { typeof(decimal), "decimal" },
-                { typeof(bool), "bool" },
-                { typeof(char), "char" },
-                { typeof(string), "string" },
-                { typeof(object), "object" },
-            };
-
-            public string ToCSharp(Type type)
-            {
-                if (type.IsArray)
-                {
-                    var elem = ToCSharp(type.GetElementType());
-                    var rank = type.GetArrayRank(); // NB: ignores multi-dimensional with rank 1
-                    return $"{elem}[{new string(',', rank - 1)}]";
-                }
-                else if (type.IsGenericType)
-                {
-                    if (type.IsGenericTypeDefinition)
-                    {
-                        var name = type.FullName;
-
-                        var tick = name.IndexOf('`');
-                        if (tick >= 0)
-                        {
-                            name = name.Substring(0, tick);
-                        }
-
-                        return $"{name}<{new string(',', type.GetGenericArguments().Length)}>";
-                    }
-                    else if (type.IsGenericParameter)
-                    {
-                        return type.Name;
-                    }
-                    else
-                    {
-                        var def = type.GetGenericTypeDefinition();
-
-                        if (def == typeof(Nullable<>))
-                        {
-                            var arg = type.GetGenericArguments()[0];
-                            var val = ToCSharp(arg);
-                            return $"{val}?";
-                        }
-                        else
-                        {
-                            var name = _namespaces.Contains(def.Namespace) ? def.Name : def.FullName;
-
-                            var tick = name.IndexOf('`');
-                            if (tick >= 0)
-                            {
-                                name = name.Substring(0, tick);
-                            }
-
-                            var args = string.Join(", ", type.GetGenericArguments().Select(ToCSharp));
-
-                            return $"{name}<{args}>";
-                        }
-                    }
-                }
-                else
-                {
-                    var res = default(string);
-
-                    if (s_primitives.TryGetValue(type, out res))
-                    {
-                        return res;
-                    }
-
-                    return _namespaces.Contains(type.Namespace) ? type.Name : type.FullName;
-                }
-            }
-
             private static string Escape(char ch)
             {
                 var res = default(string);
@@ -1739,6 +1756,11 @@ namespace System.Linq.Expressions
                 }
 
                 return str;
+            }
+
+            public string ToCSharp(Type type)
+            {
+                return type.ToCSharp(_namespaces);
             }
 
             class NonLocalJumpAnalyzer : ExpressionVisitor

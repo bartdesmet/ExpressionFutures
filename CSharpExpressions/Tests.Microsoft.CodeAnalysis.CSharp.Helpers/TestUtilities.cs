@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CSharp.Expressions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -223,9 +224,116 @@ public static class {typeName}
             return prp.GetValue(null);
         }
 
+        public static FuncEval<TDelegate> FuncEval<TDelegate>(string expr)
+        {
+            // TODO: Investigate using the scripting APIs here instead.
+
+            var typeName = "Expressions";
+
+            var deleName = typeof(TDelegate).ToCSharp("System");
+
+            var exprName = "Expression";
+            var funcName = "Function";
+
+            var exprProp = $"public static Expression<{deleName}> {exprName} => {expr};";
+            var funcProp = $"public static {deleName} {funcName} => {expr};";
+
+            var src = $@"
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
+public static class {typeName}
+{{
+    public static readonly List<string> Log = new List<string>();
+
+    public static T Return<T>(T value)
+    {{
+        Log.Add(value?.ToString());
+        return value;
+    }}
+
+    {exprProp}
+    {funcProp}
+}}
+";
+
+            var tree = CSharpSyntaxTree.ParseText(src);
+
+            var csc = CSharpCompilation
+                // A class library `Expressions` which will be emitted in memory
+                .Create("Expressions")
+                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, warningLevel: 0))
+
+                // BCL assemblies
+                .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
+
+                // Our custom assembly
+                .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) })
+
+                // Support for dynamic
+                .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
+
+                // Generated test code based on `expr`
+                .AddSyntaxTrees(tree);
+
+            var asm = default(Assembly);
+
+            using (var ms = new MemoryStream())
+            {
+                var res = default(EmitResult);
+
+                try
+                {
+                    // NB: This can fail because we're testing custom builds of the compiler.
+                    res = csc.Emit(ms);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Fatal compiler error!", ex); // TODO: add the program text
+                }
+
+                if (!res.Success)
+                {
+                    var diag = string.Join("\r\n", res.Diagnostics.Select(d => d.ToString()));
+                    throw new InvalidProgramException(diag);
+                }
+
+                ms.Position = 0;
+
+                asm = Assembly.Load(ms.ToArray());
+            }
+
+            var typ = asm.GetType(typeName);
+
+            var exp = typ.GetProperty(exprName);
+            var del = typ.GetProperty(funcName);
+            var log = typ.GetField("Log");
+
+            return new FuncEval<TDelegate>
+            {
+                Function = (TDelegate)del.GetValue(null),
+                Expression = (Expression<TDelegate>)exp.GetValue(null),
+                Log = (List<string>)log.GetValue(null),
+            };
+        }
+
         class Reducer : ExpressionVisitor
         {
             public static readonly Reducer Instance = new Reducer();
         }
+    }
+
+    public class FuncEval<TDelegate>
+    {
+        public TDelegate Function;
+        public Expression<TDelegate> Expression;
+        public List<string> Log;
     }
 }

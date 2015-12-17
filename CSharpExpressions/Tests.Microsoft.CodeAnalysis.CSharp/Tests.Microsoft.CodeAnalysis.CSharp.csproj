@@ -65,6 +65,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CompilerTests.CrossCheck.cs" />
     <Compile Include="CompilerTests.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -77,6 +78,7 @@
     </Compile>
     <Compile Include="CompilerTests.Reducing.Verify.cs" />
     <Compile Include="CompilerTests.Verify.cs" />
+    <Compile Include="LogAndResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
