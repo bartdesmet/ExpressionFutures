@@ -6,6 +6,7 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+using static System.Linq.Expressions.ExpressionStubs;
 using static Microsoft.CSharp.Expressions.Helpers;
 using LinqError = System.Linq.Expressions.Error;
 
@@ -325,6 +326,9 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignBinaryCSharpExpression MakeBinaryAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
         {
+            Helpers.RequiresCanWrite(left, nameof(left));
+            RequiresCanRead(right, nameof(right));
+
             if (binaryType == ExpressionType.Assign)
             {
                 var lhs = GetLhs(left, nameof(left));

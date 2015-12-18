@@ -267,6 +267,9 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
         {
+            RequiresCanRead(operand, nameof(operand));
+            Helpers.RequiresCanWrite(operand, nameof(operand));
+
             if (IsCSharpSpecificUnaryAssignNumeric(operand.Type) && method == null)
             {
                 return AssignUnaryCSharpExpression.Make(unaryType, operand);
@@ -286,6 +289,9 @@ namespace Microsoft.CSharp.Expressions
 
         private static AssignUnaryCSharpExpression MakeUnaryAssignChecked(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
         {
+            RequiresCanRead(operand, nameof(operand));
+            Helpers.RequiresCanWrite(operand, nameof(operand));
+
             if (IsCSharpSpecificUnaryAssignNumeric(operand.Type) && method == null)
             {
                 return AssignUnaryCSharpExpression.Make(unaryType, operand);
