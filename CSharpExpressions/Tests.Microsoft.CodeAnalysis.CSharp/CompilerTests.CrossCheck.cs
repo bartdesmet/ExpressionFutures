@@ -199,6 +199,35 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
+        public void CrossCheck_ForEach5()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (int i in new object[] { Return(0), 1, 2, 3, Return(4), 5, 6, 7, Return(8) })
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
         public void CrossCheck_Async1()
         {
             var f = Compile<Func<int>>(@"() =>
