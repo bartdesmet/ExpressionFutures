@@ -52,13 +52,131 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_ForEach()
+        public void CrossCheck_For()
         {
             var f = Compile<Action>(@"() =>
 {
     Log(""Before"");
 
     for (var i = Return(0); Return(i < 10); Return(i++))
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var i in Enumerable.Range(Return(0), Return(10)))
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var c in ""0123456789"")
+    {
+        var i = int.Parse(Return(c.ToString()));
+
+        if (i == 2)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach3()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var i in from x in Enumerable.Range(Return(0), Return(10)) where Return(x) % Return(2) == Return(0) select Return(x))
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach4()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var i in new[] { Return(0), 1, 2, 3, Return(4), 5, 6, 7, Return(8) })
     {
         if (i == 2)
         {
