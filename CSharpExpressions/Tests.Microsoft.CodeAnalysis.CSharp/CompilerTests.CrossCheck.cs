@@ -4,6 +4,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -49,6 +50,29 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     return System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b.Value);
 }");
             f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_ByRef1()
+        {
+            var f = Compile<Func<int[], int>>(@"xs =>
+{
+    return Utils.NamedParamByRef(y: Return(42), x: ref xs[0]);
+}");
+            f(new[] { 17 });
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new int[0]));
+            AssertEx.Throws<NullReferenceException>(() => f(null));
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_ByRef2()
+        {
+            var f = Compile<Func<StrongBox<int>, int>>(@"b =>
+{
+    return Utils.NamedParamByRef(y: Return(42), x: ref b.Value);
+}");
+            f(new StrongBox<int>(17));
+            AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
         [TestMethod]

@@ -4,7 +4,7 @@
 
 // NB: These get included in the runtime compilations of snippets to evaluate using Roslyn.
 
-struct WeakBox<T>
+public struct WeakBox<T>
 {
     public WeakBox(T value) { Value = value; }
 
@@ -15,4 +15,12 @@ struct WeakBox<T>
     }
 
     public T Value;
+}
+
+public static class Utils
+{
+    public static int NamedParamByRef(ref int x, int y)
+    {
+        return x + y;
+    }
 }
