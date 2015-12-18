@@ -70,6 +70,7 @@ namespace RoslynPad
 
             txtResult.Text = "";
             txtCSharp.Text = "";
+            txtIL.Text = "";
             trvExpr.Nodes.Clear();
             rtf.Clear();
             prgNode.SelectedObject = null;
@@ -124,6 +125,7 @@ namespace RoslynPad
             }
 
             Highlight();
+            UpdateIL();
         }
 
         private void Highlight()
@@ -179,6 +181,23 @@ namespace RoslynPad
             }
 
             _lastTooltipPosition = -1;
+        }
+
+        private void UpdateIL()
+        {
+            if (_eval != null)
+            {
+                try
+                {
+                    txtIL.ForeColor = Color.Black;
+                    txtIL.Text = _eval.Compile().GetMethodIL();
+                }
+                catch (Exception ex)
+                {
+                    txtIL.ForeColor = Color.Red;
+                    txtIL.Text = ex.ToString();
+                }
+            }
         }
 
         private bool _ignoreIndexChange;
@@ -310,6 +329,7 @@ namespace RoslynPad
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
                 txtCSharp.Text = "";
+                txtIL.Text = "";
             }
         }
 
@@ -756,6 +776,7 @@ namespace RoslynPad
                 txtCode.Font = frm.EditorFont;
                 rtf.Font = frm.SyntaxFont;
                 txtCSharp.Font = frm.SyntaxFont;
+                txtIL.Font = frm.SyntaxFont;
                 txtResult.Font = frm.DebugViewFont;
                 txtNode.Font = frm.DebugViewFont;
                 trvExpr.Font = frm.TreeFont;
@@ -1021,6 +1042,7 @@ namespace RoslynPad
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
                 txtCSharp.Text = "";
+                txtIL.Text = "";
             }
         }
     }

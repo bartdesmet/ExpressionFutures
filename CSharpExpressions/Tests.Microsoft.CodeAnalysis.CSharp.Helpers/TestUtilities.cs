@@ -2,6 +2,7 @@
 //
 // bartde - November 2015
 
+using ClrTest.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
@@ -12,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
 using CSharpDynamic = Microsoft.CSharp.RuntimeBinder;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -222,6 +225,65 @@ public static class {typeName}
             var prp = typ.GetProperty(propName);
 
             return prp.GetValue(null);
+        }
+
+        public static string GetMethodIL(this Delegate compiled)
+        {
+            var sb = new StringBuilder();
+
+            AppendMethod(compiled, sb);
+
+            return sb.ToString();
+        }
+
+        private static void AppendMethod(Delegate compiled, StringBuilder sb)
+        {
+            AppendMethod(compiled.Method, sb);
+
+            var closure = compiled.Target as Closure;
+            if (closure != null)
+            {
+                var objects = new Queue<object>((closure.Locals ?? Array.Empty<object>()).Concat(closure.Constants ?? Array.Empty<object>()));
+                while (objects.Count > 0)
+                {
+                    var o = objects.Dequeue();
+
+                    var m = o as MethodBase;
+                    if (m != null)
+                    {
+                        sb.AppendLine();
+                        AppendMethod(m, sb);
+                    }
+
+                    var a = o as object[];
+                    if (a != null)
+                    {
+                        foreach (var c in a)
+                        {
+                            objects.Enqueue(c);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void AppendMethod(MethodBase method, StringBuilder sb)
+        {
+            var res = MethodBodyInfo.Create(method);
+
+            sb.AppendLine($"{res.MethodToString} // 0X{res.Identity.ToString("X2")}");
+            sb.AppendLine("{");
+            foreach (var instr in res.Instructions)
+            {
+                sb.AppendLine("   " + instr);
+            }
+            sb.AppendLine("}");
+        }
+
+        private static void CheckNotNull(object o)
+        {
+            if (o == null)
+                throw new InvalidOperationException("Could not find IL code.");
         }
 
         public static FuncEval<TDelegate> FuncEval<TDelegate>(string expr)
