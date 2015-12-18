@@ -335,21 +335,6 @@ public static class {typeName}
     {exprProp}
     {funcProp}
 }}
-
-// TODO: add these as references rather than burrying them in the string
-
-struct WeakBox<T>
-{{
-    public WeakBox(T value) {{ Value = value; }}
-
-    public T this[int ignored]
-    {{
-        get {{ return Value; }}
-        set {{ Value = value; }}
-    }}
-
-    public T Value;
-}}
 ";
 
             var tree = CSharpSyntaxTree.ParseText(src);
@@ -368,6 +353,9 @@ struct WeakBox<T>
 
                 // Support for dynamic
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
+
+                // Test utilities
+                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
 
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
