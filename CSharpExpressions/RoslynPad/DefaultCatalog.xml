@@ -1,51 +1,35 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<!--TODO: Could make a hierarchical "project" to allow for better organization-->
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Expressions>
   <Expression Name="Constant">
-    <Code>
-      <![CDATA[(Expression<Func<int>>)(() => 42)]]>
-    </Code>
+    <Code><![CDATA[(Expression<Func<int>>)(() => 42)]]></Code>
   </Expression>
   <Expression Name="Arithmetic">
-    <Code>
-      <![CDATA[(Expression<Func<int, int>>)(x => x * 2 + 1)]]>
-    </Code>
+    <Code><![CDATA[(Expression<Func<int, int>>)(x => x * 2 + 1)]]></Code>
   </Expression>
   <Expression Name="Anonymous object">
-    <Code>
-      <![CDATA[(Expression<Func<object>>)(() => new { a = 1, b = 2 })]]>
-    </Code>
+    <Code><![CDATA[(Expression<Func<object>>)(() => new { a = 1, b = 2 })]]></Code>
   </Expression>
   <Expression Name="Conditional access">
-    <Code>
-      <![CDATA[(Expression<Func<DateTimeOffset?, int?>>)(dt => dt?.Offset.Hours)]]>
-    </Code>
+    <Code><![CDATA[(Expression<Func<DateTimeOffset?, int?>>)(dt => dt?.Offset.Hours)]]></Code>
   </Expression>
   <Expression Name="Named parameters">
-    <Code>
-      <![CDATA[(Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(length: j, startIndex: i))]]>
-    </Code>
+    <Code><![CDATA[(Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(length: j, startIndex: i))]]></Code>
   </Expression>
   <Expression Name="Block">
-    <Code>
-      <![CDATA[(Expression<Action>)(() =>
+    <Code><![CDATA[(Expression<Action>)(() =>
 {
   // Add statements here
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Async">
-    <Code>
-      <![CDATA[(Expression<Func<int, Task<int>>>)(async x =>
+    <Code><![CDATA[(Expression<Func<int, Task<int>>>)(async x =>
 {
   await Task.Delay(1000);
   return 2 * await Task.FromResult(x);
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Primes">
-    <Code>
-      <![CDATA[(Expression<Func<int, List<int>>>)(max =>
+    <Code><![CDATA[(Expression<Func<int, List<int>>>)(max =>
 {
   var res = new List<int>();
 
@@ -73,12 +57,10 @@
   }
 
   return res;
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Primes async">
-    <Code>
-      <![CDATA[(Expression<Func<int, Task<List<int>>>>)(async max =>
+    <Code><![CDATA[(Expression<Func<int, Task<List<int>>>>)(async max =>
 {
   var res = new List<int>();
 
@@ -108,12 +90,18 @@
   }
 
   return res;
-})]]>
-    </Code>
+})]]></Code>
   </Expression>
   <Expression Name="Dynamic">
-    <Code>
-      <![CDATA[(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)]]>
-    </Code>
+    <Code><![CDATA[(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)]]></Code>
+  </Expression>
+  <Expression Name="ForEach">
+    <Code><![CDATA[(Expression<Action>)(() =>
+{
+  foreach (var x in from y in new[] { 1, 2, 3 } where y % 2 == 0 select y + 1)
+  {
+    Console.WriteLine(x);
+  }
+})]]></Code>
   </Expression>
 </Expressions>
