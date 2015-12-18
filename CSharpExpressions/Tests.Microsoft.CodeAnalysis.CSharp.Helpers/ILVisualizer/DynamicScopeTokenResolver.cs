@@ -7,8 +7,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Diagnostics;
 
-namespace ClrTest.Reflection {
-    internal class DynamicScopeTokenResolver : ITokenResolver {
+namespace ClrTest.Reflection
+{
+    internal class DynamicScopeTokenResolver : ITokenResolver
+    {
         #region Static stuffs
         private static PropertyInfo s_indexer;
         private static FieldInfo s_scopeFi;
@@ -22,7 +24,8 @@ namespace ClrTest.Reflection {
         private static Type s_genFieldInfoType;
         private static FieldInfo s_genfieldFi1, s_genfieldFi2;
 
-        static DynamicScopeTokenResolver() {
+        static DynamicScopeTokenResolver()
+        {
             BindingFlags s_bfInternal = BindingFlags.NonPublic | BindingFlags.Instance;
             s_indexer = Type.GetType("System.Reflection.Emit.DynamicScope").GetProperty("Item", s_bfInternal);
             s_scopeFi = Type.GetType("System.Reflection.Emit.DynamicILGenerator").GetField("m_scope", s_bfInternal);
@@ -36,35 +39,44 @@ namespace ClrTest.Reflection {
             s_genmethFi2 = s_genMethodInfoType.GetField("m_context", s_bfInternal);
 
             s_genFieldInfoType = Type.GetType("System.Reflection.Emit.GenericFieldInfo", false);
-            if (s_genFieldInfoType != null) {
+            if (s_genFieldInfoType != null)
+            {
                 s_genfieldFi1 = s_genFieldInfoType.GetField("m_fieldHandle", s_bfInternal);
                 s_genfieldFi2 = s_genFieldInfoType.GetField("m_context", s_bfInternal);
-            } else {
+            }
+            else
+            {
                 s_genfieldFi1 = s_genfieldFi2 = null;
             }
         }
         #endregion
 
         object m_scope = null;
-        internal object this[int token] {
-            get {
+        internal object this[int token]
+        {
+            get
+            {
                 return s_indexer.GetValue(m_scope, new object[] { token });
             }
         }
 
-        public DynamicScopeTokenResolver(DynamicMethod dm) {
+        public DynamicScopeTokenResolver(DynamicMethod dm)
+        {
             m_scope = s_scopeFi.GetValue(dm.GetILGenerator());
         }
 
-        public String AsString(int token) {
+        public String AsString(int token)
+        {
             return this[token] as string;
         }
 
-        public FieldInfo AsField(int token) {
+        public FieldInfo AsField(int token)
+        {
             if (this[token] is RuntimeFieldHandle)
                 return FieldInfo.GetFieldFromHandle((RuntimeFieldHandle)this[token]);
 
-            if (this[token].GetType() == s_genFieldInfoType) {
+            if (this[token].GetType() == s_genFieldInfoType)
+            {
                 return FieldInfo.GetFieldFromHandle(
                         (RuntimeFieldHandle)s_genfieldFi1.GetValue(this[token]),
                         (RuntimeTypeHandle)s_genfieldFi2.GetValue(this[token]));
@@ -74,11 +86,13 @@ namespace ClrTest.Reflection {
             return null;
         }
 
-        public Type AsType(int token) {
+        public Type AsType(int token)
+        {
             return Type.GetTypeFromHandle((RuntimeTypeHandle)this[token]);
         }
 
-        public MethodBase AsMethod(int token) {
+        public MethodBase AsMethod(int token)
+        {
             if (this[token] is DynamicMethod)
                 return this[token] as DynamicMethod;
 
@@ -97,7 +111,8 @@ namespace ClrTest.Reflection {
             return null;
         }
 
-        public MemberInfo AsMember(int token) {
+        public MemberInfo AsMember(int token)
+        {
             if ((token & 0x02000000) == 0x02000000)
                 return this.AsType(token);
             if ((token & 0x06000000) == 0x06000000)
@@ -109,7 +124,8 @@ namespace ClrTest.Reflection {
             return null;
         }
 
-        public byte[] AsSignature(int token) {
+        public byte[] AsSignature(int token)
+        {
             return this[token] as byte[];
         }
     }
