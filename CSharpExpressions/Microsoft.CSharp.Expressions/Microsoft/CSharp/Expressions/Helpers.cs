@@ -399,6 +399,11 @@ namespace Microsoft.CSharp.Expressions
                             {
                                 EnsureWriteback(parameter, ref expression, variables, statements, ref writebackList);
                             }
+                            else
+                            {
+                                // NB: This ensures correct timing of an out-of-range exception relative to other arguments.
+                                statements.Add(expression);
+                            }
                         }
                     }
                     break;
@@ -442,6 +447,14 @@ namespace Microsoft.CSharp.Expressions
                             var newMember = member.Update(newObj);
                             expression = newMember;
 
+                            // NB: Reading from a static field has no side-effects, so we don't have to emit the expression
+                            //     in the statement list like we do for array indexing operations. We emit it for instance
+                            //     fields though, so we don't change the timing of NullReferenceExceptions.
+                            if (obj != null && member.Member.MemberType == MemberTypes.Field)
+                            {
+                                statements.Add(expression);
+                            }
+
                             if (useWriteback)
                             {
                                 EnsureWriteback(parameter, ref expression, variables, statements, ref writebackList);
@@ -460,6 +473,9 @@ namespace Microsoft.CSharp.Expressions
 
                         var newBinary = Expression.ArrayAccess(newLeft, newRight);
                         expression = newBinary;
+
+                        // NB: This ensures correct timing of an out-of-range exception relative to other arguments.
+                        statements.Add(expression);
 
                         // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                     }
@@ -490,6 +506,9 @@ namespace Microsoft.CSharp.Expressions
 
                             var newCall = Expression.ArrayAccess(newObj, newArgs);
                             expression = newCall;
+
+                            // NB: This ensures correct timing of an out-of-range exception relative to other arguments.
+                            statements.Add(expression);
 
                             // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                         }
