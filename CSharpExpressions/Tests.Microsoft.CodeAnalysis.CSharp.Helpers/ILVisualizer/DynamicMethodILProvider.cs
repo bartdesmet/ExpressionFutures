@@ -12,10 +12,13 @@ namespace ClrTest.Reflection
     {
         static FieldInfo s_fiLen = typeof(ILGenerator).GetField("m_length", BindingFlags.NonPublic | BindingFlags.Instance);
         static FieldInfo s_fiStream = typeof(ILGenerator).GetField("m_ILStream", BindingFlags.NonPublic | BindingFlags.Instance);
+        static FieldInfo s_fiExceptions = typeof(ILGenerator).GetField("m_exceptions", BindingFlags.NonPublic | BindingFlags.Instance);
+        static FieldInfo s_fiExceptionCount = typeof(ILGenerator).GetField("m_exceptionCount", BindingFlags.NonPublic | BindingFlags.Instance);
         static MethodInfo s_miBakeByteArray = typeof(ILGenerator).GetMethod("BakeByteArray", BindingFlags.NonPublic | BindingFlags.Instance);
 
         DynamicMethod m_method;
         byte[] m_byteArray;
+        ExceptionInfo[] m_exceptionInfo;
 
         public DynamicMethodILProvider(DynamicMethod method)
         {
@@ -42,5 +45,30 @@ namespace ClrTest.Reflection
             return m_byteArray;
         }
 
+        public ExceptionInfo[] GetExceptionInfos()
+        {
+            if (m_exceptionInfo == null)
+            {
+                ILGenerator ilgen = m_method.GetILGenerator();
+
+                var n = (int)s_fiExceptionCount.GetValue(ilgen);
+                if (n > 0)
+                {
+                    var exceptions = (Array)s_fiExceptions.GetValue(ilgen);
+
+                    m_exceptionInfo = new ExceptionInfo[n];
+                    for (var i = 0; i < n; i++)
+                    {
+                        m_exceptionInfo[i] = new ExceptionInfo(exceptions.GetValue(i));
+                    }
+                }
+                else
+                {
+                    m_exceptionInfo = Array.Empty<ExceptionInfo>();
+                }
+            }
+
+            return m_exceptionInfo;
+        }
     }
 }

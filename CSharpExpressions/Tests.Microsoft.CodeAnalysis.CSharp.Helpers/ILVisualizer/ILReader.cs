@@ -75,6 +75,11 @@ namespace ClrTest.Reflection
             m_position = 0;
         }
 
+        public IILProvider ILProvider
+        {
+            get { return m_ilProvider; }
+        }
+
         public IEnumerator<ILInstruction> GetEnumerator()
         {
             while (m_position < m_byteArray.Length)
