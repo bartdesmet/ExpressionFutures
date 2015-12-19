@@ -50,7 +50,7 @@ foreach (var node in nodes)
 		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression Assign(Expression left, Expression right)
 		{
-			return MakeBinaryAssign(CSharpExpressionType.Assign, (l, r, m, c) => Expression.Assign(l, r), left, right, null, null, null);
+			return MakeBinaryAssignCore(CSharpExpressionType.Assign, left, right, null, null, null);
 		}
 
 <#
@@ -104,7 +104,7 @@ foreach (var node in nodes)
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(CSharpExpressionType.<#=node#>, Expression.<#=node#>, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssignCore(CSharpExpressionType.<#=node#>, left, right, method, finalConversion, leftConversion);
 		}
 
 <#

@@ -22,10 +22,22 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class AssignBinaryCSharpExpression : BinaryCSharpExpression
     {
-        private AssignBinaryCSharpExpression(Expression left, Expression right)
+        private AssignBinaryCSharpExpression(CSharpExpressionType binaryType, Expression left, Expression right)
             : base(left, right)
         {
+            CSharpNodeType = binaryType;
         }
+
+        /// <summary>
+        /// Returns the node type of this <see cref="CSharpExpression" />.
+        /// </summary>
+        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
+        public override CSharpExpressionType CSharpNodeType { get; }
+
+        /// <summary>
+        /// Gets the static type of the expression.
+        /// </summary>
+        public override Type Type => Left.Type;
 
         /// <summary>
         /// Gets the implementing method for the binary operation.
@@ -49,13 +61,31 @@ namespace Microsoft.CSharp.Expressions
         /// Gets a value that indicates whether the expression tree node represents a lifted call to an operator.
         /// </summary>
         /// <returns>true if the node represents a lifted call; otherwise, false.</returns>
-        public abstract bool IsLifted { get; }
+        public bool IsLifted
+        {
+            get
+            {
+                // NB: Same logic as LINQ's BinaryExpression, modulo the absence of the Coalesce case.
+
+                if (CSharpNodeType == CSharpExpressionType.Assign)
+                {
+                    return false;
+                }
+
+                if (Left.Type.IsNullableType())
+                {
+                    return Method == null || !TypeUtils.AreEquivalent(Method.GetParametersCached()[0].ParameterType.GetNonRefType(), Left.Type);
+                }
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Gets a value that indicates whether the expression tree node represents a lifted call to an operator whose return type is lifted to a nullable type.
         /// </summary>
         /// <returns>true if the operator's return type is lifted to a nullable type; otherwise, false.</returns>
-        public abstract bool IsLiftedToNull { get; }
+        public bool IsLiftedToNull => IsLifted && Type.IsNullableType();
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -86,95 +116,64 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.MakeBinaryAssign(CSharpNodeType, left, right, Method, finalConversion, leftConversion);
         }
 
-        internal class WithConversions : AssignBinaryCSharpExpression
+        /// <summary>
+        /// Reduces the expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public override Expression Reduce()
         {
-            private readonly ExpressionType _binaryType;
-
-            internal WithConversions(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
-                : base(left, right)
+            return ReduceAssignment(Left, leftConversion: LeftConversion, functionalOp: lhs =>
             {
-                CSharpNodeType = binaryType;
-                Method = method;
-                LeftConversion = leftConversion;
-                FinalConversion = finalConversion;
-            }
+                var res = (Expression)FunctionalOp(CSharpNodeType, lhs, Right, Method);
 
-            public override CSharpExpressionType CSharpNodeType { get; }
-            public override Type Type => Left.Type;
-
-            public override MethodInfo Method { get; }
-            public override LambdaExpression LeftConversion { get; }
-            public override LambdaExpression FinalConversion { get; }
-            public override bool IsLifted
-            {
-                get
+                if (FinalConversion != null)
                 {
-                    // NB: Same logic as LINQ's BinaryExpression, modulo the absence of Assign and Coalesce cases.
-                    if (Left.Type.IsNullableType())
-                    {
-                        return Method == null || !TypeUtils.AreEquivalent(Method.GetParametersCached()[0].ParameterType.GetNonRefType(), Left.Type);
-                    }
-
-                    return false;
-                }
-            }
-            public override bool IsLiftedToNull => this.IsLifted && this.Type.IsNullableType();
-
-            public override Expression Reduce()
-            {
-                return ReduceAssignment(Left, leftConversion: LeftConversion, functionalOp: lhs =>
-                {
-                    var res = (Expression)FunctionalOp(CSharpNodeType, lhs, Right, Method);
-
-                    if (FinalConversion != null)
-                    {
-                        // DESIGN: Maybe we shouldn't use a LambdaExpression for the left conversion if it's trivial,
-                        //         cf. use of ConversionIsNotSupportedForArithmeticTypes in LINQ APIs. Instead, we
-                        //         could just insert a Convert[Checked] node. The current design allows for user-
-                        //         defined conversions as well.
-                        res = Apply(FinalConversion, res);
-                    }
-
-                    return res;
-                });
-            }
-
-            internal static BinaryExpression FunctionalOp(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method)
-            {
-                switch (binaryType)
-                {
-                    case CSharpExpressionType.Assign:
-                        return Expression.Assign(left, right);
-                    case CSharpExpressionType.AddAssign:
-                        return Expression.Add(left, right, method);
-                    case CSharpExpressionType.AndAssign:
-                        return Expression.And(left, right, method);
-                    case CSharpExpressionType.DivideAssign:
-                        return Expression.Divide(left, right, method);
-                    case CSharpExpressionType.ExclusiveOrAssign:
-                        return Expression.ExclusiveOr(left, right, method);
-                    case CSharpExpressionType.LeftShiftAssign:
-                        return Expression.LeftShift(left, right, method);
-                    case CSharpExpressionType.ModuloAssign:
-                        return Expression.Modulo(left, right, method);
-                    case CSharpExpressionType.MultiplyAssign:
-                        return Expression.Multiply(left, right, method);
-                    case CSharpExpressionType.OrAssign:
-                        return Expression.Or(left, right, method);
-                    case CSharpExpressionType.RightShiftAssign:
-                        return Expression.RightShift(left, right, method);
-                    case CSharpExpressionType.SubtractAssign:
-                        return Expression.Subtract(left, right, method);
-                    case CSharpExpressionType.AddAssignChecked:
-                        return Expression.AddChecked(left, right, method);
-                    case CSharpExpressionType.MultiplyAssignChecked:
-                        return Expression.MultiplyChecked(left, right, method);
-                    case CSharpExpressionType.SubtractAssignChecked:
-                        return Expression.SubtractChecked(left, right, method);
+                    // DESIGN: Maybe we shouldn't use a LambdaExpression for the left conversion if it's trivial,
+                    //         cf. use of ConversionIsNotSupportedForArithmeticTypes in LINQ APIs. Instead, we
+                    //         could just insert a Convert[Checked] node. The current design allows for user-
+                    //         defined conversions as well.
+                    res = Apply(FinalConversion, res);
                 }
 
-                throw LinqError.UnhandledBinary(binaryType);
+                return res;
+            });
+        }
+
+        internal static BinaryExpression FunctionalOp(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method)
+        {
+            switch (binaryType)
+            {
+                case CSharpExpressionType.Assign:
+                    return Expression.Assign(left, right);
+                case CSharpExpressionType.AddAssign:
+                    return Expression.Add(left, right, method);
+                case CSharpExpressionType.AndAssign:
+                    return Expression.And(left, right, method);
+                case CSharpExpressionType.DivideAssign:
+                    return Expression.Divide(left, right, method);
+                case CSharpExpressionType.ExclusiveOrAssign:
+                    return Expression.ExclusiveOr(left, right, method);
+                case CSharpExpressionType.LeftShiftAssign:
+                    return Expression.LeftShift(left, right, method);
+                case CSharpExpressionType.ModuloAssign:
+                    return Expression.Modulo(left, right, method);
+                case CSharpExpressionType.MultiplyAssign:
+                    return Expression.Multiply(left, right, method);
+                case CSharpExpressionType.OrAssign:
+                    return Expression.Or(left, right, method);
+                case CSharpExpressionType.RightShiftAssign:
+                    return Expression.RightShift(left, right, method);
+                case CSharpExpressionType.SubtractAssign:
+                    return Expression.Subtract(left, right, method);
+                case CSharpExpressionType.AddAssignChecked:
+                    return Expression.AddChecked(left, right, method);
+                case CSharpExpressionType.MultiplyAssignChecked:
+                    return Expression.MultiplyChecked(left, right, method);
+                case CSharpExpressionType.SubtractAssignChecked:
+                    return Expression.SubtractChecked(left, right, method);
             }
+
+            throw LinqError.UnhandledBinary(binaryType);
         }
 
         internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
@@ -240,6 +239,21 @@ namespace Microsoft.CSharp.Expressions
 
             return invoke.ReturnType;
         }
+
+        internal class WithConversions : AssignBinaryCSharpExpression
+        {
+            internal WithConversions(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+                : base(binaryType, left, right)
+            {
+                Method = method;
+                LeftConversion = leftConversion;
+                FinalConversion = finalConversion;
+            }
+
+            public override MethodInfo Method { get; }
+            public override LambdaExpression LeftConversion { get; }
+            public override LambdaExpression FinalConversion { get; }
+        }
     }
 
     partial class CSharpExpression
@@ -291,7 +305,7 @@ namespace Microsoft.CSharp.Expressions
             throw LinqError.UnhandledBinary(binaryType);
         }
 
-        private static AssignBinaryCSharpExpression MakeBinaryAssign(CSharpExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
+        private static AssignBinaryCSharpExpression MakeBinaryAssignCore(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
         {
             Helpers.RequiresCanWrite(left, nameof(left));
             RequiresCanRead(right, nameof(right));
