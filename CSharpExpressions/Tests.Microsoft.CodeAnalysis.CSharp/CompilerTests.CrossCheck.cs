@@ -4,6 +4,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -142,11 +143,123 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         #region Conditional access
 
         [TestMethod]
-        public void CrossCheck_NullConditional()
+        public void CrossCheck_ConditionalAccess_Member1()
         {
-            var f = Compile<Func<string, int?>>("s => s?.Length");
+            var f = Compile<Func<string, int?>>("s => Return(s)?.Length");
             f("bar");
             f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Member2()
+        {
+            var f = Compile<Func<TimeSpan?, int?>>("t => Return(t)?.Seconds");
+            f(TimeSpan.Zero);
+            f(new TimeSpan(2, 3, 5));
+            f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Call1()
+        {
+            var f = Compile<Func<string, string>>("s => Return(s)?.Substring(Return(1), Return(2))");
+            f("bar");
+            f(null);
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f(""));
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Call2()
+        {
+            var f = Compile<Func<TimeSpan?, TimeSpan?>>("t => Return(t)?.Add(new TimeSpan(Return(1), Return(2), Return(3)))");
+            f(TimeSpan.Zero);
+            f(new TimeSpan(2, 3, 5));
+            f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Index1()
+        {
+            var f = Compile<Func<string, char?>>("s => Return(s)?[Return(1)]");
+            f("bar");
+            f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Index2()
+        {
+            var f = Compile<Func<int[], int?>>("xs => Return(xs)?[Return(1)]");
+            f(new[] { 2, 3, 5 });
+            f(null);
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new int[0]));
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Index3()
+        {
+            var f = Compile<Func<List<int>, int?>>("xs => Return(xs)?[Return(1)]");
+            f(new List<int> { 2, 3, 5 });
+            f(null);
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f(new List<int>()));
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Invoke()
+        {
+            var f = Compile<Func<Func<int, int>, int?>>("f => Return(f)?.Invoke(Return(1))");
+            f(x => x * 2);
+            f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Many()
+        {
+            var i = 1;
+
+            foreach (var series in new[]
+            {
+                new[]
+                {
+                    ".Bar",
+                    "[Return(1)]",
+                    ".Foo(Return(2))",
+                },
+
+                new[]
+                {
+                    ".Bar[Return(1)]",
+                    ".Bar.Foo(Return(2))",
+                    "[Return(1)].Bar",
+                    "[Return(1)].Foo(Return(2))",
+                    ".Foo(Return(2)).Bar",
+                    ".Foo(Return(2))[Return(1)]",
+                },
+
+                new[]
+                {
+                    ".Bar[Return(1)].Foo(Return(2))",
+                    ".Bar.Foo(Return(2))[Return(1)]",
+                    "[Return(1)].Bar.Foo(Return(2))",
+                    "[Return(1)].Foo(Return(2)).Bar",
+                    ".Foo(Return(2)).Bar[Return(1)]",
+                    ".Foo(Return(2))[Return(1)].Bar",
+                },
+            })
+            {
+                foreach (var ifNotNull in series)
+                {
+                    var f = Compile<Func<Conditional, Conditional>>($"c => c?{ifNotNull}");
+                    f(null);
+                    f(new Conditional(i));
+
+                    if (i > 1)
+                    {
+                        AssertEx.Throws<NullReferenceException>(() => f(new Conditional(i - 2)));
+                    }
+                }
+
+                i++;
+            }
         }
 
         #endregion
