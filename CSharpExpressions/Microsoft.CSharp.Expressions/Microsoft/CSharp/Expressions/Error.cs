@@ -427,6 +427,14 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidCompoundAssignmentWithOperands(p0, p1, p2));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Unary assignment operation '{0}' is not supported for an operand of type '{1}'."
+        /// </summary>
+        internal static Exception InvalidUnaryAssignmentWithOperands(object p0, object p1)
+        {
+            return new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1));
+        }
+
     }
 
     /// <summary>
@@ -907,6 +915,14 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidCompoundAssignmentWithOperands, p0, p1, p2);
         }
 
+        /// <summary>
+        /// A string like "Unary assignment operation '{0}' is not supported for an operand of type '{1}'."
+        /// </summary>
+        internal static string InvalidUnaryAssignmentWithOperands(object p0, object p1)
+        {
+            return SR.Format(SR.InvalidUnaryAssignmentWithOperands, p0, p1);
+        }
+
     }
 }
 
@@ -966,5 +982,6 @@ namespace System
         public const string ConditionalReceiverTypeMismatch = "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver.";
         public const string InvalidCompoundAssignment = "Compound assignment operation '{0}' is not supported for type '{1}'.";
         public const string InvalidCompoundAssignmentWithOperands = "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'.";
+        public const string InvalidUnaryAssignmentWithOperands = "Unary assignment operation '{0}' is not supported for an operand of type '{1}'.";
     }
 }

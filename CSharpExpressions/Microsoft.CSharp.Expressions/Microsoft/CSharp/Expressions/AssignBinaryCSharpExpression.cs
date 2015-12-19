@@ -206,8 +206,12 @@ namespace Microsoft.CSharp.Expressions
 
             var leftDummy = Expression.Parameter(leftType, "__left");
             var rightDummy = Expression.Parameter(rightType, "__right");
-            var functionalOp = WithConversions.FunctionalOp(binaryType, leftDummy, rightDummy, method);
-            method = functionalOp.Method;
+            var functionalOp = FunctionalOp(binaryType, leftDummy, rightDummy, method);
+
+            if (method == null)
+            {
+                method = functionalOp.Method;
+            }
 
             var resultType = functionalOp.Type;
 
@@ -469,8 +473,6 @@ namespace Microsoft.CSharp.Expressions
 
             return false;
         }
-
-        delegate BinaryExpression BinaryAssignFactory(Expression left, Expression right, MethodInfo method, LambdaExpression conversion);
     }
 
     partial class CSharpExpressionVisitor

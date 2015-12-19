@@ -17,10 +17,22 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class AssignUnaryCSharpExpression : UnaryCSharpExpression
     {
-        internal AssignUnaryCSharpExpression(Expression operand)
+        internal AssignUnaryCSharpExpression(CSharpExpressionType unaryType, Expression operand)
             : base(operand)
         {
+            CSharpNodeType = unaryType;
         }
+
+        /// <summary>
+        /// Returns the node type of this <see cref="CSharpExpression" />.
+        /// </summary>
+        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
+        public override CSharpExpressionType CSharpNodeType { get; }
+
+        /// <summary>
+        /// Gets the static type of the expression.
+        /// </summary>
+        public override Type Type => Operand.Type;
 
         /// <summary>
         /// Gets the implementing method for the unary operation.
@@ -54,180 +66,206 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.MakeUnaryAssign(CSharpNodeType, operand, Method);
         }
 
-        internal class Unchecked : AssignUnaryCSharpExpression
+        /// <summary>
+        /// Reduces the expression node to a simpler expression.
+        /// </summary>
+        /// <returns>The reduced expression.</returns>
+        public override Expression Reduce()
         {
-            private readonly UnaryExpression _expression;
+            var operandType = Operand.Type;
 
-            public Unchecked(UnaryExpression expression, Expression operand)
-                : base(operand)
+            if (Method != null)
             {
-                _expression = expression;
-            }
-
-            public override CSharpExpressionType CSharpNodeType => ConvertNodeType(_expression.NodeType);
-            public override Type Type => _expression.Type;
-            public override MethodInfo Method => _expression.Method;
-
-            public override Expression Reduce()
-            {
-                var index = Operand as IndexCSharpExpression;
-                if (index != null)
+                var functionalOp = new Func<Expression, Expression>(lhs =>
                 {
-                    return index.ReduceAssign(operand => _expression.Update(operand));
-                }
+                    return Expression.Call(Method, lhs);
+                });
 
-                return _expression;
+                return ReduceAssignment(Operand, functionalOp, IsPrefix, null);
+            }
+            else if (IsCSharpSpecificUnaryAssignNumeric(operandType) || IsCheckedUnary)
+            {
+                // TODO: Move conversion notions to factory and support in expression translation of Roslyn.
+
+                var isNullableOperandType = operandType.IsNullableType();
+                var nonNullOperandType = operandType.GetNonNullableType();
+                var intermediateType = nonNullOperandType.IsEnum ? nonNullOperandType.GetEnumUnderlyingType() : typeof(int);
+
+                var operandParameter = Expression.Parameter(operandType, "__operand");
+                var convertType = isNullableOperandType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
+                var convertOperand = IsCheckedUnary ? Expression.ConvertChecked(operandParameter, convertType) : Expression.Convert(operandParameter, convertType);
+                var operandConversion = Expression.Lambda(convertOperand, operandParameter);
+
+                var functionalOp = new Func<Expression, Expression>(lhs =>
+                {
+                    var res = FunctionalOp(lhs);
+
+                    res = IsCheckedUnary ? Expression.ConvertChecked(res, operandType) : Expression.Convert(res, operandType);
+
+                    return res;
+                });
+
+                return ReduceAssignment(Operand, functionalOp, IsPrefix, operandConversion);
+            }
+            else
+            {
+                return ReduceAssignment(Operand, FunctionalOp, IsPrefix);
             }
         }
 
-        internal class UncheckedWithNodeType : Unchecked
+        private bool IsPrefix
         {
-            public UncheckedWithNodeType(UnaryExpression expression, Expression operand, CSharpExpressionType nodeType)
-                : base(expression, operand)
+            get
             {
-                CSharpNodeType = nodeType;
+                switch (CSharpNodeType)
+                {
+                    case CSharpExpressionType.PreIncrementAssign:
+                    case CSharpExpressionType.PreDecrementAssign:
+                    case CSharpExpressionType.PreIncrementAssignChecked:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
+        private bool IsCheckedUnary
+        {
+            get
+            {
+                switch (CSharpNodeType)
+                {
+                    case CSharpExpressionType.PreIncrementAssignChecked:
+                    case CSharpExpressionType.PreDecrementAssignChecked:
+                    case CSharpExpressionType.PostIncrementAssignChecked:
+                    case CSharpExpressionType.PostDecrementAssignChecked:
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
+        private Expression FunctionalOp(Expression operand)
+        {
+            var one = GetConstantOne(operand.Type);
+
+            switch (CSharpNodeType)
+            {
+                case CSharpExpressionType.PreIncrementAssignChecked:
+                case CSharpExpressionType.PostIncrementAssignChecked:
+                    return Expression.AddChecked(operand, one);
+
+                case CSharpExpressionType.PreDecrementAssignChecked:
+                case CSharpExpressionType.PostDecrementAssignChecked:
+                    return Expression.SubtractChecked(operand, one);
+
+                case CSharpExpressionType.PreIncrementAssign:
+                case CSharpExpressionType.PostIncrementAssign:
+                    return Expression.Add(operand, one);
+
+                case CSharpExpressionType.PreDecrementAssign:
+                case CSharpExpressionType.PostDecrementAssign:
+                    return Expression.Subtract(operand, one);
+
+                default:
+                    throw ContractUtils.Unreachable;
+            }
+        }
+
+        private static Expression GetConstantOne(Type type)
+        {
+            switch (type.GetNonNullableType().GetTypeCode())
+            {
+                case TypeCode.UInt16:
+                    return Expression.Constant((ushort)1, type);
+                case TypeCode.UInt32:
+                    return Expression.Constant((uint)1, type);
+                case TypeCode.UInt64:
+                    return Expression.Constant((ulong)1, type);
+                case TypeCode.Int16:
+                    return Expression.Constant((short)1, type);
+                case TypeCode.Int32:
+                    return Expression.Constant(1, type); // NB: We don't have a nullable cached instance
+                case TypeCode.Int64:
+                    return Expression.Constant((long)1, type);
+                case TypeCode.Single:
+                    return Expression.Constant((float)1, type);
+                case TypeCode.Double:
+                    return Expression.Constant((double)1, type);
+                default:
+                    throw ContractUtils.Unreachable;
+            }
+        }
+
+        internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+        {
+            ValidateCustomUnaryAssign(unaryType, operand, ref method);
+
+            // TODO: Add optimized layouts
+
+            return new Custom(unaryType, operand, method);
+        }
+
+        private static void ValidateCustomUnaryAssign(CSharpExpressionType unaryType, Expression operand, ref MethodInfo method)
+        {
+            var operandType = operand.Type;
+
+            // NB: Just leverage LINQ to do the dirty work to check everything.This could produce mysterious error
+            //     messages. (TODO: Review what's most appropriate here.)
+
+            var resultType = operandType;
+
+            if (!IsCSharpSpecificUnaryAssignNumeric(operandType))
+            {
+                var operandDummy = Expression.Parameter(operandType, "__operand");
+                var functionalOp = FunctionalOp(unaryType, operandDummy, method);
+
+                if (method == null)
+                {
+                    method = functionalOp.Method;
+                }
+
+                resultType = functionalOp.Type;
             }
 
-            public override CSharpExpressionType CSharpNodeType { get; }
+            if (!TypeUtils.AreEquivalent(resultType, operand.Type))
+            {
+                throw Error.InvalidUnaryAssignmentWithOperands(unaryType, operand.Type);
+            }
+        }
+
+        private static UnaryExpression FunctionalOp(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+        {
+            switch (unaryType)
+            {
+                case CSharpExpressionType.PreDecrementAssign:
+                case CSharpExpressionType.PreDecrementAssignChecked:
+                    return Expression.PreDecrementAssign(operand);
+                case CSharpExpressionType.PreIncrementAssign:
+                case CSharpExpressionType.PreIncrementAssignChecked:
+                    return Expression.PreIncrementAssign(operand);
+                case CSharpExpressionType.PostDecrementAssign:
+                case CSharpExpressionType.PostDecrementAssignChecked:
+                    return Expression.PostDecrementAssign(operand);
+                case CSharpExpressionType.PostIncrementAssign:
+                case CSharpExpressionType.PostIncrementAssignChecked:
+                    return Expression.PostIncrementAssign(operand);
+            }
+
+            throw LinqError.UnhandledUnary(unaryType);
         }
 
         internal class Custom : AssignUnaryCSharpExpression
         {
-            public Custom(CSharpExpressionType unaryType, Expression operand)
-                : base(operand)
+            public Custom(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+                : base(unaryType, operand)
             {
-                CSharpNodeType = unaryType;
+                Method = method;
             }
 
-            public override CSharpExpressionType CSharpNodeType { get; }
-            public override Type Type => Operand.Type; // NB: those operations don't change the operand type
-            public override MethodInfo Method => null; // NB: if a method was specified, it became Unchecked
-
-            private bool IsPrefix
-            {
-                get
-                {
-                    switch (CSharpNodeType)
-                    {
-                        case CSharpExpressionType.PreIncrementAssign:
-                        case CSharpExpressionType.PreDecrementAssign:
-                        case CSharpExpressionType.PreIncrementAssignChecked:
-                        case CSharpExpressionType.PreDecrementAssignChecked:
-                            return true;
-                    }
-
-                    return false;
-                }
-            }
-
-            private bool IsCheckedUnary
-            {
-                get
-                {
-                    switch (CSharpNodeType)
-                    {
-                        case CSharpExpressionType.PreIncrementAssignChecked:
-                        case CSharpExpressionType.PreDecrementAssignChecked:
-                        case CSharpExpressionType.PostIncrementAssignChecked:
-                        case CSharpExpressionType.PostDecrementAssignChecked:
-                            return true;
-                    }
-
-                    return false;
-                }
-            }
-
-            private Expression FunctionalOp(Expression operand)
-            {
-                var one = GetConstantOne(operand.Type);
-
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                        return Expression.AddChecked(operand, one);
-
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                        return Expression.SubtractChecked(operand, one);
-
-                    case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PostIncrementAssign:
-                        return Expression.Add(operand, one);
-
-                    case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PostDecrementAssign:
-                        return Expression.Subtract(operand, one);
-
-                    default:
-                        throw ContractUtils.Unreachable;
-                }
-            }
-
-            private static Expression GetConstantOne(Type type)
-            {
-                switch (type.GetNonNullableType().GetTypeCode())
-                {
-                    case TypeCode.UInt16:
-                        return Expression.Constant((ushort)1, type);
-                    case TypeCode.UInt32:
-                        return Expression.Constant((uint)1, type);
-                    case TypeCode.UInt64:
-                        return Expression.Constant((ulong)1, type);
-                    case TypeCode.Int16:
-                        return Expression.Constant((short)1, type);
-                    case TypeCode.Int32:
-                        return Expression.Constant(1, type); // NB: We don't have a nullable cached instance
-                    case TypeCode.Int64:
-                        return Expression.Constant((long)1, type);
-                    case TypeCode.Single:
-                        return Expression.Constant((float)1, type);
-                    case TypeCode.Double:
-                        return Expression.Constant((double)1, type);
-                    default:
-                        throw ContractUtils.Unreachable;
-                }
-            }
-
-            public override Expression Reduce()
-            {
-                var operandType = Operand.Type;
-
-                if (IsCSharpSpecificUnaryAssignNumeric(operandType))
-                {
-                    var isNullableOperandType = operandType.IsNullableType();
-                    var nonNullOperandType = operandType.GetNonNullableType();
-                    var intermediateType = nonNullOperandType.IsEnum ? nonNullOperandType.GetEnumUnderlyingType() : typeof(int);
-
-                    var operandParameter = Expression.Parameter(operandType, "__operand");
-                    var convertType = isNullableOperandType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
-                    var convertOperand = IsCheckedUnary ? Expression.ConvertChecked(operandParameter, convertType) : Expression.Convert(operandParameter, convertType);
-                    var operandConversion = Expression.Lambda(convertOperand, operandParameter);
-
-                    var functionalOp = new Func<Expression, Expression>(lhs =>
-                    {
-                        var res = FunctionalOp(lhs);
-
-                        res = IsCheckedUnary ? Expression.ConvertChecked(res, operandType) : Expression.Convert(res, operandType);
-
-                        return res;
-                    });
-
-                    return ReduceAssignment(Operand, functionalOp, IsPrefix, operandConversion);
-                }
-                else
-                {
-                    return ReduceAssignment(Operand, FunctionalOp, IsPrefix);
-                }
-            }
-        }
-
-        internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand)
-        {
-            RequiresCanRead(operand, nameof(operand));
-            Helpers.RequiresCanWrite(operand, nameof(operand));
-
-            return new Custom(unaryType, operand);
+            public override MethodInfo Method { get; }
         }
     }
 
@@ -265,51 +303,12 @@ namespace Microsoft.CSharp.Expressions
             throw LinqError.UnhandledUnary(unaryType);
         }
 
-        private static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
+        private static AssignUnaryCSharpExpression MakeUnaryAssignCore(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
         {
             RequiresCanRead(operand, nameof(operand));
             Helpers.RequiresCanWrite(operand, nameof(operand));
 
-            if (IsCSharpSpecificUnaryAssignNumeric(operand.Type) && method == null)
-            {
-                return AssignUnaryCSharpExpression.Make(unaryType, operand);
-            }
-
-            var lhs = GetLhs(operand, nameof(operand));
-
-            // NB: We could return a UnaryExpression in case the lhs is not one of our index nodes, but it'd change
-            //     the return type to Expression which isn't nice to consume. Also, the Update method would either
-            //     have to change to return Expression or we should have an AssignUnary node to hold a Unary node
-            //     underneath it. This said, a specialized layout for the case where the custom node trivially wraps
-            //     a LINQ node could be useful (just make Operand virtual).
-
-            var assign = factory(lhs, method);
-            return new AssignUnaryCSharpExpression.Unchecked(assign, operand);
-        }
-
-        private static AssignUnaryCSharpExpression MakeUnaryAssignChecked(CSharpExpressionType unaryType, UnaryAssignFactory factory, Expression operand, MethodInfo method)
-        {
-            RequiresCanRead(operand, nameof(operand));
-            Helpers.RequiresCanWrite(operand, nameof(operand));
-
-            if (IsCSharpSpecificUnaryAssignNumeric(operand.Type) && method == null)
-            {
-                return AssignUnaryCSharpExpression.Make(unaryType, operand);
-            }
-
-            var lhs = GetLhs(operand, nameof(operand));
-            var assign = factory(lhs, method);
-
-            if (method != null)
-            {
-                // NB: If a method is specified, the underlying operation won't be checked, but we still need
-                //     to surface the original node type, so we have a little special node to do that.
-                return new AssignUnaryCSharpExpression.UncheckedWithNodeType(assign, operand, unaryType);
-            }
-            else
-            {
-                return new AssignUnaryCSharpExpression.Custom(unaryType, operand);
-            }
+            return AssignUnaryCSharpExpression.Make(unaryType, operand, method);
         }
 
         internal static bool IsCSharpSpecificUnaryAssignNumeric(Type type)
@@ -333,8 +332,6 @@ namespace Microsoft.CSharp.Expressions
 
             return false;
         }
-
-        delegate UnaryExpression UnaryAssignFactory(Expression operand, MethodInfo method);
     }
 
     partial class CSharpExpressionVisitor

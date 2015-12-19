@@ -83,7 +83,7 @@ foreach (var node in nodes)
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(CSharpExpressionType.<#=node#>, Expression.<#=node#>, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
 		}
 
 <#
@@ -111,7 +111,7 @@ foreach (var node in checkedNodes)
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.<#=node#>, Expression.<#=node.Replace("Checked", "")#>, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
 		}
 
 <#

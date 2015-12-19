@@ -63,6 +63,7 @@ var errors = new[]
 	new { Name = "ConditionalReceiverTypeMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver." },
 	new { Name = "InvalidCompoundAssignment", ExceptionType = "ArgumentException", Args = 2, Message = "Compound assignment operation '{0}' is not supported for type '{1}'." },
 	new { Name = "InvalidCompoundAssignmentWithOperands", ExceptionType = "ArgumentException", Args = 3, Message = "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'." },
+    new { Name = "InvalidUnaryAssignmentWithOperands", ExceptionType = "ArgumentException", Args = 2, Message = "Unary assignment operation '{0}' is not supported for an operand of type '{1}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

@@ -61,7 +61,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PreIncrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(CSharpExpressionType.PreIncrementAssign, Expression.PreIncrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PreIncrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PreDecrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(CSharpExpressionType.PreDecrementAssign, Expression.PreDecrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PreDecrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PostIncrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(CSharpExpressionType.PostIncrementAssign, Expression.PostIncrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PostIncrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static new AssignUnaryCSharpExpression PostDecrementAssign(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssign(CSharpExpressionType.PostDecrementAssign, Expression.PostDecrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PostDecrementAssign, operand, method);
 		}
 
 		/// <summary>
@@ -145,7 +145,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static AssignUnaryCSharpExpression PreIncrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PreIncrementAssignChecked, Expression.PreIncrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PreIncrementAssignChecked, operand, method);
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static AssignUnaryCSharpExpression PreDecrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PreDecrementAssignChecked, Expression.PreDecrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PreDecrementAssignChecked, operand, method);
 		}
 
 		/// <summary>
@@ -187,7 +187,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static AssignUnaryCSharpExpression PostIncrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PostIncrementAssignChecked, Expression.PostIncrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PostIncrementAssignChecked, operand, method);
 		}
 
 		/// <summary>
@@ -208,7 +208,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
 		public static AssignUnaryCSharpExpression PostDecrementAssignChecked(Expression operand, MethodInfo method)
 		{
-			return MakeUnaryAssignChecked(CSharpExpressionType.PostDecrementAssignChecked, Expression.PostDecrementAssign, operand, method);
+			return MakeUnaryAssignCore(CSharpExpressionType.PostDecrementAssignChecked, operand, method);
 		}
 
 	}
