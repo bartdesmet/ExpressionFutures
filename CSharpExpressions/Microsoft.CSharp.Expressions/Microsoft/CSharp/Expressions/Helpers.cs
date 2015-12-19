@@ -685,8 +685,27 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                if (expression.NodeType == ExpressionType.ArrayIndex)
+                {
+                    // NB: Our current modification of the Roslyn compiler can emit this node as the LHS of an
+                    //     assignment. We can deal with this in reduction steps by rewriting it to ArrayAccess
+                    //     using EnsureWriteable below.
+                    return;
+                }
+
                 ExpressionStubs.RequiresCanWrite(expression, paramName);
             }
+        }
+
+        public static Expression EnsureWriteable(Expression lhs)
+        {
+            if (lhs.NodeType == ExpressionType.ArrayIndex)
+            {
+                var arrayIndex = (BinaryExpression)lhs;
+                return Expression.ArrayAccess(arrayIndex.Left, arrayIndex.Right);
+            }
+
+            return lhs;
         }
 
         private static void EnsureCanWrite(IndexCSharpExpression index, string paramName)

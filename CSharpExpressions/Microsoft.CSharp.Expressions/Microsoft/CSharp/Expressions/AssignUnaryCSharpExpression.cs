@@ -72,7 +72,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var operandType = Operand.Type;
+            var operand = EnsureWriteable(Operand);
+
+            var operandType = operand.Type;
 
             if (Method != null)
             {
@@ -81,7 +83,7 @@ namespace Microsoft.CSharp.Expressions
                     return Expression.Call(Method, lhs);
                 });
 
-                return ReduceAssignment(Operand, functionalOp, IsPrefix, null);
+                return ReduceAssignment(operand, functionalOp, IsPrefix, null);
             }
             else if (IsCSharpSpecificUnaryAssignNumeric(operandType) || IsCheckedUnary)
             {
@@ -105,11 +107,11 @@ namespace Microsoft.CSharp.Expressions
                     return res;
                 });
 
-                return ReduceAssignment(Operand, functionalOp, IsPrefix, operandConversion);
+                return ReduceAssignment(operand, functionalOp, IsPrefix, operandConversion);
             }
             else
             {
-                return ReduceAssignment(Operand, FunctionalOp, IsPrefix);
+                return ReduceAssignment(operand, FunctionalOp, IsPrefix);
             }
         }
 

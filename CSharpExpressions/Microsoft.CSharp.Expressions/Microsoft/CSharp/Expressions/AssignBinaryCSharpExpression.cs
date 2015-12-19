@@ -122,7 +122,23 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            return ReduceAssignment(Left, leftConversion: LeftConversion, functionalOp: lhs =>
+            var left = EnsureWriteable(Left);
+
+            if (CSharpNodeType == CSharpExpressionType.Assign)
+            {
+                // NB: We still use `ReduceAssignment` here to deal with IndexCSharpExpression which is not
+                //     a valid LHS to Expression.Assign.
+
+                var indexCSharp = left as IndexCSharpExpression;
+                if (indexCSharp != null)
+                {
+                    return indexCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right));
+                }
+
+                return Expression.Assign(left, Right);
+            }
+
+            return ReduceAssignment(left, leftConversion: LeftConversion, functionalOp: lhs =>
             {
                 var res = (Expression)FunctionalOp(CSharpNodeType, lhs, Right, Method);
 

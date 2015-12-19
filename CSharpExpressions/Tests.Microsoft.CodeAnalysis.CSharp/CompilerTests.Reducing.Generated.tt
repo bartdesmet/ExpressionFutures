@@ -25,8 +25,32 @@ var exprs = new[]
 {
     // By-ref with named parameters
     "(Expression<Func<int, int>>)(x => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref x))",
-	"(Expression<Func<StrongBox<int>, int>>)(b => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref b.Value))",
-	"(Expression<Func<int[], int>>)(xs => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref xs[int.Parse(\"0\")]))",
+    "(Expression<Func<StrongBox<int>, int>>)(b => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref b.Value))",
+    "(Expression<Func<int[], int>>)(xs => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref xs[int.Parse(\"0\")]))",
+
+    // Assign
+    "(Expression<Action<int>>)(x => { x = 1; })",
+    "(Expression<Action<int[]>>)(xs => { xs[0] = 1; })",
+    "(Expression<Action<List<int>>>)(xs => { xs[0] = 1; })",
+    "(Expression<Action<StrongBox<int>>>)(b => { b.Value = 1; })",
+
+    // Compound assign
+    "(Expression<Action<int>>)(x => { x += 1; })",
+    "(Expression<Action<int[]>>)(xs => { xs[0] += 1; })",
+    "(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })",
+    "(Expression<Action<StrongBox<int>>>)(b => { b.Value += 1; })",
+
+    // Prefix unary assign
+    "(Expression<Action<int>>)(x => { ++x; })",
+    "(Expression<Action<int[]>>)(xs => { ++xs[0]; })",
+    "(Expression<Action<List<int>>>)(xs => { ++xs[0]; })",
+    "(Expression<Action<StrongBox<int>>>)(b => { ++b.Value; })",
+
+    // Postfix unary assign
+    "(Expression<Action<int>>)(x => { x++; })",
+    "(Expression<Action<int[]>>)(xs => { xs[0]++; })",
+    "(Expression<Action<List<int>>>)(xs => { xs[0]++; })",
+    "(Expression<Action<StrongBox<int>>>)(b => { b.Value++; })",
 };
 #>
 <#

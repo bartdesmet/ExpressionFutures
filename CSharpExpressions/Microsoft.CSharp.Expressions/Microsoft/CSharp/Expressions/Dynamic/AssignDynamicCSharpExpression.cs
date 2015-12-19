@@ -6,6 +6,7 @@ using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -32,6 +33,7 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceStaticAssign(Expression lhs)
         {
+            lhs = EnsureWriteable(lhs);
             var rhs = Right.Expression;
 
             if (!TypeUtils.AreReferenceAssignable(lhs.Type, rhs.Type))
