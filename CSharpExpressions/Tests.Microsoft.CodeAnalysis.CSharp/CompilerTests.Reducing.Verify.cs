@@ -22,22 +22,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             // Compound assign
             public override void CompilerTest_044F_5A03() => OK();
-            public override void CompilerTest_E0C9_50C5() => OK();
-            public override void CompilerTest_7C94_FD1C() => OK();
+            public override void CompilerTest_E0C9_816B() => OK();
+            public override void CompilerTest_7C94_EEF3() => OK();
             public override void CompilerTest_79AE_F9F6() => OK();
             public override void CompilerTest_08DA_705B() => OK();
 
             // Prefix unary assign
             public override void CompilerTest_2115_5A03() => OK();
-            public override void CompilerTest_89F1_50C5() => OK();
-            public override void CompilerTest_205F_FD1C() => OK();
+            public override void CompilerTest_89F1_816B() => OK();
+            public override void CompilerTest_205F_EEF3() => OK();
             public override void CompilerTest_FB63_F9F6() => OK();
             public override void CompilerTest_30FE_705B() => OK();
 
             // Postfix unary assign
             public override void CompilerTest_00CF_4CB4() => OK();
-            public override void CompilerTest_FE9D_64D5() => OK();
-            public override void CompilerTest_BB88_ABF5() => OK();
+            public override void CompilerTest_FE9D_1C3B() => OK();
+            public override void CompilerTest_BB88_FBEA() => OK();
             public override void CompilerTest_55F5_73B2() => OK(); // REVIEW: Additional block emitted
             public override void CompilerTest_0564_D471() => OK();
         }

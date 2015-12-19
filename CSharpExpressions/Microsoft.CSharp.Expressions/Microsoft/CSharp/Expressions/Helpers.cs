@@ -843,20 +843,18 @@ namespace Microsoft.CSharp.Expressions
 
             var n = index.Arguments.Count;
             var args = new Expression[n];
-            var block = new Expression[n + (prefix ? 2 : 4) - (isByRef ? 1 : 0)];
-            var temps = new ParameterExpression[n + (prefix ? 1 : 2) - (isByRef ? 1 : 0)];
+            var block = new List<Expression>();
+            var temps = new List<ParameterExpression>();
 
             var obj = default(ParameterExpression);
             var receiver = index.Object;
 
-            var i = 0;
-
             if (!isByRef)
             {
                 obj = Expression.Parameter(index.Object.Type, "__object");
-                temps[i] = obj;
-                block[i] = Expression.Assign(temps[i], index.Object);
-                i++;
+                temps.Add(obj);
+
+                block.Add(Expression.Assign(obj, index.Object));
             }
             else
             {
@@ -866,26 +864,35 @@ namespace Microsoft.CSharp.Expressions
             for (var j = 0; j < n; j++)
             {
                 var arg = index.Arguments[j];
-                args[j] = temps[i] = Expression.Parameter(arg.Type, "__arg" + i);
-                block[i] = Expression.Assign(temps[i], arg);
-                i++;
+
+                if (IsPure(arg))
+                {
+                    args[j] = arg;
+                }
+                else
+                {
+                    var temp = Expression.Parameter(arg.Type, "__arg" + j);
+                    temps.Add(temp);
+
+                    block.Add(Expression.Assign(temp, arg));
+                    args[j] = temp;
+                }
             }
 
             index = index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
 
             if (prefix)
             {
-                block[i++] = Expression.Assign(index, functionalOp(WithLeftConversion(index, leftConversion)));
+                block.Add(Expression.Assign(index, functionalOp(WithLeftConversion(index, leftConversion))));
             }
             else
             {
-                var lastTemp = temps[i] = Expression.Parameter(index.Type, "__index");
+                var lastTemp = Expression.Parameter(index.Type, "__index");
+                temps.Add(lastTemp);
 
-                block[i] = Expression.Assign(temps[i], index);
-                i++;
-
-                block[i++] = Expression.Assign(index, functionalOp(WithLeftConversion(lastTemp, leftConversion)));
-                block[i++] = lastTemp;
+                block.Add(Expression.Assign(lastTemp, index));
+                block.Add(Expression.Assign(index, functionalOp(WithLeftConversion(lastTemp, leftConversion))));
+                block.Add(lastTemp);
             }
 
             var res = (Expression)Expression.Block(temps, block);
