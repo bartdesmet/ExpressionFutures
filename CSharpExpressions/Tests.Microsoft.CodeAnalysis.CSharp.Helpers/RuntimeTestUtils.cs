@@ -4,6 +4,9 @@
 
 // NB: These get included in the runtime compilations of snippets to evaluate using Roslyn.
 
+using System;
+using System.Collections.Generic;
+
 public struct WeakBox<T>
 {
     public WeakBox(T value) { Value = value; }
