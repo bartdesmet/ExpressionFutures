@@ -25,12 +25,18 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
+        #region C# 3.0
+
         [TestMethod]
         public void CrossCheck_Arithmetic()
         {
             var f = Compile<Func<int>>("() => Return(1) + Return(2)");
             f();
         }
+
+        #endregion
+
+        #region Conditional access
 
         [TestMethod]
         public void CrossCheck_NullConditional()
@@ -39,6 +45,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("bar");
             f(null);
         }
+
+        #endregion
+
+        #region Named parameters
 
         [TestMethod]
         public void CrossCheck_NamedParameters()
@@ -75,6 +85,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
+        #endregion
+
+        #region For
+
         [TestMethod]
         public void CrossCheck_For()
         {
@@ -103,6 +117,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f();
         }
+
+        #endregion
+
+        #region Foreach
 
         [TestMethod]
         public void CrossCheck_ForEach1()
@@ -251,6 +269,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        #endregion
+
+        #region Async
+
         [TestMethod]
         public void CrossCheck_Async1()
         {
@@ -307,6 +329,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f();
         }
+
+        #endregion
+
+        #region Assignment
 
         [TestMethod]
         public void CrossCheck_CompoundAssignment()
@@ -382,5 +408,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(0);
             f(41);
         }
+
+        #endregion
     }
 }
