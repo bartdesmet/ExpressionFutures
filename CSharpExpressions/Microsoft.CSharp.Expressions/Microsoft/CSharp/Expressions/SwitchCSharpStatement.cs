@@ -356,6 +356,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 assignSwitchValue,
                 WithVariableScope(body),
+                Expression.Label(BreakLabel),
             };
 
             return Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(vars), new TrueReadOnlyCollection<Expression>(exprs));
