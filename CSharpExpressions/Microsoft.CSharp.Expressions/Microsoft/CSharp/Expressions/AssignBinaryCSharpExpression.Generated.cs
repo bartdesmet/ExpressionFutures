@@ -10,31 +10,10 @@ namespace Microsoft.CSharp.Expressions
 {
 	partial class AssignBinaryCSharpExpression
 	{
-        private static CSharpExpressionType ConvertNodeType(ExpressionType nodeType)
-        {
-			switch (nodeType)
-			{
-				case ExpressionType.Assign: return CSharpExpressionType.Assign;
-				case ExpressionType.AddAssign: return CSharpExpressionType.AddAssign;
-				case ExpressionType.SubtractAssign: return CSharpExpressionType.SubtractAssign;
-				case ExpressionType.MultiplyAssign: return CSharpExpressionType.MultiplyAssign;
-				case ExpressionType.DivideAssign: return CSharpExpressionType.DivideAssign;
-				case ExpressionType.ModuloAssign: return CSharpExpressionType.ModuloAssign;
-				case ExpressionType.AndAssign: return CSharpExpressionType.AndAssign;
-				case ExpressionType.OrAssign: return CSharpExpressionType.OrAssign;
-				case ExpressionType.ExclusiveOrAssign: return CSharpExpressionType.ExclusiveOrAssign;
-				case ExpressionType.LeftShiftAssign: return CSharpExpressionType.LeftShiftAssign;
-				case ExpressionType.RightShiftAssign: return CSharpExpressionType.RightShiftAssign;
-				case ExpressionType.AddAssignChecked: return CSharpExpressionType.AddAssignChecked;
-				case ExpressionType.MultiplyAssignChecked: return CSharpExpressionType.MultiplyAssignChecked;
-				case ExpressionType.SubtractAssignChecked: return CSharpExpressionType.SubtractAssignChecked;
-				default:
-					throw ContractUtils.Unreachable;
-			}
-        }
-
 		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
         {
+            // NB: Only used for ToCSharp pretty printing; maybe we can remove it?
+
 			switch (nodeType)
 			{
 				case CSharpExpressionType.Assign: return ExpressionType.Assign;
@@ -67,7 +46,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression Assign(Expression left, Expression right)
 		{
-			return MakeBinaryAssign(ExpressionType.Assign, (l, r, m, c) => Expression.Assign(l, r), left, right, null, null, null);
+			return MakeBinaryAssign(CSharpExpressionType.Assign, (l, r, m, c) => Expression.Assign(l, r), left, right, null, null, null);
 		}
 
 		/// <summary>
@@ -117,7 +96,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression AddAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.AddAssign, Expression.AddAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.AddAssign, Expression.AddAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -167,7 +146,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression SubtractAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.SubtractAssign, Expression.SubtractAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.SubtractAssign, Expression.SubtractAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -217,7 +196,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression MultiplyAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.MultiplyAssign, Expression.MultiplyAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.MultiplyAssign, Expression.MultiplyAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -267,7 +246,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression DivideAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.DivideAssign, Expression.DivideAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.DivideAssign, Expression.DivideAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -317,7 +296,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression ModuloAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.ModuloAssign, Expression.ModuloAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.ModuloAssign, Expression.ModuloAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -367,7 +346,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression AndAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.AndAssign, Expression.AndAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.AndAssign, Expression.AndAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -417,7 +396,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression OrAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.OrAssign, Expression.OrAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.OrAssign, Expression.OrAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -467,7 +446,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression ExclusiveOrAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.ExclusiveOrAssign, Expression.ExclusiveOrAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.ExclusiveOrAssign, Expression.ExclusiveOrAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -517,7 +496,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression LeftShiftAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.LeftShiftAssign, Expression.LeftShiftAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.LeftShiftAssign, Expression.LeftShiftAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -567,7 +546,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression RightShiftAssign(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.RightShiftAssign, Expression.RightShiftAssign, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.RightShiftAssign, Expression.RightShiftAssign, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -617,7 +596,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression AddAssignChecked(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.AddAssignChecked, Expression.AddAssignChecked, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.AddAssignChecked, Expression.AddAssignChecked, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -667,7 +646,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression MultiplyAssignChecked(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.MultiplyAssignChecked, Expression.MultiplyAssignChecked, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.MultiplyAssignChecked, Expression.MultiplyAssignChecked, left, right, method, finalConversion, leftConversion);
 		}
 
 		/// <summary>
@@ -717,7 +696,7 @@ namespace Microsoft.CSharp.Expressions
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression SubtractAssignChecked(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.SubtractAssignChecked, Expression.SubtractAssignChecked, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.SubtractAssignChecked, Expression.SubtractAssignChecked, left, right, method, finalConversion, leftConversion);
 		}
 
 	}

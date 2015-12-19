@@ -19,26 +19,10 @@ namespace Microsoft.CSharp.Expressions
 {
 	partial class AssignBinaryCSharpExpression
 	{
-        private static CSharpExpressionType ConvertNodeType(ExpressionType nodeType)
-        {
-			switch (nodeType)
-			{
-				case ExpressionType.Assign: return CSharpExpressionType.Assign;
-<#
-foreach (var node in nodes)
-{
-#>
-				case ExpressionType.<#=node#>: return CSharpExpressionType.<#=node#>;
-<#
-}
-#>
-				default:
-					throw ContractUtils.Unreachable;
-			}
-        }
-
 		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
         {
+            // NB: Only used for ToCSharp pretty printing; maybe we can remove it?
+
 			switch (nodeType)
 			{
 				case CSharpExpressionType.Assign: return ExpressionType.Assign;
@@ -66,7 +50,7 @@ foreach (var node in nodes)
 		/// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
 		public static new AssignBinaryCSharpExpression Assign(Expression left, Expression right)
 		{
-			return MakeBinaryAssign(ExpressionType.Assign, (l, r, m, c) => Expression.Assign(l, r), left, right, null, null, null);
+			return MakeBinaryAssign(CSharpExpressionType.Assign, (l, r, m, c) => Expression.Assign(l, r), left, right, null, null, null);
 		}
 
 <#
@@ -120,7 +104,7 @@ foreach (var node in nodes)
 		/// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
 		public static AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
 		{
-			return MakeBinaryAssign(ExpressionType.<#=node#>, Expression.<#=node#>, left, right, method, finalConversion, leftConversion);
+			return MakeBinaryAssign(CSharpExpressionType.<#=node#>, Expression.<#=node#>, left, right, method, finalConversion, leftConversion);
 		}
 
 <#

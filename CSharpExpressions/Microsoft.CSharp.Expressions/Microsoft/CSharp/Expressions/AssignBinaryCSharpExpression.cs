@@ -90,16 +90,16 @@ namespace Microsoft.CSharp.Expressions
         {
             private readonly ExpressionType _binaryType;
 
-            internal WithConversions(ExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+            internal WithConversions(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
                 : base(left, right)
             {
-                _binaryType = binaryType;
+                CSharpNodeType = binaryType;
                 Method = method;
                 LeftConversion = leftConversion;
                 FinalConversion = finalConversion;
             }
 
-            public override CSharpExpressionType CSharpNodeType => ConvertNodeType(_binaryType);
+            public override CSharpExpressionType CSharpNodeType { get; }
             public override Type Type => Left.Type;
 
             public override MethodInfo Method { get; }
@@ -124,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 return ReduceAssignment(Left, leftConversion: LeftConversion, functionalOp: lhs =>
                 {
-                    var res = (Expression)FunctionalOp(_binaryType, lhs, Right, Method);
+                    var res = (Expression)FunctionalOp(CSharpNodeType, lhs, Right, Method);
 
                     if (FinalConversion != null)
                     {
@@ -139,37 +139,37 @@ namespace Microsoft.CSharp.Expressions
                 });
             }
 
-            internal static BinaryExpression FunctionalOp(ExpressionType binaryType, Expression left, Expression right, MethodInfo method)
+            internal static BinaryExpression FunctionalOp(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method)
             {
                 switch (binaryType)
                 {
-                    case ExpressionType.Assign:
+                    case CSharpExpressionType.Assign:
                         return Expression.Assign(left, right);
-                    case ExpressionType.AddAssign:
+                    case CSharpExpressionType.AddAssign:
                         return Expression.Add(left, right, method);
-                    case ExpressionType.AndAssign:
+                    case CSharpExpressionType.AndAssign:
                         return Expression.And(left, right, method);
-                    case ExpressionType.DivideAssign:
+                    case CSharpExpressionType.DivideAssign:
                         return Expression.Divide(left, right, method);
-                    case ExpressionType.ExclusiveOrAssign:
+                    case CSharpExpressionType.ExclusiveOrAssign:
                         return Expression.ExclusiveOr(left, right, method);
-                    case ExpressionType.LeftShiftAssign:
+                    case CSharpExpressionType.LeftShiftAssign:
                         return Expression.LeftShift(left, right, method);
-                    case ExpressionType.ModuloAssign:
+                    case CSharpExpressionType.ModuloAssign:
                         return Expression.Modulo(left, right, method);
-                    case ExpressionType.MultiplyAssign:
+                    case CSharpExpressionType.MultiplyAssign:
                         return Expression.Multiply(left, right, method);
-                    case ExpressionType.OrAssign:
+                    case CSharpExpressionType.OrAssign:
                         return Expression.Or(left, right, method);
-                    case ExpressionType.RightShiftAssign:
+                    case CSharpExpressionType.RightShiftAssign:
                         return Expression.RightShift(left, right, method);
-                    case ExpressionType.SubtractAssign:
+                    case CSharpExpressionType.SubtractAssign:
                         return Expression.Subtract(left, right, method);
-                    case ExpressionType.AddAssignChecked:
+                    case CSharpExpressionType.AddAssignChecked:
                         return Expression.AddChecked(left, right, method);
-                    case ExpressionType.MultiplyAssignChecked:
+                    case CSharpExpressionType.MultiplyAssignChecked:
                         return Expression.MultiplyChecked(left, right, method);
-                    case ExpressionType.SubtractAssignChecked:
+                    case CSharpExpressionType.SubtractAssignChecked:
                         return Expression.SubtractChecked(left, right, method);
                 }
 
@@ -177,7 +177,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal static AssignBinaryCSharpExpression Make(ExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+        internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
             ValidateCustomBinaryAssign(binaryType, left, right, ref method, leftConversion, finalConversion);
 
@@ -186,7 +186,7 @@ namespace Microsoft.CSharp.Expressions
             return new WithConversions(binaryType, left, right, method, leftConversion, finalConversion);
         }
 
-        private static void ValidateCustomBinaryAssign(ExpressionType binaryType, Expression left, Expression right, ref MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+        private static void ValidateCustomBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, ref MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
             var leftType = left.Type;
             var rightType = right.Type;
@@ -223,7 +223,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static Type ValidateConversion(ExpressionType nodeType, Type inputType, LambdaExpression conversion)
+        private static Type ValidateConversion(CSharpExpressionType nodeType, Type inputType, LambdaExpression conversion)
         {
             var invoke = conversion.Type.GetMethod("Invoke");
 
@@ -291,7 +291,7 @@ namespace Microsoft.CSharp.Expressions
             throw LinqError.UnhandledBinary(binaryType);
         }
 
-        private static AssignBinaryCSharpExpression MakeBinaryAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
+        private static AssignBinaryCSharpExpression MakeBinaryAssign(CSharpExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
         {
             Helpers.RequiresCanWrite(left, nameof(left));
             RequiresCanRead(right, nameof(right));
@@ -312,7 +312,7 @@ namespace Microsoft.CSharp.Expressions
                     // NB: This can be represented using the LINQ node; just need the method to be resolved. So, no need to
                     //     mark it as C# specific.
 
-                    if (binaryType == ExpressionType.AddAssign || binaryType == ExpressionType.AddAssignChecked)
+                    if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
                     {
                         if (rightType == typeof(string))
                         {
@@ -355,11 +355,11 @@ namespace Microsoft.CSharp.Expressions
 
                 if (method == null)
                 {
-                    if (binaryType == ExpressionType.AddAssign || binaryType == ExpressionType.AddAssignChecked)
+                    if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
                     {
                         method = typeof(Delegate).GetMethod(nameof(Delegate.Combine), new[] { typeof(Delegate), typeof(Delegate) });
                     }
-                    else if (binaryType == ExpressionType.SubtractAssign || binaryType == ExpressionType.SubtractAssignChecked)
+                    else if (binaryType == CSharpExpressionType.SubtractAssign || binaryType == CSharpExpressionType.SubtractAssignChecked)
                     {
                         method = typeof(Delegate).GetMethod(nameof(Delegate.Remove), new[] { typeof(Delegate), typeof(Delegate) });
                     }
@@ -443,13 +443,13 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        private static bool IsCheckedBinary(ExpressionType type)
+        private static bool IsCheckedBinary(CSharpExpressionType type)
         {
             switch (type)
             {
-                case ExpressionType.AddAssignChecked:
-                case ExpressionType.MultiplyAssignChecked:
-                case ExpressionType.SubtractAssignChecked:
+                case CSharpExpressionType.AddAssignChecked:
+                case CSharpExpressionType.MultiplyAssignChecked:
+                case CSharpExpressionType.SubtractAssignChecked:
                     return true;
             }
 
