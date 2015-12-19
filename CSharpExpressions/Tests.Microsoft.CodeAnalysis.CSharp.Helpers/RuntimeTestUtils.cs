@@ -78,3 +78,38 @@ public class Conditional : IEquatable<Conditional>
         return 0;
     }
 }
+
+public class Truthy
+{
+    private readonly bool _value;
+
+    public Truthy(bool value)
+    {
+        _value = value;
+    }
+
+    public static bool operator true(Truthy b)
+    {
+        return b._value;
+    }
+
+    public static bool operator false(Truthy b)
+    {
+        return !b._value;
+    }
+}
+
+public class Booleany
+{
+    private readonly bool _value;
+
+    public Booleany(bool value)
+    {
+        _value = value;
+    }
+
+    public static implicit operator bool(Booleany b)
+    {
+        return b._value;
+    }
+}

@@ -303,6 +303,122 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #endregion
 
+        #region If
+
+        [TestMethod]
+        public void CrossCheck_IfThen1()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    if (Return(b))
+        Log(""if"");
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IfThen2()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    if (Return(b))
+    {
+        Log(""if"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IfThenElse1()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    if (Return(b))
+        Log(""if"");
+    else
+        Log(""else"");
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IfThenElse2()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    if (Return(b))
+    {
+        Log(""if"");
+    }
+    else
+    {
+        Log(""else"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IfThen_IsTrue()
+        {
+            // REVIEW: This uses a Call node for is_True; should it produce a cleaner tree?
+
+            var f = Compile<Action<Truthy>>(@"b =>
+{
+    Log(""before"");
+
+    if (Return(b))
+    {
+        Log(""if"");
+    }
+
+    Log(""after"");
+}");
+            f(new Truthy(false));
+            f(new Truthy(true));
+        }
+
+        [TestMethod]
+        public void CrossCheck_IfThen_Implicit()
+        {
+            var f = Compile<Action<Booleany>>(@"b =>
+{
+    Log(""before"");
+
+    if (Return(b))
+    {
+        Log(""if"");
+    }
+
+    Log(""after"");
+}");
+            f(new Booleany(false));
+            f(new Booleany(true));
+        }
+
+        #endregion
+
         #region For
 
         [TestMethod]
