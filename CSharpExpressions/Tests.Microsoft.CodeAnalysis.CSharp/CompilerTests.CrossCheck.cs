@@ -323,8 +323,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod]
-        [Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Binary_Repro1()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -339,8 +338,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod]
-        [Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Binary_Repro2()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -355,8 +353,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod]
-        [Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Unary_Repro1()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -371,8 +368,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod]
-        [Ignore] // See https://github.com/dotnet/corefx/issues/4984; we may have to fix this with C#-specific nodes
+        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Unary_Repro2()
         {
             var f = Compile<Func<int, int>>(@"i =>
