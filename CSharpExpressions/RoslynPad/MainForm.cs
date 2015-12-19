@@ -125,7 +125,6 @@ namespace RoslynPad
             }
 
             Highlight();
-            UpdateIL();
         }
 
         private void Highlight()
@@ -183,14 +182,14 @@ namespace RoslynPad
             _lastTooltipPosition = -1;
         }
 
-        private void UpdateIL()
+        private void UpdateIL(LambdaExpression expr)
         {
-            if (_eval != null)
+            if (expr != null)
             {
                 try
                 {
                     txtIL.ForeColor = Color.Black;
-                    txtIL.Text = _eval.Compile().GetMethodIL();
+                    txtIL.Text = expr.Compile().GetMethodIL();
                 }
                 catch (Exception ex)
                 {
@@ -333,7 +332,7 @@ namespace RoslynPad
             }
         }
 
-        private void UpdateExpression(Expression expr)
+        private void UpdateExpression(LambdaExpression expr)
         {
             trvExpr.Nodes.Clear();
             prgNode.SelectedObject = null;
@@ -358,6 +357,8 @@ namespace RoslynPad
 
             trvExpr.ExpandAll();
             trvExpr.SelectedNode = root;
+
+            UpdateIL(expr);
         }
 
         private int GetId(object o)
