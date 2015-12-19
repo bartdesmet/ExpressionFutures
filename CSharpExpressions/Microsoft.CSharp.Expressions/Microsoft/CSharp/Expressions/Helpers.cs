@@ -330,7 +330,7 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.Lambda:
                 case ExpressionType.Quote:
                     return true;
-                    
+
                 // NB: Parameters are only pure if used in a read-only setting, i.e. they can be dropped without
                 //     loss of side-effects. If they can be assigned to, e.g. in the context of named parameter
                 //     analysis where a parameter occurs in an argument and may get assigned to, it is unsafe to
@@ -551,7 +551,7 @@ namespace Microsoft.CSharp.Expressions
 
             writebackList.Add(writeback);
         }
-        
+
         private static Expression StoreIfNeeded(Expression expression, string name, List<ParameterExpression> variables, List<Expression> statements)
         {
             // TODO: Can avoid introducing a local in some cases.
@@ -627,7 +627,7 @@ namespace Microsoft.CSharp.Expressions
         public static bool IsReceiverByRef(Expression expression)
         {
             // NB: Mimics behavior of GetReceiverRefKind in the C# compiler.
-            
+
             // DESIGN: Should we keep the ArgumentInfo object for the receiver in our dynamic nodes instead?
             //         Makes the shape of the tree wonky though, so we attempt to infer the behavior here.
 
@@ -730,35 +730,45 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                // ISSUE: If member.Expression is a value type, we're creating a copy here. How do we capture it
-                //        as a `ref` instead? See https://github.com/dotnet/corefx/issues/4984 for this issue
-                //        in the LINQ API as well.
-
-                var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
-                var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
-                member = member.Update(lhsTemp);
-
-                if (prefix)
+                if (NeedByRefAssign(member.Expression))
                 {
-                    res =
-                        Expression.Block(
-                            new[] { lhsTemp },
-                            lhsAssign,
-                            Expression.Assign(member, functionalOp(WithLeftConversion(member, leftConversion)))
-                        );
+                    // NB: See https://github.com/dotnet/corefx/issues/4984 for a discussion on the need to deal
+                    //     with by-ref assignment LHS expressions like this.
+
+                    var lhsTemp = Expression.Parameter(member.Type, "__lhs");
+                    var op = functionalOp(WithLeftConversion(lhsTemp, leftConversion));
+                    var method = typeof(RuntimeOpsEx).GetMethod(prefix ? "PreAssignByRef" : "PostAssignByRef");
+                    method = method.MakeGenericMethod(member.Type);
+                    res = Expression.Call(method, member, Expression.Lambda(op, lhsTemp));
                 }
                 else
                 {
-                    var temp = Expression.Parameter(member.Type, "__temp");
+                    var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
+                    var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
+                    member = member.Update(lhsTemp);
 
-                    res =
-                        Expression.Block(
-                            new[] { lhsTemp, temp },
-                            lhsAssign,
-                            Expression.Assign(temp, member),
-                            Expression.Assign(member, functionalOp(WithLeftConversion(temp, leftConversion))),
-                            temp
-                        );
+                    if (prefix)
+                    {
+                        res =
+                            Expression.Block(
+                                new[] { lhsTemp },
+                                lhsAssign,
+                                Expression.Assign(member, functionalOp(WithLeftConversion(member, leftConversion)))
+                            );
+                    }
+                    else
+                    {
+                        var temp = Expression.Parameter(member.Type, "__temp");
+
+                        res =
+                            Expression.Block(
+                                new[] { lhsTemp, temp },
+                                lhsAssign,
+                                Expression.Assign(temp, member),
+                                Expression.Assign(member, functionalOp(WithLeftConversion(temp, leftConversion))),
+                                temp
+                            );
+                    }
                 }
             }
 
@@ -769,29 +779,54 @@ namespace Microsoft.CSharp.Expressions
         {
             var index = (IndexExpression)lhs;
 
+            var isByRef = false;
+
+            if (NeedByRefAssign(index.Object))
+            {
+                // NB: See https://github.com/dotnet/corefx/issues/4984 for a discussion on the need to deal
+                //     with by-ref assignment LHS expressions like this.
+
+                // NB: For arrays, the check won't pass. For value types, this means there's an indexer and
+                //     we still have to perform a get and a set (i.e. we can't get a ref to the location that's
+                //     being indexed into). However, we don't want to operate on a copy of the struct. It now
+                //     depends on the nature of `index.Object` what we can do. If it's a variable or a field,
+                //     we can get the location as a reference. We don't have to check for this though because
+                //     the LINQ expression APIs allow passing anything by reference.
+
+                isByRef = true;
+            }
+
             var n = index.Arguments.Count;
             var args = new Expression[n];
-            var block = new Expression[n + (prefix ? 2 : 4)];
-            var temps = new ParameterExpression[n + (prefix ? 1 : 2)];
+            var block = new Expression[n + (prefix ? 2 : 4) - (isByRef ? 1 : 0)];
+            var temps = new ParameterExpression[n + (prefix ? 1 : 2) - (isByRef ? 1 : 0)];
 
-            // ISSUE: If index.Object is a value type, we're creating a copy here. How do we capture it
-            //        as a `ref` instead? See https://github.com/dotnet/corefx/issues/4984 for this issue
-            //        in the LINQ API as well.
+            var obj = default(ParameterExpression);
+            var receiver = index.Object;
 
             var i = 0;
-            temps[i] = Expression.Parameter(index.Object.Type, "__object");
-            block[i] = Expression.Assign(temps[i], index.Object);
-            i++;
 
-            while (i <= n)
+            if (!isByRef)
             {
-                var arg = index.Arguments[i - 1];
-                args[i - 1] = temps[i] = Expression.Parameter(arg.Type, "__arg" + i);
+                obj = Expression.Parameter(index.Object.Type, "__object");
+                temps[i] = obj;
+                block[i] = Expression.Assign(temps[i], index.Object);
+                i++;
+            }
+            else
+            {
+                obj = Expression.Parameter(index.Object.Type.MakeByRefType(), "__object");
+            }
+
+            for (var j = 0; j < n; j++)
+            {
+                var arg = index.Arguments[j];
+                args[j] = temps[i] = Expression.Parameter(arg.Type, "__arg" + i);
                 block[i] = Expression.Assign(temps[i], arg);
                 i++;
             }
 
-            index = index.Update(temps[0], new TrueReadOnlyCollection<Expression>(args));
+            index = index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
 
             if (prefix)
             {
@@ -808,8 +843,35 @@ namespace Microsoft.CSharp.Expressions
                 block[i++] = lastTemp;
             }
 
-            var res = Expression.Block(temps, block);
+            var res = (Expression)Expression.Block(temps, block);
+
+            if (isByRef)
+            {
+                var method = typeof(RuntimeOpsEx).GetMethod("WithByRef");
+                method = method.MakeGenericMethod(obj.Type, res.Type);
+                var delegateType = typeof(ByRef<,>).MakeGenericType(obj.Type, res.Type);
+
+                // NB: The introduction of a lambda to left the computation to the WithByRef helper method can be
+                //     expensive because of closure creation. This scenario with mutable structs and indexers should
+                //     be quite rare though.
+
+                res = Expression.Call(method, receiver, Expression.Lambda(delegateType, res, obj));
+            }
+
             return res;
+        }
+
+        private static bool NeedByRefAssign(Expression lhs)
+        {
+            // NB: Block doesn't support by-ref locals, so we have to use a helper method to perform the assignment
+            //     to the target without causing repeated re-evaluation of the LHS.
+
+            if (lhs.Type.IsValueType && !lhs.Type.IsNullableType())
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private static Expression ReduceVariable(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)

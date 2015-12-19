@@ -168,6 +168,7 @@
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
     <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
+    <Compile Include="System\Runtime\CompilerServices\RuntimeOpsEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="CodeAnalysis.xml" />

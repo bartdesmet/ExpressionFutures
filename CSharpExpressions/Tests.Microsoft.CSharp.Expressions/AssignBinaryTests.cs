@@ -305,6 +305,36 @@ namespace Tests
         }
 
         [TestMethod]
+        public void AssignBinary_MutableStruct_Field()
+        {
+            var p = Expression.Parameter(typeof(MutableStruct<int>));
+            var f = Expression.Field(p, "Value");
+            var a = CSharpExpression.AddAssign(f, Expression.Constant(1));
+            var b = Expression.Call(typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object) }), Expression.Convert(a, typeof(object)), Expression.Convert(f, typeof(object)));
+            var l = Expression.Lambda<Func<MutableStruct<int>, string>>(b, p);
+            var c = l.Compile();
+
+            var m = new MutableStruct<int>();
+            var r = c(m);
+            Assert.AreEqual("11", r);
+        }
+
+        [TestMethod]
+        public void AssignBinary_MutableStruct_Index()
+        {
+            var p = Expression.Parameter(typeof(MutableStruct<int>));
+            var f = Expression.MakeIndex(p, p.Type.GetProperty("Item"), new[] { Expression.Constant(0) });
+            var a = CSharpExpression.AddAssign(f, Expression.Constant(1));
+            var b = Expression.Call(typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object) }), Expression.Convert(a, typeof(object)), Expression.Convert(f, typeof(object)));
+            var l = Expression.Lambda<Func<MutableStruct<int>, string>>(b, p);
+            var c = l.Compile();
+
+            var m = new MutableStruct<int>();
+            var r = c(m);
+            Assert.AreEqual("11", r);
+        }
+
+        [TestMethod]
         public void AssignBinary_Visitor()
         {
             var res = CSharpExpression.MakeBinaryAssign(CSharpExpressionType.AddAssign, Expression.Parameter(typeof(int)), Expression.Constant(1), null, null, null);
@@ -350,5 +380,16 @@ namespace Tests
                 return base.VisitBinaryAssign(node);
             }
         }
+    }
+
+    struct MutableStruct<T>
+    {
+        public T this[int x]
+        {
+            get { return Value; }
+            set { Value = value; }
+        }
+
+        public T Value;
     }
 }

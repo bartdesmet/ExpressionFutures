@@ -86,37 +86,6 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.MakeBinaryAssign(CSharpNodeType, left, right, Method, finalConversion, leftConversion);
         }
 
-        internal class Primitive : AssignBinaryCSharpExpression
-        {
-            private readonly BinaryExpression _expression;
-
-            internal Primitive(BinaryExpression expression, Expression left)
-                : base(left, expression.Right)
-            {
-                _expression = expression;
-            }
-
-            public override CSharpExpressionType CSharpNodeType => ConvertNodeType(_expression.NodeType);
-            public override Type Type => _expression.Type;
-
-            public override MethodInfo Method => _expression.Method;
-            public override LambdaExpression LeftConversion => null;
-            public override LambdaExpression FinalConversion => _expression.Conversion;
-            public override bool IsLifted => _expression.IsLifted;
-            public override bool IsLiftedToNull => _expression.IsLiftedToNull;
-
-            public override Expression Reduce()
-            {
-                var index = Left as IndexCSharpExpression;
-                if (index != null)
-                {
-                    return index.ReduceAssign(left => _expression.Update(left, _expression.Conversion, _expression.Right));
-                }
-
-                return _expression;
-            }
-        }
-
         internal class WithConversions : AssignBinaryCSharpExpression
         {
             private readonly ExpressionType _binaryType;
@@ -155,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 return ReduceAssignment(Left, leftConversion: LeftConversion, functionalOp: lhs =>
                 {
-                    var res = FunctionalOp(_binaryType, lhs, Right, Method);
+                    var res = (Expression)FunctionalOp(_binaryType, lhs, Right, Method);
 
                     if (FinalConversion != null)
                     {
@@ -170,17 +139,12 @@ namespace Microsoft.CSharp.Expressions
                 });
             }
 
-            internal static Expression FunctionalOp(ExpressionType binaryType, Expression left, Expression right, MethodInfo method)
+            internal static BinaryExpression FunctionalOp(ExpressionType binaryType, Expression left, Expression right, MethodInfo method)
             {
-                if (right.Type != left.Type)
-                {
-                    // DESIGN: Should our factory allow a mismatch or should we require the right operand to be
-                    //         converted already? Note the C# compiler will emit a Convert node here.
-                    right = Expression.Convert(right, left.Type);
-                }
-
                 switch (binaryType)
                 {
+                    case ExpressionType.Assign:
+                        return Expression.Assign(left, right);
                     case ExpressionType.AddAssign:
                         return Expression.Add(left, right, method);
                     case ExpressionType.AndAssign:
@@ -215,12 +179,14 @@ namespace Microsoft.CSharp.Expressions
 
         internal static AssignBinaryCSharpExpression Make(ExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
-            ValidateCustomBinaryAssign(binaryType, left, right, method, leftConversion, finalConversion);
+            ValidateCustomBinaryAssign(binaryType, left, right, ref method, leftConversion, finalConversion);
+
+            // TODO: Add optimized layouts
 
             return new WithConversions(binaryType, left, right, method, leftConversion, finalConversion);
         }
 
-        private static void ValidateCustomBinaryAssign(ExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+        private static void ValidateCustomBinaryAssign(ExpressionType binaryType, Expression left, Expression right, ref MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
             var leftType = left.Type;
             var rightType = right.Type;
@@ -242,6 +208,7 @@ namespace Microsoft.CSharp.Expressions
             var leftDummy = Expression.Parameter(leftType, "__left");
             var rightDummy = Expression.Parameter(rightType, "__right");
             var functionalOp = WithConversions.FunctionalOp(binaryType, leftDummy, rightDummy, method);
+            method = functionalOp.Method;
 
             var resultType = functionalOp.Type;
 
@@ -329,30 +296,11 @@ namespace Microsoft.CSharp.Expressions
             Helpers.RequiresCanWrite(left, nameof(left));
             RequiresCanRead(right, nameof(right));
 
-            if (binaryType == ExpressionType.Assign)
-            {
-                var lhs = GetLhs(left, nameof(left));
-                var assign = factory(lhs, right, method, finalConversion);
-                return new AssignBinaryCSharpExpression.Primitive(assign, left);
-            }
-            else
-            {
-                return MakeBinaryCompoundAssign(binaryType, factory, left, right, method, finalConversion, leftConversion);
-            }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private static AssignBinaryCSharpExpression MakeBinaryCompoundAssign(ExpressionType binaryType, BinaryAssignFactory factory, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
-        {
-            var lhs = GetLhs(left, nameof(left));
-
             // NB: We could return a BinaryExpression in case the lhs is not one of our index nodes, but it'd change
             //     the return type to Expression which isn't nice to consume. Also, the Update method would either
             //     have to change to return Expression or we should have an AssignBinary node to hold a Binary node
             //     underneath it. This said, a specialized layout for the case where the custom node trivially wraps
             //     a LINQ node could be useful (just make Left virtual).
-
-            var isCSharpSpecific = false;
 
             var leftType = left.Type;
             var rightType = right.Type;
@@ -427,8 +375,6 @@ namespace Microsoft.CSharp.Expressions
                         finalConversion = Expression.Lambda(convertResult, resultParameter);
                     }
                 }
-
-                isCSharpSpecific = true;
             }
             else if (IsCSharpSpecificCompoundNumeric(leftType))
             {
@@ -451,18 +397,26 @@ namespace Microsoft.CSharp.Expressions
                     var resultParameter = Expression.Parameter(convertType, "__result");
                     var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, leftType) : Expression.Convert(resultParameter, leftType);
                     finalConversion = Expression.Lambda(convertResult, resultParameter);
+
+                    if (rightType != convertType)
+                    {
+                        // DESIGN: Should our factory do this our just reject the input? On the one hand,
+                        //         C# allows e.g. byte += byte, so if this is a C#-specific API it may be
+                        //         reasonable for the user to expect such a tree can be built. On the
+                        //         other hand, it's very unlike the expression tree API to insert nodes
+                        //         on behalf of the user in the factories. Note that Roslyn often models
+                        //         conversions as properties on a node using a `Conversion` objects
+                        //         which would be handy to keep the shape from the tree isomorphic to the
+                        //         bound nodes in the compiler. Note though that the RHS of a compound
+                        //         assignment doesn't have such a conversion and the compiler will insert
+                        //         a convert node in this case, so this is really just a convenience in
+                        //         our factory method to mimic that behavior.
+                        right = Expression.Convert(right, convertType);
+                    }
                 }
-
-                isCSharpSpecific = true;
             }
 
-            if (isCSharpSpecific || leftConversion != null)
-            {
-                return AssignBinaryCSharpExpression.Make(binaryType, left, right, method, leftConversion, finalConversion);
-            }
-
-            var assign = factory(lhs, right, method, finalConversion);
-            return new AssignBinaryCSharpExpression.Primitive(assign, left);
+            return AssignBinaryCSharpExpression.Make(binaryType, left, right, method, leftConversion, finalConversion);
         }
 
         private static bool IsCSharpSpecificCompoundNumeric(Type type)
