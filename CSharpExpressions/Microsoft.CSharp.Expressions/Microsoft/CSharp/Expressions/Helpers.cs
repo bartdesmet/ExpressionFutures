@@ -486,7 +486,7 @@ namespace Microsoft.CSharp.Expressions
 
                         var obj = call.Object;
                         var method = call.Method;
-                        if (!method.IsStatic && obj.Type.IsArray && method == obj.Type.GetMethod("Get", BindingFlags.Public | BindingFlags.Instance))
+                        if (IsArrayAssignment(call))
                         {
                             var args = call.Arguments;
 
@@ -685,24 +685,43 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                // NB: Our current modification of the Roslyn compiler can emit these nodes as the LHS of an
+                //     assignment. We can deal with this in reduction steps by rewriting it to ArrayAccess
+                //     using MakeWriteable below.
+
                 if (expression.NodeType == ExpressionType.ArrayIndex)
                 {
-                    // NB: Our current modification of the Roslyn compiler can emit this node as the LHS of an
-                    //     assignment. We can deal with this in reduction steps by rewriting it to ArrayAccess
-                    //     using EnsureWriteable below.
                     return;
+                }
+
+                if (expression.NodeType == ExpressionType.Call)
+                {
+                    var call = (MethodCallExpression)expression;
+                    if (IsArrayAssignment(call))
+                    {
+                        return;
+                    }
                 }
 
                 ExpressionStubs.RequiresCanWrite(expression, paramName);
             }
         }
 
-        public static Expression EnsureWriteable(Expression lhs)
+        public static Expression MakeWriteable(Expression lhs)
         {
             if (lhs.NodeType == ExpressionType.ArrayIndex)
             {
                 var arrayIndex = (BinaryExpression)lhs;
                 return Expression.ArrayAccess(arrayIndex.Left, arrayIndex.Right);
+            }
+
+            if (lhs.NodeType == ExpressionType.Call)
+            {
+                var arrayIndex = (MethodCallExpression)lhs;
+                if (IsArrayAssignment(arrayIndex))
+                {
+                    return Expression.ArrayAccess(arrayIndex.Object, arrayIndex.Arguments);
+                }
             }
 
             return lhs;
@@ -714,6 +733,13 @@ namespace Microsoft.CSharp.Expressions
             {
                 throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
             }
+        }
+
+        private static bool IsArrayAssignment(MethodCallExpression call)
+        {
+            var method = call.Method;
+            var obj = call.Object;
+            return !method.IsStatic && obj.Type.IsArray && method == obj.Type.GetMethod("Get", BindingFlags.Public | BindingFlags.Instance);
         }
 
         public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression leftConversion = null)

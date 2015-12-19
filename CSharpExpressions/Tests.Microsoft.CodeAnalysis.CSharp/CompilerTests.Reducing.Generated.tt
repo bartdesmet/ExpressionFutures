@@ -31,24 +31,28 @@ var exprs = new[]
     // Assign
     "(Expression<Action<int>>)(x => { x = 1; })",
     "(Expression<Action<int[]>>)(xs => { xs[0] = 1; })",
+    "(Expression<Action<int[,]>>)(xs => { xs[0, 0] = 1; })",
     "(Expression<Action<List<int>>>)(xs => { xs[0] = 1; })",
     "(Expression<Action<StrongBox<int>>>)(b => { b.Value = 1; })",
 
     // Compound assign
     "(Expression<Action<int>>)(x => { x += 1; })",
     "(Expression<Action<int[]>>)(xs => { xs[0] += 1; })",
+    "(Expression<Action<int[,]>>)(xs => { xs[0, 0] += 1; })",
     "(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })",
     "(Expression<Action<StrongBox<int>>>)(b => { b.Value += 1; })",
 
     // Prefix unary assign
     "(Expression<Action<int>>)(x => { ++x; })",
     "(Expression<Action<int[]>>)(xs => { ++xs[0]; })",
+    "(Expression<Action<int[,]>>)(xs => { ++xs[0, 0]; })",
     "(Expression<Action<List<int>>>)(xs => { ++xs[0]; })",
     "(Expression<Action<StrongBox<int>>>)(b => { ++b.Value; })",
 
     // Postfix unary assign
     "(Expression<Action<int>>)(x => { x++; })",
     "(Expression<Action<int[]>>)(xs => { xs[0]++; })",
+    "(Expression<Action<int[,]>>)(xs => { xs[0, 0]++; })",
     "(Expression<Action<List<int>>>)(xs => { xs[0]++; })",
     "(Expression<Action<StrongBox<int>>>)(b => { b.Value++; })",
 };

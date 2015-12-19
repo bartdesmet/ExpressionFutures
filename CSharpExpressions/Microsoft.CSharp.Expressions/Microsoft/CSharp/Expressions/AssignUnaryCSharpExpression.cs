@@ -72,7 +72,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var operand = EnsureWriteable(Operand);
+            var operand = MakeWriteable(Operand);
 
             var operandType = operand.Type;
 

@@ -122,7 +122,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var left = EnsureWriteable(Left);
+            var left = MakeWriteable(Left);
 
             if (CSharpNodeType == CSharpExpressionType.Assign)
             {

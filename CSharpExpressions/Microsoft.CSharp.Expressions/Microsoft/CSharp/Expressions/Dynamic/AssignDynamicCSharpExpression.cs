@@ -33,7 +33,7 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceStaticAssign(Expression lhs)
         {
-            lhs = EnsureWriteable(lhs);
+            lhs = MakeWriteable(lhs);
             var rhs = Right.Expression;
 
             if (!TypeUtils.AreReferenceAssignable(lhs.Type, rhs.Type))
