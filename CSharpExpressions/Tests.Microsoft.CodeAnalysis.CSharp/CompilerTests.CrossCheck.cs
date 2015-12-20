@@ -1963,7 +1963,101 @@ exit:
 
         #region Dynamic
 
-        // TODO
+        // TODO: check variants
+        // TODO: binary
+        // TODO: member
+        // TODO: indexer
+        // TODO: new
+        // TODO: invoke
+        // TODO: invoke member
+        // TODO: assignments
+        // TODO: event handlers
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Unary_Negate()
+        {
+            var f = CrossCheck_Dynamic_UnaryCore("-");
+
+            var values = Integers.Where(o => o.GetType() != typeof(ulong)).Concat(Floats);
+
+            foreach (var value in values)
+            {
+                f(value);
+            }
+
+            f(TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Unary_UnaryPlus()
+        {
+            var f = CrossCheck_Dynamic_UnaryCore("+");
+
+            var values = Integers.Concat(Floats);
+
+            foreach (var value in values)
+            {
+                f(value);
+            }
+
+            f(TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Unary_OnesComplement()
+        {
+            var f = CrossCheck_Dynamic_UnaryCore("~");
+
+            var values = Integers;
+
+            foreach (var value in values)
+            {
+                f(value);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Unary_Not()
+        {
+            var f = CrossCheck_Dynamic_UnaryCore("!");
+
+            var values = Booleans;
+
+            foreach (var value in values)
+            {
+                f(value);
+            }
+        }
+
+        private Func<dynamic, dynamic> CrossCheck_Dynamic_UnaryCore(string op)
+        {
+            return Compile<Func<dynamic, dynamic>>($"(dynamic d) => {op}d");
+        }
+
+        private IEnumerable<object> Integers = new object[]
+        {
+            (byte)42,
+            (sbyte)42,
+            (ushort)42,
+            (short)42,
+            (uint)42,
+            (int)42,
+            (ulong)42,
+            (long)42,
+        };
+
+        private IEnumerable<object> Floats = new object[]
+        {
+            (float)3.14,
+            (double)3.14,
+            (decimal)3.14
+        };
+
+        private IEnumerable<object> Booleans = new object[]
+        {
+            false,
+            true,
+        };
 
         #endregion
 
