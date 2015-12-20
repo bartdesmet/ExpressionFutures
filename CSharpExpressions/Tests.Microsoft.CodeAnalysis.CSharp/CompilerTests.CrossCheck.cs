@@ -1284,7 +1284,143 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Using
 
-        // TODO
+        // TODO: multiple resources
+        // TODO: dynamic
+        // TODO: implicit conversions
+
+        [TestMethod]
+        public void CrossCheck_Using_Class1()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    using (b ? new ResourceClass(Log<string>) : null)
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Class2()
+        {
+            var f = Compile<Action<bool, bool>>(@"(b, c) =>
+{
+    Log(""before"");
+
+    var r = b ? new ResourceClass(Log<string>) : null;
+    using (r)
+    {
+        Log(""begin"");
+        r?.Do(c);
+        Log(""end"");
+    }
+
+    Log(""after"");
+}");
+            f(false, false);
+            f(true, false);
+            f(false, true);
+            AssertEx.Throws<DivideByZeroException>(() => f(true, true));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Class3()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    IDisposable r = b ? new ResourceClass(Log<string>) : null;
+    using (r)
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Struct1()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    using (b ? (IDisposable)new ResourceStruct(Log<string>) : null)
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Struct2()
+        {
+            var f = Compile<Action<bool>>(@"c =>
+{
+    Log(""before"");
+
+    using (var r = new ResourceStruct(Log<string>))
+    {
+        Log(""begin"");
+        r.Do(c);
+        Log(""end"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            AssertEx.Throws<DivideByZeroException>(() => f(true));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Struct3()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""before"");
+
+    IDisposable r = b ? (IDisposable)new ResourceStruct(Log<string>) : null;
+    using (r)
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Struct4()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""before"");
+
+    using (new ResourceStruct(Log<string>))
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f();
+        }
 
         #endregion
 

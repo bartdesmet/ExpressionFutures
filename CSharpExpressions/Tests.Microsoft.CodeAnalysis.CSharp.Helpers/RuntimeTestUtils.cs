@@ -113,3 +113,47 @@ public class Booleany
         return b._value;
     }
 }
+
+public class ResourceClass : IDisposable
+{
+    private readonly Func<string, string> _log;
+
+    public ResourceClass(Func<string, string> log)
+    {
+        _log = log;
+        _log(".ctor");
+    }
+
+    public void Do(bool b)
+    {
+        if (b)
+            throw new DivideByZeroException();
+    }
+    
+    public void Dispose()
+    {
+        _log("Dispose");
+    }
+}
+
+public struct ResourceStruct : IDisposable
+{
+    private readonly Func<string, string> _log;
+
+    public ResourceStruct(Func<string, string> log)
+    {
+        _log = log;
+        _log(".ctor");
+    }
+
+    public void Do(bool b)
+    {
+        if (b)
+            throw new DivideByZeroException();
+    }
+
+    public void Dispose()
+    {
+        _log("Dispose");
+    }
+}
