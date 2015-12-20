@@ -336,116 +336,119 @@ namespace Microsoft.CSharp.Expressions
             //     underneath it. This said, a specialized layout for the case where the custom node trivially wraps
             //     a LINQ node could be useful (just make Left virtual).
 
-            var leftType = left.Type;
-            var rightType = right.Type;
-
-            if (leftType == typeof(string))
+            if (binaryType != CSharpExpressionType.Assign)
             {
-                if (method == null)
-                {
-                    // NB: This can be represented using the LINQ node; just need the method to be resolved. So, no need to
-                    //     mark it as C# specific.
+                var leftType = left.Type;
+                var rightType = right.Type;
 
-                    if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
+                if (leftType == typeof(string))
+                {
+                    if (method == null)
                     {
-                        if (rightType == typeof(string))
+                        // NB: This can be represented using the LINQ node; just need the method to be resolved. So, no need to
+                        //     mark it as C# specific.
+
+                        if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
                         {
-                            method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) });
+                            if (rightType == typeof(string))
+                            {
+                                method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) });
+                            }
+                            else
+                            {
+                                method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(object) });
+
+                                if (!TypeUtils.AreReferenceAssignable(typeof(object), rightType))
+                                {
+                                    // DESIGN: Should our factory do this our just reject the input?
+                                    right = Expression.Convert(right, typeof(object));
+                                }
+                            }
                         }
                         else
                         {
-                            method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(object) });
-
-                            if (!TypeUtils.AreReferenceAssignable(typeof(object), rightType))
-                            {
-                                // DESIGN: Should our factory do this our just reject the input?
-                                right = Expression.Convert(right, typeof(object));
-                            }
+                            throw Error.InvalidCompoundAssignment(binaryType, typeof(string));
                         }
                     }
-                    else
+                }
+                else if (typeof(MulticastDelegate).IsAssignableFrom(leftType))
+                {
+                    if (leftType == typeof(MulticastDelegate))
                     {
-                        throw Error.InvalidCompoundAssignment(binaryType, typeof(string));
+                        throw Error.InvalidCompoundAssignmentWithOperands(binaryType, leftType, rightType);
+                    }
+
+                    // NB: This checks for assignment with variance checks in mind, e.g.
+                    //
+                    //       Action<string> s = ...;
+                    //       Action<object> o = ...;
+                    //       s += o;
+
+                    if (!TypeUtils.AreReferenceAssignable(leftType, rightType))
+                    {
+                        throw Error.InvalidCompoundAssignmentWithOperands(binaryType, leftType, rightType);
+                    }
+
+                    if (method == null)
+                    {
+                        if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
+                        {
+                            method = typeof(Delegate).GetMethod(nameof(Delegate.Combine), new[] { typeof(Delegate), typeof(Delegate) });
+                        }
+                        else if (binaryType == CSharpExpressionType.SubtractAssign || binaryType == CSharpExpressionType.SubtractAssignChecked)
+                        {
+                            method = typeof(Delegate).GetMethod(nameof(Delegate.Remove), new[] { typeof(Delegate), typeof(Delegate) });
+                        }
+                        else
+                        {
+                            throw Error.InvalidCompoundAssignment(binaryType, leftType);
+                        }
+
+                        if (finalConversion == null)
+                        {
+                            var resultParameter = Expression.Parameter(typeof(Delegate), "__result");
+                            var convertResult = Expression.Convert(resultParameter, leftType);
+                            finalConversion = Expression.Lambda(convertResult, resultParameter);
+                        }
                     }
                 }
-            }
-            else if (typeof(MulticastDelegate).IsAssignableFrom(leftType))
-            {
-                if (leftType == typeof(MulticastDelegate))
+                else if (IsCSharpSpecificCompoundNumeric(leftType))
                 {
-                    throw Error.InvalidCompoundAssignmentWithOperands(binaryType, leftType, rightType);
-                }
+                    // NB: If any of these are passed, we'll assume the types all line up. The call to
+                    //     the ValidateCustomBinaryAssign method below will check that's indeed the case.
 
-                // NB: This checks for assignment with variance checks in mind, e.g.
-                //
-                //       Action<string> s = ...;
-                //       Action<object> o = ...;
-                //       s += o;
+                    if (method == null && leftConversion == null && finalConversion == null)
+                    {
+                        var isChecked = IsCheckedBinary(binaryType);
 
-                if (!TypeUtils.AreReferenceAssignable(leftType, rightType))
-                {
-                    throw Error.InvalidCompoundAssignmentWithOperands(binaryType, leftType, rightType);
-                }
+                        var isNullabeLeftType = leftType.IsNullableType();
+                        var nonNullLeftType = leftType.GetNonNullableType();
+                        var intermediateType = nonNullLeftType.IsEnum ? nonNullLeftType.GetEnumUnderlyingType() : typeof(int);
 
-                if (method == null)
-                {
-                    if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
-                    {
-                        method = typeof(Delegate).GetMethod(nameof(Delegate.Combine), new[] { typeof(Delegate), typeof(Delegate) });
-                    }
-                    else if (binaryType == CSharpExpressionType.SubtractAssign || binaryType == CSharpExpressionType.SubtractAssignChecked)
-                    {
-                        method = typeof(Delegate).GetMethod(nameof(Delegate.Remove), new[] { typeof(Delegate), typeof(Delegate) });
-                    }
-                    else
-                    {
-                        throw Error.InvalidCompoundAssignment(binaryType, leftType);
-                    }
+                        var leftParameter = Expression.Parameter(leftType, "__left");
+                        var convertType = isNullabeLeftType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
+                        var convertLeft = isChecked ? Expression.ConvertChecked(leftParameter, convertType) : Expression.Convert(leftParameter, convertType);
+                        leftConversion = Expression.Lambda(convertLeft, leftParameter);
 
-                    if (finalConversion == null)
-                    {
-                        var resultParameter = Expression.Parameter(typeof(Delegate), "__result");
-                        var convertResult = Expression.Convert(resultParameter, leftType);
+                        var resultParameter = Expression.Parameter(convertType, "__result");
+                        var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, leftType) : Expression.Convert(resultParameter, leftType);
                         finalConversion = Expression.Lambda(convertResult, resultParameter);
-                    }
-                }
-            }
-            else if (IsCSharpSpecificCompoundNumeric(leftType))
-            {
-                // NB: If any of these are passed, we'll assume the types all line up. The call to
-                //     the ValidateCustomBinaryAssign method below will check that's indeed the case.
 
-                if (method == null && leftConversion == null && finalConversion == null)
-                {
-                    var isChecked = IsCheckedBinary(binaryType);
-
-                    var isNullabeLeftType = leftType.IsNullableType();
-                    var nonNullLeftType = leftType.GetNonNullableType();
-                    var intermediateType = nonNullLeftType.IsEnum ? nonNullLeftType.GetEnumUnderlyingType() : typeof(int);
-
-                    var leftParameter = Expression.Parameter(leftType, "__left");
-                    var convertType = isNullabeLeftType ? typeof(Nullable<>).MakeGenericType(intermediateType) : intermediateType;
-                    var convertLeft = isChecked ? Expression.ConvertChecked(leftParameter, convertType) : Expression.Convert(leftParameter, convertType);
-                    leftConversion = Expression.Lambda(convertLeft, leftParameter);
-
-                    var resultParameter = Expression.Parameter(convertType, "__result");
-                    var convertResult = isChecked ? Expression.ConvertChecked(resultParameter, leftType) : Expression.Convert(resultParameter, leftType);
-                    finalConversion = Expression.Lambda(convertResult, resultParameter);
-
-                    if (rightType != convertType)
-                    {
-                        // DESIGN: Should our factory do this our just reject the input? On the one hand,
-                        //         C# allows e.g. byte += byte, so if this is a C#-specific API it may be
-                        //         reasonable for the user to expect such a tree can be built. On the
-                        //         other hand, it's very unlike the expression tree API to insert nodes
-                        //         on behalf of the user in the factories. Note that Roslyn often models
-                        //         conversions as properties on a node using a `Conversion` objects
-                        //         which would be handy to keep the shape from the tree isomorphic to the
-                        //         bound nodes in the compiler. Note though that the RHS of a compound
-                        //         assignment doesn't have such a conversion and the compiler will insert
-                        //         a convert node in this case, so this is really just a convenience in
-                        //         our factory method to mimic that behavior.
-                        right = Expression.Convert(right, convertType);
+                        if (rightType != convertType)
+                        {
+                            // DESIGN: Should our factory do this our just reject the input? On the one hand,
+                            //         C# allows e.g. byte += byte, so if this is a C#-specific API it may be
+                            //         reasonable for the user to expect such a tree can be built. On the
+                            //         other hand, it's very unlike the expression tree API to insert nodes
+                            //         on behalf of the user in the factories. Note that Roslyn often models
+                            //         conversions as properties on a node using a `Conversion` objects
+                            //         which would be handy to keep the shape from the tree isomorphic to the
+                            //         bound nodes in the compiler. Note though that the RHS of a compound
+                            //         assignment doesn't have such a conversion and the compiler will insert
+                            //         a convert node in this case, so this is really just a convenience in
+                            //         our factory method to mimic that behavior.
+                            right = Expression.Convert(right, convertType);
+                        }
                     }
                 }
             }
