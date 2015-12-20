@@ -424,6 +424,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Switch
 
+        // TODO: goto case
+        // TODO: empty switch
+        // TODO: switch with no break labels but only return
+        // TODO: implicit conversion
+
         [TestMethod]
         public void CrossCheck_Switch_Integral()
         {
@@ -819,7 +824,25 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #endregion
 
+        #region While
+
+        // TODO
+
+        #endregion
+
+        #region Do
+
+        // TODO
+
+        #endregion
+
         #region For
+
+        // TODO: multiple initializers
+        // TODO: multiple iterators
+        // TODO: ;; loop
+        // TODO: non-assignment initializers and iterators
+        // TODO: loops with no break or continue
 
         [TestMethod]
         public void CrossCheck_For()
@@ -853,6 +876,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         #endregion
 
         #region Foreach
+
+        // TODO: loops with no break or continue
+        // TODO: null collection
+        // TODO: loop variable conversion behavior
+        // TODO: custom enumerator pattern
 
         [TestMethod]
         public void CrossCheck_ForEach1()
@@ -1005,6 +1033,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Async
 
+        // TODO: await in try
+        // TODO: await in finally
+        // TODO: await in catch
+        // TODO: rethrow behavior
+        // TODO: await in filter
+        // TODO: various await pattern implementations
+        // TODO: await with spilling of by-ref locals (known limitation)
+        // TODO: more stack spilling cases
+
         [TestMethod]
         public void CrossCheck_Async1()
         {
@@ -1065,6 +1102,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         #endregion
 
         #region Assignment
+
+        // TODO: more primitive types
+        // TODO: indexers with named parameters as LHS
 
         [TestMethod]
         public void CrossCheck_CompoundAssignment()
@@ -1140,6 +1180,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(0);
             f(41);
         }
+
+        #endregion
+
+        #region Dynamic
+
+        // TODO
 
         #endregion
     }
