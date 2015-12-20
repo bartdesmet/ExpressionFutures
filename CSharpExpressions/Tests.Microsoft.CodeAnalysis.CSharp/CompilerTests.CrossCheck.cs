@@ -1970,11 +1970,11 @@ exit:
         // TODO: with compile-time constants
         // TODO: convert
         // TODO: new
-        // TODO: invoke
         // TODO: invoke member
         // TODO: assignments
         // TODO: event handlers
         // TODO: index, invoke, invoke member, new with named parameters
+        // TODO: index, invoke, invoke member, new with ref/out parameters
 
         #region Unary
 
