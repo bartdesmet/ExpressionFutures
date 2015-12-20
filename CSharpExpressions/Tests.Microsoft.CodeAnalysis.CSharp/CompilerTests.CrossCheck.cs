@@ -423,7 +423,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Switch
 
-        // TODO: goto case
         // TODO: implicit conversion
         // TODO: locals
 
@@ -623,6 +622,68 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             {
                 f(i);
             }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Goto_String()
+        {
+            var f = Compile<Action<string>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case ""bar"":
+            Log(""meta"");
+            break;
+        case ""foo"":
+        case ""qux"":
+            Log(""foo"");
+            goto case ""bar"";
+        case null:
+            Log(""null"");
+            break;
+        default:
+            Log(""non-meta"");
+            break;
+    }
+
+    Log(""after"");
+}");
+            f(null);
+            f("bar");
+            f("foo");
+            f("qux");
+            f("I'm not meta");
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Goto_Enum()
+        {
+            var f = Compile<Action<ConsoleColor>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case ConsoleColor.Red:
+            Log(""RGB"");
+            break;
+        case ConsoleColor.Blue:
+        case ConsoleColor.Green:
+            Log(""B|G"");
+            goto case ConsoleColor.Red;
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+            f(ConsoleColor.Red);
+            f(ConsoleColor.Blue);
+            f(ConsoleColor.Green);
+            f(ConsoleColor.Cyan);
         }
 
         private void CrossCheck_Switch_Integral_Core<T>(IEnumerable<int> values)
