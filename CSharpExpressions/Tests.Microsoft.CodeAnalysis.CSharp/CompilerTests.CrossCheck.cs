@@ -1432,7 +1432,81 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Lock
 
-        // TODO
+        // TODO: semantic test of locking behavior
+
+        [TestMethod]
+        public void CrossCheck_Lock()
+        {
+            var f = Compile<Action<object>>(@"o =>
+{
+    Log(""before"");
+
+    lock (o)
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f(new object());
+            AssertEx.Throws<ArgumentNullException>(() => f(null));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Lock_Error()
+        {
+            var f = Compile<Action<object>>(@"o =>
+{
+    Log(""before"");
+
+    lock (o)
+    {
+        Log(""body"");
+        throw new DivideByZeroException();
+    }
+
+    Log(""after"");
+}");
+            AssertEx.Throws<DivideByZeroException>(() => f(new object()));
+        }
+
+        [Ignore] // BUG: Our modified Roslyn compiler can't deal with nested lambdas and closures yet.
+        [TestMethod]
+        public void CrossCheck_Lock_ManOrBoy()
+        {
+            var f = Compile<Func<int, int>>(@"N =>
+{
+    var n = 0;
+    var o = new object();
+
+    var t1 = Task.Run(() =>
+    {
+        for (var i = 0; i < N; i++)
+        {
+            lock (o)
+            {
+                n++;
+            }
+        }
+    });
+
+    var t2 = Task.Run(() =>
+    {
+        for (var i = 0; i < N; i++)
+        {
+            lock (o)
+            {
+                n++;
+            }
+        }
+    });
+
+    Task.WaitAll(t1, t2);
+
+    return n;
+}");
+            Assert.AreEqual(20000, f(10000));
+        }
 
         #endregion
 
