@@ -1680,6 +1680,54 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #endregion
 
+        #region Lambda
+
+        [TestMethod]
+        public void CrossCheck_Lambda_Nested()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""begin"");
+    
+    Action a = () => Log(""a"");
+    Action<int> b = x => Log($""b({x})"");
+    
+    Log(""middle"");
+
+    a();
+    b(42);
+
+    Log(""end"");
+}
+");
+            f();
+        }
+
+        [Ignore] // BUG: Our modified Roslyn compiler can't deal with nested lambdas and closures yet.
+        [TestMethod]
+        public void CrossCheck_Lambda_Nested_Closure()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""begin"");
+    
+    int x = 0;
+    Func<int> @get = () => x;
+    Action<int> @set = value => x = value;
+    
+    Log(""middle"");
+
+    @set(Return(42));
+    Log(@get());
+
+    Log(""end"");
+}
+");
+            f();
+        }
+
+        #endregion
+
         // TODO: Assert iterator bodies are not supported.
     }
 }
