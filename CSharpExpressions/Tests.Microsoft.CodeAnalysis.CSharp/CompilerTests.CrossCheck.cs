@@ -1007,13 +1007,83 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region While
 
-        // TODO
+        // TODO: loops with no break or continue
+        // TODO: boolean-expression test
+
+        [TestMethod]
+        public void CrossCheck_While()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    while (Return(i < 10))
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            i++;
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+
+        Return(i++);
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
 
         #endregion
 
         #region Do
 
-        // TODO
+        // TODO: loops with no break or continue
+        // TODO: boolean-expression test
+
+        [TestMethod]
+        public void CrossCheck_Do()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    do
+    {
+        if (i == 2)
+        {
+            Log(""continue"");
+            i++;
+            continue;
+        }
+
+        if (i == 5)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+
+        Return(i++);
+    } while (Return(i < 10));
+
+    Log(""After"");
+}");
+            f();
+        }
 
         #endregion
 
