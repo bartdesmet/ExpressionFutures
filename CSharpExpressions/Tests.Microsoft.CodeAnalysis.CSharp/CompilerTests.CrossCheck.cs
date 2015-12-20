@@ -4,7 +4,10 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -415,6 +418,403 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f(new Booleany(false));
             f(new Booleany(true));
+        }
+
+        #endregion
+
+        #region Switch
+
+        [TestMethod]
+        public void CrossCheck_Switch_Integral()
+        {
+            var values = Enumerable.Range(0, 20);
+
+            CrossCheck_Switch_Integral_Core<byte>(values);
+            CrossCheck_Switch_Integral_Core<sbyte>(values);
+            CrossCheck_Switch_Integral_Core<ushort>(values);
+            CrossCheck_Switch_Integral_Core<short>(values);
+            CrossCheck_Switch_Integral_Core<uint>(values);
+            CrossCheck_Switch_Integral_Core<int>(values);
+            CrossCheck_Switch_Integral_Core<ulong>(values);
+            CrossCheck_Switch_Integral_Core<long>(values);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Integral_Nullable()
+        {
+            var values = Enumerable.Range(0, 20).Select(x => (int?)x).Concat(new int?[] { null });
+
+            CrossCheck_Switch_Integral_Nullable_Core<byte?>(values);
+            CrossCheck_Switch_Integral_Nullable_Core<sbyte?>(values);
+            CrossCheck_Switch_Integral_Nullable_Core<ushort?>(values);
+            CrossCheck_Switch_Integral_Nullable_Core<short?>(values);
+            CrossCheck_Switch_Integral_Nullable_Core<uint?>(values);
+            CrossCheck_Switch_Integral_Nullable_Core<int?>(values);
+
+            // TODO: Produces invalid code in Roslyn, see https://github.com/dotnet/roslyn/issues/7625. Reenable
+            //       when fixed in Roslyn.
+
+            //CrossCheck_Switch_Integral_Nullable_Core<ulong?>(values);
+            //CrossCheck_Switch_Integral_Nullable_Core<long?>(values);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Char()
+        {
+            CrossCheck_Switch_Char_Core(new char[] { 'a', 'b', '0', '1', 'p', 'q', 'r', 'x', 'y', 'z', '\t', '\r', '\n' });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Char_Nullable()
+        {
+            CrossCheck_Switch_Char_Nullable_Core(new char?[] { null, 'a', 'b', '0', '1', 'p', 'q', 'r', 'x', 'y', 'z', '\t', '\r', '\n' });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Boolean()
+        {
+            CrossCheck_Switch_Boolean_Core(new bool[] { false, true });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Boolean_Nullable()
+        {
+            CrossCheck_Switch_Boolean_Nullable_Core(new bool?[] { null, false, true });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_String()
+        {
+            CrossCheck_Switch_String_Core(new string[] { null, "", " ", "bar", "foo", "baz", "qux" });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Enum()
+        {
+            CrossCheck_Switch_Enum_Core(new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Cyan });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Enum_Nullable()
+        {
+            CrossCheck_Switch_Enum_Nullable_Core(new ConsoleColor?[] { null, ConsoleColor.White, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Cyan });
+        }
+
+        private void CrossCheck_Switch_Integral_Core<T>(IEnumerable<int> values)
+        {
+            var f = Compile<Action<T>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case 0:
+            Log(""zero"");
+            break;
+        case 1:
+            Log(""one"");
+            break;
+        case 7:
+        case 8:
+        case 9:
+            Log(""large"");
+            break;
+        case 17:
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            var p = Expression.Parameter(typeof(int));
+            var cast = Expression.Lambda<Func<int, T>>(Expression.Convert(p, typeof(T)), p).Compile();
+            var cases = values.Select(cast);
+
+            foreach (var x in cases)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Integral_Nullable_Core<T>(IEnumerable<int?> values)
+        {
+            var f = Compile<Action<T>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case null:
+            Log(""null"");
+            break;
+        case 0:
+            Log(""zero"");
+            break;
+        case 1:
+            Log(""one"");
+            break;
+        case 7:
+        case 8:
+        case 9:
+            Log(""large"");
+            break;
+        case 17:
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            var p = Expression.Parameter(typeof(int?));
+            var cast = Expression.Lambda<Func<int?, T>>(Expression.Convert(p, typeof(T)), p).Compile();
+            var cases = values.Select(cast);
+
+            foreach (var x in cases)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Char_Core(IEnumerable<char> values)
+        {
+            var f = Compile<Action<char>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case 'a':
+            Log(""a"");
+            break;
+        case '0':
+            Log(""zero"");
+            break;
+        case 'x':
+        case 'y':
+        case 'z':
+            Log(""math"");
+            break;
+        case '\t':
+        case '\r':
+            Log(""control"");
+            break;
+        case 'q':
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Char_Nullable_Core(IEnumerable<char?> values)
+        {
+            var f = Compile<Action<char?>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case null:
+            Log(""null"");
+            break;
+        case 'a':
+            Log(""a"");
+            break;
+        case '0':
+            Log(""zero"");
+            break;
+        case 'x':
+        case 'y':
+        case 'z':
+            Log(""math"");
+            break;
+        case '\t':
+        case '\r':
+            Log(""control"");
+            break;
+        case 'q':
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Boolean_Core(IEnumerable<bool> values)
+        {
+            var f = Compile<Action<bool>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case true:
+            Log(""true"");
+            break;
+        case false:
+            Log(""false"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Boolean_Nullable_Core(IEnumerable<bool?> values)
+        {
+            var f = Compile<Action<bool?>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case true:
+            Log(""true"");
+            break;
+        case false:
+            Log(""false"");
+            break;
+        case null:
+            Log(""null"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_String_Core(IEnumerable<string> values)
+        {
+            var f = Compile<Action<string>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case """":
+            Log(""empty"");
+            break;
+        case ""qux"":
+            Log(""qux"");
+            break;
+        case ""foo"":
+        case ""bar"":
+            Log(""foobar"");
+            break;
+        case null:
+            Log(""null"");
+            break;
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Enum_Core(IEnumerable<ConsoleColor> values)
+        {
+            var f = Compile<Action<ConsoleColor>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case ConsoleColor.Red:
+        case ConsoleColor.Blue:
+        case ConsoleColor.Green:
+            Log(""RGB"");
+            break;
+        case ConsoleColor.Black:
+        case ConsoleColor.White:
+            Log(""B|W"");
+            break;
+        case ConsoleColor.Yellow:
+            Log(""submarine"");
+            break;
+        default:
+            Log(""other"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
+        }
+
+        private void CrossCheck_Switch_Enum_Nullable_Core(IEnumerable<ConsoleColor?> values)
+        {
+            var f = Compile<Action<ConsoleColor?>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case ConsoleColor.Red:
+        case ConsoleColor.Blue:
+        case ConsoleColor.Green:
+            Log(""RGB"");
+            break;
+        case ConsoleColor.Black:
+        case ConsoleColor.White:
+            Log(""B|W"");
+            break;
+        case ConsoleColor.Yellow:
+            Log(""submarine"");
+            break;
+        default:
+            Log(""other"");
+            break;
+        case null:
+            Log(""null"");
+            break;
+    }
+
+    Log(""after"");
+}");
+
+            foreach (var x in values)
+            {
+                f(x);
+            }
         }
 
         #endregion
