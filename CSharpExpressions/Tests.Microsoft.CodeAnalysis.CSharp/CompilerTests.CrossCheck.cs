@@ -1968,14 +1968,12 @@ exit:
         // TODO: checked variants
         // TODO: with compile-time constants
         // TODO: convert
-        // TODO: member
         // TODO: indexer
         // TODO: new
         // TODO: invoke
         // TODO: invoke member
         // TODO: assignments
         // TODO: event handlers
-        // TODO: array length
 
         #region Unary
 
@@ -2361,6 +2359,39 @@ exit:
             f(TimeSpan.Zero, TimeSpan.Zero);
             f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        #endregion
+
+        #region Member
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetMember1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.Length");
+
+            f("");
+            f("bar");
+            f(new int[0]);
+            f(new int[42]);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetMember2()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.Value");
+
+            f(new StrongBox<int>());
+            f(new StrongBox<int>(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetMember3()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.Ticks");
+
+            f(TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42));
         }
 
         #endregion
