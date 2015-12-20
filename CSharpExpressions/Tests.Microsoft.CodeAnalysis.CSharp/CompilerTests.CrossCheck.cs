@@ -1512,8 +1512,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Goto/Label
 
-        // TODO
-
         [TestMethod]
         public void CrossCheck_Goto1()
         {
@@ -1570,7 +1568,45 @@ exit:
 
         #region Return
 
-        // TODO
+        [TestMethod]
+        public void CrossCheck_Return_Void()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    if (b)
+    {
+        Log(""check"");
+        return;
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Return_NonVoid()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    Log(""begin"");
+
+    if (b)
+    {
+        Log(""check"");
+        return -1;
+    }
+
+    Log(""end"");
+
+    return 0;
+}");
+            f(false);
+            f(true);
+        }
 
         #endregion
 
