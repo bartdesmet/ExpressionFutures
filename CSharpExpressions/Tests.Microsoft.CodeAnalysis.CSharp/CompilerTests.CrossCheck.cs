@@ -1968,12 +1968,12 @@ exit:
         // TODO: checked variants
         // TODO: with compile-time constants
         // TODO: convert
-        // TODO: indexer
         // TODO: new
         // TODO: invoke
         // TODO: invoke member
         // TODO: assignments
         // TODO: event handlers
+        // TODO: index, invoke, invoke member, new with named parameters
 
         #region Unary
 
