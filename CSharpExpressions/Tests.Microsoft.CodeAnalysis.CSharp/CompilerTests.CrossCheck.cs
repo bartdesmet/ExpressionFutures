@@ -4,7 +4,6 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -426,6 +425,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         // TODO: goto case
         // TODO: implicit conversion
+        // TODO: locals
 
         [TestMethod]
         public void CrossCheck_Switch_Integral()
@@ -538,6 +538,91 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f(false);
             f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Goto()
+        {
+            var f = Compile<Action<int>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case 1:
+            Log(""odd"");
+            break;
+        case 2:
+            Log(""2"");
+            goto case 4;
+        case 3:
+        case 5:
+            Log(""3-5"");
+            goto case 1;
+        case 4:
+        case 6:
+            Log(""4-6"");
+            goto case 8;
+        case 8:
+            Log(""even"");
+            break;
+        default:
+            Log(""dunno"");
+            break;
+    }
+
+    Log(""after"");
+}");
+            for (var i = 0; i < 10; i++)
+            {
+                f(i);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Goto_Nullable()
+        {
+            var f = Compile<Action<int?>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case null:
+            Log(""null"");
+            goto default;
+        case 0:
+            goto case null;
+        case 1:
+            Log(""odd"");
+            break;
+        case 2:
+            Log(""2"");
+            goto case 4;
+        case 3:
+        case 5:
+            Log(""3-5"");
+            goto case 1;
+        case 4:
+        case 6:
+            Log(""4-6"");
+            goto case 8;
+        case 8:
+            Log(""even"");
+            break;
+        default:
+            Log(""dunno"");
+            break;
+    }
+
+    Log(""after"");
+}");
+            f(null);
+
+            for (var i = 0; i < 10; i++)
+            {
+                f(i);
+            }
         }
 
         private void CrossCheck_Switch_Integral_Core<T>(IEnumerable<int> values)
