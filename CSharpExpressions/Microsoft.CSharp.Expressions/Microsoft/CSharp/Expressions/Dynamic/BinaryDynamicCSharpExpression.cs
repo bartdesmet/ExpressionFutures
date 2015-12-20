@@ -51,12 +51,17 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            switch (OperationNodeType)
+            if ((Flags & CSharpBinderFlags.BinaryOperationLogical) != 0)
             {
-                case ExpressionType.AndAlso:
-                    return ReduceLogical(isAndAlso: true);
-                case ExpressionType.OrElse:
-                    return ReduceLogical(isAndAlso: false);
+                switch (OperationNodeType)
+                {
+                    case ExpressionType.And:
+                    case ExpressionType.AndAlso:
+                        return ReduceLogical(isAndAlso: true);
+                    case ExpressionType.Or:
+                    case ExpressionType.OrElse:
+                        return ReduceLogical(isAndAlso: false);
+                }
             }
 
             return base.Reduce();
