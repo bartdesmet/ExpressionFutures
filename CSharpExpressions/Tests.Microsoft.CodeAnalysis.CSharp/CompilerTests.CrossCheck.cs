@@ -1514,6 +1514,58 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         // TODO
 
+        [TestMethod]
+        public void CrossCheck_Goto1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""begin"");
+
+    goto bar;
+
+    Log(""blackhole"");
+
+bar:
+    Log(""bar"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Goto2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""begin"");
+
+    var n = 0;
+
+bar:
+
+    Log(""bar"");
+
+    if (n == 2)
+    {
+        goto exit;
+    }
+
+    Log(""1"");
+
+    n++;
+
+    Log(""2"");
+
+    goto bar;
+
+    Log(""blackhole"");
+
+exit:
+    
+    Log(""exit"");
+}");
+            f();
+        }
+
         #endregion
 
         #region Return
