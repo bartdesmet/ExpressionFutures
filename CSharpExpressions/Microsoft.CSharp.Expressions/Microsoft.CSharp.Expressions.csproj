@@ -145,6 +145,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\Spiller.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Compiler\TypedLabelRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\BinaryCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\TryCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DoCSharpStatement.cs" />
