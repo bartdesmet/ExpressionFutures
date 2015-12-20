@@ -1819,6 +1819,7 @@ exit:
         // TODO: various await pattern implementations
         // TODO: await with spilling of by-ref locals (known limitation)
         // TODO: more stack spilling cases
+        // TODO: dynamic await
 
         [TestMethod]
         public void CrossCheck_Async1()
@@ -1965,6 +1966,7 @@ exit:
 
         // TODO: check variants
         // TODO: binary
+        // TODO: convert
         // TODO: member
         // TODO: indexer
         // TODO: new
