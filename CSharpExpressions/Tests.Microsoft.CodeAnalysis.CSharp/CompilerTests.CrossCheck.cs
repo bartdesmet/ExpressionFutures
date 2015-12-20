@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -1964,8 +1965,8 @@ exit:
 
         #region Dynamic
 
-        // TODO: check variants
-        // TODO: binary
+        // TODO: checked variants
+        // TODO: with compile-time constants
         // TODO: convert
         // TODO: member
         // TODO: indexer
@@ -1974,6 +1975,9 @@ exit:
         // TODO: invoke member
         // TODO: assignments
         // TODO: event handlers
+        // TODO: array length
+
+        #region Unary
 
         [TestMethod]
         public void CrossCheck_Dynamic_Unary_Negate()
@@ -2031,9 +2035,344 @@ exit:
             }
         }
 
+        #endregion
+
+        #region Binary
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Add()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("+");
+
+            var ls = Integers.Concat(Floats);
+            var rs = Integers2.Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(new DateTime(1983, 2, 11), TimeSpan.FromDays(32 * 365.25));
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(1));
+            f(ConsoleColor.Red, 1);
+            f("foo", "bar");
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Subtract()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("-");
+
+            var ls = Integers.Concat(Floats);
+            var rs = Integers2.Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(new DateTime(1983, 2, 11), TimeSpan.FromDays(32 * 365.25));
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(1));
+            f(ConsoleColor.Red, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Multiply()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("*");
+
+            var ls = Integers.Concat(Floats);
+            var rs = Integers2.Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Divide()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("/");
+
+            var ls = Integers.Concat(Floats);
+            var rs = Integers2.Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Modulo()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("%");
+
+            var ls = Integers.Concat(Floats);
+            var rs = Integers2.Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_And()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("&");
+
+            var ls = Integers.Concat(Booleans).Concat(Booleans);
+            var rs = Integers2.Concat(Booleans).Concat(Booleans.Reverse());
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(BindingFlags.Public | BindingFlags.Instance, BindingFlags.Instance);
+            f(BindingFlags.Public | BindingFlags.Instance, BindingFlags.Static);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Or()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("|");
+
+            var ls = Integers.Concat(Booleans).Concat(Booleans);
+            var rs = Integers2.Concat(Booleans).Concat(Booleans.Reverse());
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(BindingFlags.Public, BindingFlags.Instance);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_ExclusiveOr()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("^");
+
+            var ls = Integers.Concat(Booleans).Concat(Booleans);
+            var rs = Integers2.Concat(Booleans).Concat(Booleans.Reverse());
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(BindingFlags.Public, BindingFlags.Instance);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_AndAlso()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("&&");
+
+            var ls = Booleans;
+            var rs = Booleans;
+            var values = from l in ls from r in rs select new { l, r };
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_OrElse()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("||");
+
+            var ls = Booleans;
+            var rs = Booleans;
+            var values = from l in ls from r in rs select new { l, r };
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_LeftShift()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("<<");
+
+            foreach (var s in new[] { 0, 1, 2, 3, 0x1F, 0x20 })
+            {
+                f((int)42, s);
+                f((uint)42, s);
+            }
+
+            foreach (var s in new[] { 0, 1, 2, 3, 0x3F, 0x40 })
+            {
+                f((long)42, s);
+                f((ulong)42, s);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_RightShift()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore(">>");
+
+            foreach (var s in new[] { 0, 1, 2, 3, 0x1F, 0x20 })
+            {
+                f((int)42, s);
+                f((uint)42, s);
+            }
+
+            foreach (var s in new[] { 0, 1, 2, 3, 0x3F, 0x40 })
+            {
+                f((long)42, s);
+                f((ulong)42, s);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_Equal()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("==");
+
+            var ls = Integers.Concat(Integers).Concat(Floats).Concat(Floats).Concat(Booleans).Concat(Booleans);
+            var rs = Integers.Concat(Integers2).Concat(Floats).Concat(Floats2).Concat(Booleans).Concat(Booleans.Reverse());
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            // TODO: null cases (doesn't work with Return<T> because T can't be inferred)
+
+            f("bar", "bar");
+            f("bar", "foo");
+            f(TimeSpan.Zero, TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_NotEqual()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("!=");
+
+            var ls = Integers.Concat(Integers).Concat(Floats).Concat(Floats).Concat(Booleans).Concat(Booleans);
+            var rs = Integers.Concat(Integers2).Concat(Floats).Concat(Floats2).Concat(Booleans).Concat(Booleans.Reverse());
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            // TODO: null cases (doesn't work with Return<T> because T can't be inferred)
+
+            f("bar", "bar");
+            f("bar", "foo");
+            f(TimeSpan.Zero, TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_LessThan()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("<");
+
+            var ls = Integers.Concat(Integers).Concat(Floats).Concat(Floats);
+            var rs = Integers.Concat(Integers2).Concat(Floats).Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(TimeSpan.Zero, TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_LessThanOrEqual()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore("<=");
+
+            var ls = Integers.Concat(Integers).Concat(Floats).Concat(Floats);
+            var rs = Integers.Concat(Integers2).Concat(Floats).Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(TimeSpan.Zero, TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_GreaterThan()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore(">");
+
+            var ls = Integers.Concat(Integers).Concat(Floats).Concat(Floats);
+            var rs = Integers.Concat(Integers2).Concat(Floats).Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(TimeSpan.Zero, TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_GreaterThanOrEqual()
+        {
+            var f = CrossCheck_Dynamic_BinaryCore(">=");
+
+            var ls = Integers.Concat(Integers).Concat(Floats).Concat(Floats);
+            var rs = Integers.Concat(Integers2).Concat(Floats).Concat(Floats2);
+            var values = ls.Zip(rs, (l, r) => new { l, r });
+
+            foreach (var lr in values)
+            {
+                f(lr.l, lr.r);
+            }
+
+            f(TimeSpan.Zero, TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
+            f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        #endregion
+
         private Func<dynamic, dynamic> CrossCheck_Dynamic_UnaryCore(string op)
         {
-            return Compile<Func<dynamic, dynamic>>($"(dynamic d) => {op}d");
+            return Compile<Func<dynamic, dynamic>>($"(dynamic d) => {op}Return(d)");
+        }
+
+        private Func<dynamic, dynamic, dynamic> CrossCheck_Dynamic_BinaryCore(string op)
+        {
+            return Compile<Func<dynamic, dynamic, dynamic>>($"(dynamic l, dynamic r) => Return(l) {op} Return(r)");
         }
 
         private IEnumerable<object> Integers = new object[]
@@ -2048,6 +2387,18 @@ exit:
             (long)42,
         };
 
+        private IEnumerable<object> Integers2 = new object[]
+        {
+            (byte)3,
+            (sbyte)3,
+            (ushort)3,
+            (short)3,
+            (uint)3,
+            (int)3,
+            (ulong)3,
+            (long)3,
+        };
+
         private IEnumerable<object> Floats = new object[]
         {
             (float)3.14,
@@ -2055,11 +2406,20 @@ exit:
             (decimal)3.14
         };
 
+        private IEnumerable<object> Floats2 = new object[]
+        {
+            (float)2.72,
+            (double)2.72,
+            (decimal)2.72
+        };
+
         private IEnumerable<object> Booleans = new object[]
         {
             false,
             true,
         };
+
+        // TODO: should we add char cases as well?
 
         #endregion
 
