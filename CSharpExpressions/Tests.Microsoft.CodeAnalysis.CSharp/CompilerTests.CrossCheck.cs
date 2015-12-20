@@ -425,8 +425,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         #region Switch
 
         // TODO: goto case
-        // TODO: empty switch
-        // TODO: switch with no break labels but only return
         // TODO: implicit conversion
 
         [TestMethod]
@@ -503,6 +501,43 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         public void CrossCheck_Switch_Enum_Nullable()
         {
             CrossCheck_Switch_Enum_Nullable_Core(new ConsoleColor?[] { null, ConsoleColor.White, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Cyan });
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Empty()
+        {
+            var f = Compile<Action<int>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+    }
+
+    Log(""after"");
+}");
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_NoBreak()
+        {
+            var f = Compile<Func<bool, int>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case true:
+            return 1;
+        default:
+            return 0;
+    }
+
+    Log(""after"");
+}");
+            f(false);
+            f(true);
         }
 
         private void CrossCheck_Switch_Integral_Core<T>(IEnumerable<int> values)
