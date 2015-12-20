@@ -2,6 +2,7 @@
 //
 // bartde - December 2015
 
+using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -2450,6 +2451,49 @@ exit:
             var f = Compile<Func<dynamic, int, int, dynamic>>("(dynamic d, int e, int f) => d[e, f]");
 
             f(new int[1, 1] { { 42 } }, 0, 0);
+        }
+
+        #endregion
+
+        #region Invoke
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Invoke1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d(42)");
+
+            f(new Func<int, int>(x => x + 1));
+            f(new Func<int, string>(x => x.ToString()));
+            f(new Func<long, long>(x => x * 2L));
+
+            AssertEx.Throws<RuntimeBinderException>(() => f(null));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Invoke2()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic e) => d(e)");
+
+            f(new Func<int, int>(x => x + 1), 42);
+            f(new Func<int, string>(x => x.ToString()), 42);
+            f(new Func<long, long>(x => x * 2L), 42);
+
+            f(new Func<string, string>(s => s.ToUpper()), "bar");
+            f(new Func<string, string>(s => s ?? "null"), null);
+
+            AssertEx.Throws<NullReferenceException>(() => f(new Func<string, string>(s => s.ToUpper()), null));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Invoke3()
+        {
+            var f = Compile<Func<Func<int, int>, dynamic, dynamic>>("(Func<int, int> f, dynamic d) => f(d)");
+
+            f(new Func<int, int>(x => x + 1), 42);
+            f(new Func<int, int>(x => x + 1), (byte)42);
+
+            // REVIEW: RuntimeBinderException (C#) != NullReferenceException (ET)
+            // AssertEx.Throws<NullReferenceException>(() => f(null, 42));
         }
 
         #endregion
