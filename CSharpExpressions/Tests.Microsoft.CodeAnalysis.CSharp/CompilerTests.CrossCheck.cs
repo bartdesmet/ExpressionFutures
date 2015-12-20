@@ -1426,7 +1426,206 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Try/Throw
 
-        // TODO
+        // TODO: multiply catch blocks
+        // TODO: catch all
+
+        [TestMethod]
+        public void CrossCheck_TryFinally()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    finally
+    {
+        Log(""finally"");
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            AssertEx.Throws<DivideByZeroException>(() => f(true));
+        }
+
+        [TestMethod]
+        public void CrossCheck_TryCatch()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex)
+    {
+        Log(""catch"");
+        Log(ex.Message);
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_TryCatchFinally()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex)
+    {
+        Log(""catch"");
+        Log(ex.Message);
+    }
+    finally
+    {
+        Log(""finally"");
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_TryCatch_Rethrow()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex)
+    {
+        Log(""catch"");
+        Log(ex.Message);
+        throw;
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            AssertEx.Throws<DivideByZeroException>(() => f(true));
+        }
+
+        [TestMethod]
+        public void CrossCheck_TryCatchFinally_Rethrow()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex)
+    {
+        Log(""catch"");
+        Log(ex.Message);
+        throw;
+    }
+    finally
+    {
+        Log(""finally"");
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            AssertEx.Throws<DivideByZeroException>(() => f(true));
+        }
+
+        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
+        [TestMethod]
+        public void CrossCheck_TryCatchWhen()
+        {
+            var f = Compile<Action<bool, bool>>(@"(b, c) =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex) when (Return(c))
+    {
+        Log(""catch"");
+        Log(ex.Message);
+    }
+
+    Log(""end"");
+}");
+            f(false, false);
+            f(false, true);
+            AssertEx.Throws<DivideByZeroException>(() => f(true, false));
+            f(true, true);
+        }
 
         #endregion
 
