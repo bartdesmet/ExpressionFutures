@@ -1605,5 +1605,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO
 
         #endregion
+
+        // TODO: Assert iterator bodies are not supported.
     }
 }
