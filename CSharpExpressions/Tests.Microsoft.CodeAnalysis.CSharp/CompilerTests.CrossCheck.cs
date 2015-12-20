@@ -1212,6 +1212,36 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #endregion
 
+        #region Using
+
+        // TODO
+
+        #endregion
+
+        #region Try/Throw
+
+        // TODO
+
+        #endregion
+
+        #region Lock
+
+        // TODO
+
+        #endregion
+
+        #region Goto/Label
+
+        // TODO
+
+        #endregion
+
+        #region Return
+
+        // TODO
+
+        #endregion
+
         #region Async
 
         // TODO: await in try
