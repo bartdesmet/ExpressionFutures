@@ -2396,6 +2396,64 @@ exit:
 
         #endregion
 
+        #region Index
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetIndex1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d[1]");
+
+            f("bar");
+            f(new int[2] { 41, 42 });
+            f(new List<int> { 41, 42 });
+            f(new Dictionary<int, string> { { 1, "one" } });
+
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(""));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new int[0]));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f(new List<int>()));
+            AssertEx.Throws<KeyNotFoundException>(() => f(new Dictionary<int, string> { { 0, "zero" } }));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetIndex2()
+        {
+            var f = Compile<Func<int[], dynamic, dynamic>>("(int[] xs, dynamic d) => xs[d]");
+
+            f(new int[2] { 41, 42 }, 0);
+            f(new int[2] { 41, 42 }, 1);
+
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new int[0], 0));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetIndex3()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic, dynamic>>("(dynamic d, dynamic e, dynamic f) => d[e, f]");
+
+            f(new int[1, 1] { { 42 } }, 0, 0);
+            f(new long[1, 2] { { 41, 42 } }, 0, 1);
+            f(new double[2, 1] { { 41 }, { 42 } }, 1, 0);
+            f(new string[2, 2] { { "40", "41" }, { "43", "42" } }, 1, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetIndex4()
+        {
+            var f = Compile<Func<int[,], dynamic, dynamic, dynamic>>("(int[,] xs, dynamic e, dynamic f) => xs[e, f]");
+
+            f(new int[1, 1] { { 42 } }, 0, 0);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetIndex5()
+        {
+            var f = Compile<Func<dynamic, int, int, dynamic>>("(dynamic d, int e, int f) => d[e, f]");
+
+            f(new int[1, 1] { { 42 } }, 0, 0);
+        }
+
+        #endregion
+
         private Func<dynamic, dynamic> CrossCheck_Dynamic_UnaryCore(string op)
         {
             return Compile<Func<dynamic, dynamic>>($"(dynamic d) => {op}Return(d)");
