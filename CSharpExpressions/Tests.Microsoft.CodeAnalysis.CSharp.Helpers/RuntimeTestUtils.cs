@@ -26,6 +26,24 @@ public static class Utils
     {
         return x + y;
     }
+
+    public static bool DynamicInvokeWithGeneric<T>(Func<string, string> log, int x)
+    {
+        log($"{typeof(T)} with int x = {x}");
+        return true;
+    }
+
+    public static int DynamicInvokeWithGeneric<T>(Func<string, string> log, bool b)
+    {
+        log($"{typeof(T)} with bool b = {b}");
+        return 42;
+    }
+
+    public static object DynamicInvokeWithGeneric<T>(Func<string, string> log, string s)
+    {
+        log($"{typeof(T)} with string s = {s}");
+        return null;
+    }
 }
 
 public class Conditional : IEquatable<Conditional>
@@ -108,7 +126,7 @@ public class Booleany
         _value = value;
     }
 
-    public static implicit operator bool(Booleany b)
+    public static implicit operator bool (Booleany b)
     {
         return b._value;
     }
@@ -129,7 +147,7 @@ public class ResourceClass : IDisposable
         if (b)
             throw new DivideByZeroException();
     }
-    
+
     public void Dispose()
     {
         _log("Dispose");
@@ -155,5 +173,13 @@ public struct ResourceStruct : IDisposable
     public void Dispose()
     {
         _log("Dispose");
+    }
+}
+
+public class DynamicInvoker
+{
+    public T Return<T>(T value)
+    {
+        return value;
     }
 }

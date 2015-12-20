@@ -1970,7 +1970,6 @@ exit:
         // TODO: with compile-time constants
         // TODO: convert
         // TODO: new
-        // TODO: invoke member
         // TODO: assignments
         // TODO: event handlers
         // TODO: index, invoke, invoke member, new with named parameters
@@ -2494,6 +2493,105 @@ exit:
 
             // REVIEW: RuntimeBinderException (C#) != NullReferenceException (ET)
             // AssertEx.Throws<NullReferenceException>(() => f(null, 42));
+        }
+
+        #endregion
+
+        #region InvokeMember
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_ToString()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.ToString()");
+
+            f(new object());
+            f(42);
+            f(42L);
+            f("foo");
+            f(true);
+            f(new DateTime(1983, 2, 11));
+            f(new AppDomainSetup());
+            f(ConsoleColor.Red);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Static()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => int.Parse(d)");
+
+            f("42");
+            AssertEx.Throws<FormatException>(() => f("bar"));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Out()
+        {
+            var f = Compile<Action<dynamic>>(@"(dynamic d) => {
+    int res;
+    bool b = /* dynamic convert */ int.TryParse(d, out res);
+
+    Log(b);
+    Log(res);
+}");
+
+            f("42");
+            f("bar");
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Ref1()
+        {
+            var f = Compile<Action<dynamic>>(@"(dynamic d) => {
+    int value = 41;
+    int res = /* dynamic convert */ System.Threading.Interlocked.Exchange(ref value, d);
+
+    Log(value);
+    Log(res);
+}");
+
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Ref2()
+        {
+            var f = Compile<Action<dynamic, dynamic>>(@"(dynamic location, dynamic value) => {
+    var res = System.Threading.Interlocked.Exchange(ref location, value);
+
+    Log(location);
+    Log(res);
+}");
+
+            f(41, 42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Overloads()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => Math.Abs(d)");
+
+            f(-42);
+            f(-42L);
+            f(-42.0);
+            f(-42.0m);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Static_Generic()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => Utils.DynamicInvokeWithGeneric<double>(new Func<string, string>(Log), d)");
+
+            f(42);
+            f(true);
+            f("bar");
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Instance_Generic()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic x) => d.Return<int>(x)");
+
+            f(new DynamicInvoker(), 42);
         }
 
         #endregion
