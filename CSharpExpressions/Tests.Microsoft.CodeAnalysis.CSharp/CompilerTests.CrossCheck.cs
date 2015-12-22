@@ -3022,7 +3022,6 @@ exit:
 
         #region Dynamic
 
-        // TODO: checked variants
         // TODO: with compile-time constants
         // TODO: assignments
         // TODO: event handlers
@@ -3044,6 +3043,17 @@ exit:
             }
 
             f(TimeSpan.FromSeconds(42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Unary_NegateChecked()
+        {
+            // NB: byte, sbyte, ushort, short widen to int
+            // NB: negate of uint becomes long
+            // NB: negate of ulong not supported
+
+            AssertDynamicUnaryCheckedThrows<int>("-", int.MinValue);
+            AssertDynamicUnaryCheckedThrows<long>("-", long.MinValue);
         }
 
         [TestMethod]
@@ -3087,6 +3097,13 @@ exit:
             }
         }
 
+        private void AssertDynamicUnaryCheckedThrows<T>(string op, T operand)
+        {
+            var f = CrossCheck_Dynamic_UnaryCore_Checked(op);
+
+            AssertEx.Throws<OverflowException>(() => f(operand));
+        }
+
         #endregion
 
         #region Binary
@@ -3112,6 +3129,17 @@ exit:
         }
 
         [TestMethod]
+        public void CrossCheck_Dynamic_Binary_AddChecked()
+        {
+            // NB: byte, sbyte, ushort, short widen to int
+
+            AssertDynamicBinaryCheckedThrows<int>("+", int.MaxValue, 1);
+            AssertDynamicBinaryCheckedThrows<uint>("+", uint.MaxValue, 1);
+            AssertDynamicBinaryCheckedThrows<long>("+", long.MaxValue, 1);
+            AssertDynamicBinaryCheckedThrows<ulong>("+", ulong.MaxValue, 1);
+        }
+
+        [TestMethod]
         public void CrossCheck_Dynamic_Binary_Subtract()
         {
             var f = CrossCheck_Dynamic_BinaryCore("-");
@@ -3131,6 +3159,17 @@ exit:
         }
 
         [TestMethod]
+        public void CrossCheck_Dynamic_Binary_SubtractChecked()
+        {
+            // NB: byte, sbyte, ushort, short widen to int
+
+            AssertDynamicBinaryCheckedThrows<int>("-", int.MinValue, 1);
+            AssertDynamicBinaryCheckedThrows<uint>("-", uint.MinValue, 1);
+            AssertDynamicBinaryCheckedThrows<long>("-", long.MinValue, 1);
+            AssertDynamicBinaryCheckedThrows<ulong>("-", ulong.MinValue, 1);
+        }
+
+        [TestMethod]
         public void CrossCheck_Dynamic_Binary_Multiply()
         {
             var f = CrossCheck_Dynamic_BinaryCore("*");
@@ -3143,6 +3182,17 @@ exit:
             {
                 f(lr.l, lr.r);
             }
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Binary_MultiplyChecked()
+        {
+            // NB: byte, sbyte, ushort, short widen to int
+
+            AssertDynamicBinaryCheckedThrows<int>("*", int.MaxValue, 2);
+            AssertDynamicBinaryCheckedThrows<uint>("*", uint.MaxValue, 2);
+            AssertDynamicBinaryCheckedThrows<long>("*", long.MaxValue, 2);
+            AssertDynamicBinaryCheckedThrows<ulong>("*", ulong.MaxValue, 2);
         }
 
         [TestMethod]
@@ -3413,6 +3463,13 @@ exit:
             f(TimeSpan.Zero, TimeSpan.Zero);
             f(TimeSpan.FromSeconds(42), TimeSpan.Zero);
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
+        }
+
+        private void AssertDynamicBinaryCheckedThrows<T>(string op, T left, T right)
+        {
+            var f = CrossCheck_Dynamic_BinaryCore_Checked(op);
+
+            AssertEx.Throws<OverflowException>(() => f(left, right));
         }
 
         #endregion
@@ -3702,9 +3759,19 @@ exit:
             return Compile<Func<dynamic, dynamic>>($"(dynamic d) => {op}Return(d)");
         }
 
+        private Func<dynamic, dynamic> CrossCheck_Dynamic_UnaryCore_Checked(string op)
+        {
+            return Compile<Func<dynamic, dynamic>>($"(dynamic d) => checked({op}Return(d))");
+        }
+
         private Func<dynamic, dynamic, dynamic> CrossCheck_Dynamic_BinaryCore(string op)
         {
             return Compile<Func<dynamic, dynamic, dynamic>>($"(dynamic l, dynamic r) => Return(l) {op} Return(r)");
+        }
+
+        private Func<dynamic, dynamic, dynamic> CrossCheck_Dynamic_BinaryCore_Checked(string op)
+        {
+            return Compile<Func<dynamic, dynamic, dynamic>>($"(dynamic l, dynamic r) => checked(Return(l) {op} Return(r))");
         }
 
         private IEnumerable<object> Integers = new object[]
