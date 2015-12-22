@@ -18,6 +18,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             var res = default(Expression);
 
+            var type = node.Type;
+
             var handlers = node.Handlers;
             var n = handlers.Count;
 
@@ -37,7 +39,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     {
                         if (newHandlers.Count > 0)
                         {
-                            res = Expression.TryCatch(res, newHandlers.ToArray());
+                            res = Expression.MakeTry(type, res, null, null, newHandlers.ToArray());
                             newHandlers.Clear();
                         }
 
@@ -61,7 +63,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         newBody = RethrowRewriter.Rewrite(newBody, rethrow);
 
                         var newHandler = handler.Update(catchExceptionVariable, newFilter, handlerBody);
-                        var newTry = Expression.TryCatch(res, newHandler);
+                        var newTry = Expression.MakeTry(type, res, null, null, new[] { newHandler });
 
                         if (newTry.Type != typeof(void))
                         {
@@ -101,12 +103,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                 if (newHandlers.Count > 0)
                 {
-                    res = Expression.TryCatch(res, newHandlers.ToArray());
+                    res = Expression.MakeTry(type, res, null, null, newHandlers.ToArray());
                 }
 
                 if (node.Finally != null)
                 {
-                    res = Expression.TryFinally(res, Visit(node.Finally));
+                    res = Expression.MakeTry(type, res, Visit(node.Finally), null, null);
                 }
 
                 Debug.Assert(node.Fault == null); // NB: Factories in LINQ prevent the combo of handlers with fault
