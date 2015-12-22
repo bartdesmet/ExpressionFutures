@@ -1210,10 +1210,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region For
 
-        // TODO: multiple initializers
-        // TODO: multiple iterators
-        // TODO: non-assignment initializers and iterators
-
         [TestMethod]
         public void CrossCheck_For1()
         {
@@ -1297,6 +1293,43 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         Log($""body({i})"");
 
         Log(++i);
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_For_Complex()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    for (int i = Return(0), j = Return(10); Return(j >= i); Return(i++), Return(--j))
+    {
+        Log($""body({i}, {j})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_For_NoDeclarations()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = 0;
+
+    for (Log(""initializer""); Return(i < 10); Log(""iterator""))
+    {
+        Log($""body({i})"");
+        i++;
     }
 
     Log(""After"");
