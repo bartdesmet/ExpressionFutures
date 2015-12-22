@@ -1050,11 +1050,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region While
 
-        // TODO: loops with no break or continue
         // TODO: boolean-expression test
 
         [TestMethod]
-        public void CrossCheck_While()
+        public void CrossCheck_While1()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1087,15 +1086,35 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_While2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    while (Return(i < 10))
+    {
+        Log($""body({i})"");
+
+        Return(i++);
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
         #endregion
 
         #region Do
 
-        // TODO: loops with no break or continue
         // TODO: boolean-expression test
 
         [TestMethod]
-        public void CrossCheck_Do()
+        public void CrossCheck_Do1()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1128,6 +1147,27 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_Do2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    do
+    {
+        Log($""body({i})"");
+
+        Return(i++);
+    } while (Return(i < 10));
+
+    Log(""After"");
+}");
+            f();
+        }
+
         #endregion
 
         #region For
@@ -1135,10 +1175,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO: multiple initializers
         // TODO: multiple iterators
         // TODO: non-assignment initializers and iterators
-        // TODO: loops with no break or continue
 
         [TestMethod]
-        public void CrossCheck_For()
+        public void CrossCheck_For1()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1158,6 +1197,23 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             break;
         }
 
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_For2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    for (var i = Return(0); Return(i < 10); Return(i++))
+    {
         Log($""body({i})"");
     }
 
@@ -1197,7 +1253,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Foreach
 
-        // TODO: loops with no break or continue
         // TODO: null collection
         // TODO: loop variable conversion behavior
         // TODO: custom enumerator pattern
@@ -1341,6 +1396,23 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             break;
         }
 
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach6()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var i in Enumerable.Range(Return(0), Return(10)))
+    {
         Log($""body({i})"");
     }
 
