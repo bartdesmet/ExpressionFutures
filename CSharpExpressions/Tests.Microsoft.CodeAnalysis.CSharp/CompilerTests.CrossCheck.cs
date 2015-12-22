@@ -2682,7 +2682,6 @@ exit:
 
         #region Assignment
 
-        // TODO: compound with checked variants
         // TODO: compound with conversions
         // TODO: compound with nullables
         // TODO: compound with char
@@ -2730,6 +2729,42 @@ exit:
                 CrossCheck_CompoundAssignment_Core<ulong>(op)(42UL, 3);
                 CrossCheck_CompoundAssignment_Core<long>(op)(42L, 3);
             }
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Integral_Overflow()
+        {
+            AssertCheckedThrows<byte>("+=", byte.MaxValue, 1);
+            AssertCheckedThrows<sbyte>("+=", sbyte.MaxValue, 1);
+            AssertCheckedThrows<ushort>("+=", ushort.MaxValue, 1);
+            AssertCheckedThrows<short>("+=", short.MaxValue, 1);
+            AssertCheckedThrows<uint>("+=", uint.MaxValue, 1);
+            AssertCheckedThrows<int>("+=", int.MaxValue, 1);
+            AssertCheckedThrows<ulong>("+=", ulong.MaxValue, 1);
+            AssertCheckedThrows<long>("+=", long.MaxValue, 1);
+
+            AssertCheckedThrows<byte>("-=", byte.MinValue, 1);
+            AssertCheckedThrows<sbyte>("-=", sbyte.MinValue, 1);
+            AssertCheckedThrows<ushort>("-=", ushort.MinValue, 1);
+            AssertCheckedThrows<short>("-=", short.MinValue, 1);
+            AssertCheckedThrows<uint>("-=", uint.MinValue, 1);
+            AssertCheckedThrows<int>("-=", int.MinValue, 1);
+            AssertCheckedThrows<ulong>("-=", ulong.MinValue, 1);
+            AssertCheckedThrows<long>("-=", long.MinValue, 1);
+
+            AssertCheckedThrows<byte>("*=", byte.MaxValue, 2);
+            AssertCheckedThrows<sbyte>("*=", sbyte.MaxValue, 2);
+            AssertCheckedThrows<ushort>("*=", ushort.MaxValue, 2);
+            AssertCheckedThrows<short>("*=", short.MaxValue, 2);
+            AssertCheckedThrows<uint>("*=", uint.MaxValue, 2);
+            AssertCheckedThrows<int>("*=", int.MaxValue, 2);
+            AssertCheckedThrows<ulong>("*=", ulong.MaxValue, 2);
+            AssertCheckedThrows<long>("*=", long.MaxValue, 2);
+        }
+
+        private void AssertCheckedThrows<T>(string op, T value, T rhs)
+        {
+            AssertEx.Throws<OverflowException>(() => CrossCheck_CompoundAssignment_Checked_Core<T>(op)(value, rhs));
         }
 
         [TestMethod]
@@ -2951,6 +2986,20 @@ exit:
             var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
             var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
             var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
+
+            return f1 + f2 + f3 + f4 + f5 + f6;
+        }
+
+        private Func<T, T, string> CrossCheck_CompoundAssignment_Checked_Core<T>(string op)
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, T, string>>($"(x, r) => {{ var y = x; var z = Log(checked(y {op} r)); return $\"({{y}},{{z}})\"; }}");
+            var f2 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new StrongBox<{t}>(); var z = Log(checked(b.Value {op} r)); return $\"({{b.Value}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(checked(a[0] {op} r)); return $\"({{a[0]}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(checked(a[0, 0] {op} r)); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(checked(l[0] {op} r)); return $\"({{l[0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(checked(l[index: 0] {op} r)); return $\"({{l[index: 0]}},{{z}})\"; }}");
 
             return f1 + f2 + f3 + f4 + f5 + f6;
         }
