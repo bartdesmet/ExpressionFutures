@@ -10,7 +10,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -2682,10 +2681,6 @@ exit:
 
         #region Assignment
 
-        // TODO: compound with conversions
-        // TODO: compound with char
-        // TODO: unary increment/decrement
-
         [TestMethod]
         public void CrossCheck_Assignment_Primitives()
         {
@@ -2713,6 +2708,27 @@ exit:
             CrossCheck_Assignment_Core<ConsoleColor>()(ConsoleColor.Red);
             CrossCheck_Assignment_Core<ConsoleColor?>()(ConsoleColor.Red);
         }
+
+        private Func<T, T> CrossCheck_Assignment_Core<T>()
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, T>>("x => { var y = x; return y; }");
+            var f2 = Compile<Func<T, T>>($"x => {{ var b = new StrongBox<{t}>(); b.Value = x; return b.Value; }}");
+            var f3 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1]; a[0] = x; return a[0]; }}");
+            var f4 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; return a[0, 0]; }}");
+            var f5 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
+            var f6 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; return l[index: 0]; }}");
+
+            return f1 + f2 + f3 + f4 + f5 + f6;
+        }
+
+        #endregion
+
+        #region Compound assignment
+
+        // TODO: compound with conversions
+        // TODO: compound with char
 
         [TestMethod]
         public void CrossCheck_CompoundAssignment_Integral()
@@ -2965,50 +2981,6 @@ exit:
             f(41);
         }
 
-        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
-        public void CrossCheck_Issue4984_Unary_Repro1()
-        {
-            var f = Compile<Func<int, int>>(@"i =>
-{
-    var b = new WeakBox<int>();
-    Log(b.Value);
-    var res = b.Value++;
-    Log(res);
-    return b.Value;
-}");
-            f(0);
-            f(41);
-        }
-
-        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
-        public void CrossCheck_Issue4984_Unary_Repro2()
-        {
-            var f = Compile<Func<int, int>>(@"i =>
-{
-    var b = new WeakBox<int>();
-    Log(b[0]);
-    var res = b[0]++;
-    Log(res);
-    return b[0];
-}");
-            f(0);
-            f(41);
-        }
-
-        private Func<T, T> CrossCheck_Assignment_Core<T>()
-        {
-            var t = typeof(T).ToCSharp();
-
-            var f1 = Compile<Func<T, T>>("x => { var y = x; return y; }");
-            var f2 = Compile<Func<T, T>>($"x => {{ var b = new StrongBox<{t}>(); b.Value = x; return b.Value; }}");
-            var f3 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1]; a[0] = x; return a[0]; }}");
-            var f4 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; return a[0, 0]; }}");
-            var f5 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
-            var f6 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; return l[index: 0]; }}");
-
-            return f1 + f2 + f3 + f4 + f5 + f6;
-        }
-
         private Func<T, T, string> CrossCheck_CompoundAssignment_Core<T>(string op)
         {
             var t = typeof(T).ToCSharp();
@@ -3049,6 +3021,42 @@ exit:
             var f6 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
 
             return f1 + f2 + f3 + f4 + f5 + f6;
+        }
+
+        #endregion
+
+        #region Unary increment/decrement
+
+        // TODO: unary increment/decrement
+
+        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
+        public void CrossCheck_Issue4984_Unary_Repro1()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new WeakBox<int>();
+    Log(b.Value);
+    var res = b.Value++;
+    Log(res);
+    return b.Value;
+}");
+            f(0);
+            f(41);
+        }
+
+        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
+        public void CrossCheck_Issue4984_Unary_Repro2()
+        {
+            var f = Compile<Func<int, int>>(@"i =>
+{
+    var b = new WeakBox<int>();
+    Log(b[0]);
+    var res = b[0]++;
+    Log(res);
+    return b[0];
+}");
+            f(0);
+            f(41);
         }
 
         #endregion
