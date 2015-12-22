@@ -2683,7 +2683,6 @@ exit:
         #region Assignment
 
         // TODO: compound with conversions
-        // TODO: compound with nullables
         // TODO: compound with char
         // TODO: unary increment/decrement
 
@@ -2726,8 +2725,42 @@ exit:
                 CrossCheck_CompoundAssignment_Core<short>(op)(43, 3);
                 CrossCheck_CompoundAssignment_Core<uint>(op)(43, 3);
                 CrossCheck_CompoundAssignment_Core<int>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<ulong>(op)(42UL, 3);
-                CrossCheck_CompoundAssignment_Core<long>(op)(42L, 3);
+                CrossCheck_CompoundAssignment_Core<ulong>(op)(43UL, 3);
+                CrossCheck_CompoundAssignment_Core<long>(op)(43L, 3);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Integral_Nullable()
+        {
+            foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" })
+            {
+                CrossCheck_CompoundAssignment_Core<byte?>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<sbyte?>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<ushort?>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<short?>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<uint?>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<int?>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<ulong?>(op)(43UL, 3);
+                CrossCheck_CompoundAssignment_Core<long?>(op)(43L, 3);
+
+                CrossCheck_CompoundAssignment_Core<byte?>(op)(43, null);
+                CrossCheck_CompoundAssignment_Core<sbyte?>(op)(43, null);
+                CrossCheck_CompoundAssignment_Core<ushort?>(op)(43, null);
+                CrossCheck_CompoundAssignment_Core<short?>(op)(43, null);
+                CrossCheck_CompoundAssignment_Core<uint?>(op)(43, null);
+                CrossCheck_CompoundAssignment_Core<int?>(op)(43, null);
+                CrossCheck_CompoundAssignment_Core<ulong?>(op)(43UL, null);
+                CrossCheck_CompoundAssignment_Core<long?>(op)(43L, null);
+
+                CrossCheck_CompoundAssignment_Core<byte?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<sbyte?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<ushort?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<short?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<uint?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<int?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<ulong?>(op)(null, 3);
+                CrossCheck_CompoundAssignment_Core<long?>(op)(null, 3);
             }
         }
 
