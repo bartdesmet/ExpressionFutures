@@ -2107,14 +2107,12 @@ exit:
 
         #region Async
 
-        // TODO: await in finally
-        // TODO: await in catch
-        // TODO: rethrow behavior
         // TODO: await in filter
         // TODO: various await pattern implementations
         // TODO: await with spilling of by-ref locals (known limitation)
         // TODO: more stack spilling cases
         // TODO: dynamic await
+        // TODO: branching
 
         [TestMethod]
         public void CrossCheck_Async_AwaitVoid()
@@ -2266,7 +2264,66 @@ exit:
         return res;
     });
 }");
-            AssertEx.Throws<AggregateException>(() => f());
+            AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_AwaitInFinally()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+        }
+        finally
+        {
+            Log(""enter finally"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""exit finally"");
+        }
+
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_AwaitInFinally_Throws()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+            throw new DivideByZeroException();
+        }
+        finally
+        {
+            Log(""enter finally"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""exit finally"");
+        }
+
+        return res;
+    });
+}");
+            AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
         }
 
         [TestMethod]
@@ -2333,6 +2390,97 @@ exit:
     });
 }");
             f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_AwaitInCatch()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+        }
+        catch (DivideByZeroException)
+        {
+            Log(""enter catch"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""exit catch"");
+        }
+
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_AwaitInCatch_Throws()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            throw new DivideByZeroException();
+        }
+        catch (DivideByZeroException)
+        {
+            Log(""enter catch"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""exit catch"");
+        }
+
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_AwaitInCatch_Rethrow()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            throw new DivideByZeroException();
+        }
+        catch (DivideByZeroException)
+        {
+            Log(""enter catch"");
+
+            res = await Task.FromResult(Return(42));
+
+            throw;
+        }
+
+        return res;
+    });
+}");
+            AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
         }
 
         [TestMethod]
