@@ -132,6 +132,21 @@ public class Booleany
     }
 }
 
+public class Inty
+{
+    private readonly int _value;
+
+    public Inty(int value)
+    {
+        _value = value;
+    }
+
+    public static implicit operator int (Inty b)
+    {
+        return b._value;
+    }
+}
+
 public class ResourceClass : IDisposable
 {
     private readonly Func<string, string> _log;

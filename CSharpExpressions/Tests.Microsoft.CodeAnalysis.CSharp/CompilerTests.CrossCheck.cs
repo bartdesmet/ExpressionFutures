@@ -425,9 +425,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Switch
 
-        // TODO: implicit conversion
-        // TODO: locals
-
         [TestMethod]
         public void CrossCheck_Switch_Integral()
         {
@@ -686,6 +683,50 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Blue);
             f(ConsoleColor.Green);
             f(ConsoleColor.Cyan);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Conversion()
+        {
+            var f = Compile<Action<Inty>>(@"x =>
+{
+    Log(""before"");
+
+    switch (Return(x))
+    {
+        case 0:
+            Log(""zero"");
+            break;
+        case 1:
+            Log(""one"");
+            break;
+    }
+
+    Log(""after"");
+}");
+            f(new Inty(0));
+            f(new Inty(1));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Switch_Locals()
+        {
+            var f = Compile<Action<int>>(@"x =>
+{
+    switch (Return(x))
+    {
+        case 0:
+            int a = 1;
+            Log($""zero({a})"");
+            break;
+        case 1:
+            int b = 3;
+            Log($""one({b})"");
+            break;
+    }
+}");
+            f(new Inty(0));
+            f(new Inty(1));
         }
 
         private void CrossCheck_Switch_Integral_Core<T>(IEnumerable<int> values)

@@ -278,7 +278,7 @@ namespace Microsoft.CSharp.Expressions
                 Expression.Label(BreakLabel),
             };
 
-            return Expression.Block(new TrueReadOnlyCollection<Expression>(exprs));
+            return Expression.Block(Variables, new TrueReadOnlyCollection<Expression>(exprs));
         }
 
         private Expression ReduceNullable(SwitchAnalysis analysis)
@@ -287,7 +287,16 @@ namespace Microsoft.CSharp.Expressions
             var governingTypeNonNull = governingType.GetNonNullableType();
 
             var valueLocal = Expression.Parameter(governingType, "__value");
-            var vars = new[] { valueLocal };
+
+            var n = Variables.Count;
+            var vars = new ParameterExpression[n + 1];
+
+            for (var i = 0; i < n; i++)
+            {
+                vars[i] = Variables[i];
+            }
+
+            vars[n] = valueLocal;
 
             var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
             var body = default(Expression);
