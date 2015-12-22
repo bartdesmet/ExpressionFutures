@@ -3027,7 +3027,118 @@ exit:
 
         #region Unary increment/decrement
 
-        // TODO: unary increment/decrement
+        // TODO: enum
+
+        [TestMethod]
+        public void CrossCheck_UnaryAssignment_Integral()
+        {
+            foreach (var op in new[] { "++", "--" })
+            {
+                CrossCheck_UnaryPreAssignment_Core<byte>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<sbyte>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<ushort>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<short>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<uint>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<int>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<ulong>(op)(43UL);
+                CrossCheck_UnaryPreAssignment_Core<long>(op)(43L);
+
+                CrossCheck_UnaryPostAssignment_Core<byte>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<sbyte>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<ushort>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<short>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<uint>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<int>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<ulong>(op)(43UL);
+                CrossCheck_UnaryPostAssignment_Core<long>(op)(43L);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_UnaryAssignment_Integral_Nullable()
+        {
+            foreach (var op in new[] { "++", "--" })
+            {
+                CrossCheck_UnaryPreAssignment_Core<byte?>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<sbyte?>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<ushort?>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<short?>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<uint?>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<int?>(op)(43);
+                CrossCheck_UnaryPreAssignment_Core<ulong?>(op)(43UL);
+                CrossCheck_UnaryPreAssignment_Core<long?>(op)(43L);
+
+                CrossCheck_UnaryPreAssignment_Core<byte?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<sbyte?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<ushort?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<short?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<uint?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<int?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<ulong?>(op)(null);
+                CrossCheck_UnaryPreAssignment_Core<long?>(op)(null);
+
+                CrossCheck_UnaryPostAssignment_Core<byte?>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<sbyte?>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<ushort?>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<short?>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<uint?>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<int?>(op)(43);
+                CrossCheck_UnaryPostAssignment_Core<ulong?>(op)(43UL);
+                CrossCheck_UnaryPostAssignment_Core<long?>(op)(43L);
+
+                CrossCheck_UnaryPostAssignment_Core<byte?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<sbyte?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<ushort?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<short?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<uint?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<int?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<ulong?>(op)(null);
+                CrossCheck_UnaryPostAssignment_Core<long?>(op)(null);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_UnaryAssignment_Integral_Overflow()
+        {
+            AssertCheckedThrows<byte>("++", byte.MaxValue);
+            AssertCheckedThrows<sbyte>("++", sbyte.MaxValue);
+            AssertCheckedThrows<ushort>("++", ushort.MaxValue);
+            AssertCheckedThrows<short>("++", short.MaxValue);
+            AssertCheckedThrows<uint>("++", uint.MaxValue);
+            AssertCheckedThrows<int>("++", int.MaxValue);
+            AssertCheckedThrows<ulong>("++", ulong.MaxValue);
+            AssertCheckedThrows<long>("++", long.MaxValue);
+
+            AssertCheckedThrows<byte>("--", byte.MinValue);
+            AssertCheckedThrows<sbyte>("--", sbyte.MinValue);
+            AssertCheckedThrows<ushort>("--", ushort.MinValue);
+            AssertCheckedThrows<short>("--", short.MinValue);
+            AssertCheckedThrows<uint>("--", uint.MinValue);
+            AssertCheckedThrows<int>("--", int.MinValue);
+            AssertCheckedThrows<ulong>("--", ulong.MinValue);
+            AssertCheckedThrows<long>("--", long.MinValue);
+        }
+
+        private void AssertCheckedThrows<T>(string op, T value)
+        {
+            AssertEx.Throws<OverflowException>(() => CrossCheck_UnaryPreAssignment_Checked_Core<T>(op)(value));
+            AssertEx.Throws<OverflowException>(() => CrossCheck_UnaryPostAssignment_Checked_Core<T>(op)(value));
+        }
+
+        [TestMethod]
+        public void CrossCheck_UnaryAssignment_Float()
+        {
+            foreach (var op in new[] { "++", "--" })
+            {
+                CrossCheck_UnaryPreAssignment_Core<float>(op)(42.0f);
+                CrossCheck_UnaryPreAssignment_Core<double>(op)(42.0d);
+                CrossCheck_UnaryPreAssignment_Core<decimal>(op)(42.0m);
+
+                CrossCheck_UnaryPostAssignment_Core<float>(op)(42.0f);
+                CrossCheck_UnaryPostAssignment_Core<double>(op)(42.0d);
+                CrossCheck_UnaryPostAssignment_Core<decimal>(op)(42.0m);
+            }
+        }
 
         [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Unary_Repro1()
@@ -3057,6 +3168,54 @@ exit:
 }");
             f(0);
             f(41);
+        }
+
+        private Func<T, string> CrossCheck_UnaryPreAssignment_Core<T>(string op)
+        {
+            return CrossCheck_UnaryAssignment_Core<T>(op, null);
+        }
+
+        private Func<T, string> CrossCheck_UnaryPostAssignment_Core<T>(string op)
+        {
+            return CrossCheck_UnaryAssignment_Core<T>(null, op);
+        }
+
+        private Func<T, string> CrossCheck_UnaryAssignment_Core<T>(string pre, string post)
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, string>>($"x => {{ var y = x; var z = Log({pre}y{post}); return $\"({{y}},{{z}})\"; }}");
+            var f2 = Compile<Func<T, string>>($"x => {{ var b = new StrongBox<{t}>(); var z = Log({pre}b.Value{post}); return $\"({{b.Value}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1]; a[0] = x; var z = Log({pre}a[0]{post}); return $\"({{a[0]}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log({pre}a[0, 0]{post}); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log({pre}l[0]{post}); return $\"({{l[0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log({pre}l[index: 0]{post}); return $\"({{l[index: 0]}},{{z}})\"; }}");
+
+            return f1 + f2 + f3 + f4 + f5 + f6;
+        }
+
+        private Func<T, string> CrossCheck_UnaryPreAssignment_Checked_Core<T>(string op)
+        {
+            return CrossCheck_UnaryAssignment_Checked_Core<T>(op, null);
+        }
+
+        private Func<T, string> CrossCheck_UnaryPostAssignment_Checked_Core<T>(string op)
+        {
+            return CrossCheck_UnaryAssignment_Checked_Core<T>(null, op);
+        }
+
+        private Func<T, string> CrossCheck_UnaryAssignment_Checked_Core<T>(string pre, string post)
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, string>>($"x => {{ var y = x; var z = Log(checked({pre}y{post})); return $\"({{y}},{{z}})\"; }}");
+            var f2 = Compile<Func<T, string>>($"x => {{ var b = new StrongBox<{t}>(); var z = Log(checked({pre}b.Value{post})); return $\"({{b.Value}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1]; a[0] = x; var z = Log(checked({pre}a[0]{post})); return $\"({{a[0]}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(checked({pre}a[0, 0]{post})); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(checked({pre}l[0]{post})); return $\"({{l[0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(checked({pre}l[index: 0]{post})); return $\"({{l[index: 0]}},{{z}})\"; }}");
+
+            return f1 + f2 + f3 + f4 + f5 + f6;
         }
 
         #endregion
