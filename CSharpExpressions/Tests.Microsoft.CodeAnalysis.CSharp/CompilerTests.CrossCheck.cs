@@ -1134,7 +1134,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         // TODO: multiple initializers
         // TODO: multiple iterators
-        // TODO: ;; loop
         // TODO: non-assignment initializers and iterators
         // TODO: loops with no break or continue
 
@@ -1160,6 +1159,33 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_For_Infinite()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    for (;;)
+    {
+        if (i == Return(5))
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({i})"");
+
+        Log(++i);
     }
 
     Log(""After"");
