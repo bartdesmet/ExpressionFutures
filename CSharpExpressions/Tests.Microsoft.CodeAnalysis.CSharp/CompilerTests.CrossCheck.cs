@@ -1888,8 +1888,6 @@ exit:
         // TODO: compound with conversions
         // TODO: compound with nullables
         // TODO: compound with char
-        // TODO: compound with shift
-        // TODO: compound with delegates
         // TODO: unary increment/decrement
 
         [TestMethod]
@@ -1965,6 +1963,18 @@ exit:
         }
 
         [TestMethod]
+        public void CrossCheck_CompoundAssignment_Shift()
+        {
+            foreach (var op in new[] { "<<=", ">>=" })
+            {
+                CrossCheck_CompoundAssignment_Core<int, int>(op)(42, 1);
+                CrossCheck_CompoundAssignment_Core<uint, int>(op)(42, 1);
+                CrossCheck_CompoundAssignment_Core<long, int>(op)(42, 1);
+                CrossCheck_CompoundAssignment_Core<ulong, int>(op)(42, 1);
+            }
+        }
+
+        [TestMethod]
         public void CrossCheck_CompoundAssignment_String1()
         {
             var f = Compile<Func<string, string, string>>("(s, t) => { Log(s += t); return s; }");
@@ -1985,6 +1995,20 @@ exit:
             f("foo", 42);
             f("foo", true);
             f("foo", null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Delegate()
+        {
+            var f = Compile<Action>(@"() => {
+    Action a = () => { Log(""a""); };
+    Action b = () => { Log(""b""); };
+    a += b;
+    a();
+    a -= b;
+    a();
+}");
+            f();
         }
 
         [TestMethod]
@@ -2129,6 +2153,20 @@ exit:
             var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
             var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
             var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
+
+            return f1 + f2 + f3 + f4 + f5 + f6;
+        }
+
+        private Func<T, R, string> CrossCheck_CompoundAssignment_Core<T, R>(string op)
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, R, string>>($"(x, r) => {{ var y = x; var z = Log(y {op} r); return $\"({{y}},{{z}})\"; }}");
+            var f2 = Compile<Func<T, R, string>>($"(x, r) => {{ var b = new StrongBox<{t}>(); var z = Log(b.Value {op} r); return $\"({{b.Value}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, R, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(a[0] {op} r); return $\"({{a[0]}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, R, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
 
             return f1 + f2 + f3 + f4 + f5 + f6;
         }
