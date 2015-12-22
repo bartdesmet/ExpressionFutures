@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 public struct WeakBox<T>
 {
@@ -266,5 +268,84 @@ public struct MyEnumeratorValue
     public int Current
     {
         get { return _count; }
+    }
+}
+
+public interface IAwaitable
+{
+    IAwaiter GetAwaiter();
+}
+
+public interface IAwaiter : INotifyCompletion
+{
+    bool IsCompleted { get; }
+    void GetResult();
+}
+
+public class AsyncAwaitable : IAwaitable
+{
+    public static IAwaitable Instance => new AsyncAwaitable();
+
+    public IAwaiter GetAwaiter() => new Awaiter();
+
+    class Awaiter : IAwaiter
+    {
+        public bool IsCompleted => false;
+        public void GetResult() { }
+        public void OnCompleted(Action continuation) => Task.Run(continuation);
+    }
+}
+
+public class SyncAwaitable : IAwaitable
+{
+    public static IAwaitable Instance => new SyncAwaitable();
+
+    public IAwaiter GetAwaiter() => new Awaiter();
+
+    class Awaiter : IAwaiter
+    {
+        public bool IsCompleted => true;
+        public void GetResult() { }
+        public void OnCompleted(Action continuation) => continuation();
+    }
+}
+
+public class RacingAwaitable : IAwaitable
+{
+    public static IAwaitable Instance => new RacingAwaitable();
+
+    public IAwaiter GetAwaiter() => new Awaiter();
+
+    class Awaiter : IAwaiter
+    {
+        public bool IsCompleted => false;
+        public void GetResult() { }
+        public void OnCompleted(Action continuation) => continuation();
+    }
+}
+
+public class ThrowingAwaitable : IAwaitable
+{
+    private readonly Exception _ex;
+
+    public ThrowingAwaitable(Exception ex)
+    {
+        _ex = ex;
+    }
+
+    public IAwaiter GetAwaiter() => new Awaiter(_ex);
+
+    class Awaiter : IAwaiter
+    {
+        private readonly Exception _ex;
+
+        public Awaiter(Exception ex)
+        {
+            _ex = ex;
+        }
+
+        public bool IsCompleted => false;
+        public void GetResult() { throw _ex; }
+        public void OnCompleted(Action continuation) => continuation();
     }
 }

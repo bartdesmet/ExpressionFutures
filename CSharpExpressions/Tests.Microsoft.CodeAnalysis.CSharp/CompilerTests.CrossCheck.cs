@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -2106,7 +2107,6 @@ exit:
 
         #region Async
 
-        // TODO: await in try
         // TODO: await in finally
         // TODO: await in catch
         // TODO: rethrow behavior
@@ -2117,7 +2117,7 @@ exit:
         // TODO: dynamic await
 
         [TestMethod]
-        public void CrossCheck_Async1()
+        public void CrossCheck_Async_AwaitVoid()
         {
             var f = Compile<Func<int>>(@"() =>
 {
@@ -2136,7 +2136,45 @@ exit:
         }
 
         [TestMethod]
-        public void CrossCheck_Async2()
+        public void CrossCheck_Async_AwaitNonVoid()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var x = await Task.FromResult(Return(42));
+    
+        Log(""B"");
+    
+        return x;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_ConfigureAwait()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var x = await Task.FromResult(42).ConfigureAwait(false);
+    
+        Log(""B"");
+    
+        return x;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling()
         {
             var f = Compile<Func<int>>(@"() =>
 {
@@ -2155,7 +2193,7 @@ exit:
         }
 
         [TestMethod]
-        public void CrossCheck_Async3()
+        public void CrossCheck_Async_AwaitInExpression()
         {
             var f = Compile<Func<int>>(@"() =>
 {
@@ -2171,6 +2209,325 @@ exit:
     });
 }");
             f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_AwaitInTry()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""after await"");
+        }
+        finally
+        {
+            Log(""finally"");
+        }
+
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_AwaitInTry_Throws()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            res = Return(1) / (Return(42) - await Task.FromResult(Return(42)));
+
+            Log(""after await"");
+        }
+        finally
+        {
+            Log(""finally"");
+        }
+
+        return res;
+    });
+}");
+            AssertEx.Throws<AggregateException>(() => f());
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_AwaitInTry()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""after await"");
+        }
+        catch (DivideByZeroException)
+        {
+            Log(""in catch"");
+        }
+        finally
+        {
+            Log(""finally"");
+        }
+
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_AwaitInTry_Throws()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            res = Return(1) / (Return(42) - await Task.FromResult(Return(42)));
+
+            Log(""after await"");
+        }
+        catch (DivideByZeroException)
+        {
+            Log(""in catch"");
+        }
+        finally
+        {
+            Log(""finally"");
+        }
+
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryNested1()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+
+        try
+        {
+            Log(""B"");
+            await Task.Yield();
+            Log(""C"");
+
+            try
+            {
+                Log(""D"");
+                await Task.Yield();
+                Log(""E"");
+            }
+            catch
+            {
+                Log(""F"");
+            }
+            finally
+            {
+                Log(""G"");
+            }
+        }
+        catch
+        {
+            Log(""H"");
+        }
+        finally
+        {
+            Log(""I"");
+        }
+
+        Log(""J"");
+
+        return 42;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryNested2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        await Task.Yield();
+        Log(""B"");
+
+        try
+        {
+            Log(""C"");
+            await Task.Yield();
+            Log(""D"");
+
+            try
+            {
+                Log(""E"");
+                await Task.Yield();
+                Log(""F"");
+            }
+            catch
+            {
+                Log(""G"");
+                await Task.Yield();
+                Log(""H"");
+            }
+            finally
+            {
+                Log(""I"");
+                await Task.Yield();
+                Log(""J"");
+            }
+
+            Log(""K"");
+            await Task.Yield();
+            Log(""L"");
+        }
+        catch
+        {
+            Log(""M"");
+            await Task.Yield();
+            Log(""N"");
+        }
+        finally
+        {
+            Log(""O"");
+            await Task.Yield();
+            Log(""P"");
+        }
+
+        Log(""Q"");
+        await Task.Yield();
+        Log(""R"");
+
+        return 42;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Try_ManOrBoy()
+        {
+            const int N = 9;
+
+            var f = Compile<Func<IAwaitable[], int>>(@"tasks =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        await tasks[0];
+        Log(""B"");
+
+        try
+        {
+            Log(""C"");
+            await tasks[1];
+            Log(""D"");
+
+            try
+            {
+                Log(""E"");
+                await tasks[2];
+                Log(""F"");
+            }
+            catch (DivideByZeroException)
+            {
+                Log(""G"");
+                await tasks[3];
+                Log(""H"");
+            }
+            finally
+            {
+                Log(""I"");
+                await tasks[4];
+                Log(""J"");
+            }
+
+            Log(""K"");
+            await tasks[5];
+            Log(""L"");
+        }
+        catch (OverflowException)
+        {
+            Log(""M"");
+            await tasks[6];
+            Log(""N"");
+        }
+        finally
+        {
+            Log(""O"");
+            await tasks[7];
+            Log(""P"");
+        }
+
+        Log(""Q"");
+        await tasks[8];
+        Log(""R"");
+
+        return 42;
+    });
+}");
+            var allSync = Enumerable.Repeat(SyncAwaitable.Instance, N).ToArray();
+            var allAsync = Enumerable.Repeat(AsyncAwaitable.Instance, N).ToArray();
+            var allRacing = Enumerable.Repeat(RacingAwaitable.Instance, N).ToArray();
+
+            f(allSync);
+            f(allAsync);
+            f(allRacing);
+
+            var awaitAsn = AsyncAwaitable.Instance;
+            var throwDBZ = new ThrowingAwaitable(new DivideByZeroException());
+            var throwOVF = new ThrowingAwaitable(new OverflowException());
+            var throwIOP = new ThrowingAwaitable(new InvalidOperationException());
+
+            f(new IAwaitable[] { awaitAsn, awaitAsn, throwDBZ, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn });
+            f(new IAwaitable[] { awaitAsn, throwOVF, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn });
+            f(new IAwaitable[] { awaitAsn, awaitAsn, throwOVF, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn });
+            f(new IAwaitable[] { awaitAsn, awaitAsn, throwDBZ, throwOVF, awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn });
+            f(new IAwaitable[] { awaitAsn, awaitAsn, awaitAsn, awaitAsn, throwOVF, awaitAsn, awaitAsn, awaitAsn, awaitAsn });
+            f(new IAwaitable[] { awaitAsn, awaitAsn, awaitAsn, awaitAsn, awaitAsn, throwOVF, awaitAsn, awaitAsn, awaitAsn });
+
+            // TODO: add more cases
         }
 
         #endregion
