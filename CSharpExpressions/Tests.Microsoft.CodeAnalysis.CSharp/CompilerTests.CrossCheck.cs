@@ -1050,8 +1050,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region While
 
-        // TODO: boolean-expression test
-
         [TestMethod]
         public void CrossCheck_While1()
         {
@@ -1107,11 +1105,30 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_While_Conversion()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    while (new Booleany(i < 10))
+    {
+        Log($""body({i})"");
+
+        Return(i++);
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
         #endregion
 
         #region Do
-
-        // TODO: boolean-expression test
 
         [TestMethod]
         public void CrossCheck_Do1()
@@ -1168,6 +1185,27 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_Do_Conversion()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var i = Return(0);
+
+    do
+    {
+        Log($""body({i})"");
+
+        Return(i++);
+    } while (new Booleany(i < 10));
+
+    Log(""After"");
+}");
+            f();
+        }
+
         #endregion
 
         #region For
@@ -1213,6 +1251,23 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     Log(""Before"");
 
     for (var i = Return(0); Return(i < 10); Return(i++))
+    {
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_For_Conversion()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    for (var i = Return(0); new Booleany(i < 10); Return(i++))
     {
         Log($""body({i})"");
     }
