@@ -1884,8 +1884,13 @@ exit:
 
         #region Assignment
 
-        // TODO: more primitive types
-        // TODO: indexers with named parameters as LHS
+        // TODO: compound with checked variants
+        // TODO: compound with conversions
+        // TODO: compound with nullables
+        // TODO: compound with char
+        // TODO: compound with shift
+        // TODO: compound with delegates
+        // TODO: unary increment/decrement
 
         [TestMethod]
         public void CrossCheck_Assignment_Primitives()
@@ -1913,6 +1918,116 @@ exit:
             CrossCheck_Assignment_Core<byte?>()(null);
             CrossCheck_Assignment_Core<ConsoleColor>()(ConsoleColor.Red);
             CrossCheck_Assignment_Core<ConsoleColor?>()(ConsoleColor.Red);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Integral()
+        {
+            foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" })
+            {
+                CrossCheck_CompoundAssignment_Core<byte>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<sbyte>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<ushort>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<short>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<uint>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<int>(op)(43, 3);
+                CrossCheck_CompoundAssignment_Core<ulong>(op)(42UL, 3);
+                CrossCheck_CompoundAssignment_Core<long>(op)(42L, 3);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Float()
+        {
+            foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=" })
+            {
+                CrossCheck_CompoundAssignment_Core<float>(op)(42.0f, 3);
+                CrossCheck_CompoundAssignment_Core<double>(op)(42.0d, 3);
+                CrossCheck_CompoundAssignment_Core<decimal>(op)(42.0m, 3);
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Boolean()
+        {
+            foreach (var op in new[] { "&=", "|=", "^=" })
+            {
+                var f = CrossCheck_CompoundAssignment_Core<bool>(op);
+
+                foreach (var b1 in new[] { false, true })
+                {
+                    foreach (var b2 in new[] { false, true })
+                    {
+                        f(b1, b2);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_String1()
+        {
+            var f = Compile<Func<string, string, string>>("(s, t) => { Log(s += t); return s; }");
+
+            f("foo", "bar");
+            f("", "bar");
+            f("foo", "");
+            f(null, "bar");
+            f("foo", null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_String2()
+        {
+            var f = Compile<Func<string, object, string>>("(s, t) => { Log(s += t); return s; }");
+
+            f("foo", "bar");
+            f("foo", 42);
+            f("foo", true);
+            f("foo", null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Enum_Add()
+        {
+            var f = Compile<Func<ConsoleColor, int, ConsoleColor>>("(e, u) => { Log(e += u); return e; }");
+
+            f(ConsoleColor.Red, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Enum_Subtract1()
+        {
+            var f = Compile<Func<ConsoleColor, int, ConsoleColor>>("(e, u) => { Log(e -= u); return e; }");
+
+            f(ConsoleColor.Red, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Enum_Subtract2()
+        {
+            var f = Compile<Func<ConsoleColor, ConsoleColor, ConsoleColor>>("(e1, e2) => { Log(e1 -= e2); return e1; }");
+
+            f(ConsoleColor.Red, ConsoleColor.Blue);
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Custom()
+        {
+            var f = Compile<Func<DateTime, TimeSpan, DateTime>>("(dt, ts) => { Log(dt += ts); return dt; }");
+
+            f(new DateTime(1983, 2, 11), TimeSpan.FromHours(1));
+        }
+
+        [TestMethod]
+        public void CrossCheck_CompoundAssignment_Custom_Nullable()
+        {
+            var f = Compile<Func<DateTime?, TimeSpan?, DateTime?>>("(dt, ts) => { Log(dt += ts); return dt; }");
+
+            f(new DateTime(1983, 2, 11), TimeSpan.FromHours(1));
+            f(new DateTime(1983, 2, 11), null);
+            f(null, TimeSpan.FromHours(1));
+            f(null, null);
         }
 
         [TestMethod]
@@ -2000,6 +2115,20 @@ exit:
             var f4 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; return a[0, 0]; }}");
             var f5 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
             var f6 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; return l[index: 0]; }}");
+
+            return f1 + f2 + f3 + f4 + f5 + f6;
+        }
+
+        private Func<T, T, string> CrossCheck_CompoundAssignment_Core<T>(string op)
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, T, string>>($"(x, r) => {{ var y = x; var z = Log(y {op} r); return $\"({{y}},{{z}})\"; }}");
+            var f2 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new StrongBox<{t}>(); var z = Log(b.Value {op} r); return $\"({{b.Value}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(a[0] {op} r); return $\"({{a[0]}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
 
             return f1 + f2 + f3 + f4 + f5 + f6;
         }
