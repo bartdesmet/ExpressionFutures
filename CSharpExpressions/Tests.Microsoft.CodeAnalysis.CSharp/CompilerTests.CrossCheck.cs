@@ -1311,6 +1311,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO: null collection
         // TODO: loop variable conversion behavior
         // TODO: custom enumerator pattern
+        // TODO: dynamic
 
         [TestMethod]
         public void CrossCheck_ForEach1()

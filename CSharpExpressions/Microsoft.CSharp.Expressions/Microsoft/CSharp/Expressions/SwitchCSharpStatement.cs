@@ -268,17 +268,41 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceNonNullable(SwitchAnalysis analysis)
         {
+            var res = default(Expression);
+
             var lowered = LowerSwitchStatement(analysis, SwitchValue.Type, hoistNull: false);
 
-            var @switch = lowered.Make(SwitchValue, lowered.DefaultCase);
-
-            var exprs = new Expression[]
+            if (Variables.Count > 0)
             {
-                @switch,
-                Expression.Label(BreakLabel),
-            };
+                // NB: Variable scope should not include the switch value.
 
-            return Expression.Block(Variables, new TrueReadOnlyCollection<Expression>(exprs));
+                var value = Expression.Parameter(SwitchValue.Type);
+
+                var @switch = lowered.Make(value, lowered.DefaultCase);
+
+                var exprs = new Expression[]
+                {
+                    Expression.Assign(value, SwitchValue),
+                    WithVariableScope(@switch),
+                    Expression.Label(BreakLabel),
+                };
+
+                res = Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(new[] { value }), new TrueReadOnlyCollection<Expression>(exprs));
+            }
+            else
+            {
+                var @switch = lowered.Make(SwitchValue, lowered.DefaultCase);
+
+                var exprs = new Expression[]
+                {
+                    @switch,
+                    Expression.Label(BreakLabel),
+                };
+
+                res = Expression.Block(new TrueReadOnlyCollection<Expression>(exprs));
+            }
+
+            return res;
         }
 
         private Expression ReduceNullable(SwitchAnalysis analysis)
@@ -287,17 +311,7 @@ namespace Microsoft.CSharp.Expressions
             var governingTypeNonNull = governingType.GetNonNullableType();
 
             var valueLocal = Expression.Parameter(governingType, "__value");
-
-            var n = Variables.Count;
-            var vars = new ParameterExpression[n + 1];
-
-            for (var i = 0; i < n; i++)
-            {
-                vars[i] = Variables[i];
-            }
-
-            vars[n] = valueLocal;
-
+            var vars = new[] { valueLocal };
             var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
             var body = default(Expression);
 
