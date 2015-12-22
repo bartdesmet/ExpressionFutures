@@ -198,3 +198,73 @@ public class DynamicInvoker
         return value;
     }
 }
+
+public class MyEnumerable
+{
+    private readonly int _count;
+
+    public MyEnumerable(int count)
+    {
+        _count = count;
+    }
+
+    public MyEnumerator GetEnumerator()
+    {
+        return new MyEnumerator(_count);
+    }
+}
+
+public class MyEnumerator
+{
+    private int _count;
+
+    public MyEnumerator(int count)
+    {
+        _count = count;
+    }
+
+    public bool MoveNext()
+    {
+        return _count-- > 0;
+    }
+
+    public int Current
+    {
+        get { return _count; }
+    }
+}
+
+public class MyEnumerableValue
+{
+    private readonly int _count;
+
+    public MyEnumerableValue(int count)
+    {
+        _count = count;
+    }
+
+    public MyEnumeratorValue GetEnumerator()
+    {
+        return new MyEnumeratorValue(_count);
+    }
+}
+
+public struct MyEnumeratorValue
+{
+    private int _count;
+
+    public MyEnumeratorValue(int count)
+    {
+        _count = count;
+    }
+
+    public bool MoveNext()
+    {
+        return _count-- > 0;
+    }
+
+    public int Current
+    {
+        get { return _count; }
+    }
+}

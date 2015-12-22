@@ -1341,13 +1341,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Foreach
 
-        // TODO: null collection
-        // TODO: loop variable conversion behavior
-        // TODO: custom enumerator pattern
-        // TODO: dynamic
-
         [TestMethod]
-        public void CrossCheck_ForEach1()
+        public void CrossCheck_ForEach_IEnumerable()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1376,7 +1371,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_ForEach2()
+        public void CrossCheck_ForEach_String()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1407,7 +1402,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_ForEach3()
+        public void CrossCheck_ForEach_QueryExpression()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1436,7 +1431,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_ForEach4()
+        public void CrossCheck_ForEach_Array()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1465,7 +1460,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_ForEach5()
+        public void CrossCheck_ForEach_Convert()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1494,7 +1489,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_ForEach6()
+        public void CrossCheck_ForEach_NoBreakContinue()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -1508,6 +1503,76 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     Log(""After"");
 }");
             f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach_Pattern1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var i in new MyEnumerable(Return(10)))
+    {
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach_Pattern2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var i in new MyEnumerableValue(Return(10)))
+    {
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach_NullReference()
+        {
+            var f = Compile<Action<IEnumerable<int>>>(@"xs =>
+{
+    Log(""Before"");
+
+    foreach (var i in xs)
+    {
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            AssertEx.Throws<NullReferenceException>(() => f(null));
+        }
+
+        [TestMethod]
+        public void CrossCheck_ForEach_Dynamic()
+        {
+            var f = Compile<Action<dynamic>>(@"(dynamic xs) =>
+{
+    Log(""Before"");
+
+    foreach (int i in xs)
+    {
+        Log($""body({i})"");
+    }
+
+    Log(""After"");
+}");
+            f(Enumerable.Range(0, 10));
+            f(new[] { 0, 1, 2, 3, 4, 5 });
+            f(new List<int> { 0, 1, 2, 3, 4, 5 });
         }
 
         #endregion
