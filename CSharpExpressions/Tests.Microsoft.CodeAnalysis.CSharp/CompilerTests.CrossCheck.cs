@@ -1969,7 +1969,6 @@ exit:
         // TODO: checked variants
         // TODO: with compile-time constants
         // TODO: convert
-        // TODO: new
         // TODO: assignments
         // TODO: event handlers
         // TODO: index, invoke, invoke member, new with named parameters
@@ -2592,6 +2591,30 @@ exit:
             var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic x) => d.Return<int>(x)");
 
             f(new DynamicInvoker(), 42);
+        }
+
+        #endregion
+
+        #region InvokeConstructor
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeConstructor1()
+        {
+            var f = Compile<Func<dynamic, TimeSpan>>("(dynamic d) => new TimeSpan(d)");
+
+            f(42);
+            f(42L);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeConstructor2()
+        {
+            var f = Compile<Func<dynamic, dynamic, DateTimeOffset>>("(dynamic d1, dynamic d2) => new DateTimeOffset(d1, d2)");
+
+            var dt = new DateTime(1983, 2, 11);
+
+            f(dt, TimeSpan.FromHours(1));
+            f(dt.Ticks, TimeSpan.FromHours(1));
         }
 
         #endregion
