@@ -1888,6 +1888,25 @@ exit:
         // TODO: indexers with named parameters as LHS
 
         [TestMethod]
+        public void CrossCheck_Assignment_Primitives()
+        {
+            CrossCheck_Assignment_Core<byte>()(42);
+            CrossCheck_Assignment_Core<sbyte>()(42);
+            CrossCheck_Assignment_Core<ushort>()(42);
+            CrossCheck_Assignment_Core<short>()(42);
+            CrossCheck_Assignment_Core<uint>()(42);
+            CrossCheck_Assignment_Core<int>()(42);
+            CrossCheck_Assignment_Core<ulong>()(42UL);
+            CrossCheck_Assignment_Core<long>()(42L);
+            CrossCheck_Assignment_Core<float>()(42.0f);
+            CrossCheck_Assignment_Core<double>()(42.0d);
+            CrossCheck_Assignment_Core<decimal>()(42.0m);
+            CrossCheck_Assignment_Core<bool>()(true);
+            CrossCheck_Assignment_Core<char>()('a');
+            CrossCheck_Assignment_Core<string>()("bar");
+        }
+
+        [TestMethod]
         public void CrossCheck_CompoundAssignment()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -1960,6 +1979,18 @@ exit:
 }");
             f(0);
             f(41);
+        }
+
+        private Func<T, T> CrossCheck_Assignment_Core<T>()
+        {
+            var t = typeof(T).ToCSharp();
+
+            var f1 = Compile<Func<T, T>>("x => { var y = x; return y; }");
+            var f2 = Compile<Func<T, T>>($"x => {{ var b = new StrongBox<{t}>(); b.Value = x; return b.Value; }}");
+            var f3 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1]; a[0] = x; return a[0]; }}");
+            var f4 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
+
+            return f1 + f2 + f3 + f4;
         }
 
         #endregion
