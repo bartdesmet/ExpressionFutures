@@ -3024,7 +3024,6 @@ exit:
 
         // TODO: checked variants
         // TODO: with compile-time constants
-        // TODO: convert
         // TODO: assignments
         // TODO: event handlers
         // TODO: index, invoke, invoke member, new with named parameters
@@ -3671,6 +3670,29 @@ exit:
 
             f(dt, TimeSpan.FromHours(1));
             f(dt.Ticks, TimeSpan.FromHours(1));
+        }
+
+        #endregion
+
+        #region Convert
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Convert1()
+        {
+            var f = Compile<Func<dynamic, DateTimeOffset>>("(dynamic d) => (DateTimeOffset)d");
+
+            f(new DateTime(1983, 2, 11));
+            f(new DateTimeOffset(new DateTime(1983, 2, 11), TimeSpan.FromHours(1)));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Convert2()
+        {
+            var f = Compile<Func<dynamic, int>>("(dynamic d) => checked((int)d)");
+
+            f(42);
+            f(42L);
+            AssertEx.Throws<OverflowException>(() => f(int.MaxValue + 1L));
         }
 
         #endregion
