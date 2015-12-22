@@ -318,7 +318,7 @@ var exprs = new[]
     "(Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
     "(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })",
     "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })",
-    // TODO: dynamic
+    "(Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })",
     
     // Using
     "(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
@@ -326,7 +326,7 @@ var exprs = new[]
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })",
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { using (var fs = File.OpenRead(\"foo.txt\")) { } })",
-    // TODO: nested
+    "(Expression<Action>)(() => { using (FileStream fs1 = File.OpenRead(\"foo.txt\"), fs2 = File.OpenRead(\"bar.txt\")) { } })",
 
     // Lock
     "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",

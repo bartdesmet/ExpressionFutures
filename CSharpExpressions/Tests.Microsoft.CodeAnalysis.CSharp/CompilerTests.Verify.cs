@@ -292,6 +292,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_720D_1B2C() => OK();
             public override void CompilerTest_0041_C3E9() => OK();
             public override void CompilerTest_AE67_91A3() => OK();
+            public override void CompilerTest_8AE9_0673() => OK();
 
             // Using
             public override void CompilerTest_5598_03A6() => OK();
@@ -299,6 +300,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_BB7C_2A2A() => OK();
             public override void CompilerTest_51A3_E043() => OK();
             public override void CompilerTest_57C3_49DB() => OK();
+            public override void CompilerTest_7AF8_8902() => OK(); // REVIEW: OK to generate nested using nodes?
 
             // Lock
             public override void CompilerTest_2CF2_18B2() => OK();
