@@ -1907,6 +1907,15 @@ exit:
         }
 
         [TestMethod]
+        public void CrossCheck_Assignment_More()
+        {
+            CrossCheck_Assignment_Core<byte?>()(42);
+            CrossCheck_Assignment_Core<byte?>()(null);
+            CrossCheck_Assignment_Core<ConsoleColor>()(ConsoleColor.Red);
+            CrossCheck_Assignment_Core<ConsoleColor?>()(ConsoleColor.Red);
+        }
+
+        [TestMethod]
         public void CrossCheck_CompoundAssignment()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -1988,9 +1997,11 @@ exit:
             var f1 = Compile<Func<T, T>>("x => { var y = x; return y; }");
             var f2 = Compile<Func<T, T>>($"x => {{ var b = new StrongBox<{t}>(); b.Value = x; return b.Value; }}");
             var f3 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1]; a[0] = x; return a[0]; }}");
-            var f4 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
+            var f4 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; return a[0, 0]; }}");
+            var f5 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
+            var f6 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; return l[index: 0]; }}");
 
-            return f1 + f2 + f3 + f4;
+            return f1 + f2 + f3 + f4 + f5 + f6;
         }
 
         #endregion
