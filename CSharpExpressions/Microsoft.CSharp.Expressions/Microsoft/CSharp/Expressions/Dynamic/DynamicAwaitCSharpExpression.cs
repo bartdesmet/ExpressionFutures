@@ -36,7 +36,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An expression with the updated children.</returns>
         protected internal override AwaitCSharpExpression Rewrite(Expression operand)
         {
-            return DynamicCSharpExpression.DynamicAwait(operand);
+            return DynamicCSharpExpression.DynamicAwait(operand, Type == typeof(void), Context);
         }
 
         internal override Expression ReduceGetAwaiter()
@@ -64,7 +64,7 @@ namespace Microsoft.CSharp.Expressions
                     "GetResult",
                     Array.Empty<Type>(),
                     Array.Empty<DynamicCSharpArgument>(),
-                    CSharpBinderFlags.None,
+                    Type == typeof(void) ? CSharpBinderFlags.ResultDiscarded : CSharpBinderFlags.None,
                     Context
                 );
         }
