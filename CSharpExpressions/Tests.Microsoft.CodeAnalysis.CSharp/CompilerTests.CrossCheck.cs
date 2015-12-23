@@ -2319,7 +2319,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
         [TestMethod]
         public void CrossCheck_Async_AwaitPatterns_Void()
         {
@@ -2354,7 +2353,6 @@ exit:
             }
         }
 
-        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
         [TestMethod]
         public void CrossCheck_Async_AwaitPatterns_Void_Throws()
         {
@@ -2389,7 +2387,6 @@ exit:
             }
         }
 
-        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
         [TestMethod]
         public void CrossCheck_Async_AwaitPatterns_NonVoid()
         {
@@ -2414,9 +2411,11 @@ exit:
     {{
         Log(""before"");
     
-        await {expr};
+        var res = await {expr};
     
         Log(""after"");
+
+        return res;
     }});
 }}");
                     f();
@@ -2449,9 +2448,11 @@ exit:
     {{
         Log(""before"");
     
-        await {expr};
+        var res = await {expr};
     
         Log(""after"");
+
+        return res;
     }});
 }}");
                     AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
