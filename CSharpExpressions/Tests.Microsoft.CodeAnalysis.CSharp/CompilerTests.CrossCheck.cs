@@ -3045,7 +3045,7 @@ exit:
 
         #region Unary increment/decrement
 
-        // TODO: enum
+        // TODO: conversions
 
         [TestMethod]
         public void CrossCheck_UnaryAssignment_Integral()
@@ -3060,6 +3060,7 @@ exit:
                 CrossCheck_UnaryPreAssignment_Core<int>(op)(43);
                 CrossCheck_UnaryPreAssignment_Core<ulong>(op)(43UL);
                 CrossCheck_UnaryPreAssignment_Core<long>(op)(43L);
+                CrossCheck_UnaryPreAssignment_Core<ConsoleColor>(op)(ConsoleColor.Red);
 
                 CrossCheck_UnaryPostAssignment_Core<byte>(op)(43);
                 CrossCheck_UnaryPostAssignment_Core<sbyte>(op)(43);
@@ -3069,6 +3070,7 @@ exit:
                 CrossCheck_UnaryPostAssignment_Core<int>(op)(43);
                 CrossCheck_UnaryPostAssignment_Core<ulong>(op)(43UL);
                 CrossCheck_UnaryPostAssignment_Core<long>(op)(43L);
+                CrossCheck_UnaryPostAssignment_Core<ConsoleColor>(op)(ConsoleColor.Red);
             });
         }
 
@@ -3086,6 +3088,7 @@ exit:
                     var f6 = CrossCheck_UnaryPreAssignment_Core<int?>(op);
                     var f7 = CrossCheck_UnaryPreAssignment_Core<ulong?>(op);
                     var f8 = CrossCheck_UnaryPreAssignment_Core<long?>(op);
+                    var f9 = CrossCheck_UnaryPreAssignment_Core<ConsoleColor?>(op);
 
                     f1(43);
                     f2(43);
@@ -3095,6 +3098,7 @@ exit:
                     f6(43);
                     f7(43);
                     f8(43);
+                    f9(ConsoleColor.Red);
 
                     f1(null);
                     f2(null);
@@ -3104,6 +3108,7 @@ exit:
                     f6(null);
                     f7(null);
                     f8(null);
+                    f9(null);
                 }
 
                 {
@@ -3115,6 +3120,7 @@ exit:
                     var f6 = CrossCheck_UnaryPostAssignment_Core<int?>(op);
                     var f7 = CrossCheck_UnaryPostAssignment_Core<ulong?>(op);
                     var f8 = CrossCheck_UnaryPostAssignment_Core<long?>(op);
+                    var f9 = CrossCheck_UnaryPostAssignment_Core<ConsoleColor?>(op);
 
                     f1(43);
                     f2(43);
@@ -3124,6 +3130,7 @@ exit:
                     f6(43);
                     f7(43);
                     f8(43);
+                    f9(ConsoleColor.Red);
 
                     f1(null);
                     f2(null);
@@ -3133,6 +3140,7 @@ exit:
                     f6(null);
                     f7(null);
                     f8(null);
+                    f9(null);
                 }
             });
         }
