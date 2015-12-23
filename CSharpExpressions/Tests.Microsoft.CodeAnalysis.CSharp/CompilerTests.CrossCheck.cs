@@ -2416,7 +2416,6 @@ exit:
 
         // TODO: await with spilling of by-ref locals (known limitation)
         // TODO: more stack spilling cases
-        // TODO: dynamic await
         // TODO: branching
 
         [TestMethod]
@@ -2455,6 +2454,43 @@ exit:
     });
 }");
             f();
+        }
+
+        [Ignore] // BUG: Doesn't get ResultDiscarded passed to GetResult binder
+        [TestMethod]
+        public void CrossCheck_Async_AwaitDynamicVoid()
+        {
+            var f = Compile<Action<dynamic>>(@"(dynamic d) =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+    
+        await d;
+    
+        Log(""B"");
+    });
+}");
+            f(Task.Yield());
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_AwaitDynamicNonVoid()
+        {
+            var f = Compile<Func<dynamic, int>>(@"(dynamic d) =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        int x = await d;
+    
+        Log(""B"");
+    
+        return x;
+    });
+}");
+            f(Task.FromResult(42));
         }
 
         [TestMethod]
