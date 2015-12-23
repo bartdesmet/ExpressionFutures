@@ -2766,6 +2766,27 @@ exit:
             f();
         }
 
+        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_ByRefLocals()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var x = 41;
+        var res = System.Threading.Interlocked.Exchange(ref x, await Task.FromResult(42));
+    
+        Log(""B"");
+    
+        return res + x;
+    });
+}");
+            f();
+        }
+
         [TestMethod]
         public void CrossCheck_Async_AwaitInExpression()
         {
