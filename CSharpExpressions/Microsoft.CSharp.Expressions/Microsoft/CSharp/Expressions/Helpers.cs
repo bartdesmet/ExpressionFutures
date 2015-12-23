@@ -44,7 +44,20 @@ namespace Microsoft.CSharp.Expressions
                 if (args[i] == null)
                 {
                     var parameter = parameters[i];
-                    args[i] = Expression.Constant(parameter.DefaultValue, parameter.ParameterType);
+
+                    // REVIEW: It seems this can occur when a generic parameter has a default
+                    //         value of as default(T). Check whether this only applies to
+                    //         closed generic parameters or could we miss proper non-trivial
+                    //         default parameter values here?
+
+                    if (parameter.DefaultValue == null)
+                    {
+                        args[i] = Expression.Default(parameter.ParameterType);
+                    }
+                    else
+                    {
+                        args[i] = Expression.Constant(parameter.DefaultValue, parameter.ParameterType);
+                    }
                 }
             }
         }
