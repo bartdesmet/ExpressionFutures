@@ -2423,7 +2423,6 @@ exit:
             }
         }
 
-        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
         [TestMethod]
         public void CrossCheck_Async_AwaitPatterns_NonVoid_Throws()
         {
