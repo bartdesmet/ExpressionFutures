@@ -52,6 +52,26 @@ public static class Utils
     }
 }
 
+public class NamedAndOptionalParameters
+{
+    public NamedAndOptionalParameters(int x = 42, string y = "bar", bool z = true)
+    {
+        Value = x + y.Length + (z ? 1 : 0);
+    }
+
+    public int Value { get; }
+}
+
+public class IndexerWithNamedAndOptionalParameters
+{
+    public int this[int x = 42, string y = "bar", bool z = true]
+    {
+        get { return x + y.Length + (z ? 1 : 0); }
+    }
+}
+
+public delegate int DelegateWithNamedAndOptionalParameters(int x = 42, string y = "bar", bool z = true);
+
 public class Conditional : IEquatable<Conditional>
 {
     private readonly int _budget;

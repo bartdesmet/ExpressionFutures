@@ -278,8 +278,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Named parameters
 
+        // TODO: any issues with interface methods?
+
         [TestMethod]
-        public void CrossCheck_NamedParameters()
+        public void CrossCheck_NamedParameters_Call()
         {
             var f = Compile<Func<int>>(@"() =>
 {
@@ -291,7 +293,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_NamedParameters_ByRef1()
+        public void CrossCheck_NamedParameters_Call_ByRef1()
         {
             var f = Compile<Func<int[], int>>(@"xs =>
 {
@@ -303,7 +305,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_NamedParameters_ByRef2()
+        public void CrossCheck_NamedParameters_Call_ByRef2()
         {
             var f = Compile<Func<StrongBox<int>, int>>(@"b =>
 {
@@ -313,17 +315,37 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
+        [TestMethod]
+        public void CrossCheck_NamedParameters_New()
+        {
+            var f = Compile<Func<int>>("() => new NamedAndOptionalParameters(z: Return(false), y: Return(\"foobar\"), x: Return(43)).Value");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Index()
+        {
+            var f = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[z: Return(false), y: Return(\"foobar\"), x: Return(43)]");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Invoke()
+        {
+            var f = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(z: Return(false), y: Return(\"foobar\"), x: Return(43))");
+            f((x, y, z) => x + y.Length + (z ? 1 : 0));
+        }
+
         #endregion
 
         #region Optional parameters
 
         // TODO: more cases
         // TODO: ref/out
-        // TODO: constructors, indexers, delegates
         // TODO: generic methods with default(T)
 
         [TestMethod]
-        public void CrossCheck_OptionalParameters1()
+        public void CrossCheck_OptionalParameters_Call1()
         {
             var f1 = Compile<Func<int>>("() => Utils.OptionalParams()");
             f1();
@@ -339,7 +361,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_OptionalParameters2()
+        public void CrossCheck_OptionalParameters_Call2()
         {
             var f1 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), y: Return(\"foobar\"))");
             f1();
@@ -349,6 +371,96 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             var f3 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), Return(\"foobar\"), z: Return(false))");
             f3();
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters_New1()
+        {
+            var f1 = Compile<Func<int>>("() => new NamedAndOptionalParameters().Value");
+            f1();
+
+            var f2 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43)).Value");
+            f2();
+
+            var f3 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43), Return(\"foobar\")).Value");
+            f3();
+
+            var f4 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43), Return(\"foobar\"), Return(false)).Value");
+            f4();
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters_New2()
+        {
+            var f1 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43), y: Return(\"foobar\")).Value");
+            f1();
+
+            var f2 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43), z: Return(false)).Value");
+            f2();
+
+            var f3 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43), Return(\"foobar\"), z: Return(false)).Value");
+            f3();
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters_Index1()
+        {
+            // NB: Need at least one argument for an indexer.
+
+            var f2 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43)]");
+            f2();
+
+            var f3 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43), Return(\"foobar\")]");
+            f3();
+
+            var f4 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43), Return(\"foobar\"), Return(false)]");
+            f4();
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters_Index2()
+        {
+            var f1 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43), y: Return(\"foobar\")]");
+            f1();
+
+            var f2 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43), z: Return(false)]");
+            f2();
+
+            var f3 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43), Return(\"foobar\"), z: Return(false)]");
+            f3();
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters_Invoke1()
+        {
+            var d = new DelegateWithNamedAndOptionalParameters((x, y, z) => x + y.Length + (z ? 1 : 0));
+
+            var f1 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f()");
+            f1(d);
+
+            var f2 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(Return(43))");
+            f2(d);
+
+            var f3 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(Return(43), Return(\"foobar\"))");
+            f3(d);
+
+            var f4 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(Return(43), Return(\"foobar\"), Return(false))");
+            f4(d);
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters_Invoke2()
+        {
+            var d = new DelegateWithNamedAndOptionalParameters((x, y, z) => x + y.Length + (z ? 1 : 0));
+
+            var f1 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(Return(43), y: Return(\"foobar\"))");
+            f1(d);
+
+            var f2 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(Return(43), z: Return(false))");
+            f2(d);
+
+            var f3 = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(Return(43), Return(\"foobar\"), z: Return(false))");
+            f3(d);
         }
 
         #endregion
