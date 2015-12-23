@@ -2753,32 +2753,41 @@ exit:
         {
             foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" })
             {
-                CrossCheck_CompoundAssignment_Core<byte?>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<sbyte?>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<ushort?>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<short?>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<uint?>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<int?>(op)(43, 3);
-                CrossCheck_CompoundAssignment_Core<ulong?>(op)(43UL, 3);
-                CrossCheck_CompoundAssignment_Core<long?>(op)(43L, 3);
+                var f1 = CrossCheck_CompoundAssignment_Core<byte?>(op);
+                var f2 = CrossCheck_CompoundAssignment_Core<sbyte?>(op);
+                var f3 = CrossCheck_CompoundAssignment_Core<ushort?>(op);
+                var f4 = CrossCheck_CompoundAssignment_Core<short?>(op);
+                var f5 = CrossCheck_CompoundAssignment_Core<uint?>(op);
+                var f6 = CrossCheck_CompoundAssignment_Core<int?>(op);
+                var f7 = CrossCheck_CompoundAssignment_Core<ulong?>(op);
+                var f8 = CrossCheck_CompoundAssignment_Core<long?>(op);
 
-                CrossCheck_CompoundAssignment_Core<byte?>(op)(43, null);
-                CrossCheck_CompoundAssignment_Core<sbyte?>(op)(43, null);
-                CrossCheck_CompoundAssignment_Core<ushort?>(op)(43, null);
-                CrossCheck_CompoundAssignment_Core<short?>(op)(43, null);
-                CrossCheck_CompoundAssignment_Core<uint?>(op)(43, null);
-                CrossCheck_CompoundAssignment_Core<int?>(op)(43, null);
-                CrossCheck_CompoundAssignment_Core<ulong?>(op)(43UL, null);
-                CrossCheck_CompoundAssignment_Core<long?>(op)(43L, null);
+                f1(43, 3);
+                f2(43, 3);
+                f3(43, 3);
+                f4(43, 3);
+                f5(43, 3);
+                f6(43, 3);
+                f7(43, 3);
+                f8(43, 3);
 
-                CrossCheck_CompoundAssignment_Core<byte?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<sbyte?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<ushort?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<short?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<uint?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<int?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<ulong?>(op)(null, 3);
-                CrossCheck_CompoundAssignment_Core<long?>(op)(null, 3);
+                f1(43, null);
+                f2(43, null);
+                f3(43, null);
+                f4(43, null);
+                f5(43, null);
+                f6(43, null);
+                f7(43, null);
+                f8(43, null);
+
+                f1(null, 3);
+                f2(null, 3);
+                f3(null, 3);
+                f4(null, 3);
+                f5(null, 3);
+                f6(null, 3);
+                f7(null, 3);
+                f8(null, 3);
             }
         }
 
@@ -3067,41 +3076,63 @@ exit:
         {
             foreach (var op in new[] { "++", "--" })
             {
-                CrossCheck_UnaryPreAssignment_Core<byte?>(op)(43);
-                CrossCheck_UnaryPreAssignment_Core<sbyte?>(op)(43);
-                CrossCheck_UnaryPreAssignment_Core<ushort?>(op)(43);
-                CrossCheck_UnaryPreAssignment_Core<short?>(op)(43);
-                CrossCheck_UnaryPreAssignment_Core<uint?>(op)(43);
-                CrossCheck_UnaryPreAssignment_Core<int?>(op)(43);
-                CrossCheck_UnaryPreAssignment_Core<ulong?>(op)(43UL);
-                CrossCheck_UnaryPreAssignment_Core<long?>(op)(43L);
+                {
+                    var f1 = CrossCheck_UnaryPreAssignment_Core<byte?>(op);
+                    var f2 = CrossCheck_UnaryPreAssignment_Core<sbyte?>(op);
+                    var f3 = CrossCheck_UnaryPreAssignment_Core<ushort?>(op);
+                    var f4 = CrossCheck_UnaryPreAssignment_Core<short?>(op);
+                    var f5 = CrossCheck_UnaryPreAssignment_Core<uint?>(op);
+                    var f6 = CrossCheck_UnaryPreAssignment_Core<int?>(op);
+                    var f7 = CrossCheck_UnaryPreAssignment_Core<ulong?>(op);
+                    var f8 = CrossCheck_UnaryPreAssignment_Core<long?>(op);
 
-                CrossCheck_UnaryPreAssignment_Core<byte?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<sbyte?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<ushort?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<short?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<uint?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<int?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<ulong?>(op)(null);
-                CrossCheck_UnaryPreAssignment_Core<long?>(op)(null);
+                    f1(43);
+                    f2(43);
+                    f3(43);
+                    f4(43);
+                    f5(43);
+                    f6(43);
+                    f7(43);
+                    f8(43);
 
-                CrossCheck_UnaryPostAssignment_Core<byte?>(op)(43);
-                CrossCheck_UnaryPostAssignment_Core<sbyte?>(op)(43);
-                CrossCheck_UnaryPostAssignment_Core<ushort?>(op)(43);
-                CrossCheck_UnaryPostAssignment_Core<short?>(op)(43);
-                CrossCheck_UnaryPostAssignment_Core<uint?>(op)(43);
-                CrossCheck_UnaryPostAssignment_Core<int?>(op)(43);
-                CrossCheck_UnaryPostAssignment_Core<ulong?>(op)(43UL);
-                CrossCheck_UnaryPostAssignment_Core<long?>(op)(43L);
+                    f1(null);
+                    f2(null);
+                    f3(null);
+                    f4(null);
+                    f5(null);
+                    f6(null);
+                    f7(null);
+                    f8(null);
+                }
 
-                CrossCheck_UnaryPostAssignment_Core<byte?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<sbyte?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<ushort?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<short?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<uint?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<int?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<ulong?>(op)(null);
-                CrossCheck_UnaryPostAssignment_Core<long?>(op)(null);
+                {
+                    var f1 = CrossCheck_UnaryPostAssignment_Core<byte?>(op);
+                    var f2 = CrossCheck_UnaryPostAssignment_Core<sbyte?>(op);
+                    var f3 = CrossCheck_UnaryPostAssignment_Core<ushort?>(op);
+                    var f4 = CrossCheck_UnaryPostAssignment_Core<short?>(op);
+                    var f5 = CrossCheck_UnaryPostAssignment_Core<uint?>(op);
+                    var f6 = CrossCheck_UnaryPostAssignment_Core<int?>(op);
+                    var f7 = CrossCheck_UnaryPostAssignment_Core<ulong?>(op);
+                    var f8 = CrossCheck_UnaryPostAssignment_Core<long?>(op);
+
+                    f1(43);
+                    f2(43);
+                    f3(43);
+                    f4(43);
+                    f5(43);
+                    f6(43);
+                    f7(43);
+                    f8(43);
+
+                    f1(null);
+                    f2(null);
+                    f3(null);
+                    f4(null);
+                    f5(null);
+                    f6(null);
+                    f7(null);
+                    f8(null);
+                }
             }
         }
 
