@@ -2456,7 +2456,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Doesn't get ResultDiscarded passed to GetResult binder
         [TestMethod]
         public void CrossCheck_Async_AwaitDynamicVoid()
         {
