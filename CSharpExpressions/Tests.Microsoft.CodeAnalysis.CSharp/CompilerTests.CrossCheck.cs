@@ -318,6 +318,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         #region Optional parameters
 
         // TODO: more cases
+        // TODO: ref/out
+        // TODO: constructors, indexers, delegates
+        // TODO: generic methods with default(T)
 
         [TestMethod]
         public void CrossCheck_OptionalParameters1()
