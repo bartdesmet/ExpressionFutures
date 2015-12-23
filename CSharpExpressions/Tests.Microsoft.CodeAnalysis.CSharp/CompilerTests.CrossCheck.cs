@@ -2715,12 +2715,14 @@ exit:
 
             var f1 = Compile<Func<T, T>>("x => { var y = x; return y; }");
             var f2 = Compile<Func<T, T>>($"x => {{ var b = new StrongBox<{t}>(); b.Value = x; return b.Value; }}");
-            var f3 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1]; a[0] = x; return a[0]; }}");
-            var f4 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; return a[0, 0]; }}");
-            var f5 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
-            var f6 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; return l[index: 0]; }}");
+            var f3 = Compile<Func<T, T>>($"x => {{ var b = new WeakBox<{t}>(); b.Value = x; return b.Value; }}");
+            var f4 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1]; a[0] = x; return a[0]; }}");
+            var f5 = Compile<Func<T, T>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; return a[0, 0]; }}");
+            var f6 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; return l[0]; }}");
+            var f7 = Compile<Func<T, T>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; return l[index: 0]; }}");
+            var f8 = Compile<Func<T, T>>($"x => {{ var b = new WeakBox<{t}>(); b[0] = x; return b[0]; }}");
 
-            return f1 + f2 + f3 + f4 + f5 + f6;
+            return f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8;
         }
 
         #endregion
@@ -2987,12 +2989,14 @@ exit:
 
             var f1 = Compile<Func<T, T, string>>($"(x, r) => {{ var y = x; var z = Log(y {op} r); return $\"({{y}},{{z}})\"; }}");
             var f2 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new StrongBox<{t}>(); var z = Log(b.Value {op} r); return $\"({{b.Value}},{{z}})\"; }}");
-            var f3 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(a[0] {op} r); return $\"({{a[0]}},{{z}})\"; }}");
-            var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
-            var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
-            var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new WeakBox<{t}>(); var z = Log(b.Value {op} r); return $\"({{b.Value}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(a[0] {op} r); return $\"({{a[0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
+            var f7 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f8 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new WeakBox<{t}>(); var z = Log(b[0] {op} r); return $\"({{b[0]}},{{z}})\"; }}");
 
-            return f1 + f2 + f3 + f4 + f5 + f6;
+            return f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8;
         }
 
         private Func<T, T, string> CrossCheck_CompoundAssignment_Checked_Core<T>(string op)
@@ -3001,12 +3005,14 @@ exit:
 
             var f1 = Compile<Func<T, T, string>>($"(x, r) => {{ var y = x; var z = Log(checked(y {op} r)); return $\"({{y}},{{z}})\"; }}");
             var f2 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new StrongBox<{t}>(); var z = Log(checked(b.Value {op} r)); return $\"({{b.Value}},{{z}})\"; }}");
-            var f3 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(checked(a[0] {op} r)); return $\"({{a[0]}},{{z}})\"; }}");
-            var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(checked(a[0, 0] {op} r)); return $\"({{a[0, 0]}},{{z}})\"; }}");
-            var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(checked(l[0] {op} r)); return $\"({{l[0]}},{{z}})\"; }}");
-            var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(checked(l[index: 0] {op} r)); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new WeakBox<{t}>(); var z = Log(checked(b.Value {op} r)); return $\"({{b.Value}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(checked(a[0] {op} r)); return $\"({{a[0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, T, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(checked(a[0, 0] {op} r)); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(checked(l[0] {op} r)); return $\"({{l[0]}},{{z}})\"; }}");
+            var f7 = Compile<Func<T, T, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(checked(l[index: 0] {op} r)); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f8 = Compile<Func<T, T, string>>($"(x, r) => {{ var b = new WeakBox<{t}>(); var z = Log(checked(b[0] {op} r)); return $\"({{b[0]}},{{z}})\"; }}");
 
-            return f1 + f2 + f3 + f4 + f5 + f6;
+            return f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8;
         }
 
         private Func<T, R, string> CrossCheck_CompoundAssignment_Core<T, R>(string op)
@@ -3015,12 +3021,14 @@ exit:
 
             var f1 = Compile<Func<T, R, string>>($"(x, r) => {{ var y = x; var z = Log(y {op} r); return $\"({{y}},{{z}})\"; }}");
             var f2 = Compile<Func<T, R, string>>($"(x, r) => {{ var b = new StrongBox<{t}>(); var z = Log(b.Value {op} r); return $\"({{b.Value}},{{z}})\"; }}");
-            var f3 = Compile<Func<T, R, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(a[0] {op} r); return $\"({{a[0]}},{{z}})\"; }}");
-            var f4 = Compile<Func<T, R, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
-            var f5 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
-            var f6 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, R, string>>($"(x, r) => {{ var b = new WeakBox<{t}>(); var z = Log(b.Value {op} r); return $\"({{b.Value}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, R, string>>($"(x, r) => {{ var a = new {t}[1]; a[0] = x; var z = Log(a[0] {op} r); return $\"({{a[0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, R, string>>($"(x, r) => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(a[0, 0] {op} r); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(l[0] {op} r); return $\"({{l[0]}},{{z}})\"; }}");
+            var f7 = Compile<Func<T, R, string>>($"(x, r) => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(l[index: 0] {op} r); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f8 = Compile<Func<T, R, string>>($"(x, r) => {{ var b = new WeakBox<{t}>(); var z = Log(b[0] {op} r); return $\"({{b[0]}},{{z}})\"; }}");
 
-            return f1 + f2 + f3 + f4 + f5 + f6;
+            return f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8;
         }
 
         #endregion
@@ -3186,12 +3194,13 @@ exit:
 
             var f1 = Compile<Func<T, string>>($"x => {{ var y = x; var z = Log({pre}y{post}); return $\"({{y}},{{z}})\"; }}");
             var f2 = Compile<Func<T, string>>($"x => {{ var b = new StrongBox<{t}>(); var z = Log({pre}b.Value{post}); return $\"({{b.Value}},{{z}})\"; }}");
-            var f3 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1]; a[0] = x; var z = Log({pre}a[0]{post}); return $\"({{a[0]}},{{z}})\"; }}");
-            var f4 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log({pre}a[0, 0]{post}); return $\"({{a[0, 0]}},{{z}})\"; }}");
-            var f5 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log({pre}l[0]{post}); return $\"({{l[0]}},{{z}})\"; }}");
-            var f6 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log({pre}l[index: 0]{post}); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, string>>($"x => {{ var b = new WeakBox<{t}>(); var z = Log({pre}b.Value{post}); return $\"({{b.Value}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1]; a[0] = x; var z = Log({pre}a[0]{post}); return $\"({{a[0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log({pre}a[0, 0]{post}); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log({pre}l[0]{post}); return $\"({{l[0]}},{{z}})\"; }}");
+            var f7 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log({pre}l[index: 0]{post}); return $\"({{l[index: 0]}},{{z}})\"; }}");
 
-            return f1 + f2 + f3 + f4 + f5 + f6;
+            return f1 + f2 + f3 + f4 + f5 + f6 + f7;
         }
 
         private Func<T, string> CrossCheck_UnaryPreAssignment_Checked_Core<T>(string op)
@@ -3210,12 +3219,13 @@ exit:
 
             var f1 = Compile<Func<T, string>>($"x => {{ var y = x; var z = Log(checked({pre}y{post})); return $\"({{y}},{{z}})\"; }}");
             var f2 = Compile<Func<T, string>>($"x => {{ var b = new StrongBox<{t}>(); var z = Log(checked({pre}b.Value{post})); return $\"({{b.Value}},{{z}})\"; }}");
-            var f3 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1]; a[0] = x; var z = Log(checked({pre}a[0]{post})); return $\"({{a[0]}},{{z}})\"; }}");
-            var f4 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(checked({pre}a[0, 0]{post})); return $\"({{a[0, 0]}},{{z}})\"; }}");
-            var f5 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(checked({pre}l[0]{post})); return $\"({{l[0]}},{{z}})\"; }}");
-            var f6 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(checked({pre}l[index: 0]{post})); return $\"({{l[index: 0]}},{{z}})\"; }}");
+            var f3 = Compile<Func<T, string>>($"x => {{ var b = new WeakBox<{t}>(); var z = Log(checked({pre}b.Value{post})); return $\"({{b.Value}},{{z}})\"; }}");
+            var f4 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1]; a[0] = x; var z = Log(checked({pre}a[0]{post})); return $\"({{a[0]}},{{z}})\"; }}");
+            var f5 = Compile<Func<T, string>>($"x => {{ var a = new {t}[1, 1]; a[0, 0] = x; var z = Log(checked({pre}a[0, 0]{post})); return $\"({{a[0, 0]}},{{z}})\"; }}");
+            var f6 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[0] = x; var z = Log(checked({pre}l[0]{post})); return $\"({{l[0]}},{{z}})\"; }}");
+            var f7 = Compile<Func<T, string>>($"x => {{ var l = new List<{t}> {{ default({t}) }}; l[index: 0] = x; var z = Log(checked({pre}l[index: 0]{post})); return $\"({{l[index: 0]}},{{z}})\"; }}");
 
-            return f1 + f2 + f3 + f4 + f5 + f6;
+            return f1 + f2 + f3 + f4 + f5 + f6 + f7;
         }
 
         #endregion

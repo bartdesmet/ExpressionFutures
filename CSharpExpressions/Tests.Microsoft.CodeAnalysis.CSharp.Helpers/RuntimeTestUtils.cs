@@ -5,7 +5,6 @@
 // NB: These get included in the runtime compilations of snippets to evaluate using Roslyn.
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
