@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -2735,7 +2736,7 @@ exit:
         [TestMethod]
         public void CrossCheck_CompoundAssignment_Integral()
         {
-            foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" })
+            Parallel.ForEach(new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" }, op =>
             {
                 CrossCheck_CompoundAssignment_Core<byte>(op)(43, 3);
                 CrossCheck_CompoundAssignment_Core<sbyte>(op)(43, 3);
@@ -2745,13 +2746,13 @@ exit:
                 CrossCheck_CompoundAssignment_Core<int>(op)(43, 3);
                 CrossCheck_CompoundAssignment_Core<ulong>(op)(43UL, 3);
                 CrossCheck_CompoundAssignment_Core<long>(op)(43L, 3);
-            }
+            });
         }
 
         [TestMethod]
         public void CrossCheck_CompoundAssignment_Integral_Nullable()
         {
-            foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" })
+            Parallel.ForEach(new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" }, op =>
             {
                 var f1 = CrossCheck_CompoundAssignment_Core<byte?>(op);
                 var f2 = CrossCheck_CompoundAssignment_Core<sbyte?>(op);
@@ -2788,7 +2789,7 @@ exit:
                 f6(null, 3);
                 f7(null, 3);
                 f8(null, 3);
-            }
+            });
         }
 
         [TestMethod]
@@ -2830,18 +2831,18 @@ exit:
         [TestMethod]
         public void CrossCheck_CompoundAssignment_Float()
         {
-            foreach (var op in new[] { "+=", "-=", "*=", "/=", "%=" })
+            Parallel.ForEach(new[] { "+=", "-=", "*=", "/=", "%=" }, op =>
             {
                 CrossCheck_CompoundAssignment_Core<float>(op)(42.0f, 3);
                 CrossCheck_CompoundAssignment_Core<double>(op)(42.0d, 3);
                 CrossCheck_CompoundAssignment_Core<decimal>(op)(42.0m, 3);
-            }
+            });
         }
 
         [TestMethod]
         public void CrossCheck_CompoundAssignment_Boolean()
         {
-            foreach (var op in new[] { "&=", "|=", "^=" })
+            Parallel.ForEach(new[] { "&=", "|=", "^=" }, op =>
             {
                 var f = CrossCheck_CompoundAssignment_Core<bool>(op);
 
@@ -2852,19 +2853,19 @@ exit:
                         f(b1, b2);
                     }
                 }
-            }
+            });
         }
 
         [TestMethod]
         public void CrossCheck_CompoundAssignment_Shift()
         {
-            foreach (var op in new[] { "<<=", ">>=" })
+            Parallel.ForEach(new[] { "<<=", ">>=" }, op =>
             {
                 CrossCheck_CompoundAssignment_Core<int, int>(op)(42, 1);
                 CrossCheck_CompoundAssignment_Core<uint, int>(op)(42, 1);
                 CrossCheck_CompoundAssignment_Core<long, int>(op)(42, 1);
                 CrossCheck_CompoundAssignment_Core<ulong, int>(op)(42, 1);
-            }
+            });
         }
 
         [TestMethod]
@@ -3049,7 +3050,7 @@ exit:
         [TestMethod]
         public void CrossCheck_UnaryAssignment_Integral()
         {
-            foreach (var op in new[] { "++", "--" })
+            Parallel.ForEach(new[] { "++", "--" }, op =>
             {
                 CrossCheck_UnaryPreAssignment_Core<byte>(op)(43);
                 CrossCheck_UnaryPreAssignment_Core<sbyte>(op)(43);
@@ -3068,13 +3069,13 @@ exit:
                 CrossCheck_UnaryPostAssignment_Core<int>(op)(43);
                 CrossCheck_UnaryPostAssignment_Core<ulong>(op)(43UL);
                 CrossCheck_UnaryPostAssignment_Core<long>(op)(43L);
-            }
+            });
         }
 
         [TestMethod]
         public void CrossCheck_UnaryAssignment_Integral_Nullable()
         {
-            foreach (var op in new[] { "++", "--" })
+            Parallel.ForEach(new[] { "++", "--" }, op =>
             {
                 {
                     var f1 = CrossCheck_UnaryPreAssignment_Core<byte?>(op);
@@ -3133,7 +3134,7 @@ exit:
                     f7(null);
                     f8(null);
                 }
-            }
+            });
         }
 
         [TestMethod]
@@ -3167,7 +3168,7 @@ exit:
         [TestMethod]
         public void CrossCheck_UnaryAssignment_Float()
         {
-            foreach (var op in new[] { "++", "--" })
+            Parallel.ForEach(new[] { "++", "--" }, op =>
             {
                 CrossCheck_UnaryPreAssignment_Core<float>(op)(42.0f);
                 CrossCheck_UnaryPreAssignment_Core<double>(op)(42.0d);
@@ -3176,7 +3177,7 @@ exit:
                 CrossCheck_UnaryPostAssignment_Core<float>(op)(42.0f);
                 CrossCheck_UnaryPostAssignment_Core<double>(op)(42.0d);
                 CrossCheck_UnaryPostAssignment_Core<decimal>(op)(42.0m);
-            }
+            });
         }
 
         [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
