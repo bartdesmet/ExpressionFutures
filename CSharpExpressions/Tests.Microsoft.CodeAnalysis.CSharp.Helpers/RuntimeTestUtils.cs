@@ -50,6 +50,11 @@ public static class Utils
     {
         return x + y.Length + (z ? 1 : 0);
     }
+
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
 }
 
 public class NamedAndOptionalParameters

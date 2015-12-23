@@ -2651,7 +2651,7 @@ exit:
         }
 
         [TestMethod]
-        public void CrossCheck_Async_Spilling()
+        public void CrossCheck_Async_Spilling_Binary()
         {
             var f = Compile<Func<int>>(@"() =>
 {
@@ -2660,6 +2660,103 @@ exit:
         Log(""A"");
     
         var res = Return(1) + await Task.FromResult(Return(41));
+    
+        Log(""B"");
+    
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_Call()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var res = Utils.Add(Return(1), await Task.FromResult(Return(41)));
+    
+        Log(""B"");
+    
+        return res;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_New()
+        {
+            var f = Compile<Func<long>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var res = new TimeSpan(Return(1983), await Task.FromResult(Return(2)), Return(11));
+    
+        Log(""B"");
+    
+        return res.Ticks;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_NewArrayInit()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var res = new int[] { Return(1), await Task.FromResult(Return(2)) };
+    
+        Log(""B"");
+    
+        return res[0];
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_NewArrayBounds()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var res = new int[Return(1), await Task.FromResult(Return(2))];
+        res[0, 1] = 42;
+    
+        Log(""B"");
+    
+        return res[0, 1];
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_Index()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var arr = new int[3, 3] { { 40, 41, 42 }, { 43, 44, 45 }, { 46, 47, 48 } };
+        var res = arr[Return(1), await Task.FromResult(Return(2))];
     
         Log(""B"");
     
