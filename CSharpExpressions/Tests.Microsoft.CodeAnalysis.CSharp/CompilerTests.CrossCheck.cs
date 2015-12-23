@@ -2257,8 +2257,6 @@ exit:
 
         #region Async
 
-        // TODO: await in filter
-        // TODO: various await pattern implementations
         // TODO: await with spilling of by-ref locals (known limitation)
         // TODO: more stack spilling cases
         // TODO: dynamic await
@@ -2319,6 +2317,146 @@ exit:
     });
 }");
             f();
+        }
+
+        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
+        [TestMethod]
+        public void CrossCheck_Async_AwaitPatterns_Void()
+        {
+            foreach (var result in new[]
+            {
+                "new AwaitResult(AwaitTiming.Synchronous)",
+                "new AwaitResult(AwaitTiming.Asynchronous)",
+                "new AwaitResult(AwaitTiming.Racing)",
+            })
+            {
+                foreach (var expr in new[]
+                {
+                    $"new AwaitableClassWithAwaiterClass({result})",
+                    $"new AwaitableClassWithAwaiterStruct({result})",
+                    $"new AwaitableStructWithAwaiterClass({result})",
+                    $"new AwaitableStructWithAwaiterStruct({result})",
+                })
+                {
+                    var f = Compile<Action>($@"() =>
+{{
+    AwaitVoid(async () =>
+    {{
+        Log(""before"");
+    
+        await {expr};
+    
+        Log(""after"");
+    }});
+}}");
+                    f();
+                }
+            }
+        }
+
+        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
+        [TestMethod]
+        public void CrossCheck_Async_AwaitPatterns_Void_Throws()
+        {
+            foreach (var result in new[]
+            {
+                "new AwaitResult(AwaitTiming.Synchronous, new DivideByZeroException())",
+                "new AwaitResult(AwaitTiming.Asynchronous, new DivideByZeroException())",
+                "new AwaitResult(AwaitTiming.Racing, new DivideByZeroException())",
+            })
+            {
+                foreach (var expr in new[]
+                {
+                    $"new AwaitableClassWithAwaiterClass({result})",
+                    $"new AwaitableClassWithAwaiterStruct({result})",
+                    $"new AwaitableStructWithAwaiterClass({result})",
+                    $"new AwaitableStructWithAwaiterStruct({result})",
+                })
+                {
+                    var f = Compile<Action>($@"() =>
+{{
+    AwaitVoid(async () =>
+    {{
+        Log(""before"");
+    
+        await {expr};
+    
+        Log(""after"");
+    }});
+}}");
+                    AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
+                }
+            }
+        }
+
+        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
+        [TestMethod]
+        public void CrossCheck_Async_AwaitPatterns_NonVoid()
+        {
+            foreach (var result in new[]
+            {
+                "new AwaitResult<int>(AwaitTiming.Synchronous, 42)",
+                "new AwaitResult<int>(AwaitTiming.Asynchronous, 42)",
+                "new AwaitResult<int>(AwaitTiming.Racing, 42)",
+            })
+            {
+                foreach (var expr in new[]
+                {
+                    $"new AwaitableClassWithAwaiterClass<int>({result})",
+                    $"new AwaitableClassWithAwaiterStruct<int>({result})",
+                    $"new AwaitableStructWithAwaiterClass<int>({result})",
+                    $"new AwaitableStructWithAwaiterStruct<int>({result})",
+                })
+                {
+                    var f = Compile<Func<int>>($@"() =>
+{{
+    return Await(async () =>
+    {{
+        Log(""before"");
+    
+        await {expr};
+    
+        Log(""after"");
+    }});
+}}");
+                    f();
+                }
+            }
+        }
+
+        [Ignore] // BUG: issue with optional parameters in our Roslyn fork
+        [TestMethod]
+        public void CrossCheck_Async_AwaitPatterns_NonVoid_Throws()
+        {
+            foreach (var result in new[]
+            {
+                "new AwaitResult<int>(AwaitTiming.Synchronous, error: new DivideByZeroException())",
+                "new AwaitResult<int>(AwaitTiming.Asynchronous, error: new DivideByZeroException())",
+                "new AwaitResult<int>(AwaitTiming.Racing, error: new DivideByZeroException())",
+            })
+            {
+                foreach (var expr in new[]
+                {
+                    $"new AwaitableClassWithAwaiterClass<int>({result})",
+                    $"new AwaitableClassWithAwaiterStruct<int>({result})",
+                    $"new AwaitableStructWithAwaiterClass<int>({result})",
+                    $"new AwaitableStructWithAwaiterStruct<int>({result})",
+                })
+                {
+                    var f = Compile<Func<int>>($@"() =>
+{{
+    return Await(async () =>
+    {{
+        Log(""before"");
+    
+        await {expr};
+    
+        Log(""after"");
+    }});
+}}");
+                    AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
+                }
+            }
         }
 
         [TestMethod]
@@ -2631,6 +2769,173 @@ exit:
     });
 }");
             AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
+        }
+
+        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
+        [TestMethod]
+        public void CrossCheck_Async_TryCatchWhen_AwaitInTry()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""after await"");
+        }
+        catch (DivideByZeroException) when (Return(b))
+        {
+            Log(""in catch"");
+        }
+        finally
+        {
+            Log(""finally"");
+        }
+
+        return res;
+    });
+}");
+            f(true);
+            AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
+        }
+
+        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
+        [TestMethod]
+        public void CrossCheck_Async_TryCatchWhen_AwaitInTry_Throws()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            res = Return(1) / (Return(42) - await Task.FromResult(Return(42)));
+
+            Log(""after await"");
+        }
+        catch (DivideByZeroException) when (Return(b))
+        {
+            Log(""in catch"");
+        }
+        finally
+        {
+            Log(""finally"");
+        }
+
+        return res;
+    });
+}");
+            f(true);
+            AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
+        }
+
+        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
+        [TestMethod]
+        public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+        }
+        catch (DivideByZeroException) when (Return(b))
+        {
+            Log(""enter catch"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""exit catch"");
+        }
+
+        return res;
+    });
+}");
+            f(true);
+            f(false);
+        }
+
+        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
+        [TestMethod]
+        public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen_Throws()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            throw new DivideByZeroException();
+        }
+        catch (DivideByZeroException) when (Return(b))
+        {
+            Log(""enter catch"");
+
+            res = await Task.FromResult(Return(42));
+
+            Log(""exit catch"");
+        }
+
+        return res;
+    });
+}");
+            f(true);
+            AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
+        }
+
+        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
+        [TestMethod]
+        public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen_Rethrow()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    return Await(async () =>
+    {
+        Log(""before try"");
+    
+        var res = default(int);
+        try
+        {
+            Log(""in try"");
+
+            throw new DivideByZeroException();
+        }
+        catch (DivideByZeroException) when (Return(b))
+        {
+            Log(""enter catch"");
+
+            res = await Task.FromResult(Return(42));
+
+            throw;
+        }
+
+        return res;
+    });
+}");
+            AssertEx.Throws<AggregateException>(() => f(true), a => a.InnerException is DivideByZeroException);
+            AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
         [TestMethod]

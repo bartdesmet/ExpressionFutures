@@ -1,0 +1,132 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - December 2015
+
+// NB: These get included in the runtime compilations of snippets to evaluate using Roslyn.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
+<#
+foreach (var gen in new[] { false, true })
+{
+    var genSuf = gen ? "<T>" : "";
+    var res = gen ? "T" : "void";
+    var arg = "AwaitResult" + genSuf;
+
+    foreach (var t1 in new[] { "class", "struct" })
+    {
+        var T1 = t1 == "class" ? "Class" : "Struct";
+
+        foreach (var t2 in new[] { "class", "struct" })
+        {
+            var T2 = t2 == "class" ? "Class" : "Struct";
+#>
+public <#=t1#> Awaitable<#=T1#>WithAwaiter<#=T2#><#=genSuf#>
+{
+    private readonly <#=arg#> _result;
+
+    public Awaitable<#=T1#>WithAwaiter<#=T2#>(<#=arg#> result)
+    {
+        _result = result;
+    }
+
+    public Awaiter<#=T2#><#=genSuf#> GetAwaiter()
+    {
+        return new Awaiter<#=T2#><#=genSuf#>(_result);
+    }
+}
+
+<#
+        }
+    }
+
+    foreach (var t2 in new[] { "class", "struct" })
+    {
+        var T2 = t2 == "class" ? "Class" : "Struct";
+#>
+public <#=t2#> Awaiter<#=T2#><#=genSuf#> : INotifyCompletion
+{
+    private readonly <#=arg#> _result;
+
+    public Awaiter<#=T2#>(<#=arg#> result)
+    {
+        _result = result;
+    }
+
+    public bool IsCompleted => _result.IsCompleted;
+    public <#=res#> GetResult() => _result.GetResult();
+    public void OnCompleted(Action continuation) => _result.OnCompleted(continuation);
+}
+
+<#
+    }
+}
+#>
+public class AwaitResult
+{
+    public AwaitResult(AwaitTiming timing, Exception error = null)
+    {
+        Timing = timing;
+        Error = error;
+    }
+
+    public AwaitTiming Timing { get; }
+    public Exception Error { get; }
+    
+    public bool IsCompleted => Timing == AwaitTiming.Synchronous;
+
+    public void OnCompleted(Action continuation)
+    {
+        switch (Timing)
+        {
+            case AwaitTiming.Synchronous:
+            case AwaitTiming.Racing:
+                continuation();
+                break;
+            case AwaitTiming.Asynchronous:
+                Task.Run(continuation);
+                break;
+        }
+    }
+
+    public void GetResult()
+    {
+        if (Error != null)
+            throw Error;
+    }
+}
+
+public class AwaitResult<T> : AwaitResult
+{
+    public AwaitResult(AwaitTiming timing, T result = default(T), Exception error = null)
+        : base(timing, error)
+    {
+        Result = result;
+    }
+
+    public T Result { get; }
+
+    public new T GetResult()
+    {
+        if (Error != null)
+            throw Error;
+
+        return Result;
+    }
+}
+
+
+public enum AwaitTiming
+{
+    Synchronous,
+    Asynchronous,
+    Racing,
+}

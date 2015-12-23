@@ -332,6 +332,11 @@ public static class {typeName}
         return f().Result;
     }}
 
+    public static void AwaitVoid(Func<Task> f)
+    {{
+        f().Wait();
+    }}
+
     {exprProp}
     {funcProp}
 }}
