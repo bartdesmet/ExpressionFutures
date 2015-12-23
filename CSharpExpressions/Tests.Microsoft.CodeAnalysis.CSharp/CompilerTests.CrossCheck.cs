@@ -2416,7 +2416,6 @@ exit:
 
         // TODO: await with spilling of by-ref locals (known limitation)
         // TODO: more stack spilling cases
-        // TODO: branching
 
         [TestMethod]
         public void CrossCheck_Async_AwaitVoid()
@@ -3662,6 +3661,40 @@ exit:
             foreach (var t in new[] { false, true })
                 foreach (var b in new[] { 0, 1, 2 })
                     f(t, b);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Goto()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        await Task.Yield();
+
+        var i = 0;
+
+    B:
+        if (i < 10)
+        {
+            Log(""B"");
+            await Task.Yield();
+        }
+        else
+        {
+            goto E;
+        }
+
+        i++;
+        goto B;
+
+    E:
+        Log(""C"");
+        await Task.Yield();
+    });
+}");
+            f();
         }
 
         #endregion
