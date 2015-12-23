@@ -3382,6 +3382,164 @@ exit:
         }
 
         [TestMethod]
+        public void CrossCheck_Async_TryFinally_BranchPending_SyncTry()
+        {
+            var f = Compile<Func<int, int>>(@"(int b) =>
+{
+    return Await(async () =>
+    {
+        try
+        {
+            Log(""A"");
+
+            try
+            {
+                Log(""B"");
+
+                switch (b)
+                {
+                    case 1:
+                        goto L1;
+                    case 2:
+                        goto L2;
+                }
+            }
+            finally
+            {
+                Log(""C"");
+            }
+
+        L1:
+            Log(""D"");
+        }
+        finally
+        {
+            Log(""E"");
+            await Task.Yield();
+        }
+
+        Log(""F"");
+        await Task.Yield();
+
+    L2:
+        Log(""G"");
+        await Task.Yield();
+
+        return 42;
+    });
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_BranchPending_SyncFinally()
+        {
+            var f = Compile<Func<int, int>>(@"(int b) =>
+{
+    return Await(async () =>
+    {
+        try
+        {
+            Log(""A"");
+            await Task.Yield();
+
+            try
+            {
+                Log(""B"");
+                await Task.Yield();
+
+                switch (b)
+                {
+                    case 1:
+                        goto L1;
+                    case 2:
+                        goto L2;
+                }
+            }
+            finally
+            {
+                Log(""C"");
+            }
+
+        L1:
+            Log(""D"");
+            await Task.Yield();
+        }
+        finally
+        {
+            Log(""E"");
+            await Task.Yield();
+        }
+
+        Log(""F"");
+        await Task.Yield();
+
+    L2:
+        Log(""G"");
+        await Task.Yield();
+
+        return 42;
+    });
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_BranchPending_Return()
+        {
+            var f = Compile<Func<int, int>>(@"(int b) =>
+{
+    return Await(async () =>
+    {
+        try
+        {
+            Log(""A"");
+            await Task.Yield();
+
+            try
+            {
+                Log(""B"");
+                await Task.Yield();
+
+                switch (b)
+                {
+                    case 1:
+                        return 42;
+                    case 2:
+                        return 43;
+                }
+            }
+            finally
+            {
+                Log(""C"");
+                await Task.Yield();
+            }
+
+            Log(""D"");
+            await Task.Yield();
+        }
+        finally
+        {
+            Log(""E"");
+            await Task.Yield();
+        }
+
+        Log(""F"");
+        await Task.Yield();
+
+        return -1;
+    });
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
+        [TestMethod]
         public void CrossCheck_Async_TryCatch_BranchPending()
         {
             var f = Compile<Func<bool, int, int>>(@"(bool t, int b) =>
@@ -3439,6 +3597,66 @@ exit:
         await Task.Yield();
 
         return 42;
+    });
+}");
+            foreach (var t in new[] { false, true })
+                foreach (var b in new[] { 0, 1, 2 })
+                    f(t, b);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_BranchPending_Return()
+        {
+            var f = Compile<Func<bool, int, int>>(@"(bool t, int b) =>
+{
+    return Await(async () =>
+    {
+        try
+        {
+            Log(""A"");
+            await Task.Yield();
+
+            try
+            {
+                Log(""B"");
+                await Task.Yield();
+
+                if (t)
+                    throw new Exception(""Oops!"");
+            }
+            catch (Exception ex)
+            {
+                Log(""C"");
+                Log(ex.Message);
+                await Task.Yield();
+
+                switch (b)
+                {
+                    case 1:
+                        return 42;
+                    case 2:
+                        return 43;
+                }
+            }
+            finally
+            {
+                Log(""D"");
+                await Task.Yield();
+            }
+
+            Log(""E"");
+            await Task.Yield();
+        }
+        finally
+        {
+            Log(""F"");
+            await Task.Yield();
+        }
+
+        Log(""G"");
+        await Task.Yield();
+
+        return -1;
     });
 }");
             foreach (var t in new[] { false, true })
