@@ -45,6 +45,11 @@ public static class Utils
         log($"{typeof(T)} with string s = {s}");
         return null;
     }
+
+    public static int OptionalParams(int x = 42, string y = "bar", bool z = true)
+    {
+        return x + y.Length + (z ? 1 : 0);
+    }
 }
 
 public class Conditional : IEquatable<Conditional>

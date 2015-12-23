@@ -317,7 +317,36 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Optional parameters
 
-        // TODO
+        // TODO: more cases
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters1()
+        {
+            var f1 = Compile<Func<int>>("() => Utils.OptionalParams()");
+            f1();
+
+            var f2 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43))");
+            f2();
+
+            var f3 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), Return(\"foobar\"))");
+            f3();
+
+            var f4 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), Return(\"foobar\"), Return(false))");
+            f4();
+        }
+
+        [TestMethod]
+        public void CrossCheck_OptionalParameters2()
+        {
+            var f1 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), y: Return(\"foobar\"))");
+            f1();
+
+            var f2 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), z: Return(false))");
+            f2();
+
+            var f3 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), Return(\"foobar\"), z: Return(false))");
+            f3();
+        }
 
         #endregion
 
