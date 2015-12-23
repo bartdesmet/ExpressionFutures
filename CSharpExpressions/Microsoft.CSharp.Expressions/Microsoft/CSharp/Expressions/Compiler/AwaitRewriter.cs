@@ -180,11 +180,17 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 var beforeTry = Expression.Label("__enterTry");
                 var enterTry = Expression.Goto(beforeTry);
 
-                var previousTable = _jumpTables.Peek();
-                foreach (var jump in table)
+                if (table.Count > 0)
                 {
-                    var index = (int)((ConstantExpression)jump.TestValues.Single()).Value; // TODO: keep different data structure to avoid casts?
-                    previousTable.Add(Expression.SwitchCase(enterTry, Helpers.CreateConstantInt32(index)));
+                    var states = new List<Expression>();
+                    foreach (var jump in table)
+                    {
+                        var indexes = jump.TestValues;
+                        states.AddRange(indexes);
+                    }
+
+                    var previousTable = _jumpTables.Peek();
+                    previousTable.Add(Expression.SwitchCase(enterTry, states));
                 }
 
                 res = Expression.Block(
