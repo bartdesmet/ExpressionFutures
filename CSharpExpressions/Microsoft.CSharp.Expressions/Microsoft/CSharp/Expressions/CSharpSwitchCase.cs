@@ -13,6 +13,10 @@ using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    // DESIGN: With the C# 7.0 proposal for pattern matching, it may make more sense to
+    //         represent test values as expressions rather than objects. This also impacts
+    //         our `goto case` support. See https://github.com/dotnet/roslyn/issues/5757.
+
     // TODO: Could possibly have optimized layouts for some governing types?
 
     /// <summary>
