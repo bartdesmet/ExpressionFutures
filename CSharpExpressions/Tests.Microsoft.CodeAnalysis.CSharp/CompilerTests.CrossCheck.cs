@@ -40,6 +40,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_ParamsArray()
+        {
+            var f = Compile<Func<string>>("() => string.Format(\"{0},{1},{2}\", 42, true, \"bar\")");
+            f();
+        }
+
         #endregion
 
         #region Multi-dimensional array initializers
@@ -305,6 +312,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<int>(17));
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
+
+        #endregion
+
+        #region Optional parameters
+
+        // TODO
 
         #endregion
 
