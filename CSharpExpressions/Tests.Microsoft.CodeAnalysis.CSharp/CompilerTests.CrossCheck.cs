@@ -1759,9 +1759,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Try/Throw
 
-        // TODO: multiply catch blocks
-        // TODO: catch all
-
         [TestMethod]
         public void CrossCheck_TryFinally()
         {
@@ -1824,6 +1821,77 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
+        public void CrossCheck_TryCatchAll()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        if (b)
+        {
+            Log(""throw"");
+            throw new DivideByZeroException();
+        }
+
+        Log(""leave"");
+    }
+    catch
+    {
+        Log(""catch"");
+    }
+
+    Log(""end"");
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_TryCatchMany()
+        {
+            var f = Compile<Action<int>>(@"i =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        switch (i)
+        {
+            case 0:
+                Log(""throw DBZ"");
+                throw new DivideByZeroException();
+            case 1:
+                Log(""throw OVF"");
+                throw new OverflowException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex)
+    {
+        Log(""catch DBZ"");
+        Log(ex.Message);
+    }
+    catch (OverflowException ex)
+    {
+        Log(""catch OVF"");
+        Log(ex.Message);
+    }
+
+    Log(""end"");
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
+        [TestMethod]
         public void CrossCheck_TryCatchFinally()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -1856,6 +1924,51 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f(false);
             f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_TryCatchManyFinally()
+        {
+            var f = Compile<Action<int>>(@"i =>
+{
+    Log(""begin"");
+
+    try
+    {
+        Log(""try"");
+
+        switch (i)
+        {
+            case 0:
+                Log(""throw DBZ"");
+                throw new DivideByZeroException();
+            case 1:
+                Log(""throw OVF"");
+                throw new OverflowException();
+        }
+
+        Log(""leave"");
+    }
+    catch (DivideByZeroException ex)
+    {
+        Log(""catch DBZ"");
+        Log(ex.Message);
+    }
+    catch (OverflowException ex)
+    {
+        Log(""catch OVF"");
+        Log(ex.Message);
+    }
+    finally
+    {
+        Log(""finally"");
+    }
+
+    Log(""end"");
+}");
+            f(0);
+            f(1);
+            f(2);
         }
 
         [TestMethod]
