@@ -84,8 +84,8 @@ namespace Tests
             Assert.AreEqual(dbg4, expr4.DebugView().ToString());
         }
 
-        private Expression expr5 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object));
-        private string dbg5 = <#=toEscapedString(DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object)).DebugView())#>;
+        private Expression expr5 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object));
+        private string dbg5 = <#=toEscapedString(DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object)).DebugView())#>;
 
         [TestMethod]
         public void CSharp_DebugView_Test5()

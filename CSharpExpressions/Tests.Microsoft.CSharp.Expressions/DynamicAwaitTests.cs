@@ -17,7 +17,8 @@ namespace Tests
         public void DynamicAwait_Factory_ArgumentChecking()
         {
             AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), typeof(DynamicAwaitTests)));
+            AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), false));
+            AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), false, typeof(DynamicAwaitTests)));
         }
 
         [TestMethod]
@@ -27,6 +28,18 @@ namespace Tests
             var expr = DynamicCSharpExpression.DynamicAwait(e);
             Assert.AreEqual(CSharpExpressionType.Await, expr.CSharpNodeType);
             Assert.AreSame(e, expr.Operand);
+            Assert.AreEqual(typeof(object), expr.Type);
+            Assert.IsNull(expr.GetAwaiterMethod);
+        }
+
+        [TestMethod]
+        public void DynamicAwait_Properties_Void()
+        {
+            var e = Expression.Default(typeof(Task));
+            var expr = DynamicCSharpExpression.DynamicAwait(e, true);
+            Assert.AreEqual(CSharpExpressionType.Await, expr.CSharpNodeType);
+            Assert.AreSame(e, expr.Operand);
+            Assert.AreEqual(typeof(void), expr.Type);
             Assert.IsNull(expr.GetAwaiterMethod);
         }
 

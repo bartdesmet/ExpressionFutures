@@ -26,7 +26,7 @@ var exprs = new string[]
 	"Expression.ArrayAccess(CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42)), Expression.Constant(0), Expression.Constant(0))",
 
 	"CSharpExpression.Await(Expression.Default(typeof(Task<int>)))",
-    "DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object))",
+    "DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object))",
     "CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(Expression.Default(typeof(Task<int>))))",
 	"CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(typeof(int), CSharpExpression.Await(Expression.Default(typeof(Task<int>)))))",
 	"CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Block(new[] { CSharpExpression.Await(Expression.Default(typeof(Task<int>))) }, _lbl3))",

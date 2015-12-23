@@ -18,7 +18,7 @@ var exprs = new string[]
     "CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42))",
 
     "CSharpExpression.Await(Expression.Default(typeof(Task<int>)))",
-    "DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object))",
+    "DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object))",
     "CSharpExpression.AsyncLambda<Func<Task<int>>>(CSharpExpression.Await(Expression.Default(typeof(Task<int>))))",
     
     "CSharpExpression.Call(typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }), CSharpExpression.Bind(typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }).GetParameters()[0], Expression.Constant(42)))",

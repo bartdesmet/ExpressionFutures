@@ -89,7 +89,7 @@ namespace Tests
             Assert.AreEqual(dbg4, expr4.DebugView().ToString());
         }
 
-        private Expression expr5 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object));
+        private Expression expr5 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object));
         private string dbg5 = @"<CSharpAwait Type=""System.Object"" IsDynamic=""true"" Context=""System.Object"">
   <Operand>
     <Default Type=""System.Threading.Tasks.Task`1[System.Int32]"" />

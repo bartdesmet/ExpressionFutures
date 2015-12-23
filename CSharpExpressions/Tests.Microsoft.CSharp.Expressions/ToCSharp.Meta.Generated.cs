@@ -138,7 +138,7 @@ namespace Tests
             Assert.AreEqual(dbg11, expr11.ToCSharp());
         }
 
-        private Expression expr12 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), typeof(object));
+        private Expression expr12 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object));
         private string dbg12 = @"await default(Task<int>)";
 
         [TestMethod]
