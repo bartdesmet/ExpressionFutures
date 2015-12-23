@@ -1580,10 +1580,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Using
 
-        // TODO: multiple resources
-        // TODO: dynamic
-        // TODO: implicit conversions
-
         [TestMethod]
         public void CrossCheck_Using_Class1()
         {
@@ -1716,6 +1712,47 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     Log(""after"");
 }");
             f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Dynamic()
+        {
+            var f = Compile<Action<dynamic>>(@"(dynamic d) =>
+{
+    Log(""before"");
+
+    using (d)
+    {
+        Log(""body"");
+    }
+
+    Log(""after"");
+}");
+            f(new ResourceClass(_ => _));
+            f(new ResourceStruct(_ => _));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Using_Many()
+        {
+            var f = Compile<Action<bool, bool>>(@"(bool b1, bool b2) =>
+{
+    Log(""before"");
+
+    using (ResourceClass r1 = new ResourceClass(Log<string>), r2 = new ResourceClass(Log<string>))
+    {
+        Log(""begin"");
+        r1?.Do(b1);
+        r2?.Do(b2);
+        Log(""end"");
+    }
+
+    Log(""after"");
+}");
+            f(false, false);
+            AssertEx.Throws<DivideByZeroException>(() => f(true, false));
+            AssertEx.Throws<DivideByZeroException>(() => f(false, true));
+            AssertEx.Throws<DivideByZeroException>(() => f(true, true));
         }
 
         #endregion
