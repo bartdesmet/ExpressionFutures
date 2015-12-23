@@ -44,6 +44,7 @@ namespace Microsoft.CSharp.Expressions
                 if (args[i] == null)
                 {
                     var parameter = parameters[i];
+                    var parameterType = parameter.ParameterType;
 
                     // REVIEW: It seems this can occur when a generic parameter has a default
                     //         value of as default(T). Check whether this only applies to
@@ -52,12 +53,87 @@ namespace Microsoft.CSharp.Expressions
 
                     if (parameter.DefaultValue == null)
                     {
-                        args[i] = Expression.Default(parameter.ParameterType);
+                        args[i] = Expression.Default(parameterType);
                     }
                     else
                     {
-                        args[i] = Expression.Constant(parameter.DefaultValue, parameter.ParameterType);
+                        args[i] = Expression.Constant(parameter.DefaultValue, parameterType);
                     }
+
+#if ENABLE_CALLERINFO
+
+                    // REVIEW: Should we support caller info attributes? Replacing the optional
+                    //         parameters at compile time doesn't make sense given there's no
+                    //         caller in an expression tree. Retrieving the information at runtime
+                    //         can be expensive and relies on debugging information to be present
+                    //         so it may not be as reliable. Furthermore, it is debatable what the
+                    //         `caller` is in this context; this is even true for delegates:
+                    //
+                    //           static void CallerInfo([CallerMemberName]string member = null) => Print(member);
+                    //           static Action A() => () => CallerInfo();
+                    //           static void Main() => A()();
+                    //
+                    //         In this case, the C# compiler will emit A as the member name, even
+                    //         though the caller is really the lambda (or anonymous method) that's
+                    //         kept in the delegate. This is more like the definition site rather
+                    //         than the call site, which is understandable given the syntactic site
+                    //         is the only thing the compiler has around to substitute the optional
+                    //         parameter. Retrieving the caller info for the expression equivalent
+                    //         of A at runtime doesn't have that lexical information available and
+                    //         would have to resort to using System.Diagnostics.StackTrace which
+                    //         will return lambda_method as the caller with no file and line info
+                    //         available. We could skip to the nearest non-LCG member in the call
+                    //         stack, but that's strange when nested lambdas are used. Either way,
+                    //         the notion of a `caller` as implemented by the C# compiler is not
+                    //         reconstructable at runtime.
+                    //
+                    //         Based on these observations, maybe filling in the definition site
+                    //         of the expression at compile time isn't that bad after all. But if
+                    //         so, should all optional parameters get filled in at (Roslyn) compile
+                    //         time? The deferred nature of expression compilation doesn't make this
+                    //         the most obvious choice; after all, the expression can be serialized
+                    //         and (runtime) compiled in a different space/time where the optional
+                    //         parameter values are different. It would be indistinguishable to the
+                    //         consumer of the tree that those parameters didn't get their argument
+                    //         values from the user, unless we add a flag to our ParameterAssignment
+                    //         to indicate it was an optional parameter that got filled in by the
+                    //         (Roslyn) compiler. Obviously there are other cases where the original
+                    //         user intent gets lost (e.g. the expanded form of a params argument),
+                    //         but omitting optional parameters from the expression tree seems not
+                    //         particularly bad, given we can get all information at runtime (to
+                    //         be checked in .NET Native) and runtime expression analyzers can get
+                    //         a clearer picture of the user intent.
+                    //
+                    //         Essentially, burning optional parameter default values at compile
+                    //         time is now ambiguous because we can have different compile stages.
+
+                    var callerInfoMethod = default(MethodInfo);
+
+                    if (parameter.IsDefined(typeof(CallerMemberNameAttribute)))
+                    {
+                        callerInfoMethod = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetCallerMemberName));
+                    }
+                    else if (parameter.IsDefined(typeof(CallerLineNumberAttribute)))
+                    {
+                        callerInfoMethod = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetCallerLineNumber));
+                    }
+                    else if (parameter.IsDefined(typeof(CallerFilePathAttribute)))
+                    {
+                        callerInfoMethod = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetCallerFilePath));
+                    }
+
+                    // REVIEW: The below only takes implicit conversions into account for the
+                    //         coalesce operations. Should we use a Convert expression to allow
+                    //         for user-defined conversions here as well? According to 17.4.4
+                    //         only standard implicit conversions are to be considered, so likely
+                    //         this suffices.
+
+                    if (callerInfoMethod != null)
+                    {
+                        args[i] = Expression.Coalesce(Expression.Call(callerInfoMethod), args[i]);
+                    }
+
+#endif
                 }
             }
         }

@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+using System.Diagnostics;
+
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
@@ -48,6 +50,45 @@ namespace System.Runtime.CompilerServices
         {
             return functionalOp(ref obj);
         }
+
+#if ENABLE_CALLERINFO
+
+        /// <summary>
+        /// Gets the caller member name.
+        /// </summary>
+        /// <returns>The caller member name, if found; otherwise, null.</returns>
+        public static string GetCallerMemberName()
+        {
+            return new StackTrace(1, true).GetFrame(0)?.GetMethod()?.Name;
+        }
+
+        /// <summary>
+        /// Gets the caller line number.
+        /// </summary>
+        /// <returns>The caller line number, if found; otherwise, null.</returns>
+        public static int? GetCallerLineNumber()
+        {
+            var line = new StackTrace(1, true).GetFrame(0)?.GetFileLineNumber();
+
+            // NB: Lines are one-based; if missing, 0 is returned.
+            if (line == 0)
+            {
+                line = null;
+            }
+
+            return line;
+        }
+
+        /// <summary>
+        /// Gets the caller file path.
+        /// </summary>
+        /// <returns>The caller file path, if found; otherwise, null.</returns>
+        public static string GetCallerFilePath()
+        {
+            return new StackTrace(1, true).GetFrame(0)?.GetFileName();
+        }
+
+#endif
     }
 
     /// <summary>
