@@ -3325,6 +3325,127 @@ exit:
             // TODO: add more cases
         }
 
+        [TestMethod]
+        public void CrossCheck_Async_TryFinally_BranchPending()
+        {
+            var f = Compile<Func<int, int>>(@"(int b) =>
+{
+    return Await(async () =>
+    {
+        try
+        {
+            Log(""A"");
+            await Task.Yield();
+
+            try
+            {
+                Log(""B"");
+                await Task.Yield();
+
+                switch (b)
+                {
+                    case 1:
+                        goto L1;
+                    case 2:
+                        goto L2;
+                }
+            }
+            finally
+            {
+                Log(""C"");
+                await Task.Yield();
+            }
+
+        L1:
+            Log(""D"");
+            await Task.Yield();
+        }
+        finally
+        {
+            Log(""E"");
+            await Task.Yield();
+        }
+
+        Log(""F"");
+        await Task.Yield();
+
+    L2:
+        Log(""G"");
+        await Task.Yield();
+
+        return 42;
+    });
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_TryCatch_BranchPending()
+        {
+            var f = Compile<Func<bool, int, int>>(@"(bool t, int b) =>
+{
+    return Await(async () =>
+    {
+        try
+        {
+            Log(""A"");
+            await Task.Yield();
+
+            try
+            {
+                Log(""B"");
+                await Task.Yield();
+
+                if (t)
+                    throw new Exception(""Oops!"");
+            }
+            catch (Exception ex)
+            {
+                Log(""C"");
+                Log(ex.Message);
+                await Task.Yield();
+
+                switch (b)
+                {
+                    case 1:
+                        goto L1;
+                    case 2:
+                        goto L2;
+                }
+            }
+            finally
+            {
+                Log(""D"");
+                await Task.Yield();
+            }
+
+        L1:
+            Log(""E"");
+            await Task.Yield();
+        }
+        finally
+        {
+            Log(""F"");
+            await Task.Yield();
+        }
+
+        Log(""G"");
+        await Task.Yield();
+
+    L2:
+        Log(""H"");
+        await Task.Yield();
+
+        return 42;
+    });
+}");
+            foreach (var t in new[] { false, true })
+                foreach (var b in new[] { 0, 1, 2 })
+                    f(t, b);
+        }
+
         #endregion
 
         #region Assignment
