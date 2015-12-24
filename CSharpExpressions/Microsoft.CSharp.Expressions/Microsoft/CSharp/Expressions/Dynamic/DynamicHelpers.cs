@@ -10,6 +10,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Runtime.CompilerServices;
+using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -32,7 +33,7 @@ namespace Microsoft.CSharp.Expressions
 
         public static Expression ReduceDynamicAssignment(DynamicCSharpArgument left, Func<Expression, Expression> functionalOp, CSharpBinderFlags flags, bool prefix = true)
         {
-            var lhs = left.Expression;
+            var lhs = MakeWriteable(left.Expression);
 
             var dynamicMember = lhs as GetMemberDynamicCSharpExpression;
             if (dynamicMember != null)

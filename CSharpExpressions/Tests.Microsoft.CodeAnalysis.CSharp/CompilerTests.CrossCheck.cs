@@ -5202,7 +5202,128 @@ exit:
 
         #region Compound assignment
 
-        // TODO
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Variable1()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic e) => { Log(d += Return(e)); return d; }");
+
+            f(41, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Variable2()
+        {
+            var f = Compile<Func<int, dynamic, dynamic>>("(int d, dynamic e) => { Log(d += Return(e)); return d; }");
+
+            f(41, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Variable3()
+        {
+            var f = Compile<Func<dynamic, int, dynamic>>("(dynamic d, int e) => { Log(d += Return(e)); return d; }");
+
+            f(41, 1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_ArrayIndex1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new[] { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_ArrayIndex2()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { int[] d = new[] { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_ArrayIndex3()
+        {
+            var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new[] { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Index1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new List<int> { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Index2()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { List<int> d = new List<int> { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Index3()
+        {
+            var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new List<int> { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_CSharpIndex1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new List<int> { 41 }; Log(d[index: Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_CSharpIndex2()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { List<int> d = new List<int> { 41 }; Log(d[index: Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_CSharpIndex3()
+        {
+            var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new List<int> { 41 }; Log(d[index: Return(0)] += Return(e)); return d[0]; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Member1()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new StrongBox<int> { Value = 41 }; Log(d.Value += Return(e)); return d.Value; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Member2()
+        {
+            var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { StrongBox<int> d = new StrongBox<int> { Value = 41 }; Log(d.Value += Return(e)); return d.Value; }");
+
+            f(1);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_CompoundAssign_Member3()
+        {
+            var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new StrongBox<int> { Value = 41 }; Log(d.Value += Return(e)); return d.Value; }");
+
+            f(1);
+        }
+
+        // TODO: all operator kinds
+        // TODO: checked variations
         // TODO: event handlers
 
         #endregion
@@ -5210,6 +5331,7 @@ exit:
         #region Unary increment/decrement
 
         // TODO
+        // TODO: checked variations
 
         #endregion
 
