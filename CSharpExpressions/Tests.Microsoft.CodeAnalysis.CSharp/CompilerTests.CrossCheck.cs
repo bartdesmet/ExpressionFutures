@@ -4410,8 +4410,6 @@ exit:
         #region Dynamic
 
         // TODO: with compile-time constants
-        // TODO: assignments
-        // TODO: event handlers
         // TODO: index, invoke, new with ref/out parameters
 
         #region Unary
@@ -5169,6 +5167,25 @@ exit:
             f(42L);
             AssertEx.Throws<OverflowException>(() => f(int.MaxValue + 1L));
         }
+
+        #endregion
+
+        #region Assignment
+
+        // TODO: assignments
+
+        #endregion
+
+        #region Compound assignment
+
+        // TODO
+        // TODO: event handlers
+
+        #endregion
+
+        #region Unary increment/decrement
+
+        // TODO
 
         #endregion
 
