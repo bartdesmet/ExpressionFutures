@@ -5426,7 +5426,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Our modified Roslyn compiler can't deal with nested lambdas and closures yet.
         [TestMethod]
         public void CrossCheck_Lambda_Nested_Closure()
         {
