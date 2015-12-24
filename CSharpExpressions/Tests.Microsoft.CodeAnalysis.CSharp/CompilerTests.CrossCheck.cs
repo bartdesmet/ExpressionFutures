@@ -5322,6 +5322,8 @@ exit:
             f(1);
         }
 
+        // TODO: all operator kinds
+        // TODO: checked variations
         // TODO: event handlers
 
         #endregion
@@ -5329,6 +5331,7 @@ exit:
         #region Unary increment/decrement
 
         // TODO
+        // TODO: checked variations
 
         #endregion
 
