@@ -4412,8 +4412,7 @@ exit:
         // TODO: with compile-time constants
         // TODO: assignments
         // TODO: event handlers
-        // TODO: index, invoke, invoke member, new with named parameters
-        // TODO: index, invoke, invoke member, new with ref/out parameters
+        // TODO: index, invoke, new with ref/out parameters
 
         #region Unary
 
@@ -4950,6 +4949,14 @@ exit:
             f(new int[1, 1] { { 42 } }, 0, 0);
         }
 
+        [TestMethod]
+        public void CrossCheck_Dynamic_GetIndex_Named()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic xs, dynamic index) => xs[index: Return(index)]");
+
+            f(new List<int> { 2, 3, 5 }, 1);
+        }
+
         #endregion
 
         #region Invoke
@@ -4991,6 +4998,14 @@ exit:
 
             // REVIEW: RuntimeBinderException (C#) != NullReferenceException (ET)
             // AssertEx.Throws<NullReferenceException>(() => f(null, 42));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Invoke_Named()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic, dynamic, dynamic>>("(dynamic f, dynamic arg1, dynamic arg2, dynamic arg3) => f(arg2: Return(arg2), arg3: Return(arg3), arg1: Return(arg1))");
+
+            f(new Func<int, int, int, int>((a, b, c) => a * b + c), 2, 3, 5);
         }
 
         #endregion
@@ -5092,6 +5107,14 @@ exit:
             f(new DynamicInvoker(), 42);
         }
 
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeMember_Named()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic, dynamic>>("(dynamic s, dynamic startIndex, dynamic length) => s.Substring(length: Return(length), startIndex: Return(startIndex))");
+
+            f("foobar", 2, 3);
+        }
+
         #endregion
 
         #region InvokeConstructor
@@ -5114,6 +5137,14 @@ exit:
 
             f(dt, TimeSpan.FromHours(1));
             f(dt.Ticks, TimeSpan.FromHours(1));
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_InvokeConstructor_Named()
+        {
+            var f = Compile<Func<dynamic, dynamic, dynamic, TimeSpan>>("(dynamic hours, dynamic minutes, dynamic seconds) => new TimeSpan(minutes: Return(minutes), hours: Return(hours), seconds: Return(seconds))");
+
+            f(2, 3, 5);
         }
 
         #endregion
