@@ -5172,7 +5172,31 @@ exit:
 
         #region Assignment
 
-        // TODO: assignments
+        [TestMethod]
+        public void CrossCheck_Dynamic_Assign1()
+        {
+            var f = Compile<Action<dynamic>>("(dynamic d) => { Log<object>(d); var e = d; Log<object>(e); }");
+
+            f(1);
+            f("bar");
+            f(null);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Assign2()
+        {
+            var f = Compile<Action<int>>("(int x) => { Log(x); dynamic d = x; Log(d); }");
+
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Dynamic_Assign3()
+        {
+            var f = Compile<Action<dynamic>>("(dynamic d) => { Log(d); int x = d; Log(x); }"); // also has convert
+
+            f(42);
+        }
 
         #endregion
 
