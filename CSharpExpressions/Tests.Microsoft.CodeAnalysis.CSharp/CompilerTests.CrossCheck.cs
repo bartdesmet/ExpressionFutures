@@ -5405,6 +5405,8 @@ exit:
 
         #region Lambda
 
+        // TODO: add tests for quoted lambdas in statement bodies
+
         [TestMethod]
         public void CrossCheck_Lambda_Nested()
         {
