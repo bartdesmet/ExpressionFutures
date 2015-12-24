@@ -43,6 +43,9 @@
     <Reference Include="Microsoft.CodeAnalysis.CSharp.Scripting">
       <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.CSharp.Scripting.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
+      <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Scripting">
       <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
     </Reference>
