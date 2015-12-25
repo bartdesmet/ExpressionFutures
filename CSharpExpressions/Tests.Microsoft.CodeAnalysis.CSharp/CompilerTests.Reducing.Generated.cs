@@ -510,6 +510,38 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0564_D471() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_9551_755A()
+        {
+            // (Expression<Action<object>>)(l => { lock(l) { Console.WriteLine("In lock"); } })
+            var actual = ToCSharp(@"(Expression<Action<object>>)(l => { lock(l) { Console.WriteLine(""In lock""); } })", reduce: true);
+            var expected = @"
+(object l) =>
+{
+    {
+        bool __lockWasTaken;
+        __lockWasTaken = false;
+        try
+        {
+            System.Threading.Monitor.Enter(l, ref __lockWasTaken);
+            {
+                Console.WriteLine(""In lock"");
+            }
+        }
+        finally
+        {
+            if (__lockWasTaken)
+                System.Threading.Monitor.Exit(l);
+        }
+    }
+    L0 /*(null)*/:
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_9551_755A();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9551_755A() => INCONCLUSIVE(); }
+
     }
 
 /*
@@ -547,6 +579,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_BB88_FBEA() => OK();
             public override void CompilerTest_55F5_73B2() => OK();
             public override void CompilerTest_0564_D471() => OK();
+            public override void CompilerTest_9551_755A() => OK();
         }
     }
 }

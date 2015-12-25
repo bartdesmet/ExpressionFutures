@@ -2272,7 +2272,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(new object()));
         }
 
-        [Ignore] // BUG: Our modified Roslyn compiler can't deal with nested lambdas and closures yet.
         [TestMethod]
         public void CrossCheck_Lock_ManOrBoy()
         {

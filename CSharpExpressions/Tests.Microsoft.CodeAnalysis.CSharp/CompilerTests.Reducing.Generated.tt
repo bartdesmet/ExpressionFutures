@@ -55,6 +55,9 @@ var exprs = new[]
     "(Expression<Action<int[,]>>)(xs => { xs[0, 0]++; })",
     "(Expression<Action<List<int>>>)(xs => { xs[0]++; })",
     "(Expression<Action<StrongBox<int>>>)(b => { b.Value++; })",
+
+	// Lock
+	"(Expression<Action<object>>)(l => { lock(l) { Console.WriteLine(\"In lock\"); } })",
 };
 #>
 <#

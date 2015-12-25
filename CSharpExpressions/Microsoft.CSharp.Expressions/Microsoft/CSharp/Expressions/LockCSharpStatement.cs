@@ -80,6 +80,11 @@ namespace Microsoft.CSharp.Expressions
             var res =
                 Expression.Block(
                     new[] { lockTaken },
+                    // NB: Assignment is important here, cf. the `CrossCheck_Lock_ManOrBoy` test where
+                    //     a loop is repeatedly entering and exiting the lock. If the variable is still
+                    //     set to true from the last iteration, the `Enter` method won't re-acquire the
+                    //     lock thus causing `Exit` to complain with a `SynchronizationLockException`.
+                    Expression.Assign(lockTaken, Expression.Constant(false)),
                     Expression.TryFinally(
                         Expression.Block(
                             Expression.Call(s_enterMethod, Expression, lockTaken),
