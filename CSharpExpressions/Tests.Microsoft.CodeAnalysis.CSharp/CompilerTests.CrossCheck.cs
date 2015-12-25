@@ -2234,8 +2234,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Lock
 
-        // TODO: semantic test of locking behavior
-
         [TestMethod]
         public void CrossCheck_Lock()
         {
@@ -2243,7 +2241,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     Log(""before"");
 
-    lock (o)
+    lock (Return(o))
     {
         Log(""body"");
     }
@@ -2261,7 +2259,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     Log(""before"");
 
-    lock (o)
+    lock (Return(o))
     {
         Log(""body"");
         throw new DivideByZeroException();

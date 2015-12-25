@@ -130,19 +130,18 @@ namespace Tests
         }
 
         [TestMethod]
-        public void AsyncLambda_Compilation_NotInLock_NoFalsePositive()
+        public void AsyncLambda_Compilation_InLockResource()
         {
             var p = Expression.Parameter(typeof(Exception));
 
             var expr = CSharpExpression.Lock(
-                CSharpExpression.Await(Expression.Constant(Task.FromResult(default(object)))),
+                CSharpExpression.Await(Expression.Constant(Task.FromResult(new object()))),
                 Expression.Empty()
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
 
-            // NB: This doesn't work right now because the stack spiller can't spill the by-ref argument of Monitor.Enter.
-            AssertEx.Throws<NotSupportedException>(() => e.Compile());
+            e.Compile()();
         }
 
         [TestMethod]

@@ -75,23 +75,25 @@ namespace Microsoft.CSharp.Expressions
             var enterMethod = s_enterMethod ?? (s_enterMethod = typeof(Monitor).GetMethod("Enter", new[] { typeof(object), typeof(bool).MakeByRefType() }));
             var exitMethod = s_exitMethod ?? (s_exitMethod = typeof(Monitor).GetMethod("Exit", new[] { typeof(object) }));
 
+            var temp = Expression.Parameter(Expression.Type, "__lock");
             var lockTaken = Expression.Parameter(typeof(bool), "__lockWasTaken");
             
             var res =
                 Expression.Block(
-                    new[] { lockTaken },
+                    new[] { lockTaken, temp },
                     // NB: Assignment is important here, cf. the `CrossCheck_Lock_ManOrBoy` test where
                     //     a loop is repeatedly entering and exiting the lock. If the variable is still
                     //     set to true from the last iteration, the `Enter` method won't re-acquire the
                     //     lock thus causing `Exit` to complain with a `SynchronizationLockException`.
                     Expression.Assign(lockTaken, Expression.Constant(false)),
+                    Expression.Assign(temp, Expression),
                     Expression.TryFinally(
                         Expression.Block(
-                            Expression.Call(s_enterMethod, Expression, lockTaken),
+                            Expression.Call(s_enterMethod, temp, lockTaken),
                             Body
                         ),
                         Expression.IfThen(lockTaken,
-                            Expression.Call(s_exitMethod, Expression)
+                            Expression.Call(s_exitMethod, temp)
                         )
                     )
                 );

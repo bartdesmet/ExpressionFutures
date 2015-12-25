@@ -42,7 +42,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_0564_D471() => OK();
 
             // Lock
-            public override void CompilerTest_9551_755A() => OK();
+            public override void CompilerTest_9551_2A52() => OK();
         }
     }
 }

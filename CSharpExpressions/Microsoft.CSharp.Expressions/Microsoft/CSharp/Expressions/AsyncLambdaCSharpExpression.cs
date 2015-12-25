@@ -278,11 +278,11 @@ namespace Microsoft.CSharp.Expressions
 
             exprs = new Expression[ExprCount];
 
-            if (result != null)
-            {
-                newBody = new TypedLabelRewriter().Visit(newBody);
-                newBody = AssignmentPercolator.Percolate(newBody);
-            }
+            // NB: We need to rewrite branching involving typed labels and percolate assignments in
+            //     order to avoid reduced await expressions causing branching into non-void expressions
+            //     which is not allowed in the lambda compiler.
+            newBody = new TypedLabelRewriter().Visit(newBody);
+            newBody = AssignmentPercolator.Percolate(newBody);
 
             var i = 0;
 
