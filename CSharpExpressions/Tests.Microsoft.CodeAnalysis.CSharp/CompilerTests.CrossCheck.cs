@@ -3848,6 +3848,308 @@ exit:
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_Async_Await_If_Test1()
+        {
+            var f = Compile<Action<bool>>(@"b =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        if (await Task.FromResult(Return(b)))
+        {
+            Log(""B"");
+        }
+        else
+        {
+            Log(""C"");
+        }
+    });
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_If_Test2()
+        {
+            var f = Compile<Func<bool, int>>(@"b =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        if (await Task.FromResult(Return(b)))
+        {
+            Log(""B"");
+        }
+        else
+        {
+            Log(""C"");
+        }
+
+        return 42;
+    });
+}");
+            f(false);
+            f(true);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_While_Test1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        var i = 0;
+        while (await Task.FromResult(Return(i < 10)))
+        {
+            Log(""B"");
+            i++;
+        }
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_While_Test2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        var i = 0;
+        while (await Task.FromResult(Return(i < 10)))
+        {
+            Log(""B"");
+            i++;
+        }
+
+        return i;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_Do_Test1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        var i = 0;
+        do
+        {
+            Log(""B"");
+            i++;
+        } while (await Task.FromResult(Return(i < 10)));
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_Do_Test2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        var i = 0;
+        do
+        {
+            Log(""B"");
+            i++;
+        } while (await Task.FromResult(Return(i < 10)));
+
+        return i;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_For_Test1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        for (var i = 0; await Task.FromResult(Return(i < 10)); i++)
+        {
+            Log(""B"");
+        }
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_For_Test2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        for (var i = 0; await Task.FromResult(Return(i < 10)); i++)
+        {
+            Log(""B"");
+        }
+
+        return 42;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_ForEach_Collection1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        foreach (var x in await Task.FromResult(new[] { Return(1), Return(2) }))
+        {
+            Log(""B"" + x);
+        }
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_ForEach_Collection2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        foreach (var x in await Task.FromResult(new[] { Return(1), Return(2) }))
+        {
+            Log(""B"" + x);
+        }
+
+        return 42;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_Using_Resource1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        using (await Task.FromResult(new ResourceClass(Log)))
+        {
+            Log(""B"");
+        }
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_Using_Resource2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        using (await Task.FromResult(new ResourceClass(Log)))
+        {
+            Log(""B"");
+        }
+
+        return 42;
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_Switch_SwitchValue1()
+        {
+            var f = Compile<Action<int>>(@"x =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        switch (await Task.FromResult(Return(x)))
+        {
+            case 1:
+                Log(""B"");
+                break;
+            case 2:
+                Log(""C"");
+                break;
+            default:
+                Log(""D"");
+                break;
+        }
+    });
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Await_Switch_SwitchValue2()
+        {
+            var f = Compile<Func<int, int>>(@"x =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        switch (await Task.FromResult(Return(x)))
+        {
+            case 1:
+                Log(""B"");
+                return 9;
+            case 2:
+                Log(""C"");
+                return 8;
+            default:
+                Log(""D"");
+                return 7;
+        }
+    });
+}");
+            f(0);
+            f(1);
+            f(2);
+        }
+
         #endregion
 
         #region Assignment
