@@ -311,9 +311,16 @@ namespace Microsoft.CSharp.Expressions
                 var variables = new List<ParameterExpression>();
                 var statements = new List<Expression>();
 
+                var makeVariable = new Func<Type, string, ParameterExpression>((type, name) =>
+                {
+                    var var = Expression.Parameter(type, name);
+                    variables.Add(var);
+                    return var;
+                });
+
                 var obj = default(Expression);
                 var writebacks = default(Expression[]);
-                RewriteArguments(instance, bindings, variables, statements, ref obj, arguments, out writebacks);
+                RewriteArguments(instance, bindings, makeVariable, statements, ref obj, arguments, out writebacks);
 
                 FillOptionalParameters(parameters, arguments);
 
@@ -347,7 +354,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private static void RewriteArguments(Expression instance, ReadOnlyCollection<ParameterAssignment> bindings, List<ParameterExpression> variables, List<Expression> statements, ref Expression obj, Expression[] arguments, out Expression[] writebacks)
+        private static void RewriteArguments(Expression instance, ReadOnlyCollection<ParameterAssignment> bindings, Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements, ref Expression obj, Expression[] arguments, out Expression[] writebacks)
         {
             var writebackList = default(List<Expression>);
 
@@ -359,12 +366,11 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (IsMutableStruct(instance.Type))
                     {
-                        RewriteByRefArgument(null, ref obj, variables, statements, ref writebackList);
+                        RewriteByRefArgument(null, ref obj, makeVariable, statements, ref writebackList);
                     }
                     else
                     {
-                        var var = Expression.Parameter(instance.Type, "__obj");
-                        variables.Add(var);
+                        var var = makeVariable(instance.Type, "__obj");
                         statements.Add(Expression.Assign(var, instance));
                         obj = var;
                     }
@@ -392,12 +398,12 @@ namespace Microsoft.CSharp.Expressions
                         //
                         //         See MakeArguments in LocalRewriter_Call.cs in Roslyn for cases to review.
 
-                        RewriteByRefArgument(parameter, ref expression, variables, statements, ref writebackList);
+                        RewriteByRefArgument(parameter, ref expression, makeVariable, statements, ref writebackList);
                         arguments[parameter.Position] = expression;
                     }
                     else
                     {
-                        var var = CreateTemp(variables, parameter, argument.Expression.Type);
+                        var var = CreateTemp(makeVariable, parameter, argument.Expression.Type);
                         statements.Add(Expression.Assign(var, expression));
                         arguments[parameter.Position] = var;
                     }
@@ -436,7 +442,7 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        private static void RewriteByRefArgument(ParameterInfo parameter, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
+        public static void RewriteByRefArgument(ParameterInfo parameter, ref Expression expression, Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements, ref List<Expression> writebackList)
         {
             // NB: This deals with ArrayIndex and MemberAccess nodes passed by ref, which are classified as
             //     variables according to the C# language specification, e.g.
@@ -452,10 +458,10 @@ namespace Microsoft.CSharp.Expressions
             //     Note we'd be better off if we had the ability to store ByRef variables in the Block scope,
             //     but the LINQ APIs don't support that right now.
 
-            expression = RewriteByRefArgument(parameter, RewriteArrayIndexes(expression), variables, statements, ref writebackList);
+            expression = RewriteByRefArgument(parameter, RewriteArrayIndexes(expression), makeVariable, statements, ref writebackList);
         }
 
-        private static Expression RewriteByRefArgument(ParameterInfo parameter, Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
+        private static Expression RewriteByRefArgument(ParameterInfo parameter, Expression expression, Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements, ref List<Expression> writebackList)
         {
             // REVIEW: The semantics of writebacks here are very questionable. C# doesn't need them, but the DLR has them
             //         for by-ref property member accesses and index accesses. Retaining some for of writeback support will
@@ -483,7 +489,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = RewriteByRefArgument(parameter, obj, variables, statements, ref writebackList);
+                                newObj = RewriteByRefArgument(parameter, obj, makeVariable, statements, ref writebackList);
                             }
 
                             var n = args.Count;
@@ -491,7 +497,7 @@ namespace Microsoft.CSharp.Expressions
 
                             for (var i = 0; i < n; i++)
                             {
-                                newArgs[i] = StoreIfNeeded(args[i], "__arg" + i, variables, statements);
+                                newArgs[i] = StoreIfNeeded(args[i], "__arg" + i, makeVariable, statements);
                             }
 
                             var newIndex = index.Update(newObj, newArgs);
@@ -499,7 +505,7 @@ namespace Microsoft.CSharp.Expressions
 
                             if (!isArray)
                             {
-                                EnsureWriteback(parameter, ref expression, variables, statements, ref writebackList);
+                                EnsureWriteback(parameter, ref expression, makeVariable, statements, ref writebackList);
                             }
                             else
                             {
@@ -543,7 +549,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = RewriteByRefArgument(parameter, obj, variables, statements, ref writebackList);
+                                newObj = RewriteByRefArgument(parameter, obj, makeVariable, statements, ref writebackList);
                             }
 
                             var newMember = member.Update(newObj);
@@ -559,14 +565,14 @@ namespace Microsoft.CSharp.Expressions
 
                             if (useWriteback)
                             {
-                                EnsureWriteback(parameter, ref expression, variables, statements, ref writebackList);
+                                EnsureWriteback(parameter, ref expression, makeVariable, statements, ref writebackList);
                             }
                         }
                     }
                     break;
                 default:
                     {
-                        var variable = CreateTemp(variables, parameter, expression.Type);
+                        var variable = CreateTemp(makeVariable, parameter, expression.Type);
                         statements.Add(Expression.Assign(variable, expression));
                         expression = variable;
                     }
@@ -628,9 +634,9 @@ namespace Microsoft.CSharp.Expressions
             return expression;
         }
 
-        private static void EnsureWriteback(ParameterInfo parameter, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
+        private static void EnsureWriteback(ParameterInfo parameter, ref Expression expression, Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements, ref List<Expression> writebackList)
         {
-            var variable = CreateTemp(variables, parameter, expression.Type);
+            var variable = CreateTemp(makeVariable, parameter, expression.Type);
             statements.Add(Expression.Assign(variable, expression));
 
             var writeback = Expression.Assign(expression, variable);
@@ -639,10 +645,9 @@ namespace Microsoft.CSharp.Expressions
             expression = variable;
         }
 
-        private static ParameterExpression CreateTemp(List<ParameterExpression> variables, ParameterInfo parameter, Type type)
+        private static ParameterExpression CreateTemp(Func<Type, string, ParameterExpression> makeVariable, ParameterInfo parameter, Type type)
         {
-            var var = Expression.Parameter(type, parameter?.Name);
-            variables.Add(var);
+            var var = makeVariable(type, parameter?.Name);
             return var;
         }
 
@@ -656,12 +661,11 @@ namespace Microsoft.CSharp.Expressions
             writebackList.Add(writeback);
         }
 
-        private static Expression StoreIfNeeded(Expression expression, string name, List<ParameterExpression> variables, List<Expression> statements)
+        private static Expression StoreIfNeeded(Expression expression, string name, Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements)
         {
             // TODO: Can avoid introducing a local in some cases.
 
-            var var = Expression.Parameter(expression.Type, name);
-            variables.Add(var);
+            var var = makeVariable(expression.Type, name);
             statements.Add(Expression.Assign(var, expression));
             return var;
         }
