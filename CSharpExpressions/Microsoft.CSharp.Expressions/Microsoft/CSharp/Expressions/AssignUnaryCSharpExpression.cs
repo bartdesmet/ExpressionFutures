@@ -244,16 +244,16 @@ namespace Microsoft.CSharp.Expressions
             {
                 case CSharpExpressionType.PreDecrementAssign:
                 case CSharpExpressionType.PreDecrementAssignChecked:
-                    return Expression.PreDecrementAssign(operand);
+                    return Expression.PreDecrementAssign(operand, method);
                 case CSharpExpressionType.PreIncrementAssign:
                 case CSharpExpressionType.PreIncrementAssignChecked:
-                    return Expression.PreIncrementAssign(operand);
+                    return Expression.PreIncrementAssign(operand, method);
                 case CSharpExpressionType.PostDecrementAssign:
                 case CSharpExpressionType.PostDecrementAssignChecked:
-                    return Expression.PostDecrementAssign(operand);
+                    return Expression.PostDecrementAssign(operand, method);
                 case CSharpExpressionType.PostIncrementAssign:
                 case CSharpExpressionType.PostIncrementAssignChecked:
-                    return Expression.PostIncrementAssign(operand);
+                    return Expression.PostIncrementAssign(operand, method);
             }
 
             throw LinqError.UnhandledUnary(unaryType);
