@@ -154,10 +154,21 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceCore()
         {
+            //
+            // First, check to see whether await expressions occur in forbidden places such as the body
+            // of a lock statement or a filter of a catch clause. This is done using a C# visitor so we
+            // can analyze the original (non-reduced) intent of the nodes.
+            //
             AwaitChecker.Check(Body);
 
             const int ExprCount = 1 /* new builder */ + 1 /* new state machine */ + 1 /* initial state */ + 1 /* start state machine */;
 
+            //
+            // Next, analyze what kind of async method builder we need by analyzing the return type of
+            // the async lambda. Based on this we will determine how many expressions we need in the
+            // rewritten top-level async method which sets up the builder, state machine, and kicks off
+            // the async logic.
+            //
             var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
             var returnType = invokeMethod.ReturnType;
 
@@ -187,31 +198,77 @@ namespace Microsoft.CSharp.Expressions
             var stateMachineVar = Expression.Parameter(typeof(RuntimeAsyncStateMachine), "__statemachine");
             var stateVar = Expression.Parameter(typeof(int), "__state");
 
+            //
+            // __builder = ATMB.Create();
+            //
             var builderCreateMethod = builderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
             var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
             exprs[i++] = createBuilder;
 
+            //
+            // This is where we rewrite the body of the async lambda into an Action delegate we can pass
+            // to the runtime async state machine. The collection of variables returned by the rewrite
+            // step will contain all the variables that need to be hoisted to the heap. We do this by
+            // simply declaring them in the scope around the rewritten (synchronous) body lambda, thus
+            // causing the lambda compiler to create a closure.
+            //
+            // Note we could take the rewritten body and the variables collection and construct a struct
+            // implementing IAsyncStateMachine here. However, we don't readily have access to a TypeBuilder
+            // for the dynamically generated method created by the lambda compiler higher up, so we'd
+            // have to go through some hoops here. For now, we'll rely on a delegate with a closure that
+            // consists of a set of StrongBox objects and gets passed to a RuntimeAsyncStateMachine. We
+            // can decide to optimize this using a struct later (but then it may be worth making closures
+            // in the lambda compiler a bit cheaper by creating a display class as well).
+            //
             var variables = default(IEnumerable<ParameterExpression>);
             var body = RewriteBody(stateVar, builderVar, stateMachineVar, out variables);
 
+            //
+            // __statemachine = new RuntimeAsyncStateMachine(body);
+            //
             var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
             var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
             exprs[i++] = createStateMachine;
 
+            //
+            // __state = -1;
+            //
             exprs[i++] = Expression.Assign(stateVar, Helpers.CreateConstantInt32(-1));
 
+            //
+            // __builder.Start(ref __statemachine);
+            //
             var startMethod = builderType.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
             exprs[i++] = Expression.Call(builderVar, startMethod.MakeGenericMethod(typeof(RuntimeAsyncStateMachine)), stateMachineVar);
 
+            //
+            // return __builder.Task;
+            //
             if (returnType != typeof(void))
             {
                 exprs[i] = Expression.Property(builderVar, "Task");
             }
 
+            //
+            // The body of the top-level reduced method contains the setup and kick off of the state
+            // machine. Note the variables returned from the rewrite step of the body are included here
+            // in order to hoist them to the heap.
+            //
             var rewritten = Expression.Block(new[] { builderVar, stateMachineVar, stateVar }.Concat(variables), exprs);
 
+            //
+            // Finally, run a fairly trivial optimizer to reduce excessively nested blocks that were
+            // introduced by the rewrite steps above. This is strictly optional and we could consider
+            // an optimization flag of LambdaExpression and AsyncLambdaCSharpExpression that's more
+            // generally useful (see ExpressionOptimizationExtensions for an early sketch of some of
+            // these optimizations).
+            //
             var optimized = Optimizer.Optimize(rewritten);
 
+            //
+            // The result is a synchronous lambda that kicks off the async state machine and returns the
+            // resulting task (if non-void-returning).
+            //
             var res = Expression.Lambda<TDelegate>(optimized, Parameters);
             return res;
         }
@@ -228,6 +285,14 @@ namespace Microsoft.CSharp.Expressions
 
             var exit = Expression.Label("__exit");
 
+            //
+            // Keep a collection and a helper function to create variables that are hoisted to the heap
+            // for use by await sites. Because only one await site can be active at a time, we can reuse
+            // variables introduced for these, e.g. for awaiters of the same type.
+            //
+            // NB: We can replace the getVariable helper function with a local function in C# 7.0 if we
+            //     get that feature.
+            //
             var hoistedVars = new Dictionary<Type, ParameterExpression>();
 
             var getVariable = new Func<Type, string, ParameterExpression>((t, s) =>
@@ -242,6 +307,23 @@ namespace Microsoft.CSharp.Expressions
                 return p;
             });
 
+            //
+            // Some helpers to call AwaitOnCompleted on the async method builder for use by each await site in
+            // the asynchronous code path, e.g.
+            //
+            //   if (!awaiter.IsCompleted)
+            //   {
+            //     __state = n;
+            //     __builder.AwaitOnCompleted<AwaiterType, RuntimeAsyncStateMachine>(ref awaiter, ref __statemachine);
+            //   }
+            //
+            // NB: We can replace the onCompletedFactory helper function with a local function in C# 7.0 if we
+            //     get that feature.
+            //
+            // REVIEW: Do we have any option to call UnsafeAwaitOnCompleted at runtime, i.e. can we detect
+            //         the cases where we can do this and can we do it wrt security restrictions on code
+            //         that gets emitted dynamically?
+            //
             var awaitOnCompletedMethod = builderVar.Type.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
             var awaitOnCompletedArgs = new Type[] { default(Type), typeof(RuntimeAsyncStateMachine) };
 
@@ -252,18 +334,95 @@ namespace Microsoft.CSharp.Expressions
                 return Expression.Call(builderVar, awaitOnCompletedMethodClosed, awaiter, stateMachineVar);
             });
 
+            //
+            // First, reduce all nodes in the body except for await nodes. This makes subsequent rewrite
+            // steps easier because we reduce to the known subset of LINQ nodes.
+            //
             var reduced = Reducer.Reduce(Body);
 
+            //
+            // Next, rewrite exception handlers to synthetic equivalents where needed. This supports the
+            // C# 6.0 features to await in catch and finally handlers (in addition to fault handlers in
+            // order to support all LINQ nodes, which can be restricted if we want).
+            //
+            // This step also deals with pending branches out of exception handlers in order to properly
+            // 'leave' protected regions and execute the branch after the exception handling construct.
+            //
             var lowered = new CatchRewriter().Visit(reduced);
             lowered = new FinallyAndFaultRewriter().Visit(lowered);
 
-            var bright = AliasEliminator.Eliminate(lowered);
-            var spilled = Spiller.Spill(bright);
+            //
+            // Next, eliminate any aliasing of variables that relies on the nesting of scoped nodes in
+            // the LINQ APIs (e.g. nested blocks with reused ParmeterExpression nodes). We do this so we
+            // don't have to worry about hoisting variables out of the async lambda body and causing the
+            // meaning of the hoisted variable to change to another use of the same variable in a scoped
+            // tree node higher up. This can happen during stack spilling, e.g.
+            //
+            //   {
+            //     int x;                   // @0
+            //     {
+            //       int x;                 // @0 - same instance shadowing x in outer block
+            //       F(x, await t);
+            //     }
+            //   }
+            //
+            // ==>
+            //
+            //   int x;                     // @0 hoisted to heap by stack spilling
+            //   () =>
+            //   {
+            //     int x;                   // !!! the binding of x has now changed to the declaration
+            //     __spill0 = x;            // !!! in the inner block
+            //     __spill1 = await t;
+            //     F(__spill0, __spill1);
+            //   }
+            //
+            var aliasFree = AliasEliminator.Eliminate(lowered);
 
+            //
+            // Next, perform stack spilling in order to be able to pause the asynchronous method in the
+            // middle of an expression without changing the left-to-right subexpression evaluation
+            // semantics dictated by the C# language specification, e.g.
+            //
+            //   Console.ReadLine() + await Task.FromResult(Console.ReadLine)
+            //
+            // The first side-effect of reading from the console should happen before the second one
+            // in the async operation.
+            //
+            var spilled = Spiller.Spill(aliasFree);
+
+            //
+            // Next, rewrite await expressions to the awaiter pattern with IsCompleted, OnCompleted,
+            // and GetResult. This is where the heavy lifting (quite literally so) takes place and the
+            // state machine is built. Other than rewriting await expressions, this step also takes care
+            // of emitting the switch table for reentering the state machine, reentering nested try
+            // blocks, and hoisting of locals. For more information, see AwaitRewriter.
+            //
+            // Note we need to introduce another local to keep the state of the async state machine in
+            // order to deal with reentrancy of the async state machine via the OnCompleted call on an
+            // awaiter while we're still exiting the state machine. This is a subtle race which we avoid
+            // by making all decisions about jumps and state transitions based on a local copy of the
+            // hoisted state variable used by the state machine:
+            //
+            //   int __localState = __state;
+            //   switch (__localState)
+            //   {
+            //     ...
+            //   }
+            //
+            // NB: Right now, locals used in await sites get hoisted to the heap eagerly rather than
+            //     getting hoisted upon taking the asynchronous code path. This is an opportunity for
+            //     future optimization, together with the use of a struct for the async state machine.
+            //
             var localStateVar = Expression.Parameter(typeof(int), "__localState");
             var awaitRewriter = new AwaitRewriter(localStateVar, stateVar, getVariable, onCompletedFactory, exit);
             var rewrittenBody = awaitRewriter.Visit(spilled);
 
+            //
+            // Next, store the result of the rewritten body if the async method is non-void-returning.
+            // Note this assignment will typically have a RHS which contains a non-void block expression
+            // that originated from running the AwaitRewriter.
+            //
             var newBody = rewrittenBody;
             if (Body.Type != typeof(void) && builderVar.Type.IsGenericType /* if not ATMB<T>, no result assignment needed */)
             {
@@ -278,14 +437,25 @@ namespace Microsoft.CSharp.Expressions
 
             exprs = new Expression[ExprCount];
 
-            // NB: We need to rewrite branching involving typed labels and percolate assignments in
-            //     order to avoid reduced await expressions causing branching into non-void expressions
-            //     which is not allowed in the lambda compiler.
+            //
+            // Next, we need to rewrite branching involving typed labels and percolate assignments in
+            // order to avoid reduced await expressions causing branching into non-void expressions
+            // which is not allowed in the lambda compiler. An example os this is shown in the comments
+            // for AssignmentPercolator.
+            //
             newBody = new TypedLabelRewriter().Visit(newBody);
             newBody = AssignmentPercolator.Percolate(newBody);
 
             var i = 0;
 
+            //
+            // Next, put the jump table to resume the async state machine on top of the rewritten body
+            // returned from the AwaitRewriter. Note that the AwaitRewriter takes care of emitting the
+            // nested resume jump tables for try statements, so we just have to stick the top-level
+            // table around the body here. We don't do this in AwaitRewriter just to reduce the amount
+            // of expression tree cloning incurred by TypedLabelRewriter and AssignmentPercolator given
+            // that we know the switch tables don't contain any expressions that need such rewriting.
+            //
             var resumeList = awaitRewriter.ResumeList;
 
             if (resumeList.Count > 0)
@@ -302,9 +472,24 @@ namespace Microsoft.CSharp.Expressions
                 newBody = Helpers.CreateVoid(newBody);
             }
 
+            //
+            // int __localState = __state;
+            //
             exprs[i++] =
                 Expression.Assign(localStateVar, stateVar);
 
+            //
+            // try
+            // {
+            //    // body
+            // }
+            // catch (Exception ex)
+            // {
+            //    __state = -2;
+            //    __builder.SetException(ex);
+            //    goto __exit;
+            // }
+            //
             exprs[i++] =
                 Expression.TryCatch(
                     newBody,
@@ -317,8 +502,14 @@ namespace Microsoft.CSharp.Expressions
                     )
                 );
 
+            //
+            // __state = -2;
+            //
             exprs[i++] = Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2));
 
+            //
+            // __builder.SetResult(__result);
+            //
             if (result != null)
             {
                 exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"), result);
@@ -328,8 +519,17 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"));
             }
 
+            //
+            // __exit:
+            //   return;
+            //
             exprs[i++] = Expression.Label(exit);
 
+            //
+            // Finally, create the Action with the rewritten async lambda body that gets passed to the
+            // runtime async state machine and hoist any newly introduced variables for awaiters and
+            // such to the outer scope in order to get them stored on the heap rather than the stack.
+            //
             var body = Expression.Block(locals, exprs);
             var res = Expression.Lambda<Action>(body);
 
