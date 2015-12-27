@@ -990,7 +990,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var method = typeof(RuntimeOpsEx).GetMethod("WithByRef");
                 method = method.MakeGenericMethod(obj.Type, res.Type);
-                var delegateType = typeof(ByRef<,>).MakeGenericType(obj.Type, res.Type);
+                var delegateType = typeof(FuncByRef<,>).MakeGenericType(obj.Type, res.Type);
 
                 // NB: The introduction of a lambda to left the computation to the WithByRef helper method can be
                 //     expensive because of closure creation. This scenario with mutable structs and indexers should

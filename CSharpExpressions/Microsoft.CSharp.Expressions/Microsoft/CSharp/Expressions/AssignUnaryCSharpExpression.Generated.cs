@@ -10,19 +10,6 @@ namespace Microsoft.CSharp.Expressions
 {
 	partial class AssignUnaryCSharpExpression
 	{
-        private static CSharpExpressionType ConvertNodeType(ExpressionType nodeType)
-        {
-			switch (nodeType)
-			{
-				case ExpressionType.PreIncrementAssign: return CSharpExpressionType.PreIncrementAssign;
-				case ExpressionType.PreDecrementAssign: return CSharpExpressionType.PreDecrementAssign;
-				case ExpressionType.PostIncrementAssign: return CSharpExpressionType.PostIncrementAssign;
-				case ExpressionType.PostDecrementAssign: return CSharpExpressionType.PostDecrementAssign;
-				default:
-					throw ContractUtils.Unreachable;
-			}
-        }
-
 		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
         {
 			switch (nodeType)

@@ -20,23 +20,6 @@ namespace Microsoft.CSharp.Expressions
 {
 	partial class AssignUnaryCSharpExpression
 	{
-        private static CSharpExpressionType ConvertNodeType(ExpressionType nodeType)
-        {
-			switch (nodeType)
-			{
-<#
-foreach (var node in nodes)
-{
-#>
-				case ExpressionType.<#=node#>: return CSharpExpressionType.<#=node#>;
-<#
-}
-#>
-				default:
-					throw ContractUtils.Unreachable;
-			}
-        }
-
 		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
         {
 			switch (nodeType)
