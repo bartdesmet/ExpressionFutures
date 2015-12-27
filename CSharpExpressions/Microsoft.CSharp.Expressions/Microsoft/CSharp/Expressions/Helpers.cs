@@ -452,14 +452,20 @@ namespace Microsoft.CSharp.Expressions
             //     Note we'd be better off if we had the ability to store ByRef variables in the Block scope,
             //     but the LINQ APIs don't support that right now.
 
-            expression = RewriteArrayIndexes(expression);
+            expression = RewriteByRefArgument(parameter, RewriteArrayIndexes(expression), variables, statements, ref writebackList);
+        }
+
+        private static Expression RewriteByRefArgument(ParameterInfo parameter, Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)
+        {
+            // REVIEW: The semantics of writebacks here are very questionable. C# doesn't need them, but the DLR has them
+            //         for by-ref property member accesses and index accesses. Retaining some for of writeback support will
+            //         depend on whether we push this up to a common library so VB can use it as well.
+            //
+            //         Also note that the logic below doesn't support the C# indexer node which supports named and optional
+            //         parameters. Given that C# doesn't support passing indexers by ref, this should be fine.
 
             switch (expression.NodeType)
             {
-                // TODO: Add support for our new C# indexer node type as well? Note that C# doesn't have this type of by-ref passing anyway, 
-                //       but for equivalent VB APIs we'd need it. We could dispatch to a helper method on the node type in order to reuse
-                //       its Reduce logic in emitting the required locals and updated node that supports write-back.
-
                 case ExpressionType.Parameter:
                     // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
                     break;
@@ -477,7 +483,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = StoreIfNeeded(obj, "__object", variables, statements);
+                                newObj = RewriteByRefArgument(parameter, obj, variables, statements, ref writebackList);
                             }
 
                             var n = args.Count;
@@ -537,7 +543,7 @@ namespace Microsoft.CSharp.Expressions
                             var newObj = default(Expression);
                             if (obj != null)
                             {
-                                newObj = StoreIfNeeded(obj, "__object", variables, statements);
+                                newObj = RewriteByRefArgument(parameter, obj, variables, statements, ref writebackList);
                             }
 
                             var newMember = member.Update(newObj);
@@ -566,6 +572,8 @@ namespace Microsoft.CSharp.Expressions
                     }
                     break;
             }
+
+            return expression;
         }
 
         private static Expression RewriteArrayIndexes(Expression expression)
@@ -608,6 +616,12 @@ namespace Microsoft.CSharp.Expressions
                             }
                         }
                         break;
+                    case ExpressionType.MemberAccess:
+                        {
+                            var member = (MemberExpression)expression;
+                            var obj = RewriteArrayIndexes(member.Expression);
+                            return member.Update(obj);
+                        }
                 }
             }
 

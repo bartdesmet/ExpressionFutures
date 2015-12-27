@@ -283,13 +283,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         [TestMethod]
         public void CrossCheck_NamedParameters_Call()
         {
-            var f = Compile<Func<int>>(@"() =>
+            var f = Compile<Func<string, string>>(@"s =>
 {
-    var b = new StrongBox<int>(1);
-    Log(b.Value);
-    return System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b.Value);
+    return s.Substring(length: Return(2), startIndex: Return(1));
 }");
-            f();
+            f("foobar");
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f(""));
+            AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
         [TestMethod]
@@ -313,6 +313,152 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f(new StrongBox<int>(17));
             AssertEx.Throws<NullReferenceException>(() => f(null));
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef3()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new WeakBox<int> { Value = 17 };
+    return Utils.NamedParamByRef(y: Return(42), x: ref b.Value);
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef4()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new StrongBox<int>(1);
+    Log(b.Value);
+
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b.Value);
+    Log(b.Value);
+
+    return res;
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef5()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new WeakBox<int>(1);
+    Log(b.Value);
+
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b.Value);
+    Log(b.Value);
+
+    return res;
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef6()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new WeakBox<WeakBox<int>>(new WeakBox<int>(1));
+    Log(b.Value.Value);
+
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b.Value.Value);
+    Log(b.Value.Value);
+
+    return res;
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef7()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new[] { new WeakBox<int>(1) };
+    Log(b[0].Value);
+
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b[Return(0)].Value);
+    Log(b[0].Value);
+
+    return res;
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef8()
+        {
+            var f = Compile<Func<WeakBox<int>[], int>>(@"b =>
+{
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b[Return(0)].Value);
+    return res;
+}");
+            AssertEx.Throws<NullReferenceException>(() => f(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[0]));
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef9()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new WeakBox<int>[][] { new WeakBox<int>[] { new WeakBox<int>(1) } };
+    Log(b[0][0].Value);
+
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b[Return(1) - 1][Return(2) - 2].Value);
+    Log(b[0][0].Value);
+
+    return res;
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef10()
+        {
+            var f = Compile<Func<WeakBox<int>[][], int>>(@"b =>
+{
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b[Return(1) - 1][Return(2) - 2].Value);
+    return res;
+}");
+            AssertEx.Throws<NullReferenceException>(() => f(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[0][]));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[1][] { new WeakBox<int>[0] }));
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef11()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    var b = new WeakBox<int>[,] { { new WeakBox<int>(1) } };
+    Log(b[0, 0].Value);
+
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b[Return(1) - 1, Return(2) - 2].Value);
+    Log(b[0, 0].Value);
+
+    return res;
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_NamedParameters_Call_ByRef12()
+        {
+            var f = Compile<Func<WeakBox<int>[,], int>>(@"b =>
+{
+    var res = System.Threading.Interlocked.Exchange(value: Return(42), location1: ref b[Return(1) - 1, Return(2) - 2].Value);
+    return res;
+}");
+            AssertEx.Throws<NullReferenceException>(() => f(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[0, 0]));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[0, 1]));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[1, 0]));
         }
 
         [TestMethod]
@@ -2765,7 +2911,7 @@ exit:
 
         [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
-        public void CrossCheck_Async_Spilling_ByRefLocals()
+        public void CrossCheck_Async_Spilling_ByRefLocals1()
         {
             var f = Compile<Func<int>>(@"() =>
 {
@@ -2786,7 +2932,49 @@ exit:
 
         [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
-        public void CrossCheck_Async_Spilling_ByRefReceivers()
+        public void CrossCheck_Async_Spilling_ByRefLocals2()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var xs = new[] { 41 };
+        var res = System.Threading.Interlocked.Exchange(ref xs[Return(int.Parse(""0""))], await Task.FromResult(Return(42)));
+    
+        Log(""B"");
+    
+        return res + xs[0];
+    });
+}");
+            f();
+        }
+
+        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_ByRefLocals3()
+        {
+            var f = Compile<Func<int>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+    
+        var b = new WeakBox<int> { Value = 41 };
+        var res = System.Threading.Interlocked.Exchange(ref b.Value, await Task.FromResult(Return(42)));
+    
+        Log(""B"");
+    
+        return res + b.Value;
+    });
+}");
+            f();
+        }
+
+        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_ByRefReceivers1()
         {
             var f = Compile<Action>(@"() =>
 {
@@ -2794,10 +2982,54 @@ exit:
     {
         Log(""A"");
     
-        var t = TimeSpan.Zero;
-        var res = t.Subtract(await Task.FromResult(t));
+        var t = TimeSpan.FromSeconds(5);
+        var res = t.Subtract(await Task.FromResult(TimeSpan.FromSeconds(2)));
     
         Log(""B"");
+
+        Log(res.Ticks);
+    });
+}");
+            f();
+        }
+
+        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_ByRefReceivers2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+    
+        var ts = new[] { TimeSpan.FromSeconds(5) };
+        var res = ts[Return(int.Parse(""0""))].Subtract(await Task.FromResult(Return(TimeSpan.FromSeconds(2))));
+    
+        Log(""B"");
+
+        Log(res.Ticks);
+    });
+}");
+            f();
+        }
+
+        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_ByRefReceivers3()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+    
+        var b = new WeakBox<TimeSpan> { Value = TimeSpan.FromSeconds(5) };
+        var res = b.Value.Subtract(await Task.FromResult(Return(TimeSpan.FromSeconds(2))));
+    
+        Log(""B"");
+
+        Log(res.Ticks);
     });
 }");
             f();
