@@ -378,3 +378,11 @@ public class ThrowingAwaitable : IAwaitable
         public void OnCompleted(Action continuation) => continuation();
     }
 }
+
+public class Base
+{
+}
+
+public class Derived : Base
+{
+}

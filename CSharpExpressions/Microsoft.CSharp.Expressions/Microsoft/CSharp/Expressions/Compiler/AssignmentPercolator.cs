@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     ///     __awaiter = T.GetAwaiter();
     ///     if (!__awaiter.IsCompleted)
     ///     {
-    ///        state = 2;
+    ///        __state = 2;
     ///        __awaiter.OnCompleted(resume);
     ///        goto __exit;
     ///     }
@@ -96,7 +96,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         //     rewriting non-void Try expressions. For completeness, a few other node types are handled below as well,
         //     which can come in handy later.
 
-        class Impl : CSharpExpressionVisitor
+        class Impl : ShallowVisitor
         {
             public static readonly ExpressionVisitor Instance = new Impl();
 
@@ -191,7 +191,51 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             return @switch.Update(@switch.SwitchValue, newCases, defaultBody);
                         }
                     default:
-                        return Expression.Assign(result, expr);
+                        {
+                            var res = (Expression)Expression.Assign(result, expr);
+
+                            // NB: This is quite subtle. We don't want to change the type of the entire
+                            //     tree but could be faced with covariant assignments. If we reduce to
+                            //     a less derived type because of the LHS of the assignment being less
+                            //     derived, Update methods for the nodes above us, such as Block, will
+                            //     complain. So we convert the entire assignment to its RHS type if the
+                            //     types don't match. An example is shown below:
+                            //
+                            //       Base b = await (Derived)x;
+                            //
+                            //     We know this is safe to do because a plain assignment can only be an
+                            //     assignment where the RHS is reference assignable to the LHS (so not
+                            //     even a boxing conversion is allowed), hence there will be no side-
+                            //     effects due to user-defined conversions or so. We also know it can't
+                            //     fail because the RHS is not changing typing.
+                            //
+                            //     Note this could be avoided if we know that we can change all nodes
+                            //     encountered in percolation to void types. However, the expression
+                            //     API lacks "statement expression" nodes which clearly indicate such
+                            //     an intent, so detecting these "as void" nodes is a bit cumbersome.
+                            //
+                            //     Also note that our percolator doesn't distinguish between (reduced)
+                            //     await nodes and other nodes, so we can't assume we'd only be changing
+                            //     the type of assignment caused by await. While it's invalid to write
+                            //     the following in C# today, it is possible in the expression API:
+                            //
+                            //       /*Base*/ b = { A; B; (Derived)x; }; // an expression block
+                            //
+                            //     If we percolate the assignment here, the type of the block changes
+                            //     which can have implications to the type checking of parent nodes. So
+                            //     our percolation can also make otherwise invalid "jump into expression"
+                            //     cases that are rejected by the lambda compiler become valid given
+                            //     that we push down assignments for these as well.
+                            //
+                            //     Alternatively, we could only do this for await sites if we keep track
+                            //     of assignment sites introduced by the await rewriter and only consider
+                            //     the parent nodes of those sites as requiring percolation.
+                            if (res.Type != expr.Type)
+                            {
+                                res = Expression.Convert(res, expr.Type);
+                            }
+                            return res;
+                        }
                 }
             }
 

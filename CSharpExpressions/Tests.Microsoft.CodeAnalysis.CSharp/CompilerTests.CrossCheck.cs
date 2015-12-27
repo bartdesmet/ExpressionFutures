@@ -3812,6 +3812,23 @@ exit:
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_Async_Await_CovariantAssignment()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        Log(""A"");
+        
+        Base b = await Task.FromResult(new Derived());
+
+        Log(b.ToString());
+    });
+}");
+            f();
+        }
+
         #endregion
 
         #region Assignment
