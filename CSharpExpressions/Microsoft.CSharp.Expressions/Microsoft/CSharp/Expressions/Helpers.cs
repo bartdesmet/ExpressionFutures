@@ -357,7 +357,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (!instance.IsPure())
                 {
-                    if (instance.Type.IsValueType && !instance.Type.IsPrimitive /* immutable */)
+                    if (IsMutableStruct(instance.Type))
                     {
                         RewriteByRefArgument(null, ref obj, variables, statements, ref writebackList);
                     }
@@ -407,6 +407,11 @@ namespace Microsoft.CSharp.Expressions
             writebacks = writebackList?.ToArray() ?? Array.Empty<Expression>();
         }
 
+        public static bool IsMutableStruct(Type type)
+        {
+            return type.IsValueType && !type.IsPrimitive /* immutable */;
+        }
+
         public static bool IsPure(this Expression expression, bool readOnly = false)
         {
             // TODO: Convert and ConvertChecked can be pure under certain circumstances as well
@@ -446,6 +451,8 @@ namespace Microsoft.CSharp.Expressions
             //
             //     Note we'd be better off if we had the ability to store ByRef variables in the Block scope,
             //     but the LINQ APIs don't support that right now.
+
+            expression = RewriteArrayIndexes(expression);
 
             switch (expression.NodeType)
             {
@@ -551,58 +558,6 @@ namespace Microsoft.CSharp.Expressions
                         }
                     }
                     break;
-                case ExpressionType.ArrayIndex:
-                    {
-                        var binary = (BinaryExpression)expression;
-
-                        Debug.Assert(binary.Conversion == null);
-
-                        var newLeft = StoreIfNeeded(binary.Left, "__array", variables, statements);
-                        var newRight = StoreIfNeeded(binary.Right, "__index", variables, statements);
-
-                        var newBinary = Expression.ArrayAccess(newLeft, newRight);
-                        expression = newBinary;
-
-                        // NB: This ensures correct timing of an out-of-range exception relative to other arguments.
-                        statements.Add(expression);
-
-                        // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
-                    }
-                    break;
-                case ExpressionType.Call:
-                    {
-                        var call = (MethodCallExpression)expression;
-
-                        var obj = call.Object;
-                        var method = call.Method;
-                        if (IsArrayAssignment(call))
-                        {
-                            var args = call.Arguments;
-
-                            var newObj = default(Expression);
-                            if (obj != null)
-                            {
-                                newObj = StoreIfNeeded(obj, "__object", variables, statements);
-                            }
-
-                            var n = args.Count;
-                            var newArgs = new Expression[n];
-
-                            for (var i = 0; i < n; i++)
-                            {
-                                newArgs[i] = StoreIfNeeded(args[i], "__arg" + i, variables, statements);
-                            }
-
-                            var newCall = Expression.ArrayAccess(newObj, newArgs);
-                            expression = newCall;
-
-                            // NB: This ensures correct timing of an out-of-range exception relative to other arguments.
-                            statements.Add(expression);
-
-                            // NB: Don't use a write-back here; LambdaCompiler can emit a reference for the argument.
-                        }
-                    }
-                    break;
                 default:
                     {
                         var variable = CreateTemp(variables, parameter, expression.Type);
@@ -611,6 +566,52 @@ namespace Microsoft.CSharp.Expressions
                     }
                     break;
             }
+        }
+
+        private static Expression RewriteArrayIndexes(Expression expression)
+        {
+            // NB: This simplifies other rewrite steps for by-ref argument passing by rewriting all
+            //     variants of array access (ArrayIndex and Call with an array Get method) into
+            //     IndexExpression nodes. It only recurses on the left side of the tree to traverse
+            //     the objects being accessed in the tree.
+
+            if (expression != null)
+            {
+                switch (expression.NodeType)
+                {
+                    case ExpressionType.ArrayIndex:
+                        {
+                            var binary = (BinaryExpression)expression;
+                            var array = RewriteArrayIndexes(binary.Left);
+                            var index = binary.Right;
+                            return Expression.ArrayAccess(array, index);
+                        }
+                    case ExpressionType.Call:
+                        {
+                            var call = (MethodCallExpression)expression;
+                            if (IsArrayAssignment(call))
+                            {
+                                var array = RewriteArrayIndexes(call.Object);
+                                var indexes = call.Arguments.ToArray();
+                                return Expression.ArrayAccess(array, indexes);
+                            }
+                        }
+                        break;
+                    case ExpressionType.Index:
+                        {
+                            var index = (IndexExpression)expression;
+                            if (index.Indexer == null)
+                            {
+                                var array = RewriteArrayIndexes(index.Object);
+                                var indexes = index.Arguments;
+                                return index.Update(array, indexes);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return expression;
         }
 
         private static void EnsureWriteback(ParameterInfo parameter, ref Expression expression, List<ParameterExpression> variables, List<Expression> statements, ref List<Expression> writebackList)

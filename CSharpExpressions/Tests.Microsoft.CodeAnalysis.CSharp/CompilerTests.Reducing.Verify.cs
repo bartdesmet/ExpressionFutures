@@ -10,8 +10,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             // By-ref with named parameters
             public override void CompilerTest_6A97_3CC7() => OK();
-            public override void CompilerTest_BFB2_9E66() => OK();
-            public override void CompilerTest_4609_D626() => OK();
+            public override void CompilerTest_BFB2_C4CC() => OK();
+            public override void CompilerTest_4609_DFEE() => OK();
 
             // Assign
             public override void CompilerTest_579D_8D67() => OK();

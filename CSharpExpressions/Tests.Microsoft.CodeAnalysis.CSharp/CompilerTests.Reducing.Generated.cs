@@ -57,7 +57,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6A97_3CC7() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_BFB2_9E66()
+        public void CompilerTest_BFB2_C4CC()
         {
             // (Expression<Func<StrongBox<int>, int>>)(b => System.Threading.Interlocked.Exchange(value: int.Parse("1"), location1: ref b.Value))
             var actual = ToCSharp(@"(Expression<Func<StrongBox<int>, int>>)(b => System.Threading.Interlocked.Exchange(value: int.Parse(""1""), location1: ref b.Value))", reduce: true);
@@ -65,39 +65,35 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 (System.Runtime.CompilerServices.StrongBox<int> b) =>
 {
     int value;
-    System.Runtime.CompilerServices.StrongBox<int> __object;
     value = int.Parse(""1"");
-    __object = b;
-    __object.Value;
-    return System.Threading.Interlocked.Exchange(ref __object.Value, value);
+    b.Value;
+    return System.Threading.Interlocked.Exchange(ref b.Value, value);
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_BFB2_9E66();
+            Verify.CompilerTest_BFB2_C4CC();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BFB2_9E66() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BFB2_C4CC() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_4609_D626()
+        public void CompilerTest_4609_DFEE()
         {
             // (Expression<Func<int[], int>>)(xs => System.Threading.Interlocked.Exchange(value: int.Parse("1"), location1: ref xs[int.Parse("0")]))
             var actual = ToCSharp(@"(Expression<Func<int[], int>>)(xs => System.Threading.Interlocked.Exchange(value: int.Parse(""1""), location1: ref xs[int.Parse(""0"")]))", reduce: true);
             var expected = @"
 (int[] xs) =>
 {
-    int value, __index;
-    int[] __array;
+    int value, __arg0;
     value = int.Parse(""1"");
-    __array = xs;
-    __index = int.Parse(""0"");
-    __array[__index];
-    return System.Threading.Interlocked.Exchange(ref __array[__index], value);
+    __arg0 = int.Parse(""0"");
+    xs[__arg0];
+    return System.Threading.Interlocked.Exchange(ref xs[__arg0], value);
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_4609_D626();
+            Verify.CompilerTest_4609_DFEE();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4609_D626() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4609_DFEE() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_579D_8D67()
@@ -559,8 +555,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Reviewed
         {
             public override void CompilerTest_6A97_3CC7() => OK();
-            public override void CompilerTest_BFB2_9E66() => OK();
-            public override void CompilerTest_4609_D626() => OK();
+            public override void CompilerTest_BFB2_C4CC() => OK();
+            public override void CompilerTest_4609_DFEE() => OK();
             public override void CompilerTest_579D_8D67() => OK();
             public override void CompilerTest_93F1_077C() => OK();
             public override void CompilerTest_2F3A_1F59() => OK();
