@@ -3829,6 +3829,25 @@ exit:
             f();
         }
 
+        [TestMethod]
+        public void CrossCheck_Async_Await_DeepAssignment()
+        {
+            var f = Compile<Func<bool>>(@"() =>
+{
+    return Await(async () =>
+    {
+        Log(""A"");
+        
+        int x;
+        int y;
+        x = y = await Task.FromResult(42);
+
+        return x == y;
+    });
+}");
+            f();
+        }
+
         #endregion
 
         #region Assignment
