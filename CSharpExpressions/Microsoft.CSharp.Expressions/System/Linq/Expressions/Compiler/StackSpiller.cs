@@ -1245,7 +1245,7 @@ namespace System.Linq.Expressions.Compiler
 
         private static void MarkRefArgs(ChildRewriter cr, MethodBase method, int firstIndex)
         {
-            if (method != null)// && .Any(p => p.ParameterType.IsByRef))
+            if (method != null)
             {
                 var parameters = method.GetParametersCached();
                 for (int i = 0, j = firstIndex; i < parameters.Length; i++, j++)
