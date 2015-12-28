@@ -178,7 +178,11 @@ namespace System.Linq.Expressions.Compiler
             cr.AddArguments(node);
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNoRefArgs(node.DelegateType.GetMethod("Invoke"));
+#else
+                MarkRefArgs(cr, node.DelegateType.GetMethod("Invoke"), 0);
+#endif
             }
             return cr.Finish(cr.Rewrite ? node.Rewrite(cr[0, -1]) : expr);
         }
@@ -195,7 +199,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNotRefInstance(index.Object);
+#else
+                MarkRefInstance(cr, index.Object);
+#endif
             }
 
             if (cr.Rewrite)
@@ -270,7 +278,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNoRefArgs(node.Method);
+#else
+                MarkRefArgs(cr, node.Method, 0);
+#endif
             }
 
             return cr.Finish(cr.Rewrite ?
@@ -386,7 +398,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNotRefInstance(lvalue.Expression);
+#else
+                MarkRefInstance(cr, lvalue.Expression);
+#endif
             }
 
             if (cr.Rewrite)
@@ -437,7 +453,11 @@ namespace System.Linq.Expressions.Compiler
                 {
                     // Only need to validate propreties because reading a field
                     // is always side-effect free.
+#if LINQ
                     RequireNotRefInstance(node.Expression);
+#else
+                    MarkRefInstance(cr, node.Expression);
+#endif
                 }
 
                 expr = MemberExpressionStubs.Make(cr[0], node.Member);
@@ -461,7 +481,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNotRefInstance(node.Object);
+#else
+                MarkRefInstance(cr, node.Object);
+#endif
             }
 
             if (cr.Rewrite)
@@ -491,8 +515,13 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNotRefInstance(node.Object);
                 RequireNoRefArgs(node.Method);
+#else
+                MarkRefInstance(cr, node.Object);
+                MarkRefArgs(cr, node.Method, 1);
+#endif
             }
 
             return cr.Finish(cr.Rewrite ? node.Rewrite(cr[0], cr[1, -1]) : expr);
@@ -580,7 +609,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNoRefArgs(ExpressionStubs.GetInvokeMethod(node.Expression));
+#else
+                MarkRefArgs(cr, ExpressionStubs.GetInvokeMethod(node.Expression), 1);
+#endif
             }
 
             return cr.Finish(cr.Rewrite ? node.Rewrite(cr[0], cr[1, -1]) : expr);
@@ -598,7 +631,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNoRefArgs(node.Constructor);
+#else
+                MarkRefArgs(cr, node.Constructor, 0);
+#endif
             }
 
             return cr.Finish(cr.Rewrite ? CreateNewExpression(node.Constructor, cr[0, -1], node.Members) : expr);
@@ -711,7 +748,11 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Action == RewriteAction.SpillStack)
             {
+#if LINQ
                 RequireNoRefArgs(node.Method);
+#else
+                MarkRefArgs(cr, node.Method, 0);
+#endif
             }
 
             return cr.Finish(cr.Rewrite ? CreateUnaryExpression(node.NodeType, cr[0], node.Type, node.Method) : expr);
@@ -1145,6 +1186,7 @@ namespace System.Linq.Expressions.Compiler
 
 #endregion
 
+#if LINQ
         /// <summary>
         /// If we are spilling, requires that there are no byref arguments to
         /// the method call.
@@ -1164,13 +1206,12 @@ namespace System.Linq.Expressions.Compiler
         /// </remarks>
         private static void RequireNoRefArgs(MethodBase method)
         {
-            // TODO: Lift this restriction or improve error message for our compiler.
-
             if (method != null && method.GetParametersCached().Any(p => p.ParameterType.IsByRef))
             {
                 throw Error.TryNotSupportedForMethodsWithRefArgs(method);
             }
         }
+#endif
 
         /// <summary>
         /// Requires that the instance is not a value type (primitive types are
@@ -1190,8 +1231,6 @@ namespace System.Linq.Expressions.Compiler
         /// </remarks>
         private static void RequireNotRefInstance(Expression instance)
         {
-            // TODO: Lift this restriction or improve error message for our compiler.
-
             // Primitive value types are okay because they are all readonly,
             // but we can't rely on this for non-primitive types. So we throw
             // NotSupported.
@@ -1200,5 +1239,36 @@ namespace System.Linq.Expressions.Compiler
                 throw Error.TryNotSupportedForValueTypeInstances(instance.Type);
             }
         }
+
+#if !LINQ
+        // TODO: We still have RequireNoRefArgs for checks in ListInit and MemberInit at this point.
+
+        private static void MarkRefArgs(ChildRewriter cr, MethodBase method, int firstIndex)
+        {
+            if (method != null)// && .Any(p => p.ParameterType.IsByRef))
+            {
+                var parameters = method.GetParametersCached();
+                for (int i = 0, j = firstIndex; i < parameters.Length; i++, j++)
+                {
+                    var parameter = parameters[i];
+                    if (parameter.ParameterType.IsByRef)
+                    {
+                        cr.MarkByRef(j);
+                    }
+                }
+            }
+        }
+
+        private static void MarkRefInstance(ChildRewriter cr, Expression instance)
+        {
+            // Primitive value types are okay because they are all readonly,
+            // but we can't rely on this for non-primitive types. So we throw
+            // NotSupported.
+            if (instance != null && instance.Type.GetTypeInfo().IsValueType && instance.Type.GetTypeCode() == TypeCode.Object)
+            {
+                cr.MarkByRef(0);
+            }
+        }
+#endif
     }
 }

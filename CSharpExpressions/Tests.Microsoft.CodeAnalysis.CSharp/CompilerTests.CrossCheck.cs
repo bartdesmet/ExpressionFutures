@@ -2909,7 +2909,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
         public void CrossCheck_Async_Spilling_ByRefLocals1()
         {
@@ -2930,7 +2929,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
         public void CrossCheck_Async_Spilling_ByRefLocals2()
         {
@@ -2951,7 +2949,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
         public void CrossCheck_Async_Spilling_ByRefLocals3()
         {
@@ -2972,7 +2969,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
         public void CrossCheck_Async_Spilling_ByRefReceivers1()
         {
@@ -2993,7 +2989,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
         public void CrossCheck_Async_Spilling_ByRefReceivers2()
         {
@@ -3014,7 +3009,6 @@ exit:
             f();
         }
 
-        [Ignore] // BUG: Known limitation with stack spiller when dealing with by ref locals.
         [TestMethod]
         public void CrossCheck_Async_Spilling_ByRefReceivers3()
         {

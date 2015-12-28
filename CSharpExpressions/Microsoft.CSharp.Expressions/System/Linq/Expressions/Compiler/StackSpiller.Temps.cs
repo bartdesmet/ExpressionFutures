@@ -9,6 +9,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Dynamic.Utils;
 using static System.Linq.Expressions.ExpressionExtensions;
+#if !LINQ
+using static Microsoft.CSharp.Expressions.Helpers;
+#endif
 
 namespace System.Linq.Expressions.Compiler
 {
@@ -196,9 +199,20 @@ namespace System.Linq.Expressions.Compiler
                         {
                             if (clone[i] != null)
                             {
+#if !LINQ
+                                if (_byRef != null && _byRef[i])
+                                {
+                                    clone[i] = SpillByRef(comma, clone[i]);
+                                }
+                                else
+                                {
+#endif
                                 Expression temp;
                                 clone[i] = _self.ToTemp(clone[i], out temp);
                                 comma.Add(temp);
+#if !LINQ
+                                }
+#endif
                             }
                         }
                         comma.Capacity = comma.Count + 1;
@@ -206,6 +220,39 @@ namespace System.Linq.Expressions.Compiler
                     }
                 }
             }
+
+#if !LINQ
+            private Expression SpillByRef(List<Expression> comma, Expression expression)
+            {
+                List<Expression> writebacks = null;
+                RewriteByRefArgument(null, ref expression, (type, name) => _self.MakeTemp(type), comma, ref writebacks);
+
+                if (writebacks != null)
+                {
+                    // TODO: Make a call on supporting writebacks or not and either remove them altogether
+                    //       or provide a good error message here.
+                    throw new NotSupportedException();
+                }
+
+                return expression;
+            }
+
+            // NB: This means of tracking by-ref positions may seem adhoc because it really is an adhoc
+            //     bolt-on approach in order to mimize the number of changes to the LINQ stack spiller.
+
+            private bool[] _byRef;
+
+            internal void MarkByRef(int index)
+            {
+                if (_byRef == null)
+                {
+                    // NB: could use a bit vector if we want to optimize
+                    _byRef = new bool[_expressions.Length];
+                }
+
+                _byRef[index] = true;
+            }
+#endif
 
             internal bool Rewrite
             {
