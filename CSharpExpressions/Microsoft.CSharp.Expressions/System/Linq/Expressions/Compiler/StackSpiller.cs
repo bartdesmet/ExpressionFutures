@@ -1241,8 +1241,6 @@ namespace System.Linq.Expressions.Compiler
             }
         }
 #else
-        // TODO: We still have RequireNoRefArgs for checks in ListInit and MemberInit at this point.
-
         private static void MarkRefArgs(ChildRewriter cr, MethodBase method, int firstIndex)
         {
             if (method != null)
