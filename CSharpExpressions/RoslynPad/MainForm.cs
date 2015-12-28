@@ -70,7 +70,7 @@ namespace RoslynPad
 
             txtResult.Text = "";
             txtCSharp.Text = "";
-            txtIL.Text = "";
+            rtfIL.Clear();
             trvExpr.Nodes.Clear();
             rtf.Clear();
             prgNode.SelectedObject = null;
@@ -124,10 +124,10 @@ namespace RoslynPad
                 txtResult.ScrollToCaret();
             }
 
-            Highlight();
+            HighlightCSharp();
         }
 
-        private void Highlight()
+        private void HighlightCSharp()
         {
             if (_sem == null)
             {
@@ -182,19 +182,74 @@ namespace RoslynPad
             _lastTooltipPosition = -1;
         }
 
+        private void HighlightIL(string il)
+        {
+            il = il.Replace("\r\n", "\n");
+
+            rtfIL.Clear();
+            rtfIL.AppendText(il);
+
+            var start = 0;
+
+            var res = ILClassifier.Classify(il);
+
+            foreach (var span in res)
+            {
+                rtfIL.Select(span.TextSpan.Start - start, span.TextSpan.Length);
+                if (span.ClassificationType == "keyword")
+                {
+                    rtfIL.SelectionColor = Color.Blue;
+                }
+                else if (span.ClassificationType == "instruction")
+                {
+                    rtfIL.SelectionColor = Color.DarkBlue;
+                }
+                else if (span.ClassificationType == "labelRef")
+                {
+                    rtfIL.SelectionColor = Color.Red;
+                }
+                else if (span.ClassificationType == "labelDef")
+                {
+                    rtfIL.SelectionColor = Color.Red;
+                }
+                else if (span.ClassificationType == "labelDefUnused")
+                {
+                    rtfIL.SelectionColor = Color.DarkGray;
+                }
+                else if (span.ClassificationType == "string")
+                {
+                    rtfIL.SelectionColor = Color.DarkRed;
+                }
+                else if (span.ClassificationType == "type")
+                {
+                    rtfIL.SelectionColor = Color.DarkCyan;
+                }
+                else if (span.ClassificationType == "assembly")
+                {
+                    rtfIL.SelectionColor = Color.DarkSlateBlue;
+                }
+                //else if (span.ClassificationType == "namespace")
+                //{
+                //    rtfIL.SelectionColor = Color.DarkGray;
+                //}
+                else if (span.ClassificationType == "comment")
+                {
+                    rtfIL.SelectionColor = Color.DarkGreen;
+                }
+            }
+        }
+
         private void UpdateIL(LambdaExpression expr)
         {
             if (expr != null)
             {
                 try
                 {
-                    txtIL.ForeColor = Color.Black;
-                    txtIL.Text = expr.Compile().GetMethodIL();
+                    HighlightIL(expr.Compile().GetMethodIL());
                 }
                 catch (Exception ex)
                 {
-                    txtIL.ForeColor = Color.Red;
-                    txtIL.Text = ex.ToString();
+                    rtf.AppendText(ex.ToString());
                 }
             }
         }
@@ -328,7 +383,7 @@ namespace RoslynPad
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
                 txtCSharp.Text = "";
-                txtIL.Text = "";
+                rtfIL.Clear();
             }
         }
 
@@ -777,11 +832,11 @@ namespace RoslynPad
                 txtCode.Font = frm.EditorFont;
                 rtf.Font = frm.SyntaxFont;
                 txtCSharp.Font = frm.SyntaxFont;
-                txtIL.Font = frm.SyntaxFont;
+                rtfIL.Font = frm.SyntaxFont;
                 txtResult.Font = frm.DebugViewFont;
                 txtNode.Font = frm.DebugViewFont;
                 trvExpr.Font = frm.TreeFont;
-                Highlight();
+                HighlightCSharp();
             }
         }
 
@@ -1043,7 +1098,7 @@ namespace RoslynPad
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
                 txtCSharp.Text = "";
-                txtIL.Text = "";
+                rtfIL.Clear();
             }
         }
     }

@@ -53,6 +53,7 @@
             this.txtNode = new System.Windows.Forms.TextBox();
             this.tabCSharp = new System.Windows.Forms.TabPage();
             this.txtCSharp = new System.Windows.Forms.TextBox();
+            this.tabIL = new System.Windows.Forms.TabPage();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,8 +74,7 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
-            this.tabIL = new System.Windows.Forms.TabPage();
-            this.txtIL = new System.Windows.Forms.TextBox();
+            this.rtfIL = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -92,8 +92,8 @@
             this.pnlDetail.Panel2.SuspendLayout();
             this.pnlDetail.SuspendLayout();
             this.tabCSharp.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.tabIL.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -266,6 +266,7 @@
             this.rtf.Size = new System.Drawing.Size(994, 406);
             this.rtf.TabIndex = 8;
             this.rtf.Text = "";
+            this.rtf.WordWrap = false;
             this.rtf.MouseMove += new System.Windows.Forms.MouseEventHandler(this.rtf_MouseMove);
             // 
             // tabDebug
@@ -393,6 +394,16 @@
             this.txtCSharp.Size = new System.Drawing.Size(988, 400);
             this.txtCSharp.TabIndex = 0;
             this.txtCSharp.WordWrap = false;
+            // 
+            // tabIL
+            // 
+            this.tabIL.Controls.Add(this.rtfIL);
+            this.tabIL.Location = new System.Drawing.Point(4, 29);
+            this.tabIL.Name = "tabIL";
+            this.tabIL.Size = new System.Drawing.Size(994, 406);
+            this.tabIL.TabIndex = 4;
+            this.tabIL.Text = "IL";
+            this.tabIL.UseVisualStyleBackColor = true;
             // 
             // toolTip
             // 
@@ -557,27 +568,17 @@
             this.saveFile.Filter = "Catalogs|*.xml";
             this.saveFile.Title = "Save catalog";
             // 
-            // tabIL
+            // rtfIL
             // 
-            this.tabIL.Controls.Add(this.txtIL);
-            this.tabIL.Location = new System.Drawing.Point(4, 29);
-            this.tabIL.Name = "tabIL";
-            this.tabIL.Size = new System.Drawing.Size(994, 406);
-            this.tabIL.TabIndex = 4;
-            this.tabIL.Text = "IL";
-            this.tabIL.UseVisualStyleBackColor = true;
-            // 
-            // txtIL
-            // 
-            this.txtIL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtIL.Font = new System.Drawing.Font("Consolas", 8F);
-            this.txtIL.Location = new System.Drawing.Point(0, 0);
-            this.txtIL.Multiline = true;
-            this.txtIL.Name = "txtIL";
-            this.txtIL.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtIL.Size = new System.Drawing.Size(994, 406);
-            this.txtIL.TabIndex = 0;
-            this.txtIL.WordWrap = false;
+            this.rtfIL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtfIL.Font = new System.Drawing.Font("Consolas", 8F);
+            this.rtfIL.Location = new System.Drawing.Point(0, 0);
+            this.rtfIL.Name = "rtfIL";
+            this.rtfIL.ReadOnly = true;
+            this.rtfIL.Size = new System.Drawing.Size(994, 406);
+            this.rtfIL.TabIndex = 0;
+            this.rtfIL.Text = "";
+            this.rtfIL.WordWrap = false;
             // 
             // MainForm
             // 
@@ -613,10 +614,9 @@
             this.pnlDetail.ResumeLayout(false);
             this.tabCSharp.ResumeLayout(false);
             this.tabCSharp.PerformLayout();
+            this.tabIL.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tabIL.ResumeLayout(false);
-            this.tabIL.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -668,7 +668,7 @@
         private System.Windows.Forms.Button btnOptimize;
         private System.Windows.Forms.ToolStripMenuItem mnuOptimize;
         private System.Windows.Forms.TabPage tabIL;
-        private System.Windows.Forms.TextBox txtIL;
+        private System.Windows.Forms.RichTextBox rtfIL;
     }
 }
 
