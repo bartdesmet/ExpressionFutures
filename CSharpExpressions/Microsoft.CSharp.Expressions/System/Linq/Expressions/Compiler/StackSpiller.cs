@@ -1262,8 +1262,8 @@ namespace System.Linq.Expressions.Compiler
         private static void MarkRefInstance(ChildRewriter cr, Expression instance)
         {
             // Primitive value types are okay because they are all readonly,
-            // but we can't rely on this for non-primitive types. So we throw
-            // NotSupported.
+            // but we can't rely on this for non-primitive types. For those
+            // we have to spill the by ref local.
             if (instance != null && instance.Type.GetTypeInfo().IsValueType && instance.Type.GetTypeCode() == TypeCode.Object)
             {
                 cr.MarkByRef(0);
