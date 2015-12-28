@@ -129,7 +129,7 @@ namespace ClrTest.Reflection
 
                 //The operand is an 8-bit integer: 001F  ldc.i4.s, FE12  unaligned.
                 case OperandType.ShortInlineI:
-                    Byte int8 = ReadByte();
+                    SByte int8 = ReadSByte();
                     return new ShortInlineIInstruction(offset, opCode, int8);
 
                 //The operand is a 32-bit integer.

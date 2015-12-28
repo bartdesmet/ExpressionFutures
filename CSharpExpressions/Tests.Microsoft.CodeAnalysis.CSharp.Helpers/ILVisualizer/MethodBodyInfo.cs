@@ -57,7 +57,7 @@ namespace ClrTest.Reflection
 
             mbi.Identity = method.GetHashCode();
             mbi.TypeName = method.GetType().Name;
-            mbi.MethodToString = method.ToString();
+            mbi.MethodToString = ".method " + method.ToIL();
 
             ILReader reader = ILReaderFactory.Create(method);
             mbi.Exceptions = reader.ILProvider.GetExceptionInfos();
@@ -151,7 +151,7 @@ namespace ClrTest.Reflection
                 var t = default(Type);
                 if (m_startCatch.TryGetValue(instruction.Offset, out t))
                 {
-                    m_mbi.AddInstruction(m_indent + $"catch ({t})");
+                    m_mbi.AddInstruction(m_indent + $"catch {t.ToIL()}");
                     m_mbi.AddInstruction(m_indent + "{");
                     Indent();
                 }

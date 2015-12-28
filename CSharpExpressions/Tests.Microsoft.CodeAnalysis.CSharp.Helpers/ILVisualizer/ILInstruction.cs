@@ -126,15 +126,15 @@ namespace ClrTest.Reflection
     }
     public class ShortInlineIInstruction : ILInstruction
     {
-        private Byte m_int8;
+        private SByte m_int8;
 
-        internal ShortInlineIInstruction(Int32 offset, OpCode opCode, Byte value)
+        internal ShortInlineIInstruction(Int32 offset, OpCode opCode, SByte value)
             : base(offset, opCode)
         {
             this.m_int8 = value;
         }
 
-        public Byte Byte { get { return m_int8; } }
+        public SByte Byte { get { return m_int8; } }
 
         public override void Accept(ILInstructionVisitor vistor) { vistor.VisitShortInlineIInstruction(this); }
     }
