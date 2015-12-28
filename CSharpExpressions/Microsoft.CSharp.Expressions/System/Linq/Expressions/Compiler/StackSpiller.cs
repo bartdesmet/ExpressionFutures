@@ -808,8 +808,9 @@ namespace System.Linq.Expressions.Compiler
                     break;
 #endif
                 case RewriteAction.SpillStack:
+#if LINQ
                     RequireNotRefInstance(node.NewExpression);
-
+#endif
                     ParameterExpression tempNew = MakeTemp(rewrittenNew.Type);
                     Expression[] comma = new Expression[inits.Count + 2];
                     comma[0] = Expression.Assign(tempNew, rewrittenNew);
@@ -866,8 +867,9 @@ namespace System.Linq.Expressions.Compiler
                     break;
 #endif
                 case RewriteAction.SpillStack:
+#if LINQ
                     RequireNotRefInstance(node.NewExpression);
-
+#endif
                     ParameterExpression tempNew = MakeTemp(rewrittenNew.Type);
                     Expression[] comma = new Expression[bindings.Count + 2];
                     comma[0] = Expression.Assign(tempNew, rewrittenNew);
@@ -1184,7 +1186,7 @@ namespace System.Linq.Expressions.Compiler
             return clone;
         }
 
-#endregion
+        #endregion
 
 #if LINQ
         /// <summary>
@@ -1211,7 +1213,6 @@ namespace System.Linq.Expressions.Compiler
                 throw Error.TryNotSupportedForMethodsWithRefArgs(method);
             }
         }
-#endif
 
         /// <summary>
         /// Requires that the instance is not a value type (primitive types are
@@ -1239,8 +1240,7 @@ namespace System.Linq.Expressions.Compiler
                 throw Error.TryNotSupportedForValueTypeInstances(instance.Type);
             }
         }
-
-#if !LINQ
+#else
         // TODO: We still have RequireNoRefArgs for checks in ListInit and MemberInit at this point.
 
         private static void MarkRefArgs(ChildRewriter cr, MethodBase method, int firstIndex)

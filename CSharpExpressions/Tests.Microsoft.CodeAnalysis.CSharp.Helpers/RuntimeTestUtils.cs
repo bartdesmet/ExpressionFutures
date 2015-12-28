@@ -5,6 +5,7 @@
 // NB: These get included in the runtime compilations of snippets to evaluate using Roslyn.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -385,4 +386,54 @@ public class Base
 
 public class Derived : Base
 {
+}
+
+public struct MemberInitStruct
+{
+    private readonly Func<string, string> _log;
+    private int _y;
+
+    public MemberInitStruct(Func<string, string> log)
+    {
+        _log = log;
+
+        X = 0;
+        _y = 0;
+        Z = new NestedMemberInitStruct(log);
+        XS = new List<int>();
+    }
+
+    public int X;
+
+    public int Y
+    {
+        get { _log("get_Y"); return _y; }
+        set { _log("set_Y"); _y = value; }
+    }
+
+    public NestedMemberInitStruct Z;
+
+    public List<int> XS;
+}
+
+public struct NestedMemberInitStruct
+{
+    private readonly Func<string, string> _log;
+    private int _b;
+
+    public NestedMemberInitStruct(Func<string, string> log)
+    {
+        _log = log;
+
+        A = 0;
+        _b = 0;
+    }
+
+    public int A;
+
+    public int B
+    {
+        get { _log("get_B"); return _b; }
+        set { _log("set_B"); _b = value; }
+    }
 }

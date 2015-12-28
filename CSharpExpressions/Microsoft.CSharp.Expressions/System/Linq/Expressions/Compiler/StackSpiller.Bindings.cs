@@ -96,8 +96,9 @@ namespace System.Linq.Expressions.Compiler
                 {
                     throw Error.CannotAutoInitializeValueTypeMemberThroughProperty(_binding.Member);
                 }
+#if LINQ
                 RequireNotRefInstance(target);
-
+#endif
                 MemberExpression member = Expression.MakeMemberAccess(target, _binding.Member);
                 ParameterExpression memberTemp = _spiller.MakeTemp(member.Type);
 
@@ -182,8 +183,9 @@ namespace System.Linq.Expressions.Compiler
                 {
                     throw Error.CannotAutoInitializeValueTypeElementThroughProperty(_binding.Member);
                 }
+#if LINQ
                 RequireNotRefInstance(target);
-
+#endif
                 MemberExpression member = Expression.MakeMemberAccess(target, _binding.Member);
                 ParameterExpression memberTemp = _spiller.MakeTemp(member.Type);
 
@@ -241,8 +243,9 @@ namespace System.Linq.Expressions.Compiler
 
             internal override Expression AsExpression(Expression target)
             {
+#if LINQ
                 RequireNotRefInstance(target);
-
+#endif
                 MemberExpression member = Expression.MakeMemberAccess(target, _binding.Member);
                 ParameterExpression memberTemp = _spiller.MakeTemp(member.Type);
 

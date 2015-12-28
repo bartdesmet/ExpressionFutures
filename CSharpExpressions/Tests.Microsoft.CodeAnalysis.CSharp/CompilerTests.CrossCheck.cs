@@ -3030,6 +3030,79 @@ exit:
         }
 
         [TestMethod]
+        public void CrossCheck_Async_Spilling_MemberInit_Assign1()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        var res = new WeakBox<int> { Value = await Task.FromResult(Return(42)) };
+    
+        Log(res.Value);
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_MemberInit_Assign2()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        var res = new WeakBox<string> { Value = await Task.FromResult(Return(""bar"")) };
+    
+        Log(res.Value);
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_MemberInit_Member()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        var res = new WeakBox<WeakBox<int>> { Value = { Value = await Task.FromResult(Return(42)) } };
+    
+        Log(res.Value.Value);
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_Async_Spilling_MemberInit_ManOrBoy()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    AwaitVoid(async () =>
+    {
+        var res = new MemberInitStruct(Log<string>)
+        {
+            X = await Task.FromResult(Return(1)),
+            Z =
+            {
+                A = await Task.FromResult(Return(2)),
+                B = await Task.FromResult(Return(3))
+            },
+            Y = await Task.FromResult(Return(4)),
+            XS =
+            {
+                await Task.FromResult(Return(5))
+            }
+        };
+
+        Log($""{res.X},{res.Y},{res.Z.A},{res.Z.B},{res.XS[0]}"");
+    });
+}");
+            f();
+        }
+
+        [TestMethod]
         public void CrossCheck_Async_AwaitInExpression()
         {
             var f = Compile<Func<int>>(@"() =>
