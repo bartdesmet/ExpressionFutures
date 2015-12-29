@@ -205,6 +205,9 @@ namespace Microsoft.CSharp.Expressions
             //     and any variables introduced by those constructs are brought in scope beyond
             //     evaluation of the "source".
 
+            // REVIEW: Should we ensure all variables get assigned default values? Cf. when it's used
+            //         in a loop and the locals don't get reinitialized. Or should we assume there's
+            //         definite assignment (or enforce it)?
             var res = Expression.Block(typeof(void), Variables, expressions);
 
             return res;

@@ -170,6 +170,9 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                // REVIEW: Should we ensure all variables get assigned default values? Cf. when it's used
+                //         in a loop and the locals don't get reinitialized. Or should we assume there's
+                //         definite assignment (or enforce it)?
                 return Expression.Block(Type, Variables, statements);
             }
         }

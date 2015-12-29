@@ -254,6 +254,11 @@ namespace Microsoft.CSharp.Expressions
             // machine. Note the variables returned from the rewrite step of the body are included here
             // in order to hoist them to the heap.
             //
+
+            // REVIEW: Should we ensure all hoisted variables get assigned default values? This could
+            //         matter if the resulting lambda gets inlined in an invocation expression and is
+            //         invoked repeatedly, causing locals to be reused. Or should we assume definite
+            //         assignment here (or enforce it)?
             var rewritten = Expression.Block(new[] { builderVar, stateMachineVar, stateVar }.Concat(variables), exprs);
 
             //

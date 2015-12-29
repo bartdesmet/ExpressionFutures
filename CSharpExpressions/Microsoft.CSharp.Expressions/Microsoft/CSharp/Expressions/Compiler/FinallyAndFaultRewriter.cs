@@ -90,6 +90,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var err = Expression.Parameter(typeof(object), "__error" + _n++);
             var ex = Expression.Parameter(typeof(object), "__ex" + _n++);
 
+            // NB: Assignment with default is important here; the whole node could execute
+            //     many times, e.g. in the body of a loop, causing the same local to be
+            //     reused. We don't want to pick up the result of a previous evaluation.
+            var initErr = Expression.Assign(err, Expression.Default(err.Type));
+
             var saveException = default(Expression);
             var value = default(ParameterExpression);
 
@@ -140,7 +145,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 );
 
             var vars = new List<ParameterExpression> { err };
-            var exprs = new List<Expression> { lowered };
+            var exprs = new List<Expression> { initErr, lowered };
 
             if (leaveLabels.Count > 0)
             {

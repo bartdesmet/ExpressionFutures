@@ -389,6 +389,9 @@ namespace Microsoft.CSharp.Expressions
         {
             if (Variables.Count > 0)
             {
+                // REVIEW: Should we ensure all variables get assigned default values? Cf. when it's used
+                //         in a loop and the locals don't get reinitialized. Or should we assume there's
+                //         definite assignment (or enforce it)?
                 expression = Expression.Block(Variables, expression);
             }
 

@@ -174,6 +174,10 @@ namespace Microsoft.CSharp.Expressions
                 res =
                     Expression.Block(
                         new[] { receiver, result },
+                        // NB: Assignment with default is important here; the whole node could execute
+                        //     many times, e.g. in the body of a loop, causing the same local to be
+                        //     reused. We don't want to pick up the result of a previous evaluation.
+                        Expression.Assign(result, Expression.Default(resultType)),
                         evalReceiver,
                         Expression.IfThen(
                             nonNullCheck,

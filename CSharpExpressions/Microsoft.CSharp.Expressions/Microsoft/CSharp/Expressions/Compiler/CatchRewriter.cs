@@ -72,6 +72,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             res =
                                 Expression.Block(
                                     new[] { tryResult, exceptionVariable },
+                                    // NB: Assignment with default is important here; the whole node could execute
+                                    //     many times, e.g. in the body of a loop, causing the same local to be
+                                    //     reused. We don't want to pick up the result of a previous evaluation.
+                                    Expression.Assign(exceptionVariable, Expression.Default(exceptionVariable.Type)),
                                     Expression.Assign(tryResult, newTry),
                                     Expression.Condition(
                                         Expression.NotEqual(exceptionVariable, Expression.Default(exceptionVariable.Type)),
@@ -85,6 +89,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             res =
                                 Expression.Block(
                                     new[] { exceptionVariable },
+                                    // NB: Assignment with default is important here; the whole node could execute
+                                    //     many times, e.g. in the body of a loop, causing the same local to be
+                                    //     reused. We don't want to pick up the result of a previous evaluation.
+                                    Expression.Assign(exceptionVariable, Expression.Default(exceptionVariable.Type)),
                                     newTry,
                                     Expression.IfThen(
                                         Expression.NotEqual(exceptionVariable, Expression.Default(exceptionVariable.Type)),

@@ -274,6 +274,19 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
+        [TestMethod]
+        public void CrossCheck_ConditionalAccess_Loop()
+        {
+            var f = Compile<Action<string[]>>(@"ss =>
+{
+    foreach (var s in ss)
+    {
+        Log(s?.Length);
+    }
+}");
+            f(new[] { "bar", null, "foobar", "qux" });
+        }
+
         #endregion
 
         #region Named parameters
