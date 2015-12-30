@@ -31,16 +31,20 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.fntDetails = new RoslynPad.FontPicker();
             this.fntTree = new RoslynPad.FontPicker();
             this.fntSyntax = new RoslynPad.FontPicker();
             this.fntDebug = new RoslynPad.FontPicker();
             this.fntEditor = new RoslynPad.FontPicker();
-            this.fntDetails = new RoslynPad.FontPicker();
+            this.btnGrowAll = new System.Windows.Forms.Button();
+            this.btnShrinkAll = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnShrinkAll);
+            this.groupBox1.Controls.Add(this.btnGrowAll);
             this.groupBox1.Controls.Add(this.fntDetails);
             this.groupBox1.Controls.Add(this.fntTree);
             this.groupBox1.Controls.Add(this.fntSyntax);
@@ -48,7 +52,7 @@
             this.groupBox1.Controls.Add(this.fntEditor);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(754, 344);
+            this.groupBox1.Size = new System.Drawing.Size(754, 400);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Display settings";
@@ -72,6 +76,17 @@
             this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // fntDetails
+            // 
+            this.fntDetails.AutoSize = true;
+            this.fntDetails.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fntDetails.Caption = "Details font:";
+            this.fntDetails.Location = new System.Drawing.Point(6, 274);
+            this.fntDetails.Name = "fntDetails";
+            this.fntDetails.SelectedFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fntDetails.Size = new System.Drawing.Size(490, 46);
+            this.fntDetails.TabIndex = 8;
             // 
             // fntTree
             // 
@@ -117,16 +132,25 @@
             this.fntEditor.Size = new System.Drawing.Size(490, 46);
             this.fntEditor.TabIndex = 4;
             // 
-            // fntDetails
+            // btnGrowAll
             // 
-            this.fntDetails.AutoSize = true;
-            this.fntDetails.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.fntDetails.Caption = "Details font:";
-            this.fntDetails.Location = new System.Drawing.Point(6, 274);
-            this.fntDetails.Name = "fntDetails";
-            this.fntDetails.SelectedFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fntDetails.Size = new System.Drawing.Size(490, 46);
-            this.fntDetails.TabIndex = 8;
+            this.btnGrowAll.Location = new System.Drawing.Point(15, 346);
+            this.btnGrowAll.Name = "btnGrowAll";
+            this.btnGrowAll.Size = new System.Drawing.Size(95, 35);
+            this.btnGrowAll.TabIndex = 9;
+            this.btnGrowAll.Text = "Grow all";
+            this.btnGrowAll.UseVisualStyleBackColor = true;
+            this.btnGrowAll.Click += new System.EventHandler(this.btnGrowAll_Click);
+            // 
+            // btnShrinkAll
+            // 
+            this.btnShrinkAll.Location = new System.Drawing.Point(116, 346);
+            this.btnShrinkAll.Name = "btnShrinkAll";
+            this.btnShrinkAll.Size = new System.Drawing.Size(95, 35);
+            this.btnShrinkAll.TabIndex = 10;
+            this.btnShrinkAll.Text = "Shrink all";
+            this.btnShrinkAll.UseVisualStyleBackColor = true;
+            this.btnShrinkAll.Click += new System.EventHandler(this.btnShrinkAll_Click);
             // 
             // OptionsForm
             // 
@@ -159,5 +183,7 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private FontPicker fntDetails;
+        private System.Windows.Forms.Button btnShrinkAll;
+        private System.Windows.Forms.Button btnGrowAll;
     }
 }
