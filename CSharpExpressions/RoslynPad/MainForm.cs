@@ -837,6 +837,7 @@ namespace RoslynPad
                 txtNode.Font = frm.DebugViewFont;
                 trvExpr.Font = frm.TreeFont;
                 HighlightCSharp();
+                UpdateIL(_eval);
             }
         }
 
