@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace RoslynPad
@@ -69,8 +62,17 @@ namespace RoslynPad
             }
         }
 
-        private void OptionsForm_Load(object sender, EventArgs e)
+        public Font DetailsFont
         {
+            get
+            {
+                return fntDetails.SelectedFont;
+            }
+
+            set
+            {
+                fntDetails.SelectedFont = value;
+            }
         }
     }
 }

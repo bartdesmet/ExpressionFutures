@@ -825,6 +825,7 @@ namespace RoslynPad
                 SyntaxFont = rtf.Font,
                 DebugViewFont = txtResult.Font,
                 TreeFont = trvExpr.Font,
+                DetailsFont = prgNode.Font,
             };
 
             if (frm.ShowDialog() == DialogResult.OK)
@@ -836,6 +837,7 @@ namespace RoslynPad
                 txtResult.Font = frm.DebugViewFont;
                 txtNode.Font = frm.DebugViewFont;
                 trvExpr.Font = frm.TreeFont;
+                prgNode.Font = frm.DetailsFont;
                 HighlightCSharp();
                 UpdateIL(_eval);
             }
