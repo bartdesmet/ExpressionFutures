@@ -549,9 +549,16 @@ Generally speaking, the `Switch` node reduces into the DLR equivalent, therefore
 
 However, we optimize a few cases that the DLR fails to optimize for. In particular, we have special treatment for switches with a nullable governing type in order to emit an `IfThenElse` with null-checking logic wrapping the `Switch` on non-null values. The DLR doesn't optimize this case and emits a chain of `IfThenElse` nodes rather than leveraging the `switch` IL instruction. This optimization is analogous to the one in the C# and VB compilers.
 
+##### Block
+
+A specialized block expression `BlockCSharpExpression` has been added as well. It's very similar to the `BlockExpression` in the DLR but it allows for the specification of a return label as a `LabelTarget`. This is useful to keep the shape of the tree as close as possible to what the user wrote without relying on a `BlockExpression` with a separate `LabelExpression` for the return label at the end. In this way, the C# specific block expression is similar to the loop constructs in the DLR where the `LabelExpression` nodes are implied.
+
+The Roslyn fork with extended expression tree support emits `BlockCSharpExpression` nodes for the top-level block nodes of statement-bodied lambdas. An alternative design could be to represent statement lambdas as separate nodes which have a `ReturnLabel` in addition to the `Parameters` collection and the `Body` expression because this type of block is mostly useful when paired with a lambda expression anyway (although the reduction is straightforward and independent of the containing lambda).
+
+Reduction of the `BlockCSharpExpression` emits a `LabelExpression` after all the expressions specified in the `Statements` collection. The label never has a user-supplied default value; it is assumed control flow can never fall into the `LabelExpression` without a `Goto` (of the return kind) branching to it. Reduction steps could fuse an immediately preceding return statement by absorbing its specified return value in order to avoid emission of multiple `ret` instructions, or more generally perform control flow analysis to prune out unreachable code.
+
 ### Miscellaneous
 
 A few more nodes to document:
-- CSharpBlock
 - AssignBinary
 - AssignUnary
