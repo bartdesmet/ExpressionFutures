@@ -182,6 +182,12 @@ It goes without saying the the `CSharpExpressionVisitor` allows for visitation o
 
 Reduction of dynamically bound expressions uses a `Dynamic` node underneath. To specialize the emitted expression for each dynamically bound node type, the `DynamicCSharpExpression` base class provides a `ReduceDynamic` method which returns a `CallSiteBinder` and an `IEnumerable<Expression>` with the expressions to pass to the `Dynamic` node. The returned binders are obtained from the `Microsoft.CSharp.RuntimeBinder.Binder` factory methods.
 
+##### Dynamic assignments
+
+Assignments involving dynamic operands are represented using the `AssignBinaryDynamicCSharpExpression` and `AssignUnaryDynamicCSharpExpression` nodes. Creation of those nodes is supported via factories on `DynamicCSharpExpression` that are dynamic variants of the assignments found in the DLR, e.g. `DynamicAddAssign`. These nodes require assignable left-hand side expressions, which include the C#-specific nodes with `DynamicGetIndex` and `DynamicGetMember` node types, as well as the valid assignments targets in the DLR.
+
+Reduction of dynamic assignments with a dynamically typed left-hand side uses `ReduceAssignment` helper methods which emit `Dynamic` expressions parameterized by `SetMember` and `SetIndex` runtime binders. Dynamic variants of `AddAssign` and `SubtractAssign` will also emit a `Dynamic` node with an `IsEvent` binder in order to check whether the target of the assignment represents in event. If that's the case, a dynamically bound `InvokeMember` operation is carried out to add or remove the event handler specified in the right-hand side.
+
 ### C# 5.0
 
 #### Async and Await
