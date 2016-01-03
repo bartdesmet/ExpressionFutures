@@ -345,9 +345,6 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (method == null)
                     {
-                        // NB: This can be represented using the LINQ node; just need the method to be resolved. So, no need to
-                        //     mark it as C# specific.
-
                         if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
                         {
                             if (rightType == typeof(string))
