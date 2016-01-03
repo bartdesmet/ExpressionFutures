@@ -585,10 +585,10 @@ Note there some more trickiness around compound assignments involving a left-han
 
 ### TODO
 
-Document optimizer support
-Document RoslynPad utility
-Document testing strategy
-Document Roslyn compiler changes
-Document debugger proxy support
-Document suggested extensions and modifications to the .NET Framework to improve expression support by other languages
-Document options to share some implementation details with VB
+- Document optimizer support
+- Document RoslynPad utility
+- Document testing strategy
+- Document Roslyn compiler changes
+- Document debugger proxy support
+- Document suggested extensions and modifications to the .NET Framework to improve expression support by other languages
+- Document options to share some implementation details with VB
