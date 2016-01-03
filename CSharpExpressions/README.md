@@ -565,6 +565,30 @@ Reduction of the `BlockCSharpExpression` emits a `LabelExpression` after all the
 
 ### Miscellaneous
 
-A few more nodes to document:
-- AssignBinary
-- AssignUnary
+We also introduce specialized assignment nodes to deal with C#-specific cases. These operations are implemented via `AssignBinaryCSharpExpression` and `AssignUnaryCSharpExpression` nodes. The former are used for compound assignments, the latter for increment and decrement operations.
+
+#### Binary assignment nodes
+
+Binary compound assignment support does exist in the DLR but it is more restrictive than what's allowed in C#. In particular, compound assignments are supported for strings (`AddAssign` nodes using `Concat` methods underneath), delegates (using `Delegate.Combine` and `Delegate.Remove`), and integral types of 16 bits and below (using widening and narrowing conversions, including support for checked variants). In order to support the C# semantics of compound assignments, the `AssignBinaryCSharpExpression` node exposes `LeftConversion` and `FinalConversion` lambda expressions as properties, conform C# specification section 7.17.2.
+
+Reduction of the binary assignment nodes uses regular assignment and compound assignments nodes from the DLR after applying the necessary conversions. Implementation methods such as `String.Concat` and `Delegate.Combine` and `Delegate.Remove` are passed to the underlying nodes. In case the left-hand side of the assignment is a `IndexCSharpExpression` (with named and optional parameters), the internal `ReduceAssign` method is used in order to ensure proper evaluation order of indexer arguments and the right-hand side.
+
+Note there some more trickiness around compound assignments involving a left-hand side of a mutable value type, e.g. when applying the assignment to a field. For those cases, calls to helper methods on `RuntimeOpsEx` are emitted during reduction, e.g. `WithByRef`. For more information, see the comments in the code.
+
+#### Unary assignment nodes
+
+Unary increment and decrement operators also exist in the DLR but with a few notable omissions. First, the `byte`, `char`, and `sbyte` types are not supported for the operand of the unary assignment node. Second, checked variants are not available. For those reasons, a specialized `AssignUnaryCSharpExpression` node is provided, with node types including checked variants such as `PostIncrementAssignChecked`.
+
+Reduction of the unary assignment nodes uses the corresponding DLR nodes when applicable, e.g. for non-checked operations applied to a DLR-assignable node with a supported type (e.g. `PostIncrementAssign` on a `ParameterExpression` of type `Int32`). Checked variants, C#-specific supported types (via widening and narrowing conversions), and C#-specific assignment targets (i.e. `IndexCSharpExpression`) are reduced via the corresponding binary compound assignment operations with an right-hand side with a constant value of `1`.
+
+Note there some more trickiness around compound assignments involving a left-hand side of a mutable value type, e.g. when applying the assignment to a field. For those cases, calls to helper methods on `RuntimeOpsEx` are emitted during reduction, e.g. `PostAssignByRef`. For more information, see the comments in the code.
+
+### TODO
+
+Document optimizer support
+Document RoslynPad utility
+Document testing strategy
+Document Roslyn compiler changes
+Document debugger proxy support
+Document suggested extensions and modifications to the .NET Framework to improve expression support by other languages
+Document options to share some implementation details with VB
