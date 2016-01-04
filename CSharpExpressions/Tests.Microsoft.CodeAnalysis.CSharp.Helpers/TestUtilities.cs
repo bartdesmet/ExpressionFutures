@@ -6,6 +6,7 @@ using ClrTest.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CSharp.Expressions;
 using System;
 using System.Collections.Generic;
@@ -147,7 +148,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             // TODO: Investigate using the scripting APIs here instead.
 
-            // NB: poor man's beautification of the code as displayed in the UI
             expr = Indent(expr);
 
             var typeName = "Expressions";
@@ -179,8 +179,7 @@ public static class {typeName}
 
             var tree = CSharpSyntaxTree.ParseText(src);
 
-            // TODO: maybe we can perform formatting as well (prior to compilation)?
-            // Microsoft.CodeAnalysis.Formatting.Formatter.Format(_sem.SyntaxTree.GetRoot(), ws);
+            tree = Format(tree, trimCR);
 
             var csc = CSharpCompilation
                 // A class library `Expressions` which will be emitted in memory
@@ -232,6 +231,25 @@ public static class {typeName}
             var prp = typ.GetProperty(propName);
 
             return prp.GetValue(null);
+        }
+
+        private static SyntaxTree Format(SyntaxTree tree, bool trimCR)
+        {
+            var ws = new AdhocWorkspace();
+            var root = tree.GetRoot();
+            var newRoot = Formatter.Format(root, ws);
+            var newTree = tree.WithRootAndOptions(newRoot, tree.Options);
+
+            // NB: Likely we should fix the issue at the level of the RTF textbox instead of jumping
+            //     through hoops here.
+            if (trimCR)
+            {
+                var src = newTree.ToString();
+                src = src.Replace("\r\n", "\n");
+                newTree = CSharpSyntaxTree.ParseText(src);
+            }
+
+            return newTree;
         }
 
         private static string Indent(string code)
