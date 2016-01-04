@@ -147,6 +147,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             // TODO: Investigate using the scripting APIs here instead.
 
+            // NB: poor man's beautification of the code as displayed in the UI
+            expr = Indent(expr);
+
             var typeName = "Expressions";
             var propName = "Expression";
 
@@ -175,6 +178,9 @@ public static class {typeName}
             }
 
             var tree = CSharpSyntaxTree.ParseText(src);
+
+            // TODO: maybe we can perform formatting as well (prior to compilation)?
+            // Microsoft.CodeAnalysis.Formatting.Formatter.Format(_sem.SyntaxTree.GetRoot(), ws);
 
             var csc = CSharpCompilation
                 // A class library `Expressions` which will be emitted in memory
@@ -226,6 +232,32 @@ public static class {typeName}
             var prp = typ.GetProperty(propName);
 
             return prp.GetValue(null);
+        }
+
+        private static string Indent(string code)
+        {
+            var lines = code.Split('\n');
+
+            if (lines.Length == 1)
+            {
+                return code;
+            }
+
+            var sb = new StringBuilder();
+
+            sb.Append(lines[0] + "\n");
+
+            for (var i = 1; i < lines.Length; i++)
+            {
+                sb.Append("    " + lines[i]);
+
+                if (i != lines.Length - 1)
+                {
+                    sb.Append("\n");
+                }
+            }
+
+            return sb.ToString();
         }
 
         public static string GetMethodIL(this Delegate compiled)
