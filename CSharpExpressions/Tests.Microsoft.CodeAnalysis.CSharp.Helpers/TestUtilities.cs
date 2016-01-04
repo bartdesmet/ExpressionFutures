@@ -235,21 +235,29 @@ public static class {typeName}
 
         private static SyntaxTree Format(SyntaxTree tree, bool trimCR)
         {
-            var ws = new AdhocWorkspace();
-            var root = tree.GetRoot();
-            var newRoot = Formatter.Format(root, ws);
-            var newTree = tree.WithRootAndOptions(newRoot, tree.Options);
-
-            // NB: Likely we should fix the issue at the level of the RTF textbox instead of jumping
-            //     through hoops here.
-            if (trimCR)
+            try
             {
-                var src = newTree.ToString();
-                src = src.Replace("\r\n", "\n");
-                newTree = CSharpSyntaxTree.ParseText(src);
-            }
+                var ws = new AdhocWorkspace();
+                var root = tree.GetRoot();
+                var newRoot = Formatter.Format(root, ws);
+                var newTree = tree.WithRootAndOptions(newRoot, tree.Options);
 
-            return newTree;
+                // NB: Likely we should fix the issue at the level of the RTF textbox instead of jumping
+                //     through hoops here.
+                if (trimCR)
+                {
+                    var src = newTree.ToString();
+                    src = src.Replace("\r\n", "\n");
+                    newTree = CSharpSyntaxTree.ParseText(src);
+                }
+
+                return newTree;
+            }
+            catch (NotSupportedException)
+            {
+                // NB: This happens when running tests due to missing files in the test runner folder.
+                return tree;
+            }
         }
 
         private static string Indent(string code)
