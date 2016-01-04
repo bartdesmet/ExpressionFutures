@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using Tests.Microsoft.CodeAnalysis.CSharp;
@@ -69,7 +70,7 @@ namespace RoslynPad
             btnEval.Enabled = mnuEvaluate.Enabled = false;
 
             txtResult.Text = "";
-            txtCSharp.Text = "";
+            rtfCSharp.Clear();
             rtfIL.Clear();
             trvExpr.Nodes.Clear();
             rtf.Clear();
@@ -146,7 +147,24 @@ namespace RoslynPad
             var length = src.Length;
 
             var res = Classifier.GetClassifiedSpans(_sem, TextSpan.FromBounds(start, start + length), ws).ToArray();
+            Highlight(rtf, start, res);
 
+            _diags = _sem.GetDiagnostics();
+            foreach (var diag in _diags)
+            {
+                if (diag.Severity == DiagnosticSeverity.Error)
+                {
+                    var span = diag.Location.SourceSpan;
+                    rtf.Select(span.Start - start, span.Length);
+                    rtf.SelectionColor = Color.Red;
+                }
+            }
+
+            _lastTooltipPosition = -1;
+        }
+
+        private void Highlight(RichTextBox rtf, int start, ClassifiedSpan[] res)
+        {
             foreach (var span in res)
             {
                 rtf.Select(span.TextSpan.Start - start, span.TextSpan.Length);
@@ -167,19 +185,19 @@ namespace RoslynPad
                     rtf.SelectionColor = Color.DarkGreen;
                 }
             }
+        }
 
-            _diags = _sem.GetDiagnostics();
-            foreach (var diag in _diags)
-            {
-                if (diag.Severity == DiagnosticSeverity.Error)
-                {
-                    var span = diag.Location.SourceSpan;
-                    rtf.Select(span.Start - start, span.Length);
-                    rtf.SelectionColor = Color.Red;
-                }
-            }
+        private async Task HighlightCSharpishAsync(RichTextBox rtf, string code)
+        {
+            code = code.Replace("\r\n", "\n");
 
-            _lastTooltipPosition = -1;
+            var ws = new AdhocWorkspace();
+            var proj = ws.AddProject("Adhoc", "C#");
+            var doc = proj.AddDocument("decompiled.cs", code);
+            var start = 0;
+            var length = code.Length;
+            var res = await Classifier.GetClassifiedSpansAsync(doc, TextSpan.FromBounds(start, start + length));
+            Highlight(rtf, 0, res.ToArray());
         }
 
         private void HighlightIL(string il)
@@ -249,6 +267,7 @@ namespace RoslynPad
                 }
                 catch (Exception ex)
                 {
+                    rtf.Clear();
                     rtf.AppendText(ex.ToString());
                 }
             }
@@ -382,7 +401,7 @@ namespace RoslynPad
             {
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
-                txtCSharp.Text = "";
+                rtfCSharp.Clear();
                 rtfIL.Clear();
             }
         }
@@ -395,16 +414,24 @@ namespace RoslynPad
             txtNode.Text = "";
             txtResult.Text = expr.DebugView().ToString();
 
+            var csharp = default(string);
             try
             {
-                txtCSharp.ForeColor = Color.Black;
-                txtCSharp.Text = expr.ToCSharp(); // TODO: specify namespaces
+                rtfCSharp.ForeColor = Color.Black;
+                csharp = expr.ToCSharp(); // TODO: specify namespaces
+                rtfCSharp.Text = csharp;
             }
             catch (Exception ex)
             {
-                txtCSharp.ForeColor = Color.Red;
-                txtCSharp.Text = ex.ToString();
+                rtfCSharp.ForeColor = Color.Red;
+                rtfCSharp.Text = ex.ToString();
             }
+
+            try
+            {
+                HighlightCSharpishAsync(rtfCSharp, csharp).Wait(); // TODO: async all the way up
+            }
+            catch { } // NB: seen cases where this blows up because the code is invalid
 
             var root = new TreeNode();
             Expand(root, expr);
@@ -832,7 +859,7 @@ namespace RoslynPad
             {
                 txtCode.Font = frm.EditorFont;
                 rtf.Font = frm.SyntaxFont;
-                txtCSharp.Font = frm.SyntaxFont;
+                rtfCSharp.Font = frm.SyntaxFont;
                 rtfIL.Font = frm.SyntaxFont;
                 txtResult.Font = frm.DebugViewFont;
                 txtNode.Font = frm.DebugViewFont;
@@ -1100,7 +1127,7 @@ namespace RoslynPad
             {
                 txtResult.ForeColor = Color.Red;
                 txtResult.Text = ex.ToString();
-                txtCSharp.Text = "";
+                rtfCSharp.Clear();
                 rtfIL.Clear();
             }
         }
