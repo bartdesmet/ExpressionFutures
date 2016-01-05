@@ -866,6 +866,7 @@ namespace RoslynPad
                 trvExpr.Font = frm.TreeFont;
                 prgNode.Font = frm.DetailsFont;
                 HighlightCSharp();
+                HighlightCSharpishAsync(rtfCSharp, rtfCSharp.Text).Wait(); // TODO: deep async
                 UpdateIL(_eval);
             }
         }
