@@ -5,6 +5,8 @@
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -63,6 +65,56 @@ namespace Playground
             var r = ShadowEliminator.Eliminate(e);
         }
 
+        static void ArrayInitOptimization()
+        {
+            // See comments in NewMultidimensionalArrayInit node for more information about the goal of this
+            // optimization experiment.
+
+            foreach (var i in Enumerable.Range(1, 10).Select(x => x * 100))
+            {
+                ArrayInitOptimization(i, 100000);
+            }
+        }
+
+        static void ArrayInitOptimization(int elementCount, int iterationCount)
+        {
+            var e = Expression.NewArrayInit(typeof(int), Enumerable.Range(0, elementCount).Select(i => Expression.Constant(i)));
+
+            var sw = Stopwatch.StartNew();
+
+            var f = Expression.Lambda<Func<int[]>>(e);
+            var g = f.Compile();
+
+            //Console.WriteLine($"Compile({elementCount}) = {sw.ElapsedMilliseconds}ms");
+
+            sw.Restart();
+
+            for (var i = 0; i < iterationCount; i++)
+            {
+                g();
+            }
+
+            Console.WriteLine($"[RAW] new int[{elementCount}] x {iterationCount} = {sw.ElapsedMilliseconds}ms");
+
+            sw.Restart();
+
+            var o = ArrayInitOptimizer.Instance.VisitAndConvert(f, nameof(Test));
+            var h = o.Compile();
+
+            //Console.WriteLine($"Optimize({elementCount}) = {sw.ElapsedMilliseconds}ms");
+
+            sw.Restart();
+
+            for (var i = 0; i < iterationCount; i++)
+            {
+                h();
+            }
+
+            Console.WriteLine($"[OPT] new int[{elementCount}] x {iterationCount} = {sw.ElapsedMilliseconds}ms");
+
+            Console.WriteLine();
+        }
+
         static int F(int x,int y, int z)
         {
             throw new NotImplementedException();
@@ -84,6 +136,28 @@ namespace Playground
                 }
 
                 return base.VisitMember(node);
+            }
+        }
+
+        class ArrayInitOptimizer : ExpressionVisitor
+        {
+            public static readonly ExpressionVisitor Instance = new ArrayInitOptimizer();
+
+            protected override Expression VisitNewArray(NewArrayExpression node)
+            {
+                if (node.NodeType == ExpressionType.NewArrayInit)
+                {
+                    if (node.Type == typeof(int[]))
+                    {
+                        if (node.Expressions.All(e => e.NodeType == ExpressionType.Constant))
+                        {
+                            var values = node.Expressions.Select(e => (int)((ConstantExpression)e).Value).ToArray();
+                            return Expression.Convert(Expression.Call(Expression.Constant(values), typeof(Array).GetMethod("Clone")), node.Type);
+                        }
+                    }
+                }
+
+                return base.VisitNewArray(node);
             }
         }
     }

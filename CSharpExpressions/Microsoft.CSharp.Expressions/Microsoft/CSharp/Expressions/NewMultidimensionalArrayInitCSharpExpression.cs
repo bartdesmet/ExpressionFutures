@@ -141,6 +141,25 @@ namespace Microsoft.CSharp.Expressions
             //     Finally, not that the reduction approach below is likely more expensive than EmitArray used by
             //     the LambdaCompiler which can use dup instructions where we'll have a ldloc instruction for each
             //     element being initialized.
+            //
+            //     A quick experiment with an optimizer for NewArrayInit nodes with only constants yields the
+            //     following result (see Experiment.cs, method ArrayInitOptimization, in Playground):
+            //
+            //         [RAW] new int[10] x 100000 = 2ms
+            //         [OPT] new int[10] x 100000 = 10ms
+            //         [RAW] new int[100] x 100000 = 6ms
+            //         [OPT] new int[100] x 100000 = 15ms
+            //         [RAW] new int[400] x 100000 = 28ms   <<
+            //         [OPT] new int[400] x 100000 = 23ms   <<
+            //         [RAW] new int[500] x 100000 = 33ms
+            //         [OPT] new int[500] x 100000 = 28ms
+            //         [RAW] new int[1000] x 100000 = 69ms
+            //         [OPT] new int[1000] x 100000 = 43ms
+            //
+            //     With 100K iterations of evaluating the expression, it takes an array of 400+ elements for the
+            //     optimization to pay off. If we run into the need to optimize this, we should likely take such
+            //     a measurement into account and only apply the optimization when the expression is contained in
+            //     some loop construct and the element count is sufficiently large.
 
             var n = Expressions.Count;
             var rank = Bounds.Count;
