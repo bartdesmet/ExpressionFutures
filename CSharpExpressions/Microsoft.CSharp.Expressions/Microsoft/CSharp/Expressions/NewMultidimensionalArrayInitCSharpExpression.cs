@@ -113,6 +113,35 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            // NB: Unlike the C# compiler, we don't optimize for the case where all elements are constants of
+            //     a primitive type. In such a case, the C# compiler will emit a field with the binary representation
+            //     of the whole array and emit a call to RuntimeHelpers.InitializeArray. To achieve this, we'd need
+            //     to have access to a ModuleBuilder, also tying the reduction path to the compiler and requiring
+            //     separate treatment for the interpreter.
+            //
+            //     This optimization would matter most if many copies of the array are initialized or the array is
+            //     really big, and it only contains constants. In the case of a big array, we could argue that the
+            //     current expression API has many ineffiencies already, e.g. when emitting closures including lots
+            //     of captured variables, which does not create a display class but an array of StrongBox<T> objects.
+            //
+            //     An alternative, which could be useful if the expression is evaluated many times (creating many
+            //     copies), would be to prepare an instance of the array, cache it, and use Array.Clone to create
+            //     a copy each time the expression is evaluated. Effectively, the reduced expression would become a
+            //     Constant node containing the fully materialized array. This would only be worth the effort if the
+            //     cost of creating a clone is sufficiently less compared to element-by-element initialization which
+            //     is likely true given it does a memberwise clone underneath. One drawback is that the expression
+            //     would root the "prototype" of the array, but this is comparable to the module image containing a
+            //     blob containing the array elements from which copies are created through InitializeArray (unless
+            //     it employs a copy-on-write approach, haven't checked).
+            //
+            //     Note that the optimization sketched above could also be applied to ArrayInit nodes in LINQ, by
+            //     changing the LambdaCompiler (see ILGen.EmitArray which generates a sequence of stelems). It
+            //     doesn't seem like it was considered there, so maybe we can get away without it here as well.
+            //
+            //     Finally, not that the reduction approach below is likely more expensive than EmitArray used by
+            //     the LambdaCompiler which can use dup instructions where we'll have a ldloc instruction for each
+            //     element being initialized.
+
             var n = Expressions.Count;
             var rank = Bounds.Count;
 
