@@ -11,6 +11,7 @@
 <#@ import namespace="System.Text" #>
 <#@ output extension=".cs" #>
 <#
+// NB: When the Members property is left unspecified, all members on the specified type are exported as stubs.
 var types = new[]
 {
     new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeUtils", Members = new[] { "HasReferenceConversion" }, Suffix = "2", Partial = false },
