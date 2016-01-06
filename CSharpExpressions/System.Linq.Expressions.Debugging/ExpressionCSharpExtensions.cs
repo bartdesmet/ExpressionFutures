@@ -29,11 +29,24 @@ namespace System.Linq.Expressions
     {
         private static readonly string[] s_defaultNamespaces = new string[] { "System", "System.Collections.Generic", "System.Linq", "System.Threading.Tasks" };
 
+        /// <summary>
+        /// Returns a C# representation of the specified <paramref name="expression"/>.
+        /// </summary>
+        /// <param name="expression">The expression to get a C# representation for.</param>
+        /// <returns>A C# representation of the specified <paramref name="expression"/>.</returns>
+        /// <remarks>The produced C# may contain inaccuracies because the expression APIs are more expressive than the C# language. Use the output of this method for debugging purposes only.</remarks>
         public static string ToCSharp(this Expression expression)
         {
             return ToCSharp(expression, s_defaultNamespaces);
         }
 
+        /// <summary>
+        /// Returns a C# representation of the specified <paramref name="expression"/> considering the specified <paramref name="namespaces" /> to be imported.
+        /// </summary>
+        /// <param name="expression">The expression to get a C# representation for.</param>
+        /// <param name="namespaces">The set of namespaces that are imported, thus allowing the abbreviation of type names.</param>
+        /// <returns>A C# representation of the specified <paramref name="expression"/>.</returns>
+        /// <remarks>The produced C# may contain inaccuracies because the expression APIs are more expressive than the C# language. Use the output of this method for debugging purposes only.</remarks>
         public static string ToCSharp(this Expression expression, params string[] namespaces)
         {
             var sw = new StringWriter();
@@ -42,17 +55,32 @@ namespace System.Linq.Expressions
             return sw.ToString();
         }
 
+        /// <summary>
+        /// Returns a C# representation of the syntax to refer to the specified <paramref name="type"/> considering the specified <paramref name="namespaces" /> to be imported.
+        /// </summary>
+        /// <param name="expression">The type to get a C# representation for.</param>
+        /// <param name="namespaces">The set of namespaces that are imported, thus allowing the abbreviation of type names.</param>
+        /// <returns>A C# representation of the specified <paramref name="type"/>.</returns>
+        /// <remarks>The produced C# may contain inaccuracies because the CLR type system is more expressive than the subset made available in the C# language. Use the output of this method for debugging purposes only.</remarks>
         public static string ToCSharp(this Type type)
         {
             return ToCSharp(type, s_defaultNamespaces);
         }
+
+        /// <summary>
+        /// Returns a C# representation of the syntax to refer to the specified <paramref name="type"/> considering the specified <paramref name="namespaces" /> to be imported.
+        /// </summary>
+        /// <param name="type">The type to get a C# representation for.</param>
+        /// <param name="namespaces">The set of namespaces that are imported, thus allowing the abbreviation of type names.</param>
+        /// <returns>A C# representation of the specified <paramref name="type"/>.</returns>
+        /// <remarks>The produced C# may contain inaccuracies because the CLR type system is more expressive than the subset made available in the C# language. Use the output of this method for debugging purposes only.</remarks>
 
         public static string ToCSharp(this Type type, params string[] namespaces)
         {
             return ToCSharp(type, new HashSet<string>(namespaces ?? Array.Empty<string>()));
         }
 
-        public static string ToCSharp(this Type type, HashSet<string> namespaces)
+        private static string ToCSharp(this Type type, HashSet<string> namespaces)
         {
             if (type == null)
             {
