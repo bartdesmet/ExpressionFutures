@@ -11,17 +11,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Microsoft.CSharp.Expr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A3D7E32-E1F6-4770-B573-1ED65B5132FA}"
 	ProjectSection(SolutionItems) = preProject
-		BCL.MD = BCL.MD
-		Context.MD = Context.MD
-		Debugging.MD = Debugging.MD
-		Design.MD = Design.MD
-		Future.MD = Future.MD
-		Misc.MD = Misc.MD
-		Optimizers.MD = Optimizers.MD
+		Docs\BCL.MD = Docs\BCL.MD
+		Docs\Context.MD = Docs\Context.MD
+		Docs\Debugging.MD = Docs\Debugging.MD
+		Docs\Design.MD = Docs\Design.MD
+		Docs\Future.MD = Docs\Future.MD
+		Docs\Misc.MD = Docs\Misc.MD
+		Docs\Optimizers.MD = Docs\Optimizers.MD
 		README.md = README.md
-		RoslynPad.MD = RoslynPad.MD
-		Stubs.MD = Stubs.MD
-		Testing.MD = Testing.MD
+		Docs\RoslynPad.MD = Docs\RoslynPad.MD
+		Docs\Stubs.MD = Docs\Stubs.MD
+		Docs\Testing.MD = Docs\Testing.MD
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Linq.Expressions.Debugging", "System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj", "{29FB50CD-FA28-4051-9688-9A35EE0E51A9}"
