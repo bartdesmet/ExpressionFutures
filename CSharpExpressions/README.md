@@ -2,6 +2,17 @@
 
 This project contains C#-specific extensions to the `System.Linq.Expressions` API to support C# language constructs that were added after C# 3.0. It only contains the runtime library; the C# compiler changes required to support assignment of lambda expressions containing those language constructs to an `Expression<TDelegate>` is maintained separately in the [ExpressionTrees](https://github.com/bartdesmet/roslyn/tree/ExpressionTrees) branch of my Roslyn fork.
 
+This page describes the C# expression API in much detail. For other topics, see:
+
+- [Design principles](Design.MD)
+- [Testing strategy](Testing.MD)
+- [Debugging support](Debugging.MD)
+- [RoslynPad utility](RoslynPad.MD)
+- [Expression optimizers](Optimizers.MD)
+- [Future directions](Future.MD)
+- [Framework extensions](BCL.MD)
+- [Miscellaneous thoughts](Misc.MD)
+
 ## API Basics
 
 The top-level namespace of the API is `Microsoft.CSharp.Expressions`. Unless specified otherwise, all references to types in the description below will assume this namespace.
@@ -582,13 +593,3 @@ Unary increment and decrement operators also exist in the DLR but with a few not
 Reduction of the unary assignment nodes uses the corresponding DLR nodes when applicable, e.g. for non-checked operations applied to a DLR-assignable node with a supported type (e.g. `PostIncrementAssign` on a `ParameterExpression` of type `Int32`). Checked variants, C#-specific supported types (via widening and narrowing conversions), and C#-specific assignment targets (i.e. `IndexCSharpExpression`) are reduced via the corresponding binary compound assignment operations with an right-hand side with a constant value of `1`.
 
 Note there some more trickiness around compound assignments involving a left-hand side of a mutable value type, e.g. when applying the assignment to a field. For those cases, calls to helper methods on `RuntimeOpsEx` are emitted during reduction, e.g. `PostAssignByRef`. For more information, see the comments in the code.
-
-### TODO
-
-- Document optimizer support
-- Document RoslynPad utility
-- Document testing strategy
-- Document Roslyn compiler changes
-- Document debugger proxy support
-- Document suggested extensions and modifications to the .NET Framework to improve expression support by other languages
-- Document options to share some implementation details with VB
