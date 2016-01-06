@@ -1,6 +1,10 @@
 # Debugging Support
 
+This pages describes various features available in this prototype to aid in debugging expression trees by inspection.
+
 ## Existing debugging features
+
+The BCL has two features that aid in the debugging of expression trees: a `DebugView` property and debugger proxies for use by the IDE.
 
 ### DebugView property
 
@@ -34,6 +38,8 @@ All of this makes sense for the current use cases of `DebugView` for quick inspe
 In addition to the `DebugView` property, expression tree types in `System.Linq.Expressions` are annotated with the `DebuggerTypeProxy` attribute. The proxy types provide a view on the various properties of the expression node, including the `DebugView` property in order to make it only accessible at debug time from the IDE.
 
 ## A new DebugView approach
+
+This prototype has a new approach to `DebugView` that makes it more extensible and usable for asserts in test code, based on syntactic equality.
 
 ### DebugView method
 

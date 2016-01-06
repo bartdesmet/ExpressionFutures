@@ -1,5 +1,7 @@
 # Framework Stubs
 
+This page describes the approach taken by this prototype to access non-public helper methods in the BCL, as well as future considerations.
+
 ## Goal
 
 In order to reuse many of the internal helpers in the System.Linq.Expressions API, we call them using private reflection in this prototype, awaiting a final solution using `InternalsVisibleTo` or exposing some of these for more general use. Examples include type system helpers, various checks for use in expression factories, etc. The goal of this approach is to minimize cloning of code wherever possible.
