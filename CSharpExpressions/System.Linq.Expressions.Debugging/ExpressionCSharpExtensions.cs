@@ -56,10 +56,9 @@ namespace System.Linq.Expressions
         }
 
         /// <summary>
-        /// Returns a C# representation of the syntax to refer to the specified <paramref name="type"/> considering the specified <paramref name="namespaces" /> to be imported.
+        /// Returns a C# representation of the syntax to refer to the specified <paramref name="type"/>.
         /// </summary>
-        /// <param name="expression">The type to get a C# representation for.</param>
-        /// <param name="namespaces">The set of namespaces that are imported, thus allowing the abbreviation of type names.</param>
+        /// <param name="type">The type to get a C# representation for.</param>
         /// <returns>A C# representation of the specified <paramref name="type"/>.</returns>
         /// <remarks>The produced C# may contain inaccuracies because the CLR type system is more expressive than the subset made available in the C# language. Use the output of this method for debugging purposes only.</remarks>
         public static string ToCSharp(this Type type)
