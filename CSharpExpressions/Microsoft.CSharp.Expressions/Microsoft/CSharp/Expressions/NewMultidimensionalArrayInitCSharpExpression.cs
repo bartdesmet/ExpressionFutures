@@ -113,8 +113,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            // NB: Unlike the C# compiler, we don't optimize for the case where all elements are constants of
-            //     a primitive type. In such a case, the C# compiler will emit a field with the binary representation
+            // NB: Unlike the C# compiler, we don't optimize for the case where all elements are constants of a
+            //     blittable type. In such a case, the C# compiler will emit a field with the binary representation
             //     of the whole array and emit a call to RuntimeHelpers.InitializeArray. To achieve this, we'd need
             //     to have access to a ModuleBuilder, also tying the reduction path to the compiler and requiring
             //     separate treatment for the interpreter.
