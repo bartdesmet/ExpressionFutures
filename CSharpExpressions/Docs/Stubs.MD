@@ -6,7 +6,7 @@ In order to reuse many of the internal helpers in the System.Linq.Expressions AP
 
 ## Mechanism
 
-Stubs are generated using the [Stubs.tt T4 file](ExpressionFutures/CSharpExpressions/Microsoft.CSharp.Expressions/Stubs.tt) which includes a list of types and members to generate stubs for. The stubs simply obtain a reference to the `MemberInfo` for the specified member, cache it in a static field, and wrap it with an API that's similar to the original one. When disambiguation is needed, e.g. for a type name, a suffix can be added to the stub type name. Any `TargetInvocationException` thrown by the late-bound invocation gets unwrapped into its `InnerException` instead.
+Stubs are generated using the [Stubs.tt T4 file](../Microsoft.CSharp.Expressions/Stubs.tt) which includes a list of types and members to generate stubs for. The stubs simply obtain a reference to the `MemberInfo` for the specified member, cache it in a static field, and wrap it with an API that's similar to the original one. When disambiguation is needed, e.g. for a type name, a suffix can be added to the stub type name. Any `TargetInvocationException` thrown by the late-bound invocation gets unwrapped into its `InnerException` instead.
 
 ## Future directions
 
