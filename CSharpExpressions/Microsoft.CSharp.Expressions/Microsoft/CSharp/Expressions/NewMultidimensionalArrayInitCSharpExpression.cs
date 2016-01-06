@@ -20,14 +20,10 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class NewMultidimensionalArrayInitCSharpExpression : CSharpExpression
     {
-        // NB: We don't expose the bounds as a ReadOnlyCollection<int>. The Type property can be used to discover the bounds.
-
-        internal readonly int[] _bounds;
-
-        internal NewMultidimensionalArrayInitCSharpExpression(Type type, int[] bounds, ReadOnlyCollection<Expression> expressions)
+        internal NewMultidimensionalArrayInitCSharpExpression(Type type, ReadOnlyCollection<int> bounds, ReadOnlyCollection<Expression> expressions)
         {
             Type = type;
-            _bounds = bounds;
+            Bounds = bounds;
             Expressions = expressions;
         }
 
@@ -44,6 +40,11 @@ namespace Microsoft.CSharp.Expressions
         public override Type Type { get; }
 
         /// <summary>
+        /// Gets the bounds of the array.
+        /// </summary>
+        public ReadOnlyCollection<int> Bounds { get; }
+
+        /// <summary>
         /// Gets the values to initialize the elements of the new array.
         /// </summary>
         public ReadOnlyCollection<Expression> Expressions { get; }
@@ -58,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(indexes, nameof(indexes));
 
-            if (indexes.Length != _bounds.Length)
+            if (indexes.Length != Bounds.Count)
             {
                 throw Error.RankMismatch();
             }
@@ -67,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
             for (var i = 0; i < indexes.Length; i++)
             {
                 var idx = indexes[i];
-                var bound = _bounds[i];
+                var bound = Bounds[i];
 
                 if (idx < 0 || idx >= bound)
                 {
@@ -103,7 +104,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.NewMultidimensionalArrayInit(Type.GetElementType(), _bounds, expressions);
+            return CSharpExpression.NewMultidimensionalArrayInit(Type.GetElementType(), Bounds, expressions);
         }
 
         /// <summary>
@@ -113,15 +114,15 @@ namespace Microsoft.CSharp.Expressions
         public override Expression Reduce()
         {
             var n = Expressions.Count;
-            var rank = _bounds.Length;
+            var rank = Bounds.Count;
 
             var res = Expression.Parameter(Type, "__array");
             var exprs = new Expression[n + 2];
 
             // NB: We need the bounds to NewArrayBounds and all values from 0 to each bound for ArrayAccess.
-            var consts = Enumerable.Range(0, _bounds.Max() + 1).Select(CreateConstantInt32).ToArray();
+            var consts = Enumerable.Range(0, Bounds.Max() + 1).Select(CreateConstantInt32).ToArray();
 
-            exprs[0] = Expression.Assign(res, Expression.NewArrayBounds(Type.GetElementType(), _bounds.Map(i => consts[i])));
+            exprs[0] = Expression.Assign(res, Expression.NewArrayBounds(Type.GetElementType(), Bounds.Map(i => consts[i])));
 
             var indexValues = new int[rank];
 
@@ -132,7 +133,7 @@ namespace Microsoft.CSharp.Expressions
 
                 for (var j = rank - 1; j >= 0; j--)
                 {
-                    var bound = _bounds[j];
+                    var bound = Bounds[j];
                     indexValues[j] = idx % bound;
                     idx /= bound;
                 }
@@ -161,7 +162,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, params Expression[] initializers)
         {
-            return NewMultidimensionalArrayInit(type, bounds, (IEnumerable<Expression>)initializers);
+            return NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
         }
 
         /// <summary>
@@ -174,6 +175,19 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, IEnumerable<Expression> initializers)
         {
+            return NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="NewMultidimensionalArrayInitCSharpExpression"/> that represents creating a multi-dimensional array that has the specified bounds and elements. 
+        /// </summary>
+        /// <param name="type">A Type that represents the element type of the array.</param>
+        /// <param name="bounds">An IEnumerable{T} that contains the bounds of the array.</param>
+        /// <param name="initializers">An IEnumerable{T} that contains Expression objects that represent the elements in the array.</param>
+        /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, IEnumerable<int> bounds, IEnumerable<Expression> initializers)
+        {
             ContractUtils.RequiresNotNull(type, nameof(type));
             ContractUtils.RequiresNotNull(bounds, nameof(bounds));
             ContractUtils.RequiresNotNull(initializers, nameof(initializers));
@@ -183,9 +197,9 @@ namespace Microsoft.CSharp.Expressions
                 throw LinqError.ArgumentCannotBeOfTypeVoid();
             }
 
-            var boundsList = bounds.Copy();
+            var boundsList = bounds.ToReadOnly();
 
-            int dimensions = boundsList.Length;
+            int dimensions = boundsList.Count;
             if (dimensions <= 0)
             {
                 throw LinqError.BoundsCannotBeLessThanOne();
@@ -247,7 +261,7 @@ namespace Microsoft.CSharp.Expressions
                 initializerList = new TrueReadOnlyCollection<Expression>(newList);
             }
 
-            return new NewMultidimensionalArrayInitCSharpExpression(type.MakeArrayType(boundsList.Length), boundsList, initializerList);
+            return new NewMultidimensionalArrayInitCSharpExpression(type.MakeArrayType(boundsList.Count), boundsList, initializerList);
         }
     }
 

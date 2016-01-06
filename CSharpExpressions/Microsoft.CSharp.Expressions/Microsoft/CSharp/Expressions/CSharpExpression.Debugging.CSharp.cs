@@ -120,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
             visitor.Out(visitor.ToCSharp(Type.GetElementType()));
 
             visitor.Out("[");
-            visitor.Out(string.Join(", ", _bounds));
+            visitor.Out(string.Join(", ", Bounds));
             visitor.Out("] ");
 
             var n = Expressions.Count;
@@ -130,9 +130,9 @@ namespace Microsoft.CSharp.Expressions
                 var close = 0;
                 var open = 0;
 
-                for (var j = _bounds.Length - 1; j >= 0; j--)
+                for (var j = Bounds.Count - 1; j >= 0; j--)
                 {
-                    bound *= _bounds[j];
+                    bound *= Bounds[j];
                     var rem = i % bound;
 
                     if (rem == bound - 1)

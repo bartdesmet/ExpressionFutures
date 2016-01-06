@@ -553,7 +553,7 @@ namespace Microsoft.CSharp.Expressions
         protected internal override Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
         {
             var exprs = Visit(nameof(node.Expressions), node.Expressions);
-            var bounds = string.Join(", ", node._bounds); // TODO: looks like it's not very practical to derive this info from the type
+            var bounds = string.Join(", ", node.Bounds);
 
             return Push(node, new XAttribute("Bounds", bounds), exprs);
         }
