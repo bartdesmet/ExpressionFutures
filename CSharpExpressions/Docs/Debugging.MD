@@ -1,6 +1,6 @@
 # Debugging Support
 
-This pages describes various features available in this prototype to aid in debugging expression trees by inspection.
+This page describes various features available in this prototype to aid in debugging expression trees by inspection.
 
 ## Existing debugging features
 
