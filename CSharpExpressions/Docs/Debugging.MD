@@ -161,10 +161,42 @@ Nonetheless, with the introduction of extension nodes for language-specific cons
 
 ## ToCSharp decompiler
 
-TODO
+Besides the `DebugView` extension method, we also provide a series of `ToCSharp` extension methods that print the expression as a C#-like code fragment. It goes without saying that decompilation of an expression tree to C# is not always possible given that the expression APIs are more expressive than the subset of constructs supported by the C# language. This is particularly the case for the DLR expressions. As such, the returned string is provided as a best-effort C#-like visualization that's useful for debugging.
+
+The various overloads of `ToCSharp` are shown below:
+
+```csharp
+namespace System.Linq.Expressions
+{
+    public static class ExpressionCSharpExtensions
+	{
+        public static string ToCSharp(this Expression expression) { ... }
+		public static string ToCSharp(this Expression expression, params string[] namespaces) { ... }
+    }
+}
+```
+
+In addition to extension methods for `Expression`, similar methods are provided for `Type` in order to print the name of a type using C# syntax, usable for visualization of variable declarations. This method, too, has a best-effort nature given that the CLR type system is more expressive than the subset exposed in C#.
+
+The main use of the decompiler right now is for the [RoslynPad](RoslynPad.MD) utility used when debugging this library's functionality. Just as is the case for the `DebugView` extension method, its implementation is separated cleanly in the project structure in order to make it easy to exclude in certain build flavors. Nonetheless, functionality like this can come in handy, so it may be worth shipping it as a separate library.
+
+Some of the known restrictions of `ToCSharp` are listed below:
+
+* Limited support to print nodes that are not supported in C#; instead, we print the semantically closest construct in C# (e.g. `Loop` as a block with some `goto` statements and labels).
+* No deep tracking of the `checked` context in order to exclude non-checked subexpressions; we could emit `unchecked` around such subexpressions but haven't implemented this yet.
+* Heuristics are applied to determine how to print types, assuming anonymous types can always be inferred; this could be generalized to emit more concise code in many cases.
+* Limited decompilation of some patterns such as query expressions; instead, chains of method calls are emitted, which may include invalid identifiers for e.g. transparent identifiers.
+* Printing of variable declarations separate from initializers due to the way `Block` expressions specify their `Variables` collection; we could improve this by pushing down declarations.
+* No notion of a `dynamic` type because we lack this information at runtime for variables; instead, we should detect dynamic use sites and influence the declaration site based on it.
+* Automatic assignment of names to labels and parameters that have no specified name, but without checking for name conflicts.
+* No checks for naming conflicts across different imported namespaces; the abbreviation of type names can cause ambiguity.
+
+Without doubt, there are more such restrictions. Nonetheless, the current decompiler does a decent enough job for it to be usable in the context of debugging tools such as RoslynPad.
 
 ## Debugging proxies
 
-TODO
+Similar to the `System.Linq.Expressions` API, we provide debugging proxy types for each of the C#-specific expression nodes by annotating them using a `DebuggerTypeProxy` attribute. Generating of those types is automated using the [DebuggerTypeProxies.tt T4 file](../Microsoft.CSharp.Expressions/Microsoft/CSharp/Expressions/DebuggerTypeProxies.tt).
 
-Debugging proxies generated via T4
+Besides exposing the various properties of the node being visualized, the debugger proxy type also exposes the `DebugView` property which indirectly leverages the `DebugView` extension method described above.
+
+In order to make it possible to exclude the debugging support from the product, all related functionality is emitted in separate files that can easily be excluded from the compilation.
