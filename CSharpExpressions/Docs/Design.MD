@@ -10,3 +10,4 @@ Natural representation of C# constructs
 Compile support
 Good debugging experience
 Semantically sound wrt C# specification
+Familiarity with existing expression API
