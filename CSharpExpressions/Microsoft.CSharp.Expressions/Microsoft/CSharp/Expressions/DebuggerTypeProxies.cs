@@ -1124,6 +1124,7 @@ namespace Microsoft.CSharp.Expressions
 
         public string DebugView => _node.DebugView;
 
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Int32> Bounds => _node.Bounds;
         public System.Boolean CanReduce => _node.CanReduce;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Expressions => _node.Expressions;
