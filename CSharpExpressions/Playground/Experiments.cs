@@ -98,7 +98,7 @@ namespace Playground
 
             sw.Restart();
 
-            var o = ArrayInitOptimizer.Instance.VisitAndConvert(f, nameof(Test));
+            var o = ArrayInitOptimizer.Instance.VisitAndConvert(f, nameof(ArrayInitOptimization));
             var h = o.Compile();
 
             //Console.WriteLine($"Optimize({elementCount}) = {sw.ElapsedMilliseconds}ms");
