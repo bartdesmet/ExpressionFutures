@@ -94,8 +94,13 @@ AssertCompile((log, append) =>
 
 This code fragment shows a `foreach` loop over an instance of a type that implements the iteration pattern. The constructor of that type, `MyEnumerable1`, takes in an `Action<string>` to write to the log. Members such as `MoveNext` and `Current` use this to perform logging when being invoked. This enables verifying the sequencing of interaction patterns between the reduced code and the object being accessed.
 
-assert DebugViews (T4)
-overlap with Roslyn E2E tests
+### DebugView and ToCSharp tests
+
+In order to test both the expression factories and the `DebugView` support (see [Debugging](Debugging.MD)), we also generate a series of tests via the `Tests.Meta.tt` file. This file generates a T4 by itself, which ultimately produces a .cs file.
+
+The reason for using two steps is to produce an intermediate text transformation file that can rely on the runtime library to call `DebugView` when emitting test assert code. While this generates tests that should never fail immediately after regenerating them, it does allow to catch regressions in both factory and `DebugView` behavior, because T4 files are not processed unless one makes a change to them from the IDE.
+
+We follow a similar approach to test `ToCSharp` behavior via the `ToCSharp.Meta.tt` file.
 
 ## Testing the Roslyn changes
 
