@@ -9,7 +9,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
 {
     partial class CSharpExpressionOptimizer
     {
-        // NB: This optimization takes away 
+        // NB: This optimization takes away empty fault and finally blocks in a way similar to the C#
+        //     compiler's optimization pass. Catch handlers are left untouched.
 
         protected override Expression VisitTry(TryExpression node)
         {
