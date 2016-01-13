@@ -108,7 +108,47 @@ Besides the runtime library, we also have tests for the changes made to the Rosl
 
 ### Cross-check tests
 
-Cross-check tests for code fragments (T4)
+The majority of tests for Roslyn changes are supplied in the form of cross-check tests which start from a code fragment that represents a lambda expression and asserts it behavior using the following steps:
+
+- Construct a C# string representation of the delegate type compatible with the lambda expression
+- Create a code fragment for a class containing two properties, assigning the lambda expression to a delegate type and an expression type
+- Compile the generated code fragment using the modified copy of the Roslyn compiler
+- Load the resulting assembly and reflect on the class to obtain the value for both properties
+- Use `Compile` to compile the expression tree obtained from one of the properties
+- Cross-check the outcome of evaluating both delegates
+
+For example, consider the lambda expression `() => 42` of type `Func<int>`. The generated code will look like:
+
+```csharp
+class Expressions
+{
+    public static Func<int> Function => () => 42;
+    public static Expression<Func<int>> Expression => () => 42;
+}
+```
+
+The essence of the test assert is this:
+
+```csharp
+assert(Function(), Expression.Compile()())
+```
+
+Under the hood, the assert mechanism wraps both delegates into a single delegate which cross-checks outcomes for every invocation. This enables a test case to compile the same lambda expression one time but evaluate it many times, for example to check the behavior of arithmetic expressions with many parameter assignment combinations.
+
+Cross-check tests are both written by hand and generated from a T4 file; both can be found by looking for the `CompilerTest` files. A typical example is shown below:
+
+```csharp
+// Taken from CrossCheck_ConditionalAccess_Member1
+var f = Compile<Func<string, int?>>("s => Return(s)?.Length");
+f("bar");
+f(null);
+```
+
+The `Compile` method is the helper method that performs the compilation, evaluation, and cross-checking behavior for the specified lambda expression. The returned delegate will perform all asserts, so the test case itself typically doesn't contain any asserts by itself.
+
+Also note the use of the `Return` method. Lambda expressions passed to `Compile` have access to two helper methods: `Return` and `Log`. The former simply evaluates its argument but has the side-effect of writing a textual representation of the argument to a log. The latter takes a `string` and writes to the log. The created log is subject to cross-checking as well and can be used to assert the presence, absence, and order of evaluation of subexpressions.
+
+The T4 generated test cases are simply supplied using an array of lambda expression code fragments in the .tt file.
 
 ### Gaps
 
