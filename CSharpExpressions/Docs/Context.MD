@@ -30,10 +30,22 @@ Expression<Func<int>> e = () => 42;
 
 ## Current limitations
 
-TODO
+Language feature support in expression trees depends on two pieces:
 
-Expression subset as it existed in C# 3.0
-No statement nodes
+* Having expression tree nodes to model language constructs in soem runtime library
+* Having support for converting a lambda expression containing these language constructs to an expression tree
+
+Right now, the supported language constructs are pretty much the expression subset of the C# language version 3.0. This excludes statement trees (even though .NET 4.0 introduced these constructs in the runtime library) and expression constructs added after version 3.0. Below is a list of unsupported constructs:
+
+* Statement nodes (1.0 and beyond)
+* Compound assignment expressions (1.0)
+* Increment and decrement expressions (1.0)
+* Multi-dimensional array initializers (1.0)
+* Named and optional parameters (4.0)
+* Dynamically bound operations (4.0)
+* Async lambdas and await expressions (5.0)
+* Conditional access expressions (6.0)
+* Dictionary initializers (6.0)
 
 ## Extending expression tree support
 
