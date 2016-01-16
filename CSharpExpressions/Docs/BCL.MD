@@ -34,14 +34,24 @@ Note that `MemberInitExpression` and have `MemberListBinding` children which als
 
 ## Reuse of various utilities
 
-Access to common helpers
+Implementation of extension nodes often requires rigorous type checking in factories. Unfortunately many of the helper methods that are used by the `System.Linq.Expressions` API and the DLR are inaccessible publicly. While some may not be suited for public consumption, it may make sense to review some of them (especially the more tricky ones) for broader use.
+
+For an overview of the helpers we required when building the C#-specific expression nodes, see [Stubs](Stubs.MD). In the short term, it may suffice to have `InternalsVisibleTo` friend access to these helpers in order to avoid code duplication.
 
 ## Extensible DebugView
 
-Extensible DebugView printing
+The `DebugView` property on `Expression` lacks a good extensibility story, mnaking it hard to inspect extension nodes. It'd be great to invest in an extensible visualization mechanism for expressions, including extension nodes.
+
+For more information on an initial implementation of such functionality for our C#-specific expression nodes, see [Debugging](Debugging.MD).
 
 ## Sharing nodes across languages
 
-Pushing down async lambda support
+Right now, we haven't invested in providing extension nodes for Visual Basic to support language constructs introduced after version 9.0 of the language (the "LINQ release"). When we do so, we'll likely encounter many nodes that are very similar to the C# extension nodes provided in this project.
 
-Etc.
+If we decide to work on Visual Basic support, we have to consider whether some nodes should be moved to a common assembly in order to allow for reuse. We have a couple of possibilities to organize the code:
+
+* Have just one assembly for C# and Visual Basic nodes, much like `System.Linq.Expressions` became a namespace with nodes shared across both languages. Note that some language constructs in Visual Basic never got first-class treatment, e.g. string equality checks which use `MethodCallExpression` nodes with references to the Visual Basic runtime library.
+* Have a common assembly for shared functionality used by C# and Visual Basic nodes, including common helpers, base classes, etc. Language-specific assemblies are layered on top of this, allowing for the modeling of language-specific nodes whose semantics are (subtly) different across both languages.
+* Have two language-speicifc assemblies with the only shared assemblies being those containing the `System.Linq.Expressions` functionality in the BCL. This could lead to a lot of duplication across implementations of extension nodes for both languages, especially since the languages are aiming to co-evolve right now.
+
+The second approach seems to strike a good middle-ground. A concrete example of reuse across both languages would be the machinery used to reduce async lambda expressions with await expressions.
