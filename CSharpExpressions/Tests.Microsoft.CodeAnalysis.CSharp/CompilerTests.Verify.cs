@@ -120,13 +120,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_D55B_C6C6() => OK();
 
             // Dynamic set index
-            public override void CompilerTest_2844_F51E() => OK();
-            public override void CompilerTest_9F3A_BDCA() => OK();
-            public override void CompilerTest_C18D_37B8() => OK();
+            public override void CompilerTest_2844_368E() => OK();
+            public override void CompilerTest_9F3A_F93F() => OK();
+            public override void CompilerTest_C18D_D9F0() => OK();
 
             // Dynamic set member
-            public override void CompilerTest_AC33_4E06() => OK();
-            public override void CompilerTest_7E7C_70FE() => OK();
+            public override void CompilerTest_AC33_6CF6() => OK();
+            public override void CompilerTest_7E7C_347D() => OK();
 
             // Dynamic unary assign
             public override void CompilerTest_83CF_2E6D() => OK();
@@ -179,39 +179,40 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             // Assignments binary
             public override void CompilerTest_F94F_ACD8() => OK();
-            public override void CompilerTest_044F_75C3() => OK();
-            public override void CompilerTest_094E_50F3() => OK();
-            public override void CompilerTest_8BE1_F8B3() => OK();
-            public override void CompilerTest_F3D0_9CC6() => OK();
-            public override void CompilerTest_EB02_125F() => OK();
-            public override void CompilerTest_6EC4_3570() => OK();
-            public override void CompilerTest_7D09_CB1F() => OK();
-            public override void CompilerTest_ED89_FB15() => OK();
-            public override void CompilerTest_6090_2158() => OK();
-            public override void CompilerTest_60B4_667C() => OK();
-            public override void CompilerTest_2DAA_E873() => OK();
+            public override void CompilerTest_044F_D3EC() => OK();
+            public override void CompilerTest_094E_F5F3() => OK();
+            public override void CompilerTest_8BE1_8041() => OK();
+            public override void CompilerTest_F3D0_F9A7() => OK();
+            public override void CompilerTest_EB02_69E4() => OK();
+            public override void CompilerTest_6EC4_AD12() => OK();
+            public override void CompilerTest_7D09_A1B7() => OK();
+            public override void CompilerTest_ED89_63D1() => OK();
+            public override void CompilerTest_6090_4BC9() => OK();
+            public override void CompilerTest_D47A_FCEE() => OK();
+            public override void CompilerTest_60B4_CC06() => OK();
+            public override void CompilerTest_2DAA_6C38() => OK();
             public override void CompilerTest_7F56_2B0B() => OK();
             public override void CompilerTest_27E3_F016() => OK();
             public override void CompilerTest_467C_C565() => OK();
-            public override void CompilerTest_B13A_1A72() => OK();
-            public override void CompilerTest_EE3F_1481() => OK();
-            public override void CompilerTest_79AE_726E() => OK();
-            public override void CompilerTest_A709_4D47() => OK();
-            public override void CompilerTest_8CA7_C849() => OK();
+            public override void CompilerTest_B13A_1C7B() => OK();
+            public override void CompilerTest_EE3F_5608() => OK();
+            public override void CompilerTest_79AE_FDED() => OK();
+            public override void CompilerTest_A709_35ED() => OK();
+            public override void CompilerTest_8CA7_35F4() => OK();
             public override void CompilerTest_8BFE_5348() => OK();
             public override void CompilerTest_18CC_52FA() => OK();
-            public override void CompilerTest_7492_BDF3() => OK();
-            public override void CompilerTest_6A94_43E9() => OK();
-            public override void CompilerTest_2F5D_6848() => OK();
-            public override void CompilerTest_EAFD_1495() => OK();
-            public override void CompilerTest_AC8A_6853() => OK();
-            public override void CompilerTest_C8F7_C9E3() => OK();
-            public override void CompilerTest_3859_A369() => OK();
-            public override void CompilerTest_3AC9_62A5() => OK();
-            public override void CompilerTest_93FC_34D5() => OK();
-            public override void CompilerTest_1D2F_75F1() => OK();
-            public override void CompilerTest_1EDE_AB2B() => OK();
-            public override void CompilerTest_A171_21C8() => OK();
+            public override void CompilerTest_7492_2165() => OK();
+            public override void CompilerTest_6A94_CEB8() => OK();
+            public override void CompilerTest_2F5D_78CC() => OK();
+            public override void CompilerTest_EAFD_44CE() => OK();
+            public override void CompilerTest_AC8A_1D36() => OK();
+            public override void CompilerTest_C8F7_9590() => OK();
+            public override void CompilerTest_3859_C424() => OK();
+            public override void CompilerTest_3AC9_2A4D() => OK();
+            public override void CompilerTest_93FC_E500() => OK();
+            public override void CompilerTest_1D2F_7FC2() => OK();
+            public override void CompilerTest_1EDE_F8E3() => OK();
+            public override void CompilerTest_A171_560A() => OK();
             public override void CompilerTest_E00F_CAB4() => OK();
             public override void CompilerTest_1D70_2F15() => OK();
             public override void CompilerTest_530B_F222() => OK();
@@ -220,30 +221,29 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_2C91_A398() => OK();
 
             // Assignments unary
-            public override void CompilerTest_D47A_F8E7() => OK();
-            public override void CompilerTest_00CF_77BB() => OK();
-            public override void CompilerTest_9C51_C4A7() => OK();
-            public override void CompilerTest_2115_438C() => OK();
-            public override void CompilerTest_09D9_B341() => OK();
+            public override void CompilerTest_00CF_F74C() => OK();
+            public override void CompilerTest_9C51_A974() => OK();
+            public override void CompilerTest_2115_988C() => OK();
+            public override void CompilerTest_09D9_F0A4() => OK();
             public override void CompilerTest_C9BD_6C2B() => OK();
             public override void CompilerTest_1C12_C262() => OK();
             public override void CompilerTest_B58C_BABA() => OK();
             public override void CompilerTest_2817_4DD1() => OK();
-            public override void CompilerTest_64E0_9206() => OK();
-            public override void CompilerTest_73AB_2531() => OK();
-            public override void CompilerTest_F997_C02C() => OK();
-            public override void CompilerTest_C633_A890() => OK();
-            public override void CompilerTest_6BBF_B10F() => OK();
-            public override void CompilerTest_893C_377B() => OK();
-            public override void CompilerTest_A586_1339() => OK();
-            public override void CompilerTest_B251_4951() => OK();
-            public override void CompilerTest_98BA_B755() => OK();
-            public override void CompilerTest_5002_1E6C() => OK();
-            public override void CompilerTest_2E6E_C166() => OK();
-            public override void CompilerTest_0162_9BFC() => OK();
-            public override void CompilerTest_C668_18B0() => OK();
-            public override void CompilerTest_AD28_56BA() => OK();
-            public override void CompilerTest_0D46_C9E5() => OK();
+            public override void CompilerTest_64E0_6F8F() => OK();
+            public override void CompilerTest_73AB_B92F() => OK();
+            public override void CompilerTest_F997_C431() => OK();
+            public override void CompilerTest_C633_B342() => OK();
+            public override void CompilerTest_6BBF_B4A0() => OK();
+            public override void CompilerTest_893C_BAAE() => OK();
+            public override void CompilerTest_A586_E8F9() => OK();
+            public override void CompilerTest_B251_AFB5() => OK();
+            public override void CompilerTest_98BA_6FFB() => OK();
+            public override void CompilerTest_5002_049B() => OK();
+            public override void CompilerTest_2E6E_DC66() => OK();
+            public override void CompilerTest_0162_65C6() => OK();
+            public override void CompilerTest_C668_6525() => OK();
+            public override void CompilerTest_AD28_1A20() => OK();
+            public override void CompilerTest_0D46_A139() => OK();
             public override void CompilerTest_EDA6_9661() => OK();
             public override void CompilerTest_8D15_759F() => OK();
             public override void CompilerTest_E582_3900() => OK();

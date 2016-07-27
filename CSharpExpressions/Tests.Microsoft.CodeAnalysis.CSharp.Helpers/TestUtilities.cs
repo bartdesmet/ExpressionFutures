@@ -33,7 +33,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             var setup = new AppDomainSetup
             {
                 ApplicationBase = path,
-                ShadowCopyFiles = "true",
             };
 
             s_roslyn = AppDomain.CreateDomain("RoslynHost", null, setup);
@@ -256,6 +255,12 @@ public static class {typeName}
             catch (NotSupportedException)
             {
                 // NB: This happens when running tests due to missing files in the test runner folder.
+                return tree;
+            }
+            catch (InvalidOperationException)
+            {
+                // NB: This happens in Debug build due to Format's use of WaitAndGetResult which requires
+                //     a UI thread. See src\Workspaces\Core\Portable\Utilities\TaskExtensions.cs in Roslyn.
                 return tree;
             }
         }

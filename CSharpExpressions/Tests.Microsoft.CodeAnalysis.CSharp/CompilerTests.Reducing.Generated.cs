@@ -96,415 +96,349 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4609_DFEE() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_579D_8D67()
+        public void CompilerTest_579D_1565()
         {
             // (Expression<Action<int>>)(x => { x = 1; })
             var actual = ToCSharp(@"(Expression<Action<int>>)(x => { x = 1; })", reduce: true);
             var expected = @"
-(int x) =>
-{
-    x = 1;
-    L0 /*(null)*/:
-}";
+(int x) => x = 1";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_579D_8D67();
+            Verify.CompilerTest_579D_1565();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_579D_8D67() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_579D_1565() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_93F1_077C()
+        public void CompilerTest_93F1_0B14()
         {
             // (Expression<Action<int[]>>)(xs => { xs[0] = 1; })
             var actual = ToCSharp(@"(Expression<Action<int[]>>)(xs => { xs[0] = 1; })", reduce: true);
             var expected = @"
-(int[] xs) =>
-{
-    xs[0] = 1;
-    L0 /*(null)*/:
-}";
+(int[] xs) => xs[0] = 1";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_93F1_077C();
+            Verify.CompilerTest_93F1_0B14();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_93F1_077C() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_93F1_0B14() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_2F3A_1F59()
+        public void CompilerTest_2F3A_3301()
         {
             // (Expression<Action<int[,]>>)(xs => { xs[0, 0] = 1; })
             var actual = ToCSharp(@"(Expression<Action<int[,]>>)(xs => { xs[0, 0] = 1; })", reduce: true);
             var expected = @"
-(int[,] xs) =>
-{
-    xs[0, 0] = 1;
-    L0 /*(null)*/:
-}";
+(int[,] xs) => xs[0, 0] = 1";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_2F3A_1F59();
+            Verify.CompilerTest_2F3A_3301();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2F3A_1F59() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2F3A_3301() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_430E_BB89()
+        public void CompilerTest_430E_E061()
         {
             // (Expression<Action<List<int>>>)(xs => { xs[0] = 1; })
             var actual = ToCSharp(@"(Expression<Action<List<int>>>)(xs => { xs[0] = 1; })", reduce: true);
             var expected = @"
 (List<int> xs) =>
 {
-    {
-        List<int> __obj;
-        __obj = xs;
-        /*return*/ __obj[0] = 1/*;*/
-    }
-    L0 /*(null)*/:
+    List<int> __obj;
+    __obj = xs;
+    return __obj[0] = 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_430E_BB89();
+            Verify.CompilerTest_430E_E061();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_430E_BB89() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_430E_E061() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_AEF8_094C()
+        public void CompilerTest_AEF8_513D()
         {
             // (Expression<Action<StrongBox<int>>>)(b => { b.Value = 1; })
             var actual = ToCSharp(@"(Expression<Action<StrongBox<int>>>)(b => { b.Value = 1; })", reduce: true);
             var expected = @"
-(System.Runtime.CompilerServices.StrongBox<int> b) =>
-{
-    b.Value = 1;
-    L0 /*(null)*/:
-}";
+(System.Runtime.CompilerServices.StrongBox<int> b) => b.Value = 1";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AEF8_094C();
+            Verify.CompilerTest_AEF8_513D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AEF8_094C() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AEF8_513D() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_044F_5A03()
+        public void CompilerTest_044F_E9C5()
         {
             // (Expression<Action<int>>)(x => { x += 1; })
             var actual = ToCSharp(@"(Expression<Action<int>>)(x => { x += 1; })", reduce: true);
             var expected = @"
-(int x) =>
-{
-    x = x + 1;
-    L0 /*(null)*/:
-}";
+(int x) => x = x + 1";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_044F_5A03();
+            Verify.CompilerTest_044F_E9C5();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_044F_5A03() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_044F_E9C5() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_E0C9_816B()
+        public void CompilerTest_E0C9_5074()
         {
             // (Expression<Action<int[]>>)(xs => { xs[0] += 1; })
             var actual = ToCSharp(@"(Expression<Action<int[]>>)(xs => { xs[0] += 1; })", reduce: true);
             var expected = @"
 (int[] xs) =>
 {
-    {
-        int[] __object;
-        __object = xs;
-        /*return*/ __object[0] = __object[0] + 1/*;*/
-    }
-    L0 /*(null)*/:
+    int[] __object;
+    __object = xs;
+    return __object[0] = __object[0] + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_E0C9_816B();
+            Verify.CompilerTest_E0C9_5074();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E0C9_816B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E0C9_5074() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_7C94_EEF3()
+        public void CompilerTest_7C94_4A5D()
         {
             // (Expression<Action<int[,]>>)(xs => { xs[0, 0] += 1; })
             var actual = ToCSharp(@"(Expression<Action<int[,]>>)(xs => { xs[0, 0] += 1; })", reduce: true);
             var expected = @"
 (int[,] xs) =>
 {
-    {
-        int[,] __object;
-        __object = xs;
-        /*return*/ __object[0, 0] = __object[0, 0] + 1/*;*/
-    }
-    L0 /*(null)*/:
+    int[,] __object;
+    __object = xs;
+    return __object[0, 0] = __object[0, 0] + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_7C94_EEF3();
+            Verify.CompilerTest_7C94_4A5D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7C94_EEF3() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7C94_4A5D() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_79AE_F9F6()
+        public void CompilerTest_79AE_D22A()
         {
             // (Expression<Action<List<int>>>)(xs => { xs[0] += 1; })
             var actual = ToCSharp(@"(Expression<Action<List<int>>>)(xs => { xs[0] += 1; })", reduce: true);
             var expected = @"
 (List<int> xs) =>
 {
-    {
-        List<int> __obj;
-        __obj = xs;
-        /*return*/ __obj[0] = __obj[0] + 1/*;*/
-    }
-    L0 /*(null)*/:
+    List<int> __obj;
+    __obj = xs;
+    return __obj[0] = __obj[0] + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_79AE_F9F6();
+            Verify.CompilerTest_79AE_D22A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_79AE_F9F6() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_79AE_D22A() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_08DA_705B()
+        public void CompilerTest_08DA_1642()
         {
             // (Expression<Action<StrongBox<int>>>)(b => { b.Value += 1; })
             var actual = ToCSharp(@"(Expression<Action<StrongBox<int>>>)(b => { b.Value += 1; })", reduce: true);
             var expected = @"
 (System.Runtime.CompilerServices.StrongBox<int> b) =>
 {
-    {
-        System.Runtime.CompilerServices.StrongBox<int> __lhs;
-        __lhs = b;
-        /*return*/ __lhs.Value = __lhs.Value + 1/*;*/
-    }
-    L0 /*(null)*/:
+    System.Runtime.CompilerServices.StrongBox<int> __lhs;
+    __lhs = b;
+    return __lhs.Value = __lhs.Value + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_08DA_705B();
+            Verify.CompilerTest_08DA_1642();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_08DA_705B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_08DA_1642() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_2115_5A03()
+        public void CompilerTest_2115_E9C5()
         {
             // (Expression<Action<int>>)(x => { ++x; })
             var actual = ToCSharp(@"(Expression<Action<int>>)(x => { ++x; })", reduce: true);
             var expected = @"
-(int x) =>
-{
-    x = x + 1;
-    L0 /*(null)*/:
-}";
+(int x) => x = x + 1";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_2115_5A03();
+            Verify.CompilerTest_2115_E9C5();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2115_5A03() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2115_E9C5() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_89F1_816B()
+        public void CompilerTest_89F1_5074()
         {
             // (Expression<Action<int[]>>)(xs => { ++xs[0]; })
             var actual = ToCSharp(@"(Expression<Action<int[]>>)(xs => { ++xs[0]; })", reduce: true);
             var expected = @"
 (int[] xs) =>
 {
-    {
-        int[] __object;
-        __object = xs;
-        /*return*/ __object[0] = __object[0] + 1/*;*/
-    }
-    L0 /*(null)*/:
+    int[] __object;
+    __object = xs;
+    return __object[0] = __object[0] + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_89F1_816B();
+            Verify.CompilerTest_89F1_5074();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_89F1_816B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_89F1_5074() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_205F_EEF3()
+        public void CompilerTest_205F_4A5D()
         {
             // (Expression<Action<int[,]>>)(xs => { ++xs[0, 0]; })
             var actual = ToCSharp(@"(Expression<Action<int[,]>>)(xs => { ++xs[0, 0]; })", reduce: true);
             var expected = @"
 (int[,] xs) =>
 {
-    {
-        int[,] __object;
-        __object = xs;
-        /*return*/ __object[0, 0] = __object[0, 0] + 1/*;*/
-    }
-    L0 /*(null)*/:
+    int[,] __object;
+    __object = xs;
+    return __object[0, 0] = __object[0, 0] + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_205F_EEF3();
+            Verify.CompilerTest_205F_4A5D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_205F_EEF3() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_205F_4A5D() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_FB63_F9F6()
+        public void CompilerTest_FB63_D22A()
         {
             // (Expression<Action<List<int>>>)(xs => { ++xs[0]; })
             var actual = ToCSharp(@"(Expression<Action<List<int>>>)(xs => { ++xs[0]; })", reduce: true);
             var expected = @"
 (List<int> xs) =>
 {
-    {
-        List<int> __obj;
-        __obj = xs;
-        /*return*/ __obj[0] = __obj[0] + 1/*;*/
-    }
-    L0 /*(null)*/:
+    List<int> __obj;
+    __obj = xs;
+    return __obj[0] = __obj[0] + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_FB63_F9F6();
+            Verify.CompilerTest_FB63_D22A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FB63_F9F6() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FB63_D22A() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_30FE_705B()
+        public void CompilerTest_30FE_1642()
         {
             // (Expression<Action<StrongBox<int>>>)(b => { ++b.Value; })
             var actual = ToCSharp(@"(Expression<Action<StrongBox<int>>>)(b => { ++b.Value; })", reduce: true);
             var expected = @"
 (System.Runtime.CompilerServices.StrongBox<int> b) =>
 {
-    {
-        System.Runtime.CompilerServices.StrongBox<int> __lhs;
-        __lhs = b;
-        /*return*/ __lhs.Value = __lhs.Value + 1/*;*/
-    }
-    L0 /*(null)*/:
+    System.Runtime.CompilerServices.StrongBox<int> __lhs;
+    __lhs = b;
+    return __lhs.Value = __lhs.Value + 1;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_30FE_705B();
+            Verify.CompilerTest_30FE_1642();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30FE_705B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30FE_1642() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_00CF_4CB4()
+        public void CompilerTest_00CF_E2F6()
         {
             // (Expression<Action<int>>)(x => { x++; })
             var actual = ToCSharp(@"(Expression<Action<int>>)(x => { x++; })", reduce: true);
             var expected = @"
 (int x) =>
 {
-    {
-        int __temp;
-        __temp = x;
-        x = __temp + 1;
-        /*return*/ __temp/*;*/
-    }
-    L0 /*(null)*/:
+    int __temp;
+    __temp = x;
+    x = __temp + 1;
+    return __temp;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_00CF_4CB4();
+            Verify.CompilerTest_00CF_E2F6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_00CF_4CB4() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_00CF_E2F6() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_FE9D_1C3B()
+        public void CompilerTest_FE9D_CA70()
         {
             // (Expression<Action<int[]>>)(xs => { xs[0]++; })
             var actual = ToCSharp(@"(Expression<Action<int[]>>)(xs => { xs[0]++; })", reduce: true);
             var expected = @"
 (int[] xs) =>
 {
-    {
-        int[] __object;
-        int __index;
-        __object = xs;
-        __index = __object[0];
-        __object[0] = __index + 1;
-        /*return*/ __index/*;*/
-    }
-    L0 /*(null)*/:
+    int[] __object;
+    int __index;
+    __object = xs;
+    __index = __object[0];
+    __object[0] = __index + 1;
+    return __index;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_FE9D_1C3B();
+            Verify.CompilerTest_FE9D_CA70();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FE9D_1C3B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FE9D_CA70() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_BB88_FBEA()
+        public void CompilerTest_BB88_996D()
         {
             // (Expression<Action<int[,]>>)(xs => { xs[0, 0]++; })
             var actual = ToCSharp(@"(Expression<Action<int[,]>>)(xs => { xs[0, 0]++; })", reduce: true);
             var expected = @"
 (int[,] xs) =>
 {
-    {
-        int[,] __object;
-        int __index;
-        __object = xs;
-        __index = __object[0, 0];
-        __object[0, 0] = __index + 1;
-        /*return*/ __index/*;*/
-    }
-    L0 /*(null)*/:
+    int[,] __object;
+    int __index;
+    __object = xs;
+    __index = __object[0, 0];
+    __object[0, 0] = __index + 1;
+    return __index;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_BB88_FBEA();
+            Verify.CompilerTest_BB88_996D();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB88_FBEA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB88_996D() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_55F5_73B2()
+        public void CompilerTest_55F5_5F50()
         {
             // (Expression<Action<List<int>>>)(xs => { xs[0]++; })
             var actual = ToCSharp(@"(Expression<Action<List<int>>>)(xs => { xs[0]++; })", reduce: true);
             var expected = @"
 (List<int> xs) =>
 {
-    {
-        List<int> __obj;
-        __obj = xs;
-        /*return*/ {
-            int __temp;
-            __temp = __obj[0];
-            __obj[0] = __temp + 1;
-            /*return*/ __temp/*;*/
-        }/*;*/
-    }
-    L0 /*(null)*/:
+    List<int> __obj;
+    __obj = xs;
+    return {
+        int __temp;
+        __temp = __obj[0];
+        __obj[0] = __temp + 1;
+        /*return*/ __temp/*;*/
+    };
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_55F5_73B2();
+            Verify.CompilerTest_55F5_5F50();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55F5_73B2() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_55F5_5F50() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_0564_D471()
+        public void CompilerTest_0564_DD7A()
         {
             // (Expression<Action<StrongBox<int>>>)(b => { b.Value++; })
             var actual = ToCSharp(@"(Expression<Action<StrongBox<int>>>)(b => { b.Value++; })", reduce: true);
             var expected = @"
 (System.Runtime.CompilerServices.StrongBox<int> b) =>
 {
-    {
-        System.Runtime.CompilerServices.StrongBox<int> __lhs;
-        int __temp;
-        __lhs = b;
-        __temp = __lhs.Value;
-        __lhs.Value = __temp + 1;
-        /*return*/ __temp/*;*/
-    }
-    L0 /*(null)*/:
+    System.Runtime.CompilerServices.StrongBox<int> __lhs;
+    int __temp;
+    __lhs = b;
+    __temp = __lhs.Value;
+    __lhs.Value = __temp + 1;
+    return __temp;
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_0564_D471();
+            Verify.CompilerTest_0564_DD7A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0564_D471() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0564_DD7A() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_9551_2A52()
@@ -557,26 +491,26 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6A97_3CC7() => OK();
             public override void CompilerTest_BFB2_C4CC() => OK();
             public override void CompilerTest_4609_DFEE() => OK();
-            public override void CompilerTest_579D_8D67() => OK();
-            public override void CompilerTest_93F1_077C() => OK();
-            public override void CompilerTest_2F3A_1F59() => OK();
-            public override void CompilerTest_430E_BB89() => OK();
-            public override void CompilerTest_AEF8_094C() => OK();
-            public override void CompilerTest_044F_5A03() => OK();
-            public override void CompilerTest_E0C9_816B() => OK();
-            public override void CompilerTest_7C94_EEF3() => OK();
-            public override void CompilerTest_79AE_F9F6() => OK();
-            public override void CompilerTest_08DA_705B() => OK();
-            public override void CompilerTest_2115_5A03() => OK();
-            public override void CompilerTest_89F1_816B() => OK();
-            public override void CompilerTest_205F_EEF3() => OK();
-            public override void CompilerTest_FB63_F9F6() => OK();
-            public override void CompilerTest_30FE_705B() => OK();
-            public override void CompilerTest_00CF_4CB4() => OK();
-            public override void CompilerTest_FE9D_1C3B() => OK();
-            public override void CompilerTest_BB88_FBEA() => OK();
-            public override void CompilerTest_55F5_73B2() => OK();
-            public override void CompilerTest_0564_D471() => OK();
+            public override void CompilerTest_579D_1565() => OK();
+            public override void CompilerTest_93F1_0B14() => OK();
+            public override void CompilerTest_2F3A_3301() => OK();
+            public override void CompilerTest_430E_E061() => OK();
+            public override void CompilerTest_AEF8_513D() => OK();
+            public override void CompilerTest_044F_E9C5() => OK();
+            public override void CompilerTest_E0C9_5074() => OK();
+            public override void CompilerTest_7C94_4A5D() => OK();
+            public override void CompilerTest_79AE_D22A() => OK();
+            public override void CompilerTest_08DA_1642() => OK();
+            public override void CompilerTest_2115_E9C5() => OK();
+            public override void CompilerTest_89F1_5074() => OK();
+            public override void CompilerTest_205F_4A5D() => OK();
+            public override void CompilerTest_FB63_D22A() => OK();
+            public override void CompilerTest_30FE_1642() => OK();
+            public override void CompilerTest_00CF_E2F6() => OK();
+            public override void CompilerTest_FE9D_CA70() => OK();
+            public override void CompilerTest_BB88_996D() => OK();
+            public override void CompilerTest_55F5_5F50() => OK();
+            public override void CompilerTest_0564_DD7A() => OK();
             public override void CompilerTest_9551_2A52() => OK();
         }
     }
