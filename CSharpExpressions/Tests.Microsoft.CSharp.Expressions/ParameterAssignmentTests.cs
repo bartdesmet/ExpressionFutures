@@ -30,9 +30,14 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(MethodInfo), name, expr));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, default(string), expr));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, name, default(Expression)));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(MethodInfo), 0, expr));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, 0, default(Expression)));
 
             // can't find
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, "y", expr));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, -1, expr));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, 1, expr));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, 2, expr));
 
             // type mismatch
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(parameter, Expression.Constant("bar")));
@@ -82,6 +87,13 @@ namespace Tests
 
             {
                 var res = CSharpExpression.Bind(method, parameter.Name, expr);
+
+                Assert.AreSame(parameter, res.Parameter);
+                Assert.AreSame(expr, res.Expression);
+            }
+
+            {
+                var res = CSharpExpression.Bind(method, 0, expr);
 
                 Assert.AreSame(parameter, res.Parameter);
                 Assert.AreSame(expr, res.Expression);

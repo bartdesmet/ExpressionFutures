@@ -12,6 +12,7 @@
 var errors = new[]
 {
     new { Name = "ParameterNotDefinedForMethod", ExceptionType = "ArgumentException", Args = 2, Message = "Parameter '{0}' is not defined for method '{1}'" },
+    new { Name = "ParameterIndexOutOfBounds", ExceptionType = "ArgumentException", Args = 2, Message = "Parameter index '{0}' is out of bounds for method '{1}'" },
     new { Name = "ExpressionTypeDoesNotMatchParameter", ExceptionType = "ArgumentException", Args = 2, Message = "Expression of type '{0}' cannot be used for parameter of type '{1}'" },
     new { Name = "DuplicateParameterBinding", ExceptionType = "ArgumentException", Args = 1, Message = "Parameter '{0}' has multiple bindings" },
     new { Name = "UnboundParameter", ExceptionType = "ArgumentException", Args = 1, Message = "Non-optional parameter '{0}' has no binding" },

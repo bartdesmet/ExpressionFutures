@@ -73,9 +73,6 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ParameterAssignment Bind(MethodBase method, string parameter, Expression expression)
         {
-            // NB: This overload is needed for the compiler to emit factory calls;
-            //     we can't emit a `ldtoken` instruction to obtain a ParameterInfo.
-
             ContractUtils.RequiresNotNull(method, nameof(method));
             ContractUtils.RequiresNotNull(parameter, nameof(parameter));
 
@@ -96,6 +93,31 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Bind(parameterInfo, expression);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ParameterAssignment"/> binding the specified value to the given parameter.
+        /// </summary>
+        /// <param name="method">The <see cref="MethodInfo"/> for the method whose <paramref name="parameter"/> is being assigned to.</param>
+        /// <param name="index">The index of the parameter on <paramref name="method"/> which is being assigned to.</param>
+        /// <param name="expression">The value to be assigned to <paramref name="parameter"/>.</param>
+        /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static ParameterAssignment Bind(MethodBase method, int index, Expression expression)
+        {
+            // NB: This overload is needed for the compiler to emit factory calls;
+            //     we can't emit a `ldtoken` instruction to obtain a ParameterInfo.
+
+            ContractUtils.RequiresNotNull(method, nameof(method));
+
+            var parameters = method.GetParametersCached();
+
+            if (index < 0 || index >= parameters.Length)
+            {
+                throw Error.ParameterIndexOutOfBounds(index, method.Name);
+            }
+
+            return Bind(parameters[index], expression);
         }
 
         private static Expression ValidateOneArgument(ParameterInfo parameter, Expression expression)

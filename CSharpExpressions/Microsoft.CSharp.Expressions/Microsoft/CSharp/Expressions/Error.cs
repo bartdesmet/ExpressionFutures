@@ -20,6 +20,14 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// ArgumentException with message like "Parameter index '{0}' is out of bounds for method '{1}'"
+        /// </summary>
+        internal static Exception ParameterIndexOutOfBounds(object p0, object p1)
+        {
+            return new ArgumentException(Strings.ParameterIndexOutOfBounds(p0, p1));
+        }
+
+        /// <summary>
         /// ArgumentException with message like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
         /// </summary>
         internal static Exception ExpressionTypeDoesNotMatchParameter(object p0, object p1)
@@ -448,6 +456,14 @@ namespace Microsoft.CSharp.Expressions
         internal static string ParameterNotDefinedForMethod(object p0, object p1)
         {
             return SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Parameter index '{0}' is out of bounds for method '{1}'"
+        /// </summary>
+        internal static string ParameterIndexOutOfBounds(object p0, object p1)
+        {
+            return SR.Format(SR.ParameterIndexOutOfBounds, p0, p1);
         }
 
         /// <summary>
@@ -931,6 +947,7 @@ namespace System
     internal static partial class SR
     {
         public const string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
+        public const string ParameterIndexOutOfBounds = "Parameter index '{0}' is out of bounds for method '{1}'";
         public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
         public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
         public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
