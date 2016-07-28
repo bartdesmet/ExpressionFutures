@@ -1585,6 +1585,358 @@ namespace Tests
             Assert.AreEqual(42, r);
         }
 
+        [TestMethod]
+        public void AsyncLambda_Compilation_AndAlso_ShortCircuit_Boolean()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<bool>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool>>>(
+                Expression.AndAlso(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(false)
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(true)
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.IsFalse(t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AndAlso_ShortCircuit_NullableBoolean()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<bool?>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool?>>>(
+                Expression.AndAlso(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(false, typeof(bool?))
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(true, typeof(bool?))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.AreEqual(false, t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_AndAlso_ShortCircuit_Struct()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<B>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<B>>>(
+                Expression.AndAlso(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<B>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(new B(false))
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<B>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(new B(true))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.IsFalse((bool)t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_OrElse_ShortCircuit_Boolean()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<bool>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool>>>(
+                Expression.OrElse(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(true)
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(false)
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.IsTrue(t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_OrElse_ShortCircuit_NullableBoolean()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<bool?>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<bool?>>>(
+                Expression.OrElse(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(true, typeof(bool?))
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<bool?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(false, typeof(bool?))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.AreEqual(true, t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_OrElse_ShortCircuit_Struct()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<B>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<B>>>(
+                Expression.OrElse(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<B>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(new B(true))
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<B>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(new B(false))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.IsTrue((bool)t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Coalesce_ShortCircuit_String()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<string>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<string>>>(
+                Expression.Coalesce(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<string>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant("A")
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<string>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant("B")
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.AreEqual("A", t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Coalesce_ShortCircuit_NullableInt32_NullableInt32()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var run = MethodInfoOf(() => Task.Run(default(Func<int?>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int?>>>(
+                Expression.Coalesce(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<int?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(42, typeof(int?))
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            run,
+                            Expression.Lambda<Func<int?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(43, typeof(int?))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.AreEqual(42, t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Coalesce_ShortCircuit_NullableInt32_Int32()
+        {
+            var log = new List<string>();
+            var logExpr = Expression.Constant(log);
+            var add = MethodInfoOf((List<string> ss) => ss.Add(default(string)));
+            var runN = MethodInfoOf(() => Task.Run(default(Func<int?>)));
+            var runV = MethodInfoOf(() => Task.Run(default(Func<int>)));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(
+                Expression.Coalesce(
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            runN,
+                            Expression.Lambda<Func<int?>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("L")),
+                                    Expression.Constant(42, typeof(int?))
+                                )
+                            )
+                        )
+                    ),
+                    CSharpExpression.Await(
+                        Expression.Call(
+                            runV,
+                            Expression.Lambda<Func<int>>(
+                                Expression.Block(
+                                    Expression.Call(logExpr, add, Expression.Constant("R")),
+                                    Expression.Constant(43, typeof(int))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+            var f = e.Compile();
+            var t = f();
+            Assert.AreEqual(42, t.Result);
+            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+        }
+
         class D : IDisposable
         {
             public bool IsDisposed;
@@ -1627,6 +1979,22 @@ namespace Tests
             public bool IsCompleted { get; }
             public int GetResult() => 42;
             public void OnCompleted(Action continuation) => continuation();
+        }
+
+        struct B
+        {
+            private readonly bool _b;
+
+            public B(bool b)
+            {
+                _b = b;
+            }
+
+            public static B operator &(B a, B b) => new B(a._b & b._b);
+            public static B operator |(B a, B b) => new B(a._b | b._b);
+            public static bool operator true(B a) => a._b;
+            public static bool operator false(B a) => !a._b;
+            public static explicit operator bool(B a) => a._b;
         }
     }
 }

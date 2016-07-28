@@ -126,4 +126,36 @@ namespace System.Linq.Expressions
             return (ElementInit)s_ctor.Invoke(new object[] { addMethod, arguments });
         }
     }
+
+    internal static class BinaryExpressionExtensions
+    {
+        private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+        private static Type s_typ = s_asm.GetType("System.Linq.Expressions.BinaryExpression");
+        private static readonly PropertyInfo s_1 = s_typ.GetProperty("IsLiftedLogical", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+        private static readonly MethodInfo s_2 = s_typ.GetMethod("ReduceUserdefinedLifted", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+        public static System.Boolean get_IsLiftedLogical(this System.Linq.Expressions.BinaryExpression obj)
+        {
+            try
+            {
+                return (System.Boolean)s_1.GetValue(obj);
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        public static System.Linq.Expressions.Expression ReduceUserdefinedLifted(this System.Linq.Expressions.BinaryExpression obj)
+        {
+            try
+            {
+                return (System.Linq.Expressions.Expression)s_2.Invoke(obj, new object[0]);
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+    }
 }
