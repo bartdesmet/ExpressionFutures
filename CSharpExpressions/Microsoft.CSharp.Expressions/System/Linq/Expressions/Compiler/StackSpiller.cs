@@ -221,7 +221,6 @@ namespace System.Linq.Expressions.Compiler
             return cr.Finish(node);
         }
 
-#if LINQ
         // BinaryExpression: AndAlso, OrElse
         private Result RewriteLogicalBinaryExpression(Expression expr, Stack stack)
         {
@@ -249,10 +248,26 @@ namespace System.Linq.Expressions.Compiler
                     node.Method,
                     (LambdaExpression)conversion.Node
                 );
+
+#if !LINQ
+                /*
+                 * CONSIDER: Move logic to reduce logical binary nodes from the Reducer to the stack spiller.
+                 * 
+                switch (expr.NodeType)
+                {
+                    case ExpressionType.AndAlso:
+                    case ExpressionType.OrElse:
+                        expr = Microsoft.CSharp.Expressions.Compiler.Reducer.ReduceLogical((BinaryExpression)expr);
+                        break;
+                    case ExpressionType.Coalesce:
+                        expr = Microsoft.CSharp.Expressions.Compiler.Reducer.ReduceCoalesce((BinaryExpression)expr);
+                        break;
+                }
+                */
+#endif
             }
             return new Result(action, expr);
         }
-#endif
 
 #if LINQ // NB: We reduce nodes in an earlier stage in AsyncLambda compilation, so don't need this
         private Result RewriteReducibleExpression(Expression expr, Stack stack)
