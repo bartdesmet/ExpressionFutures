@@ -189,6 +189,9 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
 
+                // BCL extensions for C# 7
+                .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(ValueTuple).Assembly.Location) })
+
                 // Our custom assembly
                 .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
 
