@@ -81,7 +81,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     {
         private static List<T> Clone<T>(IList<T> source, int maxIndex)
         {
-            var res = new List<T>();
+            var res = new List<T>(maxIndex);
 
             for (var i = 0; i < maxIndex; i++)
             {
