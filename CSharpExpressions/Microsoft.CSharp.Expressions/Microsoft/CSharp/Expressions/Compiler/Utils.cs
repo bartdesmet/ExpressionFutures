@@ -9,9 +9,18 @@ using System.Runtime.ExceptionServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
+    /// <summary>
+    /// Contains a set of utilities for code generation.
+    /// </summary>
     static class Utils
     {
-        public static Expression CreateRethrow(Expression err, Expression beforeThrow = null)
+        /// <summary>
+        /// Creates an expression to rethrow the exception specified in <paramref name="exception"/>, preserving the original stack trace if possible.
+        /// </summary>
+        /// <param name="exception">Expression representing the exception to rethrow. This expression can be of any type; if the type derives from <see cref="System.Exception"/>, the generated expression will use <see cref="ExceptionDispatchInfo.Throw"/> to rethrow the exception preserving the stack trace.</param>
+        /// <param name="beforeThrow">Expression to emit before the rethrow code.</param>
+        /// <returns>Expression to rethrow the exception specified in <paramref name="exception"/>, optionally prepended by the expression specified in <paramref name="beforeThrow"/>.</returns>
+        public static Expression CreateRethrow(Expression exception, Expression beforeThrow = null)
         {
             var exprCount = (beforeThrow == null ? 0 : 1) /* before */ + 1 /* assign */ + 1 /* if */ + 1 /* clear */;
 
@@ -27,12 +36,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var exStronglyTyped = Expression.Parameter(typeof(Exception), "__exception");
 
             exprs[i++] =
-                Expression.Assign(exStronglyTyped, Expression.TypeAs(err, typeof(Exception)));
+                Expression.Assign(exStronglyTyped, Expression.TypeAs(exception, typeof(Exception)));
 
             exprs[i++] =
                 Expression.IfThenElse(
                     Expression.ReferenceEqual(exStronglyTyped, Expression.Default(typeof(Exception))),
-                    Expression.Throw(err), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
+                    Expression.Throw(exception), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
                     Expression.Call(
                         Expression.Call(
                             typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Capture), BindingFlags.Public | BindingFlags.Static),
@@ -43,7 +52,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 );
 
             exprs[i++] =
-                Expression.Assign(err, Expression.Default(err.Type));
+                Expression.Assign(exception, Expression.Default(exception.Type));
 
             return
                 Expression.Block(

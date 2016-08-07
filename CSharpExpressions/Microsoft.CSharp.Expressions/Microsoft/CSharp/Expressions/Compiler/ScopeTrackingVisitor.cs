@@ -13,6 +13,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal abstract class ScopeTrackingVisitor : CSharpExpressionVisitor
     {
+        /// <summary>
+        /// Visits a <see cref="BlockExpression"/>, keeping track of the variables declared in <see cref="BlockExpression.Variables"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
@@ -25,6 +30,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="CatchBlock"/>, keeping track of the (optional) variable declared in <see cref="CatchBlock.Variable"/>.
+        /// </summary>
+        /// <param name="node">The node to visit.</param>
+        /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override CatchBlock VisitCatchBlock(CatchBlock node)
         {
@@ -37,12 +47,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="LambdaExpression"/>, keeping track of the variables declared in <see cref="LambdaExpression.Parameters"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the delegate represented by the lambda expression.</typeparam>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
             Push(node.Parameters);
 
-            var res = base.VisitLambda<T>(node);
+            var res = base.VisitLambda(node);
 
             Pop();
 
@@ -54,6 +70,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
         //     utility and also to deal with the case where we may reshuffle rewrite steps. We could #if them
         //     out if we want to reduce code size.
 
+        /// <summary>
+        /// Visits a <see cref="BlockCSharpExpression"/>, keeping track of the variables declared in <see cref="BlockCSharpExpression.Variables"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitBlock(BlockCSharpExpression node)
         {
@@ -66,9 +87,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="UsingCSharpStatement"/>, keeping track of the (optional) variable declared in <see cref="UsingCSharpStatement.Variable"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
+            // NB: The variable is not in scope of the resource. In a LINQ expression tree, the ParameterExpression
+            //     could be reused in several nested scopes, so the same variable could be used within the resource
+            //     expression and bind to a declaration in a surrounding scope.
+
             var resource = Visit(node.Resource);
 
             Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
@@ -85,9 +115,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="ForEachCSharpStatement"/>, keeping track of the variable declared in <see cref="ForEachCSharpStatement.Variable"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
+            // NB: The variable is not in scope of the collection. In a LINQ expression tree, the ParameterExpression
+            //     could be reused in several nested scopes, so the same variable could be used within the collection
+            //     expression and bind to a declaration in a surrounding scope.
+
             var collection = Visit(node.Collection);
 
             Push(new[] { node.Variable });
@@ -107,6 +146,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="ForCSharpStatement"/>, keeping track of the variables declared in <see cref="ForCSharpStatement.Variables"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {
@@ -121,9 +165,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="SwitchCSharpStatement"/>, keeping track of the variables declared in <see cref="SwitchCSharpStatement.Variables"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
         {
+            // NB: The variables are not in scope of the switch value. In a LINQ expression tree, the ParameterExpressions
+            //     could be reused in several nested scopes, so the same variables could be used within the switch value
+            //     expression and bind to a declaration in a surrounding scope.
+
             var switchValue = Visit(node.SwitchValue);
 
             Push(node.Variables);
@@ -141,10 +194,25 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
+        /// <summary>
+        /// Visits a <see cref="ParameterExpression"/> representing a variable, either in a declaration or use site.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
+        /// <remarks>
+        /// Derived classes can override the <see cref="Push(IEnumerable{ParameterExpression})"/> method to analyze variables in declaration positions.
+        /// </remarks>
         protected abstract override Expression VisitParameter(ParameterExpression node);
 
+        /// <summary>
+        /// Pushes a collection of variables that are in scope.
+        /// </summary>
+        /// <param name="variables">A collection of variables that are in scope.</param>
         protected abstract void Push(IEnumerable<ParameterExpression> variables);
 
+        /// <summary>
+        /// Pops the nearest enclosing scope of variables.
+        /// </summary>
         protected abstract void Pop();
     }
 }
