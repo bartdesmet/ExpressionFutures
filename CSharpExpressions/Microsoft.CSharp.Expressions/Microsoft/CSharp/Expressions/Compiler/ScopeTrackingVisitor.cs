@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -21,11 +20,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
-            Push(node.Variables);
+            PushScope(node.Variables);
 
             var res = base.VisitBlock(node);
 
-            Pop();
+            PopScope(node.Variables);
 
             return res;
         }
@@ -38,11 +37,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override CatchBlock VisitCatchBlock(CatchBlock node)
         {
-            Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
+            PushScope(node.Variable);
 
             var res = base.VisitCatchBlock(node);
 
-            Pop();
+            PopScope(node.Variable);
 
             return res;
         }
@@ -56,11 +55,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
-            Push(node.Parameters);
+            PushScope(node.Parameters);
 
             var res = base.VisitLambda(node);
 
-            Pop();
+            PopScope(node.Parameters);
 
             return res;
         }
@@ -78,11 +77,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitBlock(BlockCSharpExpression node)
         {
-            Push(node.Variables);
+            PushScope(node.Variables);
 
             var res = base.VisitBlock(node);
 
-            Pop();
+            PopScope(node.Variables);
 
             return res;
         }
@@ -101,7 +100,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var resource = Visit(node.Resource);
 
-            Push(node.Variable != null ? new[] { node.Variable } : Array.Empty<ParameterExpression>());
+            PushScope(node.Variable);
 
             var res =
                 node.Update(
@@ -110,7 +109,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     Visit(node.Body)
                 );
 
-            Pop();
+            PopScope(node.Variable);
 
             return res;
         }
@@ -129,7 +128,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var collection = Visit(node.Collection);
 
-            Push(new[] { node.Variable });
+            PushScope(node.Variable);
 
             var res = 
                 node.Update(
@@ -141,7 +140,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     Visit(node.Body)
                 );
 
-            Pop();
+            PopScope(node.Variable);
 
             return res;
         }
@@ -156,11 +155,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             // NB: See notes in ForCSharpStatement.ReduceCore for the scoping rules applied here.
 
-            Push(node.Variables);
+            PushScope(node.Variables);
 
             var res = base.VisitFor(node);
 
-            Pop();
+            PopScope(node.Variables);
 
             return res;
         }
@@ -179,7 +178,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var switchValue = Visit(node.SwitchValue);
 
-            Push(node.Variables);
+            PushScope(node.Variables);
 
             var res =
                 node.Update(
@@ -189,7 +188,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     Visit(node.Cases, VisitSwitchCase)
                 );
 
-            Pop();
+            PopScope(node.Variables);
 
             return res;
         }
@@ -200,9 +199,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
         /// <remarks>
-        /// Derived classes can override the <see cref="Push(IEnumerable{ParameterExpression})"/> method to analyze variables in declaration positions.
+        /// Derived classes can override the <see cref="Push(IEnumerable{ParameterExpression})"/> and <see cref="Pop()"/> methods to analyze variables in declaration positions.
         /// </remarks>
         protected abstract override Expression VisitParameter(ParameterExpression node);
+
+        /// <summary>
+        /// Pushes a single variable that is in scope.
+        /// </summary>
+        /// <param name="variable">A single variable that is in scope.</param>
+        protected virtual void Push(ParameterExpression variable)
+        {
+            Push(new[] { variable });
+        }
 
         /// <summary>
         /// Pushes a collection of variables that are in scope.
@@ -214,5 +222,65 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// Pops the nearest enclosing scope of variables.
         /// </summary>
         protected abstract void Pop();
+
+        /// <summary>
+        /// Pushes a collection of variables that are in scope.
+        /// </summary>
+        /// <param name="variables">A collection of variables that are in scope.</param>
+        /// <remarks>
+        /// If the <paramref name="variables"/> collection is empty, this method is a no-op.
+        /// </remarks>
+        private void PushScope(IReadOnlyCollection<ParameterExpression> variables)
+        {
+            if (variables.Count > 0)
+            {
+                Push(variables);
+            }
+        }
+
+        /// <summary>
+        /// Pushes a single variable that is in scope.
+        /// </summary>
+        /// <param name="variable">A single variable that is in scope.</param>
+        /// <remarks>
+        /// If the <paramref name="variable"/> is <c>null</c>, this method is a no-op.
+        /// </remarks>
+        private void PushScope(ParameterExpression variable)
+        {
+            if (variable != null)
+            {
+                Push(variable);
+            }
+        }
+
+        /// <summary>
+        /// Pops the nearest enclosing scope of variables.
+        /// </summary>
+        /// <param name="variables">A collection of variables that are no longer in scope.</param>
+        /// <remarks>
+        /// If the <paramref name="variables"/> collection is empty, this method is a no-op.
+        /// </remarks>
+        private void PopScope(IReadOnlyCollection<ParameterExpression> variables)
+        {
+            if (variables.Count > 0)
+            {
+                Pop();
+            }
+        }
+
+        /// <summary>
+        /// Pops the nearest enclosing scope containing a single variable.
+        /// </summary>
+        /// <param name="variable">A single variable that is no longer in scope.</param>
+        /// <remarks>
+        /// If the <paramref name="variable"/> is <c>null</c>, this method is a no-op.
+        /// </remarks>
+        private void PopScope(ParameterExpression variable)
+        {
+            if (variable != null)
+            {
+                Pop();
+            }
+        }
     }
 }
