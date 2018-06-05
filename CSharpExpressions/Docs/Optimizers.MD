@@ -57,10 +57,10 @@ would reduce into something like this:
 bdy:
     // Body
 cnt:
-	{
-	    t = i;
-		i = t + 1;
-	    t;
+    {
+        t = i;
+        i = t + 1;
+        t;
     }
 tst:
     if (i < 10)
@@ -85,10 +85,10 @@ tst:
 This optimization could be applied in a more general context as well by analyzing whether an expression's result gets discarded. In particular, consider the reduced code for the post-increment assignment:
 
 ```csharp
-	{
-	    t = i;
-		i = t + 1;
-	    t;
+    {
+        t = i;
+        i = t + 1;
+        t;
     }
 ```
 

@@ -49,7 +49,7 @@ To address the concerns listed above, we've introduced a new `DebugView` extensi
 namespace System.Linq.Expressions
 {
     public static class ExpressionDebugViewExtensions
-	{
+    {
         public static XNode DebugView(this Expression expression) { ... }
     }
 }
@@ -169,9 +169,9 @@ The various overloads of `ToCSharp` are shown below:
 namespace System.Linq.Expressions
 {
     public static class ExpressionCSharpExtensions
-	{
+    {
         public static string ToCSharp(this Expression expression) { ... }
-		public static string ToCSharp(this Expression expression, params string[] namespaces) { ... }
+        public static string ToCSharp(this Expression expression, params string[] namespaces) { ... }
     }
 }
 ```

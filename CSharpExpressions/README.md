@@ -326,7 +326,7 @@ var expr = CSharpExpression.ConditionalAccess(
   sNotNull,
   Expression.Property(
     sNotNull,
-	typeof(string).GetProperty("Length")
+    typeof(string).GetProperty("Length")
   )
 );
 ```
@@ -526,23 +526,23 @@ CSharpStatement.Switch(
   breakLabel,
   CSharpStatement.SwitchCase(
     Expression.Call(cout, "Even"),
-	0, 2, 4
+    0, 2, 4
   ),
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoCase(0),
-	6, 8
+    6, 8
   ),
   CSharpStatement.SwitchCase(
     Expression.Call(cout, "Odd"),
-	1, 3, 5
+    1, 3, 5
   ),
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoCase(1),
-	7, 9
+    7, 9
   ),
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoDefault(),
-	-1
+    -1
   ),
   CSharpStatement.SwitchCaseDefault(
     Expression.Call(cout, "Default")

@@ -8,7 +8,7 @@ Adding support for some newer language features is quite hard without changing e
 
 ### Dictionary initializers
 
-Dictionary initializers were added in C# 6.0 as an extensio to object initializer expressions. These are modeled using `MemberInitExpression` nodes with a `Bindings` collection consisting of `MemberBinding` instances.
+Dictionary initializers were added in C# 6.0 as an extension to object initializer expressions. These are modeled using `MemberInitExpression` nodes with a `Bindings` collection consisting of `MemberBinding` instances.
 
 Unlike the `Expression` nodes, `MemberBinding` nodes are not extensible, i.e. there's no `Extension` value for `BindingType` or a `Reduce` mechanism. One issue is the pretty tight coupling of these nodes with their parent and the lambda compiler for compilation purposes.
 
