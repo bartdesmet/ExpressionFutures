@@ -9,7 +9,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler
 {
-    static class Utils
+    internal static class Utils
     {
         public static Expression CreateRethrow(Expression err, Expression beforeThrow = null)
         {

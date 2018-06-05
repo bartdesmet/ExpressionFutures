@@ -46,13 +46,13 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the body of the lambda expression.
         /// </summary>
-		/// <returns>An <see cref="Expression" /> that represents the body of the lambda expression.</returns>
+        /// <returns>An <see cref="Expression" /> that represents the body of the lambda expression.</returns>
         public Expression Body { get; }
 
         /// <summary>
         /// Gets the parameters of the lambda expression.
         /// </summary>
-		/// <returns>A <see cref="ReadOnlyCollection{T}" /> of <see cref="ParameterExpression" /> objects that represent the parameters of the lambda expression.</returns>
+        /// <returns>A <see cref="ReadOnlyCollection{T}" /> of <see cref="ParameterExpression" /> objects that represent the parameters of the lambda expression.</returns>
         public ReadOnlyCollection<ParameterExpression> Parameters { get; }
 
         /// <summary>
@@ -220,8 +220,7 @@ namespace Microsoft.CSharp.Expressions
             // can decide to optimize this using a struct later (but then it may be worth making closures
             // in the lambda compiler a bit cheaper by creating a display class as well).
             //
-            var variables = default(IEnumerable<ParameterExpression>);
-            var body = RewriteBody(stateVar, builderVar, stateMachineVar, out variables);
+            var body = RewriteBody(stateVar, builderVar, stateMachineVar, out IEnumerable<ParameterExpression> variables);
 
             //
             // __statemachine = new RuntimeAsyncStateMachine(body);
@@ -302,8 +301,7 @@ namespace Microsoft.CSharp.Expressions
 
             var getVariable = new Func<Type, string, ParameterExpression>((t, s) =>
             {
-                var p = default(ParameterExpression);
-                if (!hoistedVars.TryGetValue(t, out p))
+                if (!hoistedVars.TryGetValue(t, out ParameterExpression p))
                 {
                     p = Expression.Parameter(t, s + hoistedVars.Count);
                     hoistedVars.Add(t, p);

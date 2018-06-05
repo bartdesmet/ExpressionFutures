@@ -45,10 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var binder = default(CallSiteBinder);
-            var arguments = default(IEnumerable<Expression>);
-            var argumentTypes = default(Type[]);
-            ReduceDynamic(out binder, out arguments, out argumentTypes);
+            ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);
 
             return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
         }

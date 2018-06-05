@@ -319,8 +319,7 @@ namespace Microsoft.CSharp.Expressions
                 });
 
                 var obj = default(Expression);
-                var writebacks = default(Expression[]);
-                RewriteArguments(instance, bindings, makeVariable, statements, ref obj, arguments, out writebacks);
+                RewriteArguments(instance, bindings, makeVariable, statements, ref obj, arguments, out Expression[] writebacks);
 
                 FillOptionalParameters(parameters, arguments);
 

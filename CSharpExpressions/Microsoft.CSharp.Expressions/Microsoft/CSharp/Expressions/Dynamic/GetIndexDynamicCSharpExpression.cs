@@ -96,10 +96,7 @@ namespace Microsoft.CSharp.Expressions
 
         internal Expression ReduceAssignment(Expression value, CSharpBinderFlags flags, CSharpArgumentInfoFlags leftFlags = CSharpArgumentInfoFlags.None, CSharpArgumentInfoFlags rightFlags = CSharpArgumentInfoFlags.None)
         {
-            var binder = default(CallSiteBinder);
-            var arguments = default(IEnumerable<Expression>);
-            var argumentTypes = default(Type[]);
-            ReduceAssignment(value, flags, leftFlags, rightFlags, out binder, out arguments, out argumentTypes);
+            ReduceAssignment(value, flags, leftFlags, rightFlags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);
 
             return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
         }

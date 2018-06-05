@@ -13,12 +13,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class Optimizer
     {
-        public static Expression Optimize(Expression expression)
-        {
-            return Impl.Instance.Visit(expression);
-        }
+        public static Expression Optimize(Expression expression) => Impl.Instance.Visit(expression);
 
-        class Impl : CSharpExpressionVisitor
+        private sealed class Impl : CSharpExpressionVisitor
         {
             public static readonly ExpressionVisitor Instance = new Impl();
 

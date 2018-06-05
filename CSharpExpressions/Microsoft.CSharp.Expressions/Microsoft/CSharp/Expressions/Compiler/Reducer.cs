@@ -14,12 +14,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class Reducer
     {
-        public static Expression Reduce(Expression expression)
-        {
-            return new Impl().Visit(expression);
-        }
+        public static Expression Reduce(Expression expression) => new Impl().Visit(expression);
 
-        class Impl : AwaitTrackingVisitor
+        private sealed class Impl : AwaitTrackingVisitor
         {
             protected override Expression VisitExtension(Expression node)
             {

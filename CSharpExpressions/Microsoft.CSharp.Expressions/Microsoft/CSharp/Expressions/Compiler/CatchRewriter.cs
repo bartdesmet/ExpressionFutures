@@ -33,9 +33,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 {
                     var handler = handlers[i];
 
-                    var newBody = default(Expression);
 
-                    if (VisitAndFindAwait(handler.Body, out newBody))
+                    if (VisitAndFindAwait(handler.Body, out Expression newBody))
                     {
                         if (newHandlers.Count > 0)
                         {

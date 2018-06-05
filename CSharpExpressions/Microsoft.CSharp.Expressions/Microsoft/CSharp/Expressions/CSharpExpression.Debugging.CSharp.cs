@@ -621,8 +621,7 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Indent();
                 visitor.NewLine();
 
-                var locals = default(List<ParameterExpression>);
-                if (caseToVariables.TryGetValue(@case, out locals))
+                if (caseToVariables.TryGetValue(@case, out List<ParameterExpression> locals))
                 {
                     var vars = locals.ToLookup(v => v.Type, v => v);
                     foreach (var kv in vars)

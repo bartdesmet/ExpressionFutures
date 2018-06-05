@@ -31,8 +31,8 @@ var bts = new[]
     ExpressionType.SubtractChecked,
     
     // NB, The following are not supported by design
-	// ExpressionType.Power,
-	// ExpressionType.Coalesce,
+    // ExpressionType.Power,
+    // ExpressionType.Coalesce,
 };
 
 var uts = new[]

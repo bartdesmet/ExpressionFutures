@@ -86,17 +86,14 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </remarks>
     internal static class AssignmentPercolator
     {
-        public static Expression Percolate(Expression expression)
-        {
-            return Impl.Instance.Visit(expression);
-        }
+        public static Expression Percolate(Expression expression) => Impl.Instance.Visit(expression);
 
         // NB: We really only need percolation for node types we introduce during the rewrite steps for async lambdas.
         //     For example, we introduce Block nodes at will in various places, and introduce Conditional nodes when
         //     rewriting non-void Try expressions. For completeness, a few other node types are handled below as well,
         //     which can come in handy later.
 
-        class Impl : ShallowVisitor
+        private sealed class Impl : ShallowVisitor
         {
             public static readonly ExpressionVisitor Instance = new Impl();
 

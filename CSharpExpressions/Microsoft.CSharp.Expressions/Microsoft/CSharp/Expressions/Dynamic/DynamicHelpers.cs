@@ -52,10 +52,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static Expression ReduceDynamicMember(GetMemberDynamicCSharpExpression member, Func<Expression, Expression> functionalOp, CSharpBinderFlags flags, bool prefix)
         {
-            var args = default(DynamicCSharpArgument[]);
-            var block = default(Expression[]);
-            var temps = default(ParameterExpression[]);
-            var i = CopyArguments(member.Object, member.Arguments, prefix, out args, out block, out temps);
+            var i = CopyArguments(member.Object, member.Arguments, prefix, out DynamicCSharpArgument[] args, out Expression[] block, out ParameterExpression[] temps);
 
             member = member.Update(temps[0], new TrueReadOnlyCollection<DynamicCSharpArgument>(args));
 
@@ -80,10 +77,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static Expression ReduceDynamicIndex(GetIndexDynamicCSharpExpression index, Func<Expression, Expression> functionalOp, CSharpBinderFlags flags, bool prefix)
         {
-            var args = default(DynamicCSharpArgument[]);
-            var block = default(Expression[]);
-            var temps = default(ParameterExpression[]);
-            var i = CopyArguments(index.Object, index.Arguments, prefix, out args, out block, out temps);
+            var i = CopyArguments(index.Object, index.Arguments, prefix, out DynamicCSharpArgument[] args, out Expression[] block, out ParameterExpression[] temps);
 
             index = index.Update(temps[0], new TrueReadOnlyCollection<DynamicCSharpArgument>(args));
 

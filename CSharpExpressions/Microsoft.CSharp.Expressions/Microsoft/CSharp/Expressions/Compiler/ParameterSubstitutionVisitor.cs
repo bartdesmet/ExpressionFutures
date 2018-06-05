@@ -18,8 +18,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             foreach (var subst in _subst)
             {
-                var res = default(ParameterExpression);
-                if (subst.TryGetValue(node, out res))
+                if (subst.TryGetValue(node, out ParameterExpression res))
                 {
                     return res;
                 }

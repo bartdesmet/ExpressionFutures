@@ -14,12 +14,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class AwaitChecker
     {
-        public static void Check(Expression body)
-        {
-            new Impl().Visit(body);
-        }
+        public static void Check(Expression body) => new Impl().Visit(body);
 
-        class Impl : CSharpExpressionVisitor
+        private sealed class Impl : CSharpExpressionVisitor
         {
             private readonly Stack<string> _forbidden = new Stack<string>();
 
@@ -34,10 +31,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return node;
             }
 
-            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node)
-            {
-                return node;
-            }
+            protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node) => node;
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override CatchBlock VisitCatchBlock(CatchBlock node)

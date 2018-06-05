@@ -76,8 +76,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 var expression = expressions[i];
                 var rewritten = Visit(expression);
 
-                var statements = default(IEnumerable<Expression>);
-                if (TryGetStatements(rewritten, out statements))
+                if (TryGetStatements(rewritten, out IEnumerable<Expression> statements))
                 {
                     if (res == null)
                     {

@@ -46,13 +46,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         public HashSet<ParameterExpression> HoistedVariables { get; } = new HashSet<ParameterExpression>();
 
-        public IList<SwitchCase> ResumeList
-        {
-            get
-            {
-                return _jumpTables.Peek();
-            }
-        }
+        public IList<SwitchCase> ResumeList => _jumpTables.Peek();
 
         // NB: We don't have to deal with CatchBlock nodes which also introduce scope because the AwaitRewriter
         //     runs after lowering Try blocks. When lowering a CatchBlock containing an Await node, its exception

@@ -87,8 +87,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitLabel(LabelExpression node)
         {
-            var info = default(LabelInfo);
-            if (TryGetLabelInfo(node.Target, out info))
+            if (TryGetLabelInfo(node.Target, out LabelInfo info))
             {
                 var variable = info.Value;
                 var newTarget = info.Target;
@@ -109,8 +108,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitGoto(GotoExpression node)
         {
-            var info = default(LabelInfo);
-            if (TryGetLabelInfo(node.Target, out info))
+            if (TryGetLabelInfo(node.Target, out LabelInfo info))
             {
                 var variable = info.Value;
                 var newTarget = info.Target;

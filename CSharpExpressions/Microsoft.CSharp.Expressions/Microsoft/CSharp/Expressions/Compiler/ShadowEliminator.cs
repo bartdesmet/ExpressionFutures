@@ -27,12 +27,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </remarks>
     internal static class ShadowEliminator
     {
-        public static Expression Eliminate(Expression expression)
-        {
-            return new Impl().Visit(expression);
-        }
+        public static Expression Eliminate(Expression expression) => new Impl().Visit(expression);
 
-        class Impl : ParameterSubstitutionVisitor
+        private sealed class Impl : ParameterSubstitutionVisitor
         {
             private readonly Stack<HashSet<ParameterExpression>> _env = new Stack<HashSet<ParameterExpression>>();
 
