@@ -104,4 +104,10 @@
   }
 })]]></Code>
   </Expression>
+  <Expression Name="Throw expression">
+    <Code><![CDATA[(Expression<Action<object>>)(o =>
+{
+  var x = o ?? throw new Exception();
+})]]></Code>
+  </Expression>
 </Expressions>
