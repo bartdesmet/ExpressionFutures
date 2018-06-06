@@ -111,8 +111,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             if (node.Type == typeof(void))
             {
-                var block = node as BlockExpression;
-                if (block != null)
+                if (node is BlockExpression block)
                 {
                     if (block.Variables.Count == 0)
                     {
@@ -123,8 +122,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 }
                 else
                 {
-                    var csblock = node as BlockCSharpExpression;
-                    if (csblock != null)
+                    if (node is BlockCSharpExpression csblock)
                     {
                         if (csblock.Variables.Count == 0)
                         {
@@ -168,8 +166,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return Array.Empty<Expression>();
             }
 
-            var block = node as BlockExpression;
-            if (block != null)
+            if (node is BlockExpression block)
             {
                 if (CanOptimize(block))
                 {
@@ -178,8 +175,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             }
             else
             {
-                var csblock = node as BlockCSharpExpression;
-                if (csblock != null)
+                if (node is BlockCSharpExpression csblock)
                 {
                     if (CanOptimize(csblock))
                     {

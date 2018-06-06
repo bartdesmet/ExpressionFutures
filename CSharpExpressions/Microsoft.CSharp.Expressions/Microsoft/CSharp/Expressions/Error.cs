@@ -443,6 +443,22 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Type must not be ByRef"
+        /// </summary>
+        internal static Exception TypeMustNotBeByRef()
+        {
+            return new ArgumentException(Strings.TypeMustNotBeByRef);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Type must not be a pointer type"
+        /// </summary>
+        internal static Exception TypeMustNotBePointer()
+        {
+            return new ArgumentException(Strings.TypeMustNotBePointer);
+        }
+
     }
 
     /// <summary>
@@ -939,6 +955,28 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidUnaryAssignmentWithOperands, p0, p1);
         }
 
+        /// <summary>
+        /// A string like "Type must not be ByRef"
+        /// </summary>
+        internal static string TypeMustNotBeByRef
+        {
+            get
+            {
+                return SR.TypeMustNotBeByRef;
+            }
+        }
+
+        /// <summary>
+        /// A string like "Type must not be a pointer type"
+        /// </summary>
+        internal static string TypeMustNotBePointer
+        {
+            get
+            {
+                return SR.TypeMustNotBePointer;
+            }
+        }
+
     }
 }
 
@@ -1000,5 +1038,7 @@ namespace System
         public const string InvalidCompoundAssignment = "Compound assignment operation '{0}' is not supported for type '{1}'.";
         public const string InvalidCompoundAssignmentWithOperands = "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'.";
         public const string InvalidUnaryAssignmentWithOperands = "Unary assignment operation '{0}' is not supported for an operand of type '{1}'.";
+        public const string TypeMustNotBeByRef = "Type must not be ByRef";
+        public const string TypeMustNotBePointer = "Type must not be a pointer type";
     }
 }

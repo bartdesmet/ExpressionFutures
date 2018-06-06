@@ -767,8 +767,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var lhs = expression;
 
-            var index = expression as IndexCSharpExpression;
-            if (index != null)
+            if (expression is IndexCSharpExpression index)
             {
                 EnsureCanWrite(index, paramName);
 
@@ -785,8 +784,11 @@ namespace Microsoft.CSharp.Expressions
             //     dynamic arguments and also allow to separate the dynamic API from the rest of the nodes without
             //     having a strange circular dependency.
 
-            var index = expression as IndexCSharpExpression;
-            if (index != null)
+            if (expression is DiscardCSharpExpression)
+            {
+                return;
+            }
+            else if (expression is IndexCSharpExpression index)
             {
                 EnsureCanWrite(index, paramName);
             }
@@ -816,6 +818,11 @@ namespace Microsoft.CSharp.Expressions
 
         public static Expression MakeWriteable(Expression lhs)
         {
+            if (lhs is DiscardCSharpExpression)
+            {
+                return lhs.Reduce();
+            }
+
             if (lhs.NodeType == ExpressionType.ArrayIndex)
             {
                 var arrayIndex = (BinaryExpression)lhs;
