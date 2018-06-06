@@ -595,3 +595,50 @@ Unary increment and decrement operators also exist in the DLR but with a few not
 Reduction of the unary assignment nodes uses the corresponding DLR nodes when applicable, e.g. for non-checked operations applied to a DLR-assignable node with a supported type (e.g. `PostIncrementAssign` on a `ParameterExpression` of type `Int32`). Checked variants, C#-specific supported types (via widening and narrowing conversions), and C#-specific assignment targets (i.e. `IndexCSharpExpression`) are reduced via the corresponding binary compound assignment operations with an right-hand side with a constant value of `1`.
 
 Note there some more trickiness around compound assignments involving a left-hand side of a mutable value type, e.g. when applying the assignment to a field. For those cases, calls to helper methods on `RuntimeOpsEx` are emitted during reduction, e.g. `PostAssignByRef`. For more information, see the comments in the code.
+
+#### C# 7.0
+
+##### Throw Expressions
+
+Throw expressions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<string, string>> f = o => o ?? new Exception();
+```
+
+This fails to compile with:
+
+```
+error CS8188: An expression tree may not contain a throw-expression.
+```
+
+Support for throw expressions is added by using the `Expression.Throw(Expression, Type)` factory method that already exists in the BCL:
+
+```csharp
+Expression.Throw(
+  expression,
+  typeof(string)
+)
+```
+
+##### Discard Expressions
+
+Discard expressions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<string, bool>> f = s => int.TryParse(s, out int _);
+```
+
+This fails to compile with:
+
+```
+error CS8207: An expression tree may not contain a discard.
+```
+
+Support for discard expressions is added by a new `CSharpExpression.Factory(Type)` method:
+
+```csharp
+CSharpExpression.Discard(typeof(int))
+```
+
+Nodes of this type reduce to a valid assignment target using a `Discard<T>` helper type. Optimizers can prevent this reduction by removing assignments or by introducing temporary locals in blocks.
