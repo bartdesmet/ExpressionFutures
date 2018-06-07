@@ -621,8 +621,7 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Indent();
                 visitor.NewLine();
 
-                var locals = default(List<ParameterExpression>);
-                if (caseToVariables.TryGetValue(@case, out locals))
+                if (caseToVariables.TryGetValue(@case, out List<ParameterExpression> locals))
                 {
                     var vars = locals.ToLookup(v => v.Type, v => v);
                     foreach (var kv in vars)
@@ -1977,6 +1976,25 @@ namespace Microsoft.CSharp.Expressions
                 default:
                     throw new InvalidOperationException();
             }
+        }
+    }
+
+    partial class DiscardCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Parameter);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Out("_");
         }
     }
 

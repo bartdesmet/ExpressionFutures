@@ -326,7 +326,7 @@ var expr = CSharpExpression.ConditionalAccess(
   sNotNull,
   Expression.Property(
     sNotNull,
-	typeof(string).GetProperty("Length")
+    typeof(string).GetProperty("Length")
   )
 );
 ```
@@ -375,6 +375,53 @@ Our support for `Await` in an `AsyncLambda` (cf. the C# 5.0 section above) inclu
 The compilation of such constructs is based on a lowering step where we translate the `Try` expression into a more primitive form with catch and rethrow constructs using `ExceptionDispatchInfo`. We also support pending branches out of the `Body` of a `Try` expression while ensuring the timely execution of the `Finally` handler, if any.
 
 All of this is very similar to the C# compiler approach of supporting `await` in `catch` and `finally` blocks. Two notable differences are our support for `Await` in a `Fault` handler and our support for non-void `Try` expressions which are permitted by the DLR.
+
+#### C# 7.0
+
+##### Throw Expressions
+
+Throw expressions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<string, string>> f = o => o ?? new Exception();
+```
+
+This fails to compile with:
+
+```
+error CS8188: An expression tree may not contain a throw-expression.
+```
+
+Support for throw expressions is added by using the `Expression.Throw(Expression, Type)` factory method that already exists in the BCL:
+
+```csharp
+Expression.Throw(
+  expression,
+  typeof(string)
+)
+```
+
+##### Discard Expressions
+
+Discard expressions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<string, bool>> f = s => int.TryParse(s, out int _);
+```
+
+This fails to compile with:
+
+```
+error CS8207: An expression tree may not contain a discard.
+```
+
+Support for discard expressions is added by a new `CSharpExpression.Factory(Type)` method:
+
+```csharp
+CSharpExpression.Discard(typeof(int))
+```
+
+Nodes of this type reduce to a valid assignment target using a `Discard<T>` helper type. Optimizers can prevent this reduction by removing assignments or by introducing temporary locals in blocks.
 
 #### Statement Trees
 
@@ -526,23 +573,23 @@ CSharpStatement.Switch(
   breakLabel,
   CSharpStatement.SwitchCase(
     Expression.Call(cout, "Even"),
-	0, 2, 4
+    0, 2, 4
   ),
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoCase(0),
-	6, 8
+    6, 8
   ),
   CSharpStatement.SwitchCase(
     Expression.Call(cout, "Odd"),
-	1, 3, 5
+    1, 3, 5
   ),
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoCase(1),
-	7, 9
+    7, 9
   ),
   CSharpStatement.SwitchCase(
     CSharpStatement.GotoDefault(),
-	-1
+    -1
   ),
   CSharpStatement.SwitchCaseDefault(
     Expression.Call(cout, "Default")

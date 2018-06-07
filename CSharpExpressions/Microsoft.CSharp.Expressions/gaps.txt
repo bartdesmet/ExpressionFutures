@@ -52,31 +52,34 @@ ERR_AnonymousMethodToExpressionTree
 - To be revisited if/when we add statement support
 
 
+C# 7.x and beyond
+~~~~~~~~~~~~~~~~~
+
+ERR_ExpressionTreeContainsLocalFunction
+ERR_ExpressionTreeContainsIsMatch
+ERR_ExpressionTreeContainsTupleLiteral
+ERR_ExpressionTreeContainsTupleConversion
+ERR_ExpressionTreeContainsOutVariable
+ERR_ExpressionTreeContainsTupleBinOp
+
+
 Done
 ----
 
-NB: This is done in the *runtime library* and not yet in the Roslyn compiler.
-NB: Design for some of these is not yet final; however, we do have a first sketch of it.
-
 ERR_ExpressionTreeContainsMultiDimensionalArrayInitializer
 - () => new int[2, 2] { { 1, 2 }, { 3, 4 } }
-- Can be lifted by adding a new ArrayInit node
 
 ERR_BadAsyncExpressionTree
 - async () => await x
-- To be revisited if/when we async/await support
 
 ERR_ExpressionTreeContainsNamedArgument
 - () => Bar(x: 1)
-- Can be lifted by adding new nodes
 
 ERR_ExpressionTreeContainsOptionalArgument
 - () => Bar(/*omitted argument*/)
-- Can be lifted by adding new nodes; design question whether to resolve the default value at compile time or at runtime
 
 ERR_NullPropagatingOpInExpressionTree
-- Can be lifted by adding new nodes
-- C# 6.0 feature addition
+- s => s?.Foo()
 
 ERR_DictionaryInitializerInExpressionTree
 - Can be lifted by adding new nodes; trickiness with MemberInit / MemberBinding not being extensible
@@ -84,15 +87,19 @@ ERR_DictionaryInitializerInExpressionTree
 
 ERR_ExpressionTreeContainsDynamicOperation
 - (dynamic d) => d.Foo()
-- To be revisited if/when we add dynamic support
 
 ERR_ExpressionTreeContainsAssignment
 - () => a = 42
-- To be revisited if/when we add statement support
 
 ERR_StatementLambdaToExpressionTree
 - () => { ... }
-- To be revisited if/when we add statement support
+
+ERR_ExpressionTreeContainsThrowExpression
+- (string s) => s ?? throw new Exception();
+
+ERR_ExpressionTreeContainsDiscard
+- _ = foo()
+- int.TryParse(s, out int _)
 
 
 Ignored

@@ -45,8 +45,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-                var replacement = default(ParameterExpression);
-                if (_substitutions.TryGetValue(node, out replacement))
+                if (_substitutions.TryGetValue(node, out ParameterExpression replacement))
                 {
                     var found = false;
 

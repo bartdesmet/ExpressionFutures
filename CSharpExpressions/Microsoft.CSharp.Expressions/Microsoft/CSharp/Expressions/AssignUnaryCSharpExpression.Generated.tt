@@ -18,56 +18,56 @@ using System.Reflection;
 
 namespace Microsoft.CSharp.Expressions
 {
-	partial class AssignUnaryCSharpExpression
-	{
-		private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
+    partial class AssignUnaryCSharpExpression
+    {
+        private static ExpressionType ConvertNodeType(CSharpExpressionType nodeType)
         {
-			switch (nodeType)
-			{
+            switch (nodeType)
+            {
 <#
 var i = 0;
 foreach (var node in nodes)
 {
-	var checkedNode = checkedNodes[i];
+    var checkedNode = checkedNodes[i];
 #>
-				case CSharpExpressionType.<#=node#>: return ExpressionType.<#=node#>;
-				case CSharpExpressionType.<#=checkedNode#>: return ExpressionType.<#=node#>;
+                case CSharpExpressionType.<#=node#>: return ExpressionType.<#=node#>;
+                case CSharpExpressionType.<#=checkedNode#>: return ExpressionType.<#=node#>;
 <#
-	i++;
+    i++;
 }
 #>
-				default:
-					throw ContractUtils.Unreachable;
-			}
+                default:
+                    throw ContractUtils.Unreachable;
+            }
         }
-	}
+    }
 
-	partial class CSharpExpression
-	{
+    partial class CSharpExpression
+    {
 <#
 foreach (var node in nodes)
 {
 #>
-		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
-		/// </summary>
-		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		public static new AssignUnaryCSharpExpression <#=node#>(Expression operand)
-		{
-			return <#=node#>(operand, null);
-		}
+        /// <summary>
+        /// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+        /// </summary>
+        /// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+        /// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
+        public static new AssignUnaryCSharpExpression <#=node#>(Expression operand)
+        {
+            return <#=node#>(operand, null);
+        }
 
-		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
-		/// </summary>
-		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-		public static new AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
-		{
-			return MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
-		}
+        /// <summary>
+        /// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+        /// </summary>
+        /// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+        /// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
+        /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
+        public static new AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
+        {
+            return MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
+        }
 
 <#
 }
@@ -76,29 +76,29 @@ foreach (var node in nodes)
 foreach (var node in checkedNodes)
 {
 #>
-		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
-		/// </summary>
-		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression <#=node#>(Expression operand)
-		{
-			return <#=node#>(operand, null);
-		}
+        /// <summary>
+        /// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+        /// </summary>
+        /// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+        /// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
+        public static AssignUnaryCSharpExpression <#=node#>(Expression operand)
+        {
+            return <#=node#>(operand, null);
+        }
 
-		/// <summary>
-		/// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
-		/// </summary>
-		/// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
-		/// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
-		/// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-		public static AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
-		{
-			return MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
-		}
+        /// <summary>
+        /// Creates a <see cref="AssignUnaryCSharpExpression" /> that represents a compound assignment of type <#=node#>.
+        /// </summary>
+        /// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
+        /// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
+        /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
+        public static AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method)
+        {
+            return MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
+        }
 
 <#
 }
 #>
-	}
+    }
 }

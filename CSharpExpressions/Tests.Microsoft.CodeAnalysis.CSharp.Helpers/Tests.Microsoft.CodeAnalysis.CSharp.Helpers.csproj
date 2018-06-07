@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tests.Microsoft.CodeAnalysis.CSharp.Helpers</RootNamespace>
     <AssemblyName>Tests.Microsoft.CodeAnalysis.CSharp.Helpers</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -105,10 +105,6 @@
     <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj">
       <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
       <Name>Microsoft.CSharp.Expressions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.CSharp.Extensions\Microsoft.CSharp.Extensions.csproj">
-      <Project>{03a93918-1bc1-4a53-b2ff-984cd2964a10}</Project>
-      <Name>Microsoft.CSharp.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
       <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>

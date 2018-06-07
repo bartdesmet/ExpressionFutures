@@ -206,10 +206,10 @@ namespace System.Linq.Expressions.Compiler
                                 }
                                 else
                                 {
+
 #endif
-                                Expression temp;
-                                clone[i] = _self.ToTemp(clone[i], out temp);
-                                comma.Add(temp);
+                                    clone[i] = _self.ToTemp(clone[i], out Expression temp);
+                                    comma.Add(temp);
 #if !LINQ
                                 }
 #endif

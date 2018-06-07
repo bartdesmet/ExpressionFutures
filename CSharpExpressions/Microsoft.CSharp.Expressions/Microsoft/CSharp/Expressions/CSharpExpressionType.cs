@@ -30,7 +30,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents creating a new multi-dimensional array and initializing it from a list of elements.
         /// </summary>
         NewMultidimensionalArrayInit,
-        
+
         /// <summary>
         /// A node that represents an await operation.
         /// </summary>
@@ -39,7 +39,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents an asynchronous lambda.
         /// </summary>
         AsyncLambda,
-        
+
         /// <summary>
         /// A node that represents a block.
         /// </summary>
@@ -76,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// A node that represents a goto statement.
         /// </summary>
         Goto,
-        
+
         /// <summary>
         /// A node that represents a dynamically bound unary operation.
         /// </summary>
@@ -222,5 +222,10 @@ namespace Microsoft.CSharp.Expressions
         /// A unary postfix decrement, such as (a--), that has overflow checking. The object a should be modified in place.
         /// </summary>
         PostDecrementAssignChecked,
+
+        /// <summary>
+        /// A discard expression, i.e. a write-only expression syntactically represented as _.
+        /// </summary>
+        Discard,
     }
 }

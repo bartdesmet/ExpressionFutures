@@ -26,12 +26,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </remarks>
     internal static class AliasEliminator
     {
-        public static Expression Eliminate(Expression expression)
-        {
-            return new Impl().Visit(expression);
-        }
+        public static Expression Eliminate(Expression expression) => new Impl().Visit(expression);
 
-        class Impl : ParameterSubstitutionVisitor
+        private sealed class Impl : ParameterSubstitutionVisitor
         {
             private readonly HashSet<ParameterExpression> _env = new HashSet<ParameterExpression>();
 
@@ -50,10 +47,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 _subst.Push(subst);
             }
 
-            protected override void Pop()
-            {
-                _subst.Pop();
-            }
+            protected override void Pop() => _subst.Pop();
         }
     }
 }

@@ -154,8 +154,7 @@ namespace Microsoft.CSharp.Expressions
 
                 foreach (var gotoCase in info.GotoCases)
                 {
-                    var @case = default(CSharpSwitchCase);
-                    if (!testValueToCaseMap.TryGetValue(gotoCase.OrNullSentinel(), out @case))
+                    if (!testValueToCaseMap.TryGetValue(gotoCase.OrNullSentinel(), out CSharpSwitchCase @case))
                     {
                         throw Error.InvalidGotoCase(gotoCase.ToDebugString());
                     }
@@ -194,8 +193,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var newBody = rewriter.Visit(@case.Statements);
 
-                    var jumpTarget = default(LabelTarget);
-                    if (caseJumpTargets.TryGetValue(@case, out jumpTarget))
+                    if (caseJumpTargets.TryGetValue(@case, out LabelTarget jumpTarget))
                     {
                         newBody = newBody.AddFirst(Expression.Label(jumpTarget)).ToReadOnly();
                     }

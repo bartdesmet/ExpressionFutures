@@ -36,10 +36,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-
-            var @break = default(LabelTarget);
-            var @continue = default(LabelTarget);
-            PopLabelInfo(out @break, out @continue);
+            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
             return node.Update(@break, @continue, test, body);
         }
@@ -50,10 +47,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-
-            var @break = default(LabelTarget);
-            var @continue = default(LabelTarget);
-            PopLabelInfo(out @break, out @continue);
+            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
             var test = Visit(node.Test);
 
@@ -73,10 +67,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-
-            var @break = default(LabelTarget);
-            var @continue = default(LabelTarget);
-            PopLabelInfo(out @break, out @continue);
+            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
             return node.Update(@break, @continue, variables, initializers, test, iterators, body);
         }
@@ -93,10 +84,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-
-            var @break = default(LabelTarget);
-            var @continue = default(LabelTarget);
-            PopLabelInfo(out @break, out @continue);
+            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
             return node.Update(@break, @continue, variable, collection, conversion, body);
         }
@@ -107,10 +95,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-
-            var @break = default(LabelTarget);
-            var @continue = default(LabelTarget);
-            PopLabelInfo(out @break, out @continue);
+            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
             return node.Update(@break, @continue, body);
         }

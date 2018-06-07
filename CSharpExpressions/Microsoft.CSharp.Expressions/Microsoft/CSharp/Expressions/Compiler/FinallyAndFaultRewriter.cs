@@ -38,9 +38,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 {
                     Debug.Assert(node.Fault == null);
 
-                    var @finally = default(Expression);
 
-                    if (VisitAndFindAwait(node.Finally, out @finally))
+                    if (VisitAndFindAwait(node.Finally, out Expression @finally))
                     {
                         if (handlers.Count != 0)
                         {
@@ -58,9 +57,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 {
                     Debug.Assert(node.Finally == null);
 
-                    var fault = default(Expression);
 
-                    if (VisitAndFindAwait(node.Fault, out fault))
+                    if (VisitAndFindAwait(node.Fault, out Expression fault))
                     {
                         Debug.Assert(handlers.Count == 0);
 
@@ -82,10 +80,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private Expression RewriteHandler(Expression body, Expression handler, bool isFault)
         {
-            var leaveLabels = default(IDictionary<LabelTarget, LeaveLabelData>);
-            var exitLabel = default(LabelTarget);
-            var pendingBranch = default(ParameterExpression);
-            body = GotoRewriter.Rewrite(body, out exitLabel, out pendingBranch, out leaveLabels);
+            body = GotoRewriter.Rewrite(body, out LabelTarget exitLabel, out ParameterExpression pendingBranch, out IDictionary<LabelTarget, LeaveLabelData> leaveLabels);
 
             var err = Expression.Parameter(typeof(object), "__error" + _n++);
             var ex = Expression.Parameter(typeof(object), "__ex" + _n++);

@@ -12,7 +12,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// <summary>
     /// Contains a set of utilities for code generation.
     /// </summary>
-    static class Utils
+    internal static class Utils
     {
         /// <summary>
         /// Creates an expression to rethrow the exception specified in <paramref name="exception"/>, preserving the original stack trace if possible.

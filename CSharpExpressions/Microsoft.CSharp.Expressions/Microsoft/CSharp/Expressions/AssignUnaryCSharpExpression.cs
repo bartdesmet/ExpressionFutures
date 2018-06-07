@@ -37,7 +37,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the implementing method for the unary operation.
         /// </summary>
-		/// <returns>The <see cref="T:System.Reflection.MethodInfo" /> that represents the implementing method.</returns>
+        /// <returns>The <see cref="T:System.Reflection.MethodInfo" /> that represents the implementing method.</returns>
         public abstract MethodInfo Method { get; }
 
         /// <summary>

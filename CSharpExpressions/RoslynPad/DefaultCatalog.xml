@@ -104,4 +104,20 @@
   }
 })]]></Code>
   </Expression>
+  <Expression Name="Throw expression">
+    <Code><![CDATA[(Expression<Action<object>>)(o =>
+{
+  var x = o ?? throw new Exception();
+})]]></Code>
+  </Expression>
+  <Expression Name="Discard expression">
+    <Code>
+      <![CDATA[(Expression<Action<string>>)(s => {
+  if (int.TryParse(s, out int _))
+  {
+    _ = Console.ReadLine();
+  }
+})
+]]></Code>
+  </Expression>
 </Expressions>

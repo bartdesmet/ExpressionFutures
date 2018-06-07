@@ -11,12 +11,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class RethrowRewriter
     {
-        public static Expression Rewrite(Expression expression, Expression throwReplacement)
-        {
-            return new Impl(throwReplacement).Visit(expression);
-        }
+        public static Expression Rewrite(Expression expression, Expression throwReplacement) => new Impl(throwReplacement).Visit(expression);
 
-        class Impl : ShallowVisitor
+        private sealed class Impl : ShallowVisitor
         {
             private readonly Expression _replacement;
 

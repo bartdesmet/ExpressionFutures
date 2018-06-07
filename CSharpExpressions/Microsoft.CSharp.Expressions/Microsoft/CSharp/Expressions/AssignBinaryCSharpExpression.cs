@@ -129,8 +129,7 @@ namespace Microsoft.CSharp.Expressions
                 // NB: We still use `ReduceAssignment` here to deal with IndexCSharpExpression which is not
                 //     a valid LHS to Expression.Assign.
 
-                var indexCSharp = left as IndexCSharpExpression;
-                if (indexCSharp != null)
+                if (left is IndexCSharpExpression indexCSharp)
                 {
                     return indexCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right));
                 }
@@ -433,7 +432,7 @@ namespace Microsoft.CSharp.Expressions
 
                         if (rightType != convertType)
                         {
-                            // DESIGN: Should our factory do this our just reject the input? On the one hand,
+                            // DESIGN: Should our factory do this or just reject the input? On the one hand,
                             //         C# allows e.g. byte += byte, so if this is a C#-specific API it may be
                             //         reasonable for the user to expect such a tree can be built. On the
                             //         other hand, it's very unlike the expression tree API to insert nodes

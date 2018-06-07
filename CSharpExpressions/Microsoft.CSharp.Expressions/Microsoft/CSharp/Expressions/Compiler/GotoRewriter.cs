@@ -34,7 +34,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <summary>
         /// Collects all labels defined within an expression.
         /// </summary>
-        class LabelScanner : ShallowVisitor
+        private sealed class LabelScanner : ShallowVisitor
         {
             public readonly HashSet<LabelTarget> Labels = new HashSet<LabelTarget>();
 
@@ -69,7 +69,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// table that executes those pending branches by transferring control (and a value, if any) to the original
         /// label target.
         /// </summary>
-        class GotoScanner : ShallowVisitor
+        private sealed class GotoScanner : ShallowVisitor
         {
             private readonly HashSet<LabelTarget> _labels;
             private readonly LabelTarget _exit;
@@ -90,8 +90,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                 if (!_labels.Contains(target))
                 {
-                    var data = default(LeaveLabelData);
-                    if (!LeaveLabels.TryGetValue(target, out data))
+                    if (!LeaveLabels.TryGetValue(target, out LeaveLabelData data))
                     {
                         var parameter = default(ParameterExpression);
 
