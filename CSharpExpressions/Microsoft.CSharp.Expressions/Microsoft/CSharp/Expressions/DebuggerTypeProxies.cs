@@ -559,6 +559,29 @@ namespace Microsoft.CSharp.Expressions
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Object> TestValues => _node.TestValues;
     }
 
+    [DebuggerTypeProxy(typeof(DiscardCSharpExpressionProxy))]
+    partial class DiscardCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class DiscardCSharpExpressionProxy
+    {
+        private readonly DiscardCSharpExpression _node;
+
+        public DiscardCSharpExpressionProxy(DiscardCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(DoCSharpStatementProxy))]
     partial class DoCSharpStatement
     {
