@@ -139,8 +139,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         public static object Eval(string expr, bool includingExpressions = true)
         {
-            var sem = default(SemanticModel);
-            return Eval(expr, out sem, includingExpressions);
+            return Eval(expr, out _, includingExpressions);
         }
 
         public static object Eval(string expr, out SemanticModel sem, bool includingExpressions = true, bool trimCR = false)
@@ -307,8 +306,7 @@ public static class {typeName}
         {
             AppendMethod(compiled.Method, sb);
 
-            var closure = compiled.Target as Closure;
-            if (closure != null)
+            if (compiled.Target is Closure closure)
             {
                 var objects = new Queue<object>((closure.Locals ?? Array.Empty<object>()).Concat(closure.Constants ?? Array.Empty<object>()));
                 while (objects.Count > 0)
@@ -322,8 +320,7 @@ public static class {typeName}
                         AppendMethod(m, sb);
                     }
 
-                    var a = o as object[];
-                    if (a != null)
+                    if (o is object[] a)
                     {
                         foreach (var c in a)
                         {

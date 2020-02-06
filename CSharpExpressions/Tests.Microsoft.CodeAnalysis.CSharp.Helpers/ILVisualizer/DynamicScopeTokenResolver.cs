@@ -1,28 +1,26 @@
 // Taken from http://blogs.msdn.com/b/haibo_luo/archive/2010/04/19/9998595.aspx
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Diagnostics;
 
 namespace ClrTest.Reflection
 {
     internal class DynamicScopeTokenResolver : ITokenResolver
     {
         #region Static stuffs
-        private static PropertyInfo s_indexer;
-        private static FieldInfo s_scopeFi;
+        private static readonly PropertyInfo s_indexer;
+        private static readonly FieldInfo s_scopeFi;
 
-        private static Type s_genMethodInfoType;
-        private static FieldInfo s_genmethFi1, s_genmethFi2;
+        private static readonly Type s_genMethodInfoType;
+        private static readonly FieldInfo s_genmethFi1, s_genmethFi2;
 
-        private static Type s_varArgMethodType;
-        private static FieldInfo s_varargFi1, s_varargFi2;
+        private static readonly Type s_varArgMethodType;
+        private static readonly FieldInfo s_varargFi1;
 
-        private static Type s_genFieldInfoType;
-        private static FieldInfo s_genfieldFi1, s_genfieldFi2;
+        private static readonly Type s_genFieldInfoType;
+        private static readonly FieldInfo s_genfieldFi1, s_genfieldFi2;
 
         static DynamicScopeTokenResolver()
         {
@@ -32,7 +30,6 @@ namespace ClrTest.Reflection
 
             s_varArgMethodType = Type.GetType("System.Reflection.Emit.VarArgMethod");
             s_varargFi1 = s_varArgMethodType.GetField("m_method", s_bfInternal);
-            s_varargFi2 = s_varArgMethodType.GetField("m_signature", s_bfInternal);
 
             s_genMethodInfoType = Type.GetType("System.Reflection.Emit.GenericMethodInfo");
             s_genmethFi1 = s_genMethodInfoType.GetField("m_methodHandle", s_bfInternal);
@@ -51,7 +48,8 @@ namespace ClrTest.Reflection
         }
         #endregion
 
-        object m_scope = null;
+        private readonly object m_scope = null;
+
         internal object this[int token]
         {
             get

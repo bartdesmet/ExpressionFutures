@@ -56,7 +56,7 @@ foreach (var type in types)
     foreach (var lambda in lambdas)
     {
 #>
-                { var f = (<#=func#>)(<#=lambda#>); }
+                { _ = (<#=func#>)(<#=lambda#>); }
                 yield return "(Expression<<#=func#>>)(<#=lambda#>)";
 
 <#
@@ -71,7 +71,7 @@ foreach (var type in types)
         foreach (var shiftLambda in shiftLambdas)
         {
 #>
-                { var f = (<#=shiftFunc#>)(<#=shiftLambda#>); }
+                { _ = (<#=shiftFunc#>)(<#=shiftLambda#>); }
                 yield return "(Expression<<#=shiftFunc#>>)(<#=shiftLambda#>)";
 
 <#

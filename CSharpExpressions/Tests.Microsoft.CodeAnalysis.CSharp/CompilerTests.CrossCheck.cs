@@ -6021,7 +6021,7 @@ exit:
             return Compile<Func<dynamic, dynamic, dynamic>>($"(dynamic l, dynamic r) => checked(Return(l) {op} Return(r))");
         }
 
-        private IEnumerable<object> Integers = new object[]
+        private readonly IEnumerable<object> Integers = new object[]
         {
             (byte)42,
             (sbyte)42,
@@ -6033,7 +6033,7 @@ exit:
             (long)42,
         };
 
-        private IEnumerable<object> Integers2 = new object[]
+        private readonly IEnumerable<object> Integers2 = new object[]
         {
             (byte)3,
             (sbyte)3,
@@ -6045,21 +6045,21 @@ exit:
             (long)3,
         };
 
-        private IEnumerable<object> Floats = new object[]
+        private readonly IEnumerable<object> Floats = new object[]
         {
             (float)3.14,
             (double)3.14,
             (decimal)3.14
         };
 
-        private IEnumerable<object> Floats2 = new object[]
+        private readonly IEnumerable<object> Floats2 = new object[]
         {
             (float)2.72,
             (double)2.72,
             (decimal)2.72
         };
 
-        private IEnumerable<object> Booleans = new object[]
+        private readonly IEnumerable<object> Booleans = new object[]
         {
             false,
             true,

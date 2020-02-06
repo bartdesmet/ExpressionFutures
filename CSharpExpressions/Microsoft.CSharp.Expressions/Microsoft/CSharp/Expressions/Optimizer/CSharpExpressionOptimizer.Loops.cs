@@ -195,22 +195,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             if (expression.Type == typeof(int))
             {
-                var unary = expression as UnaryExpression;
-                if (unary != null)
+                switch (expression)
                 {
-                    switch (unary.NodeType)
-                    {
-                        case ExpressionType.PostIncrementAssign:
-                            return OptimizeIterator(expression, Expression.PreIncrementAssign, unary.Operand, unary.Method);
-                        case ExpressionType.PostDecrementAssign:
-                            return OptimizeIterator(expression, Expression.PreDecrementAssign, unary.Operand, unary.Method);
-                    }
-                }
-                else
-                {
-                    var csassign = expression as AssignUnaryCSharpExpression;
-                    if (csassign != null)
-                    {
+                    case UnaryExpression unary:
+                        switch (unary.NodeType)
+                        {
+                            case ExpressionType.PostIncrementAssign:
+                                return OptimizeIterator(expression, Expression.PreIncrementAssign, unary.Operand, unary.Method);
+                            case ExpressionType.PostDecrementAssign:
+                                return OptimizeIterator(expression, Expression.PreDecrementAssign, unary.Operand, unary.Method);
+                        }
+                        break;
+                    case AssignUnaryCSharpExpression csassign:
                         switch (csassign.CSharpNodeType)
                         {
                             case CSharpExpressionType.PostIncrementAssign:
@@ -218,7 +214,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             case CSharpExpressionType.PostDecrementAssign:
                                 return OptimizeIterator(expression, CSharpExpression.PreDecrementAssign, csassign.Operand, csassign.Method);
                         }
-                    }
+                        break;
                 }
             }
 

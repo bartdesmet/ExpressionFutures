@@ -31,14 +31,14 @@ namespace Playground
         {
             var t = CSharpExpression.Await(Expression.Constant(Task.FromResult(42)));
             var r = Expression.Add(t, t);
-            var x = Spiller.Spill(r);
+            _ = Spiller.Spill(r);
         }
 
         static void StackSpilling2()
         {
             var t = CSharpExpression.Await(CSharpExpression.Await(Expression.Constant(Task.FromResult(Task.FromResult(42)))));
             var r = Expression.Add(t, t);
-            var x = Spiller.Spill(r);
+            _ = Spiller.Spill(r);
         }
 
         static void StackSpilling3()
@@ -62,7 +62,7 @@ namespace Playground
             var p2 = Expression.Parameter(typeof(int));
             var p3 = Expression.Parameter(typeof(int));
             var e = Expression.Block(new[] { p0, p1 }, Expression.Block(new[] { p1, p2 }, Expression.Block(new[] { p2, p3 }, Expression.Block(new[] { p3, p1 }, Expression.Add(p0, Expression.Multiply(p1, Expression.Subtract(p2, p3)))))));
-            var r = ShadowEliminator.Eliminate(e);
+            _ = ShadowEliminator.Eliminate(e);
         }
 
         static void ArrayInitOptimization()

@@ -285,8 +285,7 @@ namespace RoslynPad
             _userEditMode = false;
 
             var txt = (string)cmbProgs.SelectedItem;
-            var expr = default(string);
-            if (_programs.TryGetValue(txt, out expr))
+            if (_programs.TryGetValue(txt, out string expr))
             {
                 if (_isEditing && _current != null)
                 {
@@ -445,8 +444,7 @@ namespace RoslynPad
 
         private int GetId(object o)
         {
-            var res = default(int);
-            if (!_ids.TryGetValue(o, out res))
+            if (!_ids.TryGetValue(o, out int res))
             {
                 res = _ids.Count;
                 _ids.Add(o, res);
@@ -455,7 +453,7 @@ namespace RoslynPad
             return res;
         }
 
-        private static Dictionary<ExpressionType, Color> s_exprColors = new Dictionary<ExpressionType, Color>
+        private static readonly Dictionary<ExpressionType, Color> s_exprColors = new Dictionary<ExpressionType, Color>
         {
             { ExpressionType.Lambda, Color.DarkRed },
             { ExpressionType.Constant, Color.DarkBlue },
@@ -463,7 +461,7 @@ namespace RoslynPad
             { ExpressionType.Block, Color.DarkMagenta },
         };
 
-        private static Dictionary<CSharpExpressionType, Color> s_csharpColors = new Dictionary<CSharpExpressionType, Color>
+        private static readonly Dictionary<CSharpExpressionType, Color> s_csharpColors = new Dictionary<CSharpExpressionType, Color>
         {
             { CSharpExpressionType.AsyncLambda, Color.DarkRed },
             { CSharpExpressionType.Block, Color.DarkMagenta },
@@ -479,18 +477,15 @@ namespace RoslynPad
                 return;
             }
 
-            var expr = o as Expression;
-            if (expr != null)
+            if (o is Expression expr)
             {
                 var label = "";
 
-                var csexpr = expr as CSharpExpression;
-                if (csexpr != null)
+                if (expr is CSharpExpression csexpr)
                 {
                     label = csexpr.CSharpNodeType.ToString();
 
-                    var color = default(Color);
-                    if (s_csharpColors.TryGetValue(csexpr.CSharpNodeType, out color))
+                    if (s_csharpColors.TryGetValue(csexpr.CSharpNodeType, out Color color))
                     {
                         node.ForeColor = color;
                     }
@@ -499,8 +494,7 @@ namespace RoslynPad
                 {
                     label = expr.NodeType.ToString();
 
-                    var color = default(Color);
-                    if (s_exprColors.TryGetValue(expr.NodeType, out color))
+                    if (s_exprColors.TryGetValue(expr.NodeType, out Color color))
                     {
                         node.ForeColor = color;
                     }
@@ -556,8 +550,10 @@ namespace RoslynPad
                     {
                         var propVal = prop.GetValue(o);
 
-                        var child = new TreeNode(prop.Name);
-                        child.Tag = propVal;
+                        var child = new TreeNode(prop.Name)
+                        {
+                            Tag = propVal
+                        };
 
                         if (propVal != null)
                         {
@@ -577,8 +573,10 @@ namespace RoslynPad
                         {
                             var propVal = prop.GetValue(o);
 
-                            var child = new TreeNode(prop.Name);
-                            child.Tag = propVal;
+                            var child = new TreeNode(prop.Name)
+                            {
+                                Tag = propVal
+                            };
 
                             if (propVal != null)
                             {
@@ -607,17 +605,13 @@ namespace RoslynPad
 
         private void ConcatIf<T>(object o, TreeNode node, Func<T, string> f, Func<T, bool> p = null)
         {
-            if (o is T)
+            if (o is T t && (p?.Invoke(t) ?? true))
             {
-                var t = (T)o;
-                if (p?.Invoke(t) ?? true)
-                {
-                    node.Text += " (" + f(t) + ")";
-                }
+                node.Text += " (" + f(t) + ")";
             }
         }
 
-        private Dictionary<object, int> _ids = new Dictionary<object, int>();
+        private readonly Dictionary<object, int> _ids = new Dictionary<object, int>();
 
         private static readonly Dictionary<string, int> s_ranks = new Dictionary<string, int>
         {
@@ -697,8 +691,7 @@ namespace RoslynPad
 
         private static int Rank(string name)
         {
-            var res = default(int);
-            if (s_ranks.TryGetValue(name, out res))
+            if (s_ranks.TryGetValue(name, out int res))
             {
                 return res;
             }
@@ -718,8 +711,7 @@ namespace RoslynPad
             txtNode.Text = "";
 
             // TODO: Support tear-off nodes a la ElementInit.
-            var expr = tag as Expression;
-            if (expr != null)
+            if (tag is Expression expr)
             {
                 txtNode.Text = expr.DebugView().ToString();
             }

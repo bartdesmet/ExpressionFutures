@@ -756,7 +756,7 @@ namespace Microsoft.CSharp.Expressions
             return o == null ? "null" : o.ToString();
         }
 
-        private static object s_null = new object();
+        private static readonly object s_null = new object();
 
         public static object OrNullSentinel(this object o)
         {
@@ -868,8 +868,7 @@ namespace Microsoft.CSharp.Expressions
                     return ReduceVariable(lhs, functionalOp, prefix, leftConversion);
             }
 
-            var index = lhs as IndexCSharpExpression;
-            if (index != null)
+            if (lhs is IndexCSharpExpression index)
             {
                 return ReduceIndexCSharp(index, functionalOp, prefix, leftConversion);
             }
@@ -960,8 +959,9 @@ namespace Microsoft.CSharp.Expressions
             var block = new List<Expression>();
             var temps = new List<ParameterExpression>();
 
-            var obj = default(ParameterExpression);
             var receiver = index.Object;
+
+            ParameterExpression obj;
 
             if (!isByRef)
             {
@@ -1042,7 +1042,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static Expression ReduceVariable(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
         {
-            var res = default(Expression);
+            Expression res;
 
             if (prefix)
             {
@@ -1133,8 +1133,7 @@ namespace Microsoft.CSharp.Expressions
                     return expression;
                 }
 
-                var block = expression as BlockExpression;
-                if (block != null)
+                if (expression is BlockExpression block)
                 {
                     return Expression.Block(typeof(void), block.Variables, block.Expressions);
                 }

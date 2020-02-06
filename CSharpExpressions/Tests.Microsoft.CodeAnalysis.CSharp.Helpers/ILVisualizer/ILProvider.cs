@@ -8,14 +8,14 @@ namespace ClrTest.Reflection
 {
     public interface IILProvider
     {
-        Byte[] GetByteArray();
+        byte[] GetByteArray();
         ExceptionInfo[] GetExceptionInfos();
     }
 
     public class MethodBaseILProvider : IILProvider
     {
-        MethodBase m_method;
-        byte[] m_byteArray;
+        private readonly MethodBase m_method;
+        private byte[] m_byteArray;
 
         public MethodBaseILProvider(MethodBase method)
         {
@@ -40,14 +40,14 @@ namespace ClrTest.Reflection
 
     public class ExceptionInfo
     {
-        static Type s_tyExceptionInfo = typeof(ILGenerator).Assembly.GetType(" System.Reflection.Emit.__ExceptionInfo");
-        static MethodInfo s_miGetStartAddress = s_tyExceptionInfo.GetMethod("GetStartAddress", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miGetEndAddress = s_tyExceptionInfo.GetMethod("GetEndAddress", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miGetNumberOfCatches = s_tyExceptionInfo.GetMethod("GetNumberOfCatches", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miGetCatchAddresses = s_tyExceptionInfo.GetMethod("GetCatchAddresses", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miGetCatchEndAddresses = s_tyExceptionInfo.GetMethod("GetCatchEndAddresses", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miGetCatchClass = s_tyExceptionInfo.GetMethod("GetCatchClass", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miGetExceptionTypes = s_tyExceptionInfo.GetMethod("GetExceptionTypes", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly Type s_tyExceptionInfo = typeof(ILGenerator).Assembly.GetType(" System.Reflection.Emit.__ExceptionInfo");
+        private static readonly MethodInfo s_miGetStartAddress = s_tyExceptionInfo.GetMethod("GetStartAddress", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miGetEndAddress = s_tyExceptionInfo.GetMethod("GetEndAddress", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miGetNumberOfCatches = s_tyExceptionInfo.GetMethod("GetNumberOfCatches", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miGetCatchAddresses = s_tyExceptionInfo.GetMethod("GetCatchAddresses", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miGetCatchEndAddresses = s_tyExceptionInfo.GetMethod("GetCatchEndAddresses", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miGetCatchClass = s_tyExceptionInfo.GetMethod("GetCatchClass", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miGetExceptionTypes = s_tyExceptionInfo.GetMethod("GetExceptionTypes", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public ExceptionInfo(object o)
         {

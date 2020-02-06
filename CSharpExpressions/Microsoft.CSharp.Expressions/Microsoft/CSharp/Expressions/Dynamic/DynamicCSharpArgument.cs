@@ -99,8 +99,7 @@ namespace Microsoft.CSharp.Expressions
 
             var res = CSharpArgumentInfoFlags.None;
 
-            var constExpr = expression as ConstantExpression;
-            if (constExpr != null && constExpr.Value != null)
+            if (expression is ConstantExpression constExpr && constExpr.Value != null)
             {
                 res |= CSharpArgumentInfoFlags.Constant;
             }

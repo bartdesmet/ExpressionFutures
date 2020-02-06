@@ -366,15 +366,13 @@ namespace Microsoft.CSharp.Expressions
                     }
                     else
                     {
-                        var assign = init as AssignBinaryCSharpExpression;
-                        if (assign != null)
+                        if (init is AssignBinaryCSharpExpression assign)
                         {
                             lhs = assign.Left;
                         }
                     }
 
-                    var variable = lhs as ParameterExpression;
-                    if (variable == null || !variables.Remove(variable))
+                    if (!(lhs is ParameterExpression variable) || !variables.Remove(variable))
                     {
                         hasUniformVariables = false;
                         break;
@@ -2095,8 +2093,7 @@ namespace Microsoft.CSharp.Expressions
         {
             // NB: Prevents reduction of nodes by the visitor used in the debugging library.
 
-            var csharp = node as CSharpExpression;
-            if (csharp != null)
+            if (node is CSharpExpression csharp)
             {
                 _csharp.Analyze(csharp);
                 return node;

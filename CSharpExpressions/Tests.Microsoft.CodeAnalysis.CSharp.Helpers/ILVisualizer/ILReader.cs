@@ -11,11 +11,11 @@ namespace ClrTest.Reflection
     public sealed class ILReader : IEnumerable<ILInstruction>, IEnumerable
     {
         #region Static members
-        static Type s_runtimeMethodInfoType = Type.GetType("System.Reflection.RuntimeMethodInfo");
-        static Type s_runtimeConstructorInfoType = Type.GetType("System.Reflection.RuntimeConstructorInfo");
+        private static readonly Type s_runtimeMethodInfoType = Type.GetType("System.Reflection.RuntimeMethodInfo");
+        private static readonly Type s_runtimeConstructorInfoType = Type.GetType("System.Reflection.RuntimeConstructorInfo");
 
-        static OpCode[] s_OneByteOpCodes;
-        static OpCode[] s_TwoByteOpCodes;
+        private static readonly OpCode[] s_OneByteOpCodes;
+        private static readonly OpCode[] s_TwoByteOpCodes;
 
         static ILReader()
         {
@@ -25,7 +25,7 @@ namespace ClrTest.Reflection
             foreach (FieldInfo fi in typeof(OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static))
             {
                 OpCode opCode = (OpCode)fi.GetValue(null);
-                UInt16 value = (UInt16)opCode.Value;
+                ushort value = (ushort)opCode.Value;
                 if (value < 0x100)
                 {
                     s_OneByteOpCodes[value] = opCode;
@@ -38,16 +38,16 @@ namespace ClrTest.Reflection
         }
         #endregion
 
-        Int32 m_position;
-        ITokenResolver m_resolver;
-        IILProvider m_ilProvider;
-        byte[] m_byteArray;
+        private int m_position;
+        private readonly ITokenResolver m_resolver;
+        private readonly IILProvider m_ilProvider;
+        private readonly byte[] m_byteArray;
 
         public ILReader(MethodBase method)
         {
             if (method == null)
             {
-                throw new ArgumentNullException("method");
+                throw new ArgumentNullException(nameof(method));
             }
 
             Type rtType = method.GetType();
@@ -64,13 +64,8 @@ namespace ClrTest.Reflection
 
         public ILReader(IILProvider ilProvider, ITokenResolver tokenResolver)
         {
-            if (ilProvider == null)
-            {
-                throw new ArgumentNullException("ilProvider");
-            }
-
             m_resolver = tokenResolver;
-            m_ilProvider = ilProvider;
+            m_ilProvider = ilProvider ?? throw new ArgumentNullException(nameof(ilProvider));
             m_byteArray = m_ilProvider.GetByteArray();
             m_position = 0;
         }
@@ -96,12 +91,13 @@ namespace ClrTest.Reflection
 
         ILInstruction Next()
         {
-            Int32 offset = m_position;
-            OpCode opCode = OpCodes.Nop;
-            Int32 token = 0;
+            int offset = m_position;
 
             // read first 1 or 2 bytes as opCode
-            Byte code = ReadByte();
+            byte code = ReadByte();
+
+            OpCode opCode;
+
             if (code != 0xFE)
             {
                 opCode = s_OneByteOpCodes[code];
@@ -112,6 +108,8 @@ namespace ClrTest.Reflection
                 opCode = s_TwoByteOpCodes[code];
             }
 
+            int token;
+
             switch (opCode.OperandType)
             {
                 case OperandType.InlineNone:
@@ -119,47 +117,47 @@ namespace ClrTest.Reflection
 
                 //The operand is an 8-bit integer branch target.
                 case OperandType.ShortInlineBrTarget:
-                    SByte shortDelta = ReadSByte();
+                    sbyte shortDelta = ReadSByte();
                     return new ShortInlineBrTargetInstruction(offset, opCode, shortDelta);
 
                 //The operand is a 32-bit integer branch target.
                 case OperandType.InlineBrTarget:
-                    Int32 delta = ReadInt32();
+                    int delta = ReadInt32();
                     return new InlineBrTargetInstruction(offset, opCode, delta);
 
                 //The operand is an 8-bit integer: 001F  ldc.i4.s, FE12  unaligned.
                 case OperandType.ShortInlineI:
-                    SByte int8 = ReadSByte();
+                    sbyte int8 = ReadSByte();
                     return new ShortInlineIInstruction(offset, opCode, int8);
 
                 //The operand is a 32-bit integer.
                 case OperandType.InlineI:
-                    Int32 int32 = ReadInt32();
+                    int int32 = ReadInt32();
                     return new InlineIInstruction(offset, opCode, int32);
 
                 //The operand is a 64-bit integer.
                 case OperandType.InlineI8:
-                    Int64 int64 = ReadInt64();
+                    long int64 = ReadInt64();
                     return new InlineI8Instruction(offset, opCode, int64);
 
                 //The operand is a 32-bit IEEE floating point number.
                 case OperandType.ShortInlineR:
-                    Single float32 = ReadSingle();
+                    float float32 = ReadSingle();
                     return new ShortInlineRInstruction(offset, opCode, float32);
 
                 //The operand is a 64-bit IEEE floating point number.
                 case OperandType.InlineR:
-                    Double float64 = ReadDouble();
+                    double float64 = ReadDouble();
                     return new InlineRInstruction(offset, opCode, float64);
 
                 //The operand is an 8-bit integer containing the ordinal of a local variable or an argument
                 case OperandType.ShortInlineVar:
-                    Byte index8 = ReadByte();
+                    byte index8 = ReadByte();
                     return new ShortInlineVarInstruction(offset, opCode, index8);
 
                 //The operand is 16-bit integer containing the ordinal of a local variable or an argument.
                 case OperandType.InlineVar:
-                    UInt16 index16 = ReadUInt16();
+                    ushort index16 = ReadUInt16();
                     return new InlineVarInstruction(offset, opCode, index16);
 
                 //The operand is a 32-bit metadata string token.
@@ -194,9 +192,9 @@ namespace ClrTest.Reflection
 
                 //The operand is the 32-bit integer argument to a switch instruction.
                 case OperandType.InlineSwitch:
-                    Int32 cases = ReadInt32();
-                    Int32[] deltas = new Int32[cases];
-                    for (Int32 i = 0; i < cases; i++)
+                    int cases = ReadInt32();
+                    int[] deltas = new int[cases];
+                    for (int i = 0; i < cases; i++)
                         deltas[i] = ReadInt32();
                     return new InlineSwitchInstruction(offset, opCode, deltas);
 
@@ -217,56 +215,56 @@ namespace ClrTest.Reflection
         }
 
         #region read in operands
-        Byte ReadByte()
+        byte ReadByte()
         {
-            return (Byte)m_byteArray[m_position++];
+            return (byte)m_byteArray[m_position++];
         }
 
-        SByte ReadSByte()
+        sbyte ReadSByte()
         {
-            return (SByte)ReadByte();
+            return (sbyte)ReadByte();
         }
 
-        UInt16 ReadUInt16()
+        ushort ReadUInt16()
         {
             int pos = m_position;
             m_position += 2;
             return BitConverter.ToUInt16(m_byteArray, pos);
         }
 
-        UInt32 ReadUInt32()
+        uint ReadUInt32()
         {
             int pos = m_position;
             m_position += 4;
             return BitConverter.ToUInt32(m_byteArray, pos);
         }
-        UInt64 ReadUInt64()
+        ulong ReadUInt64()
         {
             int pos = m_position;
             m_position += 8;
             return BitConverter.ToUInt64(m_byteArray, pos);
         }
 
-        Int32 ReadInt32()
+        int ReadInt32()
         {
             int pos = m_position;
             m_position += 4;
             return BitConverter.ToInt32(m_byteArray, pos);
         }
-        Int64 ReadInt64()
+        long ReadInt64()
         {
             int pos = m_position;
             m_position += 8;
             return BitConverter.ToInt64(m_byteArray, pos);
         }
 
-        Single ReadSingle()
+        float ReadSingle()
         {
             int pos = m_position;
             m_position += 4;
             return BitConverter.ToSingle(m_byteArray, pos);
         }
-        Double ReadDouble()
+        double ReadDouble()
         {
             int pos = m_position;
             m_position += 8;

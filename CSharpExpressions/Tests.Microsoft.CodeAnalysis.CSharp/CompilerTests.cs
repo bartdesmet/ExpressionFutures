@@ -96,6 +96,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             private void FAIL(string message = "") { Assert.Fail(message); }
         }
 
-        private Reviewed Verify = new Reviewed();
+        private readonly Reviewed Verify = new Reviewed();
     }
 }

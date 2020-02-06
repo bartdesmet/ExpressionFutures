@@ -90,8 +90,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
             //     reused. We don't want to pick up the result of a previous evaluation.
             var initErr = Expression.Assign(err, Expression.Default(err.Type));
 
-            var saveException = default(Expression);
             var value = default(ParameterExpression);
+
+            Expression saveException;
 
             if (body.Type == typeof(void))
             {

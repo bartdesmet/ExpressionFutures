@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using System.Reflection;
 using System.Linq;
 
@@ -16,7 +15,7 @@ namespace ClrTest.Reflection
         private string m_typeName;
         private string m_methodToString;
 
-        private List<string> m_instructions = new List<string>();
+        private readonly List<string> m_instructions = new List<string>();
 
         public int Identity
         {
@@ -53,11 +52,12 @@ namespace ClrTest.Reflection
 
         public static MethodBodyInfo Create(MethodBase method)
         {
-            MethodBodyInfo mbi = new MethodBodyInfo();
-
-            mbi.Identity = method.GetHashCode();
-            mbi.TypeName = method.GetType().Name;
-            mbi.MethodToString = ".method " + method.ToIL();
+            MethodBodyInfo mbi = new MethodBodyInfo
+            {
+                Identity = method.GetHashCode(),
+                TypeName = method.GetType().Name,
+                MethodToString = ".method " + method.ToIL()
+            };
 
             ILReader reader = ILReaderFactory.Create(method);
             mbi.Exceptions = reader.ILProvider.GetExceptionInfos();
@@ -73,15 +73,16 @@ namespace ClrTest.Reflection
 
         class MethodBodyInfoBuilder : IILStringCollector
         {
-            MethodBodyInfo m_mbi;
-            string m_indent;
-            readonly HashSet<int> m_starts;
-            readonly Dictionary<int, Type> m_startCatch;
-            readonly HashSet<int> m_endCatch;
-            readonly HashSet<int> m_ends;
-            readonly HashSet<int> m_startFinally;
-            readonly HashSet<int> m_startFault;
-            readonly HashSet<int> m_startFilter;
+            private readonly MethodBodyInfo m_mbi;
+            private readonly HashSet<int> m_starts;
+            private readonly Dictionary<int, Type> m_startCatch;
+            private readonly HashSet<int> m_endCatch;
+            private readonly HashSet<int> m_ends;
+            private readonly HashSet<int> m_startFinally;
+            private readonly HashSet<int> m_startFault;
+            private readonly HashSet<int> m_startFilter;
+
+            private string m_indent;
 
             public MethodBodyInfoBuilder(MethodBodyInfo mbi)
             {
@@ -148,8 +149,7 @@ namespace ClrTest.Reflection
                     m_mbi.AddInstruction(m_indent + "}");
                 }
 
-                var t = default(Type);
-                if (m_startCatch.TryGetValue(instruction.Offset, out t))
+                if (m_startCatch.TryGetValue(instruction.Offset, out Type t))
                 {
                     m_mbi.AddInstruction(m_indent + $"catch {t.ToIL()}");
                     m_mbi.AddInstruction(m_indent + "{");

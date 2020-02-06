@@ -329,11 +329,10 @@ namespace ClrTest.Reflection
             }
             else
             {
-                var res = default(string);
-                if (!s_primitives.TryGetValue(type, out res))
+                if (!s_primitives.TryGetValue(type, out string res))
                 {
-                    res = "[" +  type.Assembly.GetName().Name + "]" + type.FullName;
-                    
+                    res = "[" + type.Assembly.GetName().Name + "]" + type.FullName;
+
                     if (type.IsValueType)
                     {
                         res = "valuetype " + res;

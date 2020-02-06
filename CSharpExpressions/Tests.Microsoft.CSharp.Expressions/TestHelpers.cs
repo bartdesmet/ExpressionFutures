@@ -212,8 +212,8 @@ namespace Tests
                     throw new InvalidOperationException();
                 }
 
-                var check = default(Func<Exception, bool>);
-                var error = default(Exception);
+                Func<Exception, bool> check;
+                Exception error;
 
                 if (this.ErrorCheck != null)
                 {

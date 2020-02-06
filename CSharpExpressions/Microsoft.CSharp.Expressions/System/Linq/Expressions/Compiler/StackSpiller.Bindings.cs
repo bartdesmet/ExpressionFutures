@@ -55,8 +55,8 @@ namespace System.Linq.Expressions.Compiler
 
         private class MemberMemberBindingRewriter : BindingRewriter
         {
-            private ReadOnlyCollection<MemberBinding> _bindings;
-            private BindingRewriter[] _bindingRewriters;
+            private readonly ReadOnlyCollection<MemberBinding> _bindings;
+            private readonly BindingRewriter[] _bindingRewriters;
 
             internal MemberMemberBindingRewriter(MemberMemberBinding binding, StackSpiller spiller, Stack stack) :
                 base(binding, spiller)
@@ -129,8 +129,8 @@ namespace System.Linq.Expressions.Compiler
 
         private class ListBindingRewriter : BindingRewriter
         {
-            private ReadOnlyCollection<ElementInit> _inits;
-            private ChildRewriter[] _childRewriters;
+            private readonly ReadOnlyCollection<ElementInit> _inits;
+            private readonly ChildRewriter[] _childRewriters;
 
             internal ListBindingRewriter(MemberListBinding binding, StackSpiller spiller, Stack stack) :
                 base(binding, spiller)
@@ -217,7 +217,7 @@ namespace System.Linq.Expressions.Compiler
 
         private class MemberAssignmentRewriter : BindingRewriter
         {
-            private Expression _rhs;
+            private readonly Expression _rhs;
 
             internal MemberAssignmentRewriter(MemberAssignment binding, StackSpiller spiller, Stack stack) :
                 base(binding, spiller)

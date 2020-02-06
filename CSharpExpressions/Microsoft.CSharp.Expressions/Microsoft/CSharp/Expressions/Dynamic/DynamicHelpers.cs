@@ -35,14 +35,12 @@ namespace Microsoft.CSharp.Expressions
         {
             var lhs = MakeWriteable(left.Expression);
 
-            var dynamicMember = lhs as GetMemberDynamicCSharpExpression;
-            if (dynamicMember != null)
+            if (lhs is GetMemberDynamicCSharpExpression dynamicMember)
             {
                 return ReduceDynamicMember(dynamicMember, functionalOp, flags, prefix);
             }
 
-            var dynamicIndex = lhs as GetIndexDynamicCSharpExpression;
-            if (dynamicIndex != null)
+            if (lhs is GetIndexDynamicCSharpExpression dynamicIndex)
             {
                 return ReduceDynamicIndex(dynamicIndex, functionalOp, flags, prefix);
             }

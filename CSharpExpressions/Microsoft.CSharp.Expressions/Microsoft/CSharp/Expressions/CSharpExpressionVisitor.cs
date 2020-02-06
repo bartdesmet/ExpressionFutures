@@ -23,8 +23,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitExtension(Expression node)
         {
-            var csharpExpression = node as CSharpExpression;
-            if (csharpExpression != null)
+            if (node is CSharpExpression csharpExpression)
             {
                 return csharpExpression.Accept(this);
             }

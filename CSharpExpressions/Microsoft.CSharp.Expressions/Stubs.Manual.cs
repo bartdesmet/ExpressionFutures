@@ -129,8 +129,8 @@ namespace System.Linq.Expressions
 
     internal static class BinaryExpressionExtensions
     {
-        private static Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-        private static Type s_typ = s_asm.GetType("System.Linq.Expressions.BinaryExpression");
+        private static readonly Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+        private static readonly Type s_typ = s_asm.GetType("System.Linq.Expressions.BinaryExpression");
         private static readonly PropertyInfo s_1 = s_typ.GetProperty("IsLiftedLogical", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
         private static readonly MethodInfo s_2 = s_typ.GetMethod("ReduceUserdefinedLifted", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 

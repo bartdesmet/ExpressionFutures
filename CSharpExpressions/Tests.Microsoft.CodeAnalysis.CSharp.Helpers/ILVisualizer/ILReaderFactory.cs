@@ -1,8 +1,6 @@
 // Taken from http://blogs.msdn.com/b/haibo_luo/archive/2010/04/19/9998595.aspx
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 
@@ -42,11 +40,11 @@ namespace ClrTest.Reflection
             throw new NotSupportedException(string.Format("Reading IL from type {0} is currently not supported", type));
         }
 
-        private static Type s_dynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod");
-        private static Type s_runtimeMethodInfoType = Type.GetType("System.Reflection.RuntimeMethodInfo");
-        private static Type s_runtimeConstructorInfoType = Type.GetType("System.Reflection.RuntimeConstructorInfo");
+        private static readonly Type s_dynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod");
+        private static readonly Type s_runtimeMethodInfoType = Type.GetType("System.Reflection.RuntimeMethodInfo");
+        private static readonly Type s_runtimeConstructorInfoType = Type.GetType("System.Reflection.RuntimeConstructorInfo");
 
-        private static Type s_rtDynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod+RTDynamicMethod");
-        private static FieldInfo s_fiOwner = s_rtDynamicMethodType.GetField("m_owner", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly Type s_rtDynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod+RTDynamicMethod");
+        private static readonly FieldInfo s_fiOwner = s_rtDynamicMethodType.GetField("m_owner", BindingFlags.Instance | BindingFlags.NonPublic);
     }
 }

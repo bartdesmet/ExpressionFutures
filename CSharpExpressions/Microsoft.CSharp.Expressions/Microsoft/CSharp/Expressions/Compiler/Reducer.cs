@@ -20,8 +20,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             protected override Expression VisitExtension(Expression node)
             {
-                var csharp = node as CSharpExpression;
-                if (csharp != null && csharp.CSharpNodeType == CSharpExpressionType.Await)
+                if (node is CSharpExpression csharp && csharp.CSharpNodeType == CSharpExpressionType.Await)
                 {
                     var await = (AwaitCSharpExpression)csharp;
                     return base.VisitAwait(await);
@@ -163,8 +162,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var leftValue = Expression.Call(left, "GetValueOrDefault", null);
             var rightValue = Expression.Call(right, "GetValueOrDefault", null);
 
-            var test = default(Expression);
-            var bitwise = default(Expression);
+            Expression test;
+            Expression bitwise;
 
             if (node.NodeType == ExpressionType.AndAlso)
             {
@@ -204,8 +203,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             var left = Expression.Parameter(node.Left.Type);
 
-            var ifTrue = default(Expression);
-            var ifFalse = default(Expression);
+            Expression ifTrue;
+            Expression ifFalse;
 
             if (node.NodeType == ExpressionType.AndAlso)
             {

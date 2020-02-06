@@ -121,7 +121,6 @@ namespace Tests
         [TestMethod]
         public void Dynamic_InvokeMember_Static_Factories()
         {
-            var p = Expression.Parameter(typeof(object));
             var m = "bar";
             var a = Expression.Constant(1);
             var d = DynamicCSharpExpression.DynamicArgument(a);

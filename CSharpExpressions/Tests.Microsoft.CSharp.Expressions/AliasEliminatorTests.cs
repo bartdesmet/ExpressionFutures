@@ -23,7 +23,6 @@ namespace Tests
             var d1 = Expression.Parameter(typeof(IDisposable));
             var d2 = Expression.Parameter(typeof(IDisposable));
             var r1 = Expression.Default(typeof(IDisposable));
-            var r2 = Expression.Default(typeof(IDisposable));
             var c1 = Expression.Parameter(typeof(int[]));
             var c2 = Expression.Parameter(typeof(int[]));
             var i1 = Expression.Default(typeof(int));
@@ -142,7 +141,6 @@ namespace Tests
             var x = Expression.Parameter(typeof(int));
             var i = Expression.Assign(x, Expression.Constant(0));
             var b = Expression.Default(typeof(bool));
-            var xs = Expression.Default(typeof(int[]));
 
             var e = CSharpExpression.For(new[] { i }, b, null, CSharpExpression.For(new[] { i }, b, null, x));
             var r = (ForCSharpStatement)AliasEliminator.Eliminate(e);

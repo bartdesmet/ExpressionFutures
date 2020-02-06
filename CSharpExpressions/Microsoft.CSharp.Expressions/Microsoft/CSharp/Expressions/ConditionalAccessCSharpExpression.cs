@@ -144,8 +144,8 @@ namespace Microsoft.CSharp.Expressions
             var receiver = Expression.Parameter(receiverType, "__receiver");
             var evalReceiver = Expression.Assign(receiver, Receiver);
 
-            var nonNullCheck = default(Expression);
-            var nonNull = default(Expression);
+            Expression nonNullCheck;
+            Expression nonNull;
 
             if (receiverType.IsNullableType())
             {
@@ -160,8 +160,7 @@ namespace Microsoft.CSharp.Expressions
 
             var whenNotNull = new SubstituteConditionalReceiver(NonNullReceiver, nonNull).Visit(WhenNotNull);
 
-            var res = default(Expression);
-
+            Expression res;
             if (resultType != typeof(void))
             {
                 var result = Expression.Parameter(resultType, "__result");

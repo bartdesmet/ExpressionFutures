@@ -2,7 +2,6 @@
 //
 // bartde - December 2015
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
@@ -16,8 +15,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             var res = base.VisitTry(node);
 
-            var tryStmt = res as TryExpression;
-            if (tryStmt != null)
+            if (res is TryExpression tryStmt)
             {
                 // NB: It's safe to take away empty fault and finally blocks; they don't have side-
                 //     effects, don't alter exception propagation, and don't have useful properties.
@@ -42,7 +40,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 //       try { } finally { /* critical code */ }
                 //
                 //     This is a common pattern we shall not break by optimization of course.
-                
+
                 var body = tryStmt.Body;
                 if (body.IsPure(true))
                 {

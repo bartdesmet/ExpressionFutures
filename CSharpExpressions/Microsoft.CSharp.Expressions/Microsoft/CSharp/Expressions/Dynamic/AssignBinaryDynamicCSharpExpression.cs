@@ -84,8 +84,7 @@ namespace Microsoft.CSharp.Expressions
                 //     in temps, so we can safely pass it to WithEventCheck which will decompose
                 //     the member to retrieve its LHS.
 
-                var dynamicMember = Left.Expression as GetMemberDynamicCSharpExpression;
-                if (dynamicMember != null && dynamicMember.Arguments.Count == 0)
+                if (Left.Expression is GetMemberDynamicCSharpExpression dynamicMember && dynamicMember.Arguments.Count == 0)
                 {
                     return WithEventCheck(dynamicMember, candidateAccessor);
                 }

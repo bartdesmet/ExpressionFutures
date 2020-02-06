@@ -43,7 +43,7 @@ foreach (var type in types)
     foreach (var lambda in lambdas)
     {
 #>
-                { var f = (<#=func#>)(<#=lambda#>); }
+                { _ = (<#=func#>)(<#=lambda#>); }
                 yield return "(Expression<<#=func#>>)(<#=lambda#>)";
 
 <#

@@ -1,8 +1,6 @@
 // Taken from http://blogs.msdn.com/b/haibo_luo/archive/2010/04/19/9998595.aspx
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -10,15 +8,16 @@ namespace ClrTest.Reflection
 {
     public class DynamicMethodILProvider : IILProvider
     {
-        static FieldInfo s_fiLen = typeof(ILGenerator).GetField("m_length", BindingFlags.NonPublic | BindingFlags.Instance);
-        static FieldInfo s_fiStream = typeof(ILGenerator).GetField("m_ILStream", BindingFlags.NonPublic | BindingFlags.Instance);
-        static FieldInfo s_fiExceptions = typeof(ILGenerator).GetField("m_exceptions", BindingFlags.NonPublic | BindingFlags.Instance);
-        static FieldInfo s_fiExceptionCount = typeof(ILGenerator).GetField("m_exceptionCount", BindingFlags.NonPublic | BindingFlags.Instance);
-        static MethodInfo s_miBakeByteArray = typeof(ILGenerator).GetMethod("BakeByteArray", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo s_fiLen = typeof(ILGenerator).GetField("m_length", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo s_fiStream = typeof(ILGenerator).GetField("m_ILStream", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo s_fiExceptions = typeof(ILGenerator).GetField("m_exceptions", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo s_fiExceptionCount = typeof(ILGenerator).GetField("m_exceptionCount", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo s_miBakeByteArray = typeof(ILGenerator).GetMethod("BakeByteArray", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        DynamicMethod m_method;
-        byte[] m_byteArray;
-        ExceptionInfo[] m_exceptionInfo;
+        private readonly DynamicMethod m_method;
+
+        private byte[] m_byteArray;
+        private ExceptionInfo[] m_exceptionInfo;
 
         public DynamicMethodILProvider(DynamicMethod method)
         {

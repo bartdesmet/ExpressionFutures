@@ -93,8 +93,6 @@ namespace Microsoft.CSharp.Expressions
 
             ValidateIndexer(indexer.DeclaringType, indexer);
 
-            var parameters = setter.GetParameters();
-
             ValidateArgumentTypes(setter, ExpressionType.Call, ref argList);
 
             return ElementInitStub.Create(setter, argList);

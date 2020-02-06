@@ -172,8 +172,8 @@ namespace Microsoft.CSharp.Expressions
             var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
             var returnType = invokeMethod.ReturnType;
 
-            var builderType = default(Type);
-            var exprs = default(Expression[]);
+            Type builderType;
+            Expression[] exprs;
 
             if (returnType == typeof(void))
             {
@@ -328,7 +328,7 @@ namespace Microsoft.CSharp.Expressions
             //         that gets emitted dynamically?
             //
             var awaitOnCompletedMethod = builderVar.Type.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
-            var awaitOnCompletedArgs = new Type[] { default(Type), typeof(RuntimeAsyncStateMachine) };
+            var awaitOnCompletedArgs = new Type[] { default, typeof(RuntimeAsyncStateMachine) };
 
             var onCompletedFactory = new Func<Expression, Expression>(awaiter =>
             {

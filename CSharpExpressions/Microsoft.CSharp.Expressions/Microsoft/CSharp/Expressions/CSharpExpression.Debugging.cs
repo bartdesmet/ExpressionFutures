@@ -105,8 +105,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var dynamic = node as DynamicAwaitCSharpExpression;
-                if (dynamic != null)
+                if (node is DynamicAwaitCSharpExpression dynamic)
                 {
                     args.Add(new XAttribute("IsDynamic", true));
 
@@ -199,10 +198,11 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDo(DoCSharpStatement node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
-            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Body), Visit(node.Body)),
+                new XElement(nameof(node.Test), Visit(node.Test))
+            };
 
             if (node.BreakLabel != null)
             {
@@ -245,9 +245,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType)
+            };
 
             VisitDynamicCSharpExpression(node, args);
 
@@ -282,9 +283,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicGetMember(GetMemberDynamicCSharpExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.Name), node.Name));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.Name), node.Name)
+            };
 
             VisitDynamicCSharpExpression(node, args);
 
@@ -347,9 +349,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicUnary(UnaryDynamicCSharpExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType)
+            };
 
             VisitDynamicCSharpExpression(node, args);
 
@@ -383,9 +386,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicBinaryAssign(AssignBinaryDynamicCSharpExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType)
+            };
 
             VisitDynamicCSharpExpression(node, args);
 
@@ -398,9 +402,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDynamicUnaryAssign(AssignUnaryDynamicCSharpExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.OperationNodeType), node.OperationNodeType)
+            };
 
             VisitDynamicCSharpExpression(node, args);
 
@@ -452,9 +457,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Variable), Visit(node.Variable))
+            };
 
             if (node.Conversion != null)
             {
@@ -578,9 +584,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.SwitchValue), Visit(node.SwitchValue)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.SwitchValue), Visit(node.SwitchValue))
+            };
 
             if (node.Variables.Count > 0)
             {
@@ -597,11 +604,11 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.TestValues), string.Join(", ", node.TestValues.Select(EscapeToString))));
-
-            args.Add(Visit(nameof(node.Statements), node.Statements));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.TestValues), string.Join(", ", node.TestValues.Select(EscapeToString))),
+                Visit(nameof(node.Statements), node.Statements)
+            };
 
             _nodes.Push(new XElement(nameof(CSharpSwitchCase), args));
             return node;
@@ -609,15 +616,12 @@ namespace Microsoft.CSharp.Expressions
 
         private static string EscapeToString(object obj)
         {
-            if (obj == null)
+            switch (obj)
             {
-                return "null";
-            }
-
-            var s = obj as string;
-            if (s != null)
-            {
-                return "\"" + s.Replace("\"", "\\\"") + "\"";
+                case null:
+                    return "null";
+                case string s:
+                    return "\"" + s.Replace("\"", "\\\"") + "\"";
             }
 
             return obj.ToString();
@@ -626,10 +630,11 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
-            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Test), Visit(node.Test)),
+                new XElement(nameof(node.Body), Visit(node.Body))
+            };
 
             if (node.BreakLabel != null)
             {

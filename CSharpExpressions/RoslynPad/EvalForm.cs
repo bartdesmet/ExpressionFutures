@@ -121,8 +121,7 @@ namespace RoslynPad
                 return;
             }
 
-            var task = res as Task;
-            if (task != null)
+            if (res is Task task)
             {
                 txtResult.Text = "Awaiting task...";
 

@@ -30,8 +30,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     for (var i = 0; i < res.Expressions.Count; i++)
                     {
                         var expression = res.Expressions[i];
-                        var nested = expression as BlockExpression;
-                        if (nested != null && CanOptimize(nested))
+                        if (expression is BlockExpression nested && CanOptimize(nested))
                         {
                             if (expressions == null)
                             {

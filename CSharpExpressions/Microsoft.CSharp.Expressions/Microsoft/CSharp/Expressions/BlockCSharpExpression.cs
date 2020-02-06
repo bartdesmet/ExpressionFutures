@@ -126,7 +126,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            var statements = default(ReadOnlyCollection<Expression>);
+            ReadOnlyCollection<Expression> statements;
 
             if (ReturnLabel == null)
             {
@@ -142,7 +142,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var returnLabel = default(LabelExpression);
+                LabelExpression returnLabel;
 
                 if (ReturnLabel.Type != typeof(void))
                 {

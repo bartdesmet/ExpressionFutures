@@ -107,8 +107,8 @@ namespace Microsoft.CSharp.Expressions
             var resultVariable = Expression.Parameter(Type, "__result");
             var left = Left.Update(leftVariable);
 
-            var check = default(Expression);
-            var underlyingOperation = default(ExpressionType);
+            Expression check;
+            ExpressionType underlyingOperation;
 
             if (isAndAlso)
             {

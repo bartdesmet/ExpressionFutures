@@ -170,11 +170,12 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitConditional(ConditionalExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
-            args.Add(new XElement(nameof(node.IfTrue), Visit(node.IfTrue)));
-            args.Add(new XElement(nameof(node.IfFalse), Visit(node.IfFalse)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Test), Visit(node.Test)),
+                new XElement(nameof(node.IfTrue), Visit(node.IfTrue)),
+                new XElement(nameof(node.IfFalse), Visit(node.IfFalse))
+            };
 
             return Push(node, args);
         }
@@ -361,9 +362,10 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitTry(TryExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Body), Visit(node.Body))
+            };
 
             if (node.Handlers.Count > 0)
             {
@@ -410,11 +412,11 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitGoto(GotoExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.Kind), node.Kind));
-
-            args.Add(new XElement(nameof(node.Target), Visit(node.Target)));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.Kind), node.Kind),
+                new XElement(nameof(node.Target), Visit(node.Target))
+            };
 
             if (node.Value != null)
             {
@@ -426,9 +428,10 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitLabel(LabelExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Target), Visit(node.Target)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Target), Visit(node.Target))
+            };
 
             if (node.DefaultValue != null)
             {
@@ -440,12 +443,11 @@ namespace System.Linq.Expressions
 
         protected override LabelTarget VisitLabelTarget(LabelTarget node)
         {
-            var args = new List<object>();
-
-            args.Add(new XAttribute(nameof(node.Type), node.Type));
-
-            var id = MakeInstanceId(node);
-            args.Add(new XAttribute("Id", id));
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.Type), node.Type),
+                new XAttribute("Id", MakeInstanceId(node))
+            };
 
             if (node.Name != null)
             {
@@ -458,9 +460,10 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitLoop(LoopExpression node)
         {
-            var args = new List<object>();
-
-            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Body), Visit(node.Body))
+            };
 
             if (node.BreakLabel != null)
             {
@@ -482,10 +485,11 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitDebugInfo(DebugInfoExpression node)
         {
-            var args = new List<object>();
-
-            // TODO: add more document info?
-            args.Add(new XAttribute(nameof(node.Document.FileName), node.Document.FileName));
+            var args = new List<object>
+            {
+                // TODO: add more document info?
+                new XAttribute(nameof(node.Document.FileName), node.Document.FileName)
+            };
 
             if (node.IsClear)
             {
@@ -528,8 +532,7 @@ namespace System.Linq.Expressions
 
                     if (value != null)
                     {
-                        var sequence = value as IEnumerable;
-                        if (sequence != null)
+                        if (value is IEnumerable)
                         {
                             binderArgs.Add(new XElement(name, value));
                         }
@@ -550,8 +553,7 @@ namespace System.Linq.Expressions
 
         protected override Expression VisitExtension(Expression node)
         {
-            var dbg = node as IDebugViewExpression;
-            if (dbg != null)
+            if (node is IDebugViewExpression dbg)
             {
                 _nodes.Push(dbg.Accept(this));
                 return node;
@@ -685,8 +687,7 @@ namespace System.Linq.Expressions
 
         public int MakeInstanceId(object o)
         {
-            var id = default(int);
-            if (!_instanceIds.TryGetValue(o, out id))
+            if (!_instanceIds.TryGetValue(o, out int id))
             {
                 _instanceIds[o] = id = _instanceIds.Count;
             }

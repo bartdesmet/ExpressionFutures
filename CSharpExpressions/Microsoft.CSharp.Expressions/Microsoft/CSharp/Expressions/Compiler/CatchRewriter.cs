@@ -16,12 +16,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitTry(TryExpression node)
         {
-            var res = default(Expression);
-
             var type = node.Type;
 
             var handlers = node.Handlers;
             var n = handlers.Count;
+
+            Expression res;
 
             if (n > 0)
             {

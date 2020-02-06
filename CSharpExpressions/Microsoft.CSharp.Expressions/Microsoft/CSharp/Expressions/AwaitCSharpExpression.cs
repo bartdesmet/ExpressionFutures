@@ -102,16 +102,7 @@ namespace Microsoft.CSharp.Expressions
 
         internal virtual Expression ReduceGetAwaiter()
         {
-            var getAwaiterCall = default(Expression);
-            if (GetAwaiterMethod.IsStatic)
-            {
-                getAwaiterCall = Expression.Call(GetAwaiterMethod, Operand);
-            }
-            else
-            {
-                getAwaiterCall = Expression.Call(Operand, GetAwaiterMethod);
-            }
-
+            Expression getAwaiterCall = GetAwaiterMethod.IsStatic ? Expression.Call(GetAwaiterMethod, Operand) : Expression.Call(Operand, GetAwaiterMethod);
             return getAwaiterCall;
         }
 
@@ -168,8 +159,7 @@ namespace Microsoft.CSharp.Expressions
 
             RequiresCanRead(operand, nameof(operand));
 
-            var resultType = typeof(Type);
-            ValidateAwaitPattern(operand.Type, ref getAwaiterMethod, out resultType);
+            ValidateAwaitPattern(operand.Type, ref getAwaiterMethod, out var resultType);
 
             return new AwaitCSharpExpression(operand, getAwaiterMethod, resultType);
         }

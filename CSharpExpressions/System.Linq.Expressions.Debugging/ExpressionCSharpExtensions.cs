@@ -138,9 +138,7 @@ namespace System.Linq.Expressions
             }
             else
             {
-                var res = default(string);
-
-                if (s_primitives.TryGetValue(type, out res))
+                if (s_primitives.TryGetValue(type, out string res))
                 {
                     return res;
                 }
@@ -266,8 +264,7 @@ namespace System.Linq.Expressions
                     case ExpressionType.Default:
                         return ((DefaultExpression)node).Type == typeof(void);
                     case ExpressionType.Extension:
-                        var csharp = node as ICSharpPrintableExpression;
-                        if (csharp != null)
+                        if (node is ICSharpPrintableExpression csharp)
                         {
                             return csharp.IsStatement;
                         }
@@ -285,8 +282,7 @@ namespace System.Linq.Expressions
                 }
                 else
                 {
-                    var csharp = node as ICSharpPrintableExpression;
-                    if (csharp != null && csharp.IsBlock)
+                    if (node is ICSharpPrintableExpression csharp && csharp.IsBlock)
                     {
                         return true;
                     }
@@ -312,7 +308,7 @@ namespace System.Linq.Expressions
                 // TODO: support printing nullable values types
 
                 var needCast = false;
-                var res = default(string);
+                string res;
 
                 if (value == null)
                 {
@@ -389,8 +385,7 @@ namespace System.Linq.Expressions
                 }
                 else
                 {
-                    var id = default(int);
-                    if (!_constants.TryGetValue(value, out id))
+                    if (!_constants.TryGetValue(value, out int id))
                     {
                         id = _constants.Count;
                         _constants.Add(value, id);
@@ -1195,8 +1190,7 @@ namespace System.Linq.Expressions
                                 }
                                 else
                                 {
-                                    var csharp = parent as ICSharpPrintableExpression;
-                                    if (csharp != null && csharp.IsLambda)
+                                    if (parent is ICSharpPrintableExpression csharp && csharp.IsLambda)
                                     {
                                         hasImplicitReturn = true;
                                     }
@@ -1300,8 +1294,7 @@ namespace System.Linq.Expressions
                 {
                     var @continue = Expression.Label(node.ContinueLabel);
 
-                    var block = body as BlockExpression;
-                    if (block != null)
+                    if (body is BlockExpression block)
                     {
                         var exprs = new[] { @continue }.Concat(block.Expressions);
                         block = block.Update(block.Variables, exprs);
@@ -1472,9 +1465,7 @@ namespace System.Linq.Expressions
 
             protected override Expression VisitExtension(Expression node)
             {
-                var csharp = node as ICSharpPrintableExpression;
-
-                if (csharp != null)
+                if (node is ICSharpPrintableExpression csharp)
                 {
                     csharp.Accept(this);
 
@@ -1486,14 +1477,12 @@ namespace System.Linq.Expressions
 
             public string GetLabelName(LabelTarget target, bool declarationSite = false)
             {
-                var res = default(string);
-                if (CSharpLanguageHelpers.AsValidIdentifier(target.Name, out res))
+                if (CSharpLanguageHelpers.AsValidIdentifier(target.Name, out string res))
                 {
                     return res;
                 }
 
-                var name = default(string);
-                if (!_labels.TryGetValue(target, out name))
+                if (!_labels.TryGetValue(target, out string name))
                 {
                     name = $"L{_labels.Count}";
                     _labels.Add(target, name);
@@ -1501,7 +1490,7 @@ namespace System.Linq.Expressions
 
                 if (declarationSite)
                 {
-                    name = name + $" /*{target.Name ?? "(null)"}*/";
+                    name += $" /*{target.Name ?? "(null)"}*/";
                 }
 
                 return name;
@@ -1509,14 +1498,12 @@ namespace System.Linq.Expressions
 
             public string GetVariableName(ParameterExpression node, bool declarationSite = false)
             {
-                var res = default(string);
-                if (CSharpLanguageHelpers.AsValidIdentifier(node.Name, out res))
+                if (CSharpLanguageHelpers.AsValidIdentifier(node.Name, out string res))
                 {
                     return res;
                 }
 
-                var name = default(string);
-                if (!_variables.TryGetValue(node, out name))
+                if (!_variables.TryGetValue(node, out string name))
                 {
                     name = $"p{_variables.Count}";
                     _variables.Add(node, name);
@@ -1524,7 +1511,7 @@ namespace System.Linq.Expressions
 
                 if (declarationSite)
                 {
-                    name = name + $" /*{node.Name ?? "(null)"}*/";
+                    name += $" /*{node.Name ?? "(null)"}*/";
                 }
 
                 return name;
@@ -1693,8 +1680,7 @@ namespace System.Linq.Expressions
 
             private static string Escape(char ch)
             {
-                var res = default(string);
-                if (!TryEscape(ch, '\"', out res))
+                if (!TryEscape(ch, '\"', out string res))
                 {
                     res = ch.ToString();
                 }
@@ -1757,8 +1743,7 @@ namespace System.Linq.Expressions
                 {
                     var ch = str[i];
 
-                    var chStr = default(string);
-                    if (TryEscape(ch, '\'', out chStr))
+                    if (TryEscape(ch, '\'', out string chStr))
                     {
                         if (sb == null)
                         {
@@ -1866,8 +1851,7 @@ namespace System.Linq.Expressions
                     }
                     break;
                 case ExpressionType.Extension:
-                    var csharp = node as ICSharpPrintableExpression;
-                    if (csharp != null)
+                    if (node is ICSharpPrintableExpression csharp)
                     {
                         HasUncheckedOperation |= csharp.HasCheckedMode && !csharp.IsChecked;
                     }
@@ -2013,13 +1997,9 @@ namespace System.Linq.Expressions
 
         public static int GetOperatorPrecedence(Expression node)
         {
-            if (node.NodeType == ExpressionType.Extension)
+            if (node.NodeType == ExpressionType.Extension && node is ICSharpPrintableExpression csharp)
             {
-                var csharp = node as ICSharpPrintableExpression;
-                if (csharp != null)
-                {
-                    return csharp.Precedence;
-                }
+                return csharp.Precedence;
             }
 
             return GetOperatorPrecedence(node.NodeType);
@@ -2297,7 +2277,7 @@ namespace System.Linq.Expressions
             return false;
         }
 
-        private static HashSet<string> s_keywords = new HashSet<string>
+        private static readonly HashSet<string> s_keywords = new HashSet<string>
         {
             "abstract", "as", "base", "bool", "break",
             "byte", "case", "catch", "char", "checked",

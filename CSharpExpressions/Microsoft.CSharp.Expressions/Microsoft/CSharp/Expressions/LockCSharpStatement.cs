@@ -89,11 +89,11 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Assign(temp, Expression),
                     Expression.TryFinally(
                         Expression.Block(
-                            Expression.Call(s_enterMethod, temp, lockTaken),
+                            Expression.Call(enterMethod, temp, lockTaken),
                             Body
                         ),
                         Expression.IfThen(lockTaken,
-                            Expression.Call(s_exitMethod, temp)
+                            Expression.Call(exitMethod, temp)
                         )
                     )
                 );

@@ -109,7 +109,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         LeaveLabels.Add(target, data);
                     }
 
-                    var res = default(Expression);
+                    Expression res;
 
                     if (data.Value != null)
                     {

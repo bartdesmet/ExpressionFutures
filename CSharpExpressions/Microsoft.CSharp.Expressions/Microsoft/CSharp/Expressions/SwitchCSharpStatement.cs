@@ -211,9 +211,10 @@ namespace Microsoft.CSharp.Expressions
 
         private static SwitchAnalysis Analyze(IList<CSharpSwitchCase> cases)
         {
-            var res = new SwitchAnalysis();
-
-            res.OtherCases = new List<CSharpSwitchCase>();
+            var res = new SwitchAnalysis
+            {
+                OtherCases = new List<CSharpSwitchCase>()
+            };
 
             var n = cases.Count;
             for (var i = 0; i < n; i++)
@@ -266,9 +267,9 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceNonNullable(SwitchAnalysis analysis)
         {
-            var res = default(Expression);
-
             var lowered = LowerSwitchStatement(analysis, SwitchValue.Type, hoistNull: false);
+
+            Expression res;
 
             if (Variables.Count > 0)
             {
@@ -311,7 +312,8 @@ namespace Microsoft.CSharp.Expressions
             var valueLocal = Expression.Parameter(governingType, "__value");
             var vars = new[] { valueLocal };
             var assignSwitchValue = Expression.Assign(valueLocal, SwitchValue);
-            var body = default(Expression);
+
+            Expression body;
 
             // NB: The DLR switch expression does not optimize the nullable case into a switch table after a null check.
             //     We can do this here instead, but we could consider moving this logic to the DLR too.
@@ -495,7 +497,7 @@ namespace Microsoft.CSharp.Expressions
 
                 SwitchCaseInfos.Add(@case, _info);
 
-                _info = default(SwitchCaseInfo);
+                _info = default;
             }
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -565,7 +567,7 @@ namespace Microsoft.CSharp.Expressions
                     var canDropSwitchValue = switchValue.IsPure(readOnly: true);
                     var hasDefaultBody = defaultBody != null;
 
-                    var exprs = default(Expression[]);
+                    Expression[] exprs;
 
                     if (canDropSwitchValue)
                     {

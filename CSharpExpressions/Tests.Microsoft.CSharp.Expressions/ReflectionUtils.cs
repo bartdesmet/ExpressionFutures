@@ -116,35 +116,20 @@ namespace Tests
         {
             var body = f.Body;
 
-            var mce = default(MethodCallExpression);
-            var be = default(BinaryExpression);
-            var ue = default(UnaryExpression);
-            var ne = default(NewExpression);
-            var me = default(MemberExpression);
-            var ie = default(IndexExpression);
-            if ((mce = body as MethodCallExpression) != null)
+            switch (body)
             {
-                return mce.Method;
-            }
-            else if ((be = body as BinaryExpression) != null)
-            {
-                return be.Method;
-            }
-            else if ((ue = body as UnaryExpression) != null)
-            {
-                return ue.Method;
-            }
-            else if ((ne = body as NewExpression) != null)
-            {
-                return ne.Constructor;
-            }
-            else if ((me = body as MemberExpression) != null)
-            {
-                return me.Member;
-            }
-            else if ((ie = body as IndexExpression) != null)
-            {
-                return ie.Indexer;
+                case MethodCallExpression mce:
+                    return mce.Method;
+                case BinaryExpression be:
+                    return be.Method;
+                case UnaryExpression ue:
+                    return ue.Method;
+                case NewExpression ne:
+                    return ne.Constructor;
+                case MemberExpression me:
+                    return me.Member;
+                case IndexExpression ie:
+                    return ie.Indexer;
             }
 
             return null;

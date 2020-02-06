@@ -138,7 +138,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 }
             }
 
-            info = default(LabelInfo);
+            info = default;
             return false;
         }
 

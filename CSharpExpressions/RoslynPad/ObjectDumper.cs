@@ -21,17 +21,17 @@ public class ObjectDumper
 
     public static string Write(object o, int depth)
     {
-        var sw = new StringWriter();
-        sw.NewLine = "\r\n";
+        var sw = new StringWriter { NewLine = "\r\n" };
         ObjectDumper dumper = new ObjectDumper(sw, depth);
         dumper.WriteObject(null, o);
         return sw.ToString();
     }
 
-    TextWriter writer;
-    int pos;
-    int level;
-    int depth;
+    private readonly TextWriter writer;
+    private readonly int depth;
+
+    private int pos;
+    private int level;
 
     private ObjectDumper(TextWriter writer, int depth)
     {
