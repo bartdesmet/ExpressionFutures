@@ -339,6 +339,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             // Range
             public override void CompilerTest_7E29_67F2() => OK(); // NB: See above.
+
+            // Discard
+            public override void CompilerTest_16C3_9A18() => OK();
+            public override void CompilerTest_7588_8D66() => OK();
+
+            // Throw expression
+            public override void CompilerTest_8939_4396() => OK();
         }
     }
 }

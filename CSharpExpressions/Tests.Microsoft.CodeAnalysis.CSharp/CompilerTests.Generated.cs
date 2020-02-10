@@ -9950,6 +9950,82 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7E29_67F2() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_16C3_9A18()
+        {
+            // (Expression<Func<string, bool>>)(s => int.TryParse(s, out _))
+            var actual = GetDebugView(@"(Expression<Func<string, bool>>)(s => int.TryParse(s, out _))");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.String,System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <Call Type=""System.Boolean"" Method=""Boolean TryParse(System.String, Int32 ByRef)"">
+      <Arguments>
+        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+        <CSharpDiscard Type=""System.Int32"" />
+      </Arguments>
+    </Call>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_16C3_9A18();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_16C3_9A18() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_7588_8D66()
+        {
+            // (Expression<Action>)(() => { _ = Console.ReadLine(); })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { _ = Console.ReadLine(); })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpAssign Type=""System.String"">
+      <Left>
+        <CSharpDiscard Type=""System.String"" />
+      </Left>
+      <Right>
+        <Call Type=""System.String"" Method=""System.String ReadLine()"">
+          <Arguments />
+        </Call>
+      </Right>
+    </CSharpAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7588_8D66();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7588_8D66() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_8939_4396()
+        {
+            // (Expression<Func<int>>)(() => throw new Exception())
+            var actual = GetDebugView(@"(Expression<Func<int>>)(() => throw new Exception())");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32]"">
+  <Parameters />
+  <Body>
+    <Throw Type=""System.Int32"">
+      <Operand>
+        <New Type=""System.Exception"" Constructor=""Void .ctor()"">
+          <Arguments />
+        </New>
+      </Operand>
+    </Throw>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_8939_4396();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8939_4396() => INCONCLUSIVE(); }
+
     }
 
 /*
@@ -10220,6 +10296,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_EDDE_8041() => OK();
             public override void CompilerTest_F139_7F81() => OK();
             public override void CompilerTest_7E29_67F2() => OK();
+            public override void CompilerTest_16C3_9A18() => OK();
+            public override void CompilerTest_7588_8D66() => OK();
+            public override void CompilerTest_8939_4396() => OK();
         }
     }
 }

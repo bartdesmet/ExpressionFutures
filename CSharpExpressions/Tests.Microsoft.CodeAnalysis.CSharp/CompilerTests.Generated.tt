@@ -365,6 +365,13 @@ var exprs = new[]
 
     // Range
     "(Expression<Func<Range>>)(() => 1..2)",
+
+    // Discard
+    "(Expression<Func<string, bool>>)(s => int.TryParse(s, out _))",
+    "(Expression<Action>)(() => { _ = Console.ReadLine(); })",
+
+    // Throw expression
+    "(Expression<Func<int>>)(() => throw new Exception())",
 };
 #>
 <#
