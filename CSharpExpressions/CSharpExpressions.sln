@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{B266F8B2-7D9D-4E1F-9148-1211BBB7040A}"
 EndProject
@@ -33,6 +33,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Microsoft.CodeAnalysis.CSharp.Helpers", "Tests.Microsoft.CodeAnalysis.CSharp.Helpers\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.csproj", "{6E9836D3-2075-4A50-851C-AC15612BF926}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPad", "RoslynPad\RoslynPad.csproj", "{7283F5BB-8644-41E1-8530-D58CC6D809EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BclExtensions", "BclExtensions\BclExtensions.csproj", "{6FA07859-FBEB-4E2E-A70C-1373118A6740}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,10 @@ Global
 		{7283F5BB-8644-41E1-8530-D58CC6D809EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7283F5BB-8644-41E1-8530-D58CC6D809EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7283F5BB-8644-41E1-8530-D58CC6D809EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
