@@ -4,96 +4,15 @@
         <name>Microsoft.CodeAnalysis.Scripting</name>
     </assembly>
     <members>
-        <member name="M:Microsoft.CodeAnalysis.RelativePathResolver.#ctor(System.Collections.Immutable.ImmutableArray{System.String},System.String)">
+        <member name="T:Microsoft.CodeAnalysis.Scripting.CompilationErrorException">
             <summary>
-            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.RelativePathResolver"/> class.
-            </summary>
-            <param name="searchPaths">An ordered set of fully qualified 
-            paths which are searched when resolving assembly names.</param>
-            <param name="baseDirectory">Directory used when resolving relative paths.</param>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache">
-            <summary>
-            Provides APIs to enumerate and look up assemblies stored in the Global Assembly Cache.
+            An exception thrown when the compilation stage of interactive execution produces compilation errors.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache.GetAssemblyIdentities(System.Reflection.AssemblyName,System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture})">
+        <member name="P:Microsoft.CodeAnalysis.Scripting.CompilationErrorException.Diagnostics">
             <summary>
-            Enumerates assemblies in the GAC returning those that match given partial name and
-            architecture.
+            The list of diagnostics produced by compilation.
             </summary>
-            <param name="partialName">Optional partial name.</param>
-            <param name="architectureFilter">Optional architecture filter.</param>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache.GetAssemblyIdentities(System.String,System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture})">
-            <summary>
-            Enumerates assemblies in the GAC returning those that match given partial name and
-            architecture.
-            </summary>
-            <param name="partialName">The optional partial name.</param>
-            <param name="architectureFilter">The optional architecture filter.</param>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache.GetAssemblySimpleNames(System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture})">
-            <summary>
-            Enumerates assemblies in the GAC returning their simple names.
-            </summary>
-            <param name="architectureFilter">Optional architecture filter.</param>
-            <returns>Unique simple names of GAC assemblies.</returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.ToAssemblyIdentity(Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName)">
-            <summary>
-            Converts <see cref="T:Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName"/> to <see cref="T:System.Reflection.AssemblyName"/> with all metadata fields filled.
-            </summary>
-            <returns>
-            Assembly name with Version, Culture and PublicKeyToken components filled in:
-            "SimpleName, Version=#.#.#.#, Culture=XXX, PublicKeyToken=XXXXXXXXXXXXXXXX".
-            In addition Retargetable flag and ContentType are set.
-            </returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.ToAssemblyNameObject(System.Reflection.AssemblyName)">
-            <summary>
-            Converts <see cref="T:System.Reflection.AssemblyName"/> to an equivalent <see cref="T:Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.ToAssemblyNameObject(System.String)">
-            <summary>
-            Creates <see cref="T:Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName"/> object by parsing given display name.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.GetBestMatch(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName},System.String)">
-            <summary>
-            Selects the candidate assembly with the largest version number.  Uses culture as a tie-breaker if it is provided.
-            All candidates are assumed to have the same name and must include versions and cultures.  
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver">
-            <summary>
-            Resolves assembly identities in Global Assembly Cache.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.IsAvailable">
-            <summary>
-            Returns true if GAC is available on the platform.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.Architectures">
-            <summary>
-            Architecture filter used when resolving assembly references.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.PreferredCulture">
-            <summary>
-            <see cref="T:System.Globalization.CultureInfo"/> used when resolving assembly references, or null to prefer no culture.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.#ctor(System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture},System.Globalization.CultureInfo)">
-            <summary>
-            Creates an instance of a <see cref="T:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver"/>, if available on the platform (check <see cref="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.IsAvailable"/>).
-            </summary>
-            <param name="architectures">Supported architectures used to filter GAC assemblies.</param>
-            <param name="preferredCulture">A culture to use when choosing the best assembly from 
-            among the set filtered by <paramref name="architectures"/></param>
-            <exception cref="T:System.PlatformNotSupportedException">The platform doesn't support GAC.</exception>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.AssemblyLoadResult">
             <summary>
@@ -114,176 +33,6 @@
             <summary>
             Original assembly file path.
             </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineScriptGlobals">
-            <summary>
-            Defines global members that common command line script hosts expose to the hosted scripts.
-            </summary>
-            <remarks>
-            It is recommended for hosts to expose the members defined by this class and implement 
-            the same semantics, so that they can run scripts written against standard hosts. 
-            
-            Specialized hosts that target niche scenarios might choose to not provide this functionality.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineScriptGlobals.Args">
-            <summary>
-            Arguments given to the script.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineScriptGlobals.Print(System.Object)">
-            <summary>
-            Pretty-prints an object.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineRunner.RunInteractive">
-            <summary>
-            csi.exe and vbi.exe entry point.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineRunner.RunInteractiveCore(Microsoft.CodeAnalysis.ErrorLogger)">
-            <summary>
-            csi.exe and vbi.exe entry point.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveScriptGlobals">
-            <summary>
-            Defines global members that common REPL (Read Eval Print Loop) hosts make available in 
-            the interactive session.
-            </summary>
-            <remarks>
-            It is recommended for hosts to expose the members defined by this class and implement 
-            the same semantics, so that they can run scripts written against standard hosts. 
-            
-            Specialized hosts that target niche scenarios might choose to not provide this functionality.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveScriptGlobals.Args">
-            <summary>
-            Arguments given to the script.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveScriptGlobals.Print(System.Object)">
-            <summary>
-            Pretty-prints an object.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter">
-            <summary>
-            Object pretty printer.
-            </summary>
-            <summary>
-            Object pretty printer.
-            </summary>
-            <summary>
-            Object pretty printer.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.BuilderOptions">
-            <remarks>
-            Internal for testing.
-            </remarks>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Builder.AppendInfiniteRecursionMarker">
-            <remarks>
-            This is for conveying cyclic dependencies to the user, not for detecting them.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormattedMember.MinimalLength">
-            <remarks>
-            Doesn't (and doesn't need to) reflect the number of digits in <see cref="F:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormattedMember.Index"/> since
-            it's only used for a conservative approximation (shorter is more conservative when trying
-            to determine the minimum number of members that will fill the output).
-            </remarks>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormatObjectMembers(Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Builder,System.Object,System.Reflection.TypeInfo,System.Boolean,System.Boolean)">
-            <summary>
-            Formats object members to a list.
-            
-            Inline == false:
-            <code>
-            { A=true, B=false, C=new int[3] { 1, 2, 3 } }
-            </code>
-            
-            Inline == true:
-            <code>
-            {
-              A: true,
-              B: false,
-              C: new int[3] { 1, 2, 3 }
-            }
-            </code>
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormatObjectMembersRecursive(System.Collections.Generic.List{Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormattedMember},System.Object,System.Boolean,System.Int32@)">
-            <summary>
-            Enumerates sorted object members to display.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormatWithEmbeddedExpressions(System.Int32,System.String,System.Object)">
-            <summary>
-            Evaluate a format string with possible member references enclosed in braces. 
-            E.g. "foo = {GetFooString(),nq}, bar = {Bar}".
-            </summary>
-            <remarks>
-            Although in theory any expression is allowed to be embedded in the string such behavior is in practice fundamentally broken.
-            The attribute doesn't specify what language (VB, C#, F#, etc.) to use to parse these expressions. Even if it did all languages 
-            would need to be able to evaluate each other language's expressions, which is not viable and the Expression Evaluator doesn't 
-            work that way today. Instead it evaluates the embedded expressions in the language of the current method frame. When consuming 
-            VB objects from C#, for example, the evaluation might fail due to language mismatch (evaluating VB expression using C# parser).
-            
-            Therefore we limit the expressions to a simple language independent syntax: {clr-member-name} '(' ')' ',nq', 
-            where parentheses and ,nq suffix (no-quotes) are optional and the name is an arbitrary CLR field, property, or method name.
-            We then resolve the member by name using case-sensitive lookup first with fallback to case insensitive and evaluate it.
-            If parentheses are present we only look for methods.
-            Only parameterless members are considered.
-            </remarks>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.FormatMethodSignature(System.Reflection.MethodBase)">
-            <summary>
-            Returns a method signature display string. Used to display stack frames.
-            </summary>
-            <returns>Null if the method is a compiler generated method that shouldn't be displayed to the user.</returns>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatterOptions.NumberRadix">
-            <remarks>
-            Since <see cref="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatter"/> is an extension point, we don't
-            perform any validation on <see cref="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatterOptions.NumberRadix"/> - it's up to the individual
-            subtype.
-            </remarks>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatter.NullLiteral">
-            <summary>
-            String that describes "null" literal in the language.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatter.FormatPrimitive(System.Object,Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatterOptions)">
-            <summary>
-            Returns null if the type is not considered primitive in the target language.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonTypeNameFormatter.FormatArrayTypeName(System.Type,System.Array,Microsoft.CodeAnalysis.Scripting.Hosting.CommonTypeNameFormatterOptions)">
-            <summary>
-            Formats an array type name (vector or multidimensional).
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.PrintOptions.IsValidRadix(System.Int32)">
-            <remarks>
-            Virtual so that extenders can support other radices.
-            </remarks>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.ObjectFormatter">
-            <summary>
-            Object pretty printer.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.RuntimeMetadataReferenceResolver">
-            <summary>
-            Resolves metadata references for scripts.
-            </summary>
-            <remarks>
-            Operates on runtime metadata artifacts.
-            </remarks>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveAssemblyLoader">
             <summary>
@@ -419,9 +168,156 @@
             Represents a shadow copy of a single file.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.NuGetPackageResolver.TryParsePackageReference(System.String,System.String@,System.String@)">
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineRunner.RunInteractive">
             <summary>
-            Syntax is "nuget:name[/version]".
+            csi.exe and vbi.exe entry point.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineRunner.RunInteractiveCore(Microsoft.CodeAnalysis.ErrorLogger)">
+            <summary>
+            csi.exe and vbi.exe entry point.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineScriptGlobals">
+            <summary>
+            Defines global members that common command line script hosts expose to the hosted scripts.
+            </summary>
+            <remarks>
+            It is recommended for hosts to expose the members defined by this class and implement 
+            the same semantics, so that they can run scripts written against standard hosts. 
+            
+            Specialized hosts that target niche scenarios might choose to not provide this functionality.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineScriptGlobals.Args">
+            <summary>
+            Arguments given to the script.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommandLineScriptGlobals.Print(System.Object)">
+            <summary>
+            Pretty-prints an object.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveScriptGlobals">
+            <summary>
+            Defines global members that common REPL (Read Eval Print Loop) hosts make available in 
+            the interactive session.
+            </summary>
+            <remarks>
+            It is recommended for hosts to expose the members defined by this class and implement 
+            the same semantics, so that they can run scripts written against standard hosts. 
+            
+            Specialized hosts that target niche scenarios might choose to not provide this functionality.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveScriptGlobals.Args">
+            <summary>
+            Arguments given to the script.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.InteractiveScriptGlobals.Print(System.Object)">
+            <summary>
+            Pretty-prints an object.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter">
+            <summary>
+            Object pretty printer.
+            </summary>
+            <summary>
+            Object pretty printer.
+            </summary>
+            <summary>
+            Object pretty printer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Builder.AppendInfiniteRecursionMarker">
+            <remarks>
+            This is for conveying cyclic dependencies to the user, not for detecting them.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.BuilderOptions">
+            <remarks>
+            Internal for testing.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.FormatMethodSignature(System.Reflection.MethodBase)">
+            <summary>
+            Returns a method signature display string. Used to display stack frames.
+            </summary>
+            <returns>Null if the method is a compiler generated method that shouldn't be displayed to the user.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormatObjectMembers(Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Builder,System.Object,System.Reflection.TypeInfo,System.Boolean,System.Boolean)">
+            <summary>
+            Formats object members to a list.
+            
+            Inline == false:
+            <code>
+            { A=true, B=false, C=new int[3] { 1, 2, 3 } }
+            </code>
+            
+            Inline == true:
+            <code>
+            {
+              A: true,
+              B: false,
+              C: new int[3] { 1, 2, 3 }
+            }
+            </code>
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormatObjectMembersRecursive(System.Collections.Generic.List{Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormattedMember},System.Object,System.Boolean,System.Int32@)">
+            <summary>
+            Enumerates sorted object members to display.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormatWithEmbeddedExpressions(System.Int32,System.String,System.Object)">
+            <summary>
+            Evaluate a format string with possible member references enclosed in braces. 
+            E.g. "goo = {GetGooString(),nq}, bar = {Bar}".
+            </summary>
+            <remarks>
+            Although in theory any expression is allowed to be embedded in the string such behavior is in practice fundamentally broken.
+            The attribute doesn't specify what language (VB, C#, F#, etc.) to use to parse these expressions. Even if it did all languages 
+            would need to be able to evaluate each other language's expressions, which is not viable and the Expression Evaluator doesn't 
+            work that way today. Instead it evaluates the embedded expressions in the language of the current method frame. When consuming 
+            VB objects from C#, for example, the evaluation might fail due to language mismatch (evaluating VB expression using C# parser).
+            
+            Therefore we limit the expressions to a simple language independent syntax: {clr-member-name} '(' ')' ',nq', 
+            where parentheses and ,nq suffix (no-quotes) are optional and the name is an arbitrary CLR field, property, or method name.
+            We then resolve the member by name using case-sensitive lookup first with fallback to case insensitive and evaluate it.
+            If parentheses are present we only look for methods.
+            Only parameterless members are considered.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormattedMember.MinimalLength">
+            <remarks>
+            Doesn't (and doesn't need to) reflect the number of digits in <see cref="F:Microsoft.CodeAnalysis.Scripting.Hosting.CommonObjectFormatter.Visitor.FormattedMember.Index"/> since
+            it's only used for a conservative approximation (shorter is more conservative when trying
+            to determine the minimum number of members that will fill the output).
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatter.NullLiteral">
+            <summary>
+            String that describes "null" literal in the language.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatter.FormatPrimitive(System.Object,Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatterOptions)">
+            <summary>
+            Returns null if the type is not considered primitive in the target language.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatterOptions.NumberRadix">
+            <remarks>
+            Since <see cref="T:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatter"/> is an extension point, we don't
+            perform any validation on <see cref="P:Microsoft.CodeAnalysis.Scripting.Hosting.CommonPrimitiveFormatterOptions.NumberRadix"/> - it's up to the individual
+            subtype.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.CommonTypeNameFormatter.FormatArrayTypeName(System.Type,System.Array,Microsoft.CodeAnalysis.Scripting.Hosting.CommonTypeNameFormatterOptions)">
+            <summary>
+            Formats an array type name (vector or multidimensional).
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.Scripting.Hosting.MemberDisplayFormat.SingleLine">
@@ -445,127 +341,62 @@
             they are shown regardless.
             </remarks>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptingResources">
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.ObjectFormatter">
             <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
+            Object pretty printer.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.ResourceManager">
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.PrintOptions.IsValidRadix(System.Int32)">
+            <remarks>
+            Virtual so that extenders can support other radices.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.ReplServiceProvider">
             <summary>
-              Returns the cached ResourceManager instance used by this class.
+            Provides basic REPL functionality.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.Culture">
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.NuGetPackageResolver.TryParsePackageReference(System.String,System.String@,System.String@)">
             <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
+            Syntax is "nuget:name[/version]".
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.AbsolutePathExpected">
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.RuntimeMetadataReferenceResolver">
             <summary>
-              Looks up a localized string similar to Absolute path expected.
+            Resolves metadata references for scripts.
+            </summary>
+            <remarks>
+            Operates on runtime metadata artifacts.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver">
+            <summary>
+            Resolves assembly identities in Global Assembly Cache.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.AtFileLine">
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.IsAvailable">
             <summary>
-              Looks up a localized string similar to  at {0} : {1}.
+            Returns true if GAC is available on the platform.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CannotSetConstantVariable">
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.Architectures">
             <summary>
-              Looks up a localized string similar to Cannot set a constant variable.
+            Architecture filter used when resolving assembly references.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CannotSetReadOnlyVariable">
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.PreferredCulture">
             <summary>
-              Looks up a localized string similar to Cannot set a read-only variable.
+            <see cref="T:System.Globalization.CultureInfo"/> used when resolving assembly references, or null to prefer no culture.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CantAssignTo">
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.#ctor(System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture},System.Globalization.CultureInfo)">
             <summary>
-              Looks up a localized string similar to Can&apos;t assign &apos;{0}&apos; to &apos;{1}&apos;..
+            Creates an instance of a <see cref="T:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver"/>, if available on the platform (check <see cref="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.IsAvailable"/>).
             </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.DisplayNameOrPathCannotBe">
-            <summary>
-              Looks up a localized string similar to Display name or path cannot be empty..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.ExpectedAnAssemblyReference">
-            <summary>
-              Looks up a localized string similar to Expected an assembly reference..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.GlobalsNotAssignable">
-            <summary>
-              Looks up a localized string similar to The globals of type &apos;{0}&apos; is not assignable to &apos;{1}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.GlobalVariablesWithoutGlobalType">
-            <summary>
-              Looks up a localized string similar to Global variables passed to a script without a global type.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.HelpPrompt">
-            <summary>
-              Looks up a localized string similar to Type &quot;#help&quot; for more information..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.HelpText">
-             <summary>
-               Looks up a localized string similar to Keyboard shortcuts:
-              Enter         If the current submission appears to be complete, evaluate it.  Otherwise, insert a new line.
-              Escape        Clear the current submission.
-              UpArrow       Replace the current submission with a previous submission.
-              DownArrow     Replace the current submission with a subsequent submission (after having previously navigated backwards).
-              Ctrl-C        Exit the REPL.
-            REPL commands:
-              #help         Display help on available commands and key bindings.
-            Script directiv [rest of string was truncated]&quot;;.
-             </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.InvalidAssemblyName">
-            <summary>
-              Looks up a localized string similar to Invalid assembly name.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.InvalidCharactersInAssemblyName">
-            <summary>
-              Looks up a localized string similar to Invalid characters in assemblyName.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.PlusAdditionalError">
-            <summary>
-              Looks up a localized string similar to + additional {0} error.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.PlusAdditionalErrors">
-            <summary>
-              Looks up a localized string similar to + additional {0} errors.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.ScriptRequiresGlobalVariables">
-            <summary>
-              Looks up a localized string similar to The script requires access to global variables but none were given.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.StackOverflowWhileEvaluating">
-            <summary>
-              Looks up a localized string similar to !&lt;Stack overflow while evaluating object&gt;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.StartingStateIncompatible">
-            <summary>
-              Looks up a localized string similar to Starting state was incompatible with script..
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptRunner`1">
-            <summary>
-            A delegate that will run a script when invoked.
-            </summary>
-            <param name="globals">An object instance whose members can be accessed by the script as global variables.</param>
-            <param name="cancellationToken">Cancellation token.</param>
-            <exception cref="T:System.ArgumentException">The type of <paramref name="globals"/> doesn't match the corresponding <see cref="P:Microsoft.CodeAnalysis.Scripting.Script.GlobalsType"/>.</exception>
+            <param name="architectures">Supported architectures used to filter GAC assemblies.</param>
+            <param name="preferredCulture">A culture to use when choosing the best assembly from 
+            among the set filtered by <paramref name="architectures"/></param>
+            <exception cref="T:System.PlatformNotSupportedException">The platform doesn't support GAC.</exception>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.Script">
             <summary>
@@ -591,6 +422,11 @@
             The source code of the script.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.Script.SourceText">
+            <summary>
+            The <see cref="P:Microsoft.CodeAnalysis.Scripting.Script.SourceText"/> of the script.
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.Scripting.Script.GlobalsType">
             <summary>
             The type of an object whose members can be accessed by the script as global variables.
@@ -611,10 +447,24 @@
             Continues the script with given code snippet.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Script.ContinueWith(System.IO.Stream,Microsoft.CodeAnalysis.Scripting.ScriptOptions)">
+            <summary>
+            Continues the script with given <see cref="T:System.IO.Stream"/> representing code.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Stream is null.</exception>
+            <exception cref="T:System.ArgumentException">Stream is not readable or seekable.</exception>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.Scripting.Script.ContinueWith``1(System.String,Microsoft.CodeAnalysis.Scripting.ScriptOptions)">
             <summary>
             Continues the script with given code snippet.
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Script.ContinueWith``1(System.IO.Stream,Microsoft.CodeAnalysis.Scripting.ScriptOptions)">
+            <summary>
+            Continues the script with given <see cref="T:System.IO.Stream"/> representing code.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Stream is null.</exception>
+            <exception cref="T:System.ArgumentException">Stream is not readable or seekable.</exception>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Scripting.Script.GetCompilation">
             <summary>
@@ -803,27 +653,146 @@
             We also check that no user provided references are allowed to be used in the compiled code and report an error ("reserved assembly name").
             </remarks>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptBuilder.CreateExecutor``1(Microsoft.CodeAnalysis.Scripting.ScriptCompiler,Microsoft.CodeAnalysis.Compilation,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptBuilder.CreateExecutor``1(Microsoft.CodeAnalysis.Scripting.ScriptCompiler,Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Threading.CancellationToken)">
             <exception cref="T:Microsoft.CodeAnalysis.Scripting.CompilationErrorException">Compilation has errors.</exception>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptBuilder.Build``1(Microsoft.CodeAnalysis.Compilation,Microsoft.CodeAnalysis.DiagnosticBag,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptBuilder.Build``1(Microsoft.CodeAnalysis.Compilation,Microsoft.CodeAnalysis.DiagnosticBag,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Builds a delegate that will execute just this scripts code.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Scripting.CompilationErrorException">
-            <summary>
-            An exception thrown when the compilation stage of interactive execution produces compilation errors.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Scripting.CompilationErrorException.Diagnostics">
-            <summary>
-            The list of diagnostics produced by compilation.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptExecutionState">
             <summary>
             Represents the submission states and globals that get passed to a script entry point when run.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptingResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.AbsolutePathExpected">
+            <summary>
+              Looks up a localized string similar to Absolute path expected.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.AssemblyAlreadyLoaded">
+            <summary>
+              Looks up a localized string similar to Assembly &apos;{0}, Version={1}&apos; has already been loaded from &apos;{2}&apos;. A different assembly with the same name and version can&apos;t be loaded: &apos;{3}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.AssemblyAlreadyLoadedNotSigned">
+            <summary>
+              Looks up a localized string similar to Assembly &apos;{0}&apos; has already been loaded from &apos;{1}&apos;. A different assembly with the same name can&apos;t be loaded unless it&apos;s signed: &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.AtFileLine">
+            <summary>
+              Looks up a localized string similar to  at {0} : {1}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CannotSetConstantVariable">
+            <summary>
+              Looks up a localized string similar to Cannot set a constant variable.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CannotSetLanguageSpecificOption">
+            <summary>
+              Looks up a localized string similar to Cannot set {0} specific option {1} because the options were already configured for a different language..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CannotSetReadOnlyVariable">
+            <summary>
+              Looks up a localized string similar to Cannot set a read-only variable.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.CantAssignTo">
+            <summary>
+              Looks up a localized string similar to Can&apos;t assign &apos;{0}&apos; to &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.DisplayNameOrPathCannotBe">
+            <summary>
+              Looks up a localized string similar to Display name or path cannot be empty..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.ExpectedAnAssemblyReference">
+            <summary>
+              Looks up a localized string similar to Expected an assembly reference..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.GlobalsNotAssignable">
+            <summary>
+              Looks up a localized string similar to The globals of type &apos;{0}&apos; is not assignable to &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.GlobalVariablesWithoutGlobalType">
+            <summary>
+              Looks up a localized string similar to Global variables passed to a script without a global type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.HelpPrompt">
+            <summary>
+              Looks up a localized string similar to Type &quot;#help&quot; for more information..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.HelpText">
+             <summary>
+               Looks up a localized string similar to Keyboard shortcuts:
+              Enter         If the current submission appears to be complete, evaluate it.  Otherwise, insert a new line.
+              Escape        Clear the current submission.
+              UpArrow       Replace the current submission with a previous submission.
+              DownArrow     Replace the current submission with a subsequent submission (after having previously navigated backwards).
+              Ctrl-C        Exit the REPL.
+            REPL commands:
+              #help         Display help on available commands and key bindings.
+            Script directiv [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.InvalidAssemblyName">
+            <summary>
+              Looks up a localized string similar to Invalid assembly name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.InvalidCharactersInAssemblyName">
+            <summary>
+              Looks up a localized string similar to Invalid characters in assemblyName.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.PlusAdditionalError">
+            <summary>
+              Looks up a localized string similar to + additional {0} error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.PlusAdditionalErrors">
+            <summary>
+              Looks up a localized string similar to + additional {0} errors.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.ScriptRequiresGlobalVariables">
+            <summary>
+              Looks up a localized string similar to The script requires access to global variables but none were given.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.StackOverflowWhileEvaluating">
+            <summary>
+              Looks up a localized string similar to !&lt;Stack overflow while evaluating object&gt;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptingResources.StartingStateIncompatible">
+            <summary>
+              Looks up a localized string similar to Starting state was incompatible with script..
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions">
@@ -857,9 +826,40 @@
             The namespaces, static classes and aliases imported by the script.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.EmitDebugInformation">
+            <summary>
+            Specifies whether debugging symbols should be emitted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.FileEncoding">
+            <summary>
+            Specifies the encoding to be used when debugging scripts loaded from a file, or saved to a file for debugging purposes.
+            If it's null, the compiler will attempt to detect the necessary encoding for debugging
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.FilePath">
             <summary>
             The path to the script source if it originated from a file, empty otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.OptimizationLevel">
+            <summary>
+            Specifies whether or not optimizations should be performed on the output IL.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.CheckOverflow">
+            <summary>
+            Whether bounds checking on integer arithmetic is enforced by default or not.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.AllowUnsafe">
+            <summary>
+            Allow unsafe regions (i.e. unsafe modifiers on members and unsafe blocks).
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WarningLevel">
+            <summary>
+            Global warning level (from 0 to 4).
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithFilePath(System.String)">
@@ -987,6 +987,45 @@
             </summary>
             <exception cref="T:System.ArgumentNullException"><paramref name="imports"/> is null or contains a null reference.</exception>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithEmitDebugInformation(System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions"/> with debugging information enabled.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithFileEncoding(System.Text.Encoding)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions"/> with specified <see cref="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.FileEncoding"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel)">
+            <summary>
+            Create a new <see cref="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions"/> with the specified <see cref="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.OptimizationLevel"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithAllowUnsafe(System.Boolean)">
+            <summary>
+            Create a new <see cref="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions"/> with unsafe code regions allowed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithCheckOverflow(System.Boolean)">
+            <summary>
+            Create a new <see cref="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions"/> with bounds checking on integer arithmetic enforced.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WithWarningLevel(System.Int32)">
+            <summary>
+            Create a new <see cref="T:Microsoft.CodeAnalysis.Scripting.ScriptOptions"/> with the specific <see cref="P:Microsoft.CodeAnalysis.Scripting.ScriptOptions.WarningLevel"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptRunner`1">
+            <summary>
+            A delegate that will run a script when invoked.
+            </summary>
+            <param name="globals">An object instance whose members can be accessed by the script as global variables.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <exception cref="T:System.ArgumentException">The type of <paramref name="globals"/> doesn't match the corresponding <see cref="P:Microsoft.CodeAnalysis.Scripting.Script.GlobalsType"/>.</exception>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.ScriptState">
             <summary>
             The result of running a script.
@@ -1098,6 +1137,73 @@
             <exception cref="T:System.InvalidOperationException">Variable is read-only or a constant.</exception>
             <exception cref="T:System.ArgumentException">The type of the specified <paramref name="value"/> isn't assignable to the type of the variable.</exception>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CoreClrShim">
+            <summary>
+            Shim for APIs available only on CoreCLR.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.RelativePathResolver.#ctor(System.Collections.Immutable.ImmutableArray{System.String},System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.RelativePathResolver"/> class.
+            </summary>
+            <param name="searchPaths">An ordered set of fully qualified 
+            paths which are searched when resolving assembly names.</param>
+            <param name="baseDirectory">Directory used when resolving relative paths.</param>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache">
+            <summary>
+            Provides APIs to enumerate and look up assemblies stored in the Global Assembly Cache.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache.GetAssemblyIdentities(System.Reflection.AssemblyName,System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture})">
+            <summary>
+            Enumerates assemblies in the GAC returning those that match given partial name and
+            architecture.
+            </summary>
+            <param name="partialName">Optional partial name.</param>
+            <param name="architectureFilter">Optional architecture filter.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache.GetAssemblyIdentities(System.String,System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture})">
+            <summary>
+            Enumerates assemblies in the GAC returning those that match given partial name and
+            architecture.
+            </summary>
+            <param name="partialName">The optional partial name.</param>
+            <param name="architectureFilter">The optional architecture filter.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache.GetAssemblySimpleNames(System.Collections.Immutable.ImmutableArray{System.Reflection.ProcessorArchitecture})">
+            <summary>
+            Enumerates assemblies in the GAC returning their simple names.
+            </summary>
+            <param name="architectureFilter">Optional architecture filter.</param>
+            <returns>Unique simple names of GAC assemblies.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.ToAssemblyIdentity(Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName)">
+            <summary>
+            Converts <see cref="T:Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName"/> to <see cref="T:System.Reflection.AssemblyName"/> with all metadata fields filled.
+            </summary>
+            <returns>
+            Assembly name with Version, Culture and PublicKeyToken components filled in:
+            "SimpleName, Version=#.#.#.#, Culture=XXX, PublicKeyToken=XXXXXXXXXXXXXXXX".
+            In addition Retargetable flag and ContentType are set.
+            </returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.ToAssemblyNameObject(System.Reflection.AssemblyName)">
+            <summary>
+            Converts <see cref="T:System.Reflection.AssemblyName"/> to an equivalent <see cref="T:Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.ToAssemblyNameObject(System.String)">
+            <summary>
+            Creates <see cref="T:Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName"/> object by parsing given display name.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.FusionAssemblyIdentity.GetBestMatch(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.FusionAssemblyIdentity.IAssemblyName},System.String)">
+            <summary>
+            Selects the candidate assembly with the largest version number.  Uses culture as a tie-breaker if it is provided.
+            All candidates are assumed to have the same name and must include versions and cultures.  
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.GlobalAssemblyCache">
             <summary>
             Provides APIs to enumerate and look up assemblies stored in the Global Assembly Cache.
@@ -1155,6 +1261,13 @@
         <member name="T:Microsoft.CodeAnalysis.MonoGlobalAssemblyCache">
             <summary>
             Provides APIs to enumerate and look up assemblies stored in the Global Assembly Cache.
+            </summary>
+        </member>
+        <member name="T:Roslyn.Utilities.CoreLightup">
+            <summary>
+            This type contains the light up scenarios for various platform and runtimes.  Any function
+            in this type can, and is expected to, fail on various platforms.  These are light up scenarios
+            only.
             </summary>
         </member>
     </members>
