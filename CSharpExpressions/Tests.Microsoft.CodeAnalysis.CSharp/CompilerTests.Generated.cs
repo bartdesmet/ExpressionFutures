@@ -9874,6 +9874,82 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A00C_0847() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_EDDE_8041()
+        {
+            // (Expression<Func<Index>>)(() => 1)
+            var actual = GetDebugView(@"(Expression<Func<Index>>)(() => 1)");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Index]"">
+  <Parameters />
+  <Body>
+    <Convert Type=""System.Index"" Method=""System.Index op_Implicit(Int32)"">
+      <Operand>
+        <Constant Type=""System.Int32"" Value=""1"" />
+      </Operand>
+    </Convert>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_EDDE_8041();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EDDE_8041() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_F139_7F81()
+        {
+            // (Expression<Func<Index>>)(() => ^1)
+            var actual = GetDebugView(@"(Expression<Func<Index>>)(() => ^1)");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Index]"">
+  <Parameters />
+  <Body>
+    <New Type=""System.Index"" Constructor=""Void .ctor(Int32, Boolean)"">
+      <Arguments>
+        <Constant Type=""System.Int32"" Value=""1"" />
+        <Constant Type=""System.Boolean"" Value=""true"" />
+      </Arguments>
+    </New>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_F139_7F81();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F139_7F81() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_7E29_67F2()
+        {
+            // (Expression<Func<Range>>)(() => 1..2)
+            var actual = GetDebugView(@"(Expression<Func<Range>>)(() => 1..2)");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Range]"">
+  <Parameters />
+  <Body>
+    <New Type=""System.Range"" Constructor=""Void .ctor(System.Index, System.Index)"">
+      <Arguments>
+        <Convert Type=""System.Index"" Method=""System.Index op_Implicit(Int32)"">
+          <Operand>
+            <Constant Type=""System.Int32"" Value=""1"" />
+          </Operand>
+        </Convert>
+        <Convert Type=""System.Index"" Method=""System.Index op_Implicit(Int32)"">
+          <Operand>
+            <Constant Type=""System.Int32"" Value=""2"" />
+          </Operand>
+        </Convert>
+      </Arguments>
+    </New>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7E29_67F2();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7E29_67F2() => INCONCLUSIVE(); }
+
     }
 
 /*
@@ -10141,6 +10217,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6D08_923C() => OK();
             public override void CompilerTest_205E_7D00() => OK();
             public override void CompilerTest_A00C_0847() => OK();
+            public override void CompilerTest_EDDE_8041() => OK();
+            public override void CompilerTest_F139_7F81() => OK();
+            public override void CompilerTest_7E29_67F2() => OK();
         }
     }
 }

@@ -332,6 +332,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6D08_923C() => OK();
             public override void CompilerTest_205E_7D00() => OK();
             public override void CompilerTest_A00C_0847() => OK();
+
+            // Index
+            public override void CompilerTest_EDDE_8041() => OK(); // NB: These were lowered in C# 8.0, so just seeing NewExpression nodes.
+            public override void CompilerTest_F139_7F81() => OK(); // NB: See above.
+
+            // Range
+            public override void CompilerTest_7E29_67F2() => OK(); // NB: See above.
         }
     }
 }

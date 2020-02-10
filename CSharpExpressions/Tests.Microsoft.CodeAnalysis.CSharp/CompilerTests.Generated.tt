@@ -358,6 +358,13 @@ var exprs = new[]
     "(Expression<Action<int>>)(x => { switch (x) { default: break; } })",
     "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { } })",
     "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { default: break; } })",
+
+    // Index
+    "(Expression<Func<Index>>)(() => 1)",
+    "(Expression<Func<Index>>)(() => ^1)",
+
+    // Range
+    "(Expression<Func<Range>>)(() => 1..2)",
 };
 #>
 <#
