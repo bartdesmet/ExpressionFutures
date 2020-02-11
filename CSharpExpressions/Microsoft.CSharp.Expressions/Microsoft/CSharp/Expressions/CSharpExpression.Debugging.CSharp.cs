@@ -1791,39 +1791,24 @@ namespace Microsoft.CSharp.Expressions
 
         private static ExpressionType ToExpressionType(CSharpExpressionType type)
         {
-            switch (type)
+            return type switch
             {
-                case CSharpExpressionType.Assign:
-                    return ExpressionType.Assign;
-                case CSharpExpressionType.AddAssign:
-                    return ExpressionType.AddAssign;
-                case CSharpExpressionType.AndAssign:
-                    return ExpressionType.AndAssign;
-                case CSharpExpressionType.DivideAssign:
-                    return ExpressionType.DivideAssign;
-                case CSharpExpressionType.ExclusiveOrAssign:
-                    return ExpressionType.ExclusiveOrAssign;
-                case CSharpExpressionType.LeftShiftAssign:
-                    return ExpressionType.LeftShiftAssign;
-                case CSharpExpressionType.ModuloAssign:
-                    return ExpressionType.ModuloAssign;
-                case CSharpExpressionType.MultiplyAssign:
-                    return ExpressionType.MultiplyAssign;
-                case CSharpExpressionType.OrAssign:
-                    return ExpressionType.OrAssign;
-                case CSharpExpressionType.RightShiftAssign:
-                    return ExpressionType.RightShiftAssign;
-                case CSharpExpressionType.SubtractAssign:
-                    return ExpressionType.SubtractAssign;
-                case CSharpExpressionType.AddAssignChecked:
-                    return ExpressionType.AddAssignChecked;
-                case CSharpExpressionType.MultiplyAssignChecked:
-                    return ExpressionType.MultiplyAssignChecked;
-                case CSharpExpressionType.SubtractAssignChecked:
-                    return ExpressionType.SubtractAssignChecked;
-                default:
-                    throw new InvalidOperationException();
-            }
+                CSharpExpressionType.Assign => ExpressionType.Assign,
+                CSharpExpressionType.AddAssign => ExpressionType.AddAssign,
+                CSharpExpressionType.AndAssign => ExpressionType.AndAssign,
+                CSharpExpressionType.DivideAssign => ExpressionType.DivideAssign,
+                CSharpExpressionType.ExclusiveOrAssign => ExpressionType.ExclusiveOrAssign,
+                CSharpExpressionType.LeftShiftAssign => ExpressionType.LeftShiftAssign,
+                CSharpExpressionType.ModuloAssign => ExpressionType.ModuloAssign,
+                CSharpExpressionType.MultiplyAssign => ExpressionType.MultiplyAssign,
+                CSharpExpressionType.OrAssign => ExpressionType.OrAssign,
+                CSharpExpressionType.RightShiftAssign => ExpressionType.RightShiftAssign,
+                CSharpExpressionType.SubtractAssign => ExpressionType.SubtractAssign,
+                CSharpExpressionType.AddAssignChecked => ExpressionType.AddAssignChecked,
+                CSharpExpressionType.MultiplyAssignChecked => ExpressionType.MultiplyAssignChecked,
+                CSharpExpressionType.SubtractAssignChecked => ExpressionType.SubtractAssignChecked,
+                _ => throw new InvalidOperationException(),
+            };
         }
     }
 
