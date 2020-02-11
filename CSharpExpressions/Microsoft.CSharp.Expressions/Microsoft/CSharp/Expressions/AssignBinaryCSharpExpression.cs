@@ -156,39 +156,24 @@ namespace Microsoft.CSharp.Expressions
 
         internal static BinaryExpression FunctionalOp(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method)
         {
-            switch (binaryType)
+            return binaryType switch
             {
-                case CSharpExpressionType.Assign:
-                    return Expression.Assign(left, right);
-                case CSharpExpressionType.AddAssign:
-                    return Expression.Add(left, right, method);
-                case CSharpExpressionType.AndAssign:
-                    return Expression.And(left, right, method);
-                case CSharpExpressionType.DivideAssign:
-                    return Expression.Divide(left, right, method);
-                case CSharpExpressionType.ExclusiveOrAssign:
-                    return Expression.ExclusiveOr(left, right, method);
-                case CSharpExpressionType.LeftShiftAssign:
-                    return Expression.LeftShift(left, right, method);
-                case CSharpExpressionType.ModuloAssign:
-                    return Expression.Modulo(left, right, method);
-                case CSharpExpressionType.MultiplyAssign:
-                    return Expression.Multiply(left, right, method);
-                case CSharpExpressionType.OrAssign:
-                    return Expression.Or(left, right, method);
-                case CSharpExpressionType.RightShiftAssign:
-                    return Expression.RightShift(left, right, method);
-                case CSharpExpressionType.SubtractAssign:
-                    return Expression.Subtract(left, right, method);
-                case CSharpExpressionType.AddAssignChecked:
-                    return Expression.AddChecked(left, right, method);
-                case CSharpExpressionType.MultiplyAssignChecked:
-                    return Expression.MultiplyChecked(left, right, method);
-                case CSharpExpressionType.SubtractAssignChecked:
-                    return Expression.SubtractChecked(left, right, method);
-            }
-
-            throw LinqError.UnhandledBinary(binaryType);
+                CSharpExpressionType.Assign => Expression.Assign(left, right),
+                CSharpExpressionType.AddAssign => Expression.Add(left, right, method),
+                CSharpExpressionType.AndAssign => Expression.And(left, right, method),
+                CSharpExpressionType.DivideAssign => Expression.Divide(left, right, method),
+                CSharpExpressionType.ExclusiveOrAssign => Expression.ExclusiveOr(left, right, method),
+                CSharpExpressionType.LeftShiftAssign => Expression.LeftShift(left, right, method),
+                CSharpExpressionType.ModuloAssign => Expression.Modulo(left, right, method),
+                CSharpExpressionType.MultiplyAssign => Expression.Multiply(left, right, method),
+                CSharpExpressionType.OrAssign => Expression.Or(left, right, method),
+                CSharpExpressionType.RightShiftAssign => Expression.RightShift(left, right, method),
+                CSharpExpressionType.SubtractAssign => Expression.Subtract(left, right, method),
+                CSharpExpressionType.AddAssignChecked => Expression.AddChecked(left, right, method),
+                CSharpExpressionType.MultiplyAssignChecked => Expression.MultiplyChecked(left, right, method),
+                CSharpExpressionType.SubtractAssignChecked => Expression.SubtractChecked(left, right, method),
+                _ => throw LinqError.UnhandledBinary(binaryType),
+            };
         }
 
         internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
@@ -289,39 +274,24 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new <see cref="AssignBinaryCSharpExpression"/> instance representing the binary assignment.</returns>
         public static AssignBinaryCSharpExpression MakeBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
-            switch (binaryType)
+            return binaryType switch
             {
-                case CSharpExpressionType.Assign:
-                    return Assign(left, right);
-                case CSharpExpressionType.AddAssign:
-                    return AddAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.AndAssign:
-                    return AndAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.DivideAssign:
-                    return DivideAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.ExclusiveOrAssign:
-                    return ExclusiveOrAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.LeftShiftAssign:
-                    return LeftShiftAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.ModuloAssign:
-                    return ModuloAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.MultiplyAssign:
-                    return MultiplyAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.OrAssign:
-                    return OrAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.RightShiftAssign:
-                    return RightShiftAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.SubtractAssign:
-                    return SubtractAssign(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.AddAssignChecked:
-                    return AddAssignChecked(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.MultiplyAssignChecked:
-                    return MultiplyAssignChecked(left, right, method, leftConversion, finalConversion);
-                case CSharpExpressionType.SubtractAssignChecked:
-                    return SubtractAssignChecked(left, right, method, leftConversion, finalConversion);
-            }
-
-            throw LinqError.UnhandledBinary(binaryType);
+                CSharpExpressionType.Assign => Assign(left, right),
+                CSharpExpressionType.AddAssign => AddAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.AndAssign => AndAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.DivideAssign => DivideAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.ExclusiveOrAssign => ExclusiveOrAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.LeftShiftAssign => LeftShiftAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.ModuloAssign => ModuloAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.MultiplyAssign => MultiplyAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.OrAssign => OrAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.RightShiftAssign => RightShiftAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.SubtractAssign => SubtractAssign(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.AddAssignChecked => AddAssignChecked(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.MultiplyAssignChecked => MultiplyAssignChecked(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.SubtractAssignChecked => SubtractAssignChecked(left, right, method, leftConversion, finalConversion),
+                _ => throw LinqError.UnhandledBinary(binaryType),
+            };
         }
 
         private static AssignBinaryCSharpExpression MakeBinaryAssignCore(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)

@@ -178,27 +178,18 @@ namespace Microsoft.CSharp.Expressions
 
         private static Expression GetConstantOne(Type type)
         {
-            switch (type.GetNonNullableType().GetTypeCode())
+            return (type.GetNonNullableType().GetTypeCode()) switch
             {
-                case TypeCode.UInt16:
-                    return Expression.Constant((ushort)1, type);
-                case TypeCode.UInt32:
-                    return Expression.Constant((uint)1, type);
-                case TypeCode.UInt64:
-                    return Expression.Constant((ulong)1, type);
-                case TypeCode.Int16:
-                    return Expression.Constant((short)1, type);
-                case TypeCode.Int32:
-                    return Expression.Constant(1, type); // NB: We don't have a nullable cached instance
-                case TypeCode.Int64:
-                    return Expression.Constant((long)1, type);
-                case TypeCode.Single:
-                    return Expression.Constant((float)1, type);
-                case TypeCode.Double:
-                    return Expression.Constant((double)1, type);
-                default:
-                    throw ContractUtils.Unreachable;
-            }
+                TypeCode.UInt16 => Expression.Constant((ushort)1, type),
+                TypeCode.UInt32 => Expression.Constant((uint)1, type),
+                TypeCode.UInt64 => Expression.Constant((ulong)1, type),
+                TypeCode.Int16 => Expression.Constant((short)1, type),
+                TypeCode.Int32 => Expression.Constant(1, type),// NB: We don't have a nullable cached instance
+                TypeCode.Int64 => Expression.Constant((long)1, type),
+                TypeCode.Single => Expression.Constant((float)1, type),
+                TypeCode.Double => Expression.Constant((double)1, type),
+                _ => throw ContractUtils.Unreachable,
+            };
         }
 
         internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
@@ -282,27 +273,18 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new <see cref="AssignUnaryCSharpExpression"/> instance representing the unary assignment.</returns>
         public static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
         {
-            switch (unaryType)
+            return unaryType switch
             {
-                case CSharpExpressionType.PreIncrementAssign:
-                    return PreIncrementAssign(operand, method);
-                case CSharpExpressionType.PreIncrementAssignChecked:
-                    return PreIncrementAssignChecked(operand, method);
-                case CSharpExpressionType.PreDecrementAssign:
-                    return PreDecrementAssign(operand, method);
-                case CSharpExpressionType.PreDecrementAssignChecked:
-                    return PreDecrementAssignChecked(operand, method);
-                case CSharpExpressionType.PostIncrementAssign:
-                    return PostIncrementAssign(operand, method);
-                case CSharpExpressionType.PostIncrementAssignChecked:
-                    return PostIncrementAssignChecked(operand, method);
-                case CSharpExpressionType.PostDecrementAssign:
-                    return PostDecrementAssign(operand, method);
-                case CSharpExpressionType.PostDecrementAssignChecked:
-                    return PostDecrementAssignChecked(operand, method);
-            }
-
-            throw LinqError.UnhandledUnary(unaryType);
+                CSharpExpressionType.PreIncrementAssign => PreIncrementAssign(operand, method),
+                CSharpExpressionType.PreIncrementAssignChecked => PreIncrementAssignChecked(operand, method),
+                CSharpExpressionType.PreDecrementAssign => PreDecrementAssign(operand, method),
+                CSharpExpressionType.PreDecrementAssignChecked => PreDecrementAssignChecked(operand, method),
+                CSharpExpressionType.PostIncrementAssign => PostIncrementAssign(operand, method),
+                CSharpExpressionType.PostIncrementAssignChecked => PostIncrementAssignChecked(operand, method),
+                CSharpExpressionType.PostDecrementAssign => PostDecrementAssign(operand, method),
+                CSharpExpressionType.PostDecrementAssignChecked => PostDecrementAssignChecked(operand, method),
+                _ => throw LinqError.UnhandledUnary(unaryType),
+            };
         }
 
         private static AssignUnaryCSharpExpression MakeUnaryAssignCore(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
