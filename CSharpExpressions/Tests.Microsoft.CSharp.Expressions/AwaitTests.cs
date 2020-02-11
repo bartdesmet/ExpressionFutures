@@ -64,7 +64,7 @@ namespace Tests
             var expr = CSharpExpression.Await(e);
             Assert.AreEqual(CSharpExpressionType.Await, expr.CSharpNodeType);
             Assert.AreSame(e, expr.Operand);
-            Assert.IsNotNull(expr.GetAwaiterMethod);
+            Assert.IsNotNull(expr.Info);
         }
 
         [TestMethod]
@@ -72,10 +72,10 @@ namespace Tests
         {
             var e = Expression.Default(typeof(Task<int>));
             var expr = CSharpExpression.Await(e);
-            Assert.AreSame(expr, expr.Update(e));
+            Assert.AreSame(expr, expr.Update(e, expr.Info));
 
             var f = Expression.Default(typeof(Task<int>));
-            var upd = expr.Update(f);
+            var upd = expr.Update(f, expr.Info);
             Assert.AreNotSame(upd, expr);
             Assert.AreSame(f, upd.Operand);
         }

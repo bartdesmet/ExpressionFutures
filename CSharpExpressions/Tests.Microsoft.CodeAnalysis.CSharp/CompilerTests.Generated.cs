@@ -3194,7 +3194,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C576_1024() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_0FFA_7AF2()
+        public void CompilerTest_0FFA_9FD5()
         {
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t)
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t)");
@@ -3211,7 +3211,26 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
           </Parameters>
           <Body>
-            <CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+            <CSharpAwait Type=""System.Int32"">
+              <Info>
+                <StaticAwaitInfo IsCompleted=""Boolean IsCompleted"" GetResult=""Int32 GetResult()"">
+                  <GetAwaiter>
+                    <Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32]]"">
+                      <Parameters>
+                        <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""1"" Name=""p"" />
+                      </Parameters>
+                      <Body>
+                        <Call Type=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32]"" Method=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+                          <Object>
+                            <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""1"" Name=""p"" />
+                          </Object>
+                          <Arguments />
+                        </Call>
+                      </Body>
+                    </Lambda>
+                  </GetAwaiter>
+                </StaticAwaitInfo>
+              </Info>
               <Operand>
                 <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
               </Operand>
@@ -3226,13 +3245,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_0FFA_7AF2();
+            Verify.CompilerTest_0FFA_9FD5();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_7AF2() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0FFA_9FD5() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_83AE_26E4()
+        public void CompilerTest_83AE_58B0()
         {
             // (Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))
             var actual = GetDebugView(@"(Expression<Func<Task<int>, Task<int>>>)(async t => await t.ConfigureAwait(false))");
@@ -3249,7 +3268,26 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" Name=""t"" />
           </Parameters>
           <Body>
-            <CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""ConfiguredTaskAwaiter GetAwaiter()"">
+            <CSharpAwait Type=""System.Int32"">
+              <Info>
+                <StaticAwaitInfo IsCompleted=""Boolean IsCompleted"" GetResult=""Int32 GetResult()"">
+                  <GetAwaiter>
+                    <Lambda Type=""System.Func`2[System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32],System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1+ConfiguredTaskAwaiter[System.Int32]]"">
+                      <Parameters>
+                        <Parameter Type=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32]"" Id=""1"" Name=""p"" />
+                      </Parameters>
+                      <Body>
+                        <Call Type=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1+ConfiguredTaskAwaiter[System.Int32]"" Method=""ConfiguredTaskAwaiter GetAwaiter()"">
+                          <Object>
+                            <Parameter Type=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32]"" Id=""1"" Name=""p"" />
+                          </Object>
+                          <Arguments />
+                        </Call>
+                      </Body>
+                    </Lambda>
+                  </GetAwaiter>
+                </StaticAwaitInfo>
+              </Info>
               <Operand>
                 <Call Type=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32]"" Method=""System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1[System.Int32] ConfigureAwait(Boolean)"">
                   <Object>
@@ -3271,13 +3309,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_83AE_26E4();
+            Verify.CompilerTest_83AE_58B0();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_26E4() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_83AE_58B0() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_4DC5_243C()
+        public void CompilerTest_4DC5_94D3()
         {
             // (Expression<Func<dynamic, Task<dynamic>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<dynamic>>>)(async d => await d)");
@@ -3294,7 +3332,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
           </Parameters>
           <Body>
-            <CSharpAwait Type=""System.Object"" IsDynamic=""true"">
+            <CSharpAwait Type=""System.Object"">
+              <Info>
+                <DynamicAwaitInfo ResultDiscarded=""false"" Context=""Expressions"" />
+              </Info>
               <Operand>
                 <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
               </Operand>
@@ -3309,13 +3350,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_4DC5_243C();
+            Verify.CompilerTest_4DC5_94D3();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4DC5_243C() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4DC5_94D3() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_5DFD_243C()
+        public void CompilerTest_5DFD_94D3()
         {
             // (Expression<Func<dynamic, Task<object>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<object>>>)(async d => await d)");
@@ -3332,7 +3373,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
           </Parameters>
           <Body>
-            <CSharpAwait Type=""System.Object"" IsDynamic=""true"">
+            <CSharpAwait Type=""System.Object"">
+              <Info>
+                <DynamicAwaitInfo ResultDiscarded=""false"" Context=""Expressions"" />
+              </Info>
               <Operand>
                 <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
               </Operand>
@@ -3347,13 +3391,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_5DFD_243C();
+            Verify.CompilerTest_5DFD_94D3();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5DFD_243C() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5DFD_94D3() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_1A0E_F439()
+        public void CompilerTest_1A0E_037C()
         {
             // (Expression<Func<dynamic, Task<int>>>)(async d => await d)
             var actual = GetDebugView(@"(Expression<Func<dynamic, Task<int>>>)(async d => await d)");
@@ -3372,7 +3416,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <CSharpDynamicConvert Type=""System.Int32"" Context=""Expressions"">
               <Expression>
-                <CSharpAwait Type=""System.Object"" IsDynamic=""true"">
+                <CSharpAwait Type=""System.Object"">
+                  <Info>
+                    <DynamicAwaitInfo ResultDiscarded=""false"" Context=""Expressions"" />
+                  </Info>
                   <Operand>
                     <Parameter Type=""System.Object"" Id=""0"" Name=""d"" />
                   </Operand>
@@ -3389,10 +3436,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_1A0E_F439();
+            Verify.CompilerTest_1A0E_037C();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_F439() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1A0E_037C() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_B340_BC70()
@@ -10136,11 +10183,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_711C_7F96() => OK();
             public override void CompilerTest_E835_F8BD() => OK();
             public override void CompilerTest_C576_1024() => OK();
-            public override void CompilerTest_0FFA_7AF2() => OK();
-            public override void CompilerTest_83AE_26E4() => OK();
-            public override void CompilerTest_4DC5_243C() => OK();
-            public override void CompilerTest_5DFD_243C() => OK();
-            public override void CompilerTest_1A0E_F439() => OK();
+            public override void CompilerTest_0FFA_9FD5() => OK();
+            public override void CompilerTest_83AE_58B0() => OK();
+            public override void CompilerTest_4DC5_94D3() => OK();
+            public override void CompilerTest_5DFD_94D3() => OK();
+            public override void CompilerTest_1A0E_037C() => OK();
             public override void CompilerTest_B340_BC70() => OK();
             public override void CompilerTest_9320_B6D2() => OK();
             public override void CompilerTest_A997_18C3() => OK();

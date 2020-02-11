@@ -140,6 +140,14 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// ArgumentException with message like "Awaitable type '{0}' should have a 'GetAwaiter' method."
+        /// </summary>
+        internal static Exception AwaitableTypeShouldHaveGetAwaiterMethod(object p0)
+        {
+            return new ArgumentException(Strings.AwaitableTypeShouldHaveGetAwaiterMethod(p0));
+        }
+
+        /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should implement 'INotifyCompletion'"
         /// </summary>
         internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object p0)
@@ -185,6 +193,38 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception AwaiterGetResultTypeInvalid(object p0)
         {
             return new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Dynamically bound await operations cannot have a 'GetAwaiter' expression."
+        /// </summary>
+        internal static Exception DynamicAwaitNoGetAwaiter()
+        {
+            return new ArgumentException(Strings.DynamicAwaitNoGetAwaiter);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Dynamically bound await operations cannot have an 'IsCompleted' property."
+        /// </summary>
+        internal static Exception DynamicAwaitNoIsCompleted()
+        {
+            return new ArgumentException(Strings.DynamicAwaitNoIsCompleted);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Dynamically bound await operations cannot have a 'GetResult' method."
+        /// </summary>
+        internal static Exception DynamicAwaitNoGetResult()
+        {
+            return new ArgumentException(Strings.DynamicAwaitNoGetResult);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'GetAwaiter' expression should have one parameter."
+        /// </summary>
+        internal static Exception GetAwaiterExpressionOneParameter()
+        {
+            return new ArgumentException(Strings.GetAwaiterExpressionOneParameter);
         }
 
         /// <summary>
@@ -619,6 +659,14 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// A string like "Awaitable type '{0}' should have a 'GetAwaiter' method."
+        /// </summary>
+        internal static string AwaitableTypeShouldHaveGetAwaiterMethod(object p0)
+        {
+            return SR.Format(SR.AwaitableTypeShouldHaveGetAwaiterMethod, p0);
+        }
+
+        /// <summary>
         /// A string like "Awaiter type '{0}' should implement 'INotifyCompletion'"
         /// </summary>
         internal static string AwaiterTypeShouldImplementINotifyCompletion(object p0)
@@ -664,6 +712,50 @@ namespace Microsoft.CSharp.Expressions
         internal static string AwaiterGetResultTypeInvalid(object p0)
         {
             return SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
+        }
+
+        /// <summary>
+        /// A string like "Dynamically bound await operations cannot have a 'GetAwaiter' expression."
+        /// </summary>
+        internal static string DynamicAwaitNoGetAwaiter
+        {
+            get
+            {
+                return SR.DynamicAwaitNoGetAwaiter;
+            }
+        }
+
+        /// <summary>
+        /// A string like "Dynamically bound await operations cannot have an 'IsCompleted' property."
+        /// </summary>
+        internal static string DynamicAwaitNoIsCompleted
+        {
+            get
+            {
+                return SR.DynamicAwaitNoIsCompleted;
+            }
+        }
+
+        /// <summary>
+        /// A string like "Dynamically bound await operations cannot have a 'GetResult' method."
+        /// </summary>
+        internal static string DynamicAwaitNoGetResult
+        {
+            get
+            {
+                return SR.DynamicAwaitNoGetResult;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The 'GetAwaiter' expression should have one parameter."
+        /// </summary>
+        internal static string GetAwaiterExpressionOneParameter
+        {
+            get
+            {
+                return SR.GetAwaiterExpressionOneParameter;
+            }
         }
 
         /// <summary>
@@ -1000,12 +1092,17 @@ namespace System
         public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters";
         public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic";
         public const string GetAwaiterShouldReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
+        public const string AwaitableTypeShouldHaveGetAwaiterMethod = "Awaitable type '{0}' should have a 'GetAwaiter' method.";
         public const string AwaiterTypeShouldImplementINotifyCompletion = "Awaiter type '{0}' should implement 'INotifyCompletion'";
         public const string AwaiterTypeShouldHaveIsCompletedProperty = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor";
         public const string AwaiterIsCompletedShouldReturnBool = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'";
         public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters";
         public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method";
         public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type";
+        public const string DynamicAwaitNoGetAwaiter = "Dynamically bound await operations cannot have a 'GetAwaiter' expression.";
+        public const string DynamicAwaitNoIsCompleted = "Dynamically bound await operations cannot have an 'IsCompleted' property.";
+        public const string DynamicAwaitNoGetResult = "Dynamically bound await operations cannot have a 'GetResult' method.";
+        public const string GetAwaiterExpressionOneParameter = "The 'GetAwaiter' expression should have one parameter.";
         public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions";
         public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression";
         public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'";

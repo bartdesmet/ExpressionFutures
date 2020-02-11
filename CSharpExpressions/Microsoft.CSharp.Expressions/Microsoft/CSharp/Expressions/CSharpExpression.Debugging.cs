@@ -97,28 +97,44 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitAwait(AwaitCSharpExpression node)
         {
-            var args = new List<object>();
-
-            if (node.GetAwaiterMethod != null)
+            var args = new List<object>
             {
-                args.Add(new XAttribute(nameof(AwaitCSharpExpression.GetAwaiterMethod), node.GetAwaiterMethod));
-            }
-            else
-            {
-                if (node is DynamicAwaitCSharpExpression dynamic)
-                {
-                    args.Add(new XAttribute("IsDynamic", true));
-
-                    if (dynamic.Context != null)
-                    {
-                        args.Add(new XAttribute(nameof(dynamic.Context), dynamic.Context));
-                    }
-                }
-            }
-
-            args.Add(new XElement(nameof(node.Operand), Visit(node.Operand)));
+                new XElement(nameof(node.Info), Visit(node.Info)),
+                new XElement(nameof(node.Operand), Visit(node.Operand))
+            };
 
             return Push(node, args);
+        }
+
+        protected internal override AwaitInfo VisitAwaitInfo(StaticAwaitInfo node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.GetAwaiter), Visit(node.GetAwaiter)),
+                new XAttribute(nameof(node.IsCompleted), node.IsCompleted),
+                new XAttribute(nameof(node.GetResult), node.GetResult)
+            };
+
+            _nodes.Push(new XElement(nameof(StaticAwaitInfo), args));
+
+            return node;
+        }
+
+        protected internal override AwaitInfo VisitAwaitInfo(DynamicAwaitInfo node)
+        {
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.ResultDiscarded), node.ResultDiscarded)
+            };
+
+            if (node.Context != null)
+            {
+                args.Add(new XAttribute(nameof(node.Context), node.Context));
+            }
+
+            _nodes.Push(new XElement(nameof(DynamicAwaitInfo), args));
+
+            return node;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -759,6 +775,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(ConditionalReceiver node)
         {
             VisitConditionalReceiver(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(AwaitInfo node)
+        {
+            VisitAwaitInfo(node);
             return _nodes.Pop();
         }
 

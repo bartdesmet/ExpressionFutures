@@ -141,11 +141,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_C576_1024() => OK();
 
             // Async/await
-            public override void CompilerTest_0FFA_7AF2() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
-            public override void CompilerTest_83AE_26E4() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
-            public override void CompilerTest_4DC5_243C() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
-            public override void CompilerTest_5DFD_243C() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
-            public override void CompilerTest_1A0E_F439() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
+            public override void CompilerTest_0FFA_9FD5() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
+            public override void CompilerTest_83AE_58B0() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
+            public override void CompilerTest_4DC5_94D3() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
+            public override void CompilerTest_5DFD_94D3() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
+            public override void CompilerTest_1A0E_037C() => OK(); // DESIGN: Artificial Lambda/Invoke wrapper returned by AsyncLambda
 
             // Conditional access
             public override void CompilerTest_B340_BC70() => OK();

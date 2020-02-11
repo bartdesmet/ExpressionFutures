@@ -162,7 +162,7 @@ namespace Microsoft.CSharp.Expressions
 
         public System.Boolean CanReduce => _node.CanReduce;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
-        public System.Reflection.MethodInfo GetAwaiterMethod => _node.GetAwaiterMethod;
+        public Microsoft.CSharp.Expressions.AwaitInfo Info => _node.Info;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Operand => _node.Operand;
         public System.Type Type => _node.Type;
@@ -606,32 +606,6 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
-        public System.Type Type => _node.Type;
-    }
-
-    [DebuggerTypeProxy(typeof(DynamicAwaitCSharpExpressionProxy))]
-    partial class DynamicAwaitCSharpExpression
-    {
-    }
-    
-    [ExcludeFromCodeCoverage]
-    internal class DynamicAwaitCSharpExpressionProxy
-    {
-        private readonly DynamicAwaitCSharpExpression _node;
-
-        public DynamicAwaitCSharpExpressionProxy(DynamicAwaitCSharpExpression node)
-        {
-            _node = node;
-        }
-
-        public string DebugView => _node.DebugView;
-
-        public System.Boolean CanReduce => _node.CanReduce;
-        public System.Type Context => _node.Context;
-        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
-        public System.Reflection.MethodInfo GetAwaiterMethod => _node.GetAwaiterMethod;
-        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
-        public System.Linq.Expressions.Expression Operand => _node.Operand;
         public System.Type Type => _node.Type;
     }
 

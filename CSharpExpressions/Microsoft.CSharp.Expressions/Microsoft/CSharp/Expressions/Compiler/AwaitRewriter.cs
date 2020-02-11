@@ -145,10 +145,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 _awaitInBlock.Peek().Value = true;
             }
 
-            var getAwaiter = node.ReduceGetAwaiter();
+            var getAwaiter = node.Info.ReduceGetAwaiter(node.Operand);
             var awaiterVar = _variableFactory(getAwaiter.Type, "__awaiter");
-            var isCompleted = node.ReduceIsCompleted(awaiterVar);
-            var getResult = node.ReduceGetResult(awaiterVar);
+            var isCompleted = node.Info.ReduceIsCompleted(awaiterVar);
+            var getResult = node.Info.ReduceGetResult(awaiterVar);
 
             if (getResult.Type != typeof(void))
             {

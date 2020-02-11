@@ -77,7 +77,26 @@ namespace Tests
         }
 
         private Expression expr4 = CSharpExpression.Await(Expression.Default(typeof(Task<int>)));
-        private string dbg4 = @"<CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+        private string dbg4 = @"<CSharpAwait Type=""System.Int32"">
+  <Info>
+    <StaticAwaitInfo IsCompleted=""Boolean IsCompleted"" GetResult=""Int32 GetResult()"">
+      <GetAwaiter>
+        <Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32]"" Method=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+              <Object>
+                <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </GetAwaiter>
+    </StaticAwaitInfo>
+  </Info>
   <Operand>
     <Default Type=""System.Threading.Tasks.Task`1[System.Int32]"" />
   </Operand>
@@ -90,7 +109,10 @@ namespace Tests
         }
 
         private Expression expr5 = DynamicCSharpExpression.DynamicAwait(Expression.Default(typeof(Task<int>)), false, typeof(object));
-        private string dbg5 = @"<CSharpAwait Type=""System.Object"" IsDynamic=""true"" Context=""System.Object"">
+        private string dbg5 = @"<CSharpAwait Type=""System.Object"">
+  <Info>
+    <DynamicAwaitInfo ResultDiscarded=""false"" Context=""System.Object"" />
+  </Info>
   <Operand>
     <Default Type=""System.Threading.Tasks.Task`1[System.Int32]"" />
   </Operand>
@@ -106,7 +128,26 @@ namespace Tests
         private string dbg6 = @"<CSharpAsyncLambda Type=""System.Func`1[System.Threading.Tasks.Task`1[System.Int32]]"">
   <Parameters />
   <Body>
-    <CSharpAwait Type=""System.Int32"" GetAwaiterMethod=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+    <CSharpAwait Type=""System.Int32"">
+      <Info>
+        <StaticAwaitInfo IsCompleted=""Boolean IsCompleted"" GetResult=""Int32 GetResult()"">
+          <GetAwaiter>
+            <Lambda Type=""System.Func`2[System.Threading.Tasks.Task`1[System.Int32],System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32]]"">
+              <Parameters>
+                <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" />
+              </Parameters>
+              <Body>
+                <Call Type=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32]"" Method=""System.Runtime.CompilerServices.TaskAwaiter`1[System.Int32] GetAwaiter()"">
+                  <Object>
+                    <Parameter Type=""System.Threading.Tasks.Task`1[System.Int32]"" Id=""0"" />
+                  </Object>
+                  <Arguments />
+                </Call>
+              </Body>
+            </Lambda>
+          </GetAwaiter>
+        </StaticAwaitInfo>
+      </Info>
       <Operand>
         <Default Type=""System.Threading.Tasks.Task`1[System.Int32]"" />
       </Operand>

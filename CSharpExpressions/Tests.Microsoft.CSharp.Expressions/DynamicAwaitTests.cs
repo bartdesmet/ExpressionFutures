@@ -29,7 +29,17 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.Await, expr.CSharpNodeType);
             Assert.AreSame(e, expr.Operand);
             Assert.AreEqual(typeof(object), expr.Type);
-            Assert.IsNull(expr.GetAwaiterMethod);
+            Assert.IsTrue(expr.Info.IsDynamic);
+
+            if (expr.Info is DynamicAwaitInfo d)
+            {
+                Assert.IsNull(d.Context);
+                Assert.IsFalse(d.ResultDiscarded);
+            }
+            else
+            {
+                Assert.Fail();
+            }
         }
 
         [TestMethod]
@@ -40,7 +50,17 @@ namespace Tests
             Assert.AreEqual(CSharpExpressionType.Await, expr.CSharpNodeType);
             Assert.AreSame(e, expr.Operand);
             Assert.AreEqual(typeof(void), expr.Type);
-            Assert.IsNull(expr.GetAwaiterMethod);
+            Assert.IsTrue(expr.Info.IsDynamic);
+
+            if (expr.Info is DynamicAwaitInfo d)
+            {
+                Assert.IsNull(d.Context);
+                Assert.IsTrue(d.ResultDiscarded);
+            }
+            else
+            {
+                Assert.Fail();
+            }
         }
 
         [TestMethod]
@@ -48,10 +68,10 @@ namespace Tests
         {
             var e = Expression.Default(typeof(Task<int>));
             var expr = DynamicCSharpExpression.DynamicAwait(e);
-            Assert.AreSame(expr, expr.Update(e));
+            Assert.AreSame(expr, expr.Update(e, expr.Info));
 
             var f = Expression.Default(typeof(Task<int>));
-            var upd = expr.Update(f);
+            var upd = expr.Update(f, expr.Info);
             Assert.AreNotSame(upd, expr);
             Assert.AreSame(f, upd.Operand);
         }

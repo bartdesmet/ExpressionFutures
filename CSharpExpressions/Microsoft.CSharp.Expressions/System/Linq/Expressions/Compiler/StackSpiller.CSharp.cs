@@ -18,7 +18,7 @@ namespace System.Linq.Expressions.Compiler
 
             // NB: We always spill the stack for await, so unconditionally rewrite.
 
-            var res = cr.Finish(node.Rewrite(cr[0]));
+            var res = cr.Finish(node.Rewrite(cr[0], node.Info));
 
             return new Result(RewriteAction.SpillStack, res.Node);
         }

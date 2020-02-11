@@ -88,6 +88,12 @@
             Some nodes have special binders for their contents (like Blocks)
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.GetRequiredBinder(Microsoft.CodeAnalysis.SyntaxNode)">
+            <summary>
+            Gets a binder for a node that must be not null, and asserts
+            if it is not.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.GetDeclaredLocalsForScope(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
             Get locals declared immediately in scope designated by the node.

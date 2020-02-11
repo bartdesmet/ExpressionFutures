@@ -6,9 +6,7 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using static System.Linq.Expressions.ExpressionStubs;
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -17,11 +15,10 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public partial class AwaitCSharpExpression : UnaryCSharpExpression
     {
-        internal AwaitCSharpExpression(Expression operand, MethodInfo getAwaiterMethod, Type type)
+        internal AwaitCSharpExpression(Expression operand, AwaitInfo info)
             : base(operand)
         {
-            GetAwaiterMethod = getAwaiterMethod;
-            Type = type;
+            Info = info;
         }
 
         /// <summary>
@@ -34,13 +31,12 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public override Type Type { get; }
+        public override Type Type => Info.Type;
 
         /// <summary>
         /// Gets the GetAwaiter method used to await the asynchronous operation.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter", Justification = "Get a waiter :-)")]
-        public MethodInfo GetAwaiterMethod { get; }
+        public AwaitInfo Info { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -57,25 +53,27 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
         /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result.</param>
+        /// <param name="info">The <see cref="AwaitCSharpExpression.Info"/> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public AwaitCSharpExpression Update(Expression operand)
+        public AwaitCSharpExpression Update(Expression operand, AwaitInfo info)
         {
-            if (operand == Operand)
+            if (operand == Operand && info == Info)
             {
                 return this;
             }
 
-            return Rewrite(operand);
+            return Rewrite(operand, info);
         }
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children.
         /// </summary>
         /// <param name="operand">The <see cref="UnaryCSharpExpression.Operand" /> property of the result.</param>
+        /// <param name="info">The <see cref="AwaitCSharpExpression.Info"/> property of the result.</param>
         /// <returns>An expression with the updated children.</returns>
-        protected internal virtual AwaitCSharpExpression Rewrite(Expression operand)
+        protected internal virtual AwaitCSharpExpression Rewrite(Expression operand, AwaitInfo info)
         {
-            return CSharpExpression.Await(operand, GetAwaiterMethod);
+            return CSharpExpression.Await(operand, info);
         }
 
         /// <summary>
@@ -99,34 +97,6 @@ namespace Microsoft.CSharp.Expressions
                 return false;
             }
         }
-
-        internal virtual Expression ReduceGetAwaiter()
-        {
-            Expression getAwaiterCall = GetAwaiterMethod.IsStatic ? Expression.Call(GetAwaiterMethod, Operand) : Expression.Call(Operand, GetAwaiterMethod);
-            return getAwaiterCall;
-        }
-
-        internal virtual Expression ReduceGetResult(Expression awaiter)
-        {
-            var getResultMethod = GetGetResult(awaiter.Type);
-            var getResultCall = Expression.Call(awaiter, getResultMethod);
-            return getResultCall;
-        }
-
-        internal virtual Expression ReduceIsCompleted(Expression awaiter)
-        {
-            return Expression.Property(awaiter, "IsCompleted");
-        }
-
-        internal static MethodInfo GetGetResult(Type awaiterType)
-        {
-            return awaiterType.GetNonGenericMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
-        }
-
-        internal static MethodInfo GetGetAwaiter(Type awaiterType)
-        {
-            return awaiterType.GetNonGenericMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
-        }
     }
 
     partial class CSharpExpression
@@ -138,7 +108,11 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression Await(Expression operand)
         {
-            return Await(operand, null);
+            ContractUtils.RequiresNotNull(operand, nameof(operand));
+
+            RequiresCanRead(operand, nameof(operand));
+
+            return Await(operand, AwaitInfo(operand.Type));
         }
 
         /// <summary>
@@ -151,115 +125,31 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AwaitCSharpExpression Await(Expression operand, MethodInfo getAwaiterMethod)
         {
-            // NB: This is the overload the C# compiler can bind to. Note, however, that a bound await node in Roslyn has
-            //     information about IsCompleted and GetResult as well. We can infer the same information at runtime, but
-            //     could also add an overload that has all of these.
-
             ContractUtils.RequiresNotNull(operand, nameof(operand));
 
             RequiresCanRead(operand, nameof(operand));
 
-            ValidateAwaitPattern(operand.Type, ref getAwaiterMethod, out var resultType);
-
-            return new AwaitCSharpExpression(operand, getAwaiterMethod, resultType);
+            return Await(operand, AwaitInfo(operand.Type, getAwaiterMethod));
         }
 
-        private static void ValidateAwaitPattern(Type operandType, ref MethodInfo getAwaiterMethod, out Type resultType)
+        /// <summary>
+        /// Creates an <see cref="AwaitCSharpExpression"/> that represents awaiting an asynchronous operation.
+        /// </summary>
+        /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
+        /// <param name="info">An <see cref="AwaitInfo"/> that specifies binding information for the await operation.</param>
+        /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
+        public static AwaitCSharpExpression Await(Expression operand, AwaitInfo info)
         {
-            if (getAwaiterMethod == null)
-            {
-                getAwaiterMethod = AwaitCSharpExpression.GetGetAwaiter(operandType);
-            }
+            // NB: This is the overload the C# compiler binds to.
 
-            ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
+            ContractUtils.RequiresNotNull(operand, nameof(operand));
+            ContractUtils.RequiresNotNull(info, nameof(info));
 
-            ValidateGetAwaiterMethod(operandType, getAwaiterMethod);
-            ValidateAwaiterType(getAwaiterMethod.ReturnType, out resultType);
-        }
+            RequiresCanRead(operand, nameof(operand));
 
-        private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
-        {
-            ValidateMethodInfo(getAwaiterMethod);
+            info.RequiresCanBind(operand);
 
-            // NB: We don't check whether the name of the method is GetAwaiter, just like we don't check the name of
-            //     operator op_* methods in Binary and Unary node factories in LINQ. We could tighten this, but there
-            //     is no harm in letting an advanced used specify another method that obeys to the awaiter pattern
-            //     other than the predescribed method name. The C# compiler will always specify the MethodInfo in the
-            //     emitted factory call.
-
-            var getAwaiterParams = getAwaiterMethod.GetParametersCached();
-
-            if (getAwaiterMethod.IsStatic)
-            {
-                if (getAwaiterParams.Length != 1)
-                {
-                    throw Error.GetAwaiterShouldTakeZeroParameters();
-                }
-
-                var firstParam = getAwaiterParams[0];
-                if (!TypeUtils.AreReferenceAssignable(firstParam.ParameterType, operandType))
-                {
-                    throw LinqError.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType);
-                }
-            }
-            else
-            {
-                if (getAwaiterParams.Length != 0)
-                {
-                    throw Error.GetAwaiterShouldTakeZeroParameters();
-                }
-
-                if (getAwaiterMethod.IsGenericMethod)
-                {
-                    throw Error.GetAwaiterShouldNotBeGeneric();
-                }
-            }
-
-            var returnType = getAwaiterMethod.ReturnType;
-
-            if (returnType == typeof(void) || returnType.IsByRef || returnType.IsPointer)
-            {
-                throw Error.GetAwaiterShouldReturnAwaiterType();
-            }
-        }
-
-        private static void ValidateAwaiterType(Type awaiterType, out Type resultType)
-        {
-            if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
-            {
-                throw Error.AwaiterTypeShouldImplementINotifyCompletion(awaiterType);
-            }
-
-            var isCompleted = awaiterType.GetProperty("IsCompleted", BindingFlags.Public | BindingFlags.Instance);
-            if (isCompleted == null || isCompleted.GetMethod == null)
-            {
-                throw Error.AwaiterTypeShouldHaveIsCompletedProperty(awaiterType);
-            }
-
-            if (isCompleted.PropertyType != typeof(bool))
-            {
-                throw Error.AwaiterIsCompletedShouldReturnBool(awaiterType);
-            }
-
-            if (isCompleted.GetIndexParameters().Length != 0)
-            {
-                throw Error.AwaiterIsCompletedShouldNotBeIndexer(awaiterType);
-            }
-
-            var getResult = AwaitCSharpExpression.GetGetResult(awaiterType);
-            if (getResult == null || getResult.IsGenericMethodDefinition)
-            {
-                throw Error.AwaiterTypeShouldHaveGetResultMethod(awaiterType);
-            }
-
-            var returnType = getResult.ReturnType;
-
-            if (returnType.IsByRef || returnType.IsPointer)
-            {
-                throw Error.AwaiterGetResultTypeInvalid(awaiterType);
-            }
-
-            resultType = returnType;
+            return new AwaitCSharpExpression(operand, info);
         }
     }
 
@@ -273,7 +163,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitAwait(AwaitCSharpExpression node)
         {
-            return node.Update(Visit(node.Operand));
+            return node.Update(Visit(node.Operand), VisitAwaitInfo(node.Info));
         }
     }
 }
