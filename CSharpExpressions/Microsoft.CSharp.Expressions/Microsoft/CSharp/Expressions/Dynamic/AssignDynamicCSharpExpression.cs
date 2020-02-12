@@ -16,14 +16,12 @@ namespace Microsoft.CSharp.Expressions
         {
             var lhs = Left.Expression;
 
-            if (lhs is GetMemberDynamicCSharpExpression getMember)
+            switch (lhs)
             {
-                return getMember.ReduceAssignment(Right.Expression, Flags, Left.Flags, Right.Flags);
-            }
-
-            if (lhs is GetIndexDynamicCSharpExpression getIndex)
-            {
-                return getIndex.ReduceAssignment(Right.Expression, Flags, Left.Flags, Right.Flags);
+                case GetMemberDynamicCSharpExpression getMember:
+                    return getMember.ReduceAssignment(Right.Expression, Flags, Left.Flags, Right.Flags);
+                case GetIndexDynamicCSharpExpression getIndex:
+                    return getIndex.ReduceAssignment(Right.Expression, Flags, Left.Flags, Right.Flags);
             }
 
             return ReduceStaticAssign(Left.Expression);
