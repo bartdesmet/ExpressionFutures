@@ -35,14 +35,12 @@ namespace Microsoft.CSharp.Expressions
         {
             var lhs = MakeWriteable(left.Expression);
 
-            if (lhs is GetMemberDynamicCSharpExpression dynamicMember)
+            switch (lhs)
             {
-                return ReduceDynamicMember(dynamicMember, functionalOp, flags, prefix);
-            }
-
-            if (lhs is GetIndexDynamicCSharpExpression dynamicIndex)
-            {
-                return ReduceDynamicIndex(dynamicIndex, functionalOp, flags, prefix);
+                case GetMemberDynamicCSharpExpression dynamicMember:
+                    return ReduceDynamicMember(dynamicMember, functionalOp, flags, prefix);
+                case GetIndexDynamicCSharpExpression dynamicIndex:
+                    return ReduceDynamicIndex(dynamicIndex, functionalOp, flags, prefix);
             }
 
             return Helpers.ReduceAssignment(lhs, functionalOp, prefix);
@@ -131,12 +129,7 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(expression, paramName);
 
-            if (expression is GetIndexDynamicCSharpExpression)
-            {
-                return;
-            }
-
-            if (expression is GetMemberDynamicCSharpExpression)
+            if (expression is GetIndexDynamicCSharpExpression || expression is GetMemberDynamicCSharpExpression)
             {
                 return;
             }
