@@ -376,6 +376,10 @@ The compilation of such constructs is based on a lowering step where we translat
 
 All of this is very similar to the C# compiler approach of supporting `await` in `catch` and `finally` blocks. Two notable differences are our support for `Await` in a `Fault` handler and our support for non-void `Try` expressions which are permitted by the DLR.
 
+##### Interpolated Strings
+
+Right now, interpolated strings are being lowered to `string.Format` invocations in expression trees. This has the drawback that any library that wishes to translate a string interpolation needs to reverse engineer a format string literal. We can consider to capture interpolated strings as proper non-lowered expressions, and have the `Reduce` method return the equivalent `string.Format` call.
+
 #### C# 7.0
 
 ##### Throw Expressions
@@ -422,6 +426,76 @@ CSharpExpression.Discard(typeof(int))
 ```
 
 Nodes of this type reduce to a valid assignment target using a `Discard<T>` helper type. Optimizers can prevent this reduction by removing assignments or by introducing temporary locals in blocks.
+
+##### Generalized Async Return Types
+
+TODO
+
+##### Tuples
+
+TODO
+
+##### Pattern Matching
+
+TODO
+
+#### C# 7.1
+
+No new features were added that impact expression trees.
+
+#### C# 7.2
+
+##### Non-trailing Named Arguments
+
+TODO
+
+#### C# 7.3
+
+No new features were added that impact expression trees.
+
+#### C# 8.0
+
+##### Null coalescing Assignment
+
+Null coalescing assignment expressions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<string, string>> f = s => s ??= "foo";
+```
+
+This fails to compile with:
+
+```
+error CS8642: An expression tree may not contain a null coalescing assignment
+```
+
+Support for null coalescing assignment expressions is added by a new `CSharpExpression.NullCoalescingAssignment(Expression, Expression)` method:
+
+```csharp
+CSharpExpression.NullCoalescingAssignment(s, Expression.Constant("foo"))
+```
+
+Support for `dynamic` is provided through `DynamicCSharpExpression.NullCoalescingAssignment` methods.
+
+##### Switch Expressions
+
+TODO
+
+##### Using Declarations
+
+TODO
+
+##### Indices and Ranges
+
+TODO
+
+##### `await using`
+
+TODO
+
+##### `await foreach`
+
+TODO
 
 #### Statement Trees
 
