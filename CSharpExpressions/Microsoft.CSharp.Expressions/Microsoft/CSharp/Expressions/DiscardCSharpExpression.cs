@@ -68,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="DiscardCSharpExpression"/> that represents a write-only anonymous expression.
         /// </summary>
-        /// <param name="type">The type of the discard expressio.</param>
+        /// <param name="type">The type of the discard expression.</param>
         /// <returns>An instance of the <see cref="DiscardCSharpExpression"/>.</returns>
         public static DiscardCSharpExpression Discard(Type type)
         {
