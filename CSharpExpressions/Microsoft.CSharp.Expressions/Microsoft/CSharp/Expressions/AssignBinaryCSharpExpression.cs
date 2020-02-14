@@ -3,6 +3,7 @@
 // bartde - November 2015
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -67,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 // NB: Same logic as LINQ's BinaryExpression, modulo the absence of the Coalesce case.
 
-                if (CSharpNodeType == CSharpExpressionType.Assign)
+                if (CSharpNodeType == CSharpExpressionType.Assign || CSharpNodeType == CSharpExpressionType.NullCoalescingAssign)
                 {
                     return false;
                 }
@@ -124,6 +125,13 @@ namespace Microsoft.CSharp.Expressions
         {
             var left = MakeWriteable(Left);
 
+            if (CSharpNodeType == CSharpExpressionType.NullCoalescingAssign)
+            {
+                // NB: NullCoalescingAssign is handled by the Reduce implementation on the derived type.
+
+                throw ContractUtils.Unreachable;
+            }
+
             if (CSharpNodeType == CSharpExpressionType.Assign)
             {
                 // NB: We still use `ReduceAssignment` here to deal with IndexCSharpExpression which is not
@@ -177,6 +185,30 @@ namespace Microsoft.CSharp.Expressions
         }
 
         internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+        {
+            if (binaryType == CSharpExpressionType.NullCoalescingAssign)
+            {
+                return MakeNullCoalescingAssign(left, right, method, leftConversion, finalConversion);
+            }
+            else
+            {
+                return MakeCustomBinaryAssign(binaryType, left, right, method, leftConversion, finalConversion);
+            }
+        }
+
+        private static AssignBinaryCSharpExpression MakeNullCoalescingAssign(Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
+        {
+            if (method != null || leftConversion != null || finalConversion != null)
+            {
+                throw Error.InvalidNullCoalescingAssignmentArguments();
+            }
+
+            ValidateCoalesceArgTypes(left.Type, right.Type);
+
+            return new NullCoalescingAssignment(left, right);
+        }
+
+        private static AssignBinaryCSharpExpression MakeCustomBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
             ValidateCustomBinaryAssign(binaryType, left, right, ref method, leftConversion, finalConversion);
 
@@ -258,6 +290,120 @@ namespace Microsoft.CSharp.Expressions
             public override LambdaExpression LeftConversion { get; }
             public override LambdaExpression FinalConversion { get; }
         }
+
+        internal class NullCoalescingAssignment : AssignBinaryCSharpExpression
+        {
+            internal NullCoalescingAssignment(Expression left, Expression right)
+                : base(CSharpExpressionType.NullCoalescingAssign, left, right)
+            {
+            }
+
+            public override Type Type
+            {
+                get
+                {
+                    var leftType = Left.Type;
+
+                    if (leftType.IsNullableType())
+                    {
+                        var underlyingLeftType = leftType.GetNonNullableType();
+
+                        if (Right.Type == underlyingLeftType)
+                        {
+                            return underlyingLeftType;
+                        }
+                    }
+
+                    return leftType;
+                }
+            }
+
+            public override MethodInfo Method => null;
+            public override LambdaExpression LeftConversion => null;
+            public override LambdaExpression FinalConversion => null;
+
+            private bool IsNullableValueTypeAssignment
+            {
+                get
+                {
+                    var leftType = Left.Type;
+
+                    if (!leftType.IsNullableType())
+                    {
+                        return false;
+                    }
+
+                    return leftType.GetNonNullableType() == Right.Type;
+                }
+            }
+
+            public override Expression Reduce()
+            {
+                var left = MakeWriteable(Left);
+
+                if (IsNullableValueTypeAssignment)
+                {
+                    return ReduceAssign(left, assign: lhs =>
+                    {
+                        var stmts = new List<Expression>();
+                        var temps = new List<ParameterExpression>();
+
+                        var tmp = Expression.Variable(Type, "__tmp");
+                        temps.Add(tmp);
+
+                        var lhsVal = (Expression)lhs;
+
+                        if (!IsPure(lhs))
+                        {
+                            var lhsValVar = Expression.Variable(lhs.Type, "__lhsVal");
+                            temps.Add(lhsValVar);
+
+                            var assignLhsVal = Expression.Assign(lhsValVar, lhs);
+                            stmts.Add(assignLhsVal);
+
+                            lhsVal = lhsValVar;
+                        }
+
+                        var assignTmp = Expression.Assign(tmp, Expression.Call(lhsVal, "GetValueOrDefault", null));
+                        stmts.Add(assignTmp);
+
+                        var assignLhs = Expression.Block(Expression.Assign(tmp, Right), Expression.Assign(lhs, Expression.Convert(tmp, lhs.Type)), tmp);
+                        var conditional = Expression.Condition(Expression.Property(lhsVal, "HasValue"), tmp, assignLhs);
+                        stmts.Add(conditional);
+
+                        return Expression.Block(temps, stmts);
+
+                        static bool IsPure(Expression e)
+                        {
+                            //
+                            // Local decision on purity based on ReduceAssign spilling children of nodes to temporaries. E.g. for a member access,
+                            // we end up with __obj.Member, where __obj cannot be assigned to. If Member happens to be a field, we can safely access
+                            // it multiple times without a side-effect (but not if it's a property).
+                            //
+                            // NB: Roslyn relies on ref locals. We don't have those in expression trees.
+                            //
+
+                            if (e.NodeType == ExpressionType.Parameter)
+                            {
+                                return true;
+                            }
+
+                            if (e.NodeType == ExpressionType.MemberAccess)
+                            {
+                                var m = (MemberExpression)e;
+                                return m.Member.MemberType == MemberTypes.Field;
+                            }
+
+                            return false;
+                        }
+                    });
+                }
+                else
+                {
+                    return ReduceAssignment(left, leftConversion: null, functionalOp: lhs => Expression.Coalesce(lhs, Right));
+                }
+            }
+        }
     }
 
     partial class CSharpExpression
@@ -290,6 +436,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.AddAssignChecked => AddAssignChecked(left, right, method, leftConversion, finalConversion),
                 CSharpExpressionType.MultiplyAssignChecked => MultiplyAssignChecked(left, right, method, leftConversion, finalConversion),
                 CSharpExpressionType.SubtractAssignChecked => SubtractAssignChecked(left, right, method, leftConversion, finalConversion),
+                CSharpExpressionType.NullCoalescingAssign => NullCoalescingAssign(left, right),
                 _ => throw LinqError.UnhandledBinary(binaryType),
             };
         }
@@ -305,7 +452,7 @@ namespace Microsoft.CSharp.Expressions
             //     underneath it. This said, a specialized layout for the case where the custom node trivially wraps
             //     a LINQ node could be useful (just make Left virtual).
 
-            if (binaryType != CSharpExpressionType.Assign)
+            if (binaryType != CSharpExpressionType.Assign && binaryType != CSharpExpressionType.NullCoalescingAssign)
             {
                 var leftType = left.Type;
                 var rightType = right.Type;

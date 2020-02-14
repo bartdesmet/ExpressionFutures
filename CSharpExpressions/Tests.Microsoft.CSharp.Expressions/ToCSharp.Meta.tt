@@ -17,6 +17,9 @@ var exprs = new string[]
 	"/* BUG */ CSharpExpression.PostDecrementAssign(Expression.Parameter(typeof(int)), typeof(Math).GetMethod(\"Abs\", new[] { typeof(int) }))",
     "CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int)))",
     "CSharpExpression.AddAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
+
+    "CSharpExpression.NullCoalescingAssign(Expression.Parameter(typeof(int?)), Expression.Constant(1))",
+	"CSharpExpression.NullCoalescingAssign(Expression.Parameter(typeof(string)), Expression.Constant(\"foo\"))",
 	
 	"CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42))",
 	"CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 2 }, Expression.Constant(42), Expression.Constant(43))",

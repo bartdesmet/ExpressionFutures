@@ -1224,7 +1224,7 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var nodeType = ConvertNodeType(CSharpNodeType);
-            var op = CSharpLanguageHelpers.GetOperatorSyntax(nodeType);
+            var op = CSharpNodeType == CSharpExpressionType.NullCoalescingAssign ? "??=" : CSharpLanguageHelpers.GetOperatorSyntax(nodeType);
             var mtd = CSharpLanguageHelpers.GetClsMethodName(nodeType);
             var isChecked = false;
             var asMethod = false;
@@ -1807,6 +1807,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.AddAssignChecked => ExpressionType.AddAssignChecked,
                 CSharpExpressionType.MultiplyAssignChecked => ExpressionType.MultiplyAssignChecked,
                 CSharpExpressionType.SubtractAssignChecked => ExpressionType.SubtractAssignChecked,
+                CSharpExpressionType.NullCoalescingAssign => ExpressionType.Coalesce,
                 _ => throw new InvalidOperationException(),
             };
         }

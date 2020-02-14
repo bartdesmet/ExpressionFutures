@@ -72,6 +72,7 @@ var errors = new[]
     new { Name = "InvalidUnaryAssignmentWithOperands", ExceptionType = "ArgumentException", Args = 2, Message = "Unary assignment operation '{0}' is not supported for an operand of type '{1}'." },
     new { Name = "TypeMustNotBeByRef", ExceptionType = "ArgumentException", Args = 0, Message = "Type must not be ByRef" },
     new { Name = "TypeMustNotBePointer", ExceptionType = "ArgumentException", Args = 0, Message = "Type must not be a pointer type" },
+    new { Name = "InvalidNullCoalescingAssignmentArguments", ExceptionType = "ArgumentException", Args = 0, Message = "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

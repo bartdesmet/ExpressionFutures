@@ -1137,6 +1137,216 @@ namespace Tests
             Assert.AreEqual("42,42", f());
         }
 
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicMember_Nullable()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var x = Expression.Parameter(typeof(int?));
+
+            var v = typeof(StrongBox<int?>).GetField("Value");
+            var m = Expression.Convert(Expression.Field(Expression.Convert(p, v.DeclaringType), v), typeof(object));
+            var c = Expression.MemberInit(Expression.New(typeof(StrongBox<int?>)), Expression.Bind(v, x));
+            var a = Expression.Assign(p, c);
+
+            var z = DynamicCSharpExpression.DynamicGetMember(p, "Value");
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(z, Expression.Constant(42));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<int?, string>>(b, x);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f(null));
+            Assert.AreEqual("99,99", f(99));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_Member_Nullable()
+        {
+            var p = Expression.Parameter(typeof(StrongBox<int?>));
+            var y = Expression.Parameter(typeof(int?));
+
+            var v = typeof(StrongBox<int?>).GetField("Value");
+            var x = Expression.Field(p, v);
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.MemberInit(Expression.New(typeof(StrongBox<int?>)), Expression.Bind(v, y));
+            var a = Expression.Assign(p, c);
+
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(x, Expression.Constant(42, typeof(int?)));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<int?, string>>(b, y);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f(null));
+            Assert.AreEqual("99,99", f(99));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicMember_Reference()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var x = Expression.Parameter(typeof(string));
+
+            var v = typeof(StrongBox<string>).GetField("Value");
+            var m = Expression.Convert(Expression.Field(Expression.Convert(p, v.DeclaringType), v), typeof(object));
+            var c = Expression.MemberInit(Expression.New(typeof(StrongBox<string>)), Expression.Bind(v, x));
+            var a = Expression.Assign(p, c);
+
+            var z = DynamicCSharpExpression.DynamicGetMember(p, "Value");
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(z, Expression.Constant("foo"));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string, string>>(b, x);
+            var f = e.Compile();
+
+            Assert.AreEqual("foo,foo", f(null));
+            Assert.AreEqual("bar,bar", f("bar"));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_Member_Reference()
+        {
+            var p = Expression.Parameter(typeof(StrongBox<string>));
+            var y = Expression.Parameter(typeof(string));
+
+            var v = typeof(StrongBox<string>).GetField("Value");
+            var x = Expression.Field(p, v);
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.MemberInit(Expression.New(typeof(StrongBox<string>)), Expression.Bind(v, y));
+            var a = Expression.Assign(p, c);
+
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(x, Expression.Constant("foo"));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string, string>>(b, y);
+            var f = e.Compile();
+
+            Assert.AreEqual("foo,foo", f(null));
+            Assert.AreEqual("bar,bar", f("bar"));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicIndex_Nullable()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var y = Expression.Parameter(typeof(int?));
+
+            var v = typeof(List<int?>).GetProperty("Item");
+            var x = Expression.Property(Expression.Convert(p, v.DeclaringType), v, Expression.Constant(0));
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.ListInit(Expression.New(typeof(List<int?>)), Expression.ElementInit(typeof(List<int?>).GetMethod("Add"), y));
+            var a = Expression.Assign(p, c);
+
+            var z = DynamicCSharpExpression.DynamicGetIndex(p, Expression.Constant(0));
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(z, Expression.Constant(42));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<int?, string>>(b, y);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f(null));
+            Assert.AreEqual("99,99", f(99));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_Index_Nullable()
+        {
+            var p = Expression.Parameter(typeof(List<int?>));
+            var y = Expression.Parameter(typeof(int?));
+
+            var v = typeof(List<int?>).GetProperty("Item");
+            var x = Expression.Property(p, v, Expression.Constant(0));
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.ListInit(Expression.New(typeof(List<int?>)), Expression.ElementInit(typeof(List<int?>).GetMethod("Add"), y));
+            var a = Expression.Assign(p, c);
+
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(x, Expression.Constant(42, typeof(int?)));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<int?, string>>(b, y);
+            var f = e.Compile();
+
+            Assert.AreEqual("42,42", f(null));
+            Assert.AreEqual("99,99", f(99));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicIndex_Reference()
+        {
+            var p = Expression.Parameter(typeof(object));
+            var y = Expression.Parameter(typeof(string));
+
+            var v = typeof(List<string>).GetProperty("Item");
+            var x = Expression.Property(Expression.Convert(p, v.DeclaringType), v, Expression.Constant(0));
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.ListInit(Expression.New(typeof(List<string>)), Expression.ElementInit(typeof(List<string>).GetMethod("Add"), y));
+            var a = Expression.Assign(p, c);
+
+            var z = DynamicCSharpExpression.DynamicGetIndex(p, Expression.Constant(0));
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(z, Expression.Constant("foo"));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string, string>>(b, y);
+            var f = e.Compile();
+
+            Assert.AreEqual("foo,foo", f(null));
+            Assert.AreEqual("bar,bar", f("bar"));
+        }
+
+        [TestMethod]
+        public void Dynamic_BinaryAssign_NullCoalescingAssign_Index_Reference()
+        {
+            var p = Expression.Parameter(typeof(List<string>));
+            var y = Expression.Parameter(typeof(string));
+
+            var v = typeof(List<string>).GetProperty("Item");
+            var x = Expression.Property(p, v, Expression.Constant(0));
+            var m = Expression.Convert(x, typeof(object));
+            var c = Expression.ListInit(Expression.New(typeof(List<string>)), Expression.ElementInit(typeof(List<string>).GetMethod("Add"), y));
+            var a = Expression.Assign(p, c);
+
+            var i = DynamicCSharpExpression.DynamicNullCoalescingAssign(x, Expression.Constant("foo"));
+
+            var d = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object), typeof(object) });
+            var s = Expression.Call(d, Expression.Convert(i, typeof(object)), Expression.Constant(","), m);
+
+            var b = Expression.Block(new[] { p }, a, s);
+
+            var e = Expression.Lambda<Func<string, string>>(b, y);
+            var f = e.Compile();
+
+            Assert.AreEqual("foo,foo", f(null));
+            Assert.AreEqual("bar,bar", f("bar"));
+        }
+
         private void Dynamic_BinaryAssign_Compile_Variable<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
         {
             var p = Expression.Parameter(typeof(object));

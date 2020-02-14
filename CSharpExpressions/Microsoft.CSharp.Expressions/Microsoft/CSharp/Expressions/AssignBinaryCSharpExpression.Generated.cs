@@ -30,6 +30,7 @@ namespace Microsoft.CSharp.Expressions
                 case CSharpExpressionType.AddAssignChecked: return ExpressionType.AddAssignChecked;
                 case CSharpExpressionType.MultiplyAssignChecked: return ExpressionType.MultiplyAssignChecked;
                 case CSharpExpressionType.SubtractAssignChecked: return ExpressionType.SubtractAssignChecked;
+                case CSharpExpressionType.NullCoalescingAssign: return ExpressionType.Coalesce;
                 default:
                     throw ContractUtils.Unreachable;
             }
@@ -47,6 +48,17 @@ namespace Microsoft.CSharp.Expressions
         public static new AssignBinaryCSharpExpression Assign(Expression left, Expression right)
         {
             return MakeBinaryAssignCore(CSharpExpressionType.Assign, left, right, null, null, null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="AssignBinaryCSharpExpression" /> that represents a null-coalescing assignment.
+        /// </summary>
+        /// <returns>A <see cref="AssignBinaryCSharpExpression" /> that represents the operation.</returns>
+        /// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
+        /// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
+        public static AssignBinaryCSharpExpression NullCoalescingAssign(Expression left, Expression right)
+        {
+            return MakeBinaryAssignCore(CSharpExpressionType.NullCoalescingAssign, left, right, null, null, null);
         }
 
         /// <summary>

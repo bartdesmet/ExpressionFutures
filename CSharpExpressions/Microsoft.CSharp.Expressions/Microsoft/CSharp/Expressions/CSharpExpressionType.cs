@@ -227,5 +227,10 @@ namespace Microsoft.CSharp.Expressions
         /// A discard expression, i.e. a write-only expression syntactically represented as _.
         /// </summary>
         Discard,
+
+        /// <summary>
+        /// A null-coalescing assignment expression, such as (a ??= b).
+        /// </summary>
+        NullCoalescingAssign,
     }
 }

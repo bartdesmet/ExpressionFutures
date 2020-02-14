@@ -94,6 +94,39 @@ namespace Microsoft.CSharp.Expressions
             return DynamicCSharpExpression.DynamicGetIndex(@object, arguments, Flags, Context);
         }
 
+        internal GetIndexDynamicCSharpExpression TransformToLhs(List<ParameterExpression> temps, List<Expression> stores)
+        {
+            var obj = Expression.Parameter(Object.Type, "__obj");
+
+            temps.Add(obj);
+            stores.Add(Expression.Assign(obj, Object));
+
+            int n = Arguments.Count;
+
+            var newArgs = new DynamicCSharpArgument[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                var arg = Arguments[i];
+
+                if (Helpers.IsPure(arg.Expression))
+                {
+                    newArgs[i] = arg;
+                }
+                else
+                {
+                    var tmp = Expression.Parameter(arg.Expression.Type, "__arg" + i);
+
+                    temps.Add(tmp);
+                    stores.Add(Expression.Assign(tmp, arg.Expression));
+
+                    newArgs[i] = arg.Update(tmp);
+                }
+            }
+
+            return Update(obj, newArgs);
+        }
+
         internal Expression ReduceAssignment(Expression value, CSharpBinderFlags flags, CSharpArgumentInfoFlags leftFlags = CSharpArgumentInfoFlags.None, CSharpArgumentInfoFlags rightFlags = CSharpArgumentInfoFlags.None)
         {
             ReduceAssignment(value, flags, leftFlags, rightFlags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);

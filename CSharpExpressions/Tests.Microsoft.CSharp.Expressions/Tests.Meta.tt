@@ -15,6 +15,9 @@ var exprs = new string[]
     "CSharpExpression.PreDecrementAssignChecked(Expression.Parameter(typeof(int)))",
     "CSharpExpression.AddAssign(Expression.Parameter(typeof(int)), Expression.Constant(1))",
 
+    "CSharpExpression.NullCoalescingAssign(Expression.Parameter(typeof(int?)), Expression.Constant(1))",
+    "CSharpExpression.NullCoalescingAssign(Expression.Parameter(typeof(string)), Expression.Constant(\"foo\"))",
+
     "CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 1, 1 }, Expression.Constant(42))",
 
     "CSharpExpression.Await(Expression.Default(typeof(Task<int>)))",

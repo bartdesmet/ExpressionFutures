@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
@@ -854,6 +855,99 @@ namespace Microsoft.CSharp.Expressions
             var method = call.Method;
             var obj = call.Object;
             return !method.IsStatic && obj.Type.IsArray && method == obj.Type.GetMethod("Get", BindingFlags.Public | BindingFlags.Instance);
+        }
+
+        public static Expression ReduceAssign(Expression lhs, Func<Expression, Expression> assign)
+        {
+            // NB: This is a simplified form of ReduceAssignment without support for conversions or a differentation of prefix/postfix assignments.
+            //     It also assumes the lhs is not a mutable value type that needs by ref access treatment.
+
+            switch (lhs.NodeType)
+            {
+                case ExpressionType.MemberAccess:
+                    return ReduceAssignMember();
+                case ExpressionType.Index:
+                    return ReduceAssignIndex();
+                case ExpressionType.Parameter:
+                    return assign(lhs);
+            }
+
+            if (lhs is IndexCSharpExpression index)
+            {
+                return index.ReduceAssign(assign);
+            }
+
+            throw ContractUtils.Unreachable;
+
+            Expression ReduceAssignMember()
+            {
+                var member = (MemberExpression)lhs;
+
+                if (member.Expression == null)
+                {
+                    if (NeedByRefAssign(member.Expression))
+                    {
+                        throw ContractUtils.Unreachable;
+                    }
+
+                    return assign(member);
+                }
+                else
+                {
+                    var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
+                    var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
+                    member = member.Update(lhsTemp);
+
+                    return Expression.Block(
+                        new[] { lhsTemp },
+                        lhsAssign,
+                        assign(member)
+                    );
+                }
+            }
+
+            Expression ReduceAssignIndex()
+            {
+                var index = (IndexExpression)lhs;
+
+                if (NeedByRefAssign(index.Object))
+                {
+                    throw ContractUtils.Unreachable;
+                }
+
+                var n = index.Arguments.Count;
+                var args = new Expression[n];
+                var block = new List<Expression>();
+                var temps = new List<ParameterExpression>();
+
+                ParameterExpression obj = Expression.Parameter(index.Object.Type, "__object");
+                temps.Add(obj);
+                block.Add(Expression.Assign(obj, index.Object));
+
+                for (var j = 0; j < n; j++)
+                {
+                    var arg = index.Arguments[j];
+
+                    if (IsPure(arg))
+                    {
+                        args[j] = arg;
+                    }
+                    else
+                    {
+                        var temp = Expression.Parameter(arg.Type, "__arg" + j);
+                        temps.Add(temp);
+
+                        block.Add(Expression.Assign(temp, arg));
+                        args[j] = temp;
+                    }
+                }
+
+                index = index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
+
+                block.Add(assign(index));
+
+                return Expression.Block(temps, block);
+            }
         }
 
         public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression leftConversion = null)

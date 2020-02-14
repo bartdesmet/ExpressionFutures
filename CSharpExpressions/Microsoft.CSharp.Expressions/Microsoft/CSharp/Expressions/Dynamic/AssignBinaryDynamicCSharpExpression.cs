@@ -59,9 +59,12 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            if (OperationNodeType == CSharpExpressionType.Assign)
+            switch (OperationNodeType)
             {
-                return ReduceAssign();
+                case CSharpExpressionType.Assign:
+                    return ReduceAssign();
+                case CSharpExpressionType.NullCoalescingAssign:
+                    return ReduceNullCoalescingAssign();
             }
 
             var candidateAccessor = default(string);

@@ -372,6 +372,28 @@ var exprs = new[]
 
     // Throw expression
     "(Expression<Func<int>>)(() => throw new Exception())",
+
+    // Null-coalescing assignment
+    "(Expression<Func<string, string>>)(s => s ??= \"foo\")",
+    "(Expression<Func<int?, int?, int?>>)((i, j) => i ??= j)",
+    "(Expression<Func<int?, int>>)(i => i ??= 42)",
+
+    // Null-coalescing assignment with dynamic
+    "(Expression<Func<string, dynamic, string>>)((s, d) => s ??= d.bar)",
+    "(Expression<Func<string[], dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.bar)",
+    "(Expression<Func<List<string>, dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.bar)",
+    "(Expression<Func<StrongBox<string>, dynamic, string>>)((s, d) => s.Value ??= d.bar)",
+    "(Expression<Func<string, dynamic, string>>)((s, d) => s ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<string[], dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<List<string>, dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<StrongBox<string>, dynamic, string>>)((s, d) => s.Value ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<dynamic, string, string>>)((d, s) => d.bar ??= s)",
+    "(Expression<Func<dynamic, int, int>>)((d, x) => d.bar ??= x)",
+    "(Expression<Func<dynamic, string, string>>)((d, s) => d[int.Parse(\"0\")] ??= s)",
+    "(Expression<Func<dynamic, int, int>>)((d, x) => d[int.Parse(\"0\")] ??= x)",
+    "(Expression<Func<dynamic, dynamic>>)(d => d.bar ??= d.foo)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((l, r) => l ??= r.foo)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((l, r) => l ??= r[int.Parse(\"0\")])",
 };
 #>
 <#
@@ -537,6 +559,16 @@ foreach (var test in all)
 */
 }
 <#
+}
+catch (Exception ex)
+{
+    var msg = ex.ToString().Split('\n');
+    foreach (var line in msg)
+    {
+#>
+// <#=line.TrimEnd('\r')#>
+<#
+    }
 }
 finally
 {

@@ -1248,6 +1248,22 @@ namespace System.Linq.Expressions
             }
         }
 
+        private static readonly MethodInfo s_13 = s_mtds["ValidateCoalesceArgTypes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Type), typeof(System.Type) }));
+
+        public static System.Type ValidateCoalesceArgTypes(System.Type left, System.Type right)
+        {
+            try
+            {
+                var args = new object[] { left, right };
+                var res = s_13.Invoke(null, args);
+                return (System.Type)res;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
     }
 }
 namespace System.Linq.Expressions

@@ -344,6 +344,128 @@ namespace Tests
             Assert.IsTrue(v.Visited);
         }
 
+        [TestMethod]
+        public void AssignBinary_NullCoalescing_Factory_ArgumentChecking()
+        {
+            var p0 = Expression.Parameter(typeof(int));
+            var p1 = Expression.Parameter(typeof(int));
+
+            var p2 = Expression.Parameter(typeof(int?));
+            var p3 = Expression.Parameter(typeof(int?));
+
+            var p4 = Expression.Parameter(typeof(string));
+            var p5 = Expression.Parameter(typeof(string));
+
+            // NB: Inherits exception behavior from ValidateCoalesceArgTypes.
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.NullCoalescingAssign(p0, p1));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p4, p2));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p2, p4));
+
+            // the following are valid
+            CSharpExpression.NullCoalescingAssign(p2, p0);
+            CSharpExpression.NullCoalescingAssign(p2, p3);
+            CSharpExpression.NullCoalescingAssign(p4, p5);
+        }
+
+        [TestMethod]
+        public void AssignBinary_NullCoalescing_ReferenceType()
+        {
+            var p = Expression.Parameter(typeof(string));
+
+            var f1 = Expression.Lambda<Func<string, string>>(Expression.Block(CSharpExpression.NullCoalescingAssign(p, Expression.Constant("foo"))), p);
+            var f2 = Expression.Lambda<Func<string, string>>(Expression.Block(CSharpExpression.NullCoalescingAssign(p, Expression.Constant("foo")), p), p);
+
+            var d1 = f1.Compile();
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(d1("bar"), "bar");
+            Assert.AreEqual(d2("bar"), "bar");
+
+            Assert.AreEqual(d1(null), "foo");
+            Assert.AreEqual(d2(null), "foo");
+        }
+
+        [TestMethod]
+        public void AssignBinary_NullCoalescing_NullableValueType()
+        {
+            var p = Expression.Parameter(typeof(int?));
+
+            var f1 = Expression.Lambda<Func<int?, int>>(Expression.Block(CSharpExpression.NullCoalescingAssign(p, Expression.Constant(42))), p);
+            var f2 = Expression.Lambda<Func<int?, int?>>(Expression.Block(CSharpExpression.NullCoalescingAssign(p, Expression.Constant(42)), p), p);
+
+            var d1 = f1.Compile();
+            var d2 = f2.Compile();
+
+            Assert.AreEqual(d1(1), 1);
+            Assert.AreEqual(d2(1), 1);
+
+            Assert.AreEqual(d1(null), 42);
+            Assert.AreEqual(d2(null), 42);
+        }
+
+        [TestMethod]
+        public void AssignBinary_NullCoalescing_Index_SpillArgsToTemps()
+        {
+            var toString = typeof(int).GetMethod("ToString", Array.Empty<Type>());
+
+            foreach (var val in new[] { new List<int?> { 41, null, 43 }, new List<int?> { 41, 42, 43 } })
+            {
+                var exp = (val[1] ?? 99).ToString();
+
+                AssertCompile((log, append) =>
+                {
+                    var xs = Expression.Parameter(typeof(List<int?>));
+                    var x = Expression.Parameter(typeof(int));
+
+                    var one = Expression.Constant(1);
+                    var index = Expression.Block(log("I"), one);
+                    var item = typeof(List<int?>).GetProperty("Item");
+                    var element_side_effect = Expression.MakeIndex(xs,item, new Expression[] { index });
+                    var element_no_side_effect = Expression.MakeIndex(xs, item, new Expression[] { one });
+
+                    return
+                        Expression.Block(
+                            new[] { xs, x },
+                            Expression.Assign(xs, Expression.Constant(val)),
+                            Expression.Assign(x, CSharpExpression.NullCoalescingAssign(element_side_effect, Expression.Constant(99))),
+                            Expression.Invoke(append, Expression.Call(x, toString)),
+                            Expression.Invoke(append, Expression.Call(Expression.Convert(element_no_side_effect, typeof(int)), toString))
+                        );
+                }, new LogAndResult<object> { Log = { "I", exp, exp } });
+            }
+        }
+
+        [TestMethod]
+        public void AssignBinary_NullCoalescing_Index_DontReadMultipleTimes()
+        {
+            var toString = typeof(int).GetMethod("ToString", Array.Empty<Type>());
+
+            foreach (var val in new[] { new List<int?> { 41, null, 43 }, new List<int?> { 41, 42, 43 } })
+            {
+                var exp = (val[1] ?? 99).ToString();
+
+                AssertCompile((log, append) =>
+                {
+                    var xs = Expression.Parameter(typeof(IndexOnceGetOnceSet));
+                    var x = Expression.Parameter(typeof(int));
+
+                    var one = Expression.Constant(1);
+                    var index = Expression.Block(log("I"), one);
+                    var element_side_effect = Expression.MakeIndex(xs, typeof(IndexOnceGetOnceSet).GetProperty("Item"), new Expression[] { index });
+                    var element_no_side_effect = Expression.Invoke(Expression.Constant(new Func<int?>(() => val[1])));
+
+                    return
+                        Expression.Block(
+                            new[] { xs, x },
+                            Expression.Assign(xs, Expression.Constant(new IndexOnceGetOnceSet { Values = val })),
+                            Expression.Assign(x, CSharpExpression.NullCoalescingAssign(element_side_effect, Expression.Constant(99))),
+                            Expression.Invoke(append, Expression.Call(x, toString)),
+                            Expression.Invoke(append, Expression.Call(Expression.Convert(element_no_side_effect, typeof(int)), toString))
+                        );
+                }, new LogAndResult<object> { Log = { "I", exp, exp } });
+            }
+        }
+
         private static int Op(int x, int y)
         {
             throw new NotImplementedException();
@@ -391,5 +513,32 @@ namespace Tests
         }
 
         public T Value;
+    }
+
+    class IndexOnceGetOnceSet
+    {
+        public List<int?> Values;
+
+        public int? this[int i]
+        {
+            get
+            {
+                if (++_getCount > 1)
+                    Assert.Fail();
+
+                return Values[i];
+            }
+
+            set
+            {
+                if (++_setCount > 1)
+                    Assert.Fail();
+
+                Values[i] = value;
+            }
+        }
+
+        private int _getCount;
+        private int _setCount;
     }
 }

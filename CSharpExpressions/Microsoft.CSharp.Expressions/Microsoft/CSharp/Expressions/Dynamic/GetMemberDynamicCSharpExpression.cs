@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using static System.Linq.Expressions.ExpressionStubs;
 using static Microsoft.CSharp.Expressions.Helpers;
+using Microsoft.CSharp.Expressions.Compiler;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -98,6 +99,39 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return DynamicCSharpExpression.DynamicGetMember(@object, Name, arguments, Flags, Context);
+        }
+
+        internal GetMemberDynamicCSharpExpression TransformToLhs(List<ParameterExpression> temps, List<Expression> stores)
+        {
+            var obj = Expression.Parameter(Object.Type, "__obj");
+
+            temps.Add(obj);
+            stores.Add(Expression.Assign(obj, Object));
+
+            int n = Arguments.Count;
+
+            var newArgs = new DynamicCSharpArgument[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                var arg = Arguments[i];
+
+                if (Helpers.IsPure(arg.Expression))
+                {
+                    newArgs[i] = arg;
+                }
+                else
+                {
+                    var tmp = Expression.Parameter(arg.Expression.Type, "__arg" + i);
+
+                    temps.Add(tmp);
+                    stores.Add(Expression.Assign(tmp, arg.Expression));
+
+                    newArgs[i] = arg.Update(tmp);
+                }
+            }
+
+            return Update(obj, newArgs);
         }
 
         internal Expression ReduceAssignment(Expression value, CSharpBinderFlags flags, CSharpArgumentInfoFlags leftFlags = CSharpArgumentInfoFlags.None, CSharpArgumentInfoFlags rightFlags = CSharpArgumentInfoFlags.None)

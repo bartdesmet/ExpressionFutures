@@ -499,6 +499,14 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.TypeMustNotBePointer);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations."
+        /// </summary>
+        internal static Exception InvalidNullCoalescingAssignmentArguments()
+        {
+            return new ArgumentException(Strings.InvalidNullCoalescingAssignmentArguments);
+        }
+
     }
 
     /// <summary>
@@ -1069,6 +1077,17 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        /// <summary>
+        /// A string like "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations."
+        /// </summary>
+        internal static string InvalidNullCoalescingAssignmentArguments
+        {
+            get
+            {
+                return SR.InvalidNullCoalescingAssignmentArguments;
+            }
+        }
+
     }
 }
 
@@ -1137,5 +1156,6 @@ namespace System
         public const string InvalidUnaryAssignmentWithOperands = "Unary assignment operation '{0}' is not supported for an operand of type '{1}'.";
         public const string TypeMustNotBeByRef = "Type must not be ByRef";
         public const string TypeMustNotBePointer = "Type must not be a pointer type";
+        public const string InvalidNullCoalescingAssignmentArguments = "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations.";
     }
 }
