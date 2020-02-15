@@ -16004,7 +16004,7 @@
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol.MergeEquivalentTypes(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.VarianceKind)">
             <summary>
-            Merges features of the type with annother type where there is an identity conversion between them.
+            Merges features of the type with another type where there is an identity conversion between them.
             The features to be merged are
             object vs dynamic (dynamic wins), tuple names (dropped in case of conflict), and nullable
             annotations (e.g. in type arguments).
@@ -23244,6 +23244,11 @@
               Looks up a localized string similar to Static field or property &apos;{0}&apos; cannot be assigned in an object initializer.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_StdInOptionProvidedButConsoleInputIsNotRedirected">
+            <summary>
+              Looks up a localized string similar to stdin argument '-' is specified, but input has not been redirected from the standard input stream..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_StaticNotVirtual">
             <summary>
               Looks up a localized string similar to A static member &apos;{0}&apos; cannot be marked as override, virtual, or abstract.
@@ -25564,6 +25569,16 @@
               Looks up a localized string similar to A possible null value may not be used for a type marked with [NotNull] or [DisallowNull].
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_DoesNotReturnMismatch">
+            <summary>
+              Looks up a localized string similar to Method &apos;{0}&apos; lacks `[DoesNotReturn]` annotation to match implemented or overridden member..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_DoesNotReturnMismatch_Title">
+            <summary>
+              Looks up a localized string similar to Method lacks `[DoesNotReturn]` annotation to match implemented or overridden member..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_DotOnDefault">
             <summary>
               Looks up a localized string similar to Expression will always cause a System.NullReferenceException because the default value of &apos;{0}&apos; is null.
@@ -26365,6 +26380,16 @@
               Looks up a localized string similar to Nullability of reference types in type of parameter doesn&apos;t match implemented member..
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnExplicitImplementationBecauseOfAttributes">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in type of parameter &apos;{0}&apos; doesn&apos;t match implemented member &apos;{1}&apos; because of nullability attributes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnExplicitImplementationBecauseOfAttributes_Title">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in type of parameter doesn&apos;t match implemented member because of nullability attributes..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnImplicitImplementation">
             <summary>
               Looks up a localized string similar to Nullability of reference types in type of parameter &apos;{0}&apos; of &apos;{1}&apos; doesn&apos;t match implicitly implemented member &apos;{2}&apos;..
@@ -26375,6 +26400,16 @@
               Looks up a localized string similar to Nullability of reference types in type of parameter doesn&apos;t match implicitly implemented member..
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnImplicitImplementationBecauseOfAttributes">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in type of parameter &apos;{0}&apos; of &apos;{1}&apos; doesn&apos;t match implicitly implemented member &apos;{2}&apos; because of nullability attributes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnImplicitImplementationBecauseOfAttributes_Title">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in type of parameter doesn&apos;t match implicitly implemented member because of nullability attributes..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnOverride">
             <summary>
               Looks up a localized string similar to Nullability of reference types in type of parameter &apos;{0}&apos; doesn&apos;t match overridden member..
@@ -26383,6 +26418,16 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnOverride_Title">
             <summary>
               Looks up a localized string similar to Nullability of reference types in type of parameter doesn&apos;t match overridden member..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnOverrideBecauseOfAttributes">
+            <summary>
+              Looks up a localized string similar to Type of parameter &apos;{0}&apos; doesn&apos;t match overridden member because of nullability attributes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnOverrideBecauseOfAttributes_Title">
+            <summary>
+              Looks up a localized string similar to Type of parameter doesn&apos;t match overridden member because of nullability attributes..
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInParameterTypeOnPartial">
@@ -26415,6 +26460,16 @@
               Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match implemented member..
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnExplicitImplementationBecauseOfAttributes">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match implemented member &apos;{0}&apos; because of nullability attributes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnExplicitImplementationBecauseOfAttributes_Title">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match implemented member because of nullability attributes..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnImplicitImplementation">
             <summary>
               Looks up a localized string similar to Nullability of reference types in return type of &apos;{0}&apos; doesn&apos;t match implicitly implemented member &apos;{1}&apos;..
@@ -26425,6 +26480,16 @@
               Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match implicitly implemented member..
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnImplicitImplementationBecauseOfAttributes">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in return type of &apos;{0}&apos; doesn&apos;t match implicitly implemented member &apos;{1}&apos; because of nullability attributes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnImplicitImplementationBecauseOfAttributes_Title">
+            <summary>
+              Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match implicitly implemented member because of nullability attributes..
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnOverride">
             <summary>
               Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match overridden member..
@@ -26433,6 +26498,16 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnOverride_Title">
             <summary>
               Looks up a localized string similar to Nullability of reference types in return type doesn&apos;t match overridden member..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnOverrideBecauseOfAttributes">
+            <summary>
+              Looks up a localized string similar to Return type doesn&apos;t match overridden member because of nullability attributes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInReturnTypeOnOverrideBecauseOfAttributes_Title">
+            <summary>
+              Looks up a localized string similar to Return type doesn&apos;t match overridden member because of nullability attributes..
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullabilityMismatchInTypeOnExplicitImplementation">
@@ -28626,9 +28701,12 @@
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.ShouldReportNullableAssignment(Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.NullableFlowState)">
-            <summary>
-            Should we warn for assigning this state into this type?
-            </summary>
+             <summary>
+             Should we warn for assigning this state into this type?
+            
+             This should often be checked together with <seealso cref="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.IsDisallowedNullAssignment(Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState,Microsoft.CodeAnalysis.CSharp.Symbols.FlowAnalysisAnnotations)"/>
+             It catches putting a `null` into a `[DisallowNull]int?` for example, which cannot simply be represented as a non-nullable target type.
+             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.ReportNullableAssignmentIfNecessary(Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState,System.Boolean,Microsoft.CodeAnalysis.CSharp.NullableWalker.AssignmentKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,Microsoft.CodeAnalysis.Location)">
             <summary>
@@ -30753,6 +30831,20 @@
             false if it definitely can't be,
             null if we need to scan further to find out.
             </returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseMethodOrAccessorBodyBlock(System.Boolean)">
+            <summary>
+            Used to parse the block-body for a method or accessor.  For blocks that appear *inside*
+            method bodies, call <see cref="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseBlock"/>.
+            </summary>
+            <param name="isAccessorBody">If is true, then we produce a special diagnostic if the
+            open brace is missing.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseBlock">
+            <summary>
+            Used to parse normal blocks that appear inside method bodies.  For the top level block
+            of a method/accessor use <see cref="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseMethodOrAccessorBodyBlock(System.Boolean)"/>.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseLocalDeclarationStatement(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken)">
             <summary>

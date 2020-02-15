@@ -88,6 +88,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\Interpolation.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DiscardCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.cs">
@@ -129,6 +131,8 @@
     <Compile Include="Microsoft\CSharp\Expressions\Helpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalIndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalInvocationCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\InterpolationStringInsert.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\InterpolationStringLiteral.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\IndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ConditionalLoopCSharpStatement.cs" />

@@ -894,6 +894,30 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(InterpolatedStringCSharpExpressionProxy))]
+    partial class InterpolatedStringCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class InterpolatedStringCSharpExpressionProxy
+    {
+        private readonly InterpolatedStringCSharpExpression _node;
+
+        public InterpolatedStringCSharpExpressionProxy(InterpolatedStringCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.Interpolation> Interpolations => _node.Interpolations;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(InvocationCSharpExpressionProxy))]
     partial class InvocationCSharpExpression
     {

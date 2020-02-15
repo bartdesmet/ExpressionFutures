@@ -6,6 +6,7 @@ using Microsoft.CSharp.Expressions.Compiler;
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
+using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -1979,6 +1980,58 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("_");
+        }
+    }
+
+    partial class InterpolatedStringCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Constant);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Out("$\"");
+
+            foreach (var interpolation in Interpolations)
+            {
+                switch (interpolation)
+                {
+                    case InterpolationStringLiteral literal:
+                        var s = literal.Value.Replace("{", "{{").Replace("}", "}}"); // Escape {} characters
+                        visitor.Out(s);
+                        break;
+                    case InterpolationStringInsert insert:
+                        visitor.Out("{");
+                        visitor.Visit(insert.Value);
+
+                        if (insert.Alignment != null)
+                        {
+                            visitor.Out(",");
+                            visitor.Out(insert.Alignment.Value.ToString());
+                        }
+
+                        if (insert.Format != null)
+                        {
+                            visitor.Out(":");
+                            visitor.Out(insert.Format);
+                        }
+
+                        visitor.Out("}");
+                        break;
+                    default:
+                        throw ContractUtils.Unreachable;
+                }
+            }
+
+            visitor.Out("\"");
         }
     }
 

@@ -232,5 +232,10 @@ namespace Microsoft.CSharp.Expressions
         /// A null-coalescing assignment expression, such as (a ??= b).
         /// </summary>
         NullCoalescingAssign,
+
+        /// <summary>
+        /// A interpolated string expression, such as $"Hello, {world}".
+        /// </summary>
+        InterpolatedString,
     }
 }

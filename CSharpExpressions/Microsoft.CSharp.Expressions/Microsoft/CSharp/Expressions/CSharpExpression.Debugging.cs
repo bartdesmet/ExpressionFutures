@@ -43,6 +43,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class Interpolation
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class ParameterAssignment
     {
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
@@ -82,6 +87,11 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(ParameterAssignment assignment)
         {
             return Visit(assignment);
+        }
+
+        public XNode GetDebugView(Interpolation interpolation)
+        {
+            return Visit(interpolation);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -527,6 +537,44 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
         }
 
+        protected internal override Expression VisitInterpolatedString(InterpolatedStringCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.Interpolations.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Interpolations), node.Interpolations, Visit));
+            }
+
+            return Push(node, args);
+        }
+
+        protected internal override Interpolation VisitInterpolationStringInsert(InterpolationStringInsert node)
+        {
+            var args = new List<object>();
+
+            if (node.Format != null)
+            {
+                args.Add(new XAttribute(nameof(node.Format), node.Format));
+            }
+            
+            if (node.Alignment != null)
+            {
+                args.Add(new XAttribute(nameof(node.Alignment), node.Alignment.Value));
+            }
+
+            args.Add(Visit(node.Value));
+
+            _nodes.Push(new XElement(nameof(InterpolationStringLiteral), args));
+            return node;
+        }
+
+        protected internal override Interpolation VisitInterpolationStringLiteral(InterpolationStringLiteral node)
+        {
+            _nodes.Push(new XElement(nameof(InterpolationStringLiteral), new XElement("Value", node.Value)));
+            return node;
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitInvocation(InvocationCSharpExpression node)
         {
@@ -781,6 +829,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(AwaitInfo node)
         {
             VisitAwaitInfo(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(Interpolation node)
+        {
+            VisitInterpolation(node);
             return _nodes.Pop();
         }
 

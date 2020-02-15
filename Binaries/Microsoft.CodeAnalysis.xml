@@ -3224,6 +3224,11 @@
             Although this path is absolute it may not be normalized. That is, it may contain ".." and "." in the middle. 
             </remarks>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CommandLineSourceFile.IsInputRedirected">
+            <summary>
+            True if the input has been redirected from the standard input stream.
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CommandLineSourceFile.IsScript">
             <summary>
             True if the file should be treated as a script file.
@@ -33572,72 +33577,6 @@
             Used when a collection usually contains a single item but sometimes might contain multiple.
             </remarks>
         </member>
-        <member name="T:Roslyn.Utilities.PerformanceSensitiveAttribute">
-            <summary>
-            Indicates that a code element is performance sensitive under a known scenario.
-            </summary>
-            <remarks>
-            <para>When applying this attribute, only explicitly set the values for properties specifically indicated by the
-            test/measurement technique described in the associated <see cref="P:Roslyn.Utilities.PerformanceSensitiveAttribute.Uri"/>.</para>
-            </remarks>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.Uri">
-            <summary>
-            Gets the location where the original problem is documented, likely with steps to reproduce the issue and/or
-            validate performance related to a change in the method.
-            </summary>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.Constraint">
-            <summary>
-            Gets or sets a description of the constraint imposed by the original performance issue.
-            </summary>
-            <remarks>
-            <para>Constraints are normally specified by other specific properties that allow automated validation of the
-            constraint. This property supports documenting constraints which cannot be described in terms of other
-            constraint properties.</para>
-            </remarks>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowCaptures">
-            <summary>
-            Gets or sets a value indicating whether captures are allowed.
-            </summary>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowImplicitBoxing">
-            <summary>
-            Gets or sets a value indicating whether implicit boxing of value types is allowed.
-            </summary>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowGenericEnumeration">
-            <summary>
-            Gets or sets a value indicating whether enumeration of a generic <see cref="T:System.Collections.Generic.IEnumerable`1"/> is allowed.
-            </summary>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowLocks">
-            <summary>
-            Gets or sets a value indicating whether locks are allowed.
-            </summary>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.OftenCompletesSynchronously">
-            <summary>
-            Gets or sets a value indicating whether the asynchronous state machine typically completes synchronously.
-            </summary>
-            <remarks>
-            <para>When <see langword="true"/>, validation of this performance constraint typically involves analyzing
-            the method to ensure synchronous completion of the state machine does not require the allocation of a
-            <see cref="T:System.Threading.Tasks.Task"/>, either through caching the result or by using <see cref="T:System.Threading.Tasks.ValueTask`1"/>.</para>
-            </remarks>
-        </member>
-        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.IsParallelEntry">
-            <summary>
-            Gets or sets a value indicating whether this is an entry point to a parallel algorithm.
-            </summary>
-            <remarks>
-            <para>Parallelization APIs and algorithms, e.g. <c>Parallel.ForEach</c>, may be efficient for parallel entry
-            points (few direct calls but large amounts of iterative work), but are problematic when called inside the
-            iterations themselves. Performance-sensitive code should avoid the use of heavy parallelization APIs except
-            for known entry points to the parallel portion of code.</para>
-            </remarks>
-        </member>
         <member name="T:Roslyn.Utilities.PlatformInformation">
             <summary>
             This class provides simple properties for determining whether the current platform is Windows or Unix-based.
@@ -34234,6 +34173,74 @@
             <summary>
             The string type
             </summary>
+        </member>
+        <member name="T:Roslyn.Utilities.PerformanceSensitiveAttribute">
+            <summary>
+            Indicates that a code element is performance sensitive under a known scenario.
+            </summary>
+            <remarks>
+            <para>When applying this attribute, only explicitly set the values for properties specifically indicated by the
+            test/measurement technique described in the associated <see cref="P:Roslyn.Utilities.PerformanceSensitiveAttribute.Uri"/>.</para>
+            </remarks>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.Uri">
+            <summary>
+            Gets the location where the original problem is documented, likely with steps to reproduce the issue and/or
+            validate performance related to a change in the method.
+            </summary>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.Constraint">
+            <summary>
+            Gets or sets a description of the constraint imposed by the original performance issue.
+            </summary>
+            <remarks>
+            <para>Constraints are normally specified by other specific properties that allow automated validation of the
+            constraint. This property supports documenting constraints which cannot be described in terms of other
+            constraint properties.</para>
+            </remarks>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowCaptures">
+            <summary>
+            Gets or sets a value indicating whether captures are allowed.
+            </summary>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowImplicitBoxing">
+            <summary>
+            Gets or sets a value indicating whether implicit boxing of value types is allowed.
+            </summary>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowGenericEnumeration">
+            <summary>
+            Gets or sets a value indicating whether enumeration of a generic
+            <see cref="T:System.Collections.Generic.IEnumerable`1"/> is allowed.
+            </summary>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.AllowLocks">
+            <summary>
+            Gets or sets a value indicating whether locks are allowed.
+            </summary>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.OftenCompletesSynchronously">
+            <summary>
+            Gets or sets a value indicating whether the asynchronous state machine typically completes synchronously.
+            </summary>
+            <remarks>
+            <para>When <see langword="true"/>, validation of this performance constraint typically involves analyzing
+            the method to ensure synchronous completion of the state machine does not require the allocation of a
+            <see cref="T:System.Threading.Tasks.Task"/>, either through caching the result or by using
+            <see cref="T:System.Threading.Tasks.ValueTask`1"/>.</para>
+            </remarks>
+        </member>
+        <member name="P:Roslyn.Utilities.PerformanceSensitiveAttribute.IsParallelEntry">
+            <summary>
+            Gets or sets a value indicating whether this is an entry point to a parallel algorithm.
+            </summary>
+            <remarks>
+            <para>Parallelization APIs and algorithms, e.g. <c>Parallel.ForEach</c>, may be efficient for parallel entry
+            points (few direct calls but large amounts of iterative work), but are problematic when called inside the
+            iterations themselves. Performance-sensitive code should avoid the use of heavy parallelization APIs except
+            for known entry points to the parallel portion of code.</para>
+            </remarks>
         </member>
         <member name="T:System.Runtime.CompilerServices.InternalImplementationOnlyAttribute">
             <summary>
