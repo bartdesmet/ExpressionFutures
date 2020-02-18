@@ -2864,7 +2864,7 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CommandLineArguments.OutputDirectory">
             <summary>
-            Absolute path of the output directory.
+            Absolute path of the output directory (could only be null if there is an error reported).
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CommandLineArguments.DocumentationPath">

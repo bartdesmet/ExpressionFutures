@@ -378,7 +378,37 @@ All of this is very similar to the C# compiler approach of supporting `await` in
 
 ##### Interpolated Strings
 
-Right now, interpolated strings are being lowered to `string.Format` invocations in expression trees. This has the drawback that any library that wishes to translate a string interpolation needs to reverse engineer a format string literal. We can consider to capture interpolated strings as proper non-lowered expressions, and have the `Reduce` method return the equivalent `string.Format` call.
+Right now, interpolated strings are being lowered to `string.Format` invocations in expression trees. This has the drawback that any library that wishes to translate a string interpolation needs to reverse engineer a format string literal. When referencing `Microsoft.CSharp.Expressions`, we capture interpolated strings in a non-lowered form as an `InterpolatedStringCSharpExpression`, whose `Reduce` method will produce a `MethodCallExpression` for the equivalent `string.Format` call.
+
+For example:
+
+```csharp
+Expression<Func<string, int, string>> e = (name, age) => $"{name} is {age} years old.";
+```
+
+traditionally gets translated as:
+
+```csharp
+Expression.Call(
+  string_format_method,
+  Expression.Constant("{0} is {1} years old."),
+  name,
+  Expression.Convert(age, typeof(object))
+)
+```
+
+where the chosen overload of `string.Format` is decided by binding steps in the C# compiler. When referencing `Microsoft.CSharp.Expressions`, the expression is translated as:
+
+```csharp
+CSharpExpression.InterpolatedString(
+  CSharpExpression.InterpolationStringInsert(name, null, null),
+  CSharpExpression.InterpolationStringLiteral(" is "),
+  CSharpExpression.InterpolationStringInsert(age, null, null),
+  CSharpExpression.InterpolationStringLiteral(" years old.")
+)
+```
+
+where `InterpolationStringInsert` takes three parameters, one for the expression to interpolate, followed by an optional format string and alignment specifier (of type `int?`). After reduction of the `InterpolatedStringCSharpExpression`, the equivalent `MethodCallExpression` for `string.Format` call is generated.
 
 #### C# 7.0
 

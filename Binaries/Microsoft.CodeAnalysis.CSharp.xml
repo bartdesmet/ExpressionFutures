@@ -22024,6 +22024,11 @@
               Looks up a localized string similar to A void or int returning entry point cannot be async.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NoOutputDirectory">
+            <summary>
+              Looks up a localized string similar to Output directory could not be determined.
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NoPIAAssemblyMissingAttribute">
             <summary>
               Looks up a localized string similar to Cannot embed interop types from assembly &apos;{0}&apos; because it is missing the &apos;{1}&apos; attribute..

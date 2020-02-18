@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -17,6 +18,9 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class InterpolatedStringCSharpExpression : CSharpExpression
     {
+        private static MethodInfo s_format_params;
+        private static MethodInfo[] s_format_args;
+
         internal InterpolatedStringCSharpExpression(ReadOnlyCollection<Interpolation> interpolations)
         {
             Interpolations = interpolations;
@@ -115,11 +119,98 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            var formatMethod = typeof(string).GetNonGenericMethod("Format", BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) });
+            return MakeStringFormat(sb.ToString(), values);
+        }
 
-            var formatString = Expression.Constant(sb.ToString());
+        private static Expression MakeStringFormat(string format, List<Expression> args)
+        {
+            //
+            // NB: Roslyn has strange behavior for e.g. $"foo", where it leaks optimization logic in the expression tree, causing it to produce
+            //
+            //       Expression.Coalesce(Expression.Constant("foo"), Expression.Constant(""))
+            //
+            //     We don't port that behavior here.
+            //
 
-            return Expression.Call(formatMethod, formatString, Expression.NewArrayInit(typeof(object), values));
+            var n = args.Count;
+
+            if (n == 0)
+            {
+                return Expression.Constant(format);
+            }
+
+            EnsureStringFormatInfo();
+
+            var formatString = Expression.Constant(format);
+
+            if (n - 1 < s_format_args.Length)
+            {
+                var method = s_format_args[n - 1];
+
+                if (method != null)
+                {
+                    return Expression.Call(method, new Expression[] { formatString }.Concat(args));
+                }
+            }
+
+            return Expression.Call(s_format_params, formatString, Expression.NewArrayInit(typeof(object), args));
+        }
+
+        private static void EnsureStringFormatInfo()
+        {
+            if (s_format_args == null)
+            {
+                var methods = new List<MethodInfo>();
+                var maxArgs = 0;
+
+                foreach (var method in typeof(string).GetMethods(BindingFlags.Public | BindingFlags.Static))
+                {
+                    if (!method.IsGenericMethodDefinition && method.Name == "Format")
+                    {
+                        var parameters = method.GetParametersCached();
+
+                        if (parameters.Length > 1 && parameters[0].ParameterType == typeof(string))
+                        {
+                            if (parameters.Length == 2 && parameters[1].ParameterType == typeof(object[]))
+                            {
+                                s_format_params = method;
+                            }
+                            else
+                            {
+                                var isCandidate = true;
+
+                                for (int i = 1; i < parameters.Length; i++)
+                                {
+                                    if (parameters[i].ParameterType != typeof(object))
+                                    {
+                                        isCandidate = false;
+                                        break;
+                                    }
+                                }
+
+                                if (isCandidate)
+                                {
+                                    methods.Add(method);
+
+                                    var argCount = parameters.Length - 1;
+
+                                    if (argCount > maxArgs)
+                                    {
+                                        maxArgs = argCount;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                s_format_args = new MethodInfo[maxArgs];
+
+                foreach (var method in methods)
+                {
+                    s_format_args[method.GetParametersCached().Length - 2] = method;
+                }
+            }
         }
     }
 
