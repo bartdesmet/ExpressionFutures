@@ -459,7 +459,13 @@ Nodes of this type reduce to a valid assignment target using a `Discard<T>` help
 
 ##### Generalized Async Return Types
 
-TODO
+Task-like return types on async lambdas are supported using the `AsyncMethodBuilderAttribute` type to select a builder type. For example, this enables the use of `ValueTask<T>` as the return type of an async lambda:
+
+```csharp
+Expression<Func<Task<int>, ValueTask<int>>> f = t => 2 * await t;
+```
+
+Upon reduction of the `AsyncLambdaCSharpExpression` node, the async state machine is built using the custom builder type's `Create`, `Start`, `AwaitOnCompleted`, `SetResult`, and `SetException` methods. The task-like object returned is obtained using the builder's `Task` property.
 
 ##### Tuples
 
