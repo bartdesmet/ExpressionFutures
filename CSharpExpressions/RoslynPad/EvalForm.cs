@@ -121,39 +121,74 @@ namespace RoslynPad
                 return;
             }
 
-            if (res is Task task)
-            {
-                txtResult.Text = "Awaiting task...";
-
-                try
-                {
-                    await task;
-
-                    var txt = ObjectDumper.Write(res);
-                    txtResult.Text = "Awaiting task... Done!\r\n" + txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
-
-                    _done = true;
-                    tabControl1.SelectedTab = tabResult;
-                    txtResult.SelectionStart = txtResult.SelectionStart = 0;
-                    txtResult.ScrollToCaret();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-            else
+            if (!await TryAwait((dynamic)res))
             {
                 var txt = ObjectDumper.Write(res);
 
                 txtResult.ForeColor = Color.Black;
-                txtResult.Text = txt + "\r\n\r\nConsole output:\r\n" + cout.ToString();
+                txtResult.Text = txt + "\r\n\r\n";
+            }
 
-                _done = true;
-                tabControl1.SelectedTab = tabResult;
-                txtResult.SelectionStart = txtResult.SelectionStart = 0;
-                txtResult.ScrollToCaret();
+            txtResult.Text += "Console output:\r\n" + cout.ToString();
+
+            _done = true;
+            tabControl1.SelectedTab = tabResult;
+            txtResult.SelectionStart = txtResult.SelectionStart = 0;
+            txtResult.ScrollToCaret();
+        }
+
+        private async Task<bool> TryAwait(Task t)
+        {
+            await AwaitCore(async () =>
+            {
+                await t;
+                return default(object);
+            });
+
+            return true;
+        }
+
+        private async Task<bool> TryAwait(ValueTask t)
+        {
+            await AwaitCore(async () =>
+            {
+                await t;
+                return default(object);
+            });
+
+            return true;
+        }
+
+        private async Task<bool> TryAwait<T>(Task<T> t)
+        {
+            await AwaitCore(async () => await t);
+
+            return true;
+        }
+
+        private async Task<bool> TryAwait<T>(ValueTask<T> t)
+        {
+            await AwaitCore(async () => await t);
+
+            return true;
+        }
+
+        private Task<bool> TryAwait(object o) => Task.FromResult(false);
+
+        private async Task AwaitCore<T>(Func<Task<T>> f)
+        {
+            txtResult.Text = "Awaiting task...";
+
+            try
+            {
+                var res = await f();
+
+                var txt = ObjectDumper.Write(res);
+                txtResult.Text = "Awaiting task... Done!\r\n" + txt + "\r\n\r\n";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when evaluating expression:\r\n\r\n{ex.Message}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
