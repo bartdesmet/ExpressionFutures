@@ -1340,25 +1340,28 @@ namespace Microsoft.CSharp.Expressions
             // TODO: We could cache this info, but need to deal with closed generic forms of builderType.
             //
 
-            var create = builderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
-
-            if (create == null || create.IsGenericMethod || create.GetParameters().Length != 0 || create.ReturnType == typeof(void))
+            if (!TryGetCreate(ref info) || !TryGetStart(ref info) || !TryGetSetException(ref info) || !TryGetAwaitOnCompleted(ref info) || !TryGetSetResult(ref info) || !TryGetTask(ref info))
             {
                 return false;
             }
 
-            info.Create = create;
-
-            var builderInstanceType = create.ReturnType;
-
-            if (!TryGetStart(ref info) || !TryGetSetStateMachine(ref info) || !TryGetSetException(ref info) || !TryGetAwaitOnCompleted(ref info) || !TryGetAwaitUnsafeOnCompleted(ref info) || !TryGetSetResult(ref info) || !TryGetTask(ref info))
+            static bool TryGetCreate(ref AsyncMethodBuilderInfo info)
             {
-                return false;
+                var create = info.BuilderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
+
+                if (create == null || create.IsGenericMethod || create.GetParameters().Length != 0 || create.ReturnType != info.BuilderType)
+                {
+                    return false;
+                }
+
+                info.Create = create;
+
+                return true;
             }
 
-            bool TryGetStart(ref AsyncMethodBuilderInfo info)
+            static bool TryGetStart(ref AsyncMethodBuilderInfo info)
             {
-                var start = builderInstanceType.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
+                var start = info.BuilderType.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
 
                 if (start == null || !start.IsGenericMethod || start.ReturnType != typeof(void))
                 {
@@ -1384,30 +1387,9 @@ namespace Microsoft.CSharp.Expressions
                 return true;
             }
 
-            bool TryGetSetStateMachine(ref AsyncMethodBuilderInfo info)
+            static bool TryGetSetException(ref AsyncMethodBuilderInfo info)
             {
-                var setStateMachine = builderInstanceType.GetMethod("SetStateMachine", BindingFlags.Public | BindingFlags.Instance);
-
-                if (setStateMachine == null || setStateMachine.IsGenericMethod || setStateMachine.ReturnType != typeof(void))
-                {
-                    return false;
-                }
-
-                var setStateMachineParameters = setStateMachine.GetParameters();
-
-                if (setStateMachineParameters.Length != 1 || setStateMachineParameters[0].ParameterType != typeof(IAsyncStateMachine))
-                {
-                    return false;
-                }
-
-                info.SetStateMachine = setStateMachine;
-
-                return true;
-            }
-
-            bool TryGetSetException(ref AsyncMethodBuilderInfo info)
-            {
-                var setException = builderInstanceType.GetMethod("SetException", BindingFlags.Public | BindingFlags.Instance);
+                var setException = info.BuilderType.GetMethod("SetException", BindingFlags.Public | BindingFlags.Instance);
 
                 if (setException == null || setException.IsGenericMethod || setException.ReturnType != typeof(void))
                 {
@@ -1426,9 +1408,9 @@ namespace Microsoft.CSharp.Expressions
                 return true;
             }
 
-            bool TryGetAwaitOnCompleted(ref AsyncMethodBuilderInfo info)
+            static bool TryGetAwaitOnCompleted(ref AsyncMethodBuilderInfo info)
             {
-                var awaitOnCompleted = builderInstanceType.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
+                var awaitOnCompleted = info.BuilderType.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
 
                 if (awaitOnCompleted == null || awaitOnCompleted.ReturnType != typeof(void) || !awaitOnCompleted.IsGenericMethod)
                 {
@@ -1454,37 +1436,9 @@ namespace Microsoft.CSharp.Expressions
                 return true;
             }
 
-            bool TryGetAwaitUnsafeOnCompleted(ref AsyncMethodBuilderInfo info)
+            static bool TryGetSetResult(ref AsyncMethodBuilderInfo info)
             {
-                var awaitUnsafeOnCompleted = builderInstanceType.GetMethod("AwaitUnsafeOnCompleted", BindingFlags.Public | BindingFlags.Instance);
-
-                if (awaitUnsafeOnCompleted == null || awaitUnsafeOnCompleted.ReturnType != typeof(void) || !awaitUnsafeOnCompleted.IsGenericMethod)
-                {
-                    return false;
-                }
-
-                var awaitUnsafeOnCompletedGenArgs = awaitUnsafeOnCompleted.GetGenericArguments();
-
-                if (awaitUnsafeOnCompletedGenArgs.Length != 2 || !awaitUnsafeOnCompletedGenArgs[0].GetInterfaces().Contains(typeof(INotifyCompletion)) || !awaitUnsafeOnCompletedGenArgs[1].GetInterfaces().Contains(typeof(IAsyncStateMachine)))
-                {
-                    return false;
-                }
-
-                var awaitUnsafeOnCompletedParameters = awaitUnsafeOnCompleted.GetParameters();
-
-                if (awaitUnsafeOnCompletedParameters.Length != 2 || awaitUnsafeOnCompletedParameters[0].ParameterType != awaitUnsafeOnCompletedGenArgs[0].MakeByRefType() || awaitUnsafeOnCompletedParameters[1].ParameterType != awaitUnsafeOnCompletedGenArgs[1].MakeByRefType())
-                {
-                    return false;
-                }
-
-                info.AwaitUnsafeOnCompleted = awaitUnsafeOnCompleted;
-
-                return true;
-            }
-
-            bool TryGetSetResult(ref AsyncMethodBuilderInfo info)
-            {
-                var setResult = builderInstanceType.GetMethod("SetResult", BindingFlags.Public | BindingFlags.Instance);
+                var setResult = info.BuilderType.GetMethod("SetResult", BindingFlags.Public | BindingFlags.Instance);
 
                 if (setResult == null || setResult.ReturnType != typeof(void))
                 {
@@ -1518,11 +1472,11 @@ namespace Microsoft.CSharp.Expressions
                 return true;
             }
 
-            bool TryGetTask(ref AsyncMethodBuilderInfo info)
+            static bool TryGetTask(ref AsyncMethodBuilderInfo info)
             {
                 if (info.BuilderType != typeof(AsyncVoidMethodBuilder))
                 {
-                    var task = builderInstanceType.GetProperty("Task", BindingFlags.Public | BindingFlags.Instance);
+                    var task = info.BuilderType.GetProperty("Task", BindingFlags.Public | BindingFlags.Instance);
 
                     if (task == null || task.GetIndexParameters().Length != 0 || !task.CanRead)
                     {
@@ -1544,11 +1498,9 @@ namespace Microsoft.CSharp.Expressions
         public Type BuilderType;
         public MethodInfo Create;
         public MethodInfo Start;
-        public MethodInfo SetStateMachine;
         public MethodInfo SetResult;
         public MethodInfo SetException;
         public MethodInfo AwaitOnCompleted;
-        public MethodInfo AwaitUnsafeOnCompleted;
         public PropertyInfo Task;
         public Type ResultType;
     }
