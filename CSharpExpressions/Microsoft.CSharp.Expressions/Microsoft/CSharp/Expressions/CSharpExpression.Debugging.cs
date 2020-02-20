@@ -680,15 +680,12 @@ namespace Microsoft.CSharp.Expressions
 
         private static string EscapeToString(object obj)
         {
-            switch (obj)
+            return obj switch
             {
-                case null:
-                    return "null";
-                case string s:
-                    return "\"" + s.Replace("\"", "\\\"") + "\"";
-            }
-
-            return obj.ToString();
+                null => "null",
+                string s => "\"" + s.Replace("\"", "\\\"") + "\"",
+                _ => obj.ToString(),
+            };
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]

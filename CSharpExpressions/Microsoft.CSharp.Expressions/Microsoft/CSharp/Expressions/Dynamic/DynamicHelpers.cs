@@ -35,15 +35,12 @@ namespace Microsoft.CSharp.Expressions
         {
             var lhs = MakeWriteable(left.Expression);
 
-            switch (lhs)
+            return lhs switch
             {
-                case GetMemberDynamicCSharpExpression dynamicMember:
-                    return ReduceDynamicMember(dynamicMember, functionalOp, flags, prefix);
-                case GetIndexDynamicCSharpExpression dynamicIndex:
-                    return ReduceDynamicIndex(dynamicIndex, functionalOp, flags, prefix);
-            }
-
-            return Helpers.ReduceAssignment(lhs, functionalOp, prefix);
+                GetMemberDynamicCSharpExpression dynamicMember => ReduceDynamicMember(dynamicMember, functionalOp, flags, prefix),
+                GetIndexDynamicCSharpExpression dynamicIndex => ReduceDynamicIndex(dynamicIndex, functionalOp, flags, prefix),
+                _ => Helpers.ReduceAssignment(lhs, functionalOp, prefix),
+            };
         }
 
         private static Expression ReduceDynamicMember(GetMemberDynamicCSharpExpression member, Func<Expression, Expression> functionalOp, CSharpBinderFlags flags, bool prefix)
