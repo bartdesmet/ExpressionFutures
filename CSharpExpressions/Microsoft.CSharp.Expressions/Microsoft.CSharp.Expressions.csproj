@@ -220,6 +220,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj">
+      <Project>{6fa07859-fbeb-4e2e-a70c-1373118a6740}</Project>
+      <Name>BclExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
       <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
       <Name>System.Linq.Expressions.Debugging</Name>

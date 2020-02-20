@@ -172,23 +172,18 @@ namespace Microsoft.CSharp.Expressions
             var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
             var returnType = invokeMethod.ReturnType;
 
-            Type builderType;
+            var builderInfo = Helpers.GetAsyncMethodBuilderInfo(returnType);
+            var builderType = builderInfo.BuilderType;
+
             Expression[] exprs;
 
             if (returnType == typeof(void))
             {
-                builderType = typeof(AsyncVoidMethodBuilder);
+                Debug.Assert(builderType == typeof(AsyncVoidMethodBuilder));
                 exprs = new Expression[ExprCount];
-            }
-            else if (returnType == typeof(Task))
-            {
-                builderType = typeof(AsyncTaskMethodBuilder);
-                exprs = new Expression[ExprCount + 1];
             }
             else
             {
-                Debug.Assert(returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>));
-                builderType = typeof(AsyncTaskMethodBuilder<>).MakeGenericType(returnType.GetGenericArguments()[0]);
                 exprs = new Expression[ExprCount + 1];
             }
 
@@ -201,8 +196,7 @@ namespace Microsoft.CSharp.Expressions
             //
             // __builder = ATMB.Create();
             //
-            var builderCreateMethod = builderType.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
-            var createBuilder = Expression.Assign(builderVar, Expression.Call(builderCreateMethod));
+            var createBuilder = Expression.Assign(builderVar, Expression.Call(builderInfo.Create));
             exprs[i++] = createBuilder;
 
             //
@@ -220,7 +214,7 @@ namespace Microsoft.CSharp.Expressions
             // can decide to optimize this using a struct later (but then it may be worth making closures
             // in the lambda compiler a bit cheaper by creating a display class as well).
             //
-            var body = RewriteBody(stateVar, builderVar, stateMachineVar, out IEnumerable<ParameterExpression> variables);
+            var body = RewriteBody(builderInfo, stateVar, builderVar, stateMachineVar, out IEnumerable<ParameterExpression> variables);
 
             //
             // __statemachine = new RuntimeAsyncStateMachine(body);
@@ -237,7 +231,7 @@ namespace Microsoft.CSharp.Expressions
             //
             // __builder.Start(ref __statemachine);
             //
-            var startMethod = builderType.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
+            var startMethod = builderInfo.Start;
             exprs[i++] = Expression.Call(builderVar, startMethod.MakeGenericMethod(typeof(RuntimeAsyncStateMachine)), stateMachineVar);
 
             //
@@ -245,7 +239,7 @@ namespace Microsoft.CSharp.Expressions
             //
             if (returnType != typeof(void))
             {
-                exprs[i] = Expression.Property(builderVar, "Task");
+                exprs[i] = Expression.Property(builderVar, builderInfo.Task);
             }
 
             //
@@ -277,7 +271,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private Expression RewriteBody(ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
+        private Expression RewriteBody(AsyncMethodBuilderInfo builderInfo, ParameterExpression stateVar, ParameterExpression builderVar, ParameterExpression stateMachineVar, out IEnumerable<ParameterExpression> variables)
         {
             const int ExprCount = 1 /* local state var */ + 1 /* TryCatch */ + 2 /* state = -2; SetResult */ + 1 /* Label */;
 
@@ -327,7 +321,7 @@ namespace Microsoft.CSharp.Expressions
             //         the cases where we can do this and can we do it wrt security restrictions on code
             //         that gets emitted dynamically?
             //
-            var awaitOnCompletedMethod = builderVar.Type.GetMethod("AwaitOnCompleted", BindingFlags.Public | BindingFlags.Instance);
+            var awaitOnCompletedMethod = builderInfo.AwaitOnCompleted;
             var awaitOnCompletedArgs = new Type[] { default, typeof(RuntimeAsyncStateMachine) };
 
             var onCompletedFactory = new Func<Expression, Expression>(awaiter =>
@@ -499,7 +493,7 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Catch(ex,
                         Expression.Block(
                             Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2)),
-                            Expression.Call(builderVar, builderVar.Type.GetMethod("SetException"), ex),
+                            Expression.Call(builderVar, builderInfo.SetException, ex),
                             Expression.Return(exit)
                         )
                     )
@@ -515,11 +509,11 @@ namespace Microsoft.CSharp.Expressions
             //
             if (result != null)
             {
-                exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"), result);
+                exprs[i++] = Expression.Call(builderVar, builderInfo.SetResult, result);
             }
             else
             {
-                exprs[i++] = Expression.Call(builderVar, builderVar.Type.GetMethod("SetResult"));
+                exprs[i++] = Expression.Call(builderVar, builderInfo.SetResult);
             }
 
             //
@@ -741,20 +735,16 @@ namespace Microsoft.CSharp.Expressions
                 throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
             }
 
-            var returnType = method.ReturnType;
-
-            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+            if (Helpers.IsTaskLikeType(method.ReturnType, out var resultType))
             {
-                var resultType = returnType.GetGenericArguments()[0];
-
-                if (!TypeUtils.AreReferenceAssignable(resultType, body.Type) && !TryQuote(resultType, ref body))
+                if (resultType != typeof(void) && !TypeUtils.AreReferenceAssignable(resultType, body.Type) && !TryQuote(resultType, ref body))
                 {
                     throw LinqError.ExpressionTypeDoesNotMatchReturn(body.Type, method.ReturnType);
                 }
             }
-            else if (returnType != typeof(void) && returnType != typeof(Task))
+            else
             {
-                throw Error.AsyncLambdaInvalidReturnType(returnType);
+                throw Error.AsyncLambdaInvalidReturnType(method.ReturnType);
             }
         }
 
