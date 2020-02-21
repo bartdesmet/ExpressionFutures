@@ -918,6 +918,67 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(InterpolationProxy))]
+    partial class Interpolation
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class InterpolationProxy
+    {
+        private readonly Interpolation _node;
+
+        public InterpolationProxy(Interpolation node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+    }
+
+    [DebuggerTypeProxy(typeof(InterpolationStringInsertProxy))]
+    partial class InterpolationStringInsert
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class InterpolationStringInsertProxy
+    {
+        private readonly InterpolationStringInsert _node;
+
+        public InterpolationStringInsertProxy(InterpolationStringInsert node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Nullable<System.Int32> Alignment => _node.Alignment;
+        public System.String Format => _node.Format;
+        public System.Linq.Expressions.Expression Value => _node.Value;
+    }
+
+    [DebuggerTypeProxy(typeof(InterpolationStringLiteralProxy))]
+    partial class InterpolationStringLiteral
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class InterpolationStringLiteralProxy
+    {
+        private readonly InterpolationStringLiteral _node;
+
+        public InterpolationStringLiteralProxy(InterpolationStringLiteral node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.String Value => _node.Value;
+    }
+
     [DebuggerTypeProxy(typeof(InvocationCSharpExpressionProxy))]
     partial class InvocationCSharpExpression
     {
