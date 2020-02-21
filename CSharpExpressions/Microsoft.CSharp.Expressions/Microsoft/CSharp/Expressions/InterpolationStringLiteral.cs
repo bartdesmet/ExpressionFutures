@@ -9,7 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an interpolation containing a string literal.
     /// </summary>
-    public sealed class InterpolationStringLiteral : Interpolation
+    public sealed partial class InterpolationStringLiteral : Interpolation
     {
         internal InterpolationStringLiteral(string value)
         {

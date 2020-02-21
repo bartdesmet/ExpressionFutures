@@ -10,7 +10,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an interpolation containing a string insert with optional format and alignment specifiers.
     /// </summary>
-    public sealed class InterpolationStringInsert : Interpolation
+    public sealed partial class InterpolationStringInsert : Interpolation
     {
         internal InterpolationStringInsert(Expression value, string format, int? alignment)
         {
