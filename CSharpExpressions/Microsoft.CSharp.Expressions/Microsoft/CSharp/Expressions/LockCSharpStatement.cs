@@ -72,8 +72,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
-            var enterMethod = s_enterMethod ?? (s_enterMethod = typeof(Monitor).GetMethod("Enter", new[] { typeof(object), typeof(bool).MakeByRefType() }));
-            var exitMethod = s_exitMethod ?? (s_exitMethod = typeof(Monitor).GetMethod("Exit", new[] { typeof(object) }));
+            var enterMethod = s_enterMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Enter), new[] { typeof(object), typeof(bool).MakeByRefType() });
+            var exitMethod = s_exitMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Exit), new[] { typeof(object) });
 
             var temp = Expression.Parameter(Expression.Type, "__lock");
             var lockTaken = Expression.Parameter(typeof(bool), "__lockWasTaken");
