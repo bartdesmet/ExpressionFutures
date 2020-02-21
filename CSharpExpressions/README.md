@@ -401,6 +401,7 @@ where the chosen overload of `string.Format` is decided by binding steps in the 
 
 ```csharp
 CSharpExpression.InterpolatedString(
+  typeof(string),
   CSharpExpression.InterpolationStringInsert(name, null, null),
   CSharpExpression.InterpolationStringLiteral(" is "),
   CSharpExpression.InterpolationStringInsert(age, null, null),
@@ -409,6 +410,42 @@ CSharpExpression.InterpolatedString(
 ```
 
 where `InterpolationStringInsert` takes three parameters, one for the expression to interpolate, followed by an optional format string and alignment specifier (of type `int?`). After reduction of the `InterpolatedStringCSharpExpression`, the equivalent `MethodCallExpression` for `string.Format` call is generated.
+
+Interpolated strings also support conversion to `FormattableString` or `IFormattable`, causing lowering to `FormattableStringFactory.Create` invocations in expression trees. This has similar issues as the `string.Format` lowering, so we support capturing the interpolated string as a `InterpolatedStringCSharpExpression` whose `Type` property is `FormattableString` of `IFormattable`.
+
+For example:
+
+```csharp
+Expression<Func<string, int, FormattableString>> e = (name, age) => $"{name} is {age} years old.";
+```
+
+traditionally gets translated as:
+
+```csharp
+Expression.Call(
+  formattable_string_factory_create_method,
+  Expression.Constant("{0} is {1} years old."),
+  Expression.NewArrayInit(
+    typeof(object),
+    name,
+    Expression.Convert(age, typeof(object))
+  )
+)
+```
+
+When referencing `Microsoft.CSharp.Expressions`, the expression is translated as:
+
+```csharp
+CSharpExpression.InterpolatedString(
+  typeof(FormattableString),
+  CSharpExpression.InterpolationStringInsert(name, null, null),
+  CSharpExpression.InterpolationStringLiteral(" is "),
+  CSharpExpression.InterpolationStringInsert(age, null, null),
+  CSharpExpression.InterpolationStringLiteral(" years old.")
+)
+```
+
+where the first argument indicates the converted type. Reduction of the expression results in a `MethodCallExpression` for the `FormattableStringFactory.Create` method.
 
 #### C# 7.0
 

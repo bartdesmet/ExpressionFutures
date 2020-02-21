@@ -65,122 +65,6 @@
             otherwise, we match for type equivalence
             </remarks>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Cannot_retrieve_the_Span_of_a_null_syntax_reference">
-            <summary>
-              Looks up a localized string similar to Cannot retrieve the Span of a null syntax reference..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Code_block_preferences">
-            <summary>
-              Looks up a localized string similar to Code-block preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Expected_string_or_char_literal">
-            <summary>
-              Looks up a localized string similar to Expected string or char literal.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Expression_bodied_members">
-            <summary>
-              Looks up a localized string similar to Expression-bodied members.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Implement_Interface">
-            <summary>
-              Looks up a localized string similar to Implement Interface.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Indentation_preferences">
-            <summary>
-              Looks up a localized string similar to Indentation preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Namespace_can_not_be_added_in_this_destination">
-            <summary>
-              Looks up a localized string similar to Namespace can not be added in this destination..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.No_available_location_found_to_add_statements_to">
-            <summary>
-              Looks up a localized string similar to No available location found to add statements to..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Node_does_not_descend_from_root">
-            <summary>
-              Looks up a localized string similar to Node does not descend from root..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Node_not_in_parent_s_child_list">
-            <summary>
-              Looks up a localized string similar to Node not in parent&apos;s child list.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Null_checking_preferences">
-            <summary>
-              Looks up a localized string similar to Null-checking preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Only_attributes_constructor_initializers_expressions_or_statements_can_be_made_explicit">
-            <summary>
-              Looks up a localized string similar to Only attributes, constructor initializers, expressions or statements can be made explicit.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Pattern_matching_preferences">
-            <summary>
-              Looks up a localized string similar to Pattern matching preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Remove_and_Sort_Usings">
-            <summary>
-              Looks up a localized string similar to R&amp;emove and Sort Usings.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Sort_Usings">
-            <summary>
-              Looks up a localized string similar to &amp;Sort Usings.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Space_preferences">
-            <summary>
-              Looks up a localized string similar to Space preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Trivia_is_not_associated_with_token">
-            <summary>
-              Looks up a localized string similar to Trivia is not associated with token.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.using_directive_preferences">
-            <summary>
-              Looks up a localized string similar to &apos;using&apos; directive preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.var_preferences">
-            <summary>
-              Looks up a localized string similar to var preferences.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Wrapping_preferences">
-            <summary>
-              Looks up a localized string similar to Wrapping preferences.
-            </summary>
-        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.Rewriter._namespaceMembers">
             <summary>
             A hashset containing the short names of all namespace members 
@@ -189,88 +73,6 @@
         <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.Rewriter._extensionMethods">
             <summary>
             A hashset containing the short names of all extension methods
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
-            is true, the last parameter will be returned if it is params parameter and the index of
-            the specified argument is greater than the number of parameters.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.AttributeArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
-            is true, the last parameter will be returned if it is params parameter and the index of
-            the specified argument is greater than the number of parameters.
-            </summary>
-            <remarks>
-            Returns null if the <paramref name="argument"/> is a named argument.
-            </remarks>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryGetSemicolonToken(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax)">
-            <summary>
-            Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryWithSemicolonToken(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax,Microsoft.CodeAnalysis.SyntaxToken)">
-            <summary>
-            Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryWithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax)">
-            <summary>
-            Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.CSharpSyntaxContext.IsAwaitStatementContext(System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Is this a possible position for an await statement (`await using` or `await foreach`)?
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleTupleContext(Microsoft.CodeAnalysis.SyntaxTree,Microsoft.CodeAnalysis.SyntaxToken,System.Int32)">
-            <summary>
-            Are you possibly typing a tuple type or expression?
-            This is used to suppress colon as a completion trigger (so that you can type element names).
-            This is also used to recommend some keywords (like var).
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleDeconstructionDesignation(Microsoft.CodeAnalysis.SyntaxTree,System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Are you possibly in the designation part of a deconstruction?
-            This is used to enter suggestion mode (suggestions become soft-selected).
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.UnwrapPossibleTuple(Microsoft.CodeAnalysis.SyntaxNode)">
-            <summary>
-            If inside a parenthesized or tuple expression, unwrap the nestings and return the container.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.CastIfPossible(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.ITypeSymbol,System.Int32,Microsoft.CodeAnalysis.SemanticModel,System.Threading.CancellationToken)">
-            <summary>
-            Adds to <paramref name="targetType"/> if it does not contain an anonymous
-            type and binds to the same type at the given <paramref name="position"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsExpressionOfArgumentInDeconstruction(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
-            <summary>
-            If this declaration or identifier is part of a deconstruction, find the deconstruction.
-            If found, returns either an assignment expression or a foreach variable statement.
-            Returns null otherwise.
-            
-            copied from SyntaxExtensions.GetContainingDeconstruction
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions.TypeSyntaxGeneratorVisitor.AddGlobalAlias(Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax)">
-            <summary>
-            We always unilaterally add "global::" to all named types/namespaces.  This
-            will then be trimmed off if possible by calls to 
-            <see cref="M:Microsoft.CodeAnalysis.Simplification.Simplifier.ReduceAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Options.OptionSet,System.Threading.CancellationToken)"/>
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Extensions.OperatorPrecedence">
-            <summary>
-            Operator precedence classes from section 7.3.1 of the C# language specification.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SemanticModelExtensions.DecomposeName(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax@,System.String@,System.Int32@)">
@@ -294,6 +96,26 @@
             that expression. 
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsExpressionOfArgumentInDeconstruction(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
+            <summary>
+            If this declaration or identifier is part of a deconstruction, find the deconstruction.
+            If found, returns either an assignment expression or a foreach variable statement.
+            Returns null otherwise.
+            
+            copied from SyntaxExtensions.GetContainingDeconstruction
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.CastIfPossible(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.ITypeSymbol,System.Int32,Microsoft.CodeAnalysis.SemanticModel,System.Threading.CancellationToken)">
+            <summary>
+            Adds to <paramref name="targetType"/> if it does not contain an anonymous
+            type and binds to the same type at the given <paramref name="position"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Extensions.OperatorPrecedence">
+            <summary>
+            Operator precedence classes from section 7.3.1 of the C# language specification.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxKindExtensions.Contains(Microsoft.CodeAnalysis.CSharp.SyntaxKind[],Microsoft.CodeAnalysis.CSharp.SyntaxKind)">
             <summary>
             Determine if the given <see cref="T:Microsoft.CodeAnalysis.CSharp.SyntaxKind"/> array contains the given kind.
@@ -304,6 +126,12 @@
             <remarks>PERF: Not using Array.IndexOf here because it results in a call to IndexOf on the
             default EqualityComparer for SyntaxKind.The default comparer for SyntaxKind is the
             ObjectEqualityComparer which results in boxing allocations.</remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions.GetAllPrecedingTriviaToPreviousToken(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Text.SourceText,System.Boolean)">
+            <summary>
+            Returns all of the trivia to the left of this token up to the previous token (concatenates
+            the previous token's trailing trivia and this token's leading trivia).
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions.GetEnclosingUsingDirectives(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
@@ -371,11 +199,13 @@
             This is a copy of <see cref="M:Microsoft.CodeAnalysis.SyntaxNode.ChildThatContainsPosition(System.Int32)"/> that also returns the index of the child node.
             </remarks>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions.GetAllPrecedingTriviaToPreviousToken(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Text.SourceText,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxTokenExtensions.CouldBeKeyword(Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>
-            Returns all of the trivia to the left of this token up to the previous token (concatenates
-            the previous token's trailing trivia and this token's leading trivia).
+            Returns true if this token is something that looks like a C# keyword. This includes 
+            actual keywords, contextual keywords, and even 'var' and 'dynamic'
             </summary>
+            <param name="token"></param>
+            <returns></returns>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxTokenExtensions.IsFirstTokenOnLine(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Text.SourceText)">
             <summary>
@@ -397,14 +227,6 @@
             <returns>The last token in the name</returns>
             <remarks>This is related to the code in <see cref="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxTreeExtensions.IsInPartiallyWrittenGeneric(Microsoft.CodeAnalysis.SyntaxTree,System.Int32,System.Threading.CancellationToken)"/></remarks>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxTokenExtensions.CouldBeKeyword(Microsoft.CodeAnalysis.SyntaxToken)">
-            <summary>
-            Returns true if this token is something that looks like a C# keyword. This includes 
-            actual keywords, contextual keywords, and even 'var' and 'dynamic'
-            </summary>
-            <param name="token"></param>
-            <returns></returns>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxTriviaListExtensions.TakeRange(Microsoft.CodeAnalysis.SyntaxTriviaList,System.Int32,System.Int32)">
             <summary>
             Takes an INCLUSIVE range of trivia from the trivia list. 
@@ -413,6 +235,68 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.TypeSyntaxExtensions.IsTypeInferred(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax,Microsoft.CodeAnalysis.SemanticModel)">
             <summary>
             Determines whether the specified TypeSyntax is actually 'var'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
+            is true, the last parameter will be returned if it is params parameter and the index of
+            the specified argument is greater than the number of parameters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.AttributeArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
+            is true, the last parameter will be returned if it is params parameter and the index of
+            the specified argument is greater than the number of parameters.
+            </summary>
+            <remarks>
+            Returns null if the <paramref name="argument"/> is a named argument.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryGetSemicolonToken(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax)">
+            <summary>
+            Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryWithSemicolonToken(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax,Microsoft.CodeAnalysis.SyntaxToken)">
+            <summary>
+            Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryWithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax)">
+            <summary>
+            Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.CSharpSyntaxContext.IsAwaitStatementContext(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Is this a possible position for an await statement (`await using` or `await foreach`)?
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleTupleContext(Microsoft.CodeAnalysis.SyntaxTree,Microsoft.CodeAnalysis.SyntaxToken,System.Int32)">
+            <summary>
+            Are you possibly typing a tuple type or expression?
+            This is used to suppress colon as a completion trigger (so that you can type element names).
+            This is also used to recommend some keywords (like var).
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleDeconstructionDesignation(Microsoft.CodeAnalysis.SyntaxTree,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Are you possibly in the designation part of a deconstruction?
+            This is used to enter suggestion mode (suggestions become soft-selected).
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.UnwrapPossibleTuple(Microsoft.CodeAnalysis.SyntaxNode)">
+            <summary>
+            If inside a parenthesized or tuple expression, unwrap the nestings and return the container.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions.TypeSyntaxGeneratorVisitor.AddGlobalAlias(Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax)">
+            <summary>
+            We always unilaterally add "global::" to all named types/namespaces.  This
+            will then be trimmed off if possible by calls to 
+            <see cref="M:Microsoft.CodeAnalysis.Simplification.Simplifier.ReduceAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Options.OptionSet,System.Threading.CancellationToken)"/>
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.FindSymbols.CSharpDeclaredSymbolInfoFactoryService.GetSuffix(System.Char,System.Char,Microsoft.CodeAnalysis.SeparatedSyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax})">
@@ -480,36 +364,6 @@
             <summary>
             This class allows the Code Style layer to light up support for new language features when available at runtime
             while compiling against an older version of the Roslyn assemblies.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PathSyntaxReference">
-            <summary>
-            Represents a syntax reference that doesn't actually hold onto the 
-            referenced node.  Instead, enough data is held onto so that the node
-            can be recovered and returned if necessary.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.NullSyntaxReference">
-            <summary>
-            Represents a syntax reference that was passed a null
-            reference to a node. In this case, we just hold onto the
-            weak tree reference and throw if any invalid properties
-            are accessed.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PositionalSyntaxReference">
-            <summary>
-            Represents a syntax reference that doesn't actually hold onto the 
-            referenced node.  Instead, enough data is held onto so that the node
-            can be recovered and returned if necessary.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.RecoverableSyntaxTree">
-            <summary>
-            Represents a syntax tree that only has a weak reference to its 
-            underlying data.  This way it can be passed around without forcing
-            the underlying full tree to stay alive.  Think of it more as a 
-            key that can be used to identify a tree rather than the tree itself.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.GetExpansionTargetForLocation(Microsoft.CodeAnalysis.SyntaxToken)">
@@ -582,6 +436,11 @@
             <param name="node"></param>
             <returns></returns>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.FormattingRangeHelper">
+            <summary>
+            this help finding a range of tokens to format based on given ending token
+            </summary>
+        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Utilities.TypeStyleResult.IsStylePreferred">
             <summary>
             Whether or not converting would transition the code to the style the user prefers. i.e. if the user likes
@@ -636,11 +495,6 @@
             true, otherwise.
             </returns>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.FormattingRangeHelper">
-            <summary>
-            this help finding a range of tokens to format based on given ending token
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer">
             <summary>
             Helper class to analyze the semantic effects of a speculated syntax node replacement on the parenting nodes.
@@ -681,6 +535,96 @@
             Similar boxing checks are performed elsewhere, but in this case we need to perform the check on the entire conditional expression.
             This will make sure the resultant cast is proper for the type of the conditional expression.
             </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PathSyntaxReference">
+            <summary>
+            Represents a syntax reference that doesn't actually hold onto the 
+            referenced node.  Instead, enough data is held onto so that the node
+            can be recovered and returned if necessary.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.NullSyntaxReference">
+            <summary>
+            Represents a syntax reference that was passed a null
+            reference to a node. In this case, we just hold onto the
+            weak tree reference and throw if any invalid properties
+            are accessed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PositionalSyntaxReference">
+            <summary>
+            Represents a syntax reference that doesn't actually hold onto the 
+            referenced node.  Instead, enough data is held onto so that the node
+            can be recovered and returned if necessary.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.RecoverableSyntaxTree">
+            <summary>
+            Represents a syntax tree that only has a weak reference to its 
+            underlying data.  This way it can be passed around without forcing
+            the underlying full tree to stay alive.  Think of it more as a 
+            key that can be used to identify a tree rather than the tree itself.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.No_available_location_found_to_add_statements_to">
+            <summary>No available location found to add statements to.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Namespace_can_not_be_added_in_this_destination">
+            <summary>Namespace can not be added in this destination.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Node_does_not_descend_from_root">
+            <summary>Node does not descend from root.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Node_not_in_parent_s_child_list">
+            <summary>Node not in parent's child list</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Trivia_is_not_associated_with_token">
+            <summary>Trivia is not associated with token</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Cannot_retrieve_the_Span_of_a_null_syntax_reference">
+            <summary>Cannot retrieve the Span of a null syntax reference.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Only_attributes_constructor_initializers_expressions_or_statements_can_be_made_explicit">
+            <summary>Only attributes, constructor initializers, expressions or statements can be made explicit</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Implement_Interface">
+            <summary>Implement Interface</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Indentation_preferences">
+            <summary>Indentation preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Space_preferences">
+            <summary>Space preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Wrapping_preferences">
+            <summary>Wrapping preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Remove_and_Sort_Usings">
+            <summary>R&amp;emove and Sort Usings</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.Sort_Usings">
+            <summary>&amp;Sort Usings</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.var_preferences">
+            <summary>var preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.Expression_bodied_members">
+            <summary>Expression-bodied members</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.Pattern_matching_preferences">
+            <summary>Pattern matching preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.Null_checking_preferences">
+            <summary>Null-checking preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.Code_block_preferences">
+            <summary>Code-block preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.using_directive_preferences">
+            <summary>'using' directive preferences</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceExtensionsResources.Expected_string_or_char_literal">
+            <summary>Expected string or char literal</summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CodeStyle.PreferBracesPreference">
             <summary>

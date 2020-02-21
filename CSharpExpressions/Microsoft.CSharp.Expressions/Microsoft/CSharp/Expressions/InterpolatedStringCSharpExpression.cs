@@ -9,6 +9,7 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Microsoft.CSharp.Expressions
@@ -16,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents an interpolated string expression.
     /// </summary>
-    public sealed partial class InterpolatedStringCSharpExpression : CSharpExpression
+    public partial class InterpolatedStringCSharpExpression : CSharpExpression
     {
         private static MethodInfo s_format_params;
         private static MethodInfo[] s_format_args;
@@ -89,17 +90,17 @@ namespace Microsoft.CSharp.Expressions
                 {
                     case InterpolationStringInsert insert:
                         sb.Append('{').Append(pos++);
-                        
+
                         if (insert.Alignment != null)
                         {
                             sb.Append(',').Append(insert.Alignment.Value);
                         }
-                        
+
                         if (insert.Format != null)
                         {
                             sb.Append(':').Append(insert.Format);
                         }
-                        
+
                         sb.Append('}');
 
                         if (insert.Value.Type.IsValueType)
@@ -122,7 +123,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeStringFormat(sb.ToString(), values);
         }
 
-        private static Expression MakeStringFormat(string format, List<Expression> args)
+        protected virtual Expression MakeStringFormat(string format, List<Expression> args)
         {
             //
             // NB: Roslyn has strange behavior for e.g. $"foo", where it leaks optimization logic in the expression tree, causing it to produce
@@ -132,16 +133,16 @@ namespace Microsoft.CSharp.Expressions
             //     We don't port that behavior here.
             //
 
+            var formatString = Expression.Constant(format);
+
             var n = args.Count;
 
             if (n == 0)
             {
-                return Expression.Constant(format);
+                return formatString;
             }
 
             EnsureStringFormatInfo();
-
-            var formatString = Expression.Constant(format);
 
             if (n - 1 < s_format_args.Length)
             {
@@ -214,6 +215,33 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    internal sealed class FormattableInterpolatedStringCSharpExpression : InterpolatedStringCSharpExpression
+    {
+        private static MethodInfo s_create;
+
+        internal FormattableInterpolatedStringCSharpExpression(Type type, ReadOnlyCollection<Interpolation> interpolations)
+            : base(interpolations)
+        {
+            Type = type;
+        }
+
+        public override Type Type { get; }
+
+        protected override Expression MakeStringFormat(string format, List<Expression> args)
+        {
+            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod("Create", BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) });
+
+            var call = Expression.Call(s_create, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
+
+            if (Type != call.Type)
+            {
+                return Expression.Convert(call, Type);
+            }
+
+            return call;
+        }
+    }
+
     partial class CSharpExpression
     {
         /// <summary>
@@ -234,6 +262,40 @@ namespace Microsoft.CSharp.Expressions
         public static InterpolatedStringCSharpExpression InterpolatedString(IEnumerable<Interpolation> interpolations)
         {
             return new InterpolatedStringCSharpExpression(interpolations.ToReadOnly());
+        }
+
+        /// <summary>
+        /// Creates a <see cref="InterpolatedStringCSharpExpression"/> that represents an interpolated string expression.
+        /// </summary>
+        /// <param name="type">The type of the interpolated string. This can be any of <see cref="string"/>, <see cref="FormattableString"/>, or <see cref="IFormattable"/>.</param>
+        /// <param name="interpolations">The interpolations that make up the interpolated string.</param>
+        /// <returns>An instance of the <see cref="InterpolatedStringCSharpExpression"/>.</returns>
+        public static InterpolatedStringCSharpExpression InterpolatedString(Type type, params Interpolation[] interpolations)
+        {
+            return InterpolatedString(type, (IEnumerable<Interpolation>)interpolations);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="InterpolatedStringCSharpExpression"/> that represents an interpolated string expression.
+        /// </summary>
+        /// <param name="type">The type of the interpolated string. This can be any of <see cref="string"/>, <see cref="FormattableString"/>, or <see cref="IFormattable"/>.</param>
+        /// <param name="interpolations">The interpolations that make up the interpolated string.</param>
+        /// <returns>An instance of the <see cref="InterpolatedStringCSharpExpression"/>.</returns>
+        public static InterpolatedStringCSharpExpression InterpolatedString(Type type, IEnumerable<Interpolation> interpolations)
+        {
+            ContractUtils.RequiresNotNull(type, nameof(type));
+
+            if (type == typeof(string))
+            {
+                return InterpolatedString(interpolations);
+            }
+
+            if (type != typeof(FormattableString) && type != typeof(IFormattable))
+            {
+                throw Error.InvalidInterpolatedStringType(type);
+            }
+
+            return new FormattableInterpolatedStringCSharpExpression(type, interpolations.ToReadOnly());
         }
     }
 

@@ -73,6 +73,7 @@ var errors = new[]
     new { Name = "TypeMustNotBeByRef", ExceptionType = "ArgumentException", Args = 0, Message = "Type must not be ByRef" },
     new { Name = "TypeMustNotBePointer", ExceptionType = "ArgumentException", Args = 0, Message = "Type must not be a pointer type" },
     new { Name = "InvalidNullCoalescingAssignmentArguments", ExceptionType = "ArgumentException", Args = 0, Message = "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations." },
+    new { Name = "InvalidInterpolatedStringType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

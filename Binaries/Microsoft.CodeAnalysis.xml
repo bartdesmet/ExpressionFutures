@@ -136,961 +136,6 @@
             </summary>
             <param name="builder"></param>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CodeAnalysisResources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.A_language_name_cannot_be_specified_for_this_option">
-            <summary>
-              Looks up a localized string similar to A language name cannot be specified for this option..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.A_language_name_must_be_specified_for_this_option">
-            <summary>
-              Looks up a localized string similar to A language name must be specified for this option..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AbsolutePathExpected">
-            <summary>
-              Looks up a localized string similar to Absolute path expected..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerDriverFailure">
-            <summary>
-              Looks up a localized string similar to Analyzer Driver Failure.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerDriverThrows">
-            <summary>
-              Looks up a localized string similar to Analyzer driver threw an exception of type &apos;{0}&apos; with message &apos;{1}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerDriverThrowsDescription">
-             <summary>
-               Looks up a localized string similar to Analyzer driver threw the following exception:
-            &apos;{0}&apos;..
-             </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerExecutionTimeColumnHeader">
-            <summary>
-              Looks up a localized string similar to Time (s).
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerNameColumnHeader">
-            <summary>
-              Looks up a localized string similar to Analyzer.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerTotalExecutionTime">
-            <summary>
-              Looks up a localized string similar to Total analyzer execution time: {0} seconds..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnonymousTypeArgumentCountMismatch2">
-            <summary>
-              Looks up a localized string similar to {0} must either be &apos;default&apos; or have the same length as {1}..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnonymousTypeMemberAndNamesCountMismatch2">
-            <summary>
-              Looks up a localized string similar to {0} and {1} must have the same length..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ArgumentCannotBeEmpty">
-            <summary>
-              Looks up a localized string similar to Argument cannot be empty..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ArgumentElementCannotBeNull">
-            <summary>
-              Looks up a localized string similar to Argument cannot have a null element..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Arrays_with_more_than_one_dimension_cannot_be_serialized">
-            <summary>
-              Looks up a localized string similar to Arrays with more than one dimension cannot be serialized..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Assembly">
-            <summary>
-              Looks up a localized string similar to assembly.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AssemblyFileNotFound">
-            <summary>
-              Looks up a localized string similar to Assembly file not found.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AssemblyMustHaveAtLeastOneModule">
-            <summary>
-              Looks up a localized string similar to Assembly must have at least one module..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AssemblySigningNotSupported">
-            <summary>
-              Looks up a localized string similar to Assembly signing not supported..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AsyncAnalyzerActionCannotBeRegistered">
-            <summary>
-              Looks up a localized string similar to Analyzer attempted to register an &apos;async&apos; action, which is not supported..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Cannot_deserialize_type_0">
-            <summary>
-              Looks up a localized string similar to Cannot deserialize type &apos;{0}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Cannot_serialize_type_0">
-            <summary>
-              Looks up a localized string similar to Cannot serialize type &apos;{0}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotAliasModule">
-            <summary>
-              Looks up a localized string similar to Can&apos;t alias a module..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotCreateReferenceToModule">
-            <summary>
-              Looks up a localized string similar to Can&apos;t create a reference to a module..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotCreateReferenceToSubmission">
-            <summary>
-              Looks up a localized string similar to Can&apos;t create a reference to a submission..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotEmbedInteropTypesFromModule">
-            <summary>
-              Looks up a localized string similar to Can&apos;t embed interop types from module..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotTargetNetModuleWhenEmittingRefAssembly">
-            <summary>
-              Looks up a localized string similar to Cannot target net module when emitting ref assembly..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CantCreateModuleReferenceToAssembly">
-            <summary>
-              Looks up a localized string similar to Can&apos;t create a module reference to an assembly..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CantCreateReferenceToAssemblyWithoutLocation">
-            <summary>
-              Looks up a localized string similar to Can&apos;t create a metadata reference to an assembly without location..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CantCreateReferenceToDynamicAssembly">
-            <summary>
-              Looks up a localized string similar to Can&apos;t create a metadata reference to a dynamic assembly..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ChangesMustNotOverlap">
-            <summary>
-              Looks up a localized string similar to The changes must not overlap..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ChangingVersionOfAssemblyReferenceIsNotAllowedDuringDebugging">
-            <summary>
-              Looks up a localized string similar to Changing the version of an assembly reference is not allowed during debugging: &apos;{0}&apos; changed version to &apos;{1}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Class1">
-            <summary>
-              Looks up a localized string similar to class.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceInvalidRelocation">
-            <summary>
-              Looks up a localized string similar to Win32 resources, assumed to be in COFF object format, have one or more invalid relocation header values..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceInvalidSectionSize">
-            <summary>
-              Looks up a localized string similar to Win32 resources, assumed to be in COFF object format, have an invalid section size..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceInvalidSymbol">
-            <summary>
-              Looks up a localized string similar to Win32 resources, assumed to be in COFF object format, have one or more invalid symbol values..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceMissingSection">
-            <summary>
-              Looks up a localized string similar to Win32 resources, assumed to be in COFF object format, are missing one or both of sections &apos;.rsrc$01&apos; and &apos;.rsrc$02&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilationOptionsMustNotHaveErrors">
-            <summary>
-              Looks up a localized string similar to Compilation options must not have errors..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilationReferencesAssembliesWithDifferentAutoGeneratedVersion">
-            <summary>
-              Looks up a localized string similar to The compilation references multiple assemblies whose versions only differ in auto-generated build and/or revision numbers..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilerAnalyzerFailure">
-            <summary>
-              Looks up a localized string similar to Analyzer Failure.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilerAnalyzerThrows">
-             <summary>
-               Looks up a localized string similar to Analyzer &apos;{0}&apos; threw an exception of type &apos;{1}&apos; with message &apos;{2}&apos;.
-            {3}.
-             </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilerAnalyzerThrowsDescription">
-             <summary>
-               Looks up a localized string similar to Analyzer &apos;{0}&apos; threw the following exception:
-            &apos;{1}&apos;..
-             </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Constructor">
-            <summary>
-              Looks up a localized string similar to constructor.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Delegate1">
-            <summary>
-              Looks up a localized string similar to delegate.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Deserialization_reader_for_0_read_incorrect_number_of_values">
-            <summary>
-              Looks up a localized string similar to Deserialization reader for &apos;{0}&apos; read incorrect number of values..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.DiagnosticIdCantBeNullOrWhitespace">
-            <summary>
-              Looks up a localized string similar to A DiagnosticDescriptor must have an Id that is neither null nor an empty string nor a string that only contains white space..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.DisableAnalyzerDiagnosticsMessage">
-            <summary>
-              Looks up a localized string similar to Suppress the following diagnostics to disable this analyzer: {0}.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.DuplicateAnalyzerInstances">
-            <summary>
-              Looks up a localized string similar to Argument contains duplicate analyzer instances..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ElementIsExpected">
-            <summary>
-              Looks up a localized string similar to element is expected.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmbeddedTextsRequirePdb">
-            <summary>
-              Looks up a localized string similar to Embedded texts are only supported when emitting a PDB..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmbeddingPdbUnexpectedWhenEmittingMetadata">
-            <summary>
-              Looks up a localized string similar to Embedding PDB is not allowed when emitting metadata..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmptyKeyInPathMap">
-            <summary>
-              Looks up a localized string similar to A key in the pathMap is empty..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmptyOrInvalidFileName">
-            <summary>
-              Looks up a localized string similar to Empty or invalid file name.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmptyOrInvalidResourceName">
-            <summary>
-              Looks up a localized string similar to Empty or invalid resource name.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EndMustNotBeLessThanStart">
-            <summary>
-              Looks up a localized string similar to &apos;end&apos; must not be less than &apos;start&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Enum1">
-            <summary>
-              Looks up a localized string similar to enum.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Event1">
-            <summary>
-              Looks up a localized string similar to event.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ExceptionContext">
-             <summary>
-               Looks up a localized string similar to Exception occurred with following context:
-            {0}.
-             </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ExceptionEnablingMulticoreJit">
-            <summary>
-              Looks up a localized string similar to Warning: Could not enable multicore JIT due to exception: {0}..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ExpectedNonEmptyPublicKey">
-            <summary>
-              Looks up a localized string similar to Expected non-empty public key.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.FailedToResolveRuleSetName">
-            <summary>
-              Looks up a localized string similar to Could not locate the rule set file &apos;{0}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Field">
-            <summary>
-              Looks up a localized string similar to field.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.FileNotFound">
-            <summary>
-              Looks up a localized string similar to File not found..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.FileSizeExceedsMaximumAllowed">
-            <summary>
-              Looks up a localized string similar to File size exceeds maximum allowed size of a valid metadata file..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.GetMetadataMustReturnInstance">
-            <summary>
-              Looks up a localized string similar to {0}.GetMetadata() must return an instance of {1}..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IconStreamUnexpectedFormat">
-            <summary>
-              Looks up a localized string similar to Icon stream is not in the expected format..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IncludingPrivateMembersUnexpectedWhenEmittingToMetadataPeStream">
-            <summary>
-              Looks up a localized string similar to Including private members should not be used when emitting to the secondary assembly output..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InconsistentLanguageVersions">
-            <summary>
-              Looks up a localized string similar to Inconsistent language versions.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InconsistentSyntaxTreeFeature">
-            <summary>
-              Looks up a localized string similar to Inconsistent syntax tree features.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InMemoryAssembly">
-            <summary>
-              Looks up a localized string similar to &lt;in-memory assembly&gt;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InMemoryModule">
-            <summary>
-              Looks up a localized string similar to &lt;in-memory module&gt;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Interface1">
-            <summary>
-              Looks up a localized string similar to interface.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidAlias">
-            <summary>
-              Looks up a localized string similar to Invalid alias..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidAssemblyName">
-            <summary>
-              Looks up a localized string similar to Invalid assembly name: &apos;{0}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCharactersInAssemblyCultureName">
-            <summary>
-              Looks up a localized string similar to Invalid characters in assembly culture name.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCharactersInAssemblyName">
-            <summary>
-              Looks up a localized string similar to Invalid characters in assembly name.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCompilationOptions">
-            <summary>
-              Looks up a localized string similar to Invalid compilation options -- submission can&apos;t be signed..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidContentType">
-            <summary>
-              Looks up a localized string similar to Invalid content type.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCultureName">
-            <summary>
-              Looks up a localized string similar to Invalid culture name: &apos;{0}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDataAtOffset">
-            <summary>
-              Looks up a localized string similar to Invalid data at offset {0}: {1}{2}*{3}{4}.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticIdReported">
-            <summary>
-              Looks up a localized string similar to Reported diagnostic has an ID &apos;{0}&apos;, which is not a valid identifier..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticLocationReported">
-            <summary>
-              Looks up a localized string similar to Reported diagnostic &apos;{0}&apos; has a source location in file &apos;{1}&apos;, which is not part of the compilation being analyzed..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticSpanReported">
-            <summary>
-              Looks up a localized string similar to Reported diagnostic &apos;{0}&apos; has a source location &apos;{1}&apos; in file &apos;{2}&apos;, which is outside of the given file..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticSuppressionReported">
-            <summary>
-              Looks up a localized string similar to Suppressed diagnostic ID &apos;{0}&apos; does not match suppressable ID &apos;{1}&apos; for the given suppression descriptor..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidHash">
-            <summary>
-              Looks up a localized string similar to Invalid hash..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidModuleName">
-            <summary>
-              Looks up a localized string similar to Invalid module name specified in metadata module &apos;{0}&apos;: &apos;{1}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidNodeToTrack">
-            <summary>
-              Looks up a localized string similar to Node to track is not a descendant of the root..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidOperationBlockForAnalysisContext">
-            <summary>
-              Looks up a localized string similar to Given operation block does not belong to the current analysis context..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidOutputKindForSubmission">
-            <summary>
-              Looks up a localized string similar to Invalid output kind for submission. DynamicallyLinkedLibrary expected..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidPublicKey">
-            <summary>
-              Looks up a localized string similar to Invalid public key..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidPublicKeyToken">
-            <summary>
-              Looks up a localized string similar to Invalid public key token..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidRuleSetInclude">
-            <summary>
-              Looks up a localized string similar to An error occurred while loading the included rule set file {0} - {1}.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidSizeOfPublicKeyToken">
-            <summary>
-              Looks up a localized string similar to Invalid size of public key token..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidTree">
-            <summary>
-              Looks up a localized string similar to Syntax tree doesn&apos;t belong to the underlying &apos;Compilation&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IsSymbolAccessibleBadWithin">
-            <summary>
-              Looks up a localized string similar to Parameter &apos;{0}&apos; must be an &apos;INamedTypeSymbol&apos; or an &apos;IAssemblySymbol&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IsSymbolAccessibleWrongAssembly">
-            <summary>
-              Looks up a localized string similar to Parameter &apos;{0}&apos; must be a symbol from this compilation or some referenced assembly..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.KeepAliveIsNotAnInteger">
-            <summary>
-              Looks up a localized string similar to Argument to &apos;/keepalive&apos; option is not a 32-bit integer..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.KeepAliveIsTooSmall">
-            <summary>
-              Looks up a localized string similar to Arguments to &apos;/keepalive&apos; option below -1 are invalid..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.KeepAliveWithoutShared">
-            <summary>
-              Looks up a localized string similar to &apos;/keepalive&apos; option is only valid with &apos;/shared&apos; option..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MetadataPeStreamUnexpectedWhenEmittingMetadataOnly">
-            <summary>
-              Looks up a localized string similar to Metadata PE stream should not be given when emitting metadata only..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MetadataRefNotFoundToRemove1">
-            <summary>
-              Looks up a localized string similar to MetadataReference &apos;{0}&apos; not found to remove..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Method">
-            <summary>
-              Looks up a localized string similar to method.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MismatchedVersion">
-            <summary>
-              Looks up a localized string similar to Roslyn compiler server reports different protocol version than build task..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MissingKeepAlive">
-            <summary>
-              Looks up a localized string similar to Missing argument for &apos;/keepalive&apos; option..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MissingListItem">
-            <summary>
-              Looks up a localized string similar to The item specified is not the element of a list..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Module">
-            <summary>
-              Looks up a localized string similar to module.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ModuleCopyCannotBeUsedToCreateAssemblyMetadata">
-            <summary>
-              Looks up a localized string similar to Module copy can&apos;t be used to create an assembly metadata..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ModuleHasInvalidAttributes">
-            <summary>
-              Looks up a localized string similar to Module has invalid attributes..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MultithreadedAnalyzerExecutionNote">
-            <summary>
-              Looks up a localized string similar to NOTE: Elapsed time may be less than analyzer execution time because analyzers can run concurrently..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MustIncludePrivateMembersUnlessRefAssembly">
-            <summary>
-              Looks up a localized string similar to Must include private members unless emitting a ref assembly..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameCannotBeEmpty">
-            <summary>
-              Looks up a localized string similar to Name cannot be empty..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameCannotBeNull">
-            <summary>
-              Looks up a localized string similar to Name cannot be null..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameCannotStartWithWhitespace">
-            <summary>
-              Looks up a localized string similar to Name cannot start with whitespace..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameContainsInvalidCharacter">
-            <summary>
-              Looks up a localized string similar to Name contains invalid characters..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NoAnalyzersFound">
-            <summary>
-              Looks up a localized string similar to No analyzers found.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NodeOrTokenOutOfSequence">
-            <summary>
-              Looks up a localized string similar to A node or token is out of sequence..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NonReportedDiagnosticCannotBeSuppressed">
-            <summary>
-              Looks up a localized string similar to Non-reported diagnostic with ID &apos;{0}&apos; cannot be suppressed..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NotARootOperation">
-            <summary>
-              Looks up a localized string similar to Given operation has a non-null parent..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NullValueInPathMap">
-            <summary>
-              Looks up a localized string similar to A value in the pathMap is null..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.OperationHasNullSemanticModel">
-            <summary>
-              Looks up a localized string similar to Given operation has a null semantic model..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.OperationMustNotBeControlFlowGraphPart">
-            <summary>
-              Looks up a localized string similar to The provided operation must not be part of a Control Flow Graph..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.OutputKindNotSupported">
-            <summary>
-              Looks up a localized string similar to Output kind not supported..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Parameter">
-            <summary>
-              Looks up a localized string similar to parameter.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PathReturnedByResolveMetadataFileMustBeAbsolute">
-            <summary>
-              Looks up a localized string similar to Path returned by {0}.ResolveMetadataFile must be absolute: &apos;{1}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PathReturnedByResolveStrongNameKeyFileMustBeAbsolute">
-            <summary>
-              Looks up a localized string similar to Path returned by {0}.ResolveStrongNameKeyFile must be absolute: &apos;{1}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PdbStreamUnexpectedWhenEmbedding">
-            <summary>
-              Looks up a localized string similar to PDB stream should not be given when embedding PDB into the PE stream..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PdbStreamUnexpectedWhenEmittingMetadataOnly">
-            <summary>
-              Looks up a localized string similar to PDB stream should not be given when emitting metadata only..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PEImageDoesntContainManagedMetadata">
-            <summary>
-              Looks up a localized string similar to PE image doesn&apos;t contain managed metadata..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PEImageNotAvailable">
-            <summary>
-              Looks up a localized string similar to PE image not available..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PreviousSubmissionHasErrors">
-            <summary>
-              Looks up a localized string similar to Previous submission has errors..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Property">
-            <summary>
-              Looks up a localized string similar to property, indexer.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReferenceOfTypeIsInvalid1">
-            <summary>
-              Looks up a localized string similar to Reference of type &apos;{0}&apos; is not valid for this compilation..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReferenceResolverShouldReturnReadableNonNullStream">
-            <summary>
-              Looks up a localized string similar to Reference resolver should return readable non-null stream..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceDataProviderShouldReturnNonNullStream">
-            <summary>
-              Looks up a localized string similar to Resource data provider should return non-null stream.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceStreamEndedUnexpectedly">
-            <summary>
-              Looks up a localized string similar to Resource stream ended at {0} bytes, expected {1} bytes..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceStreamProviderShouldReturnNonNullStream">
-            <summary>
-              Looks up a localized string similar to Resource stream provider should return non-null stream..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Return1">
-            <summary>
-              Looks up a localized string similar to return.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReturnTypeCannotBeValuePointerbyRefOrOpen">
-            <summary>
-              Looks up a localized string similar to Return type can&apos;t be a value type, pointer, by-ref or open generic type.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReturnTypeCannotBeVoidByRefOrOpen">
-            <summary>
-              Looks up a localized string similar to Return type can&apos;t be void, by-ref or open generic type.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.RuleSetBadAttributeValue">
-            <summary>
-              Looks up a localized string similar to The attribute {0} has an invalid value of {1}..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.RuleSetHasDuplicateRules">
-            <summary>
-              Looks up a localized string similar to The rule set file has duplicate rules for &apos;{0}&apos; with differing actions &apos;{1}&apos; and &apos;{2}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.RuleSetMissingAttribute">
-            <summary>
-              Looks up a localized string similar to The element {0} is missing an attribute named {1}..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SeparatorIsExpected">
-            <summary>
-              Looks up a localized string similar to separator is expected.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SharedArgumentMissing">
-            <summary>
-              Looks up a localized string similar to Value for argument &apos;/shared:&apos; must not be empty.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SizeHasToBePositive">
-            <summary>
-              Looks up a localized string similar to Size has to be positive..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SourceTextCannotBeEmbedded">
-            <summary>
-              Looks up a localized string similar to SourceText cannot be embedded. Provide encoding or canBeEmbedded=true at construction..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SpanDoesNotIncludeEndOfLine">
-            <summary>
-              Looks up a localized string similar to The span does not include the end of a line..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SpanDoesNotIncludeStartOfLine">
-            <summary>
-              Looks up a localized string similar to The span does not include the start of a line..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StartMustNotBeNegative">
-            <summary>
-              Looks up a localized string similar to &apos;start&apos; must not be negative.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Stream_contains_invalid_data">
-            <summary>
-              Looks up a localized string similar to Stream contains invalid data.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamIsTooLong">
-            <summary>
-              Looks up a localized string similar to Stream is too long..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamMustSupportRead">
-            <summary>
-              Looks up a localized string similar to Stream must be readable..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamMustSupportReadAndSeek">
-            <summary>
-              Looks up a localized string similar to Stream must support read and seek operations..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamMustSupportWrite">
-            <summary>
-              Looks up a localized string similar to Stream must be writable..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Struct1">
-            <summary>
-              Looks up a localized string similar to struct.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SupportedDiagnosticsHasNullDescriptor">
-            <summary>
-              Looks up a localized string similar to Analyzer &apos;{0}&apos; contains a null descriptor in its &apos;SupportedDiagnostics&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SupportedSuppressionsHasNullDescriptor">
-            <summary>
-              Looks up a localized string similar to Analyzer &apos;{0}&apos; contains a null descriptor in its &apos;SupportedSuppressions&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SuppressionDiagnosticDescriptorMessage">
-            <summary>
-              Looks up a localized string similar to Diagnostic &apos;{0}: {1}&apos; was programmatically suppressed by a DiagnosticSuppressor with suppression ID &apos;{2}&apos; and justification &apos;{3}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SuppressionDiagnosticDescriptorTitle">
-            <summary>
-              Looks up a localized string similar to Programmatic suppression of an analyzer diagnostic.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SuppressionIdCantBeNullOrWhitespace">
-            <summary>
-              Looks up a localized string similar to A SuppressionDescriptor must have an Id that is neither null nor an empty string nor a string that only contains white space..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SymWriterDoesNotSupportSourceLink">
-            <summary>
-              Looks up a localized string similar to Windows PDB writer doesn&apos;t support SourceLink feature: &apos;{0}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SymWriterNotDeterministic">
-            <summary>
-              Looks up a localized string similar to Windows PDB writer doesn&apos;t support deterministic compilation: &apos;{0}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SymWriterOlderVersionThanRequired">
-            <summary>
-              Looks up a localized string similar to The version of Windows PDB writer is older than required: &apos;{0}&apos;.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.The_type_0_is_not_understood_by_the_serialization_binder">
-            <summary>
-              Looks up a localized string similar to The type &apos;{0}&apos; is not understood by the serialization binder..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TheStreamCannotBeReadFrom">
-            <summary>
-              Looks up a localized string similar to The stream cannot be read from..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TheStreamCannotBeWrittenTo">
-            <summary>
-              Looks up a localized string similar to The stream cannot be written to..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementLocationCountMismatch">
-            <summary>
-              Looks up a localized string similar to If tuple element locations are specified, the number of locations must match the cardinality of the tuple..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementNameCountMismatch">
-            <summary>
-              Looks up a localized string similar to If tuple element names are specified, the number of element names must match the cardinality of the tuple..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementNameEmpty">
-            <summary>
-              Looks up a localized string similar to Tuple element name cannot be an empty string..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementNullableAnnotationCountMismatch">
-            <summary>
-              Looks up a localized string similar to If tuple element nullable annotations are specified, the number of annotations must match the cardinality of the tuple..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TuplesNeedAtLeastTwoElements">
-            <summary>
-              Looks up a localized string similar to Tuples must have at least two elements..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleUnderlyingTypeMustBeTupleCompatible">
-            <summary>
-              Looks up a localized string similar to The underlying type for a tuple must be tuple-compatible..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeMustBeASubclassOfSyntaxAnnotation">
-            <summary>
-              Looks up a localized string similar to type must be a subclass of SyntaxAnnotation..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeMustBeSameAsHostObjectTypeOfPreviousSubmission">
-            <summary>
-              Looks up a localized string similar to Type must be same as host object type of previous submission..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeParameter">
-            <summary>
-              Looks up a localized string similar to type parameter.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnableToDetermineSpecificCauseOfFailure">
-            <summary>
-              Looks up a localized string similar to Unable to determine specific cause of the failure..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnexpectedTypeOfNodeInList">
-            <summary>
-              Looks up a localized string similar to A node in the list is not of the expected type..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnrecognizedResourceFileFormat">
-            <summary>
-              Looks up a localized string similar to Unrecognized resource file format..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Unresolved">
-            <summary>
-              Looks up a localized string similar to Unresolved: .
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedAnalyzerInstance">
-            <summary>
-              Looks up a localized string similar to Argument contains an analyzer instance that does not belong to the &apos;Analyzers&apos; for this CompilationWithAnalyzers instance..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedDiagnosticReported">
-            <summary>
-              Looks up a localized string similar to Reported diagnostic with ID &apos;{0}&apos; is not supported by the analyzer..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedHashAlgorithm">
-            <summary>
-              Looks up a localized string similar to Unsupported hash algorithm..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedSuppressionReported">
-            <summary>
-              Looks up a localized string similar to Reported suppression with ID &apos;{0}&apos; is not supported by the suppressor..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Value_too_large_to_be_represented_as_a_30_bit_unsigned_integer">
-            <summary>
-              Looks up a localized string similar to Value too large to be represented as a 30 bit unsigned integer..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WinRTIdentityCantBeRetargetable">
-            <summary>
-              Looks up a localized string similar to WindowsRuntime identity can&apos;t be retargetable.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WRN_InvalidSeverityInAnalyzerConfig">
-            <summary>
-              Looks up a localized string similar to The diagnostic &apos;{0}&apos; was given an invalid severity &apos;{1}&apos; in the analyzer config file at &apos;{2}&apos;..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WRN_InvalidSeverityInAnalyzerConfig_Title">
-            <summary>
-              Looks up a localized string similar to Invalid severity in analyzer config file..
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.XmlReferencesNotSupported">
-            <summary>
-              Looks up a localized string similar to References to XML documents are not supported..
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CodeGen.ArrayMethods">
             <summary>
             Constructs and caches already created pseudo-methods.
@@ -11429,6 +10474,11 @@
         <member name="M:Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions.TryGetValue(System.String,System.String@)">
             <summary>
             Get an analyzer config value for the given key, using the <see cref="P:Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions.KeyComparer"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions.Keys">
+            <summary>
+            Get the keys of the defined options.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptionsProvider">
@@ -29979,6 +29029,571 @@
             </summary>
             <param name="size">The size of the pool.</param>
             <returns></returns>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.OutputKindNotSupported">
+            <summary>Output kind not supported.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PathReturnedByResolveMetadataFileMustBeAbsolute">
+            <summary>Path returned by {0}.ResolveMetadataFile must be absolute: '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AssemblyMustHaveAtLeastOneModule">
+            <summary>Assembly must have at least one module.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ModuleCopyCannotBeUsedToCreateAssemblyMetadata">
+            <summary>Module copy can't be used to create an assembly metadata.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Unresolved">
+            <summary>Unresolved:</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Assembly">
+            <summary>assembly</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Class1">
+            <summary>class</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Constructor">
+            <summary>constructor</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Delegate1">
+            <summary>delegate</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Enum1">
+            <summary>enum</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Event1">
+            <summary>event</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Field">
+            <summary>field</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeParameter">
+            <summary>type parameter</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Interface1">
+            <summary>interface</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Method">
+            <summary>method</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Module">
+            <summary>module</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Parameter">
+            <summary>parameter</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Property">
+            <summary>property, indexer</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Return1">
+            <summary>return</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Struct1">
+            <summary>struct</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotCreateReferenceToSubmission">
+            <summary>Can't create a reference to a submission.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotCreateReferenceToModule">
+            <summary>Can't create a reference to a module.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InMemoryAssembly">
+            <summary>&lt;in-memory assembly&gt;</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InMemoryModule">
+            <summary>&lt;in-memory module&gt;</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SizeHasToBePositive">
+            <summary>Size has to be positive.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AssemblyFileNotFound">
+            <summary>Assembly file not found</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotEmbedInteropTypesFromModule">
+            <summary>Can't embed interop types from module.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotAliasModule">
+            <summary>Can't alias a module.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidAlias">
+            <summary>Invalid alias.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.GetMetadataMustReturnInstance">
+            <summary>{0}.GetMetadata() must return an instance of {1}.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Value_too_large_to_be_represented_as_a_30_bit_unsigned_integer">
+            <summary>Value too large to be represented as a 30 bit unsigned integer.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Arrays_with_more_than_one_dimension_cannot_be_serialized">
+            <summary>Arrays with more than one dimension cannot be serialized.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidAssemblyName">
+            <summary>Invalid assembly name: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AbsolutePathExpected">
+            <summary>Absolute path expected.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmptyKeyInPathMap">
+            <summary>A key in the pathMap is empty.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NullValueInPathMap">
+            <summary>A value in the pathMap is null.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilationOptionsMustNotHaveErrors">
+            <summary>Compilation options must not have errors.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReturnTypeCannotBeValuePointerbyRefOrOpen">
+            <summary>Return type can't be a value type, pointer, by-ref or open generic type</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReturnTypeCannotBeVoidByRefOrOpen">
+            <summary>Return type can't be void, by-ref or open generic type</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeMustBeSameAsHostObjectTypeOfPreviousSubmission">
+            <summary>Type must be same as host object type of previous submission.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PreviousSubmissionHasErrors">
+            <summary>Previous submission has errors.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidOutputKindForSubmission">
+            <summary>Invalid output kind for submission. DynamicallyLinkedLibrary expected.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCompilationOptions">
+            <summary>Invalid compilation options -- submission can't be signed.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceStreamProviderShouldReturnNonNullStream">
+            <summary>Resource stream provider should return non-null stream.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReferenceResolverShouldReturnReadableNonNullStream">
+            <summary>Reference resolver should return readable non-null stream.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmptyOrInvalidResourceName">
+            <summary>Empty or invalid resource name</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmptyOrInvalidFileName">
+            <summary>Empty or invalid file name</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceDataProviderShouldReturnNonNullStream">
+            <summary>Resource data provider should return non-null stream</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.FileNotFound">
+            <summary>File not found.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PathReturnedByResolveStrongNameKeyFileMustBeAbsolute">
+            <summary>Path returned by {0}.ResolveStrongNameKeyFile must be absolute: '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TypeMustBeASubclassOfSyntaxAnnotation">
+            <summary>type must be a subclass of SyntaxAnnotation.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidModuleName">
+            <summary>Invalid module name specified in metadata module '{0}': '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.FileSizeExceedsMaximumAllowed">
+            <summary>File size exceeds maximum allowed size of a valid metadata file.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameCannotBeNull">
+            <summary>Name cannot be null.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameCannotBeEmpty">
+            <summary>Name cannot be empty.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameCannotStartWithWhitespace">
+            <summary>Name cannot start with whitespace.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NameContainsInvalidCharacter">
+            <summary>Name contains invalid characters.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SpanDoesNotIncludeStartOfLine">
+            <summary>The span does not include the start of a line.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SpanDoesNotIncludeEndOfLine">
+            <summary>The span does not include the end of a line.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StartMustNotBeNegative">
+            <summary>'start' must not be negative</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EndMustNotBeLessThanStart">
+            <summary>'end' must not be less than 'start'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidContentType">
+            <summary>Invalid content type</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ExpectedNonEmptyPublicKey">
+            <summary>Expected non-empty public key</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidSizeOfPublicKeyToken">
+            <summary>Invalid size of public key token.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCharactersInAssemblyName">
+            <summary>Invalid characters in assembly name</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCharactersInAssemblyCultureName">
+            <summary>Invalid characters in assembly culture name</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamMustSupportReadAndSeek">
+            <summary>Stream must support read and seek operations.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamMustSupportRead">
+            <summary>Stream must be readable.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamMustSupportWrite">
+            <summary>Stream must be writable.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PdbStreamUnexpectedWhenEmbedding">
+            <summary>PDB stream should not be given when embedding PDB into the PE stream.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PdbStreamUnexpectedWhenEmittingMetadataOnly">
+            <summary>PDB stream should not be given when emitting metadata only.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MetadataPeStreamUnexpectedWhenEmittingMetadataOnly">
+            <summary>Metadata PE stream should not be given when emitting metadata only.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IncludingPrivateMembersUnexpectedWhenEmittingToMetadataPeStream">
+            <summary>Including private members should not be used when emitting to the secondary assembly output.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MustIncludePrivateMembersUnlessRefAssembly">
+            <summary>Must include private members unless emitting a ref assembly.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmbeddingPdbUnexpectedWhenEmittingMetadata">
+            <summary>Embedding PDB is not allowed when emitting metadata.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CannotTargetNetModuleWhenEmittingRefAssembly">
+            <summary>Cannot target net module when emitting ref assembly.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidHash">
+            <summary>Invalid hash.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedHashAlgorithm">
+            <summary>Unsupported hash algorithm.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InconsistentLanguageVersions">
+            <summary>Inconsistent language versions</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceInvalidRelocation">
+            <summary>Win32 resources, assumed to be in COFF object format, have one or more invalid relocation header values.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceInvalidSectionSize">
+            <summary>Win32 resources, assumed to be in COFF object format, have an invalid section size.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceInvalidSymbol">
+            <summary>Win32 resources, assumed to be in COFF object format, have one or more invalid symbol values.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CoffResourceMissingSection">
+            <summary>Win32 resources, assumed to be in COFF object format, are missing one or both of sections '.rsrc$01' and '.rsrc$02'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IconStreamUnexpectedFormat">
+            <summary>Icon stream is not in the expected format.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidCultureName">
+            <summary>Invalid culture name: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WinRTIdentityCantBeRetargetable">
+            <summary>WindowsRuntime identity can't be retargetable</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PEImageNotAvailable">
+            <summary>PE image not available.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AssemblySigningNotSupported">
+            <summary>Assembly signing not supported.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.XmlReferencesNotSupported">
+            <summary>References to XML documents are not supported.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.FailedToResolveRuleSetName">
+            <summary>Could not locate the rule set file '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidRuleSetInclude">
+            <summary>An error occurred while loading the included rule set file {0} - {1}</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilerAnalyzerFailure">
+            <summary>Analyzer Failure</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilerAnalyzerThrows">
+            <summary>Analyzer '{0}' threw an exception of type '{1}' with message '{2}'.
+            {3}</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilerAnalyzerThrowsDescription">
+            <summary>Analyzer '{0}' threw the following exception:
+            '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerDriverFailure">
+            <summary>Analyzer Driver Failure</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerDriverThrows">
+            <summary>Analyzer driver threw an exception of type '{0}' with message '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerDriverThrowsDescription">
+            <summary>Analyzer driver threw the following exception:
+            '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.PEImageDoesntContainManagedMetadata">
+            <summary>PE image doesn't contain managed metadata.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ChangesMustNotOverlap">
+            <summary>The changes must not overlap.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.DiagnosticIdCantBeNullOrWhitespace">
+            <summary>A DiagnosticDescriptor must have an Id that is neither null nor an empty string nor a string that only contains white space.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SuppressionIdCantBeNullOrWhitespace">
+            <summary>A SuppressionDescriptor must have an Id that is neither null nor an empty string nor a string that only contains white space.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.RuleSetHasDuplicateRules">
+            <summary>The rule set file has duplicate rules for '{0}' with differing actions '{1}' and '{2}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CantCreateModuleReferenceToAssembly">
+            <summary>Can't create a module reference to an assembly.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CantCreateReferenceToDynamicAssembly">
+            <summary>Can't create a metadata reference to a dynamic assembly.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CantCreateReferenceToAssemblyWithoutLocation">
+            <summary>Can't create a metadata reference to an assembly without location.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ArgumentCannotBeEmpty">
+            <summary>Argument cannot be empty.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ArgumentElementCannotBeNull">
+            <summary>Argument cannot have a null element.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AsyncAnalyzerActionCannotBeRegistered">
+            <summary>Analyzer attempted to register an 'async' action, which is not supported.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedDiagnosticReported">
+            <summary>Reported diagnostic with ID '{0}' is not supported by the analyzer.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedSuppressionReported">
+            <summary>Reported suppression with ID '{0}' is not supported by the suppressor.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticSuppressionReported">
+            <summary>Suppressed diagnostic ID '{0}' does not match suppressable ID '{1}' for the given suppression descriptor.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NonReportedDiagnosticCannotBeSuppressed">
+            <summary>Non-reported diagnostic with ID '{0}' cannot be suppressed.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticIdReported">
+            <summary>Reported diagnostic has an ID '{0}', which is not a valid identifier.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticLocationReported">
+            <summary>Reported diagnostic '{0}' has a source location in file '{1}', which is not part of the compilation being analyzed.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SupportedDiagnosticsHasNullDescriptor">
+            <summary>Analyzer '{0}' contains a null descriptor in its 'SupportedDiagnostics'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SupportedSuppressionsHasNullDescriptor">
+            <summary>Analyzer '{0}' contains a null descriptor in its 'SupportedSuppressions'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.The_type_0_is_not_understood_by_the_serialization_binder">
+            <summary>The type '{0}' is not understood by the serialization binder.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Cannot_deserialize_type_0">
+            <summary>Cannot deserialize type '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Cannot_serialize_type_0">
+            <summary>Cannot serialize type '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidNodeToTrack">
+            <summary>Node to track is not a descendant of the root.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NodeOrTokenOutOfSequence">
+            <summary>A node or token is out of sequence.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnexpectedTypeOfNodeInList">
+            <summary>A node in the list is not of the expected type.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MissingListItem">
+            <summary>The item specified is not the element of a list.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidPublicKey">
+            <summary>Invalid public key.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidPublicKeyToken">
+            <summary>Invalid public key token.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDataAtOffset">
+            <summary>Invalid data at offset {0}: {1}{2}*{3}{4}</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SymWriterNotDeterministic">
+            <summary>Windows PDB writer doesn't support deterministic compilation: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SymWriterOlderVersionThanRequired">
+            <summary>The version of Windows PDB writer is older than required: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SymWriterDoesNotSupportSourceLink">
+            <summary>Windows PDB writer doesn't support SourceLink feature: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.RuleSetBadAttributeValue">
+            <summary>The attribute {0} has an invalid value of {1}.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.RuleSetMissingAttribute">
+            <summary>The element {0} is missing an attribute named {1}.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.KeepAliveIsNotAnInteger">
+            <summary>Argument to '/keepalive' option is not a 32-bit integer.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.KeepAliveIsTooSmall">
+            <summary>Arguments to '/keepalive' option below -1 are invalid.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.KeepAliveWithoutShared">
+            <summary>'/keepalive' option is only valid with '/shared' option.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MismatchedVersion">
+            <summary>Roslyn compiler server reports different protocol version than build task.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MissingKeepAlive">
+            <summary>Missing argument for '/keepalive' option.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerTotalExecutionTime">
+            <summary>Total analyzer execution time: {0} seconds.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MultithreadedAnalyzerExecutionNote">
+            <summary>NOTE: Elapsed time may be less than analyzer execution time because analyzers can run concurrently.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerExecutionTimeColumnHeader">
+            <summary>Time (s)</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnalyzerNameColumnHeader">
+            <summary>Analyzer</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NoAnalyzersFound">
+            <summary>No analyzers found</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.DuplicateAnalyzerInstances">
+            <summary>Argument contains duplicate analyzer instances.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnsupportedAnalyzerInstance">
+            <summary>Argument contains an analyzer instance that does not belong to the 'Analyzers' for this CompilationWithAnalyzers instance.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidTree">
+            <summary>Syntax tree doesn't belong to the underlying 'Compilation'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ResourceStreamEndedUnexpectedly">
+            <summary>Resource stream ended at {0} bytes, expected {1} bytes.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SharedArgumentMissing">
+            <summary>Value for argument '/shared:' must not be empty</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ExceptionContext">
+            <summary>Exception occurred with following context:
+            {0}</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnonymousTypeMemberAndNamesCountMismatch2">
+            <summary>{0} and {1} must have the same length.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.AnonymousTypeArgumentCountMismatch2">
+            <summary>{0} must either be 'default' or have the same length as {1}.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InconsistentSyntaxTreeFeature">
+            <summary>Inconsistent syntax tree features</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ReferenceOfTypeIsInvalid1">
+            <summary>Reference of type '{0}' is not valid for this compilation.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.MetadataRefNotFoundToRemove1">
+            <summary>MetadataReference '{0}' not found to remove.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementNameCountMismatch">
+            <summary>If tuple element names are specified, the number of element names must match the cardinality of the tuple.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementNameEmpty">
+            <summary>Tuple element name cannot be an empty string.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementLocationCountMismatch">
+            <summary>If tuple element locations are specified, the number of locations must match the cardinality of the tuple.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleElementNullableAnnotationCountMismatch">
+            <summary>If tuple element nullable annotations are specified, the number of annotations must match the cardinality of the tuple.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TuplesNeedAtLeastTwoElements">
+            <summary>Tuples must have at least two elements.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.CompilationReferencesAssembliesWithDifferentAutoGeneratedVersion">
+            <summary>The compilation references multiple assemblies whose versions only differ in auto-generated build and/or revision numbers.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TupleUnderlyingTypeMustBeTupleCompatible">
+            <summary>The underlying type for a tuple must be tuple-compatible.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnrecognizedResourceFileFormat">
+            <summary>Unrecognized resource file format.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SourceTextCannotBeEmbedded">
+            <summary>SourceText cannot be embedded. Provide encoding or canBeEmbedded=true at construction.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.StreamIsTooLong">
+            <summary>Stream is too long.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.EmbeddedTextsRequirePdb">
+            <summary>Embedded texts are only supported when emitting a PDB.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TheStreamCannotBeWrittenTo">
+            <summary>The stream cannot be written to.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ElementIsExpected">
+            <summary>element is expected</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SeparatorIsExpected">
+            <summary>separator is expected</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.TheStreamCannotBeReadFrom">
+            <summary>The stream cannot be read from.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Deserialization_reader_for_0_read_incorrect_number_of_values">
+            <summary>Deserialization reader for '{0}' read incorrect number of values.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Stream_contains_invalid_data">
+            <summary>Stream contains invalid data</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidDiagnosticSpanReported">
+            <summary>Reported diagnostic '{0}' has a source location '{1}' in file '{2}', which is outside of the given file.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ExceptionEnablingMulticoreJit">
+            <summary>Warning: Could not enable multicore JIT due to exception: {0}.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.NotARootOperation">
+            <summary>Given operation has a non-null parent.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.OperationHasNullSemanticModel">
+            <summary>Given operation has a null semantic model.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.InvalidOperationBlockForAnalysisContext">
+            <summary>Given operation block does not belong to the current analysis context.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IsSymbolAccessibleBadWithin">
+            <summary>Parameter '{0}' must be an 'INamedTypeSymbol' or an 'IAssemblySymbol'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.IsSymbolAccessibleWrongAssembly">
+            <summary>Parameter '{0}' must be a symbol from this compilation or some referenced assembly.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.OperationMustNotBeControlFlowGraphPart">
+            <summary>The provided operation must not be part of a Control Flow Graph.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.A_language_name_cannot_be_specified_for_this_option">
+            <summary>A language name cannot be specified for this option.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.A_language_name_must_be_specified_for_this_option">
+            <summary>A language name must be specified for this option.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WRN_InvalidSeverityInAnalyzerConfig">
+            <summary>The diagnostic '{0}' was given an invalid severity '{1}' in the analyzer config file at '{2}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WRN_InvalidSeverityInAnalyzerConfig_Title">
+            <summary>Invalid severity in analyzer config file.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SuppressionDiagnosticDescriptorTitle">
+            <summary>Programmatic suppression of an analyzer diagnostic</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.SuppressionDiagnosticDescriptorMessage">
+            <summary>Diagnostic '{0}: {1}' was programmatically suppressed by a DiagnosticSuppressor with suppression ID '{2}' and justification '{3}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ModuleHasInvalidAttributes">
+            <summary>Module has invalid attributes.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.UnableToDetermineSpecificCauseOfFailure">
+            <summary>Unable to determine specific cause of the failure.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.ChangingVersionOfAssemblyReferenceIsNotAllowedDuringDebugging">
+            <summary>Changing the version of an assembly reference is not allowed during debugging: '{0}' changed version to '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.DisableAnalyzerDiagnosticsMessage">
+            <summary>Suppress the following diagnostics to disable this analyzer: {0}</summary>
         </member>
         <member name="M:Microsoft.DiaSymReader.IMetadataImport.ResolveTypeRef(System.Int32,System.Guid@,System.Object@,System.Int32@)">
             <summary>

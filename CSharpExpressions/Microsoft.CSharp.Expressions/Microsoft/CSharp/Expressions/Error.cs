@@ -507,6 +507,14 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidNullCoalescingAssignmentArguments);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidInterpolatedStringType(p0));
+        }
+
     }
 
     /// <summary>
@@ -1088,6 +1096,14 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable."
+        /// </summary>
+        internal static string InvalidInterpolatedStringType(object p0)
+        {
+            return SR.Format(SR.InvalidInterpolatedStringType, p0);
+        }
+
     }
 }
 
@@ -1157,5 +1173,6 @@ namespace System
         public const string TypeMustNotBeByRef = "Type must not be ByRef";
         public const string TypeMustNotBePointer = "Type must not be a pointer type";
         public const string InvalidNullCoalescingAssignmentArguments = "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations.";
+        public const string InvalidInterpolatedStringType = "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable.";
     }
 }
