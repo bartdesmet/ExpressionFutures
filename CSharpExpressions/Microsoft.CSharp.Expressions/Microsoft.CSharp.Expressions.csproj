@@ -88,6 +88,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\RangeCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\FromEndIndexCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Interpolation.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DiscardCSharpExpression.cs" />

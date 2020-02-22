@@ -506,11 +506,11 @@ Upon reduction of the `AsyncLambdaCSharpExpression` node, the async state machin
 
 ##### Tuples
 
-TODO
+TODO: Literals, conversions, deconstruction (also in foreach)
 
 ##### Pattern Matching
 
-TODO
+TODO: `is` expressions, different types of patterns (C# 8 additions), `switch` revamp
 
 #### C# 7.1
 
@@ -560,7 +560,35 @@ TODO
 
 ##### Indices and Ranges
 
-TODO
+Construction of indexes using the `^` expression is supported using a `FromEndIndexCSharpExpression` node type. For example:
+
+```csharp
+Expression<Func<int, Index>> f = i => ^i;
+```
+
+is translated into:
+
+```csharp
+CSharpExpression.FromEndIndex(i, /* methodinfoof(System.Index..ctor(int, bool)) */, typeof(Index))
+```
+
+Lifting to a nullable `Index?` type is supported as well.
+
+Construction of ranges using the `..` expression is supported using a `RangeCSharpExpression` node type. For example:
+
+```csharp
+Expression<Func<Index, Index, Range>> f = (i, j) => i..j;
+```
+
+is translated into:
+
+```csharp
+CSharpExpression.Range(i, j, /* methodinfoof(System.Range..ctor(Index, Index)) */, typeof(Range))
+```
+
+Other variants such as `..`, `i..`, and `..j` are represented byo omitting the left and/or right operands, and using a `MethodInfo` parameter representing either `Range.All`'s get method, `Range.FromStart`, or `Range.FromEnd`. Lifting to a nullable `Range?` type is supported as well.
+
+TODO: Using indexes and ranges in indexing expressions on arrays, collections, and strings.
 
 ##### `await using`
 

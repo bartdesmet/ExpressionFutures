@@ -234,8 +234,17 @@ namespace Microsoft.CSharp.Expressions
         NullCoalescingAssign,
 
         /// <summary>
-        /// A interpolated string expression, such as $"Hello, {world}".
+        /// An interpolated string expression, such as $"Hello, {world}".
         /// </summary>
         InterpolatedString,
+
+        /// <summary>
+        /// An index from end ("hat") expression, such as ^a.
+        /// </summary>
+        FromEndIndex,
+        /// <summary>
+        /// A range expression, such as a..b.
+        /// </summary>
+        Range,
     }
 }

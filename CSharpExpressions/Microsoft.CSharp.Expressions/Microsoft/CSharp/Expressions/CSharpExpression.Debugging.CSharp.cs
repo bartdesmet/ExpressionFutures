@@ -2035,6 +2035,47 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class FromEndIndexCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.UnaryPlus);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Out("^");
+            visitor.Visit(Operand);
+        }
+    }
+
+    partial class RangeCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Multiply) + 5;
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Visit(Left);
+            visitor.Out("..");
+            visitor.Visit(Right);
+        }
+    }
+
     static class CSharpPrintingVisitorExtensions
     {
         public static void ArgsVisit(this ICSharpPrintingVisitor visitor, IList<ParameterAssignment> args)

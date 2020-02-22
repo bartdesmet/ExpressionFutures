@@ -511,6 +511,22 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitFromEndIndex(FromEndIndexCSharpExpression node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Operand), Visit(node.Operand))
+            };
+
+            if (node.Method != null)
+            {
+                args.Add(new XAttribute(nameof(node.Method), node.Method));
+            }
+
+            return Push(node, args);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
         {
             return Push("CSharpGotoCase", node, new XAttribute(nameof(node.Value), node.Value ?? "null"));
@@ -643,6 +659,29 @@ namespace Microsoft.CSharp.Expressions
             _nodes.Push(res);
 
             return node;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitRange(RangeCSharpExpression node)
+        {
+            var args = new List<object>();
+
+            if (node.Left != null)
+            {
+                args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
+            }
+
+            if (node.Right != null)
+            {
+                args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
+            }
+
+            if (node.Method != null)
+            {
+                args.Add(new XAttribute(nameof(node.Method), node.Method));
+            }
+
+            return Push(node, args);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]

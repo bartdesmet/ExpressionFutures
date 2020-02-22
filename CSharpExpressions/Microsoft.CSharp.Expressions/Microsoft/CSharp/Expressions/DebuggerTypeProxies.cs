@@ -715,6 +715,32 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
     }
 
+    [DebuggerTypeProxy(typeof(FromEndIndexCSharpExpressionProxy))]
+    partial class FromEndIndexCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class FromEndIndexCSharpExpressionProxy
+    {
+        private readonly FromEndIndexCSharpExpression _node;
+
+        public FromEndIndexCSharpExpressionProxy(FromEndIndexCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean IsLifted => _node.IsLifted;
+        public System.Reflection.MethodBase Method => _node.Method;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Operand => _node.Operand;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(GetIndexDynamicCSharpExpressionProxy))]
     partial class GetIndexDynamicCSharpExpression
     {
@@ -1233,6 +1259,33 @@ namespace Microsoft.CSharp.Expressions
 
         public System.Linq.Expressions.Expression Expression => _node.Expression;
         public System.Reflection.ParameterInfo Parameter => _node.Parameter;
+    }
+
+    [DebuggerTypeProxy(typeof(RangeCSharpExpressionProxy))]
+    partial class RangeCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class RangeCSharpExpressionProxy
+    {
+        private readonly RangeCSharpExpression _node;
+
+        public RangeCSharpExpressionProxy(RangeCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean IsLifted => _node.IsLifted;
+        public System.Linq.Expressions.Expression Left => _node.Left;
+        public System.Reflection.MethodBase Method => _node.Method;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Right => _node.Right;
+        public System.Type Type => _node.Type;
     }
 
     [DebuggerTypeProxy(typeof(SwitchCSharpStatementProxy))]

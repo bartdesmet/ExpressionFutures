@@ -515,6 +515,54 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidInterpolatedStringType(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid type for an index operand. Supported types are int or int?."
+        /// </summary>
+        internal static Exception InvalidFromEndIndexOperandType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidFromEndIndexOperandType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The specified method is not valid to construct an object of type Index."
+        /// </summary>
+        internal static Exception InvalidFromEndIndexMethod()
+        {
+            return new ArgumentException(Strings.InvalidFromEndIndexMethod);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid index type. Supported types are Index or Index?."
+        /// </summary>
+        internal static Exception InvalidIndexType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidIndexType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?."
+        /// </summary>
+        internal static Exception InvalidRangeOperandType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidRangeOperandType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The specified method is not valid to construct an object of type Range."
+        /// </summary>
+        internal static Exception InvalidRangeMethod()
+        {
+            return new ArgumentException(Strings.InvalidRangeMethod);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid range type. Supported types are Range or Range?."
+        /// </summary>
+        internal static Exception InvalidRangeType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidRangeType(p0));
+        }
+
     }
 
     /// <summary>
@@ -1104,6 +1152,60 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidInterpolatedStringType, p0);
         }
 
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid type for an index operand. Supported types are int or int?."
+        /// </summary>
+        internal static string InvalidFromEndIndexOperandType(object p0)
+        {
+            return SR.Format(SR.InvalidFromEndIndexOperandType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The specified method is not valid to construct an object of type Index."
+        /// </summary>
+        internal static string InvalidFromEndIndexMethod
+        {
+            get
+            {
+                return SR.InvalidFromEndIndexMethod;
+            }
+        }
+
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid index type. Supported types are Index or Index?."
+        /// </summary>
+        internal static string InvalidIndexType(object p0)
+        {
+            return SR.Format(SR.InvalidIndexType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?."
+        /// </summary>
+        internal static string InvalidRangeOperandType(object p0)
+        {
+            return SR.Format(SR.InvalidRangeOperandType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The specified method is not valid to construct an object of type Range."
+        /// </summary>
+        internal static string InvalidRangeMethod
+        {
+            get
+            {
+                return SR.InvalidRangeMethod;
+            }
+        }
+
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid range type. Supported types are Range or Range?."
+        /// </summary>
+        internal static string InvalidRangeType(object p0)
+        {
+            return SR.Format(SR.InvalidRangeType, p0);
+        }
+
     }
 }
 
@@ -1174,5 +1276,11 @@ namespace System
         public const string TypeMustNotBePointer = "Type must not be a pointer type";
         public const string InvalidNullCoalescingAssignmentArguments = "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations.";
         public const string InvalidInterpolatedStringType = "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable.";
+        public const string InvalidFromEndIndexOperandType = "Type '{0}' is not a valid type for an index operand. Supported types are int or int?.";
+        public const string InvalidFromEndIndexMethod = "The specified method is not valid to construct an object of type Index.";
+        public const string InvalidIndexType = "Type '{0}' is not a valid index type. Supported types are Index or Index?.";
+        public const string InvalidRangeOperandType = "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?.";
+        public const string InvalidRangeMethod = "The specified method is not valid to construct an object of type Range.";
+        public const string InvalidRangeType = "Type '{0}' is not a valid range type. Supported types are Range or Range?.";
     }
 }

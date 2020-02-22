@@ -20,6 +20,31 @@ namespace Microsoft.CSharp.Expressions
 {
     static class Helpers
     {
+        public static bool IsAlwaysNull(Expression e)
+        {
+            // NB: Could add support for no-op conversions.
+
+            return e.NodeType switch
+            {
+                ExpressionType.Constant => ((ConstantExpression)e).Value == null,
+                ExpressionType.Default => !e.Type.IsValueType || e.Type.IsNullableType(),
+                ExpressionType.New => e.Type.IsNullableType() && ((NewExpression)e).Arguments.Count == 0, // e.g. new int?()
+                _ => false,
+            };
+        }
+
+        public static bool IsNeverNull(Expression e)
+        {
+            // NB: Could add support for no-op conversions.
+
+            return e.NodeType switch
+            {
+                ExpressionType.Constant => ((ConstantExpression)e).Value != null,
+                ExpressionType.New => e.Type.IsNullableType() && ((NewExpression)e).Arguments.Count == 1, // e.g. new int?(42)
+                _ => false,
+            };
+        }
+
         public static bool CheckArgumentsInOrder(ReadOnlyCollection<ParameterAssignment> arguments)
         {
             var inOrder = true;
