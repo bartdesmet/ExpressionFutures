@@ -486,7 +486,7 @@ This fails to compile with:
 error CS8207: An expression tree may not contain a discard.
 ```
 
-Support for discard expressions is added by a new `CSharpExpression.Factory(Type)` method:
+Support for discard expressions is added by a new `CSharpExpression.Discard(Type)` method:
 
 ```csharp
 CSharpExpression.Discard(typeof(int))
