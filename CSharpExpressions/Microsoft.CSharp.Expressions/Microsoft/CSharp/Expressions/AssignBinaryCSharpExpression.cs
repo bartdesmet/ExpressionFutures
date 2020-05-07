@@ -137,12 +137,12 @@ namespace Microsoft.CSharp.Expressions
                 // NB: We still use `ReduceAssignment` here to deal with IndexCSharpExpression which is not
                 //     a valid LHS to Expression.Assign.
 
-                if (left is IndexCSharpExpression indexCSharp)
+                return left switch
                 {
-                    return indexCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right));
-                }
-
-                return Expression.Assign(left, Right);
+                    IndexCSharpExpression indexCSharp => indexCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right)),
+                    ArrayAccessCSharpExpression arrayAccessCSharp => arrayAccessCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right)),
+                    _ => Expression.Assign(left, Right)
+                };
             }
 
             return ReduceAssignment(left, leftConversion: LeftConversion, functionalOp: lhs =>

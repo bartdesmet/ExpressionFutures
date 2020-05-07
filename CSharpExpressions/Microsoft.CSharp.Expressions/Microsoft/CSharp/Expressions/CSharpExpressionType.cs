@@ -246,5 +246,10 @@ namespace Microsoft.CSharp.Expressions
         /// A range expression, such as a..b.
         /// </summary>
         Range,
+
+        /// <summary>
+        /// An array access expression, such as xs[i].
+        /// </summary>
+        ArrayAccess,
     }
 }

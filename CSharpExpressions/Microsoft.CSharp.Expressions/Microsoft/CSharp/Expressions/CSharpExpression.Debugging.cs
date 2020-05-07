@@ -95,6 +95,18 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Array), Visit(node.Array)),
+                new XElement(nameof(node.Indexes), Visit(node.Indexes))
+            };
+
+            return Push(node, args);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
         {
             var parameters = Visit(nameof(AsyncCSharpExpression<TDelegate>.Parameters), node.Parameters);

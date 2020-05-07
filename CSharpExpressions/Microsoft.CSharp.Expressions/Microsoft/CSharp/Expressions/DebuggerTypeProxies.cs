@@ -8,6 +8,31 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
+    [DebuggerTypeProxy(typeof(ArrayAccessCSharpExpressionProxy))]
+    partial class ArrayAccessCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class ArrayAccessCSharpExpressionProxy
+    {
+        private readonly ArrayAccessCSharpExpression _node;
+
+        public ArrayAccessCSharpExpressionProxy(ArrayAccessCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.Expression Array => _node.Array;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Indexes => _node.Indexes;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(AssignBinaryCSharpExpressionProxy))]
     partial class AssignBinaryCSharpExpression
     {

@@ -64,6 +64,19 @@ namespace Microsoft.CSharp.Expressions
             return inOrder;
         }
 
+        public static bool CheckHasSpecialNodesPassedByRef(ReadOnlyCollection<ParameterAssignment> arguments)
+        {
+            foreach (var argument in arguments)
+            {
+                if (argument.Parameter.ParameterType.IsByRef && argument.Expression is ArrayAccessCSharpExpression)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static void FillOptionalParameters(ParameterInfo[] parameters, Expression[] args)
         {
             for (var i = 0; i < args.Length; i++)
@@ -322,7 +335,7 @@ namespace Microsoft.CSharp.Expressions
 
             var arguments = new Expression[parameters.Length];
 
-            if (!needTemps && CheckArgumentsInOrder(bindings))
+            if (!needTemps && CheckArgumentsInOrder(bindings) && !CheckHasSpecialNodesPassedByRef(bindings))
             {
                 foreach (var binding in bindings)
                 {
@@ -597,6 +610,11 @@ namespace Microsoft.CSharp.Expressions
                     }
                     break;
                 default:
+                    if (expression is ArrayAccessCSharpExpression arrayAccess)
+                    {
+                        expression = arrayAccess.Reduce(makeVariable, statements);
+                    }
+                    else
                     {
                         var variable = CreateTemp(makeVariable, parameter, expression.Type);
                         statements.Add(Expression.Assign(variable, expression));
@@ -790,20 +808,6 @@ namespace Microsoft.CSharp.Expressions
             return o ?? s_null;
         }
 
-        public static Expression GetLhs(Expression expression, string paramName)
-        {
-            var lhs = expression;
-
-            if (expression is IndexCSharpExpression index)
-            {
-                EnsureCanWrite(index, paramName);
-
-                lhs = Expression.Parameter(expression.Type, "__lhs");
-            }
-
-            return lhs;
-        }
-
         public static void RequiresCanWrite(Expression expression, string paramName)
         {
             // NB: This does not account for dynamic member and index nodes; to make dynamically bound assignments,
@@ -811,35 +815,39 @@ namespace Microsoft.CSharp.Expressions
             //     dynamic arguments and also allow to separate the dynamic API from the rest of the nodes without
             //     having a strange circular dependency.
 
-            if (expression is DiscardCSharpExpression)
+            switch (expression)
             {
-                return;
-            }
-            else if (expression is IndexCSharpExpression index)
-            {
-                EnsureCanWrite(index, paramName);
-            }
-            else
-            {
-                // NB: Our current modification of the Roslyn compiler can emit these nodes as the LHS of an
-                //     assignment. We can deal with this in reduction steps by rewriting it to ArrayAccess
-                //     using MakeWriteable below.
-
-                if (expression.NodeType == ExpressionType.ArrayIndex)
-                {
+                case DiscardCSharpExpression _:
                     return;
-                }
-
-                if (expression.NodeType == ExpressionType.Call)
-                {
-                    var call = (MethodCallExpression)expression;
-                    if (IsArrayAssignment(call))
+                case IndexCSharpExpression index:
+                    EnsureCanWrite(index, paramName);
+                    break;
+                case ArrayAccessCSharpExpression arrayAccess:
+                    EnsureCanWrite(arrayAccess, paramName);
+                    break;
+                default:
                     {
-                        return;
-                    }
-                }
+                        // NB: Our current modification of the Roslyn compiler can emit these nodes as the LHS of an
+                        //     assignment. We can deal with this in reduction steps by rewriting it to ArrayAccess
+                        //     using MakeWriteable below.
 
-                ExpressionStubs.RequiresCanWrite(expression, paramName);
+                        if (expression.NodeType == ExpressionType.ArrayIndex)
+                        {
+                            return;
+                        }
+
+                        if (expression.NodeType == ExpressionType.Call)
+                        {
+                            var call = (MethodCallExpression)expression;
+                            if (IsArrayAssignment(call))
+                            {
+                                return;
+                            }
+                        }
+
+                        ExpressionStubs.RequiresCanWrite(expression, paramName);
+                        break;
+                    }
             }
         }
 
@@ -876,6 +884,14 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        private static void EnsureCanWrite(ArrayAccessCSharpExpression arrayAccess, string paramName)
+        {
+            if (arrayAccess.Indexes[0].Type == typeof(Range))
+            {
+                throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+            }
+        }
+
         private static bool IsArrayAssignment(MethodCallExpression call)
         {
             var method = call.Method;
@@ -898,9 +914,12 @@ namespace Microsoft.CSharp.Expressions
                     return assign(lhs);
             }
 
-            if (lhs is IndexCSharpExpression index)
+            switch (lhs)
             {
-                return index.ReduceAssign(assign);
+                case IndexCSharpExpression index:
+                    return index.ReduceAssign(assign);
+                case ArrayAccessCSharpExpression arrayAccess:
+                    return arrayAccess.ReduceAssign(assign);
             }
 
             throw ContractUtils.Unreachable;
@@ -988,9 +1007,12 @@ namespace Microsoft.CSharp.Expressions
                     return ReduceVariable(lhs, functionalOp, prefix, leftConversion);
             }
 
-            if (lhs is IndexCSharpExpression index)
+            switch (lhs)
             {
-                return ReduceIndexCSharp(index, functionalOp, prefix, leftConversion);
+                case IndexCSharpExpression index:
+                    return ReduceIndexCSharp(index, functionalOp, prefix, leftConversion);
+                case ArrayAccessCSharpExpression arrayAccess:
+                    return ReduceArrayAccessCSharp(arrayAccess, functionalOp, prefix, leftConversion);
             }
 
             throw ContractUtils.Unreachable;
@@ -1186,6 +1208,11 @@ namespace Microsoft.CSharp.Expressions
         private static Expression ReduceIndexCSharp(IndexCSharpExpression index, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
         {
             return index.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
+        }
+
+        private static Expression ReduceArrayAccessCSharp(ArrayAccessCSharpExpression arrayAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        {
+            return arrayAccess.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
         }
 
         private static Expression WithLeftConversion(Expression expression, LambdaExpression leftConversion)

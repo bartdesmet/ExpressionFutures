@@ -2076,8 +2076,45 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class ArrayAccessCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.ArrayIndex);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Visit(Array);
+            visitor.Out("[");
+            visitor.Visit(Indexes);
+            visitor.Out("]");
+        }
+    }
+
     static class CSharpPrintingVisitorExtensions
     {
+        public static void Visit(this ICSharpPrintingVisitor visitor, IList<Expression> args)
+        {
+            var n = args.Count;
+
+            for (var i = 0; i < n; i++)
+            {
+                visitor.Visit(args[i]);
+
+                if (i != n - 1)
+                {
+                    visitor.Out(", ");
+                }
+            }
+        }
+
         public static void ArgsVisit(this ICSharpPrintingVisitor visitor, IList<ParameterAssignment> args)
         {
             var requiresNamedArgs = false;
