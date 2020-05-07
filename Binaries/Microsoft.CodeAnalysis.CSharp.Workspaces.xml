@@ -24,15 +24,15 @@
             Moves the trailing trivia from the node's previous token to the end of the node
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpSyntaxGenerator.RequiresLocalDeclarationType">
-            <summary>
-            C# always requires a type to be present with a local declaration.  (Even if that type is
-            <c>var</c>).
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpSyntaxGenerator.ParenthesizeLeft(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
             <summary>
             Parenthesize the left hand size of a member access, invocation or element access expression
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpSyntaxGeneratorInternal.RequiresLocalDeclarationType">
+            <summary>
+            C# always requires a type to be present with a local declaration.  (Even if that type is
+            <c>var</c>).
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.CodeStyle.TypeStyle.TypeStyleHelper.IsTypeApparentInAssignmentExpression(Microsoft.CodeAnalysis.CSharp.CodeStyle.TypeStyle.UseVarPreference,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.ITypeSymbol,System.Threading.CancellationToken)">
@@ -95,6 +95,23 @@
             Given an expression node, tries to generate an appropriate name that can be used for
             that expression. 
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
+            is true, the last parameter will be returned if it is params parameter and the index of
+            the specified argument is greater than the number of parameters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.AttributeArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
+            is true, the last parameter will be returned if it is params parameter and the index of
+            the specified argument is greater than the number of parameters.
+            </summary>
+            <remarks>
+            Returns null if the <paramref name="argument"/> is a named argument.
+            </remarks>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsExpressionOfArgumentInDeconstruction(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
             <summary>
@@ -237,23 +254,6 @@
             Determines whether the specified TypeSyntax is actually 'var'.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
-            is true, the last parameter will be returned if it is params parameter and the index of
-            the specified argument is greater than the number of parameters.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.AttributeArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Returns the parameter to which this argument is passed. If <paramref name="allowParams"/>
-            is true, the last parameter will be returned if it is params parameter and the index of
-            the specified argument is greater than the number of parameters.
-            </summary>
-            <remarks>
-            Returns null if the <paramref name="argument"/> is a named argument.
-            </remarks>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryGetSemicolonToken(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax)">
             <summary>
             Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
@@ -314,6 +314,150 @@
             create our own 'symbol display' logic here.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions">
+            <inheritdoc cref="T:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpacingAfterMethodDeclarationName">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpacingAfterMethodDeclarationName"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceWithinMethodDeclarationParenthesis">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceWithinMethodDeclarationParenthesis"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBetweenEmptyMethodDeclarationParentheses">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBetweenEmptyMethodDeclarationParentheses"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterMethodCallName">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterMethodCallName"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceWithinMethodCallParentheses">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceWithinMethodCallParentheses"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBetweenEmptyMethodCallParentheses">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBetweenEmptyMethodCallParentheses"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterControlFlowStatementKeyword">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterControlFlowStatementKeyword"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceWithinExpressionParentheses">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceWithinExpressionParentheses"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceWithinCastParentheses">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceWithinCastParentheses"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceWithinOtherParentheses">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceWithinOtherParentheses"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterCast">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterCast"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpacesIgnoreAroundVariableDeclaration">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpacesIgnoreAroundVariableDeclaration"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBeforeOpenSquareBracket">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBeforeOpenSquareBracket"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBetweenEmptySquareBrackets">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBetweenEmptySquareBrackets"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceWithinSquareBrackets">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceWithinSquareBrackets"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterColonInBaseTypeDeclaration">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterColonInBaseTypeDeclaration"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterComma">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterComma"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterDot">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterDot"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceAfterSemicolonsInForStatement">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceAfterSemicolonsInForStatement"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBeforeColonInBaseTypeDeclaration">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBeforeColonInBaseTypeDeclaration"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBeforeComma">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBeforeComma"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBeforeDot">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBeforeDot"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpaceBeforeSemicolonsInForStatement">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpaceBeforeSemicolonsInForStatement"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.SpacingAroundBinaryOperator">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.SpacingAroundBinaryOperator"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.IndentBraces">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.IndentBraces"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.IndentBlock">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.IndentBlock"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.IndentSwitchSection">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.IndentSwitchSection"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.IndentSwitchCaseSection">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.IndentSwitchCaseSection"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.IndentSwitchCaseSectionWhenBlock">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.IndentSwitchCaseSectionWhenBlock"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.LabelPositioning">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.LabelPositioning"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.WrappingPreserveSingleLine">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.WrappingPreserveSingleLine"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.WrappingKeepStatementsOnSingleLine">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.WrappingKeepStatementsOnSingleLine"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInTypes">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInTypes"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInMethods">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInMethods"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInProperties">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInProperties"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInAccessors">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInAccessors"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInAnonymousMethods">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInAnonymousMethods"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInControlBlocks">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInControlBlocks"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInAnonymousTypes">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInAnonymousTypes"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInObjectCollectionArrayInitializers">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInObjectCollectionArrayInitializers"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLinesForBracesInLambdaExpressionBody">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLinesForBracesInLambdaExpressionBody"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLineForElse">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLineForElse"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLineForCatch">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLineForCatch"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLineForFinally">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLineForFinally"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLineForMembersInObjectInit">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLineForMembersInObjectInit"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLineForMembersInAnonymousTypes">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLineForMembersInAnonymousTypes"/>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions.NewLineForClausesInQuery">
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions2.NewLineForClausesInQuery"/>
+        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Formatting.LabelPositionOptions.LeftMost">
             Placed in the Zeroth column of the text editor
         </member>
@@ -365,6 +509,16 @@
             This class allows the Code Style layer to light up support for new language features when available at runtime
             while compiling against an older version of the Roslyn assemblies.
             </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPatternValueAssertion">
+            <summary>
+            This will only compile if <see cref="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPattern"/> and <see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.RelationalPattern"/> have the same
+            value.
+            </summary>
+            <remarks>
+            <para>The subtraction will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.DotDotToken"/> is greater, and the conversion
+            to an unsigned value after negation will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPattern"/> is greater.</para>
+            </remarks>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.GetExpansionTargetForLocation(Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>
@@ -419,13 +573,13 @@
             Compares symbols by their original definition.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Simplification.Simplifiers.ExpressionSimplifier.IsMemberAccessADynamicInvocation(Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax,Microsoft.CodeAnalysis.SemanticModel)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Simplification.Simplifiers.ExpressionSimplifier.IsNonRemovablePartOfDynamicMethodInvocation(Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax,System.Threading.CancellationToken)">
             <summary>
-            Tells if the Member access is the starting part of a Dynamic Invocation
+            Tells if the member access is dynamically invoked and cannot be reduced. In the case of
+            <c>NS1.NS2.T1.T2.Method(...dynamic...)</c> we can only remove the <c>NS1.NS2</c>
+            portion. The namespace part is not encoded into the IL, but the specific types in
+            <c>T1.T2</c> and cannot be removed.
             </summary>
-            <param name="memberAccess"></param>
-            <param name="semanticModel"></param>
-            <returns>Return true, if the member access is the starting point of a Dynamic Invocation</returns>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Simplification.Simplifiers.NameSimplifier.IsPartOfNamespaceDeclarationName(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
@@ -436,9 +590,80 @@
             <param name="node"></param>
             <returns></returns>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PathSyntaxReference">
+            <summary>
+            Represents a syntax reference that doesn't actually hold onto the 
+            referenced node.  Instead, enough data is held onto so that the node
+            can be recovered and returned if necessary.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.NullSyntaxReference">
+            <summary>
+            Represents a syntax reference that was passed a null
+            reference to a node. In this case, we just hold onto the
+            weak tree reference and throw if any invalid properties
+            are accessed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PositionalSyntaxReference">
+            <summary>
+            Represents a syntax reference that doesn't actually hold onto the 
+            referenced node.  Instead, enough data is held onto so that the node
+            can be recovered and returned if necessary.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.RecoverableSyntaxTree">
+            <summary>
+            Represents a syntax tree that only has a weak reference to its 
+            underlying data.  This way it can be passed around without forcing
+            the underlying full tree to stay alive.  Think of it more as a 
+            key that can be used to identify a tree rather than the tree itself.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.FormattingRangeHelper">
             <summary>
             this help finding a range of tokens to format based on given ending token
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer">
+            <summary>
+            Helper class to analyze the semantic effects of a speculated syntax node replacement on the parenting nodes.
+            Given an expression node from a syntax tree and a new expression from a different syntax tree,
+            it replaces the expression with the new expression to create a speculated syntax tree.
+            It uses the original tree's semantic model to create a speculative semantic model and verifies that
+            the syntax replacement doesn't break the semantics of any parenting nodes of the original expression.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer.#ctor(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Threading.CancellationToken,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a semantic analyzer for speculative syntax replacement.
+            </summary>
+            <param name="expression">Original expression to be replaced.</param>
+            <param name="newExpression">New expression to replace the original expression.</param>
+            <param name="semanticModel">Semantic model of <paramref name="expression"/> node's syntax tree.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <param name="skipVerificationForReplacedNode">
+            True if semantic analysis should be skipped for the replaced node and performed starting from parent of the original and replaced nodes.
+            This could be the case when custom verifications are required to be done by the caller or
+            semantics of the replaced expression are different from the original expression.
+            </param>
+            <param name="failOnOverloadResolutionFailuresInOriginalCode">
+            True if semantic analysis should fail when any of the invocation expression ancestors of <paramref name="expression"/> in original code has overload resolution failures.
+            </param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer.ReplacementChangesSemanticsOfUnchangedLambda(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
+            <summary>
+            Determines whether performing the syntax replacement in one of the sibling nodes of the given lambda expressions will change the lambda binding semantics.
+            This is done by first determining the lambda parameters whose type differs in the replaced lambda node.
+            For each of these parameters, we find the descendant identifier name nodes in the lambda body and check if semantics of any of the parenting nodes of these
+            identifier nodes have changed in the replaced lambda.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer.ReplacementBreaksBoxingInConditionalExpression(Microsoft.CodeAnalysis.TypeInfo,Microsoft.CodeAnalysis.TypeInfo,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
+            <summary>
+            Checks if the conversion might change the resultant boxed type.
+            Similar boxing checks are performed elsewhere, but in this case we need to perform the check on the entire conditional expression.
+            This will make sure the resultant cast is proper for the type of the conditional expression.
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Utilities.TypeStyleResult.IsStylePreferred">
@@ -494,77 +719,6 @@
             false, if implicit typing cannot be used.
             true, otherwise.
             </returns>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer">
-            <summary>
-            Helper class to analyze the semantic effects of a speculated syntax node replacement on the parenting nodes.
-            Given an expression node from a syntax tree and a new expression from a different syntax tree,
-            it replaces the expression with the new expression to create a speculated syntax tree.
-            It uses the original tree's semantic model to create a speculative semantic model and verifies that
-            the syntax replacement doesn't break the semantics of any parenting nodes of the original expression.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer.#ctor(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Threading.CancellationToken,System.Boolean,System.Boolean)">
-            <summary>
-            Creates a semantic analyzer for speculative syntax replacement.
-            </summary>
-            <param name="expression">Original expression to be replaced.</param>
-            <param name="newExpression">New expression to replace the original expression.</param>
-            <param name="semanticModel">Semantic model of <paramref name="expression"/> node's syntax tree.</param>
-            <param name="cancellationToken">Cancellation token.</param>
-            <param name="skipVerificationForReplacedNode">
-            True if semantic analysis should be skipped for the replaced node and performed starting from parent of the original and replaced nodes.
-            This could be the case when custom verifications are required to be done by the caller or
-            semantics of the replaced expression are different from the original expression.
-            </param>
-            <param name="failOnOverloadResolutionFailuresInOriginalCode">
-            True if semantic analysis should fail when any of the invocation expression ancestors of <paramref name="expression"/> in original code has overload resolution failures.
-            </param>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer.ReplacementChangesSemanticsOfUnchangedLambda(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
-            <summary>
-            Determines whether performing the syntax replacement in one of the sibling nodes of the given lambda expressions will change the lambda binding semantics.
-            This is done by first determining the lambda parameters whose type differs in the replaced lambda node.
-            For each of these parameters, we find the descendant identifier name nodes in the lambda body and check if semantics of any of the parenting nodes of these
-            identifier nodes have changed in the replaced lambda.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Utilities.SpeculationAnalyzer.ReplacementBreaksBoxingInConditionalExpression(Microsoft.CodeAnalysis.TypeInfo,Microsoft.CodeAnalysis.TypeInfo,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
-            <summary>
-            Checks if the conversion might change the resultant boxed type.
-            Similar boxing checks are performed elsewhere, but in this case we need to perform the check on the entire conditional expression.
-            This will make sure the resultant cast is proper for the type of the conditional expression.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PathSyntaxReference">
-            <summary>
-            Represents a syntax reference that doesn't actually hold onto the 
-            referenced node.  Instead, enough data is held onto so that the node
-            can be recovered and returned if necessary.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.NullSyntaxReference">
-            <summary>
-            Represents a syntax reference that was passed a null
-            reference to a node. In this case, we just hold onto the
-            weak tree reference and throw if any invalid properties
-            are accessed.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PositionalSyntaxReference">
-            <summary>
-            Represents a syntax reference that doesn't actually hold onto the 
-            referenced node.  Instead, enough data is held onto so that the node
-            can be recovered and returned if necessary.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.RecoverableSyntaxTree">
-            <summary>
-            Represents a syntax tree that only has a weak reference to its 
-            underlying data.  This way it can be passed around without forcing
-            the underlying full tree to stay alive.  Think of it more as a 
-            key that can be used to identify a tree rather than the tree itself.
-            </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceResources.No_available_location_found_to_add_statements_to">
             <summary>No available location found to add statements to.</summary>
@@ -623,8 +777,14 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.using_directive_preferences">
             <summary>'using' directive preferences</summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceExtensionsResources.Expected_string_or_char_literal">
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources.Expected_string_or_char_literal">
             <summary>Expected string or char literal</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilerExtensionsResources._0_1_is_not_supported_in_this_version">
+            <summary>'{0}.{1}' is not supported in this version</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpWorkspaceExtensionsResources.EmptyResource">
+            <summary>Remove this value when another is added.</summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CodeStyle.PreferBracesPreference">
             <summary>
@@ -637,7 +797,7 @@
             </summary>
             <remarks>
             <para>The value <c>0</c> is important for serialization compatibility in
-            <see cref="M:Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption`1.FromXElement(System.Xml.Linq.XElement)"/>. Prior to the use of this enum, the serialized value
+            <see cref="M:Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption2`1.FromXElement(System.Xml.Linq.XElement)"/>. Prior to the use of this enum, the serialized value
             was the <see cref="T:System.Boolean"/> value <see langword="false"/>.</para>
             </remarks>
         </member>
@@ -654,7 +814,7 @@
              </summary>
              <remarks>
              <para>The value <c>1</c> is important for serialization compatibility in
-             <see cref="M:Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption`1.FromXElement(System.Xml.Linq.XElement)"/>. Prior to the use of this enum, the serialized value
+             <see cref="M:Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption2`1.FromXElement(System.Xml.Linq.XElement)"/>. Prior to the use of this enum, the serialized value
              was the <see cref="T:System.Boolean"/> value <see langword="true"/>.</para>
              </remarks>
         </member>
