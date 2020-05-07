@@ -61,6 +61,10 @@ ERR_ExpressionTreeContainsTupleLiteral
 ERR_ExpressionTreeContainsTupleConversion
 ERR_ExpressionTreeContainsOutVariable
 ERR_ExpressionTreeContainsTupleBinOp
+ERR_ExpressionTreeContainsSwitchExpression
+ERR_ExpressionTreeCantContainRefStruct
+ERR_ExpressionTreeContainsPatternIndexOrRangeIndexer
+- TODO for collections and strings
 
 
 Done
@@ -100,6 +104,18 @@ ERR_ExpressionTreeContainsThrowExpression
 ERR_ExpressionTreeContainsDiscard
 - _ = foo()
 - int.TryParse(s, out int _)
+
+ERR_ExpressionTreeContainsFromEndIndexExpression
+- ^1
+
+ERR_ExpressionTreeContainsRangeExpression
+- 1..2
+
+ERR_ExpressionTreeContainsPatternIndexOrRangeIndexer
+- xs[i]
+
+ERR_ExpressionTreeCantContainNullCoalescingAssignment
+- o ??= p
 
 
 Ignored
