@@ -248,8 +248,12 @@ namespace Microsoft.CSharp.Expressions
         Range,
 
         /// <summary>
-        /// An array access expression, such as xs[i].
+        /// An array access expression, such as xs[i], where xs is an array.
         /// </summary>
         ArrayAccess,
+        /// <summary>
+        /// An indexer access expression, such as xs[i], where xs is a countable collection type.
+        /// </summary>
+        IndexerAccess,
     }
 }
