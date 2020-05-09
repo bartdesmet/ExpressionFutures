@@ -587,7 +587,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ArrayAccess_ByRef_CSharpNodes()
+        public void ArrayAccess_ByRef_CSharpNodes_SystemIndex()
         {
             //
             // NB: Unlike the test case above, this works because we can reduce CSharpExpression variants of MethodCall, New, and Invoke
@@ -625,6 +625,28 @@ namespace Tests
             MethodCallCSharpExpression mce = CSharpExpression.Call(inc, new Expression[] { CSharpExpression.ArrayAccess(xs, i) });
 
             var res = Expression.Lambda<Func<int[], Index, int>>(mce, xs, i);
+
+            var f = res.Compile();
+
+            var vals = new int[] { 41 };
+
+            int val = f(vals, 0);
+
+            Assert.AreEqual(42, val);
+            Assert.AreEqual(42, vals[0]);
+        }
+
+        [TestMethod]
+        public void ArrayAccess_ByRef_CSharpNodes_Int()
+        {
+            var xs = Expression.Parameter(typeof(int[]));
+            var i = Expression.Parameter(typeof(int));
+
+            var inc = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), new[] { typeof(int).MakeByRefType() });
+
+            MethodCallCSharpExpression mce = CSharpExpression.Call(inc, new Expression[] { CSharpExpression.ArrayAccess(xs, i) });
+
+            var res = Expression.Lambda<Func<int[], int, int>>(mce, xs, i);
 
             var f = res.Compile();
 

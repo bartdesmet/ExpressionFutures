@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
@@ -84,13 +85,19 @@ namespace Microsoft.CSharp.Expressions
             {
                 return ReduceSimple();
             }
-            else if (IsIndexArrayAccess())
+
+            if (Indexes.Count == 1)
             {
-                return ReduceIndex();
-            }
-            else if (IsRangeArrayAccess())
-            {
-                return ReduceRange();
+                var indexType = Indexes[0].Type;
+
+                if (indexType == typeof(Index))
+                {
+                    return ReduceIndex();
+                }
+                else if (indexType == typeof(Range))
+                {
+                    return ReduceRange();
+                }
             }
 
             throw ContractUtils.Unreachable;
@@ -102,23 +109,21 @@ namespace Microsoft.CSharp.Expressions
             {
                 return ReduceSimple();
             }
-            else if (IsIndexArrayAccess())
+
+            if (Indexes.Count == 1)
             {
-                return ReduceIndex(makeVariable, statements);
-            }
-            else if (IsRangeArrayAccess())
-            {
-                return ReduceRange();
+                var indexType = Indexes[0].Type;
+
+                if (indexType == typeof(Index))
+                {
+                    return ReduceIndex(makeVariable, statements);
+                }
             }
 
             throw ContractUtils.Unreachable;
         }
 
         private bool IsSimpleArrayAccess() => Indexes.All(index => index.Type == typeof(int));
-
-        private bool IsIndexArrayAccess() => Indexes.Count == 1 && Indexes[0].Type == typeof(Index);
-
-        private bool IsRangeArrayAccess() => Indexes.Count == 1 && Indexes[0].Type == typeof(Range);
 
         private Expression ReduceSimple()
         {
@@ -175,7 +180,7 @@ namespace Microsoft.CSharp.Expressions
             // System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray(array, Range)
 
             var elemType = Array.Type.GetElementType(); // REVIEW
-            var getSubArrayMethod = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).MakeGenericMethod(elemType);
+            var getSubArrayMethod = GetSubArray.MakeGenericMethod(elemType);
 
             return Expression.Call(getSubArrayMethod, Array, Indexes[0]);
         }
@@ -188,9 +193,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                var getOffsetMethod = typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance, new[] { typeof(int) });
-
-                return Expression.Call(index, getOffsetMethod, Expression.ArrayLength(array));
+                return Expression.Call(index, GetOffset, Expression.ArrayLength(array));
             }
         }
 
@@ -287,6 +290,12 @@ namespace Microsoft.CSharp.Expressions
 
             throw ContractUtils.Unreachable;
         }
+
+        private static MethodInfo s_getOffset;
+        private static MethodInfo GetOffset => s_getOffset ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance, new[] { typeof(int) });
+
+        private static MethodInfo s_getSubArray;
+        private static MethodInfo GetSubArray => s_getSubArray ??= typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 
         //
         // BUG: This node can't be passed to a ref parameter. E.g. Interlocked.Exchange(ref xs[^i], val)
