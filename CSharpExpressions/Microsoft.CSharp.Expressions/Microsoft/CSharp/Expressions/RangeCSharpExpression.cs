@@ -207,7 +207,7 @@ namespace Microsoft.CSharp.Expressions
         private static MethodInfo All => s_all ??= typeof(Range).GetProperty(nameof(System.Range.All)).GetGetMethod();
         private static MethodInfo EndAt => s_end_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.EndAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) });
         private static MethodInfo StartAt => s_start_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.StartAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) });
-        private static ConstructorInfo Ctor = s_ctor ??= typeof(Range).GetConstructor(new[] { typeof(System.Index), typeof(System.Index) });
+        private static ConstructorInfo Ctor => s_ctor ??= typeof(Range).GetConstructor(new[] { typeof(System.Index), typeof(System.Index) });
     }
 
     partial class CSharpExpression
