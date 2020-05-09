@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj">
+      <Project>{6fa07859-fbeb-4e2e-a70c-1373118a6740}</Project>
+      <Name>BclExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj">
       <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
       <Name>Microsoft.CSharp.Expressions</Name>
