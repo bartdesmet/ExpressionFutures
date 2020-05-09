@@ -5,6 +5,7 @@
 using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -25,6 +26,12 @@ namespace Tests
             var s = Expression.Constant("foo");
             var j = Expression.Constant(new Index());
             var r = Expression.Constant(new Range());
+
+            // null checks
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(null, i));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, default(Expression)));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new Expression[] { null }));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new List<Expression> { null }));
 
             // the following are valid
             Assert.IsNotNull(CSharpExpression.ArrayAccess(xs, i));
