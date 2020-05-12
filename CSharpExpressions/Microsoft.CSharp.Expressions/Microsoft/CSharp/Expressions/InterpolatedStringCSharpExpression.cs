@@ -144,6 +144,10 @@ namespace Microsoft.CSharp.Expressions
 
             EnsureStringFormatInfo();
 
+            //
+            // CONSIDER: Review the decision on https://github.com/dotnet/roslyn/issues/44168.
+            //
+
             if (n - 1 < s_format_args.Length)
             {
                 var method = s_format_args[n - 1];
