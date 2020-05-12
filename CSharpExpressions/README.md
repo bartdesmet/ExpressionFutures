@@ -586,9 +586,57 @@ is translated into:
 CSharpExpression.Range(i, j, /* methodinfoof(System.Range..ctor(Index, Index)) */, typeof(Range))
 ```
 
-Other variants such as `..`, `i..`, and `..j` are represented byo omitting the left and/or right operands, and using a `MethodInfo` parameter representing either `Range.All`'s get method, `Range.FromStart`, or `Range.FromEnd`. Lifting to a nullable `Range?` type is supported as well.
+Other variants such as `..`, `i..`, and `..j` are represented by omitting the left and/or right operands, and using a `MethodInfo` parameter representing either `Range.All`'s get method, `Range.FromStart`, or `Range.FromEnd`. Lifting to a nullable `Range?` type is supported as well.
 
-TODO: Using indexes and ranges in indexing expressions on arrays, collections, and strings.
+Indexing and slicing operations for arrays are supported using an `ArrayAccessCSharpExpression` node type. For example:
+
+```csharp
+Expression<Func<int[], Index, int>> f = (xs, i) => xs[i];
+```
+
+is translated into:
+
+```csharp
+CSharpExpression.ArrayAccess(xs, i)
+```
+
+Note that `ArrayAccess` indexing using `int` or `Index` types supports assignment using the `AssignBinaryCSharpExpression` and `AssignUnaryCSharpExpression` nodes, as well as being passed as a `ref` parameter using the C# nodes for `Call`, `Invoke`, and `New`.
+
+Slicing using a `Range` value is supported as well. For example:
+
+```csharp
+Expression<Func<int[], Range, int[]>> f = (xs, r) => xs[r];
+```
+
+is translated into:
+
+```csharp
+CSharpExpression.ArrayAccess(xs, r)
+```
+
+Indexing and slicing operations for other types (including `string`) are supported using an `IndexerAccessCSharpExpression` node type. For example:
+
+```csharp
+Expression<Func<string, Index, char>> f = (s, i) => s[i];
+```
+
+is translated into:
+
+```csharp
+CSharpExpression.IndexerAccess(s, i, /* methodinfoof(System.String.get_Length) */, /* methodinfoof(System.String.get_Chars) */)
+```
+
+where the `MethodInfo` parameters represent the `get` accessor of the `Length` or `Count` property, and the `get` accessor of the indexer. When used for a slicing operation, the second `MethodInfo` parameter represents the `Slice` method (or, in case of `string`, the `Substring` method). For example:
+
+```csharp
+Expression<Func<string, Range, string>> f = (s, r) => s[r];
+```
+
+is translated into:
+
+```csharp
+CSharpExpression.IndexerAccess(s, i, /* methodinfoof(System.String.get_Length) */, /* methodinfoof(System.String.Substring) */)
+```
 
 ##### `await using`
 
