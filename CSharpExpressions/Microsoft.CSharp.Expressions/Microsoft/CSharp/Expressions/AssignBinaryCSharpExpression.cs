@@ -141,6 +141,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     IndexCSharpExpression indexCSharp => indexCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right)),
                     ArrayAccessCSharpExpression arrayAccessCSharp => arrayAccessCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right)),
+                    IndexerAccessCSharpExpression indexerAccessCSharp => indexerAccessCSharp.ReduceAssign(lhs => Expression.Assign(lhs, Right)),
                     _ => Expression.Assign(left, Right)
                 };
             }

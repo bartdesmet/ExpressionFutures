@@ -101,10 +101,41 @@ namespace Microsoft.CSharp.Expressions
             }
 
             throw ContractUtils.Unreachable;
+
+            Expression ReduceIndex()
+            {
+                // REVIEW: Evaluate array.Length before index argument? May throw NullReferenceException.
+
+                var temps = new List<ParameterExpression>(1);
+                var stmts = new List<Expression>(2);
+
+                var array = GetArrayExpression(temps, stmts);
+
+                var index = GetIntIndexExpression(array, Indexes[0]);
+
+                stmts.Add(Expression.ArrayAccess(array, index));
+
+                return Helpers.Comma(temps, stmts);
+            }
+
+            Expression ReduceRange()
+            {
+                // System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray(array, Range)
+
+                var elemType = Array.Type.GetElementType(); // REVIEW
+                var getSubArrayMethod = GetSubArrayMethod.MakeGenericMethod(elemType);
+
+                return Expression.Call(getSubArrayMethod, Array, Indexes[0]);
+            }
         }
 
         internal Expression Reduce(Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements)
         {
+            //
+            // NB: This is called for the CSharpExpression variants of MethodCall, Invocation, and New. It correctly supports
+            //     passing an ArrayAccessCSharpExpression by reference.
+            //
+
             if (IsSimpleArrayAccess())
             {
                 return ReduceSimple();
@@ -116,84 +147,23 @@ namespace Microsoft.CSharp.Expressions
 
                 if (indexType == typeof(Index))
                 {
-                    return ReduceIndex(makeVariable, statements);
+                    return ReduceIndex();
                 }
             }
 
             throw ContractUtils.Unreachable;
-        }
 
-        private bool IsSimpleArrayAccess() => Indexes.All(index => index.Type == typeof(int));
-
-        private Expression ReduceSimple()
-        {
-            return Expression.ArrayAccess(Array, Indexes);
-        }
-
-        private Expression ReduceIndex()
-        {
-            // Lowered code:
-            // ref var receiver = receiverExpr;
-            // int length = receiver.length;
-            // int index = argument.GetOffset(length);
-            // receiver[index];
-
-            var arrayVariable = Expression.Parameter(Array.Type, "__arr");
-
-            return Expression.Block(
-                new[] { arrayVariable },
-                Expression.Assign(arrayVariable, Array),
-                MakeArrayAccess(arrayVariable)
-            );
-        }
-
-        private Expression ReduceIndex(Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements)
-        {
-            //
-            // NB: This is called for the CSharpExpression variants of MethodCall, Invocation, and New. It correctly supports
-            //     passing an ArrayAccessCSharpExpression by reference.
-            //
-
-            // Lowered code:
-            // ref var receiver = receiverExpr;
-            // int length = receiver.length;
-            // int index = argument.GetOffset(length);
-            // receiver[index];
-
-            var arrayVariable = makeVariable(Array.Type, "__arr");
-
-            statements.Add(Expression.Assign(arrayVariable, Array));
-
-            return MakeArrayAccess(arrayVariable);
-        }
-
-        private Expression MakeArrayAccess(Expression arrayVariable)
-        {
-            return Expression.ArrayAccess(
-                arrayVariable,
-                GetIntIndexExpression(arrayVariable, Indexes[0])
-            );
-        }
-
-        private Expression ReduceRange()
-        {
-            // System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray(array, Range)
-
-            var elemType = Array.Type.GetElementType(); // REVIEW
-            var getSubArrayMethod = GetSubArray.MakeGenericMethod(elemType);
-
-            return Expression.Call(getSubArrayMethod, Array, Indexes[0]);
-        }
-
-        private static Expression GetIntIndexExpression(Expression array, Expression index)
-        {
-            if (index is FromEndIndexCSharpExpression hat)
+            Expression ReduceIndex()
             {
-                return Expression.Subtract(Expression.ArrayLength(array), hat.Operand);
-            }
-            else
-            {
-                return Expression.Call(index, GetOffset, Expression.ArrayLength(array));
+                var array = GetArrayExpression(makeVariable, statements);
+
+                var index = GetIntIndexExpression(array, Indexes[0]);
+
+                var indexVariable = makeVariable(index.Type, "__idx");
+
+                statements.Add(Expression.Assign(indexVariable, index));
+
+                return Expression.ArrayAccess(array, indexVariable);
             }
         }
 
@@ -205,19 +175,9 @@ namespace Microsoft.CSharp.Expressions
             if (Indexes.Count > 1 || indexType == typeof(int))
             {
                 var temps = new List<ParameterExpression>(Indexes.Count + 1);
-                var stmts = new List<Expression>(Indexes.Count + 2);
+                var stmts = new List<Expression>(Indexes.Count + 3);
 
-                var array = Array;
-
-                if (!Helpers.IsPure(array))
-                {
-                    var arrayVariable = Expression.Parameter(Array.Type, "__arr");
-
-                    temps.Add(arrayVariable);
-                    stmts.Add(Expression.Assign(arrayVariable, Array));
-
-                    array = arrayVariable;
-                }
+                var array = GetArrayExpression(temps, stmts);
 
                 var indexes = new List<Expression>(Indexes.Count);
 
@@ -241,29 +201,29 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 var access = assign(Expression.ArrayAccess(array, indexes));
+                stmts.Add(access);
 
-                if (stmts.Count > 0)
-                {
-                    stmts.Add(access);
-
-                    return Expression.Block(temps, stmts);
-                }
-                else
-                {
-                    return access;
-                }
+                return Helpers.Comma(temps, stmts);
             }
 
             if (indexType == typeof(Index))
             {
-                // Lowered code:
-                // ref var receiver = receiverExpr;
-                // int length = receiver.length;
-                // int index = argument.GetOffset(length);
-                // receiver[index] = rhs;
+                var temps = new List<ParameterExpression>(2);
+                var stmts = new List<Expression>(3);
 
-                var arrayVariable = Expression.Parameter(Array.Type, "__arr");
-                var indexVariable = Expression.Parameter(typeof(int), "__idx");
+                var array = GetArrayExpression(temps, stmts);
+
+                var index = GetIntIndexExpression(array, firstIndex);
+
+                if (!Helpers.IsPure(index))
+                {
+                    var indexVariable = Expression.Parameter(typeof(int), "__idx");
+
+                    temps.Add(indexVariable);
+                    stmts.Add(Expression.Assign(indexVariable, index));
+
+                    index = indexVariable;
+                }
 
                 // NB: We don't have ref locals in expression trees, so we may end up with
                 //
@@ -272,30 +232,59 @@ namespace Microsoft.CSharp.Expressions
                 //     for compound assignments, which is benign but may incur multiple bounds checks. Alternatively, we could
                 //     dispatch into the RuntimeOpsEx.WithByRef helper method.
 
-                return Expression.Block(
-                    new[] { arrayVariable, indexVariable },
-                    Expression.Assign(arrayVariable, Array),
-                    Expression.Assign(
-                        indexVariable,
-                        GetIntIndexExpression(arrayVariable, firstIndex)
-                    ),
-                    assign(
-                        Expression.ArrayAccess(
-                            arrayVariable,
-                            indexVariable
-                        )
-                    )
-                );
+                var access = assign(Expression.ArrayAccess(array, index));
+                stmts.Add(access);
+
+                return Helpers.Comma(temps, stmts);
             }
 
             throw ContractUtils.Unreachable;
         }
 
-        private static MethodInfo s_getOffset;
-        private static MethodInfo GetOffset => s_getOffset ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance, new[] { typeof(int) });
+        private bool IsSimpleArrayAccess() => Indexes.All(index => index.Type == typeof(int));
+
+        private Expression ReduceSimple() => Expression.ArrayAccess(Array, Indexes);
+
+        private Expression GetArrayExpression(List<ParameterExpression> variables, List<Expression> statements)
+        {
+            return GetArrayExpression((type, name) =>
+            {
+                var variable = Expression.Parameter(type, name);
+                variables.Add(variable);
+                return variable;
+            }, statements);
+        }
+
+        private Expression GetArrayExpression(Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements)
+        {
+            var array = Array;
+
+            if (!Helpers.IsPure(array))
+            {
+                var arrayVariable = makeVariable(Array.Type, "__arr");
+
+                statements.Add(Expression.Assign(arrayVariable, Array));
+
+                array = arrayVariable;
+            }
+
+            return array;
+        }
+
+        private static Expression GetIntIndexExpression(Expression array, Expression index)
+        {
+            //
+            // NB: The Roslyn compiler also allows the array.Length expression to be evaluated after evaluating the index expression,
+            //     so we follow suit here. This is different from IndexerAccess behavior where, when needed, the length is evaluated
+            //     prior to evaluating the index. Arguably, the only side-effect that can take place here is a NullReferenceException
+            //     when the array is null.
+            //
+
+            return IndexerAccessCSharpExpression.GetIndexOffset(index, Expression.ArrayLength(array), out _);
+        }
 
         private static MethodInfo s_getSubArray;
-        private static MethodInfo GetSubArray => s_getSubArray ??= typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+        private static MethodInfo GetSubArrayMethod => s_getSubArray ??= typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), BindingFlags.Public | BindingFlags.Static);
 
         //
         // BUG: This node can't be passed to a ref parameter. E.g. Interlocked.Exchange(ref xs[^i], val)

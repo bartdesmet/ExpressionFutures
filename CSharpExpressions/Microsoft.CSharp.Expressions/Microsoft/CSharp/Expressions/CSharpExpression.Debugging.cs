@@ -565,6 +565,15 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, new XAttribute(nameof(node.Indexer), node.Indexer), new XElement(nameof(node.Object), obj), args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitIndexerAccess(IndexerAccessCSharpExpression node)
+        {
+            var obj = Visit(node.Object);
+            var arg = Visit(node.Argument);
+
+            return Push(node, new XAttribute(nameof(node.LengthOrCount), node.LengthOrCount), new XAttribute(nameof(node.IndexOrSlice), node.IndexOrSlice), new XElement(nameof(node.Object), obj), new XElement(nameof(node.Argument), arg));
+        }
+
         protected internal override Expression VisitInterpolatedString(InterpolatedStringCSharpExpression node)
         {
             var args = new List<object>();

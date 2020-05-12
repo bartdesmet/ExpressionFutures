@@ -6,8 +6,6 @@ using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
@@ -825,6 +823,9 @@ namespace Microsoft.CSharp.Expressions
                 case ArrayAccessCSharpExpression arrayAccess:
                     EnsureCanWrite(arrayAccess, paramName);
                     break;
+                case IndexerAccessCSharpExpression indexerAccess:
+                    EnsureCanWrite(indexerAccess, paramName);
+                    break;
                 default:
                     {
                         // NB: Our current modification of the Roslyn compiler can emit these nodes as the LHS of an
@@ -892,6 +893,23 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        private static void EnsureCanWrite(IndexerAccessCSharpExpression indexerAccess, string paramName)
+        {
+            if (indexerAccess.Type == typeof(Range))
+            {
+                throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+            }
+            else
+            {
+                var indexer = (PropertyInfo)indexerAccess.IndexOrSlice;
+
+                if (!indexer.CanWrite)
+                {
+                    throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+                }
+            }
+        }
+
         private static bool IsArrayAssignment(MethodCallExpression call)
         {
             var method = call.Method;
@@ -920,6 +938,8 @@ namespace Microsoft.CSharp.Expressions
                     return index.ReduceAssign(assign);
                 case ArrayAccessCSharpExpression arrayAccess:
                     return arrayAccess.ReduceAssign(assign);
+                case IndexerAccessCSharpExpression indexerAccess:
+                    return indexerAccess.ReduceAssign(assign);
             }
 
             throw ContractUtils.Unreachable;
@@ -1013,6 +1033,8 @@ namespace Microsoft.CSharp.Expressions
                     return ReduceIndexCSharp(index, functionalOp, prefix, leftConversion);
                 case ArrayAccessCSharpExpression arrayAccess:
                     return ReduceArrayAccessCSharp(arrayAccess, functionalOp, prefix, leftConversion);
+                case IndexerAccessCSharpExpression indexerAccess:
+                    return ReduceIndexerAccessCSharp(indexerAccess, functionalOp, prefix, leftConversion);
             }
 
             throw ContractUtils.Unreachable;
@@ -1155,7 +1177,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (isByRef)
             {
-                var method = typeof(RuntimeOpsEx).GetMethod("WithByRef");
+                var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef));
                 method = method.MakeGenericMethod(obj.Type, res.Type);
                 var delegateType = typeof(FuncByRef<,>).MakeGenericType(obj.Type, res.Type);
 
@@ -1213,6 +1235,11 @@ namespace Microsoft.CSharp.Expressions
         private static Expression ReduceArrayAccessCSharp(ArrayAccessCSharpExpression arrayAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
         {
             return arrayAccess.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
+        }
+
+        private static Expression ReduceIndexerAccessCSharp(IndexerAccessCSharpExpression indexerAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        {
+            return indexerAccess.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
         }
 
         private static Expression WithLeftConversion(Expression expression, LambdaExpression leftConversion)
@@ -1287,6 +1314,16 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Expression.Block(typeof(void), expressions);
+        }
+
+        public static Expression Comma(List<ParameterExpression> variables, List<Expression> statements)
+        {
+            if (variables.Count == 0 && statements.Count == 1)
+            {
+                return statements[0];
+            }
+
+            return Expression.Block(variables, statements);
         }
 
         public static bool IsTaskLikeType(Type type, out Type resultType)

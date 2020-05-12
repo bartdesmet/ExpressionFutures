@@ -563,6 +563,62 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidRangeType(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range."
+        /// </summary>
+        internal static Exception InvalidIndexerAccessArgumentType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidIndexerAccessArgumentType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Property '{0}' should be of type int."
+        /// </summary>
+        internal static Exception InvalidLengthOrCountPropertyType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidLengthOrCountPropertyType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo."
+        /// </summary>
+        internal static Exception InvalidIndexMember(object p0)
+        {
+            return new ArgumentException(Strings.InvalidIndexMember(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Member '{0}' is not a valid member for a slice method."
+        /// </summary>
+        internal static Exception InvalidSliceMember(object p0)
+        {
+            return new ArgumentException(Strings.InvalidSliceMember(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Indexer '{0}' does not have an 'int' parameter type."
+        /// </summary>
+        internal static Exception InvalidIndexerParameterType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidIndexerParameterType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Slice method '{0}' should be an instance method."
+        /// </summary>
+        internal static Exception SliceMethodMustNotBeStatic(object p0)
+        {
+            return new ArgumentException(Strings.SliceMethodMustNotBeStatic(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Slice method '{0}' should be have exactly two parameters of type 'int'."
+        /// </summary>
+        internal static Exception InvalidSliceParameters(object p0)
+        {
+            return new ArgumentException(Strings.InvalidSliceParameters(p0));
+        }
+
     }
 
     /// <summary>
@@ -1206,6 +1262,62 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidRangeType, p0);
         }
 
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range."
+        /// </summary>
+        internal static string InvalidIndexerAccessArgumentType(object p0)
+        {
+            return SR.Format(SR.InvalidIndexerAccessArgumentType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Property '{0}' should be of type int."
+        /// </summary>
+        internal static string InvalidLengthOrCountPropertyType(object p0)
+        {
+            return SR.Format(SR.InvalidLengthOrCountPropertyType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo."
+        /// </summary>
+        internal static string InvalidIndexMember(object p0)
+        {
+            return SR.Format(SR.InvalidIndexMember, p0);
+        }
+
+        /// <summary>
+        /// A string like "Member '{0}' is not a valid member for a slice method."
+        /// </summary>
+        internal static string InvalidSliceMember(object p0)
+        {
+            return SR.Format(SR.InvalidSliceMember, p0);
+        }
+
+        /// <summary>
+        /// A string like "Indexer '{0}' does not have an 'int' parameter type."
+        /// </summary>
+        internal static string InvalidIndexerParameterType(object p0)
+        {
+            return SR.Format(SR.InvalidIndexerParameterType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Slice method '{0}' should be an instance method."
+        /// </summary>
+        internal static string SliceMethodMustNotBeStatic(object p0)
+        {
+            return SR.Format(SR.SliceMethodMustNotBeStatic, p0);
+        }
+
+        /// <summary>
+        /// A string like "Slice method '{0}' should be have exactly two parameters of type 'int'."
+        /// </summary>
+        internal static string InvalidSliceParameters(object p0)
+        {
+            return SR.Format(SR.InvalidSliceParameters, p0);
+        }
+
     }
 }
 
@@ -1282,5 +1394,12 @@ namespace System
         public const string InvalidRangeOperandType = "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?.";
         public const string InvalidRangeMethod = "The specified method is not valid to construct an object of type Range.";
         public const string InvalidRangeType = "Type '{0}' is not a valid range type. Supported types are Range or Range?.";
+        public const string InvalidIndexerAccessArgumentType = "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range.";
+        public const string InvalidLengthOrCountPropertyType = "Property '{0}' should be of type int.";
+        public const string InvalidIndexMember = "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo.";
+        public const string InvalidSliceMember = "Member '{0}' is not a valid member for a slice method.";
+        public const string InvalidIndexerParameterType = "Indexer '{0}' does not have an 'int' parameter type.";
+        public const string SliceMethodMustNotBeStatic = "Slice method '{0}' should be an instance method.";
+        public const string InvalidSliceParameters = "Slice method '{0}' should be have exactly two parameters of type 'int'.";
     }
 }

@@ -80,6 +80,13 @@ var errors = new[]
     new { Name = "InvalidRangeOperandType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?." },
     new { Name = "InvalidRangeMethod", ExceptionType = "ArgumentException", Args = 0, Message = "The specified method is not valid to construct an object of type Range." },
     new { Name = "InvalidRangeType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid range type. Supported types are Range or Range?." },
+    new { Name = "InvalidIndexerAccessArgumentType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range." },
+    new { Name = "InvalidLengthOrCountPropertyType", ExceptionType = "ArgumentException", Args = 1, Message = "Property '{0}' should be of type int." },
+    new { Name = "InvalidIndexMember", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo." },
+    new { Name = "InvalidSliceMember", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' is not a valid member for a slice method." },
+    new { Name = "InvalidIndexerParameterType", ExceptionType = "ArgumentException", Args = 1, Message = "Indexer '{0}' does not have an 'int' parameter type." },
+    new { Name = "SliceMethodMustNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "Slice method '{0}' should be an instance method." },
+    new { Name = "InvalidSliceParameters", ExceptionType = "ArgumentException", Args = 1, Message = "Slice method '{0}' should be have exactly two parameters of type 'int'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));
