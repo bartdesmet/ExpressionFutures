@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPad", "RoslynPad\Rosl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BclExtensions", "BclExtensions\BclExtensions.csproj", "{6FA07859-FBEB-4E2E-A70C-1373118A6740}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaygroundCore", "PlaygroundCore\PlaygroundCore.csproj", "{16AA6A23-AC15-4FBF-A76F-7E208B256114}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA07859-FBEB-4E2E-A70C-1373118A6740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16AA6A23-AC15-4FBF-A76F-7E208B256114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16AA6A23-AC15-4FBF-A76F-7E208B256114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16AA6A23-AC15-4FBF-A76F-7E208B256114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16AA6A23-AC15-4FBF-A76F-7E208B256114}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
