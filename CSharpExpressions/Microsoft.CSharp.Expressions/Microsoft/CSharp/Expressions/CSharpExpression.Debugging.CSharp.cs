@@ -2120,6 +2120,44 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class TupleLiteralCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.New);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Out("(");
+            if (ArgumentNames != null)
+            {
+                for (int i = 0, n = Arguments.Count; i < n; i++)
+                {
+                    visitor.Out(ArgumentNames[i]);
+                    visitor.Out(": ");
+                    visitor.Visit(Arguments[i]);
+
+                    if (i != n - 1)
+                    {
+                        visitor.Out(", ");
+                    }
+                }
+            }
+            else
+            {
+                visitor.Visit(Arguments);
+            }
+            visitor.Out(")");
+        }
+    }
+
     static class CSharpPrintingVisitorExtensions
     {
         public static void Visit(this ICSharpPrintingVisitor visitor, IList<Expression> args)

@@ -87,6 +87,9 @@ var errors = new[]
     new { Name = "InvalidIndexerParameterType", ExceptionType = "ArgumentException", Args = 1, Message = "Indexer '{0}' does not have an 'int' parameter type." },
     new { Name = "SliceMethodMustNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "Slice method '{0}' should be an instance method." },
     new { Name = "InvalidSliceParameters", ExceptionType = "ArgumentException", Args = 1, Message = "Slice method '{0}' should be have exactly two parameters of type 'int'." },
+    new { Name = "InvalidTupleType", ExceptionType = "ArgumentException", Args = 1, Message = "Type '{0}' is not a valid tuple type." },
+    new { Name = "InvalidTupleArgumentCount", ExceptionType = "ArgumentException", Args = 1, Message = "The number of arguments does not match the number of components of tuple type '{0}'." },
+    new { Name = "InvalidTupleArgumentNamesCount", ExceptionType = "ArgumentException", Args = 1, Message = "The number of argument names does not match the number of components of tuple type '{0}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

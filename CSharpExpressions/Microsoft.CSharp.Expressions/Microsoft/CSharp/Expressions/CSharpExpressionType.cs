@@ -255,5 +255,10 @@ namespace Microsoft.CSharp.Expressions
         /// An indexer access expression, such as xs[i], where xs is a countable collection type.
         /// </summary>
         IndexerAccess,
+
+        /// <summary>
+        /// A tuple literal expression, such as (1, 2).
+        /// </summary>
+        TupleLiteral,
     }
 }

@@ -1367,6 +1367,31 @@ namespace Microsoft.CSharp.Expressions
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
     }
 
+    [DebuggerTypeProxy(typeof(TupleLiteralCSharpExpressionProxy))]
+    partial class TupleLiteralCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class TupleLiteralCSharpExpressionProxy
+    {
+        private readonly TupleLiteralCSharpExpression _node;
+
+        public TupleLiteralCSharpExpressionProxy(TupleLiteralCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.String> ArgumentNames => _node.ArgumentNames;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Arguments => _node.Arguments;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(UnaryCSharpExpressionProxy))]
     partial class UnaryCSharpExpression
     {

@@ -506,7 +506,31 @@ Upon reduction of the `AsyncLambdaCSharpExpression` node, the async state machin
 
 ##### Tuples
 
-TODO: Literals, conversions, deconstruction (also in foreach)
+Tuple literals are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<(int, int)>> f = () => (x: 1, y: 2);
+```
+
+This fails to compile with:
+
+```
+error CS8143: An expression tree may not contain a tuple literal.
+```
+
+Support for tuple literal expressions is added by a new `CSharpExpression.TupleLiteral(Type, IEnumerable<Expression>, IEnumerable<string>)` method:
+
+```csharp
+CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), new[] { Expression.Constant(1), Expression.Constant(2) }, new[] { "x", "y" })
+```
+
+When names are specified for the tuple fields, those are made available in `ArgumentNames`.
+
+Nodes of this type reduce to a `NewExpression`, or a nesting of `NewExpression` nodes for tuples with more than 7 arguments.
+
+##### Deconstructing Aassignment
+
+TODO: (also in foreach)
 
 ##### Pattern Matching
 
@@ -524,7 +548,9 @@ TODO
 
 #### C# 7.3
 
-No new features were added that impact expression trees.
+##### Tuples equality and inequality
+
+TODO
 
 #### C# 8.0
 

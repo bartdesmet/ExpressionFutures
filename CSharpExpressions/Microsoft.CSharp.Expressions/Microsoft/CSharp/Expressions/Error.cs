@@ -619,6 +619,30 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidSliceParameters(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "Type '{0}' is not a valid tuple type."
+        /// </summary>
+        internal static Exception InvalidTupleType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidTupleType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The number of arguments does not match the number of components of tuple type '{0}'."
+        /// </summary>
+        internal static Exception InvalidTupleArgumentCount(object p0)
+        {
+            return new ArgumentException(Strings.InvalidTupleArgumentCount(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The number of argument names does not match the number of components of tuple type '{0}'."
+        /// </summary>
+        internal static Exception InvalidTupleArgumentNamesCount(object p0)
+        {
+            return new ArgumentException(Strings.InvalidTupleArgumentNamesCount(p0));
+        }
+
     }
 
     /// <summary>
@@ -1318,6 +1342,30 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidSliceParameters, p0);
         }
 
+        /// <summary>
+        /// A string like "Type '{0}' is not a valid tuple type."
+        /// </summary>
+        internal static string InvalidTupleType(object p0)
+        {
+            return SR.Format(SR.InvalidTupleType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The number of arguments does not match the number of components of tuple type '{0}'."
+        /// </summary>
+        internal static string InvalidTupleArgumentCount(object p0)
+        {
+            return SR.Format(SR.InvalidTupleArgumentCount, p0);
+        }
+
+        /// <summary>
+        /// A string like "The number of argument names does not match the number of components of tuple type '{0}'."
+        /// </summary>
+        internal static string InvalidTupleArgumentNamesCount(object p0)
+        {
+            return SR.Format(SR.InvalidTupleArgumentNamesCount, p0);
+        }
+
     }
 }
 
@@ -1401,5 +1449,8 @@ namespace System
         public const string InvalidIndexerParameterType = "Indexer '{0}' does not have an 'int' parameter type.";
         public const string SliceMethodMustNotBeStatic = "Slice method '{0}' should be an instance method.";
         public const string InvalidSliceParameters = "Slice method '{0}' should be have exactly two parameters of type 'int'.";
+        public const string InvalidTupleType = "Type '{0}' is not a valid tuple type.";
+        public const string InvalidTupleArgumentCount = "The number of arguments does not match the number of components of tuple type '{0}'.";
+        public const string InvalidTupleArgumentNamesCount = "The number of argument names does not match the number of components of tuple type '{0}'.";
     }
 }

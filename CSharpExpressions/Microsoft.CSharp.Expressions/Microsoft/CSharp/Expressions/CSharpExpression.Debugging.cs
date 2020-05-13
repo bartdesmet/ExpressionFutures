@@ -859,6 +859,28 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        protected internal override Expression VisitTupleLiteral(TupleLiteralCSharpExpression node)
+        {
+            var args = new List<XNode>();
+
+            if (node.ArgumentNames != null)
+            {
+                for (int i = 0, n = node.Arguments.Count; i < n; i++)
+                {
+                    args.Add(new XElement("Argument", new XAttribute("Name", node.ArgumentNames[i]), Visit(node.Arguments[i])));
+                }
+            }
+            else
+            {
+                foreach (var expression in node.Arguments)
+                {
+                    args.Add(Visit(expression));
+                }
+            }
+
+            return Push("TupleLiteral", node, new XElement(nameof(node.Arguments), args));
+        }
+
         private XNode Visit(ParameterAssignment node)
         {
             VisitParameterAssignment(node);
