@@ -50,13 +50,58 @@ namespace Tests
             var r = Expression.Parameter(typeof(Range));
             var o = Expression.Parameter(typeof(object));
             var c = Expression.Parameter(typeof(C));
+            var a = Expression.Parameter(new { Length = 0 }.GetType());
+            var t = Expression.Parameter(typeof(SliceAndIndexList));
 
             // null checks
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(null, i, StringLength, StringChars));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(s, null, StringLength, StringChars));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(s, i, default(MethodInfo), StringChars));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(s, i, default(PropertyInfo), StringChars));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(s, i, StringLength, null));
+
+            // can't find Length or Count property
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, i, default(PropertyInfo), null));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, i, default(MethodInfo), null));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, r, default(PropertyInfo), null));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, r, default(MethodInfo), null));
+
+            // can't find indexer or slice
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, i, default(PropertyInfo), null));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, i, default(MethodInfo), null));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, r, default(PropertyInfo), null));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, r, default(MethodInfo), null));
+
+            // auto-resolve indexer
+            var strIndx1 = CSharpExpression.IndexerAccess(s, i, default(MethodInfo), null);
+            Assert.AreEqual(StringLength, strIndx1.LengthOrCount);
+            Assert.AreEqual(StringChars, strIndx1.IndexOrSlice);
+
+            var strIndx2 = CSharpExpression.IndexerAccess(s, i, default(PropertyInfo), null);
+            Assert.AreEqual(StringLength, strIndx2.LengthOrCount);
+            Assert.AreEqual(StringChars, strIndx2.IndexOrSlice);
+
+            var lstIndx1 = CSharpExpression.IndexerAccess(t, i, default(MethodInfo), null);
+            Assert.AreEqual(SliceAndIndexListLength, lstIndx1.LengthOrCount);
+            Assert.AreEqual(SliceAndIndexListIndexer, lstIndx1.IndexOrSlice);
+
+            var lstIndx2 = CSharpExpression.IndexerAccess(t, i, default(PropertyInfo), null);
+            Assert.AreEqual(SliceAndIndexListLength, lstIndx2.LengthOrCount);
+            Assert.AreEqual(SliceAndIndexListIndexer, lstIndx2.IndexOrSlice);
+
+            // auto-resolve slice
+            var strSlice1 = CSharpExpression.IndexerAccess(s, r, default(MethodInfo), null);
+            Assert.AreEqual(StringLength, strSlice1.LengthOrCount);
+            Assert.AreEqual(StringSubstring, strSlice1.IndexOrSlice);
+
+            var strSlice2 = CSharpExpression.IndexerAccess(s, r, default(PropertyInfo), null);
+            Assert.AreEqual(StringLength, strSlice2.LengthOrCount);
+            Assert.AreEqual(StringSubstring, strSlice2.IndexOrSlice);
+
+            var lstSlice1 = CSharpExpression.IndexerAccess(t, r, default(MethodInfo), null);
+            Assert.AreEqual(SliceAndIndexListLength, lstSlice1.LengthOrCount);
+            Assert.AreEqual(SliceAndIndexListSlice, lstSlice1.IndexOrSlice);
+
+            var lstSlice2 = CSharpExpression.IndexerAccess(t, r, default(PropertyInfo), null);
+            Assert.AreEqual(SliceAndIndexListLength, lstSlice2.LengthOrCount);
+            Assert.AreEqual(SliceAndIndexListSlice, lstSlice2.IndexOrSlice);
 
             // the following are valid
             Assert.IsNotNull(CSharpExpression.IndexerAccess(s, i, StringLength, StringChars));
