@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -468,9 +469,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new <see cref="IndexerAccessCSharpExpression"/> instance representing the array access operation.</returns>
         public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument, MethodInfo lengthOrCount, MemberInfo indexOrSlice)
         {
-            ContractUtils.RequiresNotNull(lengthOrCount, nameof(lengthOrCount));
-
-            var property = GetProperty(lengthOrCount);
+            var property = lengthOrCount != null ? GetProperty(lengthOrCount) : null;
 
             return IndexerAccess(@object, argument, property, indexOrSlice);
         }
@@ -501,6 +500,10 @@ namespace Microsoft.CSharp.Expressions
             //
             // A type is Countable if it has a property named Length or Count with an accessible getter and a return type of int.
             //
+
+            lengthOrCount ??= FindCountProperty("Length") ?? FindCountProperty("Count");
+
+            PropertyInfo FindCountProperty(string name) => @object.Type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance, binder: null, typeof(int), Type.EmptyTypes, modifiers: null);
 
             ContractUtils.RequiresNotNull(lengthOrCount, nameof(lengthOrCount));
 
@@ -533,13 +536,26 @@ namespace Microsoft.CSharp.Expressions
 
             ValidateMethodInfo(lengthOrCountGetMethod);
 
-            ContractUtils.RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
-
             if (argument.Type == typeof(Index))
             {
                 //
                 // The type has an accessible instance indexer which takes a single int as the argument.
                 //
+
+                indexOrSlice ??= FindIndexer();
+
+                PropertyInfo FindIndexer()
+                {
+                    var indexers = (from p in @object.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                    let i = p.GetIndexParameters()
+                                    where i.Length == 1 && i[0].ParameterType == typeof(int)
+                                    select p)
+                                   .ToArray();
+
+                    return indexers.Length == 1 ? indexers[0] : null;
+                }
+
+                ContractUtils.RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
                 var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice));
 
@@ -583,10 +599,14 @@ namespace Microsoft.CSharp.Expressions
                 //
                 // The type has an accessible member named Slice which has two parameters of type int.
                 //
-                // NB: We don't care about the name here. In fact, it may be Substring.
-                //
 
                 Debug.Assert(argument.Type == typeof(Range));
+
+                indexOrSlice ??= FindSliceMethod();
+
+                MethodInfo FindSliceMethod() => @object.Type.GetMethod(@object.Type == typeof(string) ? "Substring" : "Slice", BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null);
+
+                ContractUtils.RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
                 var slice = indexOrSlice as MethodInfo ?? throw Error.InvalidSliceMember(indexOrSlice);
 
