@@ -1216,15 +1216,15 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_11 = s_mtds["ValidateOperator"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+        private static readonly MethodInfo s_11 = s_mtds["ParameterIsAssignable"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.ParameterInfo), typeof(System.Type) }));
 
-        public static void ValidateOperator(System.Reflection.MethodInfo method)
+        public static System.Boolean ParameterIsAssignable(System.Reflection.ParameterInfo pi, System.Type argType)
         {
             try
             {
-                var args = new object[] { method };
+                var args = new object[] { pi, argType };
                 var res = s_11.Invoke(null, args);
-                
+                return (System.Boolean)res;
             }
             catch (TargetInvocationException ex)
             {
@@ -1232,9 +1232,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_12 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+        private static readonly MethodInfo s_12 = s_mtds["ValidateOperator"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
 
-        public static void ValidateMethodInfo(System.Reflection.MethodInfo method)
+        public static void ValidateOperator(System.Reflection.MethodInfo method)
         {
             try
             {
@@ -1248,14 +1248,30 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_13 = s_mtds["ValidateCoalesceArgTypes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Type), typeof(System.Type) }));
+        private static readonly MethodInfo s_13 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+
+        public static void ValidateMethodInfo(System.Reflection.MethodInfo method)
+        {
+            try
+            {
+                var args = new object[] { method };
+                var res = s_13.Invoke(null, args);
+                
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_14 = s_mtds["ValidateCoalesceArgTypes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Type), typeof(System.Type) }));
 
         public static System.Type ValidateCoalesceArgTypes(System.Type left, System.Type right)
         {
             try
             {
                 var args = new object[] { left, right };
-                var res = s_13.Invoke(null, args);
+                var res = s_14.Invoke(null, args);
                 return (System.Type)res;
             }
             catch (TargetInvocationException ex)

@@ -6,6 +6,7 @@ using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
@@ -1348,6 +1349,66 @@ namespace Microsoft.CSharp.Expressions
             return true;
         }
 
+        public static int GetTupleArity(Type type)
+        {
+            Debug.Assert(IsTupleType(type));
+
+            var def = type.GetGenericTypeDefinition();
+
+            if (def == MaxTupleType)
+            {
+                return TupleArities[def] + GetTupleArity(type.GetGenericArguments()[^1]);
+            }
+
+            return TupleArities[def];
+        }
+
+        public static IEnumerable<Type> GetTupleComponentTypes(Type type)
+        {
+            Debug.Assert(IsTupleType(type));
+
+            while (type != null)
+            {
+                var def = type.GetGenericTypeDefinition();
+                var args = type.GetGenericArguments();
+
+                if (def == MaxTupleType)
+                {
+                    for (int i = 0; i < args.Length - 1; i++)
+                    {
+                        yield return args[i];
+                    }
+
+                    type = args[^1];
+                }
+                else
+                {
+                    foreach (var arg in args)
+                    {
+                        yield return arg;
+                    }
+
+                    yield break;
+                }
+            }
+        }
+
+        public static Expression GetTupleItemAccess(Expression tuple, int item)
+        {
+            while (true)
+            {
+                if (item < TupleItemNames.Length)
+                {
+                    return Expression.Field(tuple, TupleItemNames[item]);
+                }
+                else
+                {
+                    tuple = Expression.Field(tuple, "Rest");
+                    item -= TupleItemNames.Length;
+                }
+            }
+        }
+
         public static bool IsTaskLikeType(Type type, out Type resultType)
         {
             if (TryGetAsyncMethodBuilderInfo(type, out var info))
@@ -1605,7 +1666,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static HashSet<Type> s_tupleTypes;
 
-        private static HashSet<Type> TupleTypes => s_tupleTypes ??= new HashSet<Type>() {
+        private static HashSet<Type> TupleTypes => s_tupleTypes ??= new HashSet<Type> {
             typeof(ValueTuple<>),
             typeof(ValueTuple<,>),
             typeof(ValueTuple<,,>),
@@ -1614,6 +1675,31 @@ namespace Microsoft.CSharp.Expressions
             typeof(ValueTuple<,,,,,>),
             typeof(ValueTuple<,,,,,,>),
             typeof(ValueTuple<,,,,,,,>),
+        };
+
+        private static Dictionary<Type, int> s_tupleArities;
+
+        private static Dictionary<Type, int> TupleArities => s_tupleArities ??= new Dictionary<Type, int> {
+            { typeof(ValueTuple<>),        1 },
+            { typeof(ValueTuple<,>),       2 },
+            { typeof(ValueTuple<,,>),      3 },
+            { typeof(ValueTuple<,,,>),     4 },
+            { typeof(ValueTuple<,,,,>),    5 },
+            { typeof(ValueTuple<,,,,,>),   6 },
+            { typeof(ValueTuple<,,,,,,>),  7 },
+            { typeof(ValueTuple<,,,,,,,>), 7 }, // NB: Not a mistake, there are only 7 values, and one rest slot.
+        };
+
+        private static string[] s_tupleItemNames;
+
+        private static string[] TupleItemNames => s_tupleItemNames ?? new[] {
+            "Item1",
+            "Item2",
+            "Item3",
+            "Item4",
+            "Item5",
+            "Item6",
+            "Item7",
         };
 
         public static readonly Type MaxTupleType = typeof(ValueTuple<,,,,,,,>);

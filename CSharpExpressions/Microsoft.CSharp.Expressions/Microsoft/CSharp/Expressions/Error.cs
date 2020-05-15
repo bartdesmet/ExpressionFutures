@@ -643,6 +643,22 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidTupleArgumentNamesCount(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'."
+        /// </summary>
+        internal static Exception TupleComponentCountMismatch(object p0, object p1)
+        {
+            return new ArgumentException(Strings.TupleComponentCountMismatch(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The number of element conversion expressions does not match tuple arity '{0}'."
+        /// </summary>
+        internal static Exception InvalidElementConversionCount(object p0)
+        {
+            return new ArgumentException(Strings.InvalidElementConversionCount(p0));
+        }
+
     }
 
     /// <summary>
@@ -1366,6 +1382,22 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidTupleArgumentNamesCount, p0);
         }
 
+        /// <summary>
+        /// A string like "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'."
+        /// </summary>
+        internal static string TupleComponentCountMismatch(object p0, object p1)
+        {
+            return SR.Format(SR.TupleComponentCountMismatch, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The number of element conversion expressions does not match tuple arity '{0}'."
+        /// </summary>
+        internal static string InvalidElementConversionCount(object p0)
+        {
+            return SR.Format(SR.InvalidElementConversionCount, p0);
+        }
+
     }
 }
 
@@ -1452,5 +1484,7 @@ namespace System
         public const string InvalidTupleType = "Type '{0}' is not a valid tuple type.";
         public const string InvalidTupleArgumentCount = "The number of arguments does not match the number of components of tuple type '{0}'.";
         public const string InvalidTupleArgumentNamesCount = "The number of argument names does not match the number of components of tuple type '{0}'.";
+        public const string TupleComponentCountMismatch = "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'.";
+        public const string InvalidElementConversionCount = "The number of element conversion expressions does not match tuple arity '{0}'.";
     }
 }

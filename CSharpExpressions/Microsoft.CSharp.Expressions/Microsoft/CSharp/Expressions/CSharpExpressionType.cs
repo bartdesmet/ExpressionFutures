@@ -260,5 +260,9 @@ namespace Microsoft.CSharp.Expressions
         /// A tuple literal expression, such as (1, 2).
         /// </summary>
         TupleLiteral,
+        /// <summary>
+        /// A tuple conversion expression, such as ((int, bool))t.
+        /// </summary>
+        TupleConvert,
     }
 }

@@ -881,6 +881,17 @@ namespace Microsoft.CSharp.Expressions
             return Push("TupleLiteral", node, new XElement(nameof(node.Arguments), args));
         }
 
+        protected internal override Expression VisitTupleConvert(TupleConvertCSharpExpression node)
+        {
+            var args = new List<XNode>
+            {
+                new XElement(nameof(node.Operand), Visit(node.Operand)),
+                Visit(nameof(node.ElementConversions), node.ElementConversions)
+            };
+
+            return Push(node, args);
+        }
+
         private XNode Visit(ParameterAssignment node)
         {
             VisitParameterAssignment(node);
