@@ -528,6 +528,32 @@ When names are specified for the tuple fields, those are made available in `Argu
 
 Nodes of this type reduce to a `NewExpression`, or a nesting of `NewExpression` nodes for tuples with more than 7 arguments.
 
+Tuple conversions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<(int, DateTime), (long, DateTimeOffset)>> f = t => t;
+```
+
+This fails to compile with:
+
+```
+error CS8144: An expression tree may not contain a tuple conversion.
+```
+
+Support for tuple conversion expressions is added by a new `CSharpExpression.TupleConvert(Expression, Type, IEnumerable<LambdaExpression>)` method:
+
+```csharp
+var p1 = Expression.Parameter(typeof(int));
+var convert1 = Expression.Lambda<Func<int, long>>(Expression.Convert(p1), p1);
+var p2 = Expression.Parameter(typeof(DateTime));
+var convert2 = Expression.Lambda<Func<DateTime, DateTimeOffset>>(Expression.Convert(p2), p2);
+CSharpExpression.TupleConvert(t, typeof(ValueTuple<long, long>), new[] { convert1, convert2 })
+```
+
+The lambda expressions array passed to `TupleConvert` represents the conversions for the tuple elements.
+
+Nodes of this type reduce to a `TupleLiteralCSharpExpression` that constructs a value of the target tuple type, using conversions applied to elements extracted from the tuple operand.
+
 ##### Deconstructing Aassignment
 
 TODO: (also in foreach)
