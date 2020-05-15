@@ -896,41 +896,46 @@ namespace System.Linq.Expressions
                     Visit(node.Arguments);
                     Out(")");
                 }
-                else if (node.Members != null || (node.Type.IsDefined(typeof(CompilerGeneratedAttribute)) && node.Type.Name.StartsWith("<>f__AnonymousType")))
-                {
-                    Out("{");
-
-                    var n = node.Members?.Count ?? 0;
-                    for (var i = 0; i < n; i++)
-                    {
-                        Out(" ");
-
-                        var member = node.Members[i];
-                        var arg = node.Arguments[i];
-
-                        Out(member.Name);
-                        Out(" = ");
-                        Visit(arg);
-
-                        if (i != n - 1)
-                        {
-                            Out(",");
-                        }
-                    }
-
-                    Out(" }");
-                }
                 else
                 {
-                    Out(ToCSharp(node.Type));
-                    Out("(");
+                    Out("new ");
 
-                    if (node.Constructor != null)
+                    if (node.Members != null || (node.Type.IsDefined(typeof(CompilerGeneratedAttribute)) && node.Type.Name.StartsWith("<>f__AnonymousType")))
                     {
-                        ArgsVisit(node.Arguments, node.Constructor);
-                    }
+                        Out("{");
 
-                    Out(")");
+                        var n = node.Members?.Count ?? 0;
+                        for (var i = 0; i < n; i++)
+                        {
+                            Out(" ");
+
+                            var member = node.Members[i];
+                            var arg = node.Arguments[i];
+
+                            Out(member.Name);
+                            Out(" = ");
+                            Visit(arg);
+
+                            if (i != n - 1)
+                            {
+                                Out(",");
+                            }
+                        }
+
+                        Out(" }");
+                    }
+                    else
+                    {
+                        Out(ToCSharp(node.Type));
+                        Out("(");
+
+                        if (node.Constructor != null)
+                        {
+                            ArgsVisit(node.Arguments, node.Constructor);
+                        }
+
+                        Out(")");
+                    }
                 }
 
                 return node;
