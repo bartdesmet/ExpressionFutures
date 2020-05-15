@@ -5,6 +5,7 @@
 using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -47,13 +48,66 @@ namespace Tests
         [TestMethod]
         public void TupleConvert_Factory_Properties()
         {
-            // TODO
+            var operand = Expression.Constant((1, 2));
+            var type = typeof(ValueTuple<long, long>);
+            var convert1 = (Expression<Func<int, long>>)(x => x);
+            var convert2 = (Expression<Func<int, long>>)(x => x);
+
+            var it = CSharpExpression.TupleConvert(operand, type, new LambdaExpression[] { convert1, convert2 });
+
+            Assert.AreEqual(CSharpExpressionType.TupleConvert, it.CSharpNodeType);
+            Assert.AreEqual(type, it.Type);
+            Assert.AreSame(operand, it.Operand);
+            Assert.AreEqual(2, it.ElementConversions.Count);
+            Assert.AreSame(convert1, it.ElementConversions[0]);
+            Assert.AreSame(convert2, it.ElementConversions[1]);
+            Assert.IsFalse(it.IsLifted);
+            Assert.IsFalse(it.IsLiftedToNull);
+
+            var nullableDest = typeof(Nullable<>).MakeGenericType(type);
+            var nullableSrc = typeof(Nullable<>).MakeGenericType(operand.Type);
+
+            var lifted1 = CSharpExpression.TupleConvert(operand, nullableDest, new LambdaExpression[] { convert1, convert2 }); ;
+
+            Assert.AreEqual(nullableDest, lifted1.Type);
+            Assert.IsTrue(lifted1.IsLifted);
+            Assert.IsTrue(lifted1.IsLiftedToNull);
+
+            var lifted2 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), type, new LambdaExpression[] { convert1, convert2 }); ;
+
+            Assert.AreEqual(type, lifted2.Type);
+            Assert.IsTrue(lifted2.IsLifted);
+            Assert.IsFalse(lifted2.IsLiftedToNull);
+
+            var lifted3 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), nullableDest, new LambdaExpression[] { convert1, convert2 }); ;
+
+            Assert.AreEqual(nullableDest, lifted3.Type);
+            Assert.IsTrue(lifted3.IsLifted);
+            Assert.IsTrue(lifted3.IsLiftedToNull);
         }
 
         [TestMethod]
         public void TupleConvert_Update()
         {
-            // TODO
+            var operand = Expression.Constant((1, 2));
+            var type = typeof(ValueTuple<long, long>);
+            var convert1 = (Expression<Func<int, long>>)(x => x);
+            var convert2 = (Expression<Func<int, long>>)(x => x);
+            var it = CSharpExpression.TupleConvert(operand, type, new LambdaExpression[] { convert1, convert2 });
+
+            Assert.AreSame(it, it.Update(it.Operand, it.ElementConversions));
+
+            var newOperand = Expression.Constant((2, 3));
+            var new1 = it.Update(newOperand, it.ElementConversions);
+            Assert.AreSame(newOperand, new1.Operand);
+            Assert.AreSame(it.ElementConversions, new1.ElementConversions);
+
+            var convert3 = (Expression<Func<int, long>>)(x => x);
+            var new2 = it.Update(it.Operand, new[] { convert1, convert3 });
+            Assert.AreSame(it.Operand, new2.Operand);
+            Assert.AreEqual(2, it.ElementConversions.Count);
+            Assert.AreSame(convert1, new2.ElementConversions[0]);
+            Assert.AreSame(convert3, new2.ElementConversions[1]);
         }
 
         [TestMethod]
@@ -83,7 +137,73 @@ namespace Tests
         [TestMethod]
         public void TupleConvert_Reduce()
         {
-            // TODO
+            var convertIntToLong = (Expression<Func<int, long>>)(x => x);
+            var convertLongToInt = (Expression<Func<long, int>>)(x => (int)x);
+
+            var convertIntToObject = (Expression<Func<int, object>>)(x => x);
+            var convertObjectToInt = (Expression<Func<object, int>>)(x => (int)x);
+
+            var convertDateTimeToDateTimeOffset = (Expression<Func<DateTime, DateTimeOffset>>)(x => x);
+
+            var conversions = new LambdaExpression[] { convertIntToLong, convertLongToInt, convertIntToObject, convertObjectToInt, convertDateTimeToDateTimeOffset };
+
+            var dt = DateTime.Now;
+            var dto = (DateTimeOffset)dt;
+
+            {
+                var f = CreateTupleConvert<ValueTuple<int, long, int, object, DateTime>, ValueTuple<long, int, object, int, DateTimeOffset>>(conversions);
+
+                Assert.AreEqual((1, 2, 3, 4, dto), f((1, 2, 3, 4, dt)));
+            }
+
+            {
+                var f = CreateTupleConvert<ValueTuple<int, long, int, object, DateTime>?, ValueTuple<long, int, object, int, DateTimeOffset>?>(conversions);
+
+                Assert.AreEqual((1, 2, 3, 4, dto), f((1, 2, 3, 4, dt)));
+                Assert.AreEqual(null, f(null));
+            }
+
+            {
+                var f = CreateTupleConvert<ValueTuple<int, long, int, object, DateTime>, ValueTuple<long, int, object, int, DateTimeOffset>?>(conversions);
+
+                Assert.AreEqual((1, 2, 3, 4, dto), f((1, 2, 3, 4, dt)));
+            }
+
+            {
+                var f = CreateTupleConvert<ValueTuple<int, long, int, object, DateTime>?, ValueTuple<long, int, object, int, DateTimeOffset>>(conversions);
+
+                Assert.AreEqual((1, 2, 3, 4, dto), f((1, 2, 3, 4, dt)));
+                AssertEx.Throws<InvalidOperationException>(() => f(null));
+            }
+        }
+
+        [TestMethod]
+        public void TupleConvert_Reduce_Nested()
+        {
+            var convertIntToLong = (Expression<Func<int, long>>)(x => x);
+            var convertLongToInt = (Expression<Func<long, int>>)(x => (int)x);
+
+            var convertIntToObject = (Expression<Func<int, object>>)(x => x);
+
+            var p = Expression.Parameter(typeof(object));
+            var convertObjectToInt = Expression.Lambda<Func<object, int>>(Expression.Unbox(p, typeof(int)), p);
+
+            var inner = CreateTupleConvertExpression<ValueTuple<int, object>, ValueTuple<long, int>>(convertIntToLong, convertObjectToInt);
+            var outer = CreateTupleConvert<ValueTuple<long, int, ValueTuple<int, object>>, ValueTuple<int, object, ValueTuple<long, int>>>(convertLongToInt, convertIntToObject, inner);
+
+            Assert.AreEqual((1, 2, (3, 4)), outer((1, 2, (3, 4))));
+        }
+
+        private static Func<T, R> CreateTupleConvert<T, R>(params LambdaExpression[] elementConversions)
+        {
+            return CreateTupleConvertExpression<T, R>(elementConversions).Compile();
+        }
+
+        private static Expression<Func<T, R>> CreateTupleConvertExpression<T, R>(params LambdaExpression[] elementConversions)
+        {
+            var p = Expression.Parameter(typeof(T));
+            var c = CSharpExpression.TupleConvert(p, typeof(R), elementConversions);
+            return Expression.Lambda<Func<T, R>>(c, p);
         }
 
         [TestMethod]
@@ -112,4 +232,26 @@ namespace Tests
             Assert.AreEqual(expected, res);
         }
     }
+
+    /*
+     * TODO: Compiler test cases.
+     * 
+        // Nop
+        (Expression<Func<(int,int),(int,int)>>)(t => t)
+
+        // TupleConvert
+        (Expression<Func<(int,int),(long,long)>>)(t => t)
+
+        // Convert
+        (Expression<Func<(int,int),(int,int)>>)(t => ((int,int))t)
+        (Expression<Func<(int,int),(int,int)?>>)(t => t)
+        (Expression<Func<(int,int)?,(int,int)>>)(t => ((int,int))t)
+        (Expression<Func<(int,int)?,(int,int)?>>)(t => t)
+
+        // TupleConvert (Lifted)
+        (Expression<Func<(int,int),(long,long)?>>)(t => t)
+        (Expression<Func<(int,int)?,(long,long)>>)(t => ((long,long))t)
+        (Expression<Func<(int,int)?,(long,long)?>>)(t => t)
+     * 
+     */
 }

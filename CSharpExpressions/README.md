@@ -550,7 +550,14 @@ var convert2 = Expression.Lambda<Func<DateTime, DateTimeOffset>>(Expression.Conv
 CSharpExpression.TupleConvert(t, typeof(ValueTuple<long, long>), new[] { convert1, convert2 })
 ```
 
-The lambda expressions array passed to `TupleConvert` represents the conversions for the tuple elements.
+The lambda expressions array passed to `TupleConvert` represents the conversions for the tuple elements. Similar to `UnaryExpression` nodes with a `Convert` node type, this node supports lifted operations. That is, the following conversions are valid:
+
+* `T` to `U`
+* `T?` to `U`
+* `T` to `U?`
+* `T?` to `U?`
+
+where `T` and `U` are tuple types. If `T` and `U` are the same, identity functions can be used for the element conversion lambda expressions. Alternatively, `Expression.Convert` can be used for conversions between `T` and `T?`.
 
 Nodes of this type reduce to a `TupleLiteralCSharpExpression` that constructs a value of the target tuple type, using conversions applied to elements extracted from the tuple operand.
 

@@ -47,6 +47,16 @@ namespace Microsoft.CSharp.Expressions
         public override Type Type { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the tuple conversion is lifted.
+        /// </summary>
+        public bool IsLifted => Type.IsNullableType() || Operand.Type.IsNullableType();
+
+        /// <summary>
+        /// Gets a value indicating whether the tuple conversion whose return type is lifted to a nullable type.
+        /// </summary>
+        public bool IsLiftedToNull => IsLifted && Type.IsNullableType();
+
+        /// <summary>
         /// Dispatches to the specific visit method for this node type.
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
@@ -78,56 +88,155 @@ namespace Microsoft.CSharp.Expressions
         {
             var operand = Operand;
 
-            ParameterExpression tmp = null;
+            var temps = new List<ParameterExpression>();
+            var stmts = new List<Expression>();
 
+
+            //
             // NB: We can't check IsPure with the readOnly parameter set to true, because the user conversions may assign to a variable.
-            //     To mitigate this, we'd have to check all element conversions to make sure they don't assign to the variable.
+            //     To mitigate this, we'd have to check all element conversions to make sure they don't assign to the variable, which is
+            //     very unlikely, though a hand-written conversion lambda could have such a side-effect. One could argue that a side-
+            //     effecting conversion that mutates the parent tuple yields undefined behavior.
+            //
 
             if (!Helpers.IsPure(Operand))
             {
-                tmp = Expression.Parameter(Operand.Type, "__t");
-                operand = tmp;
+                var operandVariable = Expression.Parameter(Operand.Type, "__t");
+                
+                temps.Add(operandVariable);
+                stmts.Add(Expression.Assign(operandVariable, Operand));
+
+                operand = operandVariable;
             }
 
-            var n = ElementConversions.Count;
+            Expression res;
 
-            var args = new List<Expression>(n);
-
-            for (int i = 0; i < n; i++)
+            if (operand.Type.IsNullableType())
             {
-                var conversion = ElementConversions[i];
+                var nonNullOperand = Expression.Property(operand, "Value");
+                var nonNullOperandVariable = Expression.Parameter(nonNullOperand.Type, "__nonNull");
 
-                var item = Helpers.GetTupleItemAccess(operand, i);
+                var args = GetConversions(nonNullOperandVariable);
 
-                var conversionParameter = conversion.Parameters[0];
-
-                if (conversion.Body is UnaryExpression { Operand: var unaryOperand } unary && unaryOperand == conversionParameter && IsConvert(unary.NodeType))
+                if (Type.IsNullableType())
                 {
-                    args.Add(unary.Update(item));
-                }
-                else if (conversion.Body is TupleConvertCSharpExpression { Operand: var convertOperand } convert && convertOperand == conversionParameter)
-                {
-                    args.Add(convert.Update(item, convert.ElementConversions));
+                    //
+                    // T? -> U?
+                    //
+                    // var t = operand;
+                    //
+                    // if (t.HasValue)
+                    // {
+                    //    var v = t.Value;
+                    //    return (U?)new U(...);
+                    // }
+                    // else
+                    // {
+                    //    return default(U?);
+                    // }
+                    //
+
+                    var hasValueTest = Expression.Property(operand, "HasValue");
+
+                    var nullValue = Expression.Default(Type);
+
+                    var convertedTuple = Expression.Convert(CSharpExpression.TupleLiteral(Type.GetNonNullableType(), args, argumentNames: null), Type);
+                    var nonNullValue = Expression.Block(new[] { nonNullOperandVariable }, Expression.Assign(nonNullOperandVariable, nonNullOperand), convertedTuple);
+
+                    res = Expression.Condition(hasValueTest, nonNullValue, nullValue);
                 }
                 else
                 {
-                    args.Add(Expression.Invoke(conversion, item));
-                }
+                    //
+                    // T? -> U
+                    //
+                    // var t = operand;
+                    // var v = operand.Value; // NB: May throw
+                    // return new U(...);
 
-                static bool IsConvert(ExpressionType nodeType)
-                {
-                    return nodeType == ExpressionType.Convert || nodeType == ExpressionType.ConvertChecked || nodeType == ExpressionType.Unbox;
+                    temps.Add(nonNullOperandVariable);
+                    stmts.Add(Expression.Assign(nonNullOperandVariable, nonNullOperand));
+
+                    res = CSharpExpression.TupleLiteral(Type, args, argumentNames: null);
                 }
             }
-
-            var res = CSharpExpression.TupleLiteral(Type, args, argumentNames: null);
-
-            if (tmp != null)
+            else
             {
-                return Expression.Block(new[] { tmp }, Expression.Assign(tmp, Operand), res);
+                var args = GetConversions(operand);
+
+                var targetType = Type.GetNonNullableType();
+
+                var convertedTuple = CSharpExpression.TupleLiteral(targetType, args, argumentNames: null);
+
+                if (Type.IsNullableType())
+                {
+                    //
+                    // T -> U?
+                    //
+                    // var t = operand;
+                    // return (U?)new U(...);
+
+                    res = Expression.Convert(convertedTuple, Type);
+                }
+                else
+                {
+                    //
+                    // T -> U
+                    //
+                    // var t = operand;
+                    // return new U(...);
+                    //
+
+                    res = convertedTuple;
+                }
             }
 
-            return res;
+            stmts.Add(res);
+
+            return Helpers.Comma(temps, stmts);
+
+            List<Expression> GetConversions(Expression operand)
+            {
+                var n = ElementConversions.Count;
+
+                var args = new List<Expression>(n);
+
+                for (int i = 0; i < n; i++)
+                {
+                    var conversion = ElementConversions[i];
+
+                    var item = Helpers.GetTupleItemAccess(operand, i);
+
+                    var conversionParameter = conversion.Parameters[0];
+
+                    if (conversion.Body is UnaryExpression { Operand: var unaryOperand } unary && unaryOperand == conversionParameter && IsConvert(unary.NodeType))
+                    {
+                        args.Add(unary.Update(item));
+                    }
+                    else if (conversion.Body is TupleConvertCSharpExpression { Operand: var convertOperand } convert && convertOperand == conversionParameter)
+                    {
+                        args.Add(convert.Update(item, convert.ElementConversions));
+                    }
+                    else
+                    {
+                        //
+                        // CONSIDER: Accessing a tuple item is a pure operation, so it can be reordered. We could try to inline the item expression
+                        //           into the lambda body (beta reduction). However, the common cases (i.e. those generated by the C# compiler) should
+                        //           be handled above, so this may not be worth it. Also, this type of optimization could be done elsewhere, more
+                        //           globally (though it'd have to analyze that the fields in the tuple are not being written to).
+                        //
+
+                        args.Add(Expression.Invoke(conversion, item));
+                    }
+
+                    static bool IsConvert(ExpressionType nodeType)
+                    {
+                        return nodeType == ExpressionType.Convert || nodeType == ExpressionType.ConvertChecked || nodeType == ExpressionType.Unbox;
+                    }
+                }
+
+                return args;
+            }
         }
     }
 
@@ -139,34 +248,55 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The <see cref="Expression" /> representing the tuple to convert.</param>
         /// <param name="type">The <see cref="Type" /> that represents the tuple type to convert to.</param>
         /// <param name="elementConversions">An array of one or more of <see cref="LambdaExpression" /> objects that represent the conversions of the tuple elements.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="TupleConvertCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleConvert" /> and the <see cref="TupleConvertCSharpExpression.Operand" /> and <see cref="TupleConvertCSharpExpression.ElementConversions" /> properties set to the specified values.</returns>
         public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, params LambdaExpression[] elementConversions)
         {
             return TupleConvert(operand, type, (IEnumerable<LambdaExpression>)elementConversions);
         }
 
+        /// <summary>
+        /// Creates a <see cref="TupleConvertCSharpExpression" /> that represents a tuple conversion.
+        /// </summary>
+        /// <param name="operand">The <see cref="Expression" /> representing the tuple to convert.</param>
+        /// <param name="type">The <see cref="Type" /> that represents the tuple type to convert to.</param>
+        /// <param name="elementConversions">An array of one or more of <see cref="LambdaExpression" /> objects that represent the conversions of the tuple elements.</param>
+        /// <returns>A <see cref="TupleConvertCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleConvert" /> and the <see cref="TupleConvertCSharpExpression.Operand" /> and <see cref="TupleConvertCSharpExpression.ElementConversions" /> properties set to the specified values.</returns>
         public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, IEnumerable<LambdaExpression> elementConversions)
         {
             RequiresCanRead(operand, nameof(operand));
 
-            if (!Helpers.IsTupleType(operand.Type))
+            var sourceType = operand.Type;
+
+            if (sourceType.IsNullableType())
+            {
+                sourceType = sourceType.GetNonNullableType();
+            }
+
+            if (!Helpers.IsTupleType(sourceType))
             {
                 throw Error.InvalidTupleType(operand.Type);
             }
 
             ContractUtils.RequiresNotNull(type, nameof(type));
 
-            if (!Helpers.IsTupleType(type))
+            var destinationType = type;
+
+            if (destinationType.IsNullableType())
+            {
+                destinationType = destinationType.GetNonNullableType();
+            }
+
+            if (!Helpers.IsTupleType(destinationType))
             {
                 throw Error.InvalidTupleType(type);
             }
 
-            var arityFrom = Helpers.GetTupleArity(operand.Type);
-            var arityTo = Helpers.GetTupleArity(type);
+            var arityFrom = Helpers.GetTupleArity(sourceType);
+            var arityTo = Helpers.GetTupleArity(destinationType);
 
             if (arityFrom != arityTo)
             {
-                throw Error.TupleComponentCountMismatch(operand.Type, type);
+                throw Error.TupleComponentCountMismatch(sourceType, destinationType);
             }
 
             var conversions = elementConversions.ToReadOnly();
@@ -176,8 +306,8 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.InvalidElementConversionCount(arityFrom);
             }
 
-            var fromTypes = Helpers.GetTupleComponentTypes(operand.Type).ToArray();
-            var toTypes = Helpers.GetTupleComponentTypes(type).ToArray();
+            var fromTypes = Helpers.GetTupleComponentTypes(sourceType).ToArray();
+            var toTypes = Helpers.GetTupleComponentTypes(destinationType).ToArray();
 
             ContractUtils.RequiresNotNullItems(conversions, nameof(conversions));
 
