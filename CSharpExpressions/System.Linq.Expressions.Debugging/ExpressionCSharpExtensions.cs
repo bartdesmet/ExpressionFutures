@@ -88,7 +88,7 @@ namespace System.Linq.Expressions
 
             if (type.IsArray)
             {
-                var elem = ToCSharp(type.GetElementType());
+                var elem = ToCSharp(type.GetElementType(), namespaces);
                 var rank = type.GetArrayRank(); // NB: ignores multi-dimensional with rank 1
                 return $"{elem}[{new string(',', rank - 1)}]";
             }
@@ -117,8 +117,40 @@ namespace System.Linq.Expressions
                     if (def == typeof(Nullable<>))
                     {
                         var arg = type.GetGenericArguments()[0];
-                        var val = ToCSharp(arg);
+                        var val = ToCSharp(arg, namespaces);
                         return $"{val}?";
+                    }
+                    else if (s_tupleTypes.Contains(def) && def != MinTupleType)
+                    {
+                        var componentTypes = new List<string>();
+
+                        while (true)
+                        {
+                            def = type.GetGenericTypeDefinition();
+
+                            var args = type.GetGenericArguments();
+
+                            if (def == MaxTupleType)
+                            {
+                                for (int i = 0; i < args.Length - 1; i++)
+                                {
+                                    componentTypes.Add(ToCSharp(args[i], namespaces));
+                                }
+
+                                type = args[args.Length - 1];
+                            }
+                            else
+                            {
+                                foreach (var arg in args)
+                                {
+                                    componentTypes.Add(ToCSharp(arg, namespaces));
+                                }
+
+                                break;
+                            }
+                        }
+
+                        return $"({string.Join(", ", componentTypes)})";
                     }
                     else
                     {
@@ -130,7 +162,7 @@ namespace System.Linq.Expressions
                             name = name.Substring(0, tick);
                         }
 
-                        var args = string.Join(", ", type.GetGenericArguments().Select(ToCSharp));
+                        var args = string.Join(", ", type.GetGenericArguments().Select(arg => ToCSharp(arg, namespaces)));
 
                         return $"{name}<{args}>";
                     }
@@ -145,6 +177,28 @@ namespace System.Linq.Expressions
 
                 return namespaces.Contains(type.Namespace) ? type.Name : type.FullName;
             }
+        }
+
+        public static bool IsTupleType(Type type)
+        {
+            if (!type.IsConstructedGenericType)
+            {
+                return false;
+            }
+
+            var def = type.GetGenericTypeDefinition();
+
+            if (!s_tupleTypes.Contains(def))
+            {
+                return false;
+            }
+
+            if (def == MaxTupleType)
+            {
+                return IsTupleType(type.GetGenericArguments().Last());
+            }
+
+            return true;
         }
 
         private static readonly Dictionary<Type, string> s_primitives = new Dictionary<Type, string>
@@ -165,6 +219,20 @@ namespace System.Linq.Expressions
             { typeof(string), "string" },
             { typeof(object), "object" },
         };
+
+        private static readonly HashSet<Type> s_tupleTypes = new HashSet<Type> {
+            typeof(ValueTuple<>),
+            typeof(ValueTuple<,>),
+            typeof(ValueTuple<,,>),
+            typeof(ValueTuple<,,,>),
+            typeof(ValueTuple<,,,,>),
+            typeof(ValueTuple<,,,,,>),
+            typeof(ValueTuple<,,,,,,>),
+            typeof(ValueTuple<,,,,,,,>),
+        };
+
+        private static readonly Type MinTupleType = typeof(ValueTuple<>);
+        private static readonly Type MaxTupleType = typeof(ValueTuple<,,,,,,,>);
 
         class CSharpPrinter : ExpressionVisitor, ICSharpPrintingVisitor
         {
@@ -822,9 +890,13 @@ namespace System.Linq.Expressions
 
             protected override Expression VisitNew(NewExpression node)
             {
-                Out("new ");
-
-                if (node.Members != null || (node.Type.IsDefined(typeof(CompilerGeneratedAttribute)) && node.Type.Name.StartsWith("<>f__AnonymousType")))
+                if (IsTupleType(node.Type))
+                {
+                    Out("(");
+                    Visit(node.Arguments);
+                    Out(")");
+                }
+                else if (node.Members != null || (node.Type.IsDefined(typeof(CompilerGeneratedAttribute)) && node.Type.Name.StartsWith("<>f__AnonymousType")))
                 {
                     Out("{");
 
