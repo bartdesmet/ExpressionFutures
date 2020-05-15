@@ -1326,6 +1326,28 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Block(variables, statements);
         }
 
+        public static bool IsTupleType(Type type)
+        {
+            if (!type.IsConstructedGenericType)
+            {
+                return false;
+            }
+
+            var def = type.GetGenericTypeDefinition();
+
+            if (!TupleTypes.Contains(def))
+            {
+                return false;
+            }
+
+            if (def == MaxTupleType)
+            {
+                return IsTupleType(type.GetGenericArguments()[^1]);
+            }
+
+            return true;
+        }
+
         public static bool IsTaskLikeType(Type type, out Type resultType)
         {
             if (TryGetAsyncMethodBuilderInfo(type, out var info))
@@ -1580,6 +1602,21 @@ namespace Microsoft.CSharp.Expressions
 
             return true;
         }
+
+        private static HashSet<Type> s_tupleTypes;
+
+        private static HashSet<Type> TupleTypes => s_tupleTypes ??= new HashSet<Type>() {
+            typeof(ValueTuple<>),
+            typeof(ValueTuple<,>),
+            typeof(ValueTuple<,,>),
+            typeof(ValueTuple<,,,>),
+            typeof(ValueTuple<,,,,>),
+            typeof(ValueTuple<,,,,,>),
+            typeof(ValueTuple<,,,,,,>),
+            typeof(ValueTuple<,,,,,,,>),
+        };
+
+        public static readonly Type MaxTupleType = typeof(ValueTuple<,,,,,,,>);
     }
 
     internal struct AsyncMethodBuilderInfo

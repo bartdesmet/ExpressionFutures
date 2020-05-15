@@ -97,7 +97,7 @@ namespace Microsoft.CSharp.Expressions
                 var current = Type;
                 Push(current);
 
-                while (current.GetGenericTypeDefinition() == CSharpExpression.MaxTupleType)
+                while (current.GetGenericTypeDefinition() == Helpers.MaxTupleType)
                 {
                     current = current.GetGenericArguments()[^1];
                     Push(current);
@@ -167,29 +167,7 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(type, nameof(type));
 
-            static bool IsTupleType(Type type)
-            {
-                if (!type.IsConstructedGenericType)
-                {
-                    return false;
-                }
-
-                var def = type.GetGenericTypeDefinition();
-
-                if (!TupleTypes.Contains(def))
-                {
-                    return false;
-                }
-
-                if (def == MaxTupleType)
-                {
-                    return IsTupleType(type.GetGenericArguments()[^1]);
-                }
-
-                return true;
-            }
-
-            if (!IsTupleType(type))
+            if (!Helpers.IsTupleType(type))
             {
                 throw Error.InvalidTupleType(type);
             }
@@ -204,7 +182,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var def = type.GetGenericTypeDefinition();
 
-                    if (def == MaxTupleType)
+                    if (def == Helpers.MaxTupleType)
                     {
                         for (int i = 0; i < parameters.Length - 1; i++)
                         {
@@ -249,21 +227,6 @@ namespace Microsoft.CSharp.Expressions
 
             return new TupleLiteralCSharpExpression(type, args, argNames);
         }
-
-        private static HashSet<Type> s_tupleTypes;
-
-        private static HashSet<Type> TupleTypes => s_tupleTypes ??= new HashSet<Type>() {
-            typeof(ValueTuple<>),
-            typeof(ValueTuple<,>),
-            typeof(ValueTuple<,,>),
-            typeof(ValueTuple<,,,>),
-            typeof(ValueTuple<,,,,>),
-            typeof(ValueTuple<,,,,,>),
-            typeof(ValueTuple<,,,,,,>),
-            typeof(ValueTuple<,,,,,,,>),
-        };
-
-        internal static readonly Type MaxTupleType = typeof(ValueTuple<,,,,,,,>);
     }
 
     partial class CSharpExpressionVisitor
