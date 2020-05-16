@@ -1387,6 +1387,8 @@ namespace Microsoft.CSharp.Expressions
         public System.Boolean CanReduce => _node.CanReduce;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.LambdaExpression> ElementConversions => _node.ElementConversions;
+        public System.Boolean IsLifted => _node.IsLifted;
+        public System.Boolean IsLiftedToNull => _node.IsLiftedToNull;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Operand => _node.Operand;
         public System.Type Type => _node.Type;
