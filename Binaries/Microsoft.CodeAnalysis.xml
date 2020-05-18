@@ -1634,6 +1634,11 @@
             Represents a single EditorConfig file, see http://editorconfig.org for details about the format.
             </summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.AnalyzerConfig.GlobalKey">
+            <summary>
+            Key that indicates if this config is a global config
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.AnalyzerConfig.ReservedKeys">
             <summary>
             A set of keys that are reserved for special interpretation for the editorconfig specification.
@@ -1673,6 +1678,11 @@
             Gets whether this editorconfig is a topmost editorconfig.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.AnalyzerConfig.IsGlobal">
+            <summary>
+            Gets whether this editorconfig is a global editorconfig.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.AnalyzerConfig.Parse(System.String,System.String)">
             <summary>
             Parses an editor config file text located at the given path. No parsing
@@ -1692,6 +1702,12 @@
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.AnalyzerConfig.Section.NameComparer">
+            <summary>
+            Used to compare <see cref="P:Microsoft.CodeAnalysis.AnalyzerConfig.Section.Name"/>s of sections. Specified by editorconfig to
+            be a case-sensitive comparison.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.AnalyzerConfig.Section.NameEqualityComparer">
             <summary>
             Used to compare <see cref="P:Microsoft.CodeAnalysis.AnalyzerConfig.Section.Name"/>s of sections. Specified by editorconfig to
             be a case-sensitive comparison.
@@ -1823,6 +1839,31 @@
             </summary>
             <param name="sourcePath">The path to a file such as a source file or additional file. Must be non-null.</param>
             <remarks>This method is safe to call from multiple threads.</remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.AnalyzerConfigSet.MergeGlobalConfigs(Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.AnalyzerConfig},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic}@)">
+            <summary>
+            Merge any partial global configs into a single global config, and remove the partial configs
+            </summary>
+            <param name="analyzerConfigs">An <see cref="T:Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder`1"/> of <see cref="T:Microsoft.CodeAnalysis.AnalyzerConfig"/> containing a mix of regular and unmerged partial global configs</param>
+            <param name="diagnostics">Diagnostics produced during merge will be added to this bag</param>
+            <returns>A <see cref="T:Microsoft.CodeAnalysis.AnalyzerConfigSet.GlobalAnalyzerConfig" /> that contains the merged partial configs, or <c>null</c> if there were no partial configs</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.AnalyzerConfigSet.GlobalAnalyzerConfigBuilder">
+            <summary>
+            Builds a global analyzer config from a series of partial configs
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.AnalyzerConfigSet.GlobalAnalyzerConfig">
+            <summary>
+            Represents a combined global analyzer config.
+            </summary>
+            <remarks>
+            We parse all <see cref="T:Microsoft.CodeAnalysis.AnalyzerConfig"/>s as individual files, according to the editorconfig spec.
+            
+            However, when viewing the configs as an <see cref="T:Microsoft.CodeAnalysis.AnalyzerConfigSet"/> if multiple files have the
+            <c>is_global</c> property set to <c>true</c> we combine those files and treat them as a single 
+            'logical' global config file. This type represents that combined file. 
+            </remarks>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CommandLineAnalyzerReference">
             <summary>
@@ -30399,6 +30440,12 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.Single_type_per_generator_0">
             <summary>Only a single {0} can be registered per generator.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WRN_MultipleGlobalAnalyzerKeys">
+            <summary>Multiple global analyzer config files set the same key '{0}' in section '{1}'. It has been unset. Key was set by the following files: '{2}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.WRN_MultipleGlobalAnalyzerKeys_Title">
+            <summary>Multiple global analyzer config files set the same key. It has been unset.</summary>
         </member>
         <member name="M:Microsoft.DiaSymReader.IMetadataImport.ResolveTypeRef(System.Int32,System.Guid@,System.Object@,System.Int32@)">
             <summary>

@@ -1644,6 +1644,23 @@
             gives the constants for all ones we want to convert
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CodeGeneration.NullableSyntaxAnnotation">
+            <summary>
+            Annotation placed on <see cref="T:Microsoft.CodeAnalysis.ITypeSymbol"/>s that the <see cref="T:Microsoft.CodeAnalysis.Editing.SyntaxGenerator"/> converts to a node. This
+            information tracks the original nullable state of the symbol and is used by metadata-as-source to determine if
+            it needs to add <c>#nullable</c> directives in the file.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CodeGeneration.NullableSyntaxAnnotation.Oblivious">
+            <summary>
+            For <c>string~</c> types.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CodeGeneration.NullableSyntaxAnnotation.AnnotatedOrNotAnnotated">
+            <summary>
+            For <c>string!</c> or <c>string?</c> types.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext">
             <summary>
             Context for code refactorings provided by a <see cref="T:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringProvider"/>.
@@ -9168,6 +9185,24 @@
             </summary>
             <param name="keyNameFromLanguageName">A function that maps from a <see cref="T:Microsoft.CodeAnalysis.LanguageNames"/> value to the key name.</param>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Packaging.IPackageInstallerService.TryGetPackageSourcesAsync(System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Gets the package sources applicable to the workspace.
+            </summary>
+            <param name="allowSwitchToMainThread"><see langword="true"/> to allow the implementation to switch to the
+            main thread (if necessary) to compute the result; otherwise <see langword="false"/> to return without an
+            answer if such a switch would be required.</param>
+            <param name="cancellationToken">The cancellation token that the asynchronous operation will observe.</param>
+            <returns>
+            <para>A collection of package sources.</para>
+            <para>-or-</para>
+            <para><see langword="null"/> if <paramref name="allowSwitchToMainThread"/> is <see langword="false"/> and
+            the package sources could not be computed without switching to the main thread.</para>
+            <para>-or-</para>
+            <para><see langword="null"/> if the package sources were invalidated by the project system before the
+            computation completed.</para>
+            </returns>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.PatternMatching.PatternMatcher">
             <summary>
             The pattern matcher is thread-safe.  However, it maintains an internal cache of
@@ -9451,7 +9486,7 @@
             Find conflicts in the new solution 
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Rename.ConflictEngine.ConflictResolver.Session.GetNodesOrTokensToCheckForConflicts(Microsoft.CodeAnalysis.DocumentId,Microsoft.CodeAnalysis.SyntaxNode)">
+        <member name="M:Microsoft.CodeAnalysis.Rename.ConflictEngine.ConflictResolver.Session.GetNodesOrTokensToCheckForConflicts(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
             Gets the list of the nodes that were annotated for a conflict check 
             </summary>
@@ -9666,7 +9701,7 @@
             for the set.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Rename.RenameLocations.ReferenceProcessing.GetRenamableSymbolAsync(Microsoft.CodeAnalysis.Document,System.Int32,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Rename.RenameLocations.ReferenceProcessing.TryGetRenamableSymbolAsync(Microsoft.CodeAnalysis.Document,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Given a symbol in a document, returns the "right" symbol that should be renamed in
             the case the name binds to things like aliases _and_ the underlying type at once.
@@ -9887,7 +9922,7 @@
             and updating that type.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Rename.Renamer.RenameSymbolDocumentAction.GetMatchingTypeDeclarationAsync(Microsoft.CodeAnalysis.Document,System.String,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Rename.Renamer.RenameSymbolDocumentAction.GetMatchingTypeDeclarationAsync(Microsoft.CodeAnalysis.Document,System.Threading.CancellationToken)">
             <summary>
             Finds a matching type such that the display name of the type matches the name passed in, ignoring case. Case isn't used because
             documents with name "Foo.cs" and "foo.cs" should still have the same type name
@@ -10258,7 +10293,7 @@
             type and let the simplifier decide if it should be <c>var</c> or not.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Shared.Extensions.SyntaxGeneratorExtensions.IsSpecialCaseBinaryExpression(Microsoft.CodeAnalysis.Operations.IBinaryOperation,Microsoft.CodeAnalysis.Operations.BinaryOperatorKind,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Shared.Extensions.SyntaxGeneratorExtensions.IsSpecialCaseBinaryExpression(Microsoft.CodeAnalysis.Operations.IBinaryOperation,Microsoft.CodeAnalysis.Operations.BinaryOperatorKind)">
             <summary>
             Returns true if the binaryExpression consists of an expression that can never be negative, 
             such as length or unsigned numeric types, being compared to zero with greater than, 
@@ -12146,11 +12181,10 @@
                 The SymbolKey for both 'M' methods will be the same.  The SymbolKey will then resolve to both methods.
             </para>
             <para>
-            <see cref="T:Microsoft.CodeAnalysis.SymbolKey"/>s are not guaranteed to work across different versions of Roslyn.
-            They can be persisted in their <see cref="M:Microsoft.CodeAnalysis.SymbolKey.ToString"/> form and used across sessions with
-            the same version of Roslyn. However, future versions may change the encoded format and may
-            no longer be able to <see cref="M:Microsoft.CodeAnalysis.SymbolKey.Resolve(Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Boolean,System.Threading.CancellationToken)"/> previous
-            keys.  As such, only persist if using for a cache that can be regenerated if necessary.
+            <see cref="T:Microsoft.CodeAnalysis.SymbolKey"/>s are not guaranteed to work across different versions of Roslyn. They can be persisted
+            in their <see cref="M:Microsoft.CodeAnalysis.SymbolKey.ToString"/> form and used across sessions with the same version of Roslyn. However, future
+            versions may change the encoded format and may no longer be able to <see cref="M:Microsoft.CodeAnalysis.SymbolKey.Resolve(Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Threading.CancellationToken)"/> previous keys.  As
+            such, only persist if using for a cache that can be regenerated if necessary.
             </para>
             </summary>
         </member>
@@ -12197,13 +12231,10 @@
             effective symbol.
             </param>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.SymbolKey.Resolve(Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.SymbolKey.Resolve(Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Tries to resolve this <see cref="T:Microsoft.CodeAnalysis.SymbolKey"/> in the given 
-            <paramref name="compilation"/> to a matching symbol.  <paramref name="resolveLocations"/>
-            should only be given <see langword="true"/> if the symbol was produced from a compilation
-            that has the exact same source as the compilation we're resolving against.  Otherwise
-            the locations resolved may not actually be correct in the final compilation.
+            <paramref name="compilation"/> to a matching symbol.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.SymbolKey.ToString">
@@ -12237,11 +12268,10 @@
         </member>
         <member name="T:Microsoft.CodeAnalysis.SymbolKeyResolution">
             <summary>
-            The result of <see cref="M:Microsoft.CodeAnalysis.SymbolKey.Resolve(Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Boolean,System.Threading.CancellationToken)"/>.
-            If the <see cref="T:Microsoft.CodeAnalysis.SymbolKey"/> could be uniquely mapped to a single <see cref="T:Microsoft.CodeAnalysis.ISymbol"/>
-            then that will be returned in <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.Symbol"/>.  Otherwise, if 
-            the key resolves to multiple symbols (which can happen in error scenarios), then 
-            <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.CandidateSymbols"/> and <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.CandidateReason"/> will be returned.
+            The result of <see cref="M:Microsoft.CodeAnalysis.SymbolKey.Resolve(Microsoft.CodeAnalysis.Compilation,System.Boolean,System.Threading.CancellationToken)"/>. If the <see cref="T:Microsoft.CodeAnalysis.SymbolKey"/> could be uniquely mapped to a
+            single <see cref="T:Microsoft.CodeAnalysis.ISymbol"/> then that will be returned in <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.Symbol"/>.  Otherwise, if the key resolves
+            to multiple symbols (which can happen in error scenarios), then <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.CandidateSymbols"/> and <see
+            cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.CandidateReason"/> will be returned.
             
             If no symbol can be found <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.Symbol"/> will be <c>null</c> and <see cref="P:Microsoft.CodeAnalysis.SymbolKeyResolution.CandidateSymbols"/>
             will be empty.
@@ -12298,8 +12328,7 @@
         </member>
         <member name="T:Microsoft.CodeAnalysis.TodoComments.ITodoCommentsListener">
             <summary>
-            Callback the host (VS) passes to the OOP service to allow it to send batch notifications
-            about todo comments.
+            Callback the host (VS) passes to the OOP service to allow it to send batch notifications about todo comments.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.TodoComments.TodoCommentData">
@@ -18311,6 +18340,12 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.WorkspacesResources.Symbols_project_could_not_be_found_in_the_provided_solution">
             <summary>Symbol's project could not be found in the provided solution</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.WorkspacesResources.Rename_0_to_1">
+            <summary>Rename '{0}' to '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.WorkspacesResources.Sync_namespace_to_folder_structure">
+            <summary>Sync namespace to folder structure</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CompilerExtensionsResources.Absolute_path_expected">
             <summary>Absolute path expected.</summary>

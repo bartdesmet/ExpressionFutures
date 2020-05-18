@@ -51,7 +51,7 @@
             e.g: int.Parse, XElement.Load, Tuple.Create etc.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeStyle.TypeStyle.TypeStyleHelper.IsPossibleConversionMethod(Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.SemanticModel)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeStyle.TypeStyle.TypeStyleHelper.IsPossibleConversionMethod(Microsoft.CodeAnalysis.IMethodSymbol)">
             <summary>
             If we have a method ToXXX and its return type is also XXX, then type name is apparent
             e.g: Convert.ToString.
