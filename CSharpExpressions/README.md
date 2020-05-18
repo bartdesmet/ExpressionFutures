@@ -583,7 +583,33 @@ TODO
 
 ##### Tuples equality and inequality
 
-TODO
+Tuple equality and inequality expressions are not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<(int, DateTime), (int, DateTime), bool>> f = (t1, t2) => t1 == t2;
+```
+
+This fails to compile with:
+
+```
+error CS8382: An expression tree may not contain a tuple == or != operator.
+```
+
+Support for tuple equality and inequality expressions is added by new `CSharpExpression.TupleEqual(Expression, Expression, IEnumerable<LambdaExpression>)` and `CSharpExpression.TupleNotEqual(Expression, Expression, IEnumerable<LambdaExpression>)` methods:
+
+```csharp
+var p1 = Expression.Parameter(typeof(int));
+var p2 = Expression.Parameter(typeof(int));
+var check1 = Expression.Lambda<Func<int, long>>(Expression.Equal(p1, p2), p1, p2);
+var p3 = Expression.Parameter(typeof(DateTime));
+var p4 = Expression.Parameter(typeof(DateTime));
+var check2 = Expression.Lambda<Func<DateTime, DateTimeOffset>>(Expression.Equal(p3, p4), p3, pt4);
+CSharpExpression.TupleEqual(t1, t2, new LambdaExpression[] { check1, check2 })
+```
+
+The lambda expressions array passed to `TupleEqual` or `TupleNotEqual` represents the equality checks for the tuple elements. Similar to `BinaryExpression` nodes with an `Equal` or `NotEqual` node type, this node supports lifted operations where equality tests are performed on nullable tuple types.
+
+Nodes of this type reduce to a logical conjunction or disjunction using `AndAlso` (in case of `TupleEqual`) or `OrElse` (in case of `TupleNotEqual`) expressions to combine equality checks applied to elements extracted from the tuple operands, while guaranteeing a left-to-right evaluation of side-effects.
 
 #### C# 8.0
 
