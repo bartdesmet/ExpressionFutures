@@ -5,11 +5,8 @@
 using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using static Tests.TestHelpers;
 
 namespace Tests
