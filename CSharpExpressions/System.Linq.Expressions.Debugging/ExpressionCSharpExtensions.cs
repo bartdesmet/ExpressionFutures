@@ -761,7 +761,7 @@ namespace System.Linq.Expressions
                     var ifTrueNeedsCurly = false;
 
                     //
-                    // We require curly braces around the IfTrue branch if we could fall vicitim to
+                    // We require curly braces around the IfTrue branch if we could fall victim to
                     // the dangling else problem:
                     //
                     //   if (a)
