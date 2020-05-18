@@ -10625,7 +10625,7 @@
             Abstract base class for mutable and immutable type maps.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AbstractTypeMap.SubstituteMemberType(Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AbstractTypeMap.SubstituteTypeDeclaration(Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol)">
             <summary>
             Substitute for a type declaration.  May use alpha renaming if the container is substituted.
             </summary>
@@ -13746,15 +13746,27 @@
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.NativeIntegerTypeSymbol.GetMembers">
             <summary>
-            There are no members on <see cref="T:System.IntPtr"/> that should be exposed directly on nint:
-            constructors for nint other than the default parameterless constructor are not supported;
-            operators are handled explicitly as built-in operators and conversions;
-            0 should be used instead of Zero;
-            sizeof(nint) should be used instead of Size;
-            + and - should be used instead of Add() and Subtract();
-            ToInt32(), ToInt64(), ToPointer() should be used from System.IntPtr only;
-            overridden methods Equals(), GetHashCode(), and ToString() are referenced from System.Object.
-            The one remaining member is <see cref="M:System.IntPtr.ToString(System.String)"/> which we could expose if needed.
+            Certain members from the underlying types are not exposed from the native integer types:
+              constructors other than the default parameterless constructor are not supported;
+              operators are handled explicitly as built-in operators and conversions;
+              0 should be used instead of Zero;
+              sizeof() should be used instead of Size;
+              + and - should be used instead of Add() and Subtract();
+              ToInt32(), ToInt64(), ToPointer() should be used from underlying types only.
+            The remaining members are exposed on the native integer types with appropriate
+            substitution of underlying types in the signatures.
+            Specifically, we expose public, non-generic instance and static methods and properties
+            other than those named above.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.NativeIntegerTypeSymbol.SubstituteUnderlyingType(Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations)">
+            <summary>
+            Replaces references to underlying type with references to native integer type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.NativeIntegerTypeSymbol.SubstituteUnderlyingType(Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol)">
+            <summary>
+            Replaces references to underlying type with references to native integer type.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.NonMissingAssemblySymbol">

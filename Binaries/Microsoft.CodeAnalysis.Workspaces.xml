@@ -6299,7 +6299,7 @@
             which has derived type called 'B' somewhere".  So when the index is examined for the name 'A', it will say
             'examine types called 'B' to see if they're an actual match'.
             <para/>
-            These links are then continually tranversed to get the full set of results.
+            These links are then continually traversed to get the full set of results.
             </remarks>
         </member>
         <member name="F:Microsoft.CodeAnalysis.FindSymbols.DependentTypeFinder.s_createTypeMap">
@@ -19693,6 +19693,10 @@
             If the current environment uses the '\' directory separator, replaces all uses of '\'
             in the given string with '/'. Otherwise, returns the string.
             </summary>
+            <remarks>
+            This method is equivalent to Microsoft.CodeAnalysis.BuildTasks.GenerateMSBuildAnalyzerConfig.NormalizeWithForwardSlash
+            Both methods should be kept in sync.
+            </remarks>
         </member>
         <member name="M:Roslyn.Utilities.ReflectionUtilities.GetTypeFromEither(System.String,System.String)">
             <summary>

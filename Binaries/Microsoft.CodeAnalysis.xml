@@ -2177,6 +2177,13 @@
             Trims all '.' and whitespace from the end of the path
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CommandLineParser.SplitWithDoubledSeparatorEscaping(System.String,System.Char)">
+            <summary>
+            Splits specified <paramref name="str"/> on <paramref name="separator"/>
+            treating two consecutive separators as if they were a single non-separating character.
+            E.g. "a,,b,c" split on ',' yields ["a,b", "c"].
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CommandLineParser.TryParseClientArgs(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.List{System.String}@,System.Boolean@,System.String@,System.String@,System.String@)">
             <summary>
             Returns false if any of the client arguments are invalid and true otherwise.
@@ -33461,6 +33468,10 @@
             If the current environment uses the '\' directory separator, replaces all uses of '\'
             in the given string with '/'. Otherwise, returns the string.
             </summary>
+            <remarks>
+            This method is equivalent to Microsoft.CodeAnalysis.BuildTasks.GenerateMSBuildAnalyzerConfig.NormalizeWithForwardSlash
+            Both methods should be kept in sync.
+            </remarks>
         </member>
         <member name="M:Roslyn.Utilities.ArrayExtensions.BinarySearchUpperBound(System.Int32[],System.Int32)">
             <summary>

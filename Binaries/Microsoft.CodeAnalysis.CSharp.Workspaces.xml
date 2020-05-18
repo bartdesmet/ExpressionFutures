@@ -516,7 +516,7 @@
             value.
             </summary>
             <remarks>
-            <para>The subtraction will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.DotDotToken"/> is greater, and the conversion
+            <para>The subtraction will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.RelationalPattern"/> is greater, and the conversion
             to an unsigned value after negation will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPattern"/> is greater.</para>
             </remarks>
         </member>
