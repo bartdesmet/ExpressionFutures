@@ -1692,7 +1692,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static string[] s_tupleItemNames;
 
-        private static string[] TupleItemNames => s_tupleItemNames ?? new[] {
+        private static string[] TupleItemNames => s_tupleItemNames ??= new[] {
             "Item1",
             "Item2",
             "Item3",

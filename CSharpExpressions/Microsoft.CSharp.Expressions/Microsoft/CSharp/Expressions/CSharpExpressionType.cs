@@ -264,5 +264,13 @@ namespace Microsoft.CSharp.Expressions
         /// A tuple conversion expression, such as ((int, bool))t.
         /// </summary>
         TupleConvert,
+        /// <summary>
+        /// A tuple equality expression, such as (a, b) == (c, d).
+        /// </summary>
+        TupleEqual,
+        /// <summary>
+        /// A tuple inequality expression, such as (a, b) != (c, d).
+        /// </summary>
+        TupleNotEqual,
     }
 }

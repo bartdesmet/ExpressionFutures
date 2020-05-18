@@ -2140,7 +2140,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 for (int i = 0, n = Arguments.Count; i < n; i++)
                 {
-                    visitor.Out(ArgumentNames[i]);
+                    visitor.Out(ArgumentNames[i] ?? ("Item" + i));
                     visitor.Out(": ");
                     visitor.Visit(Arguments[i]);
 
@@ -2177,6 +2177,27 @@ namespace Microsoft.CSharp.Expressions
             visitor.Out(visitor.ToCSharp(Type));
             visitor.Out(")");
             visitor.ParenthesizedVisit(this, Operand);
+        }
+    }
+
+    partial class TupleBinaryCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Equal);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.ParenthesizedVisit(this, Left);
+            visitor.Out(this.CSharpNodeType == CSharpExpressionType.TupleEqual ? " == " : " != ");
+            visitor.ParenthesizedVisit(this, Right);
         }
     }
 

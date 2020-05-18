@@ -162,6 +162,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\StaticAwaitInfo.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\TryCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\TupleConvertCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\TupleBinaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\TupleLiteralCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />

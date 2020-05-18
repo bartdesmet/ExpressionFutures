@@ -867,7 +867,16 @@ namespace Microsoft.CSharp.Expressions
             {
                 for (int i = 0, n = node.Arguments.Count; i < n; i++)
                 {
-                    args.Add(new XElement("Argument", new XAttribute("Name", node.ArgumentNames[i]), Visit(node.Arguments[i])));
+                    var name = node.ArgumentNames[i];
+
+                    if (name != null)
+                    {
+                        args.Add(new XElement("Argument", new XAttribute("Name", name), Visit(node.Arguments[i])));
+                    }
+                    else
+                    {
+                        args.Add(new XElement("Argument", Visit(node.Arguments[i])));
+                    }
                 }
             }
             else
@@ -887,6 +896,18 @@ namespace Microsoft.CSharp.Expressions
             {
                 new XElement(nameof(node.Operand), Visit(node.Operand)),
                 Visit(nameof(node.ElementConversions), node.ElementConversions)
+            };
+
+            return Push(node, args);
+        }
+
+        protected internal override Expression VisitTupleBinary(TupleBinaryCSharpExpression node)
+        {
+            var args = new List<XNode>
+            {
+                new XElement(nameof(node.Left), Visit(node.Left)),
+                new XElement(nameof(node.Right), Visit(node.Right)),
+                Visit(nameof(node.EqualityChecks), node.EqualityChecks)
             };
 
             return Push(node, args);

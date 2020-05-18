@@ -1367,6 +1367,33 @@ namespace Microsoft.CSharp.Expressions
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
     }
 
+    [DebuggerTypeProxy(typeof(TupleBinaryCSharpExpressionProxy))]
+    partial class TupleBinaryCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class TupleBinaryCSharpExpressionProxy
+    {
+        private readonly TupleBinaryCSharpExpression _node;
+
+        public TupleBinaryCSharpExpressionProxy(TupleBinaryCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.LambdaExpression> EqualityChecks => _node.EqualityChecks;
+        public System.Boolean IsLifted => _node.IsLifted;
+        public System.Linq.Expressions.Expression Left => _node.Left;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Right => _node.Right;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(TupleConvertCSharpExpressionProxy))]
     partial class TupleConvertCSharpExpression
     {

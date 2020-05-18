@@ -309,7 +309,7 @@ namespace Microsoft.CSharp.Expressions
             var fromTypes = Helpers.GetTupleComponentTypes(sourceType).ToArray();
             var toTypes = Helpers.GetTupleComponentTypes(destinationType).ToArray();
 
-            ContractUtils.RequiresNotNullItems(conversions, nameof(conversions));
+            ContractUtils.RequiresNotNullItems(conversions, nameof(elementConversions));
 
             for (int i = 0; i < arityFrom; i++)
             {
