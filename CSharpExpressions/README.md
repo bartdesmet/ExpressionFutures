@@ -561,7 +561,7 @@ where `T` and `U` are tuple types. If `T` and `U` are the same, identity functio
 
 Nodes of this type reduce to a `TupleLiteralCSharpExpression` that constructs a value of the target tuple type, using conversions applied to elements extracted from the tuple operand.
 
-##### Deconstructing Aassignment
+##### Deconstructing Assignment
 
 TODO: (also in foreach)
 
