@@ -49,7 +49,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the binary operation is lifted.
         /// </summary>
-        public bool IsLifted => Left.Type.IsNullableType();
+        public bool IsLifted => Left.Type.IsNullableType() || Right.Type.IsNullableType();
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -68,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public TupleBinaryCSharpExpression Update(Expression left, Expression right, IEnumerable<LambdaExpression> equalityChecks)
         {
-            if (left == this.Left && right == this.Right && EqualityChecks == this.EqualityChecks)
+            if (left == this.Left && right == this.Right && equalityChecks == this.EqualityChecks)
             {
                 return this;
             }
@@ -110,12 +110,19 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                static (Expression hasValue, ParameterExpression valueTemp, Expression assignValue) GetNullableExpressions(Expression e, string valueTempName)
+                static (Expression hasValue, ParameterExpression valueTemp, Expression assignValue) GetNullableExpressions(ParameterExpression operandTemp, string valueTempName)
                 {
-                    var value = Expression.Property(e, "Value");
-                    var valueTemp = Expression.Parameter(value.Type, valueTempName);
+                    if (operandTemp.Type.IsNullableType())
+                    {
+                        var value = Expression.Property(operandTemp, "Value");
+                        var valueTemp = Expression.Parameter(value.Type, valueTempName);
 
-                    return (Expression.Property(e, "HasValue"), valueTemp, Expression.Assign(valueTemp, value));
+                        return (Expression.Property(operandTemp, "HasValue"), valueTemp, Expression.Assign(valueTemp, value));
+                    }
+                    else
+                    {
+                        return (Expression.Constant(true), operandTemp, Expression.Empty());
+                    }
                 }
 
                 var (leftHasValue, leftValueTemp, leftValueAssign) = GetNullableExpressions(leftTemp, "__leftVal");
