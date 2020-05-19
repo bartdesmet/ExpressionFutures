@@ -97,6 +97,7 @@
     <Compile Include="GotoTests.cs" />
     <Compile Include="HelpersTests.cs" />
     <Compile Include="AliasEliminatorTests.cs" />
+    <Compile Include="TupleBinaryTests.cs" />
     <Compile Include="TupleConvertTests.cs" />
     <Compile Include="TupleLiteralTests.cs" />
     <Compile Include="IndexerAccessTests.cs" />
