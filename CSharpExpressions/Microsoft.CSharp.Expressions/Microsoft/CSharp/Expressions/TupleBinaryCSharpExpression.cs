@@ -110,27 +110,36 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                static (Expression hasValue, ParameterExpression valueTemp, Expression assignValue) GetNullableExpressions(ParameterExpression operandTemp, string valueTempName)
+                var valueTemps = new List<ParameterExpression>();
+                var valueStmts = new List<Expression>();
+
+                (Expression hasValue, ParameterExpression valueTemp) GetNullableExpressions(ParameterExpression operandTemp, string valueTempName)
                 {
                     if (operandTemp.Type.IsNullableType())
                     {
                         var value = Expression.Property(operandTemp, "Value");
                         var valueTemp = Expression.Parameter(value.Type, valueTempName);
 
-                        return (Expression.Property(operandTemp, "HasValue"), valueTemp, Expression.Assign(valueTemp, value));
+                        valueTemps.Add(valueTemp);
+                        valueStmts.Add(Expression.Assign(valueTemp, value));
+
+                        return (Expression.Property(operandTemp, "HasValue"), valueTemp);
                     }
                     else
                     {
-                        return (Expression.Constant(true), operandTemp, Expression.Empty());
+                        return (Expression.Constant(true), operandTemp);
                     }
                 }
 
-                var (leftHasValue, leftValueTemp, leftValueAssign) = GetNullableExpressions(leftTemp, "__leftVal");
-                var (rightHasValue, rightValueTemp, rightValueAssign) = GetNullableExpressions(rightTemp, "__rightVal");
+                var (leftHasValue, leftValueTemp) = GetNullableExpressions(leftTemp, "__leftVal");
+                var (rightHasValue, rightValueTemp) = GetNullableExpressions(rightTemp, "__rightVal");
 
                 var nullNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleEqual);
                 var nullNonNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleNotEqual);
-                var nonNullNonNull = Expression.Block(new[] { leftValueTemp, rightValueTemp }, leftValueAssign, rightValueAssign, GetEvalExpr(leftValueTemp, rightValueTemp));
+
+                valueStmts.Add(GetEvalExpr(leftValueTemp, rightValueTemp));
+
+                var nonNullNonNull = Expression.Block(valueTemps, valueStmts);
 
                 res = Expression.Condition(Expression.Equal(leftHasValue, rightHasValue), Expression.Condition(leftHasValue, nonNullNonNull, nullNull), nullNonNull);
             }
