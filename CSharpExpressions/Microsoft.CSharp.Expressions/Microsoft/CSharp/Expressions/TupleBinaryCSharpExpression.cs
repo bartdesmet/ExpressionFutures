@@ -193,25 +193,20 @@ namespace Microsoft.CSharp.Expressions
 
                     var equalityCheck = equalityChecks[i];
 
+                    static bool IsBinaryEquality(BinaryExpression b) => b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual;
+                    static bool IsBinaryAppliedToParameters(BinaryExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
+                    static bool IsTupleBinaryEquality(TupleBinaryCSharpExpression b) => b.CSharpNodeType == CSharpExpressionType.TupleEqual || b.CSharpNodeType == CSharpExpressionType.TupleNotEqual;
+                    static bool IsTupleBinaryAppliedToParameters(TupleBinaryCSharpExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
+
                     var expr = equalityCheck.Body switch
                     {
                         ConstantExpression c => (Expression)c,
                         DefaultExpression _ => Expression.Constant(false),
-                        BinaryExpression { Left: var leftOp, Right: var rightOp } binary
-                            when (binary.NodeType == ExpressionType.Equal || binary.NodeType == ExpressionType.NotEqual)
-                                && leftOp == equalityCheck.Parameters[0]
-                                && rightOp == equalityCheck.Parameters[1]
+                        BinaryExpression binary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
                             => binary.Update(leftChild, null, rightChild),
-                        TupleBinaryCSharpExpression { Left: var leftOp, Right: var rightOp } binary
-                            when (binary.CSharpNodeType == CSharpExpressionType.TupleEqual || binary.CSharpNodeType == CSharpExpressionType.TupleNotEqual)
-                                && leftOp == equalityCheck.Parameters[0]
-                                && rightOp == equalityCheck.Parameters[1]
+                        TupleBinaryCSharpExpression binary when IsTupleBinaryEquality(binary) && IsTupleBinaryAppliedToParameters(binary, equalityCheck)
                             => binary.Update(leftChild, rightChild, binary.EqualityChecks), // CONSIDER: We could flatten the && or || across these.
-                        UnaryExpression { Operand: BinaryExpression { Left: var leftOp, Right: var rightOp } binary } unary
-                            when unary.NodeType == ExpressionType.Convert
-                                && (binary.NodeType == ExpressionType.Equal || binary.NodeType == ExpressionType.NotEqual)
-                                && leftOp == equalityCheck.Parameters[0]
-                                && rightOp == equalityCheck.Parameters[1]
+                        UnaryExpression { Operand: BinaryExpression binary } unary when unary.NodeType == ExpressionType.Convert && IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
                             => unary.Update(binary.Update(leftChild, null, rightChild)),
                         _ => Expression.Invoke(equalityCheck, leftChild, rightChild),
                     };
