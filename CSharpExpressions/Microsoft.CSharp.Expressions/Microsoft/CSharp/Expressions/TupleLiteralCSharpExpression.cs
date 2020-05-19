@@ -156,6 +156,8 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        // CONSIDER: params overload with just arguments, no names.
+
         /// <summary>
         /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
         /// </summary>
