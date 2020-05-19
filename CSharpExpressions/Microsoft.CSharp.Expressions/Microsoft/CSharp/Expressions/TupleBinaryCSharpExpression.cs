@@ -141,7 +141,36 @@ namespace Microsoft.CSharp.Expressions
 
                 var nonNullNonNull = Expression.Block(valueTemps, valueStmts);
 
-                res = Expression.Condition(Expression.Equal(leftHasValue, rightHasValue), Expression.Condition(leftHasValue, nonNullNonNull, nullNull), nullNonNull);
+                res = MakeCondition(MakeEqual(leftHasValue, rightHasValue), MakeCondition(leftHasValue, nonNullNonNull, nullNull), nullNonNull);
+
+                static bool IsConst(Expression e, bool value)
+                {
+                    return e is ConstantExpression { Value: var val } && val is bool b && b == value;
+                }
+
+                static Expression MakeEqual(Expression l, Expression r)
+                {
+                    if (IsConst(l, true))
+                    {
+                        return r;
+                    }
+                    else if (IsConst(r, true))
+                    {
+                        return l;
+                    }
+
+                    return Expression.Equal(l, r);
+                }
+
+                static Expression MakeCondition(Expression test, Expression ifTrue, Expression ifFalse)
+                {
+                    if (IsConst(ifTrue, true) && IsConst(ifFalse, false))
+                    {
+                        return test;
+                    }
+
+                    return Expression.Condition(test, ifTrue, ifFalse);
+                }
             }
 
             stmts.Add(res);
