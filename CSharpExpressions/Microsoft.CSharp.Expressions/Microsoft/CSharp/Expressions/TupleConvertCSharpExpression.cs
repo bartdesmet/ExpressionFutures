@@ -299,6 +299,8 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.TupleComponentCountMismatch(sourceType, destinationType);
             }
 
+            // CONSIDER: If no conversions are specified, generate default ones (using Convert or TupleConvert for elements)?
+
             var conversions = elementConversions.ToReadOnly();
 
             if (conversions.Count != arityFrom)
@@ -306,10 +308,10 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.InvalidElementConversionCount(arityFrom);
             }
 
+            ContractUtils.RequiresNotNullItems(conversions, nameof(elementConversions));
+
             var fromTypes = Helpers.GetTupleComponentTypes(sourceType).ToArray();
             var toTypes = Helpers.GetTupleComponentTypes(destinationType).ToArray();
-
-            ContractUtils.RequiresNotNullItems(conversions, nameof(elementConversions));
 
             for (int i = 0; i < arityFrom; i++)
             {

@@ -659,6 +659,14 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidElementConversionCount(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The number of equality check expressions does not match tuple arity '{0}'."
+        /// </summary>
+        internal static Exception InvalidEqualityCheckCount(object p0)
+        {
+            return new ArgumentException(Strings.InvalidEqualityCheckCount(p0));
+        }
+
     }
 
     /// <summary>
@@ -1398,6 +1406,14 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidElementConversionCount, p0);
         }
 
+        /// <summary>
+        /// A string like "The number of equality check expressions does not match tuple arity '{0}'."
+        /// </summary>
+        internal static string InvalidEqualityCheckCount(object p0)
+        {
+            return SR.Format(SR.InvalidEqualityCheckCount, p0);
+        }
+
     }
 }
 
@@ -1486,5 +1502,6 @@ namespace System
         public const string InvalidTupleArgumentNamesCount = "The number of argument names does not match the number of components of tuple type '{0}'.";
         public const string TupleComponentCountMismatch = "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'.";
         public const string InvalidElementConversionCount = "The number of element conversion expressions does not match tuple arity '{0}'.";
+        public const string InvalidEqualityCheckCount = "The number of equality check expressions does not match tuple arity '{0}'.";
     }
 }

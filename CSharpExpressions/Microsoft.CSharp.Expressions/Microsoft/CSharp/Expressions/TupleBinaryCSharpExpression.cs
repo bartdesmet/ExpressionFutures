@@ -251,12 +251,19 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.TupleComponentCountMismatch(leftType, rightType);
             }
 
+            // CONSIDER: If no equality checks are specified, generate default ones (using Equal/NotEqual or TupleEqual/TupleNotEqual for elements)?
+
             var checks = equalityChecks.ToReadOnly();
+
+            if (checks.Count != arityLeft)
+            {
+                throw Error.InvalidEqualityCheckCount(arityLeft);
+            }
+
+            ContractUtils.RequiresNotNullItems(checks, nameof(equalityChecks));
 
             var leftTypes = Helpers.GetTupleComponentTypes(leftType).ToArray();
             var rightTypes = Helpers.GetTupleComponentTypes(rightType).ToArray();
-
-            ContractUtils.RequiresNotNullItems(checks, nameof(equalityChecks));
 
             for (int i = 0; i < arityLeft; i++)
             {
