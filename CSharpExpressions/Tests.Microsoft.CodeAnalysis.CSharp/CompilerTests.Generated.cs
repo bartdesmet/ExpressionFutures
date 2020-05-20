@@ -9952,12 +9952,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 <Lambda Type=""System.Func`1[System.Index]"">
   <Parameters />
   <Body>
-    <New Type=""System.Index"" Constructor=""Void .ctor(Int32, Boolean)"">
-      <Arguments>
+    <CSharpFromEndIndex Type=""System.Index"" Method=""Void .ctor(Int32, Boolean)"">
+      <Operand>
         <Constant Type=""System.Int32"" Value=""1"" />
-        <Constant Type=""System.Boolean"" Value=""true"" />
-      </Arguments>
-    </New>
+      </Operand>
+    </CSharpFromEndIndex>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
@@ -9975,20 +9974,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 <Lambda Type=""System.Func`1[System.Range]"">
   <Parameters />
   <Body>
-    <New Type=""System.Range"" Constructor=""Void .ctor(System.Index, System.Index)"">
-      <Arguments>
+    <CSharpRange Type=""System.Range"" Method=""Void .ctor(System.Index, System.Index)"">
+      <Left>
         <Convert Type=""System.Index"" Method=""System.Index op_Implicit(Int32)"">
           <Operand>
             <Constant Type=""System.Int32"" Value=""1"" />
           </Operand>
         </Convert>
+      </Left>
+      <Right>
         <Convert Type=""System.Index"" Method=""System.Index op_Implicit(Int32)"">
           <Operand>
             <Constant Type=""System.Int32"" Value=""2"" />
           </Operand>
         </Convert>
-      </Arguments>
-    </New>
+      </Right>
+    </CSharpRange>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
