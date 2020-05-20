@@ -388,6 +388,84 @@ namespace Tests
         }
 
         [TestMethod]
+        public void TupleBinary_Reduce_Null_Optimize_RemoveLiftToNullConversion()
+        {
+            var tuples = new (int, string)?[]
+            {
+                (1, null),
+                (1, "bar"),
+                (1, "foo"),
+                (2, null),
+                (2, "bar"),
+                (2, "foo"),
+            };
+
+            var tupleType = tuples[0].GetType();
+            var nullableTupleType = typeof(Nullable<>).MakeGenericType(tupleType);
+
+            // Left null, right non-null
+            {
+                var left = Expression.Parameter(nullableTupleType, "left");
+                var right = Expression.Parameter(tupleType, "right");
+
+                var liftRight = Expression.Convert(right, nullableTupleType);
+
+                var bodyEq = CSharpExpression.TupleEqual(left, liftRight, (Expression<Func<int, int, bool>>)((l, r) => l == r), (Expression<Func<string, string, bool>>)((l, r) => l == r));
+                var bodyNe = CSharpExpression.TupleNotEqual(left, liftRight, (Expression<Func<int, int, bool>>)((l, r) => l != r), (Expression<Func<string, string, bool>>)((l, r) => l != r));
+
+                var lambda = Expression.Lambda<Func<(int, string)?, (int, string), bool>>(bodyEq, left, right);
+                var res = new V().Visit(lambda);
+
+                var eq = Expression.Lambda<Func<(int, string)?, (int, string), bool>>(bodyEq, left, right).Compile();
+                var ne = Expression.Lambda<Func<(int, string)?, (int, string), bool>>(bodyNe, left, right).Compile();
+
+                foreach (var l in tuples)
+                {
+                    foreach (var r in tuples)
+                    {
+                        Assert.AreEqual(l == r, eq(l, r.Value));
+                        Assert.AreEqual(l != r, ne(l, r.Value));
+                    }
+                }
+
+                foreach (var r in tuples)
+                {
+                    Assert.AreEqual(null == r, eq(null, r.Value));
+                    Assert.AreEqual(null != r, ne(null, r.Value));
+                }
+            }
+
+            // Left non-null, right null
+            {
+                var left = Expression.Parameter(tupleType, "left");
+                var right = Expression.Parameter(nullableTupleType, "right");
+
+                var liftLeft = Expression.Convert(left, nullableTupleType);
+
+                var bodyEq = CSharpExpression.TupleEqual(liftLeft, right, (Expression<Func<int, int, bool>>)((l, r) => l == r), (Expression<Func<string, string, bool>>)((l, r) => l == r));
+                var bodyNe = CSharpExpression.TupleNotEqual(liftLeft, right, (Expression<Func<int, int, bool>>)((l, r) => l != r), (Expression<Func<string, string, bool>>)((l, r) => l != r));
+
+                var eq = Expression.Lambda<Func<(int, string), (int, string)?, bool>>(bodyEq, left, right).Compile();
+                var ne = Expression.Lambda<Func<(int, string), (int, string)?, bool>>(bodyNe, left, right).Compile();
+
+                foreach (var l in tuples)
+                {
+                    foreach (var r in tuples)
+                    {
+                        Assert.AreEqual(l == r, eq(l.Value, r));
+                        Assert.AreEqual(l != r, ne(l.Value, r));
+                    }
+                }
+
+                foreach (var l in tuples)
+                {
+                    Assert.AreEqual(l == null, eq(l.Value, null));
+                    Assert.AreEqual(l != null, ne(l.Value, null));
+                }
+            }
+        }
+
+        [TestMethod]
         public void TupleBinary_Reduce_Nested()
         {
             var tuples = new[]
@@ -442,7 +520,7 @@ namespace Tests
         {
             var l = Expression.Parameter(typeof(int));
             var r = Expression.Parameter(typeof(int));
-            
+
             // Equal
 
             AssertCompile((log, append) =>
@@ -550,6 +628,9 @@ namespace Tests
             var res = WithLog<T>(createExpression).Compile()();
             Assert.AreEqual(expected, res);
         }
+
+        // TODO: tests for various optimizations
+        // TODO: tests for dynamic equality
     }
 
     /*
@@ -578,6 +659,8 @@ namespace Tests
         // Nested
         (Expression<Func<(int,(string,DateTime)),(int,(string,DateTime)),bool>>)((t1, t2) => t1 == t2)
         (Expression<Func<(int,(string,DateTime)),(int,(string,DateTime)),bool>>)((t1, t2) => t1 != t2)
+
+        // TODO: null literals
      * 
      */
 }

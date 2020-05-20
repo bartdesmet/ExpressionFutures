@@ -19,6 +19,11 @@ namespace Microsoft.CSharp.Expressions
 {
     static class Helpers
     {
+        public static bool IsConst(Expression e, bool value)
+        {
+            return e is ConstantExpression { Value: var val } && val is bool b && b == value;
+        }
+
         public static bool IsAlwaysNull(Expression e)
         {
             // NB: Could add support for no-op conversions.

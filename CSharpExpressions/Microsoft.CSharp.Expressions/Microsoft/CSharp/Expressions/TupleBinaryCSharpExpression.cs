@@ -91,24 +91,23 @@ namespace Microsoft.CSharp.Expressions
             //        possibly with implicit tuple conversions or nullable conversions applied.
             //
 
+            var left = RemoveNullableIfNeverNull(Left);
+            var right = RemoveNullableIfNeverNull(Right);
+
             var temps = new List<ParameterExpression>();
             var stmts = new List<Expression>();
 
-            var leftTemp = Expression.Parameter(Left.Type, "__left");
+            var leftTemp = Expression.Parameter(left.Type, "__left");
             temps.Add(leftTemp);
-            stmts.Add(Expression.Assign(leftTemp, Left));
+            stmts.Add(Expression.Assign(leftTemp, left));
 
-            var rightTemp = Expression.Parameter(Right.Type, "__right");
+            var rightTemp = Expression.Parameter(right.Type, "__right");
             temps.Add(rightTemp);
-            stmts.Add(Expression.Assign(rightTemp, Right));
+            stmts.Add(Expression.Assign(rightTemp, right));
 
             Expression res;
 
-            if (!IsLifted)
-            {
-                res = GetEvalExpr(leftTemp, rightTemp);
-            }
-            else
+            if (left.Type.IsNullableType() || right.Type.IsNullableType())
             {
                 var valueTemps = new List<ParameterExpression>();
                 var valueStmts = new List<Expression>();
@@ -143,18 +142,13 @@ namespace Microsoft.CSharp.Expressions
 
                 res = MakeCondition(MakeEqual(leftHasValue, rightHasValue), MakeCondition(leftHasValue, nonNullNonNull, nullNull), nullNonNull);
 
-                static bool IsConst(Expression e, bool value)
-                {
-                    return e is ConstantExpression { Value: var val } && val is bool b && b == value;
-                }
-
                 static Expression MakeEqual(Expression l, Expression r)
                 {
-                    if (IsConst(l, true))
+                    if (Helpers.IsConst(l, true))
                     {
                         return r;
                     }
-                    else if (IsConst(r, true))
+                    else if (Helpers.IsConst(r, true))
                     {
                         return l;
                     }
@@ -164,7 +158,15 @@ namespace Microsoft.CSharp.Expressions
 
                 static Expression MakeCondition(Expression test, Expression ifTrue, Expression ifFalse)
                 {
-                    if (IsConst(ifTrue, true) && IsConst(ifFalse, false))
+                    if (Helpers.IsConst(test, true))
+                    {
+                        return ifTrue;
+                    }
+                    else if (Helpers.IsConst(test, false))
+                    {
+                        return ifFalse;
+                    }
+                    else if (Helpers.IsConst(ifTrue, true) && Helpers.IsConst(ifFalse, false))
                     {
                         return test;
                     }
@@ -172,10 +174,38 @@ namespace Microsoft.CSharp.Expressions
                     return Expression.Condition(test, ifTrue, ifFalse);
                 }
             }
+            else
+            {
+                res = GetEvalExpr(leftTemp, rightTemp);
+            }
 
             stmts.Add(res);
 
             return Expression.Block(temps, stmts);
+
+            static Expression RemoveNullableIfNeverNull(Expression e)
+            {
+                //
+                // NB: This is a common case emitted by the C# compiler, e.g.
+                //
+                //       (T l, T? r) => t == r
+                //       (T? l, T r) => t == r
+                //
+                //      where T is a tuple type, resulting in
+                //
+                //       (T l, T? r) => (T?)l == r
+                //       (T? l, T r) => l == (T?)r
+                //
+                //      We can optimize this case by unlifting the operand, which removes a HasValue check and the use of a temporary for Value.
+                //
+
+                if (e.Type.IsNullableType() && e is UnaryExpression { NodeType: ExpressionType.Convert, Operand: var o, Method: null } && o.Type == e.Type.GetNonNullableType())
+                {
+                    return o;
+                }
+
+                return e;
+            }
 
             Expression GetEvalExpr(Expression lhs, Expression rhs)
             {
@@ -200,14 +230,14 @@ namespace Microsoft.CSharp.Expressions
 
                     var expr = equalityCheck.Body switch
                     {
-                        ConstantExpression c => (Expression)c,
+                        ConstantExpression c => (Expression)c, // NB: This is commonly emitted by the C# compiler for null == null and null != null checks that occur in tuple literals.
                         DefaultExpression _ => Expression.Constant(false),
                         BinaryExpression binary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
                             => binary.Update(leftChild, null, rightChild),
                         TupleBinaryCSharpExpression binary when IsTupleBinaryEquality(binary) && IsTupleBinaryAppliedToParameters(binary, equalityCheck)
                             => binary.Update(leftChild, rightChild, binary.EqualityChecks), // CONSIDER: We could flatten the && or || across these.
-                        UnaryExpression { Operand: BinaryExpression binary } unary when unary.NodeType == ExpressionType.Convert && IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
-                            => unary.Update(binary.Update(leftChild, null, rightChild)),
+                        UnaryExpression { Operand: BinaryExpression binary, NodeType: ExpressionType.Convert } unary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
+                            => unary.Update(binary.Update(leftChild, conversion: null, rightChild)),
                         _ => Expression.Invoke(equalityCheck, leftChild, rightChild),
                     };
 
