@@ -1,0 +1,43 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp80_NullCoalescingAssignment";
+
+var exprs = new[]
+{
+    // Null-coalescing assignment
+    "(Expression<Func<string, string>>)(s => s ??= \"foo\")",
+    "(Expression<Func<int?, int?, int?>>)((i, j) => i ??= j)",
+    "(Expression<Func<int?, int>>)(i => i ??= 42)",
+
+    // Null-coalescing assignment with dynamic
+    "(Expression<Func<string, dynamic, string>>)((s, d) => s ??= d.bar)",
+    "(Expression<Func<string[], dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.bar)",
+    "(Expression<Func<List<string>, dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.bar)",
+    "(Expression<Func<StrongBox<string>, dynamic, string>>)((s, d) => s.Value ??= d.bar)",
+    "(Expression<Func<string, dynamic, string>>)((s, d) => s ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<string[], dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<List<string>, dynamic, string>>)((ss, d) => ss[int.Parse(\"0\")] ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<StrongBox<string>, dynamic, string>>)((s, d) => s.Value ??= d.foo[int.Parse(\"1\")])",
+    "(Expression<Func<dynamic, string, string>>)((d, s) => d.bar ??= s)",
+    "(Expression<Func<dynamic, int, int>>)((d, x) => d.bar ??= x)",
+    "(Expression<Func<dynamic, string, string>>)((d, s) => d[int.Parse(\"0\")] ??= s)",
+    "(Expression<Func<dynamic, int, int>>)((d, x) => d[int.Parse(\"0\")] ??= x)",
+    "(Expression<Func<dynamic, dynamic>>)(d => d.bar ??= d.foo)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((l, r) => l ??= r.foo)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((l, r) => l ??= r[int.Parse(\"0\")])",
+};
+#>
+<#@ include file="CompilerTests.t4" #>

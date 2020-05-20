@@ -68,18 +68,84 @@
     <Compile Include="AssertEx.cs" />
     <Compile Include="CompilerTests.CrossCheck.cs" />
     <Compile Include="CompilerTests.cs" />
-    <Compile Include="CompilerTests.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CompilerTests.Generated.tt</DependentUpon>
-    </Compile>
     <Compile Include="CompilerTests.Reducing.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CompilerTests.Reducing.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="CompilerTests.Reducing.Verify.cs" />
-    <Compile Include="CompilerTests.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.cs">
+      <DependentUpon>CSharp30.MultiDimensionalArrayInitializers.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Assignments.Generated.cs">
+      <DependentUpon>CSharp30.Assignments.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Assignments.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp50.AsyncAwait.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.Discard.Generated.cs">
+      <DependentUpon>CSharp70.Discard.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp70.ThrowExpression.Generated.cs">
+      <DependentUpon>CSharp70.ThrowExpression.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp70.Discard.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.NullCoalescingAssignment.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.cs">
+      <DependentUpon>CSharp80.NullCoalescingAssignment.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp80.IndexRange.Generated.cs">
+      <DependentUpon>CSharp80.IndexRange.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Generated.cs">
+      <DependentUpon>CSharp30.Statements.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp40.Dynamic.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp60.NullConditionalExpressions.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp60.NullConditionalExpressions.Generated.cs">
+      <DependentUpon>CSharp60.NullConditionalExpressions.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp50.AsyncAwait.Generated.cs">
+      <DependentUpon>CSharp50.AsyncAwait.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp40.NamedAndOptionalParameters.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.ThrowExpression.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.IndexRange.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Original.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp40.Dynamic.Generated.cs">
+      <DependentUpon>CSharp40.Dynamic.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp40.NamedAndOptionalParameters.Generated.cs">
+      <DependentUpon>CSharp40.NamedAndOptionalParameters.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Original.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Original.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Include="LogAndResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -98,13 +164,57 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CompilerTests.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CompilerTests.Generated.cs</LastGenOutput>
-    </Content>
     <Content Include="CompilerTests.Reducing.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CompilerTests.Reducing.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.MultiDimensionalArrayInitializers.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Assignments.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp70.Discard.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.Discard.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp70.ThrowExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.ThrowExpression.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.NullCoalescingAssignment.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp80.IndexRange.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.IndexRange.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp40.Dynamic.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp40.Dynamic.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp60.NullConditionalExpressions.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp60.NullConditionalExpressions.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp50.AsyncAwait.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp50.AsyncAwait.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp40.NamedAndOptionalParameters.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp40.NamedAndOptionalParameters.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Original.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Original.Generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="CompilerTests\CompilerTests.t4" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

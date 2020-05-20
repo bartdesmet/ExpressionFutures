@@ -1,0 +1,120 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp30_Statements";
+
+var exprs = new[]
+{
+    // Block
+    "(Expression<Action>)(() => { })",
+    "(Expression<Action>)(() => { int x; x = 5; })",
+    "(Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })",
+    
+    // Empty
+    "(Expression<Action>)(() => { ; })",
+    "(Expression<Action>)(() => { ;; })",
+    
+    // Return
+    "(Expression<Action>)(() => { return; })",
+    "(Expression<Func<int>>)(() => { int x = 42; return x; })",
+    "(Expression<Func<int>>)(() => { return 42; })",
+    
+    // Label/Goto
+    "(Expression<Action>)(() => { goto A; A: Console.Write('A'); })",
+    "(Expression<Action>)(() => { A: Console.Write('A'); goto A; })",
+
+    // If
+    "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); })",
+    "(Expression<Action<int>>)(x => { if (x > 0) Console.Write('T'); else Console.Write('F'); })",
+    "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } })",
+    "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else { Console.Write('F'); } })",
+    "(Expression<Action<int>>)(x => { if (x > 0) { Console.Write('T'); } else if (x < 5) { Console.Write('E'); } else { Console.Write('F'); } })",
+    "(Expression<Action<int>>)(x => { if (x > 0) int.Parse(\"42\"); })",
+    "(Expression<Action<int>>)(x => { if (x > 0) int.Parse(\"42\"); else long.Parse(\"42\"); })",
+    
+    // While
+    "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
+    "(Expression<Action>)(() => { while (true) { Console.Write('.'); } })",
+    "(Expression<Action>)(() => { while (true) { break; } })",
+    "(Expression<Action>)(() => { while (true) { continue; } })",
+    "(Expression<Action>)(() => { while (true) { return; } })",
+    "(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
+    "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })",
+    "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })",
+    
+    // Do
+    "(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
+    "(Expression<Action>)(() => { int i = 0; do { if (i == 5) continue; if (i == 8) break; i++; } while (i < 10); })",
+    
+    // For
+    "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { Console.Write(i); } })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })",
+    "(Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })",
+    // TODO: for with initializer statement
+    
+    // ForEach
+    "(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })",
+    "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })",
+    "(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })",
+    "(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })",
+    "(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })",
+    "(Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })",
+    
+    // Using
+    "(Expression<Action<IDisposable>>)(d => { using (d) Console.Write('.'); })",
+    "(Expression<Action<IDisposable>>)(d => { using (d) { Console.Write('.'); } })",
+    "(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })",
+    "(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })",
+    "(Expression<Action>)(() => { using (var fs = File.OpenRead(\"foo.txt\")) { } })",
+    "(Expression<Action>)(() => { using (FileStream fs1 = File.OpenRead(\"foo.txt\"), fs2 = File.OpenRead(\"bar.txt\")) { } })",
+
+    // Lock
+    "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
+    "(Expression<Action>)(() => { lock (new object()) { Console.Write('.'); } })",
+    
+    // Try
+    "(Expression<Action>)(() => { try { Console.Write('T'); } finally { Console.Write('F'); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch { Console.Write('C'); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception) { Console.Write('C'); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
+    
+    // Throw
+    "(Expression<Action>)(() => { throw new Exception(); })",
+    "(Expression<Action>)(() => { try { } catch { throw; } })",
+    "(Expression<Action>)(() => { try { } catch (Exception ex) { throw ex; } })",
+
+    // Switch
+    "(Expression<Action<int>>)(x => { switch (x) {} })",
+    "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { default: break; } })",
+    "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { } })",
+    "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { default: break; } })",
+};
+#>
+<#@ include file="CompilerTests.t4" #>

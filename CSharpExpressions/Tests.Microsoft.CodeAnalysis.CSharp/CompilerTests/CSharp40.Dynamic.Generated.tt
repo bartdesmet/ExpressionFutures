@@ -1,0 +1,129 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp40_Dynamic";
+
+var exprs = new[]
+{
+    // Dynamic unary
+    "(Expression<Func<dynamic, dynamic>>)(x => +x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => -x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => !x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => ~x)",
+    "(Expression<Func<dynamic, dynamic>>)(x => checked(-x))",
+
+    // Dynamic binary
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a + b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a - b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a * b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a / b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a % b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a & b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a | b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a ^ b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a < b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a <= b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a > b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >= b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a == b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a != b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a << b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a >> b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a && b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => a || b)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((a, b) => checked(a + b))",
+
+    // Dynamic convert
+    "(Expression<Func<dynamic, int>>)(x => (int)x)",
+    "(Expression<Func<dynamic, string>>)(x => (string)x)",
+    "(Expression<Func<dynamic, object>>)(x => (object)x)", // NB: gets erased
+
+    // Dynamic get member
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo)",
+
+    // Dynamic invoke member
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo())",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(1, 2))",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo(x: 1, y: 2))",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int>())",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo<int, bool>())",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(y: y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(ref y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: ref y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(out y))",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo(a: out y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(y: y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(ref y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: ref y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(out y))",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo(a: out y))",
+    "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s.Substring(i))",
+    "(Expression<Func<dynamic, int>>)(x => int.Parse(x))",
+    // TODO: tests for discard result behavior
+
+    // Dynamic invoke
+    "(Expression<Func<dynamic, dynamic>>)(f => f())",
+    "(Expression<Func<dynamic, dynamic>>)(f => f(1, 2))",
+    "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
+    "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: d, b: x))",
+    "(Expression<Func<dynamic, dynamic, int, dynamic>>)((f, d, x) => f(a: ref d, b: out x))",
+    "(Expression<Func<Func<int, int, int>, dynamic, int, dynamic>>)((f, d, x) => f(d, x))",
+
+    // Dynamic get index
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[1])",
+    "(Expression<Func<dynamic, dynamic>>)(x => x[1])",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo[a: 1])",
+    "(Expression<Func<dynamic, dynamic>>)(x => x[a: 1])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[y])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[y])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x.Foo[a: y])",
+    "(Expression<Func<dynamic, int, dynamic>>)((x, y) => x[a: y])",
+    "(Expression<Func<dynamic, int, dynamic, dynamic>>)((x, y, z) => x[a: ref y, b: out z])",
+    "(Expression<Func<string, dynamic, dynamic>>)((s, i) => s[i])",
+
+    // Dynamic invoke constructor
+    "(Expression<Func<dynamic, TimeSpan>>)(x => new TimeSpan(x))",
+    "(Expression<Func<dynamic, int, dynamic, TimeSpan>>)((x, y, z) => new TimeSpan(x, y, z))",
+    "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(x))",
+    "(Expression<Func<dynamic, List<int>>>)(x => new List<int>(capacity: x))",
+    // TODO: ref/out
+
+    // Dynamic set index
+    "(Expression<Action<dynamic>>)(x => { x[1] = 42; })",
+    "(Expression<Action<dynamic>>)(x => { x.Foo[1] = 42; })",
+    "(Expression<Action<List<int>, dynamic>>)((xs, x) => { xs[0] = x; })",
+
+    // Dynamic set member
+    "(Expression<Action<dynamic>>)(x => { x.Foo = 42; })",
+    "(Expression<Action<StrongBox<int>, dynamic>>)((b, x) => { b.Value = x; })",
+
+    // Dynamic unary assign
+    "(Expression<Func<dynamic, dynamic>>)(x => x++)",
+    "(Expression<Func<dynamic, dynamic>>)(x => x.Foo++)",
+    "(Expression<Func<dynamic, dynamic>>)(x => x[0]++)",
+    "(Expression<Func<dynamic, dynamic>>)(x => checked(--x))",
+    // TODO: exhaustive set of cases
+
+    // Dynamic binary assign
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x += y)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x.Foo += y)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => x[0] += y)",
+    "(Expression<Func<dynamic, dynamic, dynamic>>)((x, y) => checked(x -= y))",
+    // TODO: exhaustive set of cases
+};
+#>
+<#@ include file="CompilerTests.t4" #>
