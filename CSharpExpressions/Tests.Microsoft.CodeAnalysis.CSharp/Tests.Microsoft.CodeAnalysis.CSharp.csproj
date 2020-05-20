@@ -66,7 +66,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AssertEx.cs" />
-    <Compile Include="CompilerTests.CrossCheck.cs" />
     <Compile Include="CompilerTests.cs" />
     <Compile Include="CompilerTests.Reducing.Generated.cs">
       <AutoGen>True</AutoGen>
@@ -158,6 +157,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CSharp30.Original.Generated.tt</DependentUpon>
     </Compile>
+    <Compile Include="CrossCheckTests\CSharp30.MultiDimensionalArrayInitializers.cs" />
+    <Compile Include="CrossCheckTests\CSharp60.NullConditionalExpressions.cs" />
+    <Compile Include="CrossCheckTests\CSharp50.AsyncAwait.cs" />
+    <Compile Include="CrossCheckTests\CSharp40.Dynamic.cs" />
+    <Compile Include="CrossCheckTests\CSharp40.NamedAndOptionalParameters.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Assignments.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Original.cs" />
     <Compile Include="LogAndResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -244,6 +251,7 @@
     <None Include="App.config" />
     <None Include="CompilerTests\CompilerTests.t4" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
