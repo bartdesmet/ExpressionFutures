@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp30_Original
+    [TestClass]
+    public partial class CompilerTests_CSharp30_Original
     {
         [TestMethod]
         public void CompilerTest_9D30_AA02()

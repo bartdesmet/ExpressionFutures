@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp70_ThrowExpression
+    [TestClass]
+    public partial class CompilerTests_CSharp70_ThrowExpression
     {
         [TestMethod]
         public void CompilerTest_8939_4396()

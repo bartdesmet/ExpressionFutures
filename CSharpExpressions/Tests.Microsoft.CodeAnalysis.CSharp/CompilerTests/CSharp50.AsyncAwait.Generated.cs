@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp50_AsyncAwait
+    [TestClass]
+    public partial class CompilerTests_CSharp50_AsyncAwait
     {
         [TestMethod]
         public void CompilerTest_0FFA_9FD5()

@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp80_IndexRange
+    [TestClass]
+    public partial class CompilerTests_CSharp80_IndexRange
     {
         [TestMethod]
         public void CompilerTest_EDDE_8041()

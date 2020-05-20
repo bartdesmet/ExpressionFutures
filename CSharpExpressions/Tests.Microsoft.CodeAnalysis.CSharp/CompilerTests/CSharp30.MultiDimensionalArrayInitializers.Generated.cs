@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp30_MultiDimensionalArrayInitializers
+    [TestClass]
+    public partial class CompilerTests_CSharp30_MultiDimensionalArrayInitializers
     {
         [TestMethod]
         public void CompilerTest_F51F_71B6()

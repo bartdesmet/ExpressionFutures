@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp80_NullCoalescingAssignment
+    [TestClass]
+    public partial class CompilerTests_CSharp80_NullCoalescingAssignment
     {
         [TestMethod]
         public void CompilerTest_A465_3AAF()

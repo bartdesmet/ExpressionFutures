@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp40_NamedAndOptionalParameters
+    [TestClass]
+    public partial class CompilerTests_CSharp40_NamedAndOptionalParameters
     {
         [TestMethod]
         public void CompilerTest_E9F4_7C15()

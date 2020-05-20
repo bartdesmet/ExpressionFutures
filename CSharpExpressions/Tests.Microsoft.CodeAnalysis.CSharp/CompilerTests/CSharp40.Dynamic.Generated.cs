@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp40_Dynamic
+    [TestClass]
+    public partial class CompilerTests_CSharp40_Dynamic
     {
         [TestMethod]
         public void CompilerTest_B473_5F62()

@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp60_NullConditionalExpressions
+    [TestClass]
+    public partial class CompilerTests_CSharp60_NullConditionalExpressions
     {
         [TestMethod]
         public void CompilerTest_B340_BC70()
