@@ -100,7 +100,7 @@ namespace Microsoft.CSharp.Expressions
             var args = new List<object>
             {
                 new XElement(nameof(node.Array), Visit(node.Array)),
-                new XElement(nameof(node.Indexes), Visit(node.Indexes))
+                Visit(nameof(node.Indexes), node.Indexes)
             };
 
             return Push(node, args);
