@@ -18,11 +18,41 @@ var name = "CSharp80_IndexRange";
 var exprs = new[]
 {
     // Index
-    "(Expression<Func<Index>>)(() => 1)",
+    "(Expression<Func<Index>>)(() =>  1)",
     "(Expression<Func<Index>>)(() => ^1)",
+    
+    "(Expression<Func<int , Index>>) (i =>  i)",
+    "(Expression<Func<int,  Index>>) (i => ^i)",
+    "(Expression<Func<int?, Index?>>)(i =>  i)",
+    "(Expression<Func<int?, Index?>>)(i => ^i)",
 
     // Range
-    "(Expression<Func<Range>>)(() => 1..2)",
+    "(Expression<Func<Range>>)(() =>   ..  )",
+    "(Expression<Func<Range>>)(() =>  1..  )",
+    "(Expression<Func<Range>>)(() => ^1..  )",
+    "(Expression<Func<Range>>)(() =>   .. 2)",
+    "(Expression<Func<Range>>)(() =>   ..^2)",
+    "(Expression<Func<Range>>)(() =>  1.. 2)",
+    "(Expression<Func<Range>>)(() => ^1.. 2)",
+    "(Expression<Func<Range>>)(() =>  1..^2)",
+    "(Expression<Func<Range>>)(() => ^1..^2)",
+    
+    "(Expression<Func<Index, Index, Range>>)((l, r) => l..)",
+    "(Expression<Func<Index, Index, Range>>)((l, r) =>  ..r)",
+    "(Expression<Func<Index, Index, Range>>)((l, r) => l..r)",
+
+    "(Expression<Func<Index?, Index?, Range?>>)((l, r) => l..)",
+    "(Expression<Func<Index?, Index?, Range?>>)((l, r) =>  ..r)",
+    "(Expression<Func<Index?, Index?, Range?>>)((l, r) => l..r)",
+
+    // Indexing
+    "(Expression<Func<int[], int>>)    (xs => xs[^1])",
+    "(Expression<Func<List<int>, int>>)(xs => xs[^1])",
+    "(Expression<Func<string, char>>)  ( s =>  s[^1])",
+
+    // Slicing
+    "(Expression<Func<int[], int[]>>)  (xs => xs[1..2])",
+    "(Expression<Func<string, string>>)( s =>  s[1..2])",
 };
 #>
 <#@ include file="CompilerTests.t4" #>
