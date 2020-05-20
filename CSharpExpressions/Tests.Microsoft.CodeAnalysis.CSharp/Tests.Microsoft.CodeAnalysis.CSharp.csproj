@@ -87,6 +87,18 @@
     </Compile>
     <Compile Include="CompilerTests\CSharp30.Assignments.Verify.cs" />
     <Compile Include="CompilerTests\CSharp50.AsyncAwait.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp73.TupleEquality.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp73.TupleEquality.Generated.cs">
+      <DependentUpon>CSharp73.TupleEquality.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp70.Tuples.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.Tuples.Generated.cs">
+      <DependentUpon>CSharp70.Tuples.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="CompilerTests\CSharp70.Discard.Generated.cs">
       <DependentUpon>CSharp70.Discard.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -175,6 +187,14 @@
     <Content Include="CompilerTests\CSharp30.Assignments.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp73.TupleEquality.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp70.Tuples.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.Tuples.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp70.Discard.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
