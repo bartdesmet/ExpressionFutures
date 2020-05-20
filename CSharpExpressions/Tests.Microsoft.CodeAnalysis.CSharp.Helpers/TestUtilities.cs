@@ -418,6 +418,7 @@ public static class {typeName}
                 // BCL assemblies
                 .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
 
                 // Our custom assembly
                 .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) })
