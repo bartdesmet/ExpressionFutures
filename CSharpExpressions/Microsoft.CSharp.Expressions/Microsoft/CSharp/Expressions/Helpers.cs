@@ -49,6 +49,27 @@ namespace Microsoft.CSharp.Expressions
             };
         }
 
+        public static Expression MakeNullableHasValue(Expression e)
+        {
+            Debug.Assert(e.Type.IsNullableType());
+
+            return Expression.Property(e, "HasValue");
+        }
+
+        public static Expression MakeNullableGetValueOrDefault(Expression e)
+        {
+            Debug.Assert(e.Type.IsNullableType());
+
+            return Expression.Call(e, "GetValueOrDefault", typeArguments: null);
+        }
+
+        public static Expression MakeNullableGetValue(Expression e)
+        {
+            Debug.Assert(e.Type.IsNullableType());
+
+            return Expression.Property(e, "Value");
+        }
+
         public static bool CheckArgumentsInOrder(ReadOnlyCollection<ParameterAssignment> arguments)
         {
             var inOrder = true;

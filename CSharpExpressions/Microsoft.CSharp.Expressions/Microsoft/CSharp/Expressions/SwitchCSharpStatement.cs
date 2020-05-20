@@ -325,8 +325,8 @@ namespace Microsoft.CSharp.Expressions
                     // We found a case with only a 'null' test value; we can lower to a null-check followed by a non-null switch,
                     // and move the 'null' case to an else branch.
 
-                    var hasValue = Expression.Property(valueLocal, "HasValue");
-                    var value = Expression.Property(valueLocal, "Value");
+                    var hasValue = Helpers.MakeNullableHasValue(valueLocal);
+                    var value = Helpers.MakeNullableGetValueOrDefault(valueLocal);
 
                     var lowered = LowerSwitchStatement(analysis, governingTypeNonNull, hoistNull: true);
 
@@ -348,8 +348,8 @@ namespace Microsoft.CSharp.Expressions
             {
                 // We have no 'null' test value whatsoever; we can lower to a null-check followed by a non-null switch.
 
-                var hasValue = Expression.Property(valueLocal, "HasValue");
-                var value = Expression.Property(valueLocal, "Value");
+                var hasValue = Helpers.MakeNullableHasValue(valueLocal);
+                var value = Helpers.MakeNullableGetValueOrDefault(valueLocal);
 
                 var lowered = LowerSwitchStatement(analysis, governingTypeNonNull, hoistNull: false);
 

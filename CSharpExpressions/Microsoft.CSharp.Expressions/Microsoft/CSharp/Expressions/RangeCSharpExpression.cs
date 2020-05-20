@@ -134,7 +134,7 @@ namespace Microsoft.CSharp.Expressions
 
                 stmts.Add(Expression.Assign(temp, operand));
 
-                var hasValue = Expression.Property(temp, "HasValue");
+                var hasValue = Helpers.MakeNullableHasValue(temp);
 
                 if (notNullCheck == null)
                 {
@@ -145,7 +145,7 @@ namespace Microsoft.CSharp.Expressions
                     notNullCheck = Expression.AndAlso(notNullCheck, hasValue);
                 }
 
-                return Expression.Property(temp, "Value");
+                return Helpers.MakeNullableGetValueOrDefault(temp);
             }
         }
 

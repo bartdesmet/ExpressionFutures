@@ -85,9 +85,11 @@ namespace Microsoft.CSharp.Expressions
                 
                 if (Helpers.IsNeverNull(Operand))
                 {
+                    // CONSIDER: Peek into Operand and try to extract non-null value.
+
                     return
                         Expression.Convert(
-                            MakeFromEnd(Expression.Property(Operand, "Value")),
+                            MakeFromEnd(Helpers.MakeNullableGetValueOrDefault(Operand)),
                             Type
                         );
                 }
@@ -115,9 +117,9 @@ namespace Microsoft.CSharp.Expressions
 
             Expression MakeLiftedFromEnd(ParameterExpression operand) =>
                 Expression.Condition(
-                    Expression.Property(operand, "HasValue"),
+                    Helpers.MakeNullableHasValue(operand),
                     Expression.Convert(
-                        MakeFromEnd(Expression.Property(operand, "Value")),
+                        MakeFromEnd(Helpers.MakeNullableGetValueOrDefault(operand)),
                         Type
                     ),
                     Expression.Default(Type)

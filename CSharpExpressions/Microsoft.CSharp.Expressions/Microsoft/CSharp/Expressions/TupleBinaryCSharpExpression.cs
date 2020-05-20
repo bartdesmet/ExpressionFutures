@@ -116,13 +116,13 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (operandTemp.Type.IsNullableType())
                     {
-                        var value = Expression.Property(operandTemp, "Value");
+                        var value = Helpers.MakeNullableGetValueOrDefault(operandTemp);
                         var valueTemp = Expression.Parameter(value.Type, valueTempName);
 
                         valueTemps.Add(valueTemp);
                         valueStmts.Add(Expression.Assign(valueTemp, value));
 
-                        return (Expression.Property(operandTemp, "HasValue"), valueTemp);
+                        return (Helpers.MakeNullableHasValue(operandTemp), valueTemp);
                     }
                     else
                     {

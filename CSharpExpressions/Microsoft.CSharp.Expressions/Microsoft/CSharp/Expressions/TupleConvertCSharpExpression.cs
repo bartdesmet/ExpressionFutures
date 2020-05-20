@@ -113,7 +113,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (operand.Type.IsNullableType())
             {
-                var nonNullOperand = Expression.Property(operand, "Value");
+                var nonNullOperand = Helpers.MakeNullableGetValue(operand); // NB: Use of Nullable<T>.Value to ensure proper exception is thrown if null.
                 var nonNullOperandVariable = Expression.Parameter(nonNullOperand.Type, "__nonNull");
 
                 var args = GetConversions(nonNullOperandVariable);
@@ -136,7 +136,7 @@ namespace Microsoft.CSharp.Expressions
                     // }
                     //
 
-                    var hasValueTest = Expression.Property(operand, "HasValue");
+                    var hasValueTest = Helpers.MakeNullableHasValue(operand);
 
                     var nullValue = Expression.Default(Type);
 

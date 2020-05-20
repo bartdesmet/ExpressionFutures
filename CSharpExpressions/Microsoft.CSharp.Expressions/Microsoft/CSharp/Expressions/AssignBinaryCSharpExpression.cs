@@ -365,11 +365,11 @@ namespace Microsoft.CSharp.Expressions
                             lhsVal = lhsValVar;
                         }
 
-                        var assignTmp = Expression.Assign(tmp, Expression.Call(lhsVal, "GetValueOrDefault", null));
+                        var assignTmp = Expression.Assign(tmp, Helpers.MakeNullableGetValueOrDefault(lhsVal));
                         stmts.Add(assignTmp);
 
                         var assignLhs = Expression.Block(Expression.Assign(tmp, Right), Expression.Assign(lhs, Expression.Convert(tmp, lhs.Type)), tmp);
-                        var conditional = Expression.Condition(Expression.Property(lhsVal, "HasValue"), tmp, assignLhs);
+                        var conditional = Expression.Condition(Helpers.MakeNullableHasValue(lhsVal), tmp, assignLhs);
                         stmts.Add(conditional);
 
                         return Expression.Block(temps, stmts);

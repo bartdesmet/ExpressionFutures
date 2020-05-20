@@ -149,8 +149,8 @@ namespace Microsoft.CSharp.Expressions
 
             if (receiverType.IsNullableType())
             {
-                nonNullCheck = Expression.Property(receiver, "HasValue");
-                nonNull = Expression.Property(receiver, "Value");
+                nonNullCheck = Helpers.MakeNullableHasValue(receiver);
+                nonNull = Helpers.MakeNullableGetValueOrDefault(receiver);
             }
             else
             {

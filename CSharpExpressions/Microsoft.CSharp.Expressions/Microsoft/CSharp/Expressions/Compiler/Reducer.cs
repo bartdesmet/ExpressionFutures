@@ -159,8 +159,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var left = Expression.Parameter(node.Left.Type);
             var right = Expression.Parameter(node.Right.Type);
 
-            var leftValue = Expression.Call(left, "GetValueOrDefault", null);
-            var rightValue = Expression.Call(right, "GetValueOrDefault", null);
+            var leftValue = Helpers.MakeNullableGetValueOrDefault(left);
+            var rightValue = Helpers.MakeNullableGetValueOrDefault(right);
 
             Expression test;
             Expression bitwise;
@@ -180,7 +180,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 new[] { left },
                 Expression.Assign(left, node.Left),
                 Expression.Condition(
-                    Expression.Property(left, "HasValue"),
+                    Helpers.MakeNullableHasValue(left),
                     Expression.Condition(
                         test,
                         left,
@@ -188,7 +188,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                             new[] { right },
                             Expression.Assign(right, node.Right),
                             Expression.Condition(
-                                Expression.Property(right, "HasValue"),
+                                Helpers.MakeNullableHasValue(right),
                                 Expression.Convert(bitwise, node.Type),
                                 Expression.Constant(null, node.Type)
                             )
@@ -231,7 +231,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             var left = Expression.Parameter(node.Left.Type);
 
-            var ifNull = (Expression)Expression.Call(left, "GetValueOrDefault", null);
+            var ifNull = Helpers.MakeNullableGetValueOrDefault(left);
 
             if (node.Conversion != null)
             {
@@ -245,7 +245,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 new[] { left },
                 Expression.Assign(left, node.Left),
                 Expression.Condition(
-                    Expression.Property(left, "HasValue"),
+                    Helpers.MakeNullableHasValue(left),
                     Convert(ifNull, node.Type),
                     Convert(node.Right, node.Type)
                 )

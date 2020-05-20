@@ -95,7 +95,7 @@ namespace Microsoft.CSharp.Expressions
                 if (resourceType.IsNullableType())
                 {
                     variable = Variable ?? Expression.Parameter(resourceType, "__resource");
-                    variableValue = Expression.Property(variable, "Value");
+                    variableValue = Helpers.MakeNullableGetValueOrDefault(variable);
                     checkNull = true;
                 }
                 else
