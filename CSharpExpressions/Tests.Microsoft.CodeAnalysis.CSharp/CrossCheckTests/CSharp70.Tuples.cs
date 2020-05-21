@@ -61,5 +61,19 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             var f = Compile<Func<(int, int, int, int, int, int, int, int, int, int)>>("() => (Return(0), Return(1), Return(2), Return(3), Return(4), Return(5), Return(6), Return(7), Return(8), Return(9))");
             f();
         }
+
+        [TestMethod]
+        public void CrossCheck_TupleConvert()
+        {
+            var f = Compile<Func<(int, DateTime), (long, DateTimeOffset)>>("t => t");
+            f((1, DateTime.Now));
+        }
+
+        [TestMethod]
+        public void CrossCheck_TupleConvert_Nested()
+        {
+            var f = Compile<Func<(int, (DateTime, string)), (long, (DateTimeOffset, object))>>("t => t");
+            f((1, (DateTime.Now, "foo")));
+        }
     }
 }
