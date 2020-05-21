@@ -388,6 +388,12 @@ public static class {typeName}
         return value;
     }}
 
+    public static T Return<T>(T value, string message)
+    {{
+        s_Log.Add($""{{value}} - {{message}}"");
+        return value;
+    }}
+
     public static T Log<T>(T value)
     {{
         return Return<T>(value); // just an alias for now

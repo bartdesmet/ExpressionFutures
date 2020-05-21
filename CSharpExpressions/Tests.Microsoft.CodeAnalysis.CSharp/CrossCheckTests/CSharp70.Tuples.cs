@@ -63,6 +63,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
+        public void CrossCheck_TupleLiteral_Null()
+        {
+            var f = Compile<Func<(int, string)>>("() => (0, null)");
+            f();
+        }
+
+        [TestMethod]
         public void CrossCheck_TupleConvert()
         {
             var f = Compile<Func<(int, DateTime), (long, DateTimeOffset)>>("t => t");
