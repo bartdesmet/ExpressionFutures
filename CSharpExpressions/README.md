@@ -569,6 +569,39 @@ TODO: (also in foreach)
 
 TODO: `is` expressions, different types of patterns (C# 8 additions), `switch` revamp
 
+##### Local Functions
+
+We do not add support to call local functions from an expression tree lambda, nor to declare a local function within an expression tree lambda. For example:
+
+```csharp
+void F() {}
+Expression<Action> a = () => F();
+```
+
+fails to compile with
+
+```
+error CS8110: An expression tree may not contain a reference to a local function.
+```
+
+Merely defining a local function with an expression tree lambda, as in
+
+```csharp
+Expression<Action> a = () =>
+{
+  void F() {}
+};
+```
+
+will cause the local function declaration to be erased in the resulting expression tree as an `Expression.Empty()` node.
+
+Adding support for local functions has several pitfalls:
+
+* Invoking a local function defined outside an expression tree would require the closure over local variables (if the local function is not `static`, as introduced in C# 8.0) to be created as a class (rather than a struct). The expression tree would then reference this closure object using a `ConstantExpression` node, used for the receiver of the `MethodCallExpression` targeting the synthesized local function method.
+* Defining a local function within an expression tree may result in a closure over variables declared within the expression tree lambda, so the whole definition needs to be quoted within the expression tree. The naive approach would be to turn these into nested expression tree lambdas, but there are several complexities:
+  - Local functions become delegate-typed variables that need to be declared and assigned at the beginning of the block (because local functions can be defined anywhere; they're effectively statement nodes). We'd likely have to keep them on nodes such as `BlockCSharpExpression`, and use the reduction of such nodes to turn them into local variables and assignment statements.
+  - Local functions can be generic. Expression trees can't be used to define open generic delegates and expression tree factory methods will guard against `System.Type` instances that represent open generics or generic type parameters. One way around this is to chase down all instantiations of the local function and specialize for all of them, resulting in duplication of the code. Or, we could reject generic local functions.
+
 #### C# 7.1
 
 No new features were added that impact expression trees.
