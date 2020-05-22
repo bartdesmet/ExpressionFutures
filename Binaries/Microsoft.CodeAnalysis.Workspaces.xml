@@ -6088,23 +6088,6 @@
             Returns a <see cref="T:Microsoft.CodeAnalysis.Remote.RemoteHostClient"/> that a user can use to communicate with a remote host (i.e. ServiceHub) 
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Remote.IRemoteHostClientService.RequestNewRemoteHostAsync(System.Threading.CancellationToken)">
-            <summary>
-            Request new remote host. 
-            
-            this is designed to be not disruptive to existing callers and to support scenarios where
-            features required to reload user extension dlls without re-launching VS.
-            
-            if someone requests new remote host, all new callers for <see cref="M:Microsoft.CodeAnalysis.Remote.IRemoteHostClientService.TryGetRemoteHostClientAsync(System.Threading.CancellationToken)"/> will
-            receive a new remote host client that connects to a new remote host.
-            
-            existing remoteHostClient will still remain connected to old host and that old host will eventually go away once all existing clients
-            are done with their requests.
-            
-            callers can subscribe to <see cref="E:Microsoft.CodeAnalysis.Remote.RemoteHostClient.StatusChanged"/> event to see whether client is going away if
-            caller is designed to hold onto a service for a while to react to remote host change.
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.Remote.IRemoteHostClientService.TryGetRemoteHostClientAsync(System.Threading.CancellationToken)">
             <summary>
             Get <see cref="T:Microsoft.CodeAnalysis.Remote.RemoteHostClient"/> to current RemoteHost
@@ -6146,7 +6129,7 @@
             cases where 2 external process finding each others
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Remote.RemoteHostClient.TryCreateConnectionAsync(System.String,System.Object,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Remote.RemoteHostClient.TryCreateConnectionAsync(Microsoft.CodeAnalysis.Remote.RemoteServiceName,System.Object,System.Threading.CancellationToken)">
             <summary>
             Create <see cref="T:Microsoft.CodeAnalysis.Remote.RemoteHostClient.Connection"/> for the <paramref name="serviceName"/> if possible.
             otherwise, return null.
@@ -6155,7 +6138,7 @@
             remote host.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Remote.RemoteHostClient.TryCreateKeepAliveSessionAsync(System.String,System.Object,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Remote.RemoteHostClient.TryCreateKeepAliveSessionAsync(Microsoft.CodeAnalysis.Remote.RemoteServiceName,System.Object,System.Threading.CancellationToken)">
             <summary>
             Creates <see cref="T:Microsoft.CodeAnalysis.Remote.KeepAliveSession"/> for the <paramref name="serviceName"/>, otherwise returns <see langword="null"/>.
             </summary>
@@ -6171,6 +6154,20 @@
             This is a connection between client and server. user can use this to communicate with remote host.
             
             This doesn't know anything specific to Roslyn. this is general pure connection between client and server.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Remote.RemoteServiceName">
+            <summary>
+            Abstract the name of a remote service.
+            </summary>
+            <remarks>
+            Allows partner teams to specify bitness-specific service name, while we can use bitness agnostic id for well-known services.
+            TODO: Update LUT and SBD to use well-known ids and remove this abstraction (https://github.com/dotnet/roslyn/issues/44327).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Remote.RemoteServiceName.#ctor(System.String)">
+            <summary>
+            Exact service name - must be reflect the bitness of the ServiceHub process.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Remote.RemoteUtilities.GetDocumentTextChangesAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.Solution,System.Threading.CancellationToken)">
@@ -6319,12 +6316,6 @@
             These links are then continually traversed to get the full set of results.
             </remarks>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.FindSymbols.DependentTypeFinder.s_createTypeMap">
-            <summary>
-            We pass the special <see cref="F:Microsoft.CodeAnalysis.FindSymbols.DependentTypeFinder.KeyEqualityComparer.Instance"/> here because <see cref="T:System.Collections.Immutable.IImmutableSet`1"/>
-            uses reference equality not value equality.
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.FindSymbols.DependentTypeFinder.DescendInheritanceTreeAsync(Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.Solution,System.Collections.Immutable.IImmutableSet{Microsoft.CodeAnalysis.Project},System.Func{Microsoft.CodeAnalysis.INamedTypeSymbol,System.Collections.Generic.HashSet{Microsoft.CodeAnalysis.INamedTypeSymbol},System.Boolean},System.Func{Microsoft.CodeAnalysis.INamedTypeSymbol,System.Boolean},System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Walks down a <paramref name="type"/>'s inheritance tree looking for more <see cref="T:Microsoft.CodeAnalysis.INamedTypeSymbol"/>'s
@@ -6341,12 +6332,6 @@
             Moves all the types in <paramref name="tempBuffer"/> to <paramref name="result"/>.  If these are types we
             haven't seen before, and the caller says we <paramref name="shouldContinueSearching"/> on them, then add
             them to <paramref name="typesToSearchFor"/> for the next round of searching.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.FindSymbols.DependentTypeFinder.KeyEqualityComparer">
-            <summary>
-            Special comparer we need for our cache keys.  Necessary because <see cref="T:System.Collections.Immutable.IImmutableSet`1"/> uses
-            reference equality and not value-equality semantics.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.FindSymbols.Finders.AbstractReferenceFinder.FindDocumentsAsync(Microsoft.CodeAnalysis.Project,System.Collections.Immutable.IImmutableSet{Microsoft.CodeAnalysis.Document},System.Threading.CancellationToken,System.String[])">
@@ -17198,6 +17183,12 @@
             for debugging unit tests that hit a fatal exception
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.FailFast.DumpStackTrace(System.Exception)">
+            <summary>
+            Dumps the stack trace of the exception and the handler to the console. This is useful
+            for debugging unit tests that hit a fatal exception
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.FailFast.Assert(System.Boolean,System.String)">
             <summary>
             Checks for the given <paramref name="condition"/>; if the <paramref name="condition"/> is <c>true</c>, 
@@ -19729,7 +19720,7 @@
             in the given string with '/'. Otherwise, returns the string.
             </summary>
             <remarks>
-            This method is equivalent to Microsoft.CodeAnalysis.BuildTasks.GenerateMSBuildAnalyzerConfig.NormalizeWithForwardSlash
+            This method is equivalent to Microsoft.CodeAnalysis.BuildTasks.GenerateMSBuildEditorConfig.NormalizeWithForwardSlash
             Both methods should be kept in sync.
             </remarks>
         </member>

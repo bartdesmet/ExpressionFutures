@@ -18178,6 +18178,11 @@
             and type forwarders defined in this compilation or any included netmodule (in this order).
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Emit.PEModuleBuilder.GetForwardedTypes(Microsoft.CodeAnalysis.CSharp.Symbols.SourceAssemblySymbol,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.Cci.ExportedType})">
+            <summary>
+            Returns a set of top-level forwarded types
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Emit.PEModuleBuilder.SetFixedImplementationType(Microsoft.CodeAnalysis.CSharp.Symbols.SourceMemberFieldSymbol)">
             <summary>
             Set the underlying implementation type for a given fixed-size buffer field.
@@ -34320,13 +34325,10 @@
             <summary>Inconsistent lambda parameter usage; parameter types must be all explicit or all implicit</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodInvalidModifier">
-            <summary>A partial method cannot have access modifiers or the virtual, abstract, override, new, sealed, or extern modifiers</summary>
+            <summary>A partial method cannot have the 'abstract' modifier</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodOnlyInPartialClass">
             <summary>A partial method must be declared within a partial class, partial struct, or partial interface</summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodCannotHaveOutParameters">
-            <summary>A partial method cannot have out parameters</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodNotExplicit">
             <summary>A partial method may not explicitly implement an interface method</summary>
@@ -34363,9 +34365,6 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodInExpressionTree">
             <summary>Partial methods with only a defining declaration or removed conditional methods cannot be used in expression trees</summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodMustReturnVoid">
-            <summary>Partial methods must have a void return type</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_ObsoleteOverridingNonObsolete">
             <summary>Obsolete member '{0}' overrides non-obsolete member '{1}'</summary>
@@ -37813,7 +37812,7 @@
             <summary>An out variable cannot be declared as a ref local</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_ExpressionTreeContainsBadTupleBinary">
-            <summary>An expression tree lambda may not contain a tuple == or != operator with a null or default literal occurring in a tuple literal operand.</summary>
+            <summary>An expression tree lambda may not contain a tuple == or != operator with a null literal occurring in a tuple literal operand.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_MultipleAnalyzerConfigsInSameDir">
             <summary>Multiple analyzer config files cannot be in the same directory ('{0}').</summary>
@@ -38153,6 +38152,27 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RelationalPatternWithNaN">
             <summary>Relational patterns may not be used for a floating-point NaN.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_FeatureExtendedPartialMethods">
+            <summary>extended partial methods</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodWithNonVoidReturnMustHaveAccessMods">
+            <summary>Partial method '{0}' must have accessibility modifiers because it has a non-void return type.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodWithOutParamMustHaveAccessMods">
+            <summary>Partial method '{0}' must have accessibility modifiers because it has 'out' parameters.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodWithAccessibilityModsMustHaveImplementation">
+            <summary>Partial method '{0}' must have an implementation part because it has accessibility modifiers.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodWithExtendedModMustHaveAccessMods">
+            <summary>Partial method '{0}' must have accessibility modifiers because it has a 'virtual', 'override', 'sealed', 'new', or 'extern' modifier.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodAccessibilityDifference">
+            <summary>Both partial method declarations must have identical accessibility modifiers.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_PartialMethodExtendedModDifference">
+            <summary>Both partial method declarations must have identical combinations of 'virtual', 'override', 'sealed', and 'new' modifiers.</summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.CSharp.CSharpCompilerDiagnosticAnalyzer">
             <summary>

@@ -16788,6 +16788,12 @@
             for debugging unit tests that hit a fatal exception
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.FailFast.DumpStackTrace(System.Exception)">
+            <summary>
+            Dumps the stack trace of the exception and the handler to the console. This is useful
+            for debugging unit tests that hit a fatal exception
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.FailFast.Assert(System.Boolean,System.String)">
             <summary>
             Checks for the given <paramref name="condition"/>; if the <paramref name="condition"/> is <c>true</c>, 
@@ -23033,6 +23039,11 @@
             Returns the type symbol for a forwarded type based its canonical CLR metadata name.
             The name should refer to a non-nested type. If type with this name is not forwarded,
             null is returned.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.IAssemblySymbol.GetForwardedTypes">
+            <summary>
+            Returns type symbols for top-level (non-nested) types forwarded by this assembly.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.IAssemblySymbol.GetMetadata">
@@ -33516,7 +33527,7 @@
             in the given string with '/'. Otherwise, returns the string.
             </summary>
             <remarks>
-            This method is equivalent to Microsoft.CodeAnalysis.BuildTasks.GenerateMSBuildAnalyzerConfig.NormalizeWithForwardSlash
+            This method is equivalent to Microsoft.CodeAnalysis.BuildTasks.GenerateMSBuildEditorConfig.NormalizeWithForwardSlash
             Both methods should be kept in sync.
             </remarks>
         </member>
