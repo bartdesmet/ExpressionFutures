@@ -4,6 +4,8 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -119,6 +121,129 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f6(null, 2);
             f6(1, null);
             f6(1, 2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IndexerAccess_Array_Index()
+        {
+            var f1 = Compile<Func<int[], Index, int>>("(xs, i) => xs[i]");
+            f1(new[] { 1, 2, 3, 4, 5 }, 2);
+            f1(new[] { 1, 2, 3, 4, 5 }, new Index(2, fromEnd: true));
+            AssertEx.Throws<NullReferenceException>(() => f1(null, 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f1(new[] { 1, 2 }, 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f1(new[] { 1, 2 }, new Index(3, fromEnd: true)));
+            
+            var f2 = Compile<Func<int[], Index, int>>("(xs, i) => Return(xs, \"A\")[Return(i, \"I\")]");
+            f2(new[] { 1, 2, 3, 4, 5 }, 2);
+            f2(new[] { 1, 2, 3, 4, 5 }, new Index(2, fromEnd: true));
+            AssertEx.Throws<NullReferenceException>(() => f2(null, 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f2(new[] { 1, 2 }, 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f2(new[] { 1, 2 }, new Index(3, fromEnd: true)));
+
+            var f3 = Compile<Func<int[], int>>("xs => Return(xs, \"A\")[2]");
+            f3(new[] { 1, 2, 3, 4, 5 });
+            AssertEx.Throws<NullReferenceException>(() => f3(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f3(new[] { 1, 2 }));
+
+            var f4 = Compile<Func<int[], int>>("xs => Return(xs, \"A\")[^3]");
+            f4(new[] { 1, 2, 3, 4, 5 });
+            AssertEx.Throws<NullReferenceException>(() => f4(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f4(new[] { 1 }));
+        }
+
+        [TestMethod]
+        public void CrossCheck_IndexerAccess_List_Index()
+        {
+            var f1 = Compile<Func<List<int>, Index, int>>("(xs, i) => xs[i]");
+            f1(new List<int> { 1, 2, 3, 4, 5 }, 2);
+            f1(new List<int> { 1, 2, 3, 4, 5 }, new Index(2, fromEnd: true));
+            AssertEx.Throws<NullReferenceException>(() => f1(null, 2));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1(new List<int> { 1, 2 }, 2));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1(new List<int> { 1, 2 }, new Index(3, fromEnd: true)));
+
+            var f2 = Compile<Func<List<int>, Index, int>>("(xs, i) => Return(xs, \"A\")[Return(i, \"I\")]");
+            f2(new List<int> { 1, 2, 3, 4, 5 }, 2);
+            f2(new List<int> { 1, 2, 3, 4, 5 }, new Index(2, fromEnd: true));
+            AssertEx.Throws<NullReferenceException>(() => f2(null, 2));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f2(new List<int> { 1, 2 }, 2));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f2(new List<int> { 1, 2 }, new Index(3, fromEnd: true)));
+
+            var f3 = Compile<Func<List<int>, int>>("xs => Return(xs, \"A\")[2]");
+            f3(new List<int> { 1, 2, 3, 4, 5 });
+            AssertEx.Throws<NullReferenceException>(() => f3(null));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f3(new List<int> { 1, 2 }));
+
+            var f4 = Compile<Func<List<int>, int>>("xs => Return(xs, \"A\")[^3]");
+            f4(new List<int> { 1, 2, 3, 4, 5 });
+            AssertEx.Throws<NullReferenceException>(() => f4(null));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f4(new List<int> { 1, 2 }));
+        }
+
+        [TestMethod]
+        public void CrossCheck_IndexerAccess_String_Index()
+        {
+            var f1 = Compile<Func<string, Index, char>>("(s, i) => s[i]");
+            f1("foobarqux", 2);
+            f1("foobarqux", new Index(2, fromEnd: true));
+            AssertEx.Throws<NullReferenceException>(() => f1(null, 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f1("", 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f1("bar", 7));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f1("bar", new Index(7, fromEnd: true)));
+
+            var f2 = Compile<Func<string, Index, char>>("(s, i) => Return(s, \"A\")[Return(i, \"I\")]");
+            f2("foobarqux", 2);
+            f2("foobarqux", new Index(2, fromEnd: true));
+            AssertEx.Throws<NullReferenceException>(() => f2(null, 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f2("", 2));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f2("bar", 7));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f2("bar", new Index(7, fromEnd: true)));
+
+            var f3 = Compile<Func<string, char>>("s => Return(s, \"A\")[2]");
+            f3("foobarqux");
+            AssertEx.Throws<NullReferenceException>(() => f3(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f3(""));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f3("ba"));
+
+            var f4 = Compile<Func<string, char>>("s => Return(s, \"A\")[^3]");
+            f4("foobarqux");
+            AssertEx.Throws<NullReferenceException>(() => f4(null));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f4(""));
+            AssertEx.Throws<IndexOutOfRangeException>(() => f4("ba"));
+        }
+
+        [TestMethod]
+        [Ignore] // TODO: Address `error CS0656: Missing compiler required member 'System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray'` by moving tests to run on .NET Core.
+        public void CrossCheck_IndexerAccess_Array_Slice()
+        {
+            var xs = Enumerable.Range(7, 50).ToArray();
+
+            var f1 = Compile<Func<int[], Range, int[]>>("(xs, i) => xs[i]");
+            f1(xs, new Range(9, 16));
+
+            // TODO: The test above won't succeed because EqualityComparer<int[]>.Default won't do the right thing.
+        }
+
+        [TestMethod]
+        public void CrossCheck_IndexerAccess_String_Slice()
+        {
+            var f1 = Compile<Func<string, Range, string>>("(s, i) => s[i]");
+            f1("foobarqux", Range.All);
+            f1("foobarqux", Range.StartAt(2));
+            f1("foobarqux", Range.StartAt(Index.FromEnd(2)));
+            f1("foobarqux", Range.EndAt(5));
+            f1("foobarqux", Range.EndAt(Index.FromEnd(5)));
+            f1("foobarqux", new Range(2, 5));
+            AssertEx.Throws<NullReferenceException>(() => f1(null, Range.All));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.StartAt(10)));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.StartAt(Index.FromEnd(10))));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.EndAt(10)));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.EndAt(Index.FromEnd(10))));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", new Range(10, 21)));
+
+            var f2 = Compile<Func<string, string>>("s => Return(s)[Return(2)..Return(3)]");
+            f2("foobarqux");
+            AssertEx.Throws<NullReferenceException>(() => f2(null));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f2(""));
         }
     }
 }
