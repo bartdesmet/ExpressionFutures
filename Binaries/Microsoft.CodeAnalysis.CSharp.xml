@@ -37812,6 +37812,9 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_OutVariableCannotBeByRef">
             <summary>An out variable cannot be declared as a ref local</summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_ExpressionTreeContainsBadTupleBinary">
+            <summary>An expression tree lambda may not contain a tuple == or != operator with a null or default literal occurring in a tuple literal operand.</summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_MultipleAnalyzerConfigsInSameDir">
             <summary>Multiple analyzer config files cannot be in the same directory ('{0}').</summary>
         </member>
