@@ -484,7 +484,15 @@ namespace Microsoft.CSharp.Expressions
 
         public static bool IsPure(this Expression expression, bool readOnly = false)
         {
-            // TODO: Convert and ConvertChecked can be pure under certain circumstances as well
+            //
+            // CONSIDER: Improve purity analysis to handle more cases.
+            //
+            // - Convert can be pure for some cases when applied to a pure operand, e.g.
+            //   - nullable lifting T -> T?
+            //   - widening conversions, e.g. char to int
+            //   - conversions to a base type or an interface type known to be implemented
+            // - New can be pure for T? if the value is pure
+            //
 
             switch (expression.NodeType)
             {
