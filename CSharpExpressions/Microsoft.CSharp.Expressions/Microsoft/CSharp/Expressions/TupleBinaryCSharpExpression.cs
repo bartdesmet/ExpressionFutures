@@ -161,6 +161,11 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
+                    //
+                    // CONSIDER: Add a purity check to avoid spilling here in some cases, e.g. t => t == (1, 2). This needs an additional analysis step to ensure
+                    //           the the variable is not being written to. We can do so by finding all assignments and `ref` uses of variables.
+                    //
+
                     var tmp = Expression.Parameter(tuple.Type, prefix);
                     temps.Add(tmp);
                     stmts.Add(Expression.Assign(tmp, tuple));

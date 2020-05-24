@@ -497,7 +497,15 @@ namespace Microsoft.CSharp.Expressions
             switch (expression.NodeType)
             {
                 case ExpressionType.Default:
+
+                //
+                // PERF: There's a caveat on allowing a ConstantExpression to be duplicated if it's a non-primitive
+                //       value type, because the generated code will repeatedly unbox it from an `object` storage
+                //       slot in the compiled lambda's environment. We should likely have more options on IsPure to
+                //       indicate the usage intent if the expression is pure, e.g. `UseManyTimes`.
+                //
                 case ExpressionType.Constant:
+
                 case ExpressionType.Unbox:
                 case ExpressionType.Lambda:
                 case ExpressionType.Quote:
