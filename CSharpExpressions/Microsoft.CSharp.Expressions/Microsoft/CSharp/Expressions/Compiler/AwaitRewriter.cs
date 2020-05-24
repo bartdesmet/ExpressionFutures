@@ -163,7 +163,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 var resultVar = Expression.Parameter(getResult.Type, "__result");
                 getResult = Expression.Assign(resultVar, getResult);
                 vars = new[] { resultVar };
-                exprs[exprs.Length - 1] = resultVar;
+                exprs[^1] = resultVar;
             }
 
             var continueLabel = GetLabel();

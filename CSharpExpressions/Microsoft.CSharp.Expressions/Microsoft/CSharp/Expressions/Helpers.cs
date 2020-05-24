@@ -285,7 +285,7 @@ namespace Microsoft.CSharp.Expressions
             if (value >= MinConstInt32 && value <= MaxConstInt32)
             {
                 var index = value - MinConstInt32;
-                var consts = s_constInt32 ?? (s_constInt32 = new ConstantExpression[MaxConstInt32 - MinConstInt32 + 1]);
+                var consts = s_constInt32 ??= new ConstantExpression[MaxConstInt32 - MinConstInt32 + 1];
                 return consts[index] ?? (consts[index] = Expression.Constant(value));
             }
 
@@ -965,27 +965,19 @@ namespace Microsoft.CSharp.Expressions
             // NB: This is a simplified form of ReduceAssignment without support for conversions or a differentation of prefix/postfix assignments.
             //     It also assumes the lhs is not a mutable value type that needs by ref access treatment.
 
-            switch (lhs.NodeType)
+            return lhs.NodeType switch
             {
-                case ExpressionType.MemberAccess:
-                    return ReduceAssignMember();
-                case ExpressionType.Index:
-                    return ReduceAssignIndex();
-                case ExpressionType.Parameter:
-                    return assign(lhs);
-            }
-
-            switch (lhs)
-            {
-                case IndexCSharpExpression index:
-                    return index.ReduceAssign(assign);
-                case ArrayAccessCSharpExpression arrayAccess:
-                    return arrayAccess.ReduceAssign(assign);
-                case IndexerAccessCSharpExpression indexerAccess:
-                    return indexerAccess.ReduceAssign(assign);
-            }
-
-            throw ContractUtils.Unreachable;
+                ExpressionType.MemberAccess => ReduceAssignMember(),
+                ExpressionType.Index => ReduceAssignIndex(),
+                ExpressionType.Parameter => assign(lhs),
+                _ => lhs switch
+                {
+                    IndexCSharpExpression index => index.ReduceAssign(assign),
+                    ArrayAccessCSharpExpression arrayAccess => arrayAccess.ReduceAssign(assign),
+                    IndexerAccessCSharpExpression indexerAccess => indexerAccess.ReduceAssign(assign),
+                    _ => throw ContractUtils.Unreachable,
+                },
+            };
 
             Expression ReduceAssignMember()
             {
@@ -1060,27 +1052,19 @@ namespace Microsoft.CSharp.Expressions
 
         public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression leftConversion = null)
         {
-            switch (lhs.NodeType)
+            return lhs.NodeType switch
             {
-                case ExpressionType.MemberAccess:
-                    return ReduceMember(lhs, functionalOp, prefix, leftConversion);
-                case ExpressionType.Index:
-                    return ReduceIndex(lhs, functionalOp, prefix, leftConversion);
-                case ExpressionType.Parameter:
-                    return ReduceVariable(lhs, functionalOp, prefix, leftConversion);
-            }
-
-            switch (lhs)
-            {
-                case IndexCSharpExpression index:
-                    return ReduceIndexCSharp(index, functionalOp, prefix, leftConversion);
-                case ArrayAccessCSharpExpression arrayAccess:
-                    return ReduceArrayAccessCSharp(arrayAccess, functionalOp, prefix, leftConversion);
-                case IndexerAccessCSharpExpression indexerAccess:
-                    return ReduceIndexerAccessCSharp(indexerAccess, functionalOp, prefix, leftConversion);
-            }
-
-            throw ContractUtils.Unreachable;
+                ExpressionType.MemberAccess => ReduceMember(lhs, functionalOp, prefix, leftConversion),
+                ExpressionType.Index => ReduceIndex(lhs, functionalOp, prefix, leftConversion),
+                ExpressionType.Parameter => ReduceVariable(lhs, functionalOp, prefix, leftConversion),
+                _ => lhs switch
+                {
+                    IndexCSharpExpression index => ReduceIndexCSharp(index, functionalOp, prefix, leftConversion),
+                    ArrayAccessCSharpExpression arrayAccess => ReduceArrayAccessCSharp(arrayAccess, functionalOp, prefix, leftConversion),
+                    IndexerAccessCSharpExpression indexerAccess => ReduceIndexerAccessCSharp(indexerAccess, functionalOp, prefix, leftConversion),
+                    _ => throw ContractUtils.Unreachable,
+                },
+            };
         }
 
         private static Expression ReduceMember(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)

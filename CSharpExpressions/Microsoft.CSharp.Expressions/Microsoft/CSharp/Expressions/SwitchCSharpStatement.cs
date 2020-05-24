@@ -492,7 +492,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (_info.GotoCases == null)
                 {
-                    _info.GotoCases = (s_empty ?? (s_empty = new HashSet<object>()));
+                    _info.GotoCases = (s_empty ??= new HashSet<object>());
                 }
 
                 SwitchCaseInfos.Add(@case, _info);
