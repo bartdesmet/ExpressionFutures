@@ -162,5 +162,27 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             Compile<Func<bool>>("() => (Return(1, \"L1\"), (Return(true, \"L2\"), Return(\"bar\", \"L3\")), (Return(2, \"L4\"), (Return(3L, \"L5\"), Return(4L, \"L6\")), Return(new DateTime(1983, 2, 11), \"L7\"))) != (Return(1, \"R1\"), (Return(true, \"R2\"), Return(\"bar\", \"R3\")), (Return(2, \"R4\"), (Return(3L, \"R5\"), Return(4L, \"R6\")), Return(new DateTime(1983, 2, 11), \"R7\")))")();
             Compile<Func<bool>>("() => (Return(1, \"L1\"), (Return(true, \"L2\"), Return(\"bar\", \"L3\")), (Return(2, \"L4\"), (Return(3L, \"L5\"), Return(4L, \"L6\")), Return(new DateTime(1983, 2, 11), \"L7\"))) != (Return(1, \"R1\"), (Return(true, \"R2\"), Return(\"bar\", \"R3\")), (Return(2, \"R4\"), (Return(-3L, \"R5\"), Return(4L, \"R6\")), Return(new DateTime(1983, 2, 11), \"R7\")))")();
         }
+
+        [TestMethod]
+        public void CrossCheck_TupleEquality_Dynamic()
+        {
+            var eqs = new[]
+            {
+                Compile<Func<(int, dynamic), (int, dynamic), bool>>("(t1, t2) => t1 == t2"),
+                Compile<Func<(int, dynamic), (int, dynamic), bool>>("(t1, t2) => t1 != t2"),
+            };
+
+            foreach (var eq in eqs)
+            {
+                eq((1, 2), (1, 2));
+                eq((1, 2), (3, 4));
+                
+                eq((1, 2), (1, "bar"));
+                
+                eq((1, "bar"), (1, "bar"));
+                eq((1, "bar"), (3, "bar"));
+                eq((1, "bar"), (1, "foo"));
+            }
+        }
     }
 }
