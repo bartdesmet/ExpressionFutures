@@ -474,6 +474,145 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9551_2A52() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_E117_F776()
+        {
+            // (Expression<Func<bool>>)(() => (1, 2) == (3, 4))
+            var actual = ToCSharp(@"(Expression<Func<bool>>)(() => (1, 2) == (3, 4))", reduce: true);
+            var expected = @"
+() => 1 == 3 && 2 == 4";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_E117_F776();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E117_F776() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_F202_FB1D()
+        {
+            // (Expression<Func<bool>>)(() => (1, int.Parse("2")) != (int.Parse("3"), 4))
+            var actual = ToCSharp(@"(Expression<Func<bool>>)(() => (1, int.Parse(""2"")) != (int.Parse(""3""), 4))", reduce: true);
+            var expected = @"
+() =>
+{
+    int __left1, __right0;
+    __left1 = int.Parse(""2"");
+    __right0 = int.Parse(""3"");
+    return 1 != __right0 || __left1 != 4;
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_F202_FB1D();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F202_FB1D() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_9411_0D00()
+        {
+            // (Expression<Func<(int, int), bool>>)(t => t == (3, 4))
+            var actual = ToCSharp(@"(Expression<Func<(int, int), bool>>)(t => t == (3, 4))", reduce: true);
+            var expected = @"
+((int, int) t) =>
+{
+    (int, int) __left;
+    __left = t;
+    return __left.Item1 == 3 && __left.Item2 == 4;
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_9411_0D00();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9411_0D00() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_36A3_3E5F()
+        {
+            // (Expression<Func<(int, int), bool>>)(t => (1, 2) != t)
+            var actual = ToCSharp(@"(Expression<Func<(int, int), bool>>)(t => (1, 2) != t)", reduce: true);
+            var expected = @"
+((int, int) t) =>
+{
+    (int, int) __right;
+    __right = t;
+    return 1 != __right.Item1 || 2 != __right.Item2;
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_36A3_3E5F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_36A3_3E5F() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_B5AA_125F()
+        {
+            // (Expression<Func<bool>>)(() => (1, (true, "foo")) == (3, (false, "bar")))
+            var actual = ToCSharp(@"(Expression<Func<bool>>)(() => (1, (true, ""foo"")) == (3, (false, ""bar"")))", reduce: true);
+            var expected = @"
+() => 1 == 3 && true == false && ""foo"" == ""bar""";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B5AA_125F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B5AA_125F() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_02A6_E636()
+        {
+            // (Expression<Func<bool>>)(() => (int.Parse("1"), (true, "foo".ToUpper())) != (3, ("qux".StartsWith("z"), "bar")))
+            var actual = ToCSharp(@"(Expression<Func<bool>>)(() => (int.Parse(""1""), (true, ""foo"".ToUpper())) != (3, (""qux"".StartsWith(""z""), ""bar"")))", reduce: true);
+            var expected = @"
+() =>
+{
+    int __left0;
+    string __left1_1;
+    bool __right1_0;
+    __left0 = int.Parse(""1"");
+    __left1_1 = ""foo"".ToUpper();
+    __right1_0 = ""qux"".StartsWith(""z"");
+    return __left0 != 3 || true != __right1_0 || __left1_1 != ""bar"";
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_02A6_E636();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_02A6_E636() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_0830_8FE6()
+        {
+            // (Expression<Func<(bool, string), bool>>)(t => (1, t) == (3, (false, "bar")))
+            var actual = ToCSharp(@"(Expression<Func<(bool, string), bool>>)(t => (1, t) == (3, (false, ""bar"")))", reduce: true);
+            var expected = @"
+((bool, string) t) =>
+{
+    (bool, string) __left1;
+    __left1 = t;
+    return 1 == 3 && __left1.Item1 == false && __left1.Item2 == ""bar"";
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_0830_8FE6();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0830_8FE6() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_B038_1EAB()
+        {
+            // (Expression<Func<(bool, string), bool>>)(t => (1, (true, "foo")) != (3, t))
+            var actual = ToCSharp(@"(Expression<Func<(bool, string), bool>>)(t => (1, (true, ""foo"")) != (3, t))", reduce: true);
+            var expected = @"
+((bool, string) t) =>
+{
+    (bool, string) __right1;
+    __right1 = t;
+    return 1 != 3 || true != __right1.Item1 || ""foo"" != __right1.Item2;
+}";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B038_1EAB();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B038_1EAB() => INCONCLUSIVE(); }
+
     }
 
 /*
@@ -512,6 +651,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_55F5_5F50() => OK();
             public override void CompilerTest_0564_DD7A() => OK();
             public override void CompilerTest_9551_2A52() => OK();
+            public override void CompilerTest_E117_F776() => OK();
+            public override void CompilerTest_F202_FB1D() => OK();
+            public override void CompilerTest_9411_0D00() => OK();
+            public override void CompilerTest_36A3_3E5F() => OK();
+            public override void CompilerTest_B5AA_125F() => OK();
+            public override void CompilerTest_02A6_E636() => OK();
+            public override void CompilerTest_0830_8FE6() => OK();
+            public override void CompilerTest_B038_1EAB() => OK();
         }
     }
 }
