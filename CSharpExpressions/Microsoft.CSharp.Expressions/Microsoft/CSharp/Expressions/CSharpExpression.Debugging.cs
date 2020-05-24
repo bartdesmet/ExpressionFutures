@@ -903,12 +903,16 @@ namespace Microsoft.CSharp.Expressions
 
         protected internal override Expression VisitTupleBinary(TupleBinaryCSharpExpression node)
         {
-            var args = new List<XNode>
+            var args = new List<object>();
+
+            if (node.IsLifted)
             {
-                new XElement(nameof(node.Left), Visit(node.Left)),
-                new XElement(nameof(node.Right), Visit(node.Right)),
-                Visit(nameof(node.EqualityChecks), node.EqualityChecks)
-            };
+                args.Add(new XAttribute(nameof(node.IsLifted), node.IsLifted));
+            }
+
+            args.Add(new XElement(nameof(node.Left), Visit(node.Left)));
+            args.Add(new XElement(nameof(node.Right), Visit(node.Right)));
+            args.Add(Visit(nameof(node.EqualityChecks), node.EqualityChecks));
 
             return Push(node, args);
         }
