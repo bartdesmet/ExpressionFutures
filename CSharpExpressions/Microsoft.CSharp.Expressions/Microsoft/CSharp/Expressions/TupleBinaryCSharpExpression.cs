@@ -82,106 +82,234 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            //
-            // TODO: Optimizations for common cases, e.g.
-            //
-            //         t == (1, 2)
-            //         (a, b) == (c, d)
-            //
-            //        possibly with implicit tuple conversions or nullable conversions applied.
-            //
-
             var left = RemoveNullableIfNeverNull(Left);
             var right = RemoveNullableIfNeverNull(Right);
 
             var temps = new List<ParameterExpression>();
             var stmts = new List<Expression>();
 
-            var leftTemp = Expression.Parameter(left.Type, "__left");
-            temps.Add(leftTemp);
-            stmts.Add(Expression.Assign(leftTemp, left));
+            left = SpillToTemps(left, EqualityChecks, "__left");
+            right = SpillToTemps(right, EqualityChecks, "__right");
 
-            var rightTemp = Expression.Parameter(right.Type, "__right");
-            temps.Add(rightTemp);
-            stmts.Add(Expression.Assign(rightTemp, right));
+            stmts.Add(Reduce(left, right, EqualityChecks));
 
-            Expression res;
+            return Helpers.Comma(temps, stmts);
 
-            if (left.Type.IsNullableType() || right.Type.IsNullableType())
+            Expression SpillToTemps(Expression tuple, ReadOnlyCollection<LambdaExpression> equalityChecks, string prefix)
             {
-                var valueTemps = new List<ParameterExpression>();
-                var valueStmts = new List<Expression>();
+                //
+                // CONSIDER: Handle TupleConvertCSharpExpression by analyzing if all conversions are implicit, unchecked, and non-user-defined
+                //           ones, in which case we can spill the operand to a temp and defer applying the conversions to elements.
+                //
 
-                (Expression hasValue, ParameterExpression valueTemp) GetNullableExpressions(ParameterExpression operandTemp, string valueTempName)
+                if (tuple is TupleLiteralCSharpExpression literal)
                 {
-                    if (operandTemp.Type.IsNullableType())
-                    {
-                        var value = Helpers.MakeNullableGetValueOrDefault(operandTemp);
-                        var valueTemp = Expression.Parameter(value.Type, valueTempName);
+                    List<Expression> newArgs = null;
 
-                        valueTemps.Add(valueTemp);
-                        valueStmts.Add(Expression.Assign(valueTemp, value));
+                    var args = literal.Arguments;
 
-                        return (Helpers.MakeNullableHasValue(operandTemp), valueTemp);
-                    }
-                    else
+                    void EnsureArgs(int max)
                     {
-                        return (Expression.Constant(true), operandTemp);
+                        if (newArgs == null)
+                        {
+                            newArgs = new List<Expression>(args.Count);
+
+                            for (int j = 0; j < max; j++)
+                            {
+                                newArgs.Add(args[j]);
+                            }
+                        }
                     }
+
+                    for (int i = 0, n = args.Count; i < n; i++)
+                    {
+                        var arg = args[i];
+
+                        if (Helpers.IsPure(arg))
+                        {
+                            if (newArgs != null)
+                            {
+                                newArgs.Add(arg);
+                            }
+                        }
+                        else if (arg is TupleLiteralCSharpExpression nestedLiteral && IsNestedTupleBinaryEqualityCheck(CSharpNodeType, equalityChecks[i], out var nestedEqualityChecks))
+                        {
+                            var newArg = SpillToTemps(nestedLiteral, nestedEqualityChecks, prefix + i + "_");
+
+                            if (newArg != arg)
+                            {
+                                EnsureArgs(i);
+                            }
+
+                            if (newArgs != null)
+                            {
+                                newArgs.Add(newArg);
+                            }
+                        }
+                        else
+                        {
+                            var tmp = Expression.Parameter(arg.Type, prefix + i);
+                            temps.Add(tmp);
+                            stmts.Add(Expression.Assign(tmp, arg));
+
+                            EnsureArgs(i);
+                            newArgs.Add(tmp);
+                        }
+                    }
+
+                    return newArgs != null ? literal.Update(newArgs) : literal;
+                }
+                else
+                {
+                    var tmp = Expression.Parameter(tuple.Type, prefix);
+                    temps.Add(tmp);
+                    stmts.Add(Expression.Assign(tmp, tuple));
+
+                    return tmp;
                 }
 
-                var (leftHasValue, leftValueTemp) = GetNullableExpressions(leftTemp, "__leftVal");
-                var (rightHasValue, rightValueTemp) = GetNullableExpressions(rightTemp, "__rightVal");
-
-                var nullNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleEqual);
-                var nullNonNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleNotEqual);
-
-                valueStmts.Add(GetEvalExpr(leftValueTemp, rightValueTemp));
-
-                var nonNullNonNull = Expression.Block(valueTemps, valueStmts);
-
-                res = MakeCondition(MakeEqual(leftHasValue, rightHasValue), MakeCondition(leftHasValue, nonNullNonNull, nullNull), nullNonNull);
-
-                static Expression MakeEqual(Expression l, Expression r)
+                static bool IsNestedTupleBinaryEqualityCheck(CSharpExpressionType kind, LambdaExpression equalityCheck, out ReadOnlyCollection<LambdaExpression> equalityChecks)
                 {
-                    if (Helpers.IsConst(l, true))
+                    if (equalityCheck.Body is TupleBinaryCSharpExpression binary && binary.CSharpNodeType == kind && binary.Left == equalityCheck.Parameters[0] && binary.Right == equalityCheck.Parameters[1])
                     {
-                        return r;
-                    }
-                    else if (Helpers.IsConst(r, true))
-                    {
-                        return l;
+                        equalityChecks = binary.EqualityChecks;
+                        return true;
                     }
 
-                    return Expression.Equal(l, r);
-                }
-
-                static Expression MakeCondition(Expression test, Expression ifTrue, Expression ifFalse)
-                {
-                    if (Helpers.IsConst(test, true))
-                    {
-                        return ifTrue;
-                    }
-                    else if (Helpers.IsConst(test, false))
-                    {
-                        return ifFalse;
-                    }
-                    else if (Helpers.IsConst(ifTrue, true) && Helpers.IsConst(ifFalse, false))
-                    {
-                        return test;
-                    }
-
-                    return Expression.Condition(test, ifTrue, ifFalse);
+                    equalityChecks = null;
+                    return false;
                 }
             }
-            else
+
+            Expression Reduce(Expression left, Expression right, ReadOnlyCollection<LambdaExpression> equalityChecks)
             {
-                res = GetEvalExpr(leftTemp, rightTemp);
+                left = RemoveNullableIfNeverNull(left);
+                right = RemoveNullableIfNeverNull(right);
+
+                if (left.Type.IsNullableType() || right.Type.IsNullableType())
+                {
+                    (Expression hasValue, Expression valueTemp) GetNullableExpressions(Expression operand)
+                    {
+                        if (operand.Type.IsNullableType())
+                        {
+                            var temp = Expression.Parameter(operand.Type);
+
+                            temps.Add(temp);
+                            stmts.Add(Expression.Assign(temp, operand));
+
+                            return (Helpers.MakeNullableHasValue(temp), Helpers.MakeNullableGetValueOrDefault(temp));
+                        }
+                        else
+                        {
+                            return (Expression.Constant(true), operand);
+                        }
+                    }
+
+                    var (leftHasValue, leftValue) = GetNullableExpressions(left);
+                    var (rightHasValue, rightValue) = GetNullableExpressions(right);
+
+                    var nullNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleEqual);
+                    var nullNonNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleNotEqual);
+
+                    var nonNullNonNull = ReduceNonNull(leftValue, rightValue, equalityChecks);
+
+                    return MakeCondition(MakeEqual(leftHasValue, rightHasValue), MakeCondition(leftHasValue, nonNullNonNull, nullNull), nullNonNull);
+
+                    static Expression MakeEqual(Expression l, Expression r)
+                    {
+                        if (Helpers.IsConst(l, true))
+                        {
+                            return r;
+                        }
+                        else if (Helpers.IsConst(r, true))
+                        {
+                            return l;
+                        }
+
+                        return Expression.Equal(l, r);
+                    }
+
+                    static Expression MakeCondition(Expression test, Expression ifTrue, Expression ifFalse)
+                    {
+                        if (Helpers.IsConst(test, true))
+                        {
+                            return ifTrue;
+                        }
+                        else if (Helpers.IsConst(test, false))
+                        {
+                            return ifFalse;
+                        }
+                        else if (Helpers.IsConst(ifTrue, true) && Helpers.IsConst(ifFalse, false))
+                        {
+                            return test;
+                        }
+
+                        return Expression.Condition(test, ifTrue, ifFalse);
+                    }
+                }
+                else
+                {
+                    return ReduceNonNull(left, right, equalityChecks);
+                }
+
+                Expression ReduceNonNull(Expression left, Expression right, ReadOnlyCollection<LambdaExpression> equalityChecks)
+                {
+                    Expression res = null;
+
+                    for (int i = 0, n = equalityChecks.Count; i < n; i++)
+                    {
+                        var lhs = GetComponent(left, i);
+                        var rhs = GetComponent(right, i);
+
+                        var check = GetEqualityCheck(lhs, rhs, equalityChecks[i]);
+
+                        if (res == null)
+                        {
+                            res = check;
+                        }
+                        else
+                        {
+                            res = Expression.MakeBinary(CSharpNodeType == CSharpExpressionType.TupleEqual ? ExpressionType.AndAlso : ExpressionType.OrElse, res, check);
+                        }
+                    }
+
+                    return res;
+
+                    static Expression GetComponent(Expression tuple, int i)
+                    {
+                        if (tuple is TupleLiteralCSharpExpression literal)
+                        {
+                            return literal.Arguments[i];
+                        }
+                        else
+                        {
+                            return Helpers.GetTupleItemAccess(tuple, i);
+                        }
+                    }
+
+                    Expression GetEqualityCheck(Expression lhs, Expression rhs, LambdaExpression equalityCheck)
+                    {
+                        static bool IsBinaryEquality(BinaryExpression b) => b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual;
+                        static bool IsBinaryAppliedToParameters(BinaryExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
+                        static bool IsTupleBinaryAppliedToParameters(TupleBinaryCSharpExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
+
+                        var expr = equalityCheck.Body switch
+                        {
+                            ConstantExpression c => (Expression)c, // NB: This is commonly emitted by the C# compiler for null == null and null != null checks that occur in tuple literals.
+                            DefaultExpression _ => Expression.Constant(false),
+                            BinaryExpression binary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
+                                => binary.Update(lhs, null, rhs),
+                            UnaryExpression { Operand: BinaryExpression binary, NodeType: ExpressionType.Convert } unary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
+                                => unary.Update(binary.Update(lhs, conversion: null, rhs)),
+                            TupleBinaryCSharpExpression binary when binary.CSharpNodeType == CSharpNodeType && IsTupleBinaryAppliedToParameters(binary, equalityCheck)
+                                => Reduce(lhs, rhs, binary.EqualityChecks),
+                            _ => Expression.Invoke(equalityCheck, lhs, rhs),
+                        };
+
+                        return expr;
+                    }
+                }
             }
-
-            stmts.Add(res);
-
-            return Expression.Block(temps, stmts);
 
             static Expression RemoveNullableIfNeverNull(Expression e)
             {
@@ -205,44 +333,6 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 return e;
-            }
-
-            Expression GetEvalExpr(Expression lhs, Expression rhs)
-            {
-                var exprs = Core(EqualityChecks, lhs, rhs).ToList();
-
-                return exprs.Aggregate((l, r) => CSharpNodeType == CSharpExpressionType.TupleEqual ? Expression.AndAlso(l, r) : Expression.OrElse(l, r));
-            }
-
-            IEnumerable<Expression> Core(ReadOnlyCollection<LambdaExpression> equalityChecks, Expression lhs, Expression rhs)
-            {
-                for (int i = 0, n = equalityChecks.Count; i < n; i++)
-                {
-                    var leftChild = Helpers.GetTupleItemAccess(lhs, i);
-                    var rightChild = Helpers.GetTupleItemAccess(rhs, i);
-
-                    var equalityCheck = equalityChecks[i];
-
-                    static bool IsBinaryEquality(BinaryExpression b) => b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual;
-                    static bool IsBinaryAppliedToParameters(BinaryExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
-                    static bool IsTupleBinaryEquality(TupleBinaryCSharpExpression b) => b.CSharpNodeType == CSharpExpressionType.TupleEqual || b.CSharpNodeType == CSharpExpressionType.TupleNotEqual;
-                    static bool IsTupleBinaryAppliedToParameters(TupleBinaryCSharpExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
-
-                    var expr = equalityCheck.Body switch
-                    {
-                        ConstantExpression c => (Expression)c, // NB: This is commonly emitted by the C# compiler for null == null and null != null checks that occur in tuple literals.
-                        DefaultExpression _ => Expression.Constant(false),
-                        BinaryExpression binary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
-                            => binary.Update(leftChild, null, rightChild),
-                        TupleBinaryCSharpExpression binary when IsTupleBinaryEquality(binary) && IsTupleBinaryAppliedToParameters(binary, equalityCheck)
-                            => binary.Update(leftChild, rightChild, binary.EqualityChecks), // CONSIDER: We could flatten the && or || across these.
-                        UnaryExpression { Operand: BinaryExpression binary, NodeType: ExpressionType.Convert } unary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
-                            => unary.Update(binary.Update(leftChild, conversion: null, rightChild)),
-                        _ => Expression.Invoke(equalityCheck, leftChild, rightChild),
-                    };
-
-                    yield return expr;
-                }
             }
         }
 

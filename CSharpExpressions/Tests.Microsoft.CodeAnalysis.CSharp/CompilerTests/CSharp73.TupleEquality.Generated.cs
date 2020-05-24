@@ -164,7 +164,287 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1183_EE62() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_E4CE_8C7A()
+        public void CompilerTest_E39A_78A2()
+        {
+            // (Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`2[System.Nullable`1[System.Int32],System.String],System.ValueTuple`2[System.Nullable`1[System.Int32],System.String],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Nullable`1[System.Int32],System.Nullable`1[System.Int32],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"" IsLifted=""true"">
+              <Left>
+                <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""3"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.String, System.String)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_E39A_78A2();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E39A_78A2() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_9A78_F30E()
+        {
+            // (Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l != r)
+            var actual = GetDebugView(@"(Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l != r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`2[System.Nullable`1[System.Int32],System.String],System.ValueTuple`2[System.Nullable`1[System.Int32],System.String],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleNotEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.String]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Nullable`1[System.Int32],System.Nullable`1[System.Int32],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"" IsLifted=""true"">
+              <Left>
+                <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""3"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.String, System.String)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleNotEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_9A78_F30E();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9A78_F30E() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_B73C_68B9()
+        {
+            // (Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.String,System.DateTime],System.ValueTuple`3[System.Int32,System.String,System.DateTime],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.String, System.String)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.DateTime,System.DateTime,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.DateTime"" Id=""6"" Name=""left"" />
+            <Parameter Type=""System.DateTime"" Id=""7"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.DateTime, System.DateTime)"">
+              <Left>
+                <Parameter Type=""System.DateTime"" Id=""6"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.DateTime"" Id=""7"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B73C_68B9();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B73C_68B9() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_530F_CF5A()
+        {
+            // (Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l != r)
+            var actual = GetDebugView(@"(Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l != r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.String,System.DateTime],System.ValueTuple`3[System.Int32,System.String,System.DateTime],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleNotEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.String,System.DateTime]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.String, System.String)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.String"" Id=""5"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.DateTime,System.DateTime,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.DateTime"" Id=""6"" Name=""left"" />
+            <Parameter Type=""System.DateTime"" Id=""7"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.DateTime, System.DateTime)"">
+              <Left>
+                <Parameter Type=""System.DateTime"" Id=""6"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.DateTime"" Id=""7"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleNotEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_530F_CF5A();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_530F_CF5A() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_E4CE_9D5B()
         {
             // (Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l == r)
             var actual = GetDebugView(@"(Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l == r)");
@@ -175,7 +455,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.Int32,System.String]]"" Id=""1"" Name=""r"" />
   </Parameters>
   <Body>
-    <CSharpTupleEqual Type=""System.Boolean"">
+    <CSharpTupleEqual Type=""System.Boolean"" IsLifted=""true"">
       <Left>
         <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.Int32,System.String]]"" Id=""0"" Name=""l"" />
       </Left>
@@ -220,13 +500,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_E4CE_8C7A();
+            Verify.CompilerTest_E4CE_9D5B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E4CE_8C7A() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E4CE_9D5B() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_0B1F_2641()
+        public void CompilerTest_0B1F_7212()
         {
             // (Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l != r)
             var actual = GetDebugView(@"(Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l != r)");
@@ -237,7 +517,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.Int32,System.String]]"" Id=""1"" Name=""r"" />
   </Parameters>
   <Body>
-    <CSharpTupleNotEqual Type=""System.Boolean"">
+    <CSharpTupleNotEqual Type=""System.Boolean"" IsLifted=""true"">
       <Left>
         <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.Int32,System.String]]"" Id=""0"" Name=""l"" />
       </Left>
@@ -282,10 +562,1128 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_0B1F_2641();
+            Verify.CompilerTest_0B1F_7212();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0B1F_2641() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0B1F_7212() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_A78C_7F57()
+        {
+            // (Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64],System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.ValueTuple`2[System.String,System.Boolean],System.ValueTuple`2[System.String,System.Boolean],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_A78C_7F57();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A78C_7F57() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_235E_24DF()
+        {
+            // (Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l != r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l != r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64],System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleNotEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.Boolean],System.Int64]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.ValueTuple`2[System.String,System.Boolean],System.ValueTuple`2[System.String,System.Boolean],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleNotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.Boolean]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleNotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleNotEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_235E_24DF();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_235E_24DF() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_D6B8_C461()
+        {
+            // (Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64],System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleEqual Type=""System.Boolean"" IsLifted=""true"">
+              <Left>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_D6B8_C461();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D6B8_C461() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_5CFE_A5A4()
+        {
+            // (Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l != r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l != r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64],System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleNotEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleNotEqual Type=""System.Boolean"" IsLifted=""true"">
+              <Left>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleNotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleNotEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_5CFE_A5A4();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CFE_A5A4() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_27FD_7B61()
+        {
+            // (Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]],System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"" IsLifted=""true"">
+      <Left>
+        <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleEqual Type=""System.Boolean"" IsLifted=""true"">
+              <Left>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_27FD_7B61();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_27FD_7B61() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_157E_20F1()
+        {
+            // (Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l != r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l != r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]],System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleNotEqual Type=""System.Boolean"" IsLifted=""true"">
+      <Left>
+        <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.Nullable`1[System.ValueTuple`3[System.Int32,System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Int64]]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleNotEqual Type=""System.Boolean"" IsLifted=""true"">
+              <Left>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Nullable`1[System.ValueTuple`2[System.String,System.Boolean]]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.Boolean"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.Boolean"" Id=""9"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleNotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""10"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""11"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleNotEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_157E_20F1();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_157E_20F1() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_2CC6_948A()
+        {
+            // (Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64],System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </Equal>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.ValueTuple`3[System.Boolean,System.DateTime,System.Double],System.ValueTuple`3[System.Boolean,System.DateTime,System.Double],System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <CSharpTupleEqual Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""9"" Name=""right"" />
+                      </Right>
+                      <EqualityChecks>
+                        <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                          <Parameters>
+                            <Parameter Type=""System.Boolean"" Id=""10"" Name=""left"" />
+                            <Parameter Type=""System.Boolean"" Id=""11"" Name=""right"" />
+                          </Parameters>
+                          <Body>
+                            <Equal Type=""System.Boolean"">
+                              <Left>
+                                <Parameter Type=""System.Boolean"" Id=""10"" Name=""left"" />
+                              </Left>
+                              <Right>
+                                <Parameter Type=""System.Boolean"" Id=""11"" Name=""right"" />
+                              </Right>
+                            </Equal>
+                          </Body>
+                        </Lambda>
+                        <Lambda Type=""System.Func`3[System.DateTime,System.DateTime,System.Boolean]"">
+                          <Parameters>
+                            <Parameter Type=""System.DateTime"" Id=""12"" Name=""left"" />
+                            <Parameter Type=""System.DateTime"" Id=""13"" Name=""right"" />
+                          </Parameters>
+                          <Body>
+                            <Equal Type=""System.Boolean"" Method=""Boolean op_Equality(System.DateTime, System.DateTime)"">
+                              <Left>
+                                <Parameter Type=""System.DateTime"" Id=""12"" Name=""left"" />
+                              </Left>
+                              <Right>
+                                <Parameter Type=""System.DateTime"" Id=""13"" Name=""right"" />
+                              </Right>
+                            </Equal>
+                          </Body>
+                        </Lambda>
+                        <Lambda Type=""System.Func`3[System.Double,System.Double,System.Boolean]"">
+                          <Parameters>
+                            <Parameter Type=""System.Double"" Id=""14"" Name=""left"" />
+                            <Parameter Type=""System.Double"" Id=""15"" Name=""right"" />
+                          </Parameters>
+                          <Body>
+                            <Equal Type=""System.Boolean"">
+                              <Left>
+                                <Parameter Type=""System.Double"" Id=""14"" Name=""left"" />
+                              </Left>
+                              <Right>
+                                <Parameter Type=""System.Double"" Id=""15"" Name=""right"" />
+                              </Right>
+                            </Equal>
+                          </Body>
+                        </Lambda>
+                      </EqualityChecks>
+                    </CSharpTupleEqual>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""16"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""17"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""16"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""17"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2CC6_948A();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CC6_948A() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_B81E_0DAE()
+        {
+            // (Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l != r)
+            var actual = GetDebugView(@"(Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l != r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64],System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleNotEqual Type=""System.Boolean"">
+      <Left>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""0"" Name=""l"" />
+      </Left>
+      <Right>
+        <Parameter Type=""System.ValueTuple`3[System.Int32,System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Int64]"" Id=""1"" Name=""r"" />
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""3"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]],System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""4"" Name=""left"" />
+            <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""5"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <CSharpTupleNotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""4"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.ValueTuple`2[System.String,System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]]"" Id=""5"" Name=""right"" />
+              </Right>
+              <EqualityChecks>
+                <Lambda Type=""System.Func`3[System.String,System.String,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                    <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.String, System.String)"">
+                      <Left>
+                        <Parameter Type=""System.String"" Id=""6"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.String"" Id=""7"" Name=""right"" />
+                      </Right>
+                    </NotEqual>
+                  </Body>
+                </Lambda>
+                <Lambda Type=""System.Func`3[System.ValueTuple`3[System.Boolean,System.DateTime,System.Double],System.ValueTuple`3[System.Boolean,System.DateTime,System.Double],System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""8"" Name=""left"" />
+                    <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""9"" Name=""right"" />
+                  </Parameters>
+                  <Body>
+                    <CSharpTupleNotEqual Type=""System.Boolean"">
+                      <Left>
+                        <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""8"" Name=""left"" />
+                      </Left>
+                      <Right>
+                        <Parameter Type=""System.ValueTuple`3[System.Boolean,System.DateTime,System.Double]"" Id=""9"" Name=""right"" />
+                      </Right>
+                      <EqualityChecks>
+                        <Lambda Type=""System.Func`3[System.Boolean,System.Boolean,System.Boolean]"">
+                          <Parameters>
+                            <Parameter Type=""System.Boolean"" Id=""10"" Name=""left"" />
+                            <Parameter Type=""System.Boolean"" Id=""11"" Name=""right"" />
+                          </Parameters>
+                          <Body>
+                            <NotEqual Type=""System.Boolean"">
+                              <Left>
+                                <Parameter Type=""System.Boolean"" Id=""10"" Name=""left"" />
+                              </Left>
+                              <Right>
+                                <Parameter Type=""System.Boolean"" Id=""11"" Name=""right"" />
+                              </Right>
+                            </NotEqual>
+                          </Body>
+                        </Lambda>
+                        <Lambda Type=""System.Func`3[System.DateTime,System.DateTime,System.Boolean]"">
+                          <Parameters>
+                            <Parameter Type=""System.DateTime"" Id=""12"" Name=""left"" />
+                            <Parameter Type=""System.DateTime"" Id=""13"" Name=""right"" />
+                          </Parameters>
+                          <Body>
+                            <NotEqual Type=""System.Boolean"" Method=""Boolean op_Inequality(System.DateTime, System.DateTime)"">
+                              <Left>
+                                <Parameter Type=""System.DateTime"" Id=""12"" Name=""left"" />
+                              </Left>
+                              <Right>
+                                <Parameter Type=""System.DateTime"" Id=""13"" Name=""right"" />
+                              </Right>
+                            </NotEqual>
+                          </Body>
+                        </Lambda>
+                        <Lambda Type=""System.Func`3[System.Double,System.Double,System.Boolean]"">
+                          <Parameters>
+                            <Parameter Type=""System.Double"" Id=""14"" Name=""left"" />
+                            <Parameter Type=""System.Double"" Id=""15"" Name=""right"" />
+                          </Parameters>
+                          <Body>
+                            <NotEqual Type=""System.Boolean"">
+                              <Left>
+                                <Parameter Type=""System.Double"" Id=""14"" Name=""left"" />
+                              </Left>
+                              <Right>
+                                <Parameter Type=""System.Double"" Id=""15"" Name=""right"" />
+                              </Right>
+                            </NotEqual>
+                          </Body>
+                        </Lambda>
+                      </EqualityChecks>
+                    </CSharpTupleNotEqual>
+                  </Body>
+                </Lambda>
+              </EqualityChecks>
+            </CSharpTupleNotEqual>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int64,System.Int64,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int64"" Id=""16"" Name=""left"" />
+            <Parameter Type=""System.Int64"" Id=""17"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <NotEqual Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int64"" Id=""16"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int64"" Id=""17"" Name=""right"" />
+              </Right>
+            </NotEqual>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleNotEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B81E_0DAE();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B81E_0DAE() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_BC36_A04C()
+        {
+            // (Expression<Func<(char, byte), (char, byte), bool>>)((l, r) => l == r)
+            var actual = GetDebugView(@"(Expression<Func<(char, byte), (char, byte), bool>>)((l, r) => l == r)");
+            var expected = @"
+<Lambda Type=""System.Func`3[System.ValueTuple`2[System.Char,System.Byte],System.ValueTuple`2[System.Char,System.Byte],System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Char,System.Byte]"" Id=""0"" Name=""l"" />
+    <Parameter Type=""System.ValueTuple`2[System.Char,System.Byte]"" Id=""1"" Name=""r"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleEqual Type=""System.Boolean"">
+      <Left>
+        <CSharpTupleConvert Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+          <Operand>
+            <Parameter Type=""System.ValueTuple`2[System.Char,System.Byte]"" Id=""0"" Name=""l"" />
+          </Operand>
+          <ElementConversions>
+            <Lambda Type=""System.Func`2[System.Char,System.Int32]"">
+              <Parameters>
+                <Parameter Type=""System.Char"" Id=""2"" Name=""p"" />
+              </Parameters>
+              <Body>
+                <Convert Type=""System.Int32"">
+                  <Operand>
+                    <Parameter Type=""System.Char"" Id=""2"" Name=""p"" />
+                  </Operand>
+                </Convert>
+              </Body>
+            </Lambda>
+            <Lambda Type=""System.Func`2[System.Byte,System.Int32]"">
+              <Parameters>
+                <Parameter Type=""System.Byte"" Id=""3"" Name=""p"" />
+              </Parameters>
+              <Body>
+                <Convert Type=""System.Int32"">
+                  <Operand>
+                    <Parameter Type=""System.Byte"" Id=""3"" Name=""p"" />
+                  </Operand>
+                </Convert>
+              </Body>
+            </Lambda>
+          </ElementConversions>
+        </CSharpTupleConvert>
+      </Left>
+      <Right>
+        <CSharpTupleConvert Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+          <Operand>
+            <Parameter Type=""System.ValueTuple`2[System.Char,System.Byte]"" Id=""1"" Name=""r"" />
+          </Operand>
+          <ElementConversions>
+            <Lambda Type=""System.Func`2[System.Char,System.Int32]"">
+              <Parameters>
+                <Parameter Type=""System.Char"" Id=""4"" Name=""p"" />
+              </Parameters>
+              <Body>
+                <Convert Type=""System.Int32"">
+                  <Operand>
+                    <Parameter Type=""System.Char"" Id=""4"" Name=""p"" />
+                  </Operand>
+                </Convert>
+              </Body>
+            </Lambda>
+            <Lambda Type=""System.Func`2[System.Byte,System.Int32]"">
+              <Parameters>
+                <Parameter Type=""System.Byte"" Id=""5"" Name=""p"" />
+              </Parameters>
+              <Body>
+                <Convert Type=""System.Int32"">
+                  <Operand>
+                    <Parameter Type=""System.Byte"" Id=""5"" Name=""p"" />
+                  </Operand>
+                </Convert>
+              </Body>
+            </Lambda>
+          </ElementConversions>
+        </CSharpTupleConvert>
+      </Right>
+      <EqualityChecks>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""6"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""7"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""6"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""7"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`3[System.Int32,System.Int32,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""8"" Name=""left"" />
+            <Parameter Type=""System.Int32"" Id=""9"" Name=""right"" />
+          </Parameters>
+          <Body>
+            <Equal Type=""System.Boolean"">
+              <Left>
+                <Parameter Type=""System.Int32"" Id=""8"" Name=""left"" />
+              </Left>
+              <Right>
+                <Parameter Type=""System.Int32"" Id=""9"" Name=""right"" />
+              </Right>
+            </Equal>
+          </Body>
+        </Lambda>
+      </EqualityChecks>
+    </CSharpTupleEqual>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_BC36_A04C();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BC36_A04C() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -315,8 +1713,21 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             public override void CompilerTest_41C6_D6EC() => OK();
             public override void CompilerTest_1183_EE62() => OK();
-            public override void CompilerTest_E4CE_8C7A() => OK();
-            public override void CompilerTest_0B1F_2641() => OK();
+            public override void CompilerTest_E39A_78A2() => OK();
+            public override void CompilerTest_9A78_F30E() => OK();
+            public override void CompilerTest_B73C_68B9() => OK();
+            public override void CompilerTest_530F_CF5A() => OK();
+            public override void CompilerTest_E4CE_9D5B() => OK();
+            public override void CompilerTest_0B1F_7212() => OK();
+            public override void CompilerTest_A78C_7F57() => OK();
+            public override void CompilerTest_235E_24DF() => OK();
+            public override void CompilerTest_D6B8_C461() => OK();
+            public override void CompilerTest_5CFE_A5A4() => OK();
+            public override void CompilerTest_27FD_7B61() => OK();
+            public override void CompilerTest_157E_20F1() => OK();
+            public override void CompilerTest_2CC6_948A() => OK();
+            public override void CompilerTest_B81E_0DAE() => OK();
+            public override void CompilerTest_BC36_A04C() => OK();
         }
     }
 }

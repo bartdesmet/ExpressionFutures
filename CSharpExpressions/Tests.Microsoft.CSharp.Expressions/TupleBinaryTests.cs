@@ -516,6 +516,58 @@ namespace Tests
         }
 
         [TestMethod]
+        public void TupleBinary_Reduce_Nested_Nullable()
+        {
+            var tuples = new (int, (string, long)?)[]
+            {
+                (1, null),
+                (1, (null, 1L)),
+                (1, (null, 2L)),
+                (1, ("bar", 1L)),
+                (1, ("bar", 2L)),
+                (1, ("foo", 1L)),
+                (1, ("foo", 2L)),
+                (2, null),
+                (2, (null, 1L)),
+                (2, (null, 2L)),
+                (2, ("bar", 1L)),
+                (2, ("bar", 2L)),
+                (2, ("foo", 1L)),
+                (2, ("foo", 2L)),
+            };
+
+            var tupleType = tuples[0].GetType();
+            var nestedTupleType = tupleType.GetGenericArguments()[1];
+
+            var nestedLeft = Expression.Parameter(nestedTupleType, "left");
+            var nestedRight = Expression.Parameter(nestedTupleType, "right");
+
+            var nestedEq = CSharpExpression.TupleEqual(nestedLeft, nestedRight, (Expression<Func<string, string, bool>>)((l, r) => l == r), (Expression<Func<long, long, bool>>)((l, r) => l == r));
+            var nestedNe = CSharpExpression.TupleNotEqual(nestedLeft, nestedRight, (Expression<Func<string, string, bool>>)((l, r) => l != r), (Expression<Func<long, long, bool>>)((l, r) => l != r));
+
+            var nestedEqCheck = Expression.Lambda<Func<(string, long)?, (string, long)?, bool>>(nestedEq, nestedLeft, nestedRight);
+            var nestedNeCheck = Expression.Lambda<Func<(string, long)?, (string, long)?, bool>>(nestedNe, nestedLeft, nestedRight);
+
+            var left = Expression.Parameter(tupleType, "left");
+            var right = Expression.Parameter(tupleType, "right");
+
+            var bodyEq = CSharpExpression.TupleEqual(left, right, (Expression<Func<int, int, bool>>)((l, r) => l == r), nestedEqCheck);
+            var bodyNe = CSharpExpression.TupleNotEqual(left, right, (Expression<Func<int, int, bool>>)((l, r) => l != r), nestedNeCheck);
+
+            var eq = Expression.Lambda<Func<(int, (string, long)?), (int, (string, long)?), bool>>(bodyEq, left, right).Compile();
+            var ne = Expression.Lambda<Func<(int, (string, long)?), (int, (string, long)?), bool>>(bodyNe, left, right).Compile();
+
+            foreach (var l in tuples)
+            {
+                foreach (var r in tuples)
+                {
+                    Assert.AreEqual(l == r, eq(l, r));
+                    Assert.AreEqual(l != r, ne(l, r));
+                }
+            }
+        }
+
+        [TestMethod]
         public void TupleBinary_SideEffects_ShortCircuit()
         {
             var l = Expression.Parameter(typeof(int));
@@ -623,6 +675,119 @@ namespace Tests
             }, new LogAndResult<bool> { Log = { "L.I1", "L.I2", "R.I1", "R.I2", "1", "2" }, Value = true });
         }
 
+        [TestMethod]
+        public void TupleBinary_SideEffects_TupleLiteral_Pure()
+        {
+            var l = Expression.Parameter(typeof(int));
+            var r = Expression.Parameter(typeof(int));
+
+            AssertCompile((log, append) =>
+            {
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(log(i.ToString()), Expression.Equal(l, r)), l, r));
+
+                var left = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Constant(1), Expression.Block(log("L.I2"), Expression.Constant(2)) }, null);
+                var right = Expression.Block(log("R"), Expression.Constant((1, 2)));
+
+                return CSharpExpression.TupleEqual(left, right, checksEq);
+            }, new LogAndResult<bool> { Log = { "L.I2", "R", "1", "2" }, Value = true });
+
+            AssertCompile((log, append) =>
+            {
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(log(i.ToString()), Expression.Equal(l, r)), l, r));
+
+                var left = Expression.Block(log("L"), Expression.Constant((1, 2)));
+                var right = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I1"), Expression.Constant(1)), Expression.Constant(2) }, null);
+
+                return CSharpExpression.TupleEqual(left, right, checksEq);
+            }, new LogAndResult<bool> { Log = { "L", "R.I1", "1", "2" }, Value = true });
+
+            AssertCompile((log, append) =>
+            {
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(log(i.ToString()), Expression.Equal(l, r)), l, r));
+
+                var left = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I1"), Expression.Constant(1)), Expression.Constant(2) }, null);
+                var right = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Constant(1), Expression.Block(log("R.I2"), Expression.Constant(2)) }, null);
+
+                return CSharpExpression.TupleEqual(left, right, checksEq);
+            }, new LogAndResult<bool> { Log = { "L.I1", "R.I2", "1", "2" }, Value = true });
+
+            AssertCompile((log, append) =>
+            {
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(log(i.ToString()), Expression.Equal(l, r)), l, r));
+
+                var left = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Constant(1), Expression.Constant(2) }, null);
+                var right = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Constant(1), Expression.Constant(2) }, null);
+
+                return CSharpExpression.TupleEqual(left, right, checksEq);
+            }, new LogAndResult<bool> { Log = { "1", "2" }, Value = true });
+        }
+
+        [TestMethod]
+        public void TupleBinary_SideEffects_TupleLiteral_Nested()
+        {
+            // ((int, int), (int, int))
+
+            var l = Expression.Parameter(typeof(int));
+            var r = Expression.Parameter(typeof(int));
+
+            var lNested = Expression.Parameter(typeof((int, int)));
+            var rNested = Expression.Parameter(typeof((int, int)));
+
+            AssertCompile((log, append) =>
+            {
+                var appendEq = Expression.Invoke(append, CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringInsert(l, format: null, alignment: null), CSharpExpression.InterpolationStringLiteral(" == "), CSharpExpression.InterpolationStringInsert(r, format: null, alignment: null)));
+
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(appendEq, Expression.Equal(l, r)), l, r));
+                var checksNested = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<(int, int), (int, int), bool>>(CSharpExpression.TupleEqual(lNested, rNested, checksEq), lNested, rNested));
+
+                var leftNested1 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I1.I1"), Expression.Constant(1)), Expression.Block(log("L.I1.I2"), Expression.Constant(2)) }, null);
+                var leftNested2 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I2.I1"), Expression.Constant(3)), Expression.Block(log("L.I2.I2"), Expression.Constant(4)) }, null);
+                var left = CSharpExpression.TupleLiteral(typeof(((int, int), (int, int))), new Expression[] { leftNested1, leftNested2 }, null);
+
+                var rightNested1 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I1.I1"), Expression.Constant(1)), Expression.Block(log("R.I1.I2"), Expression.Constant(2)) }, null);
+                var rightNested2 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I2.I1"), Expression.Constant(3)), Expression.Block(log("R.I2.I2"), Expression.Constant(4)) }, null);
+                var right = CSharpExpression.TupleLiteral(typeof(((int, int), (int, int))), new Expression[] { rightNested1, rightNested2 }, null);
+
+                return CSharpExpression.TupleEqual(left, right, checksNested);
+            }, new LogAndResult<bool> { Log = { "L.I1.I1", "L.I1.I2", "L.I2.I1", "L.I2.I2", "R.I1.I1", "R.I1.I2", "R.I2.I1", "R.I2.I2", "1 == 1", "2 == 2", "3 == 3", "4 == 4" }, Value = true });
+
+            AssertCompile((log, append) =>
+            {
+                var appendEq = Expression.Invoke(append, CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringInsert(l, format: null, alignment: null), CSharpExpression.InterpolationStringLiteral(" == "), CSharpExpression.InterpolationStringInsert(r, format: null, alignment: null)));
+
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(appendEq, Expression.Equal(l, r)), l, r));
+                var checksNested = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<(int, int), (int, int), bool>>(CSharpExpression.TupleEqual(lNested, rNested, checksEq), lNested, rNested));
+
+                var leftNested1 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I1.I1"), Expression.Constant(1)), Expression.Block(log("L.I1.I2"), Expression.Constant(2)) }, null);
+                var leftNested2 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I2.I1"), Expression.Constant(3)), Expression.Block(log("L.I2.I2"), Expression.Constant(4)) }, null);
+                var left = CSharpExpression.TupleLiteral(typeof(((int, int), (int, int))), new Expression[] { leftNested1, leftNested2 }, null);
+
+                var rightNested1 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I1.I1"), Expression.Constant(1)), Expression.Block(log("R.I1.I2"), Expression.Constant(-2)) }, null);
+                var rightNested2 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I2.I1"), Expression.Constant(3)), Expression.Block(log("R.I2.I2"), Expression.Constant(4)) }, null);
+                var right = CSharpExpression.TupleLiteral(typeof(((int, int), (int, int))), new Expression[] { rightNested1, rightNested2 }, null);
+
+                return CSharpExpression.TupleEqual(left, right, checksNested);
+            }, new LogAndResult<bool> { Log = { "L.I1.I1", "L.I1.I2", "L.I2.I1", "L.I2.I2", "R.I1.I1", "R.I1.I2", "R.I2.I1", "R.I2.I2", "1 == 1", "2 == -2" }, Value = false });
+
+            AssertCompile((log, append) =>
+            {
+                var appendEq = Expression.Invoke(append, CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringInsert(l, format: null, alignment: null), CSharpExpression.InterpolationStringLiteral(" == "), CSharpExpression.InterpolationStringInsert(r, format: null, alignment: null)));
+
+                var checksEq = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<int, int, bool>>(Expression.Block(appendEq, Expression.Equal(l, r)), l, r));
+                var checksNested = Enumerable.Range(1, 2).Select(i => Expression.Lambda<Func<(int, int), (int, int), bool>>(CSharpExpression.TupleEqual(lNested, rNested, checksEq), lNested, rNested));
+
+                var leftNested1 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I1.I1"), Expression.Constant(1)), Expression.Block(log("L.I1.I2"), Expression.Constant(2)) }, null);
+                var leftNested2 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("L.I2.I1"), Expression.Constant(3)), Expression.Block(log("L.I2.I2"), Expression.Constant(4)) }, null);
+                var left = CSharpExpression.TupleLiteral(typeof(((int, int), (int, int))), new Expression[] { leftNested1, leftNested2 }, null);
+
+                var rightNested1 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I1.I1"), Expression.Constant(1)), Expression.Block(log("R.I1.I2"), Expression.Constant(2)) }, null);
+                var rightNested2 = CSharpExpression.TupleLiteral(typeof((int, int)), new Expression[] { Expression.Block(log("R.I2.I1"), Expression.Constant(-3)), Expression.Block(log("R.I2.I2"), Expression.Constant(4)) }, null);
+                var right = CSharpExpression.TupleLiteral(typeof(((int, int), (int, int))), new Expression[] { rightNested1, rightNested2 }, null);
+
+                return CSharpExpression.TupleEqual(left, right, checksNested);
+            }, new LogAndResult<bool> { Log = { "L.I1.I1", "L.I1.I2", "L.I2.I1", "L.I2.I2", "R.I1.I1", "R.I1.I2", "R.I2.I1", "R.I2.I2", "1 == 1", "2 == 2", "3 == -3" }, Value = false });
+        }
+
         private void AssertCompile<T>(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLog<T>(createExpression).Compile()();
@@ -630,6 +795,7 @@ namespace Tests
         }
 
         // TODO: tests for various optimizations
+        // TODO: tests with nested tuple literals containing nullable, e.g. (int, (int, int)?)
         // TODO: tests for dynamic equality
     }
 

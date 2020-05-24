@@ -20,12 +20,29 @@ var exprs = new[]
     // Non-null
     "(Expression<Func<(int, string), (int, string), bool>>)((l, r) => l == r)",
     "(Expression<Func<(int, string), (int, string), bool>>)((l, r) => l != r)",
+    "(Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l == r)",
+    "(Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l != r)",
+    "(Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l == r)",
+    "(Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l != r)",
 
     // Null
     "(Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l == r)",
     "(Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l != r)",
 
-    // TODO: Nested, using literals, etc.
+    // Nested
+    "(Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l == r)",
+    "(Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l != r)",
+    "(Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l == r)",
+    "(Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l != r)",
+    "(Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l == r)",
+    "(Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l != r)",
+    "(Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l == r)",
+    "(Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l != r)",
+
+    // Spurious conversions
+    "(Expression<Func<(char, byte), (char, byte), bool>>)((l, r) => l == r)",
+
+    // TODO: using literals, dynamic, etc.
 };
 #>
 <#@ include file="CompilerTests.t4" #>
