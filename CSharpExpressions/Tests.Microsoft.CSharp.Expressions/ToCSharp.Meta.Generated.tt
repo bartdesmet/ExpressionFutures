@@ -48,12 +48,12 @@ namespace Tests
     [TestClass]
     public class ToCSharpTests
     {
-		private static LabelTarget _lbl1 = Expression.Label();
-		private static LabelTarget _lbl2 = Expression.Label();
-		private static LabelTarget _lbl3 = Expression.Label(typeof(int));
-		private static ParameterExpression _par1 = Expression.Parameter(typeof(int));
-		private static ParameterExpression _par2 = Expression.Parameter(typeof(int));
-		private static ParameterExpression _par3 = Expression.Parameter(typeof(long));
+        private static LabelTarget _lbl1 = Expression.Label();
+        private static LabelTarget _lbl2 = Expression.Label();
+        private static LabelTarget _lbl3 = Expression.Label(typeof(int));
+        private static ParameterExpression _par1 = Expression.Parameter(typeof(int));
+        private static ParameterExpression _par2 = Expression.Parameter(typeof(int));
+        private static ParameterExpression _par3 = Expression.Parameter(typeof(long));
 
         private Expression expr0 = CSharpExpression.PostIncrementAssign(Expression.Parameter(typeof(int)));
         private string dbg0 = <#=toEscapedString(CSharpExpression.PostIncrementAssign(Expression.Parameter(typeof(int))).ToCSharp())#>;

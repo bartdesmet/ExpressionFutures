@@ -33,10 +33,10 @@ var bts = new[]
     ExpressionType.RightShift,
     ExpressionType.Subtract,
     ExpressionType.SubtractChecked,
-    
+
     // NB, The following are not supported by design
-	// ExpressionType.Power,
-	// ExpressionType.Coalesce,
+    // ExpressionType.Power,
+    // ExpressionType.Coalesce,
 };
 
 var uts = new[]
@@ -81,32 +81,32 @@ namespace Tests
 var i = 0;
 foreach (var et in bts)
 {
-	var flags = "CSharpBinderFlags.None";
+    var flags = "CSharpBinderFlags.None";
 
-	switch (et)
-	{
-		case ExpressionType.AddChecked:
-		case ExpressionType.SubtractChecked:
-		case ExpressionType.MultiplyChecked:
-			flags = "CSharpBinderFlags.CheckedContext";
-			break;
-		case ExpressionType.AndAlso:
-		case ExpressionType.OrElse:
-			flags = "CSharpBinderFlags.BinaryOperationLogical";
-			break;
-	}
+    switch (et)
+    {
+        case ExpressionType.AddChecked:
+        case ExpressionType.SubtractChecked:
+        case ExpressionType.MultiplyChecked:
+            flags = "CSharpBinderFlags.CheckedContext";
+            break;
+        case ExpressionType.AndAlso:
+        case ExpressionType.OrElse:
+            flags = "CSharpBinderFlags.BinaryOperationLogical";
+            break;
+    }
 #>
             var be<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(le, re);
             Assert.AreEqual(ExpressionType.<#=et#>, be<#=i#>.OperationNodeType);
             Assert.AreSame(le, be<#=i#>.Left.Expression);
             Assert.AreSame(re, be<#=i#>.Right.Expression);
-			Assert.AreEqual(<#=flags#>, be<#=i#>.Flags);
+            Assert.AreEqual(<#=flags#>, be<#=i#>.Flags);
 
             var bd<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd);
             Assert.AreEqual(ExpressionType.<#=et#>, bd<#=i#>.OperationNodeType);
             Assert.AreSame(ld, bd<#=i#>.Left);
             Assert.AreSame(rd, bd<#=i#>.Right);
-			Assert.AreEqual(<#=flags#>, bd<#=i#>.Flags);
+            Assert.AreEqual(<#=flags#>, bd<#=i#>.Flags);
 
             var bf<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd, <#=flags#>);
             Assert.AreEqual(ExpressionType.<#=et#>, bf<#=i#>.OperationNodeType);
@@ -138,24 +138,24 @@ foreach (var et in bts)
 var j = 0;
 foreach (var et in uts)
 {
-	var flags = "CSharpBinderFlags.None";
+    var flags = "CSharpBinderFlags.None";
 
-	switch (et)
-	{
-		case ExpressionType.NegateChecked:
-			flags = "CSharpBinderFlags.CheckedContext";
-			break;
-	}
+    switch (et)
+    {
+        case ExpressionType.NegateChecked:
+            flags = "CSharpBinderFlags.CheckedContext";
+            break;
+    }
 #>
             var ue<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(oe);
             Assert.AreEqual(ExpressionType.<#=et#>, ue<#=j#>.OperationNodeType);
             Assert.AreSame(oe, ue<#=j#>.Operand.Expression);
-			Assert.AreEqual(<#=flags#>, ue<#=j#>.Flags);
+            Assert.AreEqual(<#=flags#>, ue<#=j#>.Flags);
 
             var ud<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od);
             Assert.AreEqual(ExpressionType.<#=et#>, ud<#=j#>.OperationNodeType);
             Assert.AreSame(od, ud<#=j#>.Operand);
-			Assert.AreEqual(<#=flags#>, ud<#=j#>.Flags);
+            Assert.AreEqual(<#=flags#>, ud<#=j#>.Flags);
 
             var uf<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od, <#=flags#>);
             Assert.AreEqual(ExpressionType.<#=et#>, uf<#=j#>.OperationNodeType);
