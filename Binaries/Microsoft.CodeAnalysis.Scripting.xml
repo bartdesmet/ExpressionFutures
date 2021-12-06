@@ -369,6 +369,11 @@
             Operates on runtime metadata artifacts.
             </remarks>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Scripting.Hosting.RuntimeMetadataReferenceResolver.CreateCurrentPlatformResolver(System.Collections.Immutable.ImmutableArray{System.String},System.String,System.Func{System.String,Microsoft.CodeAnalysis.MetadataReferenceProperties,Microsoft.CodeAnalysis.PortableExecutableReference})">
+            <summary>
+            Creates a resolver that uses the current platform settings (GAC, platform assembly list).
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver">
             <summary>
             Resolves assembly identities in Global Assembly Cache.
@@ -376,7 +381,7 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.IsAvailable">
             <summary>
-            Returns true if GAC is available on the platform.
+            Returns true if GAC is available on the current platform.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.Architectures">
@@ -394,7 +399,7 @@
             Creates an instance of a <see cref="T:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver"/>, if available on the platform (check <see cref="P:Microsoft.CodeAnalysis.Scripting.Hosting.GacFileResolver.IsAvailable"/>).
             </summary>
             <param name="architectures">Supported architectures used to filter GAC assemblies.</param>
-            <param name="preferredCulture">A culture to use when choosing the best assembly from 
+            <param name="preferredCulture">A culture to use when choosing the best assembly from
             among the set filtered by <paramref name="architectures"/></param>
             <exception cref="T:System.PlatformNotSupportedException">The platform doesn't support GAC.</exception>
         </member>

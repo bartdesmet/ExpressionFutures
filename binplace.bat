@@ -12,6 +12,7 @@ copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Composition.Hosting.dll" 
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Composition.Runtime.dll" "Binaries\"
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Composition.TypedParts.dll" "Binaries\"
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Reflection.Metadata.dll" "Binaries\"
+copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Runtime.CompilerServices.Unsafe.dll" "Binaries\"
 
 copy "%1\Microsoft.CodeAnalysis\Debug\netstandard2.0\Microsoft.CodeAnalysis.dll" "Binaries\"
 copy "%1\Microsoft.CodeAnalysis\Debug\netstandard2.0\Microsoft.CodeAnalysis.xml" "Binaries\"

@@ -19,6 +19,12 @@
             and constructed via provided factory.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpCodeGenerationHelpers.GetReuseableSyntaxNodeForSymbol``1(Microsoft.CodeAnalysis.ISymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
+            <summary>
+            Try use the existing syntax node and generate a new syntax node for the given <param name="symbol"/>.
+            Note: the returned syntax node might be modified, which means its parent information might be missing.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpSyntaxGenerator.ShiftTrivia(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
             Moves the trailing trivia from the node's previous token to the end of the node
@@ -65,24 +71,40 @@
             otherwise, we match for type equivalence
             </remarks>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.Rewriter._namespaceMembers">
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.ConflictWalker">
             <summary>
-            A hashset containing the short names of all namespace members 
+            Walks the portion of the tree we're adding imports to looking to see if those imports could likely cause
+            conflicts with existing code.  Note: this is a best-effort basis, and the goal is to catch reasonable
+            conflicts effectively.  There may be cases that do slip through that we can adjust for in the future.  Those
+            cases should be assessed to see how reasonable/likely they are.  I.e. if it's just a hypothetical case with
+            no users being hit, then that's far less important than if we have a reasonable coding pattern that would be
+            impacted by adding an import to a normal namespace.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.Rewriter._extensionMethods">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.ConflictWalker._importedTypes">
             <summary>
-            A hashset containing the short names of all extension methods
+            A mapping containing the simple names and arity of all imported types, mapped to the import that they're
+            brought in by.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SemanticModelExtensions.DecomposeName(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax@,System.String@,System.Int32@)">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.ConflictWalker._importedExtensionMethods">
             <summary>
-            Decomposes a name or member access expression into its component parts.
+            A mapping containing the simple names of all imported extension methods, mapped to the import that
+            they're brought in by.  This doesn't keep track of arity because methods can be called with type
+            arguments.
             </summary>
-            <param name="expression">The name or member access expression.</param>
-            <param name="qualifier">The qualifier (or left-hand-side) of the name expression. This may be null if there is no qualifier.</param>
-            <param name="name">The name of the expression.</param>
-            <param name="arity">The number of generic type parameters.</param>
+            <remarks>
+            We could consider adding more information here (for example the min/max number of args that this can be
+            called with).  That could then be used to check if there could be a conflict. However, that's likely
+            more complexity than we need currently.  But it is always something we can do in the future.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Editing.CSharpImportAdder.ConflictWalker._inAnonymousMethod">
+            <summary>
+            Track if we're in an anonymous method or not.  If so, because of how the language binds lambdas and
+            overloads, we'll assume any method access we see inside (instance or otherwise) could end up conflicting
+            with an extension method we might pull in.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SemanticModelExtensions.GenerateNameForArgument(Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax,System.Threading.CancellationToken)">
             <summary>
@@ -95,6 +117,15 @@
             Given an expression node, tries to generate an appropriate name that can be used for
             that expression. 
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SemanticModelExtensions.DecomposeName(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax@,System.String@,System.Int32@)">
+            <summary>
+            Decomposes a name or member access expression into its component parts.
+            </summary>
+            <param name="expression">The name or member access expression.</param>
+            <param name="qualifier">The qualifier (or left-hand-side) of the name expression. This may be null if there is no qualifier.</param>
+            <param name="name">The name of the expression.</param>
+            <param name="arity">The number of generic type parameters.</param>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ArgumentSyntaxExtensions.DetermineParameter(Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax,Microsoft.CodeAnalysis.SemanticModel,System.Boolean,System.Threading.CancellationToken)">
             <summary>
@@ -113,19 +144,74 @@
             Returns null if the <paramref name="argument"/> is a named argument.
             </remarks>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsExpressionOfArgumentInDeconstruction(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleTupleContext(Microsoft.CodeAnalysis.SyntaxTree,Microsoft.CodeAnalysis.SyntaxToken,System.Int32)">
             <summary>
-            If this declaration or identifier is part of a deconstruction, find the deconstruction.
-            If found, returns either an assignment expression or a foreach variable statement.
-            Returns null otherwise.
-            
-            copied from SyntaxExtensions.GetContainingDeconstruction
+            Are you possibly typing a tuple type or expression?
+            This is used to suppress colon as a completion trigger (so that you can type element names).
+            This is also used to recommend some keywords (like var).
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleDeconstructionDesignation(Microsoft.CodeAnalysis.SyntaxTree,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Are you possibly in the designation part of a deconstruction?
+            This is used to enter suggestion mode (suggestions become soft-selected).
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.UnwrapPossibleTuple(Microsoft.CodeAnalysis.SyntaxNode)">
+            <summary>
+            If inside a parenthesized or tuple expression, unwrap the nestings and return the container.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.CSharpSyntaxContext.IsAwaitStatementContext(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Is this a possible position for an await statement (`await using` or `await foreach`)?
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.CSharpSyntaxContext.IsAwaitKeywordContext">
+            <summary>
+            Determines whether await should be suggested in a given position.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsExpressionOfArgumentInDeconstruction(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
+             <summary>
+             If this declaration or identifier is part of a deconstruction, find the deconstruction.
+             If found, returns either an assignment expression or a foreach variable statement.
+             Returns null otherwise.
+            
+             copied from SyntaxExtensions.GetContainingDeconstruction
+             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.CastIfPossible(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.ITypeSymbol,System.Int32,Microsoft.CodeAnalysis.SemanticModel,System.Threading.CancellationToken)">
             <summary>
             Adds to <paramref name="targetType"/> if it does not contain an anonymous
             type and binds to the same type at the given <paramref name="position"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.ShouldNameExpressionBeTreatedAsExpressionInsteadOfType(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.SymbolInfo@,Microsoft.CodeAnalysis.ITypeSymbol@)">
+            <summary>
+            DeterminesCheck if we're in an interesting situation like this:
+            <code>
+                int i = 5;
+                i.          // -- here
+                List ml = new List();
+            </code>
+            The problem is that "i.List" gets parsed as a type.  In this case we need to try binding again as if "i" is
+            an expression and not a type.  In order to do that, we need to speculate as to what 'i' meant if it wasn't
+            part of a local declaration's type.
+            <para/>
+            Another interesting case is something like:
+            <code>
+                 stringList.
+                 await Test2();
+            </code>
+            Here "stringList.await" is thought of as the return type of a local function.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions.TypeSyntaxGeneratorVisitor.AddGlobalAlias(Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax)">
+            <summary>
+            We always unilaterally add "global::" to all named types/namespaces.  This
+            will then be trimmed off if possible by calls to 
+            <see cref="M:Microsoft.CodeAnalysis.Simplification.Simplifier.ReduceAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Options.OptionSet,System.Threading.CancellationToken)"/>
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Extensions.OperatorPrecedence">
@@ -149,6 +235,11 @@
             Returns all of the trivia to the left of this token up to the previous token (concatenates
             the previous token's trailing trivia and this token's leading trivia).
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions.GetRootConditionalAccessExpression(Microsoft.CodeAnalysis.SyntaxNode)">
+            <summary>
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.LanguageServices.ISyntaxFacts.GetRootConditionalAccessExpression(Microsoft.CodeAnalysis.SyntaxNode)"/>
+            </summary>>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions.GetEnclosingUsingDirectives(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
@@ -267,36 +358,6 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.BasePropertyDeclarationSyntaxExtensions.TryWithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax,Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax)">
             <summary>
             Available if <paramref name="node"/> is <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax"/> or <see cref="T:Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.CSharpSyntaxContext.IsAwaitStatementContext(System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Is this a possible position for an await statement (`await using` or `await foreach`)?
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleTupleContext(Microsoft.CodeAnalysis.SyntaxTree,Microsoft.CodeAnalysis.SyntaxToken,System.Int32)">
-            <summary>
-            Are you possibly typing a tuple type or expression?
-            This is used to suppress colon as a completion trigger (so that you can type element names).
-            This is also used to recommend some keywords (like var).
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.IsPossibleDeconstructionDesignation(Microsoft.CodeAnalysis.SyntaxTree,System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Are you possibly in the designation part of a deconstruction?
-            This is used to enter suggestion mode (suggestions become soft-selected).
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.SyntaxTreeExtensions.UnwrapPossibleTuple(Microsoft.CodeAnalysis.SyntaxNode)">
-            <summary>
-            If inside a parenthesized or tuple expression, unwrap the nestings and return the container.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions.TypeSyntaxGeneratorVisitor.AddGlobalAlias(Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax)">
-            <summary>
-            We always unilaterally add "global::" to all named types/namespaces.  This
-            will then be trimmed off if possible by calls to 
-            <see cref="M:Microsoft.CodeAnalysis.Simplification.Simplifier.ReduceAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Options.OptionSet,System.Threading.CancellationToken)"/>
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.FindSymbols.CSharpDeclaredSymbolInfoFactoryService.GetSuffix(System.Char,System.Char,Microsoft.CodeAnalysis.SeparatedSyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax})">
@@ -481,6 +542,12 @@
             this holds onto changes made by formatting engine.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Formatting.CSharpTriviaFormatter.IsVisualBasicComment(Microsoft.CodeAnalysis.SyntaxTrivia)">
+            <summary>
+            C# never passes a VB Comment
+            </summary>
+            <param name="trivia"></param>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Formatting.TriviaDataFactory">
             <summary>
             trivia factory.
@@ -504,21 +571,33 @@
             Check whether the currentToken is a comma and is a delimiter between arguments inside a tuple expression.
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx">
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Recommendations.CSharpRecommendationServiceRunner">
             <summary>
-            This class allows the Code Style layer to light up support for new language features when available at runtime
-            while compiling against an older version of the Roslyn assemblies.
+            Adds user defined and predefined conversions to the unnamed recommendation set.
+            </summary>
+            <summary>
+            Adds user defined operators to the unnamed recommendation set.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPatternValueAssertion">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.RenameRewriter._isRenamingInStrings">
             <summary>
-            This will only compile if <see cref="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPattern"/> and <see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.RelationalPattern"/> have the same
-            value.
+            Flag indicating if we should perform a rename inside string literals.
             </summary>
-            <remarks>
-            <para>The subtraction will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.RelationalPattern"/> is greater, and the conversion
-            to an unsigned value after negation will overflow if <see cref="F:Microsoft.CodeAnalysis.CSharp.Formatting.SyntaxKindEx.RelationalPattern"/> is greater.</para>
-            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.RenameRewriter._isRenamingInComments">
+            <summary>
+            Flag indicating if we should perform a rename inside comment trivia.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.RenameRewriter._stringAndCommentTextSpans">
+            <summary>
+            A map from spans of tokens needing rename within strings or comments to an optional
+            set of specific sub-spans within the token span that
+            have <see cref="F:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.RenameRewriter._originalText"/> matches and should be renamed.
+            If this sorted set is null, it indicates that sub-spans to rename within the token span
+            are not available, and a regex match should be performed to rename
+            all <see cref="F:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.RenameRewriter._originalText"/> matches within the span.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService.GetExpansionTargetForLocation(Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>
@@ -589,6 +668,30 @@
             </summary>
             <param name="node"></param>
             <returns></returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Simplification.Simplifiers.CastSimplifier">
+            <summary>
+            By default the cast simplifier operates under several main principles:
+            <list type="number">
+            <item>The final type that a cast-expression was converted to should be the same as the final
+            type that the underlying expression should convert to without the cast.  This tells us that 
+            the compiler thinks that value should convert to that type implicitly, not just explicitly.</item>
+            <item>Static semantics of the code should remain the same.  This means that things like overload
+            resolution of the invocations the casted expression is contained within should not change.</item>
+            <item>Runtime types and values should not observably change.  This means that if casting the 
+            value would cause a different type to be seen in a <see cref="M:System.Object.GetType"/> call, 
+            or a different value could be observed at runtime, then it must remain.</item>
+            </list>
+            
+            These rules serve as a good foundational intuition about when casts should be kept and when 
+            they should be removable.  However, they are not entirely complete.  There are cases when we
+            can weaken some of the above rules if it would not be observable at runtime.  For example,
+            if it can be proven that calling through an interface method would lead to the exact same
+            call at runtime to a specific implementation of that interface method, then it can be legal to
+            remove such a cast as at runtime this would not be observable.  This does in effect mean that
+            the emitted IL will be different, but this matches the user expectation that the *end* behavior
+            of their code remains the same.
+            </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory.CSharpSyntaxTreeFactoryService.PathSyntaxReference">
             <summary>
