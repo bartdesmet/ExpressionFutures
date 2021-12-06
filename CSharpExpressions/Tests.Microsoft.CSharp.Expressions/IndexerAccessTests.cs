@@ -431,7 +431,7 @@ namespace Tests
                 var index = Expression.Block(log("I"), Expression.Constant(new Index(3)));
 
                 return CSharpExpression.IndexerAccess(obj, index, SliceAndIndexStringLength, SliceAndIndexStringIndexer);
-            }, new LogAndResult<char> { Log = { "O", "Length", "I", "this[3] get()" }, Value = 'b' });
+            }, new LogAndResult<char> { Log = { "O", "I", "Length", "this[3] get()" }, Value = 'b' });
 
             // str[^i]
 
@@ -441,7 +441,7 @@ namespace Tests
                 var index = Expression.Block(log("I"), Expression.Constant(new Index(3, fromEnd: true)));
 
                 return CSharpExpression.IndexerAccess(obj, index, SliceAndIndexStringLength, SliceAndIndexStringIndexer);
-            }, new LogAndResult<char> { Log = { "O", "Length", "I", "this[3] get()" }, Value = 'b' });
+            }, new LogAndResult<char> { Log = { "O", "I", "Length", "this[3] get()" }, Value = 'b' });
 
             // str[^i] using FromEndIndex
 
@@ -451,7 +451,7 @@ namespace Tests
                 var index = CSharpExpression.FromEndIndex(Expression.Block(log("E"), Expression.Constant(3)));
 
                 return CSharpExpression.IndexerAccess(obj, index, SliceAndIndexStringLength, SliceAndIndexStringIndexer);
-            }, new LogAndResult<char> { Log = { "O", "Length", "E", "this[3] get()" }, Value = 'b' });
+            }, new LogAndResult<char> { Log = { "O", "E", "Length", "this[3] get()" }, Value = 'b' });
         }
 
         [TestMethod]
@@ -1002,7 +1002,7 @@ namespace Tests
                     it,
                     Expression.Property(var, SliceAndIndexListStructLog)
                 );
-            }, new LogAndResult<string> { Log = { "O", "Length", "I", "this[2] get()" }, Value = "Length;this[2] get();" });
+            }, new LogAndResult<string> { Log = { "O", "I", "Length", "this[2] get()" }, Value = "Length;this[2] get();" });
         }
 
         private static (int Offset, int Length) GetOffsetAndLengthNoFail(Range range, int length)

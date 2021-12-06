@@ -109,11 +109,23 @@ namespace Microsoft.CSharp.Expressions
 
                 Expression obj = isByRef ? Expression.Parameter(Object.Type.MakeByRefType(), "__obj") : GetObjectExpression(temps, stmts);
 
+                var arg = Argument;
+
+                if (!Helpers.IsPure(arg))
+                {
+                    var argVariable = Expression.Parameter(Argument.Type, "__arg");
+
+                    temps.Add(argVariable);
+                    stmts.Add(Expression.Assign(argVariable, Argument));
+
+                    arg = argVariable;
+                }
+
                 // NB: We always need to evaluate Length first to have a consistent evaluation order regardless of optimizations.
 
                 var length = Expression.Parameter(typeof(int), "__len");
 
-                var expr = GetIndexOffset(Argument, length, out var useLength);
+                var expr = GetIndexOffset(arg, length, out var useLength);
 
                 var index = Expression.MakeIndex(obj, (PropertyInfo)IndexOrSlice, new[] { expr });
 
