@@ -50,7 +50,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             if (!expression.Equals(function))
             {
-                throw new InvalidOperationException("Results don't match.");
+                throw new InvalidOperationException($"Results don't match.\r\n\r\nExpression: {expression}\r\n\r\nFunction: {function}");
             }
         }
 
