@@ -667,6 +667,78 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.InvalidEqualityCheckCount(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "'{0}' is not a member of any type."
+        /// </summary>
+        internal static Exception NotAMemberOfAnyType(object p0)
+        {
+            return new ArgumentException(Strings.NotAMemberOfAnyType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A 'with' expression for value type '{0}' cannot specify a 'Clone' method."
+        /// </summary>
+        internal static Exception WithExpressionCannotHaveCloneForValueType(object p0)
+        {
+            return new ArgumentException(Strings.WithExpressionCannotHaveCloneForValueType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A 'with' expression for type '{0}' should specify a 'Clone' method."
+        /// </summary>
+        internal static Exception WithExpressionShouldHaveClone(object p0)
+        {
+            return new ArgumentException(Strings.WithExpressionShouldHaveClone(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Clone method '{0}' should have no parameters."
+        /// </summary>
+        internal static Exception CloneMethodShouldHaveNoParameters(object p0)
+        {
+            return new ArgumentException(Strings.CloneMethodShouldHaveNoParameters(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Clone method '{0}' should be an instance method."
+        /// </summary>
+        internal static Exception CloneMethodMustNotBeStatic(object p0)
+        {
+            return new ArgumentException(Strings.CloneMethodMustNotBeStatic(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Clone method '{0}' should return a type that can be converted to '{1}'."
+        /// </summary>
+        internal static Exception CloneMethodShouldReturnCompatibleType(object p0, object p1)
+        {
+            return new ArgumentException(Strings.CloneMethodShouldReturnCompatibleType(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' cannot be static."
+        /// </summary>
+        internal static Exception MemberInitializerMemberMustNotBeStatic(object p0)
+        {
+            return new ArgumentException(Strings.MemberInitializerMemberMustNotBeStatic(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' must be writeable."
+        /// </summary>
+        internal static Exception MemberInitializerMemberMustBeWriteable(object p0)
+        {
+            return new ArgumentException(Strings.MemberInitializerMemberMustBeWriteable(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "No suitable constructor found for type '{0}' using the specified members."
+        /// </summary>
+        internal static Exception NoAnonymousTypeConstructorFound(object p0)
+        {
+            return new ArgumentException(Strings.NoAnonymousTypeConstructorFound(p0));
+        }
+
     }
 
     /// <summary>
@@ -1414,6 +1486,78 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.InvalidEqualityCheckCount, p0);
         }
 
+        /// <summary>
+        /// A string like "'{0}' is not a member of any type."
+        /// </summary>
+        internal static string NotAMemberOfAnyType(object p0)
+        {
+            return SR.Format(SR.NotAMemberOfAnyType, p0);
+        }
+
+        /// <summary>
+        /// A string like "A 'with' expression for value type '{0}' cannot specify a 'Clone' method."
+        /// </summary>
+        internal static string WithExpressionCannotHaveCloneForValueType(object p0)
+        {
+            return SR.Format(SR.WithExpressionCannotHaveCloneForValueType, p0);
+        }
+
+        /// <summary>
+        /// A string like "A 'with' expression for type '{0}' should specify a 'Clone' method."
+        /// </summary>
+        internal static string WithExpressionShouldHaveClone(object p0)
+        {
+            return SR.Format(SR.WithExpressionShouldHaveClone, p0);
+        }
+
+        /// <summary>
+        /// A string like "Clone method '{0}' should have no parameters."
+        /// </summary>
+        internal static string CloneMethodShouldHaveNoParameters(object p0)
+        {
+            return SR.Format(SR.CloneMethodShouldHaveNoParameters, p0);
+        }
+
+        /// <summary>
+        /// A string like "Clone method '{0}' should be an instance method."
+        /// </summary>
+        internal static string CloneMethodMustNotBeStatic(object p0)
+        {
+            return SR.Format(SR.CloneMethodMustNotBeStatic, p0);
+        }
+
+        /// <summary>
+        /// A string like "Clone method '{0}' should return a type that can be converted to '{1}'."
+        /// </summary>
+        internal static string CloneMethodShouldReturnCompatibleType(object p0, object p1)
+        {
+            return SR.Format(SR.CloneMethodShouldReturnCompatibleType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Member '{0}' used in a 'MemberInitializer' cannot be static."
+        /// </summary>
+        internal static string MemberInitializerMemberMustNotBeStatic(object p0)
+        {
+            return SR.Format(SR.MemberInitializerMemberMustNotBeStatic, p0);
+        }
+
+        /// <summary>
+        /// A string like "Member '{0}' used in a 'MemberInitializer' must be writeable."
+        /// </summary>
+        internal static string MemberInitializerMemberMustBeWriteable(object p0)
+        {
+            return SR.Format(SR.MemberInitializerMemberMustBeWriteable, p0);
+        }
+
+        /// <summary>
+        /// A string like "No suitable constructor found for type '{0}' using the specified members."
+        /// </summary>
+        internal static string NoAnonymousTypeConstructorFound(object p0)
+        {
+            return SR.Format(SR.NoAnonymousTypeConstructorFound, p0);
+        }
+
     }
 }
 
@@ -1503,5 +1647,14 @@ namespace System
         public const string TupleComponentCountMismatch = "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'.";
         public const string InvalidElementConversionCount = "The number of element conversion expressions does not match tuple arity '{0}'.";
         public const string InvalidEqualityCheckCount = "The number of equality check expressions does not match tuple arity '{0}'.";
+        public const string NotAMemberOfAnyType = "'{0}' is not a member of any type.";
+        public const string WithExpressionCannotHaveCloneForValueType = "A 'with' expression for value type '{0}' cannot specify a 'Clone' method.";
+        public const string WithExpressionShouldHaveClone = "A 'with' expression for type '{0}' should specify a 'Clone' method.";
+        public const string CloneMethodShouldHaveNoParameters = "Clone method '{0}' should have no parameters.";
+        public const string CloneMethodMustNotBeStatic = "Clone method '{0}' should be an instance method.";
+        public const string CloneMethodShouldReturnCompatibleType = "Clone method '{0}' should return a type that can be converted to '{1}'.";
+        public const string MemberInitializerMemberMustNotBeStatic = "Member '{0}' used in a 'MemberInitializer' cannot be static.";
+        public const string MemberInitializerMemberMustBeWriteable = "Member '{0}' used in a 'MemberInitializer' must be writeable.";
+        public const string NoAnonymousTypeConstructorFound = "No suitable constructor found for type '{0}' using the specified members.";
     }
 }

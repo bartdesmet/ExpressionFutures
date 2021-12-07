@@ -93,6 +93,15 @@ var errors = new[]
     new { Name = "TupleComponentCountMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'." },
     new { Name = "InvalidElementConversionCount", ExceptionType = "ArgumentException", Args = 1, Message = "The number of element conversion expressions does not match tuple arity '{0}'." },
     new { Name = "InvalidEqualityCheckCount", ExceptionType = "ArgumentException", Args = 1, Message = "The number of equality check expressions does not match tuple arity '{0}'." },
+    new { Name = "NotAMemberOfAnyType", ExceptionType = "ArgumentException", Args = 1, Message = "'{0}' is not a member of any type." },
+    new { Name = "WithExpressionCannotHaveCloneForValueType", ExceptionType = "ArgumentException", Args = 1, Message = "A 'with' expression for value type '{0}' cannot specify a 'Clone' method." },
+    new { Name = "WithExpressionShouldHaveClone", ExceptionType = "ArgumentException", Args = 1, Message = "A 'with' expression for type '{0}' should specify a 'Clone' method." },
+    new { Name = "CloneMethodShouldHaveNoParameters", ExceptionType = "ArgumentException", Args = 1, Message = "Clone method '{0}' should have no parameters." },
+    new { Name = "CloneMethodMustNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "Clone method '{0}' should be an instance method." },
+    new { Name = "CloneMethodShouldReturnCompatibleType", ExceptionType = "ArgumentException", Args = 2, Message = "Clone method '{0}' should return a type that can be converted to '{1}'." },
+    new { Name = "MemberInitializerMemberMustNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' used in a 'MemberInitializer' cannot be static." },
+    new { Name = "MemberInitializerMemberMustBeWriteable", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' used in a 'MemberInitializer' must be writeable." },
+    new { Name = "NoAnonymousTypeConstructorFound", ExceptionType = "ArgumentException", Args = 1, Message = "No suitable constructor found for type '{0}' using the specified members." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

@@ -437,3 +437,9 @@ public struct NestedMemberInitStruct
         set { _log("set_B"); _b = value; }
     }
 }
+
+public struct Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}

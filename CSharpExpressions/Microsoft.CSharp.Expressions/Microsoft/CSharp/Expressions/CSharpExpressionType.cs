@@ -272,5 +272,10 @@ namespace Microsoft.CSharp.Expressions
         /// A tuple inequality expression, such as (a, b) != (c, d).
         /// </summary>
         TupleNotEqual,
+
+        /// <summary>
+        /// A with expression, such as o with { x = e }.
+        /// </summary>
+        With,
     }
 }

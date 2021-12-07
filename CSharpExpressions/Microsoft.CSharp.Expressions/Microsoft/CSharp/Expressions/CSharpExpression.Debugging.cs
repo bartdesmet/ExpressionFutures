@@ -917,6 +917,38 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, args);
         }
 
+        protected internal override Expression VisitWith(WithCSharpExpression node)
+        {
+            var nodes = new List<object>
+            {
+                new XElement(nameof(node.Object), Visit(node.Object)),
+                Visit(nameof(node.Initializers), node.Initializers, Visit),
+            };
+
+            if (node.Clone != null)
+            {
+                nodes.Add(new XAttribute(nameof(node.Clone), node.Clone));
+            }
+
+            if (node.Members != null)
+            {
+                var members = new XElement(nameof(node.Members), node.Members.Select(m => new XElement("Member", m)));
+                nodes.Add(members);
+            }
+
+            return Push(node, nodes);
+        }
+
+        protected override MemberInitializer VisitMemberInitializer(MemberInitializer node)
+        {
+            var expr = Visit(node.Expression);
+
+            var res = new XElement(nameof(MemberInitializer), new XAttribute(nameof(node.Member), node.Member), new XElement(nameof(node.Expression), expr));
+            _nodes.Push(res);
+
+            return node;
+        }
+
         private XNode Visit(ParameterAssignment node)
         {
             VisitParameterAssignment(node);
@@ -950,6 +982,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(Interpolation node)
         {
             VisitInterpolation(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(MemberInitializer node)
+        {
+            VisitMemberInitializer(node);
             return _nodes.Pop();
         }
 

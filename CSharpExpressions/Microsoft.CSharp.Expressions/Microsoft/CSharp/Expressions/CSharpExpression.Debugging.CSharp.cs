@@ -2076,6 +2076,28 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class WithCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.MemberInit);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Visit(Object);
+            visitor.Out(" with { ");
+            visitor.Visit(Initializers);
+            visitor.Out(" }");
+        }
+    }
+
     partial class ArrayAccessCSharpExpression
     {
         /// <summary>
@@ -2210,6 +2232,25 @@ namespace Microsoft.CSharp.Expressions
             for (var i = 0; i < n; i++)
             {
                 visitor.Visit(args[i]);
+
+                if (i != n - 1)
+                {
+                    visitor.Out(", ");
+                }
+            }
+        }
+
+        public static void Visit(this ICSharpPrintingVisitor visitor, IList<MemberInitializer> initializers)
+        {
+            var n = initializers.Count;
+
+            for (var i = 0; i < n; i++)
+            {
+                var initializer = initializers[i];
+
+                visitor.Out(initializer.Member.Name);
+                visitor.Out(" = ");
+                visitor.Visit(initializer.Expression);
 
                 if (i != n - 1)
                 {

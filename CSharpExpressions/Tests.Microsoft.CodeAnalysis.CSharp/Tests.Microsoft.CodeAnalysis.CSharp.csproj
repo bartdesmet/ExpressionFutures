@@ -109,6 +109,12 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CompilerTests\CSharp70.Discard.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp90.WithExpression.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp90.WithExpression.Generated .cs">
+      <DependentUpon>CSharp90.WithExpression.Generated .tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="CompilerTests\CSharp80.NullCoalescingAssignment.Verify.cs" />
     <Compile Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.cs">
       <DependentUpon>CSharp80.NullCoalescingAssignment.Generated.tt</DependentUpon>
@@ -158,6 +164,7 @@
       <DependentUpon>CSharp30.Original.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="CrossCheckTests\CSharp30.MultiDimensionalArrayInitializers.cs" />
+    <Compile Include="CrossCheckTests\CSharp90.WithExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp80.NullCoalescingAssignment.cs" />
     <Compile Include="CrossCheckTests\CSharp80.IndexRange.cs" />
     <Compile Include="CrossCheckTests\CSharp73.TupleEquality.cs" />
@@ -220,6 +227,10 @@
     <Content Include="CompilerTests\CSharp70.ThrowExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp70.ThrowExpression.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp90.WithExpression.Generated .tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp90.WithExpression.Generated .cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

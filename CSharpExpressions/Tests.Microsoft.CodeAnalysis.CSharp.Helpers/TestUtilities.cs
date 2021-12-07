@@ -28,6 +28,18 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         //     from "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\PrivateAssemblies".
         private static AppDomain s_roslyn;
 
+        // TODO: Move the code below to RuntimeTestUtils.cs instead once this solution builds using the latest C#
+        //       language version.
+        private static string testCode = @"
+using System;
+
+public record class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+";
+
         public static void InitializeDomain(string path)
         {
             var setup = new AppDomainSetup
@@ -170,22 +182,6 @@ public static class {typeName}
 }}
 ".Trim('\r', '\n');
 
-            var testCode = @"
-using System;
-
-public record class Person
-{
-    public string Name { get; set; }
-    public int Age { get; set; }
-}
-
-public struct Point
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-}
-";
-
             if (trimCR)
             {
                 src = src.Replace("\r\n", "\n");
@@ -215,6 +211,9 @@ public struct Point
 
                 // Support for dynamic
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
+
+                // Test utilities
+                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
 
                 // Helper types
                 .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode))
@@ -453,6 +452,9 @@ public static class {typeName}
 
                 // Test utilities
                 .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
+
+                // Helper types
+                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode))
 
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
