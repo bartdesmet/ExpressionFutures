@@ -170,6 +170,22 @@ public static class {typeName}
 }}
 ".Trim('\r', '\n');
 
+            var testCode = @"
+using System;
+
+public record class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+public struct Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+";
+
             if (trimCR)
             {
                 src = src.Replace("\r\n", "\n");
@@ -199,6 +215,9 @@ public static class {typeName}
 
                 // Support for dynamic
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
+
+                // Helper types
+                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode))
 
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
