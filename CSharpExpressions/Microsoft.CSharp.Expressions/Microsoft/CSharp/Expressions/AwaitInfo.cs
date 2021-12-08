@@ -46,6 +46,11 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual AwaitInfo VisitAwaitInfo(AwaitInfo node)
         {
+            if (node == null)
+            {
+                return null;
+            }
+
             return node.Accept(this);
         }
     }

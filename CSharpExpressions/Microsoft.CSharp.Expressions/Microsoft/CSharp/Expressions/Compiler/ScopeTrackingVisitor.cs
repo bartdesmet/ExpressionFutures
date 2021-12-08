@@ -106,7 +106,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 node.Update(
                     VisitAndConvert(node.Variable, nameof(VisitUsing)),
                     resource,
-                    Visit(node.Body)
+                    Visit(node.Body),
+                    node.AwaitInfo
                 );
 
             PopScope(node.Variable);

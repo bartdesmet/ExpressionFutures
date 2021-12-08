@@ -450,12 +450,12 @@ namespace Microsoft.CSharp.Expressions
                         //     Double-check this.
                         Debug.Assert(!enumeratorType.IsNullableType());
 
-                        var dispose = enumeratorType.FindDisposeMethod();
+                        var dispose = enumeratorType.FindDisposeMethod(isAsync: false);
                         cleanup = Expression.Call(enumeratorVariable, dispose);
                     }
                     else
                     {
-                        var dispose = enumeratorType.FindDisposeMethod();
+                        var dispose = enumeratorType.FindDisposeMethod(isAsync: false);
                         cleanup =
                             Expression.IfThen(
                                 Expression.ReferenceNotEqual(enumeratorVariable, Expression.Constant(null, typeof(IDisposable))),

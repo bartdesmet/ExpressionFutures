@@ -334,18 +334,22 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        public static MethodInfo FindDisposeMethod(this Type type)
+        public static MethodInfo FindDisposeMethod(this Type type, bool isAsync)
         {
+            var disposableInterface = isAsync ? typeof(IAsyncDisposable) : typeof(IDisposable);
+
             if (type.IsInterface)
             {
-                if (typeof(IDisposable).IsAssignableFrom(type))
+                if (disposableInterface.IsAssignableFrom(type))
                 {
-                    return typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
+                    var disposeMethodName = isAsync ? nameof(IAsyncDisposable.DisposeAsync) : nameof(IDisposable.Dispose);
+
+                    return disposableInterface.GetMethod(disposeMethodName);
                 }
             }
 
             // REVIEW: This may pose challenges on .NET Native
-            var map = type.GetInterfaceMap(typeof(IDisposable));
+            var map = type.GetInterfaceMap(disposableInterface);
             return map.TargetMethods.Single(); // NB: IDisposable has only one method
         }
 

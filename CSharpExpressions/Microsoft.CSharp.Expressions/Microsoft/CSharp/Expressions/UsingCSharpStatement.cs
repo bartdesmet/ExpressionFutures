@@ -5,6 +5,7 @@
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 using LinqError = System.Linq.Expressions.Error;
@@ -21,11 +22,12 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class UsingCSharpStatement : CSharpStatement
     {
-        internal UsingCSharpStatement(ParameterExpression variable, Expression resource, Expression body)
+        internal UsingCSharpStatement(ParameterExpression variable, Expression resource, Expression body, AwaitInfo awaitInfo)
         {
             Variable = variable;
             Resource = resource;
             Body = body;
+            AwaitInfo = awaitInfo;
         }
 
         /// <summary>
@@ -42,6 +44,16 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the <see cref="Expression" /> representing the body.
         /// </summary>
         public Expression Body { get; }
+
+        /// <summary>
+        /// Gets the information required to await the DisposeAsync operation for await using statements.
+        /// </summary>
+        public new AwaitInfo AwaitInfo { get; }
+
+        /// <summary>
+        /// Gets a Boolean indicating whether the using statement is asynchronous.
+        /// </summary>
+        public bool IsAsync => AwaitInfo != null;
 
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
@@ -66,15 +78,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The <see cref="Variable" /> property of the result.</param>
         /// <param name="resource">The <see cref="Resource" /> property of the result.</param>
         /// <param name="body">The <see cref="Body" /> property of the result.</param>
+        /// <param name="awaitInfo">The <see cref="AwaitInfo"/> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public UsingCSharpStatement Update(ParameterExpression variable, Expression resource, Expression body)
+        public UsingCSharpStatement Update(ParameterExpression variable, Expression resource, Expression body, AwaitInfo awaitInfo)
         {
-            if (variable == this.Variable && resource == this.Resource && body == this.Body)
+            if (variable == this.Variable && resource == this.Resource && body == this.Body && awaitInfo == this.AwaitInfo)
             {
                 return this;
             }
 
-            return CSharpExpression.Using(variable, resource, body);
+            return CSharpExpression.Using(variable, resource, body, awaitInfo);
         }
 
         /// <summary>
@@ -104,19 +117,33 @@ namespace Microsoft.CSharp.Expressions
                     variableValue = variable;
                 }
 
-                var disposeMethod = variableValue.Type.FindDisposeMethod();
+                var disposeMethod = variableValue.Type.FindDisposeMethod(IsAsync);
                 cleanup = Expression.Call(variableValue, disposeMethod);
             }
             else
             {
-                variable = Variable ?? Expression.Parameter(typeof(IDisposable), "__resource");
+                var disposableInterface = IsAsync ? typeof(IAsyncDisposable) : typeof(IDisposable);
+
+                variable = Variable ?? Expression.Parameter(disposableInterface, "__resource");
 
                 // NB: This optimization would be more effective if the expression compiler would emit a `call` instruction,
                 //     but the JIT may still optimize it if it realizes the `callvirt` to the resource is predicated by a
                 //     prior null check.
                 var variableType = variable.Type;
-                var disposeMethod = variableType.IsSealed ? variableType.FindDisposeMethod() : typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
+
+                var disposeMethod =
+                    variableType.IsSealed
+                        ? variableType.FindDisposeMethod(IsAsync)
+                        : (IsAsync
+                            ? typeof(IAsyncDisposable).GetMethod(nameof(IAsyncDisposable.DisposeAsync))
+                            : typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose)));
+
                 cleanup = Expression.Call(variable, disposeMethod);
+
+                if (IsAsync)
+                {
+                    cleanup = Await(cleanup);
+                }
 
                 checkNull = true;
             }
@@ -212,7 +239,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
         public static UsingCSharpStatement Using(Expression resource, Expression body)
         {
-            return Using(null, resource, body);
+            return Using(variable: null, resource, body);
         }
 
         /// <summary>
@@ -224,6 +251,47 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static UsingCSharpStatement Using(ParameterExpression variable, Expression resource, Expression body)
+        {
+            return Using(variable, resource, body, awaitInfo: null);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
+        /// </summary>
+        /// <param name="resource">The resource managed by the statement.</param>
+        /// <param name="body">The body of the statement.</param>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
+        /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
+        public static UsingCSharpStatement AwaitUsing(Expression resource, Expression body, AwaitInfo awaitInfo)
+        {
+            return AwaitUsing(variable: null, resource, body, awaitInfo);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
+        /// </summary>
+        /// <param name="variable">The variable containing the resource.</param>
+        /// <param name="resource">The resource managed by the statement.</param>
+        /// <param name="body">The body of the statement.</param>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
+        /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        public static UsingCSharpStatement AwaitUsing(ParameterExpression variable, Expression resource, Expression body, AwaitInfo awaitInfo)
+        {
+            awaitInfo ??= AwaitInfo(typeof(ValueTask));
+
+            return Using(variable, resource, body, awaitInfo);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
+        /// </summary>
+        /// <param name="variable">The variable containing the resource.</param>
+        /// <param name="resource">The resource managed by the statement.</param>
+        /// <param name="body">The body of the statement.</param>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
+        /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
+        public static UsingCSharpStatement Using(ParameterExpression variable, Expression resource, Expression body, AwaitInfo awaitInfo)
         {
             RequiresCanRead(resource, nameof(resource));
             RequiresCanRead(body, nameof(body));
@@ -245,16 +313,25 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
+            var disposableInterface = awaitInfo != null ? typeof(IAsyncDisposable) : typeof(IDisposable);
+
             var resourceTypeNonNull = resourceType.GetNonNullableType();
 
             // NB: We don't handle implicit conversions here; the C# compiler can emit a Convert node,
             //     just like it does for those type of conversions in various other places.
-            if (!typeof(IDisposable).IsAssignableFrom(resourceTypeNonNull))
+            if (!disposableInterface.IsAssignableFrom(resourceTypeNonNull))
             {
-                throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, typeof(IDisposable));
+                throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, disposableInterface);
             }
 
-            return new UsingCSharpStatement(variable, resource, body);
+            if (awaitInfo != null)
+            {
+                var disposeMethod = disposableInterface.GetMethod(nameof(IAsyncDisposable.DisposeAsync));
+
+                awaitInfo.RequiresCanBind(Expression.Parameter(disposeMethod.ReturnType));
+            }
+
+            return new UsingCSharpStatement(variable, resource, body, awaitInfo);
         }
     }
 
@@ -268,7 +345,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitUsing(UsingCSharpStatement node)
         {
-            return node.Update(VisitAndConvert(node.Variable, nameof(VisitUsing)), Visit(node.Resource), Visit(node.Body));
+            return node.Update(VisitAndConvert(node.Variable, nameof(VisitUsing)), Visit(node.Resource), Visit(node.Body), VisitAwaitInfo(node.AwaitInfo));
         }
     }
 }

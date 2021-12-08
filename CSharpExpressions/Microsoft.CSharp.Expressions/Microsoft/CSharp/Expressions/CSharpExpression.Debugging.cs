@@ -775,6 +775,11 @@ namespace Microsoft.CSharp.Expressions
         {
             var args = new List<object>();
 
+            if (node.IsAsync)
+            {
+                args.Add(new XElement(nameof(node.AwaitInfo), Visit(node.AwaitInfo)));
+            }
+
             if (node.Variable != null)
             {
                 args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));

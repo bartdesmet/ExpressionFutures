@@ -726,6 +726,11 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
+            if (IsAsync)
+            {
+                visitor.Out("await ");
+            }
+
             visitor.Out("using (");
 
             if (Variable != null)

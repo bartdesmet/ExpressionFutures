@@ -69,15 +69,15 @@ namespace Tests
             var body = Expression.Empty();
             var res = CSharpExpression.Using(variable, resource, body);
 
-            Assert.AreSame(res, res.Update(res.Variable, res.Resource, res.Body));
+            Assert.AreSame(res, res.Update(res.Variable, res.Resource, res.Body, res.AwaitInfo));
 
             var newVariable = Expression.Parameter(typeof(IDisposable));
             var newResource = Expression.Default(typeof(IDisposable));
             var newBody = Expression.Empty();
 
-            var upd1 = res.Update(newVariable, res.Resource, res.Body);
-            var upd2 = res.Update(res.Variable, newResource, res.Body);
-            var upd3 = res.Update(res.Variable, res.Resource, newBody);
+            var upd1 = res.Update(newVariable, res.Resource, res.Body, res.AwaitInfo);
+            var upd2 = res.Update(res.Variable, newResource, res.Body, res.AwaitInfo);
+            var upd3 = res.Update(res.Variable, res.Resource, newBody, res.AwaitInfo);
 
             Assert.AreSame(newVariable, upd1.Variable);
             Assert.AreSame(res.Resource, upd1.Resource);
