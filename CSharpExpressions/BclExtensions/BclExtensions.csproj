@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="AsyncMethodBuilder.cs" />
     <Compile Include="AsyncValueTaskMethodBuilder.cs" />
+    <Compile Include="IAsyncDisposable.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
