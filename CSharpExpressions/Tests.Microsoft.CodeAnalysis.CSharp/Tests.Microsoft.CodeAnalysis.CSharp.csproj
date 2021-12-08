@@ -109,6 +109,12 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CompilerTests\CSharp70.Discard.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.AwaitUsing.Generated.cs">
+      <DependentUpon>CSharp80.AwaitUsing.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp80.AwaitUsing.Verify.cs" />
     <Compile Include="CompilerTests\CSharp90.WithExpression.Verify.cs" />
     <Compile Include="CompilerTests\CSharp90.WithExpression.Generated.cs">
       <DependentUpon>CSharp90.WithExpression.Generated.tt</DependentUpon>
@@ -227,6 +233,10 @@
     <Content Include="CompilerTests\CSharp70.ThrowExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp70.ThrowExpression.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp80.AwaitUsing.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.AwaitUsing.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp90.WithExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
