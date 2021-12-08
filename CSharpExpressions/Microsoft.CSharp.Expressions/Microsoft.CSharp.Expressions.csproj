@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Friends.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\DeconstructionAssignmentCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ArrayAccessCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.cs">
       <DependentUpon>AssignUnaryCSharpExpression.Generated.tt</DependentUpon>
