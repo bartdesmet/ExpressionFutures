@@ -110,8 +110,8 @@
     </Compile>
     <Compile Include="CompilerTests\CSharp70.Discard.Verify.cs" />
     <Compile Include="CompilerTests\CSharp90.WithExpression.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp90.WithExpression.Generated .cs">
-      <DependentUpon>CSharp90.WithExpression.Generated .tt</DependentUpon>
+    <Compile Include="CompilerTests\CSharp90.WithExpression.Generated.cs">
+      <DependentUpon>CSharp90.WithExpression.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -228,9 +228,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp70.ThrowExpression.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="CompilerTests\CSharp90.WithExpression.Generated .tt">
+    <Content Include="CompilerTests\CSharp90.WithExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp90.WithExpression.Generated .cs</LastGenOutput>
+      <LastGenOutput>CSharp90.WithExpression.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
