@@ -70,7 +70,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public RangeCSharpExpression Update(Expression left, Expression right)
         {
-            if (left == this.Left || Right == this.Right)
+            if (left == this.Left && right == this.Right)
             {
                 return this;
             }
