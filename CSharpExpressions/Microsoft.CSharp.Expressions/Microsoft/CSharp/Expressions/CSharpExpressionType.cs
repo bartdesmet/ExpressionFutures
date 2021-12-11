@@ -277,5 +277,10 @@ namespace Microsoft.CSharp.Expressions
         /// A with expression, such as o with { x = e }.
         /// </summary>
         With,
+
+        /// <summary>
+        /// A pattern matching is expression, such as o is int x.
+        /// </summary>
+        IsPattern,
     }
 }

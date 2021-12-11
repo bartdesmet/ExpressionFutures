@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Friends.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\IsPatternCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DeconstructionAssignmentCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ArrayAccessCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.cs">
@@ -91,6 +92,30 @@
       <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
     </Compile>
     <Compile Include="Microsoft\CSharp\Expressions\MemberInitializer.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\BinaryCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\ConstantCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpObjectPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpObjectPatternInfo.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPattern.Debugging.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPattern.Debugging.CSharp.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPatternInfo.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPatternType.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpSubpattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpSubpatternType.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PatternHelpers.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PositionalCSharpSubpattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PropertyCSharpSubpattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PropertyCSharpSubpatternMember.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\ITupleCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\RecursiveCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\TupleFieldInfo.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\VarCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\DeclarationCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\DiscardCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\NotCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\RelationalCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\TypeCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\WithCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\RangeCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\FromEndIndexCSharpExpression.cs" />

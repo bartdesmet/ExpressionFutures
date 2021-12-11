@@ -120,4 +120,53 @@
 })
 ]]></Code>
   </Expression>
+  <Expression Name="Pattern matching (properties)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is Point { X: > 0, Y: < 10 } p)
+  {
+    Console.WriteLine(p.X);
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (deconstruct)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is Point(x: > 0, y: _) p)
+  {
+    Console.WriteLine(p.X);
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (positional)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is Point(> 0, _) p)
+  {
+    Console.WriteLine(p.X);
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (tuple)">
+    <Code>
+      <![CDATA[(Expression<Action<(int, string)>>)(o => {
+  if (o is (> 0 and var x, { Length: > 0 and var s }))
+  {
+    Console.WriteLine($"x = {x}; s = {s}");
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (ITuple)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is (0, 0))
+  {
+  }
+})
+]]></Code>
+  </Expression>
 </Expressions>

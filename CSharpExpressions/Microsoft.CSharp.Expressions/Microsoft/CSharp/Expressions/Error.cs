@@ -739,6 +739,174 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.NoAnonymousTypeConstructorFound(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "A pattern can never produce a value of a nullable type."
+        /// </summary>
+        internal static Exception CannotHaveNullablePatternType()
+        {
+            return new ArgumentException(Strings.CannotHaveNullablePatternType);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The input and narrowed type for a pattern of type '{0}' should be equal."
+        /// </summary>
+        internal static Exception PatternInputAndNarrowedTypeShouldMatch(object p0)
+        {
+            return new ArgumentException(Strings.PatternInputAndNarrowedTypeShouldMatch(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The variable type '{0}' should be equal to the pattern result type '{1}'."
+        /// </summary>
+        internal static Exception CannotAssignPatternResultToVariable(object p0, object p1)
+        {
+            return new ArgumentException(Strings.CannotAssignPatternResultToVariable(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The pattern type '{0}' is not compatible with a subpattern type '{1}'."
+        /// </summary>
+        internal static Exception PatternTypeMismatch(object p0, object p1)
+        {
+            return new ArgumentException(Strings.PatternTypeMismatch(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The pattern type '{0}' is not a valid binary pattern type."
+        /// </summary>
+        internal static Exception InvalidBinaryPatternType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidBinaryPatternType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The pattern type '{0}' is not a valid relational pattern type."
+        /// </summary>
+        internal static Exception InvalidRelationalPatternType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidRelationalPatternType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' cannot be used for a constant in a pattern."
+        /// </summary>
+        internal static Exception InvalidPatternConstantType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidPatternConstantType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' cannot be used for a constant in a relational pattern."
+        /// </summary>
+        internal static Exception InvalidRelationalPatternConstantType(object p0)
+        {
+            return new ArgumentException(Strings.InvalidRelationalPatternConstantType(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The value NaN cannot be used for a constant in a relational pattern."
+        /// </summary>
+        internal static Exception CannotUsePatternConstantNaN()
+        {
+            return new ArgumentException(Strings.CannotUsePatternConstantNaN);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A null pattern should use a constant of type object."
+        /// </summary>
+        internal static Exception NullValueShouldUseObjectType()
+        {
+            return new ArgumentException(Strings.NullValueShouldUseObjectType);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A null value cannot be used in a relational pattern."
+        /// </summary>
+        internal static Exception CannotUseNullValueInRelationalPattern()
+        {
+            return new ArgumentException(Strings.CannotUseNullValueInRelationalPattern);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'GetLengthMethod' of an 'ITuple' pattern should return an integer value."
+        /// </summary>
+        internal static Exception ITupleGetLengthShouldReturnInt32()
+        {
+            return new ArgumentException(Strings.ITupleGetLengthShouldReturnInt32);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'GetItemMethod' of an 'ITuple' pattern should return an object of type Object."
+        /// </summary>
+        internal static Exception ITupleGetItemShouldReturnObject()
+        {
+            return new ArgumentException(Strings.ITupleGetItemShouldReturnObject);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' cannot have a field specified."
+        /// </summary>
+        internal static Exception ITuplePositionalPatternCannotHaveField(object p0)
+        {
+            return new ArgumentException(Strings.ITuplePositionalPatternCannotHaveField(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' cannot have a parameter specified."
+        /// </summary>
+        internal static Exception ITuplePositionalPatternCannotHaveParameter(object p0)
+        {
+            return new ArgumentException(Strings.ITuplePositionalPatternCannotHaveParameter(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' has type '{1}'. Only type Object is supported."
+        /// </summary>
+        internal static Exception ITuplePositionalPatternInvalidInputType(object p0, object p1)
+        {
+            return new ArgumentException(Strings.ITuplePositionalPatternInvalidInputType(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A positional pattern should either be applied to a tuple type or provide a Deconstruct method."
+        /// </summary>
+        internal static Exception InvalidPositionalPattern()
+        {
+            return new ArgumentException(Strings.InvalidPositionalPattern);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The number of positional subpatterns does not match the number of components in input type '{0}'."
+        /// </summary>
+        internal static Exception InvalidPositionalPatternCount(object p0)
+        {
+            return new ArgumentException(Strings.InvalidPositionalPatternCount(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Deconstruct method '{0}' should return void."
+        /// </summary>
+        internal static Exception DeconstructShouldReturnVoid(object p0)
+        {
+            return new ArgumentException(Strings.DeconstructShouldReturnVoid(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter."
+        /// </summary>
+        internal static Exception DeconstructParameterShouldBeOut(object p0, object p1)
+        {
+            return new ArgumentException(Strings.DeconstructParameterShouldBeOut(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Deconstruct method '{0}' should have at least one parameter."
+        /// </summary>
+        internal static Exception DeconstructExtensionMethodMissingThis(object p0)
+        {
+            return new ArgumentException(Strings.DeconstructExtensionMethodMissingThis(p0));
+        }
+
     }
 
     /// <summary>
@@ -1558,6 +1726,195 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.NoAnonymousTypeConstructorFound, p0);
         }
 
+        /// <summary>
+        /// A string like "A pattern can never produce a value of a nullable type."
+        /// </summary>
+        internal static string CannotHaveNullablePatternType
+        {
+            get
+            {
+                return SR.CannotHaveNullablePatternType;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The input and narrowed type for a pattern of type '{0}' should be equal."
+        /// </summary>
+        internal static string PatternInputAndNarrowedTypeShouldMatch(object p0)
+        {
+            return SR.Format(SR.PatternInputAndNarrowedTypeShouldMatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "The variable type '{0}' should be equal to the pattern result type '{1}'."
+        /// </summary>
+        internal static string CannotAssignPatternResultToVariable(object p0, object p1)
+        {
+            return SR.Format(SR.CannotAssignPatternResultToVariable, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The pattern type '{0}' is not compatible with a subpattern type '{1}'."
+        /// </summary>
+        internal static string PatternTypeMismatch(object p0, object p1)
+        {
+            return SR.Format(SR.PatternTypeMismatch, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The pattern type '{0}' is not a valid binary pattern type."
+        /// </summary>
+        internal static string InvalidBinaryPatternType(object p0)
+        {
+            return SR.Format(SR.InvalidBinaryPatternType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The pattern type '{0}' is not a valid relational pattern type."
+        /// </summary>
+        internal static string InvalidRelationalPatternType(object p0)
+        {
+            return SR.Format(SR.InvalidRelationalPatternType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' cannot be used for a constant in a pattern."
+        /// </summary>
+        internal static string InvalidPatternConstantType(object p0)
+        {
+            return SR.Format(SR.InvalidPatternConstantType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' cannot be used for a constant in a relational pattern."
+        /// </summary>
+        internal static string InvalidRelationalPatternConstantType(object p0)
+        {
+            return SR.Format(SR.InvalidRelationalPatternConstantType, p0);
+        }
+
+        /// <summary>
+        /// A string like "The value NaN cannot be used for a constant in a relational pattern."
+        /// </summary>
+        internal static string CannotUsePatternConstantNaN
+        {
+            get
+            {
+                return SR.CannotUsePatternConstantNaN;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A null pattern should use a constant of type object."
+        /// </summary>
+        internal static string NullValueShouldUseObjectType
+        {
+            get
+            {
+                return SR.NullValueShouldUseObjectType;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A null value cannot be used in a relational pattern."
+        /// </summary>
+        internal static string CannotUseNullValueInRelationalPattern
+        {
+            get
+            {
+                return SR.CannotUseNullValueInRelationalPattern;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The 'GetLengthMethod' of an 'ITuple' pattern should return an integer value."
+        /// </summary>
+        internal static string ITupleGetLengthShouldReturnInt32
+        {
+            get
+            {
+                return SR.ITupleGetLengthShouldReturnInt32;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The 'GetItemMethod' of an 'ITuple' pattern should return an object of type Object."
+        /// </summary>
+        internal static string ITupleGetItemShouldReturnObject
+        {
+            get
+            {
+                return SR.ITupleGetItemShouldReturnObject;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The 'ITuple' positional subpattern with index '{0}' cannot have a field specified."
+        /// </summary>
+        internal static string ITuplePositionalPatternCannotHaveField(object p0)
+        {
+            return SR.Format(SR.ITuplePositionalPatternCannotHaveField, p0);
+        }
+
+        /// <summary>
+        /// A string like "The 'ITuple' positional subpattern with index '{0}' cannot have a parameter specified."
+        /// </summary>
+        internal static string ITuplePositionalPatternCannotHaveParameter(object p0)
+        {
+            return SR.Format(SR.ITuplePositionalPatternCannotHaveParameter, p0);
+        }
+
+        /// <summary>
+        /// A string like "The 'ITuple' positional subpattern with index '{0}' has type '{1}'. Only type Object is supported."
+        /// </summary>
+        internal static string ITuplePositionalPatternInvalidInputType(object p0, object p1)
+        {
+            return SR.Format(SR.ITuplePositionalPatternInvalidInputType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "A positional pattern should either be applied to a tuple type or provide a Deconstruct method."
+        /// </summary>
+        internal static string InvalidPositionalPattern
+        {
+            get
+            {
+                return SR.InvalidPositionalPattern;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The number of positional subpatterns does not match the number of components in input type '{0}'."
+        /// </summary>
+        internal static string InvalidPositionalPatternCount(object p0)
+        {
+            return SR.Format(SR.InvalidPositionalPatternCount, p0);
+        }
+
+        /// <summary>
+        /// A string like "Deconstruct method '{0}' should return void."
+        /// </summary>
+        internal static string DeconstructShouldReturnVoid(object p0)
+        {
+            return SR.Format(SR.DeconstructShouldReturnVoid, p0);
+        }
+
+        /// <summary>
+        /// A string like "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter."
+        /// </summary>
+        internal static string DeconstructParameterShouldBeOut(object p0, object p1)
+        {
+            return SR.Format(SR.DeconstructParameterShouldBeOut, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Deconstruct method '{0}' should have at least one parameter."
+        /// </summary>
+        internal static string DeconstructExtensionMethodMissingThis(object p0)
+        {
+            return SR.Format(SR.DeconstructExtensionMethodMissingThis, p0);
+        }
+
     }
 }
 
@@ -1656,5 +2013,26 @@ namespace System
         public const string MemberInitializerMemberMustNotBeStatic = "Member '{0}' used in a 'MemberInitializer' cannot be static.";
         public const string MemberInitializerMemberMustBeWriteable = "Member '{0}' used in a 'MemberInitializer' must be writeable.";
         public const string NoAnonymousTypeConstructorFound = "No suitable constructor found for type '{0}' using the specified members.";
+        public const string CannotHaveNullablePatternType = "A pattern can never produce a value of a nullable type.";
+        public const string PatternInputAndNarrowedTypeShouldMatch = "The input and narrowed type for a pattern of type '{0}' should be equal.";
+        public const string CannotAssignPatternResultToVariable = "The variable type '{0}' should be equal to the pattern result type '{1}'.";
+        public const string PatternTypeMismatch = "The pattern type '{0}' is not compatible with a subpattern type '{1}'.";
+        public const string InvalidBinaryPatternType = "The pattern type '{0}' is not a valid binary pattern type.";
+        public const string InvalidRelationalPatternType = "The pattern type '{0}' is not a valid relational pattern type.";
+        public const string InvalidPatternConstantType = "The type '{0}' cannot be used for a constant in a pattern.";
+        public const string InvalidRelationalPatternConstantType = "The type '{0}' cannot be used for a constant in a relational pattern.";
+        public const string CannotUsePatternConstantNaN = "The value NaN cannot be used for a constant in a relational pattern.";
+        public const string NullValueShouldUseObjectType = "A null pattern should use a constant of type object.";
+        public const string CannotUseNullValueInRelationalPattern = "A null value cannot be used in a relational pattern.";
+        public const string ITupleGetLengthShouldReturnInt32 = "The 'GetLengthMethod' of an 'ITuple' pattern should return an integer value.";
+        public const string ITupleGetItemShouldReturnObject = "The 'GetItemMethod' of an 'ITuple' pattern should return an object of type Object.";
+        public const string ITuplePositionalPatternCannotHaveField = "The 'ITuple' positional subpattern with index '{0}' cannot have a field specified.";
+        public const string ITuplePositionalPatternCannotHaveParameter = "The 'ITuple' positional subpattern with index '{0}' cannot have a parameter specified.";
+        public const string ITuplePositionalPatternInvalidInputType = "The 'ITuple' positional subpattern with index '{0}' has type '{1}'. Only type Object is supported.";
+        public const string InvalidPositionalPattern = "A positional pattern should either be applied to a tuple type or provide a Deconstruct method.";
+        public const string InvalidPositionalPatternCount = "The number of positional subpatterns does not match the number of components in input type '{0}'.";
+        public const string DeconstructShouldReturnVoid = "Deconstruct method '{0}' should return void.";
+        public const string DeconstructParameterShouldBeOut = "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter.";
+        public const string DeconstructExtensionMethodMissingThis = "Deconstruct method '{0}' should have at least one parameter.";
     }
 }

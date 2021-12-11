@@ -53,7 +53,7 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
-    class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
+    partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
         private readonly Stack<XNode> _nodes = new Stack<XNode>();
@@ -940,6 +940,17 @@ namespace Microsoft.CSharp.Expressions
                 var members = new XElement(nameof(node.Members), node.Members.Select(m => new XElement("Member", m)));
                 nodes.Add(members);
             }
+
+            return Push(node, nodes);
+        }
+
+        protected internal override Expression VisitIsPattern(IsPatternCSharpExpression node)
+        {
+            var nodes = new List<object>
+            {
+                new XElement(nameof(node.Expression), Visit(node.Expression)),
+                new XElement(nameof(node.Pattern), Visit(node.Pattern)),
+            };
 
             return Push(node, nodes);
         }

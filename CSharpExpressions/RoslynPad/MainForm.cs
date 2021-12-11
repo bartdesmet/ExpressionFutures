@@ -502,6 +502,10 @@ namespace RoslynPad
 
                 node.Text = string.IsNullOrEmpty(node.Text) ? label : node.Text + " - " + label;
             }
+            else if (o is CSharpPattern cspat)
+            {
+                node.Text = cspat.PatternType.ToString();
+            }
             else
             {
                 node.Text = o.GetType().Name;
