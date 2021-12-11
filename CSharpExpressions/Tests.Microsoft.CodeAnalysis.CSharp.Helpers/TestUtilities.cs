@@ -201,10 +201,10 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
 
                 // BCL extensions for C# 7
-                .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(ValueTuple).Assembly.Location) })
+                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTuple).Assembly.Location))
 
                 // BCL extensions for C# 8
-                .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(Index).Assembly.Location) })
+                .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
 
                 // Our custom assembly
                 .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
@@ -242,6 +242,13 @@ public static class {typeName}
                 {
                     var diag = string.Join("\r\n", res.Diagnostics.Select(d => d.ToString()));
                     throw new InvalidProgramException(diag);
+                }
+
+                ms.Position = 0;
+
+                using (var fs = File.Create(@"Expressions.dll"))
+                {
+                    ms.CopyTo(fs);
                 }
 
                 ms.Position = 0;
