@@ -59,3 +59,24 @@
 // And
 //
 (Expression<Func<object, bool>>)(o => o is >= 0 and < 10)
+
+//
+// Property
+//
+(Expression<Func<object, bool>>)(o => o is Point { X: 0, Y: 1 })
+(Expression<Func<object, bool>>)(o => o is Point { Y: <10, X: >0 } p)
+
+//
+// Positional tuple
+//
+(Expression<Func<(int, int), bool>>)(o => o is (1, 2))
+(Expression<Func<(int x, int y), bool>>)(o => o is (x: >0, y: <=10))  // NB: Reordering is not supported.
+
+//
+// Positional deconstruct
+//
+(Expression<Func<Point, bool>>)(o => o is (1, 2))
+(Expression<Func<Point, bool>>)(o => o is (x: 1, y: 2))  // NB: Reordering is not supported.
+
+// ITuple
+(Expression<Func<object, bool>>)(o => o is (1, 2))
