@@ -2,6 +2,7 @@
 //
 // bartde - November 2015
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System;
@@ -13,6 +14,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text;
+using Tests.Microsoft.CodeAnalysis.CSharp;
 
 namespace RoslynPad
 {
@@ -63,6 +65,11 @@ namespace RoslynPad
                         "System.Collections",
                         "System.Collections.Generic",
                         "System.Threading.Tasks"
+                    )
+                    .AddReferences(
+                        MetadataReference.CreateFromFile(typeof(ValueTuple).Assembly.Location),
+                        MetadataReference.CreateFromFile(typeof(Index).Assembly.Location),
+                        MetadataReference.CreateFromFile(typeof(TestUtilities).Assembly.Location)
                     );
 
             var n = _args.Length;
@@ -139,11 +146,14 @@ namespace RoslynPad
 
         private async Task<bool> TryAwait(Task t)
         {
-            await AwaitCore(async () =>
+            if (t != null)
             {
-                await t;
-                return default(object);
-            });
+                await AwaitCore(async () =>
+                {
+                    await t;
+                    return default(object);
+                });
+            }
 
             return true;
         }
