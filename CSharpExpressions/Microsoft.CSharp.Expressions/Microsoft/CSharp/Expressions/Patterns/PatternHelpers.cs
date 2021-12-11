@@ -31,8 +31,14 @@ namespace Microsoft.CSharp.Expressions
 
         public static void CheckConstant(ConstantExpression value, bool isRelational)
         {
-            if (value.Value == null && isRelational)
-                throw Error.CannotUseNullValueInRelationalPattern();
+            if (value.Value == null)
+            {
+                if (isRelational)
+                    throw Error.CannotUseNullValueInRelationalPattern();
+
+                if (value.Type == typeof(object))
+                    return;
+            }
 
             if (value.Type.IsNullableType() && value.Value != null)
                 throw Error.InvalidPatternConstantType(value.Type);

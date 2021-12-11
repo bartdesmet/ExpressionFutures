@@ -130,7 +130,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (info != null)
             {
-                RequiresCompatiblePatternTypes(info.InputType, info.NarrowedType);
+                RequiresCompatiblePatternTypes(value.Type, info.NarrowedType);
             }
             else
             {
