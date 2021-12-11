@@ -163,7 +163,7 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Out("{ }");
             }
             
-            visitor.VisitDesignation(pattern);
+            visitor.VisitDesignation(pattern, noDiscard: true);
         }
 
         private static void Visit(this ICSharpPrintingVisitor visitor, ITupleCSharpPattern pattern)
@@ -176,14 +176,14 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static void VisitDesignation(this ICSharpPrintingVisitor visitor, CSharpObjectPattern pattern)
+        private static void VisitDesignation(this ICSharpPrintingVisitor visitor, CSharpObjectPattern pattern, bool noDiscard = false)
         {
             if (pattern.Variable != null)
             {
                 visitor.Out(" ");
                 visitor.Visit(pattern.Variable);
             }
-            else
+            else if (!noDiscard)
             {
                 visitor.Out(" _");
             }
