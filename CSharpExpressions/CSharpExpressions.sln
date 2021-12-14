@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{B266F8B2-7D9D-4E1F-9148-1211BBB7040A}"
 EndProject
@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPad", "RoslynPad\Rosl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BclExtensions", "BclExtensions\BclExtensions.csproj", "{6FA07859-FBEB-4E2E-A70C-1373118A6740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaygroundCore", "PlaygroundCore\PlaygroundCore.csproj", "{16AA6A23-AC15-4FBF-A76F-7E208B256114}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaygroundCore", "PlaygroundCore\PlaygroundCore.csproj", "{16AA6A23-AC15-4FBF-A76F-7E208B256114}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
