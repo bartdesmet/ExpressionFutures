@@ -721,6 +721,32 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
     }
 
+    [DebuggerTypeProxy(typeof(DeconstructionAssignmentCSharpExpressionProxy))]
+    partial class DeconstructionAssignmentCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class DeconstructionAssignmentCSharpExpressionProxy
+    {
+        private readonly DeconstructionAssignmentCSharpExpression _node;
+
+        public DeconstructionAssignmentCSharpExpressionProxy(DeconstructionAssignmentCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.DeconstructionConversion Conversion => _node.Conversion;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public Microsoft.CSharp.Expressions.TupleLiteralCSharpExpression Left => _node.Left;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Right => _node.Right;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(DiscardCSharpExpressionProxy))]
     partial class DiscardCSharpExpression
     {

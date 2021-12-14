@@ -282,5 +282,10 @@ namespace Microsoft.CSharp.Expressions
         /// A pattern matching is expression, such as o is int x.
         /// </summary>
         IsPattern,
+
+        /// <summary>
+        /// A deconstruction assignment, such as (x, y) = (1, 2).
+        /// </summary>
+        DeconstructionAssignment,
     }
 }

@@ -2188,7 +2188,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 for (int i = 0, n = Arguments.Count; i < n; i++)
                 {
-                    visitor.Out(ArgumentNames[i] ?? ("Item" + i));
+                    visitor.Out(ArgumentNames[i] ?? ("Item" + (i + 1)));
                     visitor.Out(": ");
                     visitor.Visit(Arguments[i]);
 
@@ -2249,15 +2249,54 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class DeconstructionAssignmentCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Assign);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            Expression visitLeft(Expression expr)
+            {
+                if (expr is TupleLiteralCSharpExpression t)
+                {
+                    visitor.Out("(");
+                    visitor.Visit(t.Arguments, visitLeft);
+                    visitor.Out(")");
+                }
+                else
+                {
+                    visitor.Visit(expr);
+                }
+
+                return expr;
+            }
+
+            visitLeft(Left);
+            visitor.Out(" = ");
+            visitor.ParenthesizedVisit(this, Right);
+        }
+    }
+
     static class CSharpPrintingVisitorExtensions
     {
-        public static void Visit(this ICSharpPrintingVisitor visitor, IList<Expression> args)
+        public static void Visit(this ICSharpPrintingVisitor visitor, IList<Expression> args) => visitor.Visit(args, visitor.Visit);
+
+        public static void Visit(this ICSharpPrintingVisitor visitor, IList<Expression> args, Func<Expression, Expression> visit)
         {
             var n = args.Count;
 
             for (var i = 0; i < n; i++)
             {
-                visitor.Visit(args[i]);
+                visit(args[i]);
 
                 if (i != n - 1)
                 {

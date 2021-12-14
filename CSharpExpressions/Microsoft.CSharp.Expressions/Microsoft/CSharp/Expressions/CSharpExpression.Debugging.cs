@@ -228,6 +228,19 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitDeconstructionAssignment(DeconstructionAssignmentCSharpExpression node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Left), Visit(node.Left)),
+                new XElement(nameof(node.Right), Visit(node.Right))
+                // TODO: Add conversion.
+            };
+
+            return Push(node, args);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDiscard(DiscardCSharpExpression node)
         {
             return Push("CSharpDiscard", node);

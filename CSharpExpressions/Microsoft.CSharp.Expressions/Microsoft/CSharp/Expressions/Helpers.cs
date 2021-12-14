@@ -606,8 +606,7 @@ namespace Microsoft.CSharp.Expressions
                         var writeable = false;
                         var useWriteback = false;
 
-                        var prop = member.Member as PropertyInfo;
-                        if (prop != null)
+                        if (member.Member is PropertyInfo prop)
                         {
                             if (prop.CanWrite)
                             {
@@ -617,8 +616,7 @@ namespace Microsoft.CSharp.Expressions
                         }
                         else
                         {
-                            var field = member.Member as FieldInfo;
-                            if (field != null && !(field.IsInitOnly || field.IsLiteral))
+                            if (member.Member is FieldInfo field && !(field.IsInitOnly || field.IsLiteral))
                             {
                                 writeable = true;
 
@@ -989,15 +987,15 @@ namespace Microsoft.CSharp.Expressions
 
                 if (member.Expression == null)
                 {
+                    return assign(member);
+                }
+                else
+                {
                     if (NeedByRefAssign(member.Expression))
                     {
                         throw ContractUtils.Unreachable;
                     }
 
-                    return assign(member);
-                }
-                else
-                {
                     var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
                     var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
                     member = member.Update(lhsTemp);
@@ -1090,7 +1088,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var lhsTemp = Expression.Parameter(member.Type, "__lhs");
                     var op = functionalOp(WithLeftConversion(lhsTemp, leftConversion));
-                    var method = typeof(RuntimeOpsEx).GetMethod(prefix ? "PreAssignByRef" : "PostAssignByRef");
+                    var method = typeof(RuntimeOpsEx).GetMethod(prefix ? nameof(RuntimeOpsEx.PreAssignByRef) : nameof(RuntimeOpsEx.PostAssignByRef));
                     method = method.MakeGenericMethod(member.Type);
                     res = Expression.Call(method, member, Expression.Lambda(op, lhsTemp));
                 }
@@ -1439,6 +1437,48 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        private static int NumberOfValueTuples(int numElements, out int remainder)
+        {
+            remainder = (numElements - 1) % (ValueTupleRestPosition - 1) + 1;
+
+            return (numElements - 1) / (ValueTupleRestPosition - 1) + 1;
+        }
+
+        public static Type MakeTupleType(Type[] elementTypes)
+        {
+            int chainLength = NumberOfValueTuples(elementTypes.Length, out int remainder);
+
+            var firstTupleType = TupleTypes[remainder - 1];
+
+            var args = new Type[remainder];
+            CopyElementTypes(args, (chainLength - 1) * (ValueTupleRestPosition - 1), remainder);
+
+            var tupleType = firstTupleType.MakeGenericType(args);
+
+            int loop = chainLength - 1;
+            
+            while (loop > 0)
+            {
+                args = new Type[ValueTupleRestPosition];
+                CopyElementTypes(args, (loop - 1) * (ValueTupleRestPosition - 1), ValueTupleRestPosition - 1);
+                args[ValueTupleRestPosition - 1] = tupleType;
+
+                tupleType = MaxTupleType.MakeGenericType(args);
+            
+                loop--;
+            }
+
+            return tupleType;
+
+            void CopyElementTypes(Type[] target, int offset, int count)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    target[i] = elementTypes[offset + i];
+                }
+            }
+        }
+
         public static bool IsTaskLikeType(Type type, out Type resultType)
         {
             if (TryGetAsyncMethodBuilderInfo(type, out var info))
@@ -1694,9 +1734,9 @@ namespace Microsoft.CSharp.Expressions
             return true;
         }
 
-        private static HashSet<Type> s_tupleTypes;
+        private static List<Type> s_tupleTypes;
 
-        private static HashSet<Type> TupleTypes => s_tupleTypes ??= new HashSet<Type> {
+        private static List<Type> TupleTypes => s_tupleTypes ??= new List<Type> {
             typeof(ValueTuple<>),
             typeof(ValueTuple<,>),
             typeof(ValueTuple<,,>),
@@ -1733,6 +1773,8 @@ namespace Microsoft.CSharp.Expressions
         };
 
         public static readonly Type MaxTupleType = typeof(ValueTuple<,,,,,,,>);
+
+        public const int ValueTupleRestPosition = 8;
     }
 
     internal struct AsyncMethodBuilderInfo
