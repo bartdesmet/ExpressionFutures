@@ -9724,13 +9724,13 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.Operations.IListPatternOperation.LengthSymbol">
             <summary>
-            The <c>Length</c> or <c>Count</c> property that is being used to fetch the length value.
+            The <c>Length</c> or <c>Count</c> property that is used to fetch the length value.
             Returns <c>null</c> if no such property is found.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.Operations.IListPatternOperation.IndexerSymbol">
             <summary>
-            The indexer that is being used to fetch elements.
+            The indexer that is used to fetch elements.
             Returns <c>null</c> for an array input.
             </summary>
         </member>
@@ -9765,6 +9765,43 @@
         <member name="P:Microsoft.CodeAnalysis.Operations.ISlicePatternOperation.Pattern">
             <summary>
             The pattern that the slice value is matched with, if any.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Operations.IImplicitIndexerReferenceOperation">
+            <summary>
+            Represents a reference to an implicit System.Index or System.Range indexer over a non-array type.
+            <para>
+              Current usage:
+              (1) C# implicit System.Index or System.Range indexer reference expression.
+            </para>
+            </summary>
+            <remarks>
+            <para>This node is associated with the following operation kinds:</para>
+            <list type="bullet">
+            <item><description><see cref="F:Microsoft.CodeAnalysis.OperationKind.ImplicitIndexerReference"/></description></item>
+            </list>
+            <para>This interface is reserved for implementation by its associated APIs. We reserve the right to
+            change it in the future.</para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Operations.IImplicitIndexerReferenceOperation.Instance">
+            <summary>
+            Instance of the type to be indexed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Operations.IImplicitIndexerReferenceOperation.Argument">
+            <summary>
+            System.Index or System.Range value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Operations.IImplicitIndexerReferenceOperation.LengthSymbol">
+            <summary>
+            The <c>Length</c> or <c>Count</c> property that might be used to fetch the length value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Operations.IImplicitIndexerReferenceOperation.IndexerSymbol">
+            <summary>
+            Symbol for the underlying indexer or a slice method that is used to implement the implicit indexer.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Operations.BlockOperation.CreateTemporaryBlock(System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IOperation},Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.SyntaxNode)">
@@ -19171,6 +19208,9 @@
         <member name="F:Microsoft.CodeAnalysis.OperationKind.SlicePattern">
             <summary>Indicates an <see cref="T:Microsoft.CodeAnalysis.Operations.ISlicePatternOperation"/>.</summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.OperationKind.ImplicitIndexerReference">
+            <summary>Indicates an <see cref="T:Microsoft.CodeAnalysis.Operations.IImplicitIndexerReferenceOperation"/>.</summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.InternalUtilities.ConcurrentLruCache`2">
             <summary>
             Cache with a fixed size that evicts the least recently used members.
@@ -23258,7 +23298,7 @@
             Creates a new generator state that contains an exception and the associated diagnostic
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.GeneratorState.#ctor(Microsoft.CodeAnalysis.GeneratorInfo,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISyntaxInputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IIncrementalGeneratorOutputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic},System.TimeSpan)">
+        <member name="M:Microsoft.CodeAnalysis.GeneratorState.#ctor(Microsoft.CodeAnalysis.GeneratorInfo,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISyntaxInputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IIncrementalGeneratorOutputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic},System.Collections.Immutable.ImmutableDictionary{System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IncrementalGeneratorRunStep}},System.Collections.Immutable.ImmutableDictionary{System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IncrementalGeneratorRunStep}},System.TimeSpan)">
             <summary>
             Creates a generator state that contains results
             </summary>
@@ -23337,6 +23377,41 @@
             <remarks>
             The severity of the diagnostic may cause the compilation to fail, depending on the <see cref="T:Microsoft.CodeAnalysis.Compilation"/> settings.
             </remarks>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.IncrementalGeneratorRunStep">
+            <summary>
+            A description of a step of an incremental generator that was executed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.IncrementalStepRunReason">
+            <summary>
+            The state of the output of a given executed incremental source generator step.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IncrementalStepRunReason.New">
+            <summary>
+            The output of this step is a new output produced from a new input.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IncrementalStepRunReason.Modified">
+            <summary>
+            The input to this step was modified from a previous run, and it produced a different value than the previous run.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IncrementalStepRunReason.Unchanged">
+            <summary>
+            The input to this step was modified from a previous run, but it produced an equal value to the previous run.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IncrementalStepRunReason.Cached">
+            <summary>
+            The output of this step was pulled from this step's cache since the inputs was unchanged from the previous run.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IncrementalStepRunReason.Removed">
+            <summary>
+            The input that this output is generated from was removed from the input step's outputs, so this value will be removed from the output step results.
+            </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.IncrementalValueProvider`1">
             <summary>
@@ -23629,6 +23704,16 @@
             The wall clock time that elapsed while this generator was running.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.GeneratorRunResult.TrackedSteps">
+            <summary>
+            A collection of the named incremental steps executed during the generator pass this result represents.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.GeneratorRunResult.TrackedOutputSteps">
+            <summary>
+            A collection of the named incremental steps executed during the generator pass this result represents.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.GeneratedSourceResult">
             <summary>
             Represents the results of an <see cref="T:Microsoft.CodeAnalysis.ISourceGenerator"/> calling <see cref="M:Microsoft.CodeAnalysis.GeneratorExecutionContext.AddSource(System.String,Microsoft.CodeAnalysis.Text.SourceText)"/>.
@@ -23655,6 +23740,16 @@
         <member name="T:Microsoft.CodeAnalysis.SyntaxContextReceiverAdaptor">
             <summary>
             Wraps an <see cref="T:Microsoft.CodeAnalysis.ISyntaxReceiver"/> in an <see cref="T:Microsoft.CodeAnalysis.ISyntaxContextReceiver"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.WellKnownGeneratorInputs">
+            <summary>
+            Well known incremental generator input step names.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.WellKnownGeneratorOutputs">
+            <summary>
+            Well known incremental generator output step names.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.SpecialType">

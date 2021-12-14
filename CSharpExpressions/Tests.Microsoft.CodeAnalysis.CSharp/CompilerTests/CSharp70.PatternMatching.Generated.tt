@@ -1,0 +1,48 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - December 2021
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp70_PatternMatching";
+
+var exprs = new[]
+{
+    // var
+    "(Expression<Func<object, bool>>)(o => o is var x)",
+    "(Expression<Func<int?,   bool>>)(o => o is var x)",
+    "(Expression<Func<int,    bool>>)(o => o is var x)",
+
+    // Declaration
+    "(Expression<Func<object, bool>>)(o => o is int x)",
+    "(Expression<Func<int?,   bool>>)(o => o is int x)",
+    "(Expression<Func<int,    bool>>)(o => o is int x)",
+
+    // Constant - Null
+    "(Expression<Func<object, bool>>)(o => o is null)",
+    "(Expression<Func<string, bool>>)(o => o is null)",
+    "(Expression<Func<int?,   bool>>)(o => o is null)",
+
+    // Constant - Int32
+    "(Expression<Func<object, bool>>)(o => o is 42)",
+    "(Expression<Func<int?,   bool>>)(o => o is 42)",
+    "(Expression<Func<int,    bool>>)(o => o is 42)",
+
+    // Constant - Misc
+    "(Expression<Func<object, bool>>)(o => o is 42UL)",
+    "(Expression<Func<object, bool>>)(o => o is Math.PI)",
+    "(Expression<Func<object, bool>>)(o => o is ConsoleColor.Red)",
+    "(Expression<Func<object, bool>>)(o => o is \"bar\")",
+    "(Expression<Func<object, bool>>)(o => o is 4.95m)",
+};
+#>
+<#@ include file="CompilerTests.t4" #>

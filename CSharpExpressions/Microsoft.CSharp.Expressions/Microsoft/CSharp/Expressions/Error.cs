@@ -907,6 +907,126 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.DeconstructExtensionMethodMissingThis(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "A tuple field index must be positive."
+        /// </summary>
+        internal static Exception TupleFieldIndexMustBePositive()
+        {
+            return new ArgumentException(Strings.TupleFieldIndexMustBePositive);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' parameter must be declared on a method used for deconstruction."
+        /// </summary>
+        internal static Exception PositionalPatternParameterMustBeOnMethod(object p0)
+        {
+            return new ArgumentException(Strings.PositionalPatternParameterMustBeOnMethod(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' parameter must be an out parameter used for deconstruction."
+        /// </summary>
+        internal static Exception PositionalPatternParameterMustBeOut(object p0)
+        {
+            return new ArgumentException(Strings.PositionalPatternParameterMustBeOut(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The property pattern member '{0}' should not be static."
+        /// </summary>
+        internal static Exception PropertyPatternMemberShouldNotBeStatic(object p0)
+        {
+            return new ArgumentException(Strings.PropertyPatternMemberShouldNotBeStatic(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The property pattern member '{0}' should be readable."
+        /// </summary>
+        internal static Exception PropertyPatternMemberShouldBeReadable(object p0)
+        {
+            return new ArgumentException(Strings.PropertyPatternMemberShouldBeReadable(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The property pattern member '{0}' should not be an indexer property."
+        /// </summary>
+        internal static Exception PropertyPatternMemberShouldNotBeIndexer(object p0)
+        {
+            return new ArgumentException(Strings.PropertyPatternMemberShouldNotBeIndexer(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The property pattern member '{0}' is not compatible with a receiver of type '{1}'."
+        /// </summary>
+        internal static Exception PropertyPatternMemberIsNotCompatibleWithReceiver(object p0, object p1)
+        {
+            return new ArgumentException(Strings.PropertyPatternMemberIsNotCompatibleWithReceiver(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A positional pattern using a Deconstruct method cannot specify a tuple field."
+        /// </summary>
+        internal static Exception PositionalPatternWithDeconstructMethodCannotSpecifyField()
+        {
+            return new ArgumentException(Strings.PositionalPatternWithDeconstructMethodCannotSpecifyField);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' parameter is not declared on the '{1}' method."
+        /// </summary>
+        internal static Exception PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object p0, object p1)
+        {
+            return new ArgumentException(Strings.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' parameter is used more than once."
+        /// </summary>
+        internal static Exception PositionalPatternParameterShouldOnlyBeUsedOnce(object p0)
+        {
+            return new ArgumentException(Strings.PositionalPatternParameterShouldOnlyBeUsedOnce(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Either all or none of the Deconstruct method parameters should be specified."
+        /// </summary>
+        internal static Exception PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters()
+        {
+            return new ArgumentException(Strings.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A positional pattern for a tuple type cannot specify a Deconstruct method parameter."
+        /// </summary>
+        internal static Exception PositionalPatternWithTupleCannotSpecifyParameter()
+        {
+            return new ArgumentException(Strings.PositionalPatternWithTupleCannotSpecifyParameter);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'."
+        /// </summary>
+        internal static Exception PositionalPatternTupleIndexOutOfRange(object p0, object p1)
+        {
+            return new ArgumentException(Strings.PositionalPatternTupleIndexOutOfRange(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The tuple field index '{0}' is used more than once."
+        /// </summary>
+        internal static Exception PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object p0)
+        {
+            return new ArgumentException(Strings.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "Either all or none of the tuple fields should be specified."
+        /// </summary>
+        internal static Exception PositionalPatternWithTupleShouldSpecifyAllIndices()
+        {
+            return new ArgumentException(Strings.PositionalPatternWithTupleShouldSpecifyAllIndices);
+        }
+
     }
 
     /// <summary>
@@ -1915,6 +2035,141 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.DeconstructExtensionMethodMissingThis, p0);
         }
 
+        /// <summary>
+        /// A string like "A tuple field index must be positive."
+        /// </summary>
+        internal static string TupleFieldIndexMustBePositive
+        {
+            get
+            {
+                return SR.TupleFieldIndexMustBePositive;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The '{0}' parameter must be declared on a method used for deconstruction."
+        /// </summary>
+        internal static string PositionalPatternParameterMustBeOnMethod(object p0)
+        {
+            return SR.Format(SR.PositionalPatternParameterMustBeOnMethod, p0);
+        }
+
+        /// <summary>
+        /// A string like "The '{0}' parameter must be an out parameter used for deconstruction."
+        /// </summary>
+        internal static string PositionalPatternParameterMustBeOut(object p0)
+        {
+            return SR.Format(SR.PositionalPatternParameterMustBeOut, p0);
+        }
+
+        /// <summary>
+        /// A string like "The property pattern member '{0}' should not be static."
+        /// </summary>
+        internal static string PropertyPatternMemberShouldNotBeStatic(object p0)
+        {
+            return SR.Format(SR.PropertyPatternMemberShouldNotBeStatic, p0);
+        }
+
+        /// <summary>
+        /// A string like "The property pattern member '{0}' should be readable."
+        /// </summary>
+        internal static string PropertyPatternMemberShouldBeReadable(object p0)
+        {
+            return SR.Format(SR.PropertyPatternMemberShouldBeReadable, p0);
+        }
+
+        /// <summary>
+        /// A string like "The property pattern member '{0}' should not be an indexer property."
+        /// </summary>
+        internal static string PropertyPatternMemberShouldNotBeIndexer(object p0)
+        {
+            return SR.Format(SR.PropertyPatternMemberShouldNotBeIndexer, p0);
+        }
+
+        /// <summary>
+        /// A string like "The property pattern member '{0}' is not compatible with a receiver of type '{1}'."
+        /// </summary>
+        internal static string PropertyPatternMemberIsNotCompatibleWithReceiver(object p0, object p1)
+        {
+            return SR.Format(SR.PropertyPatternMemberIsNotCompatibleWithReceiver, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "A positional pattern using a Deconstruct method cannot specify a tuple field."
+        /// </summary>
+        internal static string PositionalPatternWithDeconstructMethodCannotSpecifyField
+        {
+            get
+            {
+                return SR.PositionalPatternWithDeconstructMethodCannotSpecifyField;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The '{0}' parameter is not declared on the '{1}' method."
+        /// </summary>
+        internal static string PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object p0, object p1)
+        {
+            return SR.Format(SR.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The '{0}' parameter is used more than once."
+        /// </summary>
+        internal static string PositionalPatternParameterShouldOnlyBeUsedOnce(object p0)
+        {
+            return SR.Format(SR.PositionalPatternParameterShouldOnlyBeUsedOnce, p0);
+        }
+
+        /// <summary>
+        /// A string like "Either all or none of the Deconstruct method parameters should be specified."
+        /// </summary>
+        internal static string PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters
+        {
+            get
+            {
+                return SR.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A positional pattern for a tuple type cannot specify a Deconstruct method parameter."
+        /// </summary>
+        internal static string PositionalPatternWithTupleCannotSpecifyParameter
+        {
+            get
+            {
+                return SR.PositionalPatternWithTupleCannotSpecifyParameter;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'."
+        /// </summary>
+        internal static string PositionalPatternTupleIndexOutOfRange(object p0, object p1)
+        {
+            return SR.Format(SR.PositionalPatternTupleIndexOutOfRange, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The tuple field index '{0}' is used more than once."
+        /// </summary>
+        internal static string PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object p0)
+        {
+            return SR.Format(SR.PositionalPatternTupleIndexShouldOnlyBeUsedOnce, p0);
+        }
+
+        /// <summary>
+        /// A string like "Either all or none of the tuple fields should be specified."
+        /// </summary>
+        internal static string PositionalPatternWithTupleShouldSpecifyAllIndices
+        {
+            get
+            {
+                return SR.PositionalPatternWithTupleShouldSpecifyAllIndices;
+            }
+        }
+
     }
 }
 
@@ -2034,5 +2289,20 @@ namespace System
         public const string DeconstructShouldReturnVoid = "Deconstruct method '{0}' should return void.";
         public const string DeconstructParameterShouldBeOut = "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter.";
         public const string DeconstructExtensionMethodMissingThis = "Deconstruct method '{0}' should have at least one parameter.";
+        public const string TupleFieldIndexMustBePositive = "A tuple field index must be positive.";
+        public const string PositionalPatternParameterMustBeOnMethod = "The '{0}' parameter must be declared on a method used for deconstruction.";
+        public const string PositionalPatternParameterMustBeOut = "The '{0}' parameter must be an out parameter used for deconstruction.";
+        public const string PropertyPatternMemberShouldNotBeStatic = "The property pattern member '{0}' should not be static.";
+        public const string PropertyPatternMemberShouldBeReadable = "The property pattern member '{0}' should be readable.";
+        public const string PropertyPatternMemberShouldNotBeIndexer = "The property pattern member '{0}' should not be an indexer property.";
+        public const string PropertyPatternMemberIsNotCompatibleWithReceiver = "The property pattern member '{0}' is not compatible with a receiver of type '{1}'.";
+        public const string PositionalPatternWithDeconstructMethodCannotSpecifyField = "A positional pattern using a Deconstruct method cannot specify a tuple field.";
+        public const string PositionalPatternParameterIsNotDeclaredOnDeconstructMethod = "The '{0}' parameter is not declared on the '{1}' method.";
+        public const string PositionalPatternParameterShouldOnlyBeUsedOnce = "The '{0}' parameter is used more than once.";
+        public const string PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters = "Either all or none of the Deconstruct method parameters should be specified.";
+        public const string PositionalPatternWithTupleCannotSpecifyParameter = "A positional pattern for a tuple type cannot specify a Deconstruct method parameter.";
+        public const string PositionalPatternTupleIndexOutOfRange = "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'.";
+        public const string PositionalPatternTupleIndexShouldOnlyBeUsedOnce = "The tuple field index '{0}' is used more than once.";
+        public const string PositionalPatternWithTupleShouldSpecifyAllIndices = "Either all or none of the tuple fields should be specified.";
     }
 }

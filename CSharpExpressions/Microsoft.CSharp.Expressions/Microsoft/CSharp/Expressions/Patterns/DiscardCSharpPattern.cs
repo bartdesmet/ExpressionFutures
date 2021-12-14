@@ -10,7 +10,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a pattern that always matches.
     /// </summary>
-    public sealed class DiscardCSharpPattern : CSharpPattern
+    public sealed partial class DiscardCSharpPattern : CSharpPattern
     {
         internal DiscardCSharpPattern(CSharpPatternInfo info)
             : base(info)

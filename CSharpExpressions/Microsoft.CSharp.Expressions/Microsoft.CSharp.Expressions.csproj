@@ -102,6 +102,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPatternType.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpSubpattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpSubpatternType.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Patterns\IPositionalCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\PatternHelpers.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\PositionalCSharpSubpattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\PropertyCSharpSubpattern.cs" />

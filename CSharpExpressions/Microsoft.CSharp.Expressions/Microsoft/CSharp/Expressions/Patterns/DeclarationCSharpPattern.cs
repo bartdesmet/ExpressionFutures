@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a pattern that checks convertibility to a type and assigns to a variable.
     /// </summary>
-    public sealed class DeclarationCSharpPattern : CSharpObjectPattern
+    public sealed partial class DeclarationCSharpPattern : CSharpObjectPattern
     {
         internal DeclarationCSharpPattern(CSharpObjectPatternInfo info, Type type)
             : base(info)
@@ -102,11 +102,13 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpPattern
     {
+        // REVIEW: Type cannot be nullable.
+
         /// <summary>
         /// Creates a pattern that checks convertibility to a type and assigns to a variable.
         /// </summary>
         /// <param name="info">Type information about the pattern.</param>
-        /// <param name="type"></param>
+        /// <param name="type">The type to check for.</param>
         /// <returns>A <see cref="DeclarationCSharpPattern" /> that represents a pattern that checks convertibility to a type and assigns to a variable.</returns>
         public static DeclarationCSharpPattern Declaration(CSharpObjectPatternInfo info, Type type)
         {

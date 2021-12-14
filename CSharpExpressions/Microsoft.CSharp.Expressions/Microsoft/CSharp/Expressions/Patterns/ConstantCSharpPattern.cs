@@ -13,7 +13,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a pattern that checks for equality to a constant value.
     /// </summary>
-    public sealed class ConstantCSharpPattern : CSharpPattern
+    public sealed partial class ConstantCSharpPattern : CSharpPattern
     {
         internal ConstantCSharpPattern(CSharpPatternInfo info, ConstantExpression value)
             : base(info)

@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a pattern that always matches and assigns the input to a variable.
     /// </summary>
-    public sealed class VarCSharpPattern : CSharpObjectPattern
+    public sealed partial class VarCSharpPattern : CSharpObjectPattern
     {
         internal VarCSharpPattern(CSharpObjectPatternInfo info)
             : base(info)

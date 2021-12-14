@@ -218,6 +218,30 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(BinaryCSharpPatternProxy))]
+    partial class BinaryCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class BinaryCSharpPatternProxy
+    {
+        private readonly BinaryCSharpPattern _node;
+
+        public BinaryCSharpPatternProxy(BinaryCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public Microsoft.CSharp.Expressions.CSharpPattern Left => _node.Left;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public Microsoft.CSharp.Expressions.CSharpPattern Right => _node.Right;
+    }
+
     [DebuggerTypeProxy(typeof(BinaryDynamicCSharpExpressionProxy))]
     partial class BinaryDynamicCSharpExpression
     {
@@ -491,6 +515,29 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(ConstantCSharpPatternProxy))]
+    partial class ConstantCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class ConstantCSharpPatternProxy
+    {
+        private readonly ConstantCSharpPattern _node;
+
+        public ConstantCSharpPatternProxy(ConstantCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Linq.Expressions.ConstantExpression Value => _node.Value;
+    }
+
     [DebuggerTypeProxy(typeof(ConvertDynamicCSharpExpressionProxy))]
     partial class ConvertDynamicCSharpExpression
     {
@@ -540,6 +587,51 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(CSharpObjectPatternProxy))]
+    partial class CSharpObjectPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class CSharpObjectPatternProxy
+    {
+        private readonly CSharpObjectPattern _node;
+
+        public CSharpObjectPatternProxy(CSharpObjectPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpPatternProxy))]
+    partial class CSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class CSharpPatternProxy
+    {
+        private readonly CSharpPattern _node;
+
+        public CSharpPatternProxy(CSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+    }
+
     [DebuggerTypeProxy(typeof(CSharpStatementProxy))]
     partial class CSharpStatement
     {
@@ -563,6 +655,27 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(CSharpSubpatternProxy))]
+    partial class CSharpSubpattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class CSharpSubpatternProxy
+    {
+        private readonly CSharpSubpattern _node;
+
+        public CSharpSubpatternProxy(CSharpSubpattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public Microsoft.CSharp.Expressions.CSharpSubpatternType SubpatternType => _node.SubpatternType;
+    }
+
     [DebuggerTypeProxy(typeof(CSharpSwitchCaseProxy))]
     partial class CSharpSwitchCase
     {
@@ -582,6 +695,30 @@ namespace Microsoft.CSharp.Expressions
 
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Object> TestValues => _node.TestValues;
+    }
+
+    [DebuggerTypeProxy(typeof(DeclarationCSharpPatternProxy))]
+    partial class DeclarationCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class DeclarationCSharpPatternProxy
+    {
+        private readonly DeclarationCSharpPattern _node;
+
+        public DeclarationCSharpPatternProxy(DeclarationCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
     }
 
     [DebuggerTypeProxy(typeof(DiscardCSharpExpressionProxy))]
@@ -605,6 +742,28 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(DiscardCSharpPatternProxy))]
+    partial class DiscardCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class DiscardCSharpPatternProxy
+    {
+        private readonly DiscardCSharpPattern _node;
+
+        public DiscardCSharpPatternProxy(DiscardCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
     }
 
     [DebuggerTypeProxy(typeof(DoCSharpStatementProxy))]
@@ -1165,6 +1324,56 @@ namespace Microsoft.CSharp.Expressions
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Type> TypeArguments => _node.TypeArguments;
     }
 
+    [DebuggerTypeProxy(typeof(IsPatternCSharpExpressionProxy))]
+    partial class IsPatternCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class IsPatternCSharpExpressionProxy
+    {
+        private readonly IsPatternCSharpExpression _node;
+
+        public IsPatternCSharpExpressionProxy(IsPatternCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(ITupleCSharpPatternProxy))]
+    partial class ITupleCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class ITupleCSharpPatternProxy
+    {
+        private readonly ITupleCSharpPattern _node;
+
+        public ITupleCSharpPatternProxy(ITupleCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.PositionalCSharpSubpattern> Deconstruction => _node.Deconstruction;
+        public System.Reflection.MethodInfo GetItemMethod => _node.GetItemMethod;
+        public System.Reflection.MethodInfo GetLengthMethod => _node.GetLengthMethod;
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+    }
+
     [DebuggerTypeProxy(typeof(LockCSharpStatementProxy))]
     partial class LockCSharpStatement
     {
@@ -1292,6 +1501,29 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(NotCSharpPatternProxy))]
+    partial class NotCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class NotCSharpPatternProxy
+    {
+        private readonly NotCSharpPattern _node;
+
+        public NotCSharpPatternProxy(NotCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPattern Negated => _node.Negated;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+    }
+
     [DebuggerTypeProxy(typeof(ParameterAssignmentProxy))]
     partial class ParameterAssignment
     {
@@ -1311,6 +1543,52 @@ namespace Microsoft.CSharp.Expressions
 
         public System.Linq.Expressions.Expression Expression => _node.Expression;
         public System.Reflection.ParameterInfo Parameter => _node.Parameter;
+    }
+
+    [DebuggerTypeProxy(typeof(PositionalCSharpSubpatternProxy))]
+    partial class PositionalCSharpSubpattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class PositionalCSharpSubpatternProxy
+    {
+        private readonly PositionalCSharpSubpattern _node;
+
+        public PositionalCSharpSubpatternProxy(PositionalCSharpSubpattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public Microsoft.CSharp.Expressions.TupleFieldInfo Field => _node.Field;
+        public System.Reflection.ParameterInfo Parameter => _node.Parameter;
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public Microsoft.CSharp.Expressions.CSharpSubpatternType SubpatternType => _node.SubpatternType;
+    }
+
+    [DebuggerTypeProxy(typeof(PropertyCSharpSubpatternProxy))]
+    partial class PropertyCSharpSubpattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class PropertyCSharpSubpatternProxy
+    {
+        private readonly PropertyCSharpSubpattern _node;
+
+        public PropertyCSharpSubpatternProxy(PropertyCSharpSubpattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean IsLengthOrCount => _node.IsLengthOrCount;
+        public Microsoft.CSharp.Expressions.PropertyCSharpSubpatternMember Member => _node.Member;
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public Microsoft.CSharp.Expressions.CSharpSubpatternType SubpatternType => _node.SubpatternType;
     }
 
     [DebuggerTypeProxy(typeof(RangeCSharpExpressionProxy))]
@@ -1338,6 +1616,56 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Right => _node.Right;
         public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(RecursiveCSharpPatternProxy))]
+    partial class RecursiveCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class RecursiveCSharpPatternProxy
+    {
+        private readonly RecursiveCSharpPattern _node;
+
+        public RecursiveCSharpPatternProxy(RecursiveCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.PositionalCSharpSubpattern> Deconstruction => _node.Deconstruction;
+        public System.Reflection.MethodInfo DeconstructMethod => _node.DeconstructMethod;
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.PropertyCSharpSubpattern> Properties => _node.Properties;
+        public System.Type Type => _node.Type;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+    }
+
+    [DebuggerTypeProxy(typeof(RelationalCSharpPatternProxy))]
+    partial class RelationalCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class RelationalCSharpPatternProxy
+    {
+        private readonly RelationalCSharpPattern _node;
+
+        public RelationalCSharpPatternProxy(RelationalCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Linq.Expressions.ConstantExpression Value => _node.Value;
     }
 
     [DebuggerTypeProxy(typeof(SwitchCSharpStatementProxy))]
@@ -1446,6 +1774,29 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(TypeCSharpPatternProxy))]
+    partial class TypeCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class TypeCSharpPatternProxy
+    {
+        private readonly TypeCSharpPattern _node;
+
+        public TypeCSharpPatternProxy(TypeCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(UnaryCSharpExpressionProxy))]
     partial class UnaryCSharpExpression
     {
@@ -1514,12 +1865,37 @@ namespace Microsoft.CSharp.Expressions
 
         public string DebugView => _node.DebugView;
 
+        public Microsoft.CSharp.Expressions.AwaitInfo AwaitInfo => _node.AwaitInfo;
         public System.Linq.Expressions.Expression Body => _node.Body;
         public System.Boolean CanReduce => _node.CanReduce;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Boolean IsAsync => _node.IsAsync;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Resource => _node.Resource;
         public System.Type Type => _node.Type;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+    }
+
+    [DebuggerTypeProxy(typeof(VarCSharpPatternProxy))]
+    partial class VarCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class VarCSharpPatternProxy
+    {
+        private readonly VarCSharpPattern _node;
+
+        public VarCSharpPatternProxy(VarCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
         public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
     }
 
@@ -1547,6 +1923,33 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
+        public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(WithCSharpExpressionProxy))]
+    partial class WithCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class WithCSharpExpressionProxy
+    {
+        private readonly WithCSharpExpression _node;
+
+        public WithCSharpExpressionProxy(WithCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Reflection.MethodInfo Clone => _node.Clone;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.MemberInitializer> Initializers => _node.Initializers;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Reflection.MemberInfo> Members => _node.Members;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
         public System.Type Type => _node.Type;
     }
 

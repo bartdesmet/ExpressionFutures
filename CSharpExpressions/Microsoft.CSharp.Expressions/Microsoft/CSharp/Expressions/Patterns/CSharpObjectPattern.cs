@@ -9,7 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for patterns that assign the result to a variable upon a successful match.
     /// </summary>
-    public abstract class CSharpObjectPattern : CSharpPattern
+    public abstract partial class CSharpObjectPattern : CSharpPattern
     {
         internal CSharpObjectPattern(CSharpObjectPatternInfo info)
             : base(info.Info)

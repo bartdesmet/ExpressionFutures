@@ -3,16 +3,47 @@
 // bartde - December 2021
 
 using System.Collections.Generic;
+using System.Dynamic.Utils;
 using System.Xml.Linq;
 
 namespace Microsoft.CSharp.Expressions
 {
+    partial class CSharpPattern
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
+    partial class CSharpSubpattern
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor
     {
+        public XNode GetDebugView(CSharpPattern node)
+        {
+            return Visit(node);
+        }
+
+        public XNode GetDebugView(CSharpSubpattern node)
+        {
+            return Visit(node);
+        }
+
         protected XNode Visit(CSharpPattern node)
         {
             VisitPattern(node);
             return _nodes.Pop();
+        }
+
+        protected XNode Visit(CSharpSubpattern node)
+        {
+            return node switch
+            {
+                PositionalCSharpSubpattern p => Visit(p),
+                PropertyCSharpSubpattern p => Visit(p),
+                _ => throw ContractUtils.Unreachable,
+            };
         }
 
         protected XNode Visit(PositionalCSharpSubpattern node)
@@ -65,14 +96,14 @@ namespace Microsoft.CSharp.Expressions
         protected internal override CSharpPattern VisitBinaryPattern(BinaryCSharpPattern node)
         {
             return Push(node,
-                new XElement(nameof(node.Left), VisitPattern(node.Left)),
-                new XElement(nameof(node.Right), VisitPattern(node.Right))
+                new XElement(nameof(node.Left), Visit(node.Left)),
+                new XElement(nameof(node.Right), Visit(node.Right))
             );
         }
 
         protected internal override CSharpPattern VisitNotPattern(NotCSharpPattern node)
         {
-            return Push(node, new XElement(nameof(node.Negated), VisitPattern(node.Negated)));
+            return Push(node, new XElement(nameof(node.Negated), Visit(node.Negated)));
         }
 
         protected internal override CSharpPattern VisitTypePattern(TypeCSharpPattern node)

@@ -123,6 +123,21 @@ var errors = new[]
     new { Name = "DeconstructShouldReturnVoid", ExceptionType = "ArgumentException", Args = 1, Message = "Deconstruct method '{0}' should return void." },
     new { Name = "DeconstructParameterShouldBeOut", ExceptionType = "ArgumentException", Args = 2, Message = "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter." },
     new { Name = "DeconstructExtensionMethodMissingThis", ExceptionType = "ArgumentException", Args = 1, Message = "Deconstruct method '{0}' should have at least one parameter." },
+    new { Name = "TupleFieldIndexMustBePositive", ExceptionType = "ArgumentException", Args = 0, Message = "A tuple field index must be positive." },
+    new { Name = "PositionalPatternParameterMustBeOnMethod", ExceptionType = "ArgumentException", Args = 1, Message = "The '{0}' parameter must be declared on a method used for deconstruction." },
+    new { Name = "PositionalPatternParameterMustBeOut", ExceptionType = "ArgumentException", Args = 1, Message = "The '{0}' parameter must be an out parameter used for deconstruction." },
+    new { Name = "PropertyPatternMemberShouldNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "The property pattern member '{0}' should not be static." },
+    new { Name = "PropertyPatternMemberShouldBeReadable", ExceptionType = "ArgumentException", Args = 1, Message = "The property pattern member '{0}' should be readable." },
+    new { Name = "PropertyPatternMemberShouldNotBeIndexer", ExceptionType = "ArgumentException", Args = 1, Message = "The property pattern member '{0}' should not be an indexer property." },
+    new { Name = "PropertyPatternMemberIsNotCompatibleWithReceiver", ExceptionType = "ArgumentException", Args = 2, Message = "The property pattern member '{0}' is not compatible with a receiver of type '{1}'." },
+    new { Name = "PositionalPatternWithDeconstructMethodCannotSpecifyField", ExceptionType = "ArgumentException", Args = 0, Message = "A positional pattern using a Deconstruct method cannot specify a tuple field." },
+    new { Name = "PositionalPatternParameterIsNotDeclaredOnDeconstructMethod", ExceptionType = "ArgumentException", Args = 2, Message = "The '{0}' parameter is not declared on the '{1}' method." },
+    new { Name = "PositionalPatternParameterShouldOnlyBeUsedOnce", ExceptionType = "ArgumentException", Args = 1, Message = "The '{0}' parameter is used more than once." },
+    new { Name = "PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters", ExceptionType = "ArgumentException", Args = 0, Message = "Either all or none of the Deconstruct method parameters should be specified." },
+    new { Name = "PositionalPatternWithTupleCannotSpecifyParameter", ExceptionType = "ArgumentException", Args = 0, Message = "A positional pattern for a tuple type cannot specify a Deconstruct method parameter." },
+    new { Name = "PositionalPatternTupleIndexOutOfRange", ExceptionType = "ArgumentException", Args = 2, Message = "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'." },
+    new { Name = "PositionalPatternTupleIndexShouldOnlyBeUsedOnce", ExceptionType = "ArgumentException", Args = 1, Message = "The tuple field index '{0}' is used more than once." },
+    new { Name = "PositionalPatternWithTupleShouldSpecifyAllIndices", ExceptionType = "ArgumentException", Args = 0, Message = "Either all or none of the tuple fields should be specified." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

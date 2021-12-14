@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a binary pattern that's either a conjunction or a disjunction of two patterns.
     /// </summary>
-    public sealed class BinaryCSharpPattern : CSharpPattern
+    public sealed partial class BinaryCSharpPattern : CSharpPattern
     {
         internal BinaryCSharpPattern(CSharpPatternInfo info, CSharpPatternType patternType, CSharpPattern left, CSharpPattern right)
             : base(info)

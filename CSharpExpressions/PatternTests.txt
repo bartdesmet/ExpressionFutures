@@ -22,8 +22,8 @@
 // Constant
 //
 (Expression<Func<object, bool>>)(o => o is 42)
-(Expression<Func<int?, bool>>)(o => o is 42)
-(Expression<Func<int, bool>>)(o => o is 42)
+(Expression<Func<int?,   bool>>)(o => o is 42)
+(Expression<Func<int,    bool>>)(o => o is 42)
 
 (Expression<Func<object, bool>>)(o => o is ConsoleColor.Red)
 (Expression<Func<object, bool>>)(o => o is "bar")

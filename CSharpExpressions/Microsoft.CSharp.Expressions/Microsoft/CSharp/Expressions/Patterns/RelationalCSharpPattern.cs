@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a relational pattern that compares against a constant value.
     /// </summary>
-    public sealed class RelationalCSharpPattern : CSharpPattern
+    public sealed partial class RelationalCSharpPattern : CSharpPattern
     {
         internal RelationalCSharpPattern(CSharpPatternInfo info, CSharpPatternType patternType, ConstantExpression value)
             : base(info)
@@ -81,7 +81,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpPatternType.LessThanOrEqual => ExpressionType.LessThanOrEqual,
                 CSharpPatternType.GreaterThan => ExpressionType.GreaterThan,
                 CSharpPatternType.GreaterThanOrEqual => ExpressionType.GreaterThanOrEqual,
-                _ => throw ContractUtils.Unreachable
+                _ => throw Unreachable
             };
 
             return MakeTest(this, @object, op, Value);

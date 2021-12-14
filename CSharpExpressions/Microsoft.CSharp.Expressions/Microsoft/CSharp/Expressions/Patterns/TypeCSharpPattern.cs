@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a pattern that checks convertibility to a type.
     /// </summary>
-    public sealed class TypeCSharpPattern : CSharpPattern
+    public sealed partial class TypeCSharpPattern : CSharpPattern
     {
         internal TypeCSharpPattern(CSharpPatternInfo info, Type type)
             : base(info)

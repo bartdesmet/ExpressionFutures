@@ -14,12 +14,12 @@ using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // REVIEW: Consider reflecting the C# grammar instead of "recursive".
+    // REVIEW: Consider reflecting the C# grammar instead of "recursive" (despite the C# 8.0 feature being titled "Recurive pattern matching").
 
     /// <summary>
     /// Represents a pattern that applies positional and/or property subpatterns.
     /// </summary>
-    public sealed class RecursiveCSharpPattern : CSharpObjectPattern
+    public sealed partial class RecursiveCSharpPattern : CSharpObjectPattern, IPositionalCSharpPattern
     {
         internal RecursiveCSharpPattern(CSharpObjectPatternInfo info, Type type, MethodInfo deconstructMethod, ReadOnlyCollection<PositionalCSharpSubpattern> deconstruction, ReadOnlyCollection<PropertyCSharpSubpattern> properties)
             : base(info)
@@ -249,15 +249,152 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpPattern
     {
+        //
+        // TODO: Add more convenience overloads for positional recursive patterns.
+        //
+        //       - Should it find Deconstruct instance methods if unspecified?
+        //         - This will require to find types from PositionalCSharpSubpattern.Pattern.InputType to do overload resolution for the out parameters.
+        //
+
+        /// <summary>
+        /// Creates a positional pattern that matches on components of an object.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="deconstructMethod">The method used to deconstruct an object into its components for use with positional subpatterns.</param>
+        /// <param name="deconstruction">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="IPositionalCSharpPattern" /> representing a positional pattern.</returns>
+        public static IPositionalCSharpPattern Positional(CSharpObjectPatternInfo info, Type type, MethodInfo deconstructMethod, params PositionalCSharpSubpattern[] deconstruction) => Positional(info, type, deconstructMethod, (IEnumerable<PositionalCSharpSubpattern>)deconstruction);
+
+        /// <summary>
+        /// Creates a positional pattern that matches on components of an object.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="deconstructMethod">The method used to deconstruct an object into its components for use with positional subpatterns.</param>
+        /// <param name="deconstruction">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="IPositionalCSharpPattern" /> representing a positional pattern.</returns>
+        public static IPositionalCSharpPattern Positional(CSharpObjectPatternInfo info, Type type, MethodInfo deconstructMethod, IEnumerable<PositionalCSharpSubpattern> deconstruction)
+        {
+            RequiresNotNull(info, nameof(info));
+
+            if (deconstructMethod == null && info.Variable == null && type == null)
+            {
+                var narrowedType = info.Info.NarrowedType;
+
+                if (!Helpers.IsTupleType(narrowedType))
+                {
+                    return ITuple(deconstruction);
+                }
+            }
+
+            return Recursive(info, type, deconstructMethod, deconstruction, properties: null);
+        }
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(Type type, ParameterExpression variable, params PropertyCSharpSubpattern[] properties) => Property(type, variable, (IEnumerable<PropertyCSharpSubpattern>)properties);
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(Type type, ParameterExpression variable, IEnumerable<PropertyCSharpSubpattern> properties)
+        {
+            var narrowedType = variable?.Type ?? type;
+            var info = ObjectPatternInfo(PatternInfo(typeof(object), narrowedType), variable);
+
+            return Recursive(info, type, deconstructMethod: null, deconstruction: null, properties);
+        }
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(CSharpPatternInfo info, Type type, ParameterExpression variable, params PropertyCSharpSubpattern[] properties) => Property(info, type, variable, (IEnumerable<PropertyCSharpSubpattern>)properties);
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(CSharpPatternInfo info, Type type, ParameterExpression variable, IEnumerable<PropertyCSharpSubpattern> properties)
+        {
+            return Recursive(ObjectPatternInfo(info, variable), type, deconstructMethod: null, deconstruction: null, properties);
+        }
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(CSharpObjectPatternInfo info, Type type, params PropertyCSharpSubpattern[] properties) => Property(info, type, (IEnumerable<PropertyCSharpSubpattern>)properties);
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(CSharpObjectPatternInfo info, Type type, IEnumerable<PropertyCSharpSubpattern> properties)
+        {
+            return Recursive(info, type, deconstructMethod: null, deconstruction: null, properties);
+        }
+
+        /// <summary>
+        /// Creates a recursive pattern that can perform positional matching and/or matching on properties.
+        /// </summary>
+        /// <param name="info">Type information about the pattern.</param>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="deconstructMethod">The method used to deconstruct an object into its components for use with positional subpatterns.</param>
+        /// <param name="deconstruction">The positional subpatterns to apply to the components of the object.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a recursive pattern.</returns>
         public static RecursiveCSharpPattern Recursive(CSharpObjectPatternInfo info, Type type, MethodInfo deconstructMethod, IEnumerable<PositionalCSharpSubpattern> deconstruction, IEnumerable<PropertyCSharpSubpattern> properties)
         {
-            // TODO: info
+            if (info == null)
+            {
+                // NB: We could arguably attempt to infer the type from the other parameters but that's a bit too implicit.
+
+                RequiresNotNull(type, nameof(type));
+
+                info = ObjectPatternInfo(PatternInfo(typeof(object), type), variable: null);
+            }
+            else
+            {
+                if (info.Variable != null)
+                {
+                    RequiresCompatiblePatternTypes(info.Info.NarrowedType, info.Variable.Type);
+                }
+            }
 
             var narrowedType = info.Info.NarrowedType;
             var deconstructionCollection = deconstruction.ToReadOnly();
             var propertiesCollection = properties.ToReadOnly();
 
             var objParam = Expression.Parameter(narrowedType); // NB: Utility to utilize some expression factories to expedite some checks.
+
+            // REVIEW: Reordering of positional matches with names (for tuple elements or deconstruction out parameters) is not supported.
 
             validateType();
             validatePositional();
@@ -337,24 +474,26 @@ namespace Microsoft.CSharp.Expressions
                         foreach (var positionalPattern in deconstructionCollection)
                         {
                             if (positionalPattern.Field != null)
-                                throw new Exception(); // TODO
+                                throw Error.PositionalPatternWithDeconstructMethodCannotSpecifyField();
 
-                            if (positionalPattern.Parameter != null)
+                            var parameter = positionalPattern.Parameter;
+
+                            if (parameter != null)
                             {
-                                if (positionalPattern.Parameter.Member != deconstructMethod)
-                                    throw new Exception(); // TODO
+                                if (parameter.Member != deconstructMethod)
+                                    throw Error.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(parameter, deconstructMethod);
 
-                                if (parameterToPattern.ContainsKey(positionalPattern.Parameter))
-                                    throw new Exception(); // TODO
+                                if (parameterToPattern.ContainsKey(parameter))
+                                    throw Error.PositionalPatternParameterShouldOnlyBeUsedOnce(parameter);
 
-                                parameterToPattern.Add(positionalPattern.Parameter, positionalPattern);
+                                parameterToPattern.Add(parameter, positionalPattern);
                             }
                         }
 
                         var bindByParameter = parameterToPattern.Count > 0;
 
                         if (bindByParameter && parameterToPattern.Count != arity)
-                            throw new Exception(); // TODO
+                            throw Error.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters();
 
                         PositionalCSharpSubpattern getPositionalPattern(ParameterInfo parameter, int index) => bindByParameter
                             ? parameterToPattern[parameter]
@@ -387,17 +526,17 @@ namespace Microsoft.CSharp.Expressions
                         foreach (var positionalPattern in deconstructionCollection)
                         {
                             if (positionalPattern.Parameter != null)
-                                throw new Exception(); // TODO
+                                throw Error.PositionalPatternWithTupleCannotSpecifyParameter();
 
                             if (positionalPattern.Field != null)
                             {
                                 var index = positionalPattern.Field.Index;
 
-                                if (index >= arity)
-                                    throw new Exception(); // TODO
+                                if (index < 0 || index >= arity)
+                                    throw Error.PositionalPatternTupleIndexOutOfRange(index, arity);
 
                                 if (indexToPattern[index] != null)
-                                    throw new Exception(); // TODO
+                                    throw Error.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(index);
 
                                 indexToPattern[index] = positionalPattern;
                                 byIndexCount++;
@@ -407,7 +546,7 @@ namespace Microsoft.CSharp.Expressions
                         var bindByIndex = byIndexCount > 0;
 
                         if (bindByIndex && byIndexCount != arity)
-                            throw new Exception(); // TODO
+                            throw Error.PositionalPatternWithTupleShouldSpecifyAllIndices();
 
                         PositionalCSharpSubpattern getPositionalPattern(int index) => bindByIndex
                             ? indexToPattern[index]

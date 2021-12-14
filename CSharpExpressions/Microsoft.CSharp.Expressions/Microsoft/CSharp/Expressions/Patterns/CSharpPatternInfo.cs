@@ -4,7 +4,6 @@
 
 using System;
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
 {

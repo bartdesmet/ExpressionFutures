@@ -4,15 +4,24 @@
 
 namespace Microsoft.CSharp.Expressions
 {
-    public abstract class CSharpSubpattern
+    /// <summary>
+    /// Base class for subpatterns.
+    /// </summary>
+    public abstract partial class CSharpSubpattern
     {
-        protected CSharpSubpattern(CSharpPattern pattern)
+        internal CSharpSubpattern(CSharpPattern pattern)
         {
             Pattern = pattern;
         }
 
+        /// <summary>
+        /// Gets the type of the subpattern.
+        /// </summary>
         public abstract CSharpSubpatternType SubpatternType { get; }
 
+        /// <summary>
+        /// Gets the pattern applied by the subpattern.
+        /// </summary>
         public CSharpPattern Pattern { get; }
 
         /// <summary>

@@ -4763,16 +4763,16 @@
             A list of all the nodes reachable from the root node, in a topologically sorted order.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.Rewrite(System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode},Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode})">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.Rewrite(System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,System.Collections.Generic.IReadOnlyDictionary{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode},Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode})">
             <summary>
             Rewrite a decision dag, using a mapping function that rewrites one node at a time. That function
             takes as its input the node to be rewritten and a function that returns the previously computed
             rewritten node for successor nodes.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.TrivialReplacement(Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode})">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.TrivialReplacement(Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,System.Collections.Generic.IReadOnlyDictionary{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode})">
             <summary>
-            A trivial node replacement function for use with <see cref="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.Rewrite(System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode},Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode})"/>.
+            A trivial node replacement function for use with <see cref="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.Rewrite(System.Func{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,System.Collections.Generic.IReadOnlyDictionary{Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode,Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode},Microsoft.CodeAnalysis.CSharp.BoundDecisionDagNode})"/>.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.SimplifyDecisionDagIfConstantInput(Microsoft.CodeAnalysis.CSharp.BoundExpression)">
@@ -5734,11 +5734,11 @@
             Once all trees are processed the value is set to null.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.CSharpCompilation.NullableAnalysisData">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.CSharpCompilation.TestOnlyCompilationData">
             <summary>
-            Nullable analysis data for methods, parameter default values, and attributes.
-            The key is a symbol for methods or parameters, and syntax for attributes.
-            The data is collected during testing only.
+            Optional data collected during testing only.
+            Used for instance for nullable analysis (<see cref="T:Microsoft.CodeAnalysis.CSharp.NullableWalker.NullableAnalysisData"/>)
+            and inferred delegate types (<see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.InferredDelegateTypeData"/>).
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilation.Options">
@@ -13186,25 +13186,29 @@
             Creates a function pointer method symbol from individual parts. This method should only be used when diagnostics are not needed.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.InferredDelegateTypeData">
+            <summary>
+            Inferred delegate type state, recorded during testing only.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.InferredDelegateTypeData.InferredDelegateCount">
+            <summary>
+            Number of delegate types calculated in the compilation.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol">
             <summary>
-            A <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol"/> implementation that represents the inferred signature of a
+            A <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol"/> implementation that represents the lazily-inferred signature of a
             lambda expression or method group. This is implemented as a <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol"/>
             to allow types and function signatures to be treated similarly in <see cref="T:Microsoft.CodeAnalysis.CSharp.ConversionsBase"/>,
             <see cref="T:Microsoft.CodeAnalysis.CSharp.BestTypeInferrer"/>, and <see cref="T:Microsoft.CodeAnalysis.CSharp.MethodTypeInferrer"/>. Instances of this type
             should only be used in those code paths and should not be exposed from the symbol model.
+            The actual delegate signature is calculated on demand in <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol.GetInternalDelegateType"/>.
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol.Lazy">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol.GetInternalDelegateType">
             <summary>
-            A lazily calculated instance of <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol"/> that represents
-            the inferred signature of a lambda expression or method group.
-            The actual signature is calculated on demand in <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol.Lazy.GetValue"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol.Lazy.GetValue">
-            <summary>
-            Returns the inferred signature as a <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionTypeSymbol"/>
+            Returns the inferred signature as a delegate type
             or null if the signature could not be inferred.
             </summary>
         </member>
@@ -20333,6 +20337,13 @@
         <member name="T:Microsoft.CodeAnalysis.CSharp.NullableWalker">
             <summary>
             Nullability flow analysis.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.NullableWalker.NullableAnalysisData">
+            <summary>
+            Nullable analysis data for methods, parameter default values, and attributes
+            stored on the Compilation during testing only.
+            The key is a symbol for methods or parameters, and syntax for attributes.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.NullableWalker.VariableState">
@@ -31474,6 +31485,9 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.ParseTokens(System.String,System.Int32,System.Int32,Microsoft.CodeAnalysis.CSharp.CSharpParseOptions)">
             <summary>
             Parse a sequence of C# language tokens.
+            Since this API does not create a <see cref="T:Microsoft.CodeAnalysis.SyntaxNode"/> that owns all produced tokens,
+            the <see cref="M:Microsoft.CodeAnalysis.SyntaxToken.GetLocation"/> API may yield surprising results for
+            the produced tokens and its behavior is generally unspecified.
             </summary>
             <param name="text">The text of all the tokens.</param>
             <param name="initialTokenPosition">An integer to use as the starting position of the first token.</param>
@@ -43146,6 +43160,12 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_CannotBeMadeNullable">
             <summary>'{0}' cannot be made nullable.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_LowerCaseTypeName">
+            <summary>The type name '{0}' only contains lower-cased ascii characters. Such names may become reserved for the language.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_LowerCaseTypeName_Title">
+            <summary>The type name only contains lower-cased ascii characters. Such names may become reserved for the language.</summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.CSharp.CSharpCompilerDiagnosticAnalyzer">
             <summary>

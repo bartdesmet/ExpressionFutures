@@ -445,3 +445,14 @@ public struct Point
 
     public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
 }
+
+public struct Point2D
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+
+public static class Point2DExtensions
+{
+    public static void Deconstruct(this ref Point2D p, out int x, out int y) => (x, y) = (p.X, p.Y);
+}

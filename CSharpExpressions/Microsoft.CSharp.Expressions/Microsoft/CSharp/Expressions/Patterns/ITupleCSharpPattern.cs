@@ -19,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a pattern that matches a tuple using the <see cref="ITuple"/> interface.
     /// </summary>
-    public sealed class ITupleCSharpPattern : CSharpPattern
+    public sealed partial class ITupleCSharpPattern : CSharpPattern, IPositionalCSharpPattern
     {
         internal ITupleCSharpPattern(CSharpPatternInfo info, MethodInfo getLengthMethod, MethodInfo getItemMethod, ReadOnlyCollection<PositionalCSharpSubpattern> deconstruction)
             : base(info)

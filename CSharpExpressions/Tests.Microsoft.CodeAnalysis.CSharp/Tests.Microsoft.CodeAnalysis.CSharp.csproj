@@ -86,6 +86,31 @@
     </Compile>
     <Compile Include="CompilerTests\CSharp30.Assignments.Verify.cs" />
     <Compile Include="CompilerTests\CSharp50.AsyncAwait.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.IsExpression.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.IsExpression.Generated.cs">
+      <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharpN100.PatternMatching.Generated.cs">
+      <DependentUpon>CSharpN100.PatternMatching.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharpN100.PatternMatching.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp90.PatternMatching.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.PatternMatching.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.PatternMatching.Generated.cs">
+      <DependentUpon>CSharp80.PatternMatching.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp70.PatternMatching.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.PatternMatching.Generated.cs">
+      <DependentUpon>CSharp70.PatternMatching.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="CompilerTests\CSharp73.TupleEquality.Verify.cs" />
     <Compile Include="CompilerTests\CSharp73.TupleEquality.Generated.cs">
       <DependentUpon>CSharp73.TupleEquality.Generated.tt</DependentUpon>
@@ -115,6 +140,11 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CompilerTests\CSharp80.AwaitUsing.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp90.PatternMatching.Generated.cs">
+      <DependentUpon>CSharp90.PatternMatching.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="CompilerTests\CSharp90.WithExpression.Verify.cs" />
     <Compile Include="CompilerTests\CSharp90.WithExpression.Generated.cs">
       <DependentUpon>CSharp90.WithExpression.Generated.tt</DependentUpon>
@@ -218,6 +248,18 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
     </Content>
+    <Content Include="CompilerTests\CSharp70.IsExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp80.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.PatternMatching.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp70.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.PatternMatching.Generated.cs</LastGenOutput>
+    </Content>
     <Content Include="CompilerTests\CSharp73.TupleEquality.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
@@ -237,6 +279,14 @@
     <Content Include="CompilerTests\CSharp80.AwaitUsing.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp80.AwaitUsing.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharpN100.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharpN100.PatternMatching.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp90.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp90.PatternMatching.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp90.WithExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
