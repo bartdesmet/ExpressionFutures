@@ -413,6 +413,158 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B907_F017() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_B4EA_1FE3()
+        {
+            // (Expression<Func<char, bool>>)(c => c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z') or '.' or ',')
+            var actual = GetDebugView(@"(Expression<Func<char, bool>>)(c => c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z') or '.' or ',')");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.Char,System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.Char"" Id=""0"" Name=""c"" />
+  </Parameters>
+  <Body>
+    <CSharpIsPattern Type=""System.Boolean"">
+      <Expression>
+        <Parameter Type=""System.Char"" Id=""0"" Name=""c"" />
+      </Expression>
+      <Pattern>
+        <OrPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+          <Left>
+            <OrPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+              <Left>
+                <OrPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                  <Left>
+                    <AndPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                      <Left>
+                        <GreaterThanOrEqualPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                          <Constant Type=""System.Char"" Value=""a"" />
+                        </GreaterThanOrEqualPattern>
+                      </Left>
+                      <Right>
+                        <LessThanOrEqualPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                          <Constant Type=""System.Char"" Value=""z"" />
+                        </LessThanOrEqualPattern>
+                      </Right>
+                    </AndPattern>
+                  </Left>
+                  <Right>
+                    <AndPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                      <Left>
+                        <GreaterThanOrEqualPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                          <Constant Type=""System.Char"" Value=""A"" />
+                        </GreaterThanOrEqualPattern>
+                      </Left>
+                      <Right>
+                        <LessThanOrEqualPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                          <Constant Type=""System.Char"" Value=""Z"" />
+                        </LessThanOrEqualPattern>
+                      </Right>
+                    </AndPattern>
+                  </Right>
+                </OrPattern>
+              </Left>
+              <Right>
+                <ConstantPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+                  <Constant Type=""System.Char"" Value=""."" />
+                </ConstantPattern>
+              </Right>
+            </OrPattern>
+          </Left>
+          <Right>
+            <ConstantPattern InputType=""System.Char"" NarrowedType=""System.Char"">
+              <Constant Type=""System.Char"" Value="","" />
+            </ConstantPattern>
+          </Right>
+        </OrPattern>
+      </Pattern>
+    </CSharpIsPattern>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B4EA_1FE3();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B4EA_1FE3() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_39C5_8985()
+        {
+            // (Expression<Func<DateTime, bool>>)(date => date is { Year: 2020, Month: 5, Day: 19 or 20 or 21 })
+            var actual = GetDebugView(@"(Expression<Func<DateTime, bool>>)(date => date is { Year: 2020, Month: 5, Day: 19 or 20 or 21 })");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.DateTime,System.Boolean]"">
+  <Parameters>
+    <Parameter Type=""System.DateTime"" Id=""0"" Name=""date"" />
+  </Parameters>
+  <Body>
+    <CSharpIsPattern Type=""System.Boolean"">
+      <Expression>
+        <Parameter Type=""System.DateTime"" Id=""0"" Name=""date"" />
+      </Expression>
+      <Pattern>
+        <RecursivePattern InputType=""System.DateTime"" NarrowedType=""System.DateTime"">
+          <Properties>
+            <Property>
+              <Member>
+                <PropertyCSharpSubpatternMember Member=""Int32 Year"" />
+              </Member>
+              <Pattern>
+                <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                  <Constant Type=""System.Int32"" Value=""2020"" />
+                </ConstantPattern>
+              </Pattern>
+            </Property>
+            <Property>
+              <Member>
+                <PropertyCSharpSubpatternMember Member=""Int32 Month"" />
+              </Member>
+              <Pattern>
+                <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                  <Constant Type=""System.Int32"" Value=""5"" />
+                </ConstantPattern>
+              </Pattern>
+            </Property>
+            <Property>
+              <Member>
+                <PropertyCSharpSubpatternMember Member=""Int32 Day"" />
+              </Member>
+              <Pattern>
+                <OrPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                  <Left>
+                    <OrPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                      <Left>
+                        <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                          <Constant Type=""System.Int32"" Value=""19"" />
+                        </ConstantPattern>
+                      </Left>
+                      <Right>
+                        <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                          <Constant Type=""System.Int32"" Value=""20"" />
+                        </ConstantPattern>
+                      </Right>
+                    </OrPattern>
+                  </Left>
+                  <Right>
+                    <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""21"" />
+                    </ConstantPattern>
+                  </Right>
+                </OrPattern>
+              </Pattern>
+            </Property>
+          </Properties>
+        </RecursivePattern>
+      </Pattern>
+    </CSharpIsPattern>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_39C5_8985();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_39C5_8985() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -451,6 +603,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_9DC2_F0F3() => OK();
             public override void CompilerTest_0343_2E7E() => OK();
             public override void CompilerTest_B907_F017() => OK();
+            public override void CompilerTest_B4EA_1FE3() => OK();
+            public override void CompilerTest_39C5_8985() => OK();
         }
     }
 }

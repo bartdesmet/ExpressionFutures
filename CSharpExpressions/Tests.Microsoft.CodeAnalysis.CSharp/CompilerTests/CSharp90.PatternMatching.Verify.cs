@@ -27,6 +27,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // Not
             public override void CompilerTest_0343_2E7E() => OK();
             public override void CompilerTest_B907_F017() => OK();
+
+            // MSDN samples
+            public override void CompilerTest_B4EA_1FE3() => OK();
+            public override void CompilerTest_39C5_8985() => OK();
         }
     }
 }
