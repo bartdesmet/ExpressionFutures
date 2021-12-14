@@ -563,11 +563,61 @@ Nodes of this type reduce to a `TupleLiteralCSharpExpression` that constructs a 
 
 ##### Deconstructing Assignment
 
-TODO: (also in foreach)
+TODO - Partial implementation; pending support in foreach.
 
 ##### Pattern Matching
 
-TODO: `is` expressions, different types of patterns (C# 8 additions), `switch` revamp
+The `is` pattern matching operator is not supported in expression trees as shown below:
+
+```csharp
+Expression<Func<object, bool>> f = o => o is int x;
+```
+
+This fails to compile with:
+
+```
+error CS8122: An expression tree may not contain an 'is' pattern-matching operator.
+```
+
+Support for `is` pattern matching is added by a new `CSharpExpression.IsPattern(Expression, CSharpPattern)` method, where `CSharpPattern` is the base class for patterns. In the sample above, a `DeclarationCSharpPattern` will be constructed to represent the `int x` pattern:
+
+```csharp
+var p = Expression.Parameter(typeof(object));
+var x = Expression.Parameter(typeof(int), "x");
+var declaration = CSharpPattern.Declaration(x);
+CSharpExpression.IsPattern(p, declaration)
+```
+
+Other supported C# 7.0 pattern types are:
+
+* `ConstantCSharpPattern` which is parameterized on a `ConstantExpression` to check for a constant, and,
+* `VarCSharpPattern` for patterns that always match and introduce a new local variable.
+
+For example,
+
+```csharp
+o is 42
+```
+
+is translated into
+
+```csharp
+CSharpExpression.IsPattern(o, CSharpPattern.Constant(Expression.Constant(42)))
+```
+
+and
+
+```csharp
+o is var x
+```
+
+is translated into
+
+```csharp
+CSharpExpression.IsPattern(o, CSharpPattern.Var(Expression.Parameter(x, o.Type)))
+```
+
+More pattern types were introduced in subsequent versions of C# and are covered further down in this document.
 
 ##### Local Functions
 
@@ -610,7 +660,7 @@ No new features were added that impact expression trees.
 
 ##### Non-trailing Named Arguments
 
-TODO
+TODO - Pending verification.
 
 #### C# 7.3
 
@@ -668,13 +718,25 @@ CSharpExpression.NullCoalescingAssignment(s, Expression.Constant("foo"))
 
 Support for `dynamic` is provided through `DynamicCSharpExpression.NullCoalescingAssignment` methods.
 
+##### Recursive pattern matching
+
+Support for positional and property patterns was added by extending the `CSharpPattern` class hierarchy to support:
+
+* `DiscardCSharpPattern` to represent a `_` pattern,
+* `RecursiveCSharpPattern` to support positional and property patterns, and,
+* `ITupleCSharpPattern` to support positional property patterns using `ITuple`.
+
+Recursive patterns use subpatterns of type `PositionalCSharpSubpattern` and `PropertyCSharpSubpattern` to represent the recursive application of patterns.
+
+More pattern types were introduced in subsequent versions of C# and are covered further down in this document.
+
 ##### Switch Expressions
 
-TODO
+TODO - Implementation pending.
 
 ##### Using Declarations
 
-TODO
+TODO - Document implementation.
 
 ##### Indices and Ranges
 
@@ -758,11 +820,27 @@ CSharpExpression.IndexerAccess(s, i, /* methodinfoof(System.String.get_Length) *
 
 ##### `await using`
 
-TODO
+TODO - Add documentation; partial implementation without "pattern dispose" ready.
 
 ##### `await foreach`
 
-TODO
+TODO - Implementation pending.
+
+#### C# 9.0
+
+##### Pattern matching enhancements
+
+Support for relational, `and`, `or`, and `not` patterns was added by extending the `CSharpPattern` class hierarchy to support:
+
+* `BinaryCSharpPattern` with kinds `CSharpPatternType.And` and `CSharpPatternType.Or` to support `and` and `or`,
+* `NotCSharpPattern` to support `not``, and,
+* `RelationalCSharpPattern` to support relational patterns using `<`, `<=`, `>`, or `>=`.
+
+#### C# 10.0
+
+##### Extended property patterns
+
+Support for extended property patterns was added by supporting a chain of member lookups in `PropertyCSharpSubpatternMember`.
 
 #### Statement Trees
 
