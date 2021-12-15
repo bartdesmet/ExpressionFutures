@@ -244,12 +244,12 @@ public static class {typeName}
                     throw new InvalidProgramException(diag);
                 }
 
-                ms.Position = 0;
+                //ms.Position = 0;
 
-                using (var fs = File.Create(@"Expressions.dll"))
-                {
-                    ms.CopyTo(fs);
-                }
+                //using (var fs = File.Create(@"Expressions.dll"))
+                //{
+                //    ms.CopyTo(fs);
+                //}
 
                 ms.Position = 0;
 
