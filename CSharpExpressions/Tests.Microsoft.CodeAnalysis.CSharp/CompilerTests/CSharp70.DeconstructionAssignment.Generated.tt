@@ -1,0 +1,32 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - December 2021
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp70_DeconstructionAssignment";
+
+var exprs = new[]
+{
+    "(Expression<Action<(int, int)>>)(t => { (int x, int y) = t; })",
+    "(Expression<Action<(int, int)>>)(t => { (int? x, long y) = t; })",
+
+    "(Expression<Action<(int, (bool, char))>>)(t => { var (x, bc) = t; })",
+    "(Expression<Action<(int, (bool, char))>>)(t => { (int x, (bool b, char c)) = t; })",
+
+    "(Expression<Action<Point>>)(p => { (int x, int y) = p; })",
+    "(Expression<Action<(int, Point, string)>>)(t => { (long a, (double x, double y), string s) = t; })",
+
+    "(Expression<Action<(int, int, int, int), StrongBox<int>, int[], int[], List<int>>>)((t, sb, xs, ys, zs) => { (sb.Value, xs[0], ys[^1], zs[2]) = t; })",
+};
+#>
+<#@ include file="CompilerTests.t4" #>

@@ -86,6 +86,12 @@
     </Compile>
     <Compile Include="CompilerTests\CSharp30.Assignments.Verify.cs" />
     <Compile Include="CompilerTests\CSharp50.AsyncAwait.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.DeconstructionAssignment.Generated.cs">
+      <DependentUpon>CSharp70.DeconstructionAssignment.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp70.DeconstructionAssignment.Verify.cs" />
     <Compile Include="CompilerTests\CSharp70.IsExpression.Verify.cs" />
     <Compile Include="CompilerTests\CSharp70.IsExpression.Generated.cs">
       <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
@@ -247,6 +253,10 @@
     <Content Include="CompilerTests\CSharp30.Assignments.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp70.DeconstructionAssignment.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.DeconstructionAssignment.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp70.IsExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

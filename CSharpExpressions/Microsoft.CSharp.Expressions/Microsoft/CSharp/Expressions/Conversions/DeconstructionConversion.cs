@@ -2,10 +2,14 @@
 //
 // bartde - December 2021
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -64,7 +68,28 @@ namespace Microsoft.CSharp.Expressions
 
         public static LambdaExpression DeconstructLambda(Expression body, params ParameterExpression[] parameters)
         {
-            return Lambda(body, parameters);
+            RequiresCanRead(body, nameof(body));
+            RequiresNotNullItems(parameters, nameof(parameters));
+
+            if (body.Type != typeof(void))
+                throw new Exception(); // TODO
+
+            if (parameters.Length < 3)
+                throw new Exception(); // TODO
+
+            var types = new Type[parameters.Length];
+
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                if (i >= 1 && !parameters[i].IsByRef)
+                    throw new Exception(); // TODO
+
+                types[i] = parameters[i].Type;
+            }
+
+            var delegateType = DeconstructActionDelegateHelpers.GetDeconstructActionType(types);
+
+            return delegateType != null ? Lambda(delegateType, body, parameters) : Lambda(body, parameters);
         }
     }
 }

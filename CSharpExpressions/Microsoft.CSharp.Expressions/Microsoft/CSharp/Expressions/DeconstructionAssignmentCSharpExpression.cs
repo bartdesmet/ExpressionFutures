@@ -11,55 +11,6 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
-    /*
-     * TODO: This file contains a placeholder for the APIs called for deconstructing assignment.
-     * 
-        // Case 1
-        (Expression<Action>)(() =>
-        {
-            var t = (1, 2);
-            (long x, int y) = t;
-        })
-
-        // Case 2
-        (Expression<Action>)(() =>
-        {
-            var t = (1, (2, 3));
-            (long x, (int y, double z)) = t;
-        })
-
-        // Case 3
-        (Expression<Action>)(() =>
-        {
-            var t = (1, (2, 3));
-            var (x, yz) = t;
-            var (y, z) = yz;
-        })
-
-        // Case 4
-        (Expression<Action>)(() =>
-        {
-            var p = new Point { X = 1, Y = 2 };
-            (int x, int y) = p;
-        })
-
-        // Case 5
-        (Expression<Action>)(() =>
-        {
-            var t = (1, new Point { X = 2, Y = 3 });
-            (long a, (int x, int y)) = t;
-        })
-
-        // Case 6
-        (Expression<Action>)(() =>
-        {
-            var t = (1, 2);
-            var xs = new int[0];
-            var sb = new StrongBox<int>();
-            (xs[0], sb.Value) = t;
-        })
-     */
-
     /// <summary>
     /// Represents a deconstruction assignment.
     /// </summary>

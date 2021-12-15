@@ -2,7 +2,9 @@
 //
 // bartde - December 2021
 
+using System;
 using System.Linq.Expressions;
+using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -42,9 +44,21 @@ namespace Microsoft.CSharp.Expressions
 
         public static SimpleConversion Convert(LambdaExpression conversion)
         {
-            // Check single parameter.
+            RequiresNotNull(conversion, nameof(conversion));
+
+            if (conversion.Parameters.Count != 1)
+                throw new Exception(); // TODO
+
+            if (conversion.ReturnType == typeof(void))
+                throw new Exception(); // TODO
 
             return new SimpleConversion(conversion);
         }
+
+        // CONSIDER: Add specialized derived types of SimpleConversion for trivial conversions:
+        //
+        //             Identity:          (T x) => x
+        //             Convert[Checked]:  (T x) => (R)x    with/without Method
+        //             Nullable:          (T x) => (T?)x
     }
 }

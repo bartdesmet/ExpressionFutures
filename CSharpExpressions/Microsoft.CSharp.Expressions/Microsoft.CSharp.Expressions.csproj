@@ -218,6 +218,11 @@
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Generated.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
+    <Compile Include="System\Runtime\CompilerServices\DeconstructDelegates.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeconstructDelegates.tt</DependentUpon>
+    </Compile>
     <Compile Include="System\Runtime\CompilerServices\Discard.cs" />
     <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
     <Compile Include="System\Runtime\CompilerServices\RuntimeOpsEx.cs" />
@@ -253,6 +258,10 @@
     <Content Include="Stubs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Stubs.cs</LastGenOutput>
+    </Content>
+    <Content Include="System\Runtime\CompilerServices\DeconstructDelegates.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DeconstructDelegates.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
