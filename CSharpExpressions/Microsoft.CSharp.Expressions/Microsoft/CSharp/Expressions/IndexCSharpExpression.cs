@@ -101,16 +101,32 @@ namespace Microsoft.CSharp.Expressions
 
         internal Expression ReduceAssign(Func<Expression, Expression> assign)
         {
+            var variables = new List<ParameterExpression>();
+            var statements = new List<Expression>();
+
+            var expr = Reduce(assign, variables, statements);
+            statements.Add(expr);
+
+            return Comma(variables, statements);
+        }
+
+        internal Expression ReduceAssign(List<ParameterExpression> temps, List<Expression> stmts)
+        {
+            return Reduce(e => e, temps, stmts);
+        }
+
+        private Expression Reduce(Func<Expression, Expression> functionalOp, List<ParameterExpression> temps, List<Expression> stmts)
+        {
             var method = Indexer.GetGetMethod(true);
             var parameters = method.GetParametersCached();
 
             // TODO: Check all writeback cases with mutable structs.
-            var res = BindArguments((obj, args) => assign(Expression.Property(obj, Indexer, args)), Object, parameters, Arguments, needTemps: true);
+            var res = BindArguments((obj, args) => functionalOp(Expression.Property(obj, Indexer, args)), Object, parameters, Arguments, temps, stmts);
 
             return res;
         }
 
-        internal class MethodBased : IndexCSharpExpression
+        internal sealed class MethodBased : IndexCSharpExpression
         {
             private readonly MethodInfo _method;
 
@@ -128,7 +144,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal class PropertyBased : IndexCSharpExpression
+        internal sealed class PropertyBased : IndexCSharpExpression
         {
             public PropertyBased(Expression @object, PropertyInfo indexer, ReadOnlyCollection<ParameterAssignment> arguments)
                 : base(@object, arguments)

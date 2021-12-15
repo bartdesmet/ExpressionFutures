@@ -362,10 +362,10 @@ namespace Microsoft.CSharp.Expressions
         {
             var res = default(Expression);
 
-            var arguments = new Expression[parameters.Length];
-
             if (!needTemps && CheckArgumentsInOrder(bindings) && !CheckHasSpecialNodesPassedByRef(bindings))
             {
+                var arguments = new Expression[parameters.Length];
+
                 foreach (var binding in bindings)
                 {
                     arguments[binding.Parameter.Position] = binding.Expression;
@@ -380,38 +380,11 @@ namespace Microsoft.CSharp.Expressions
                 var variables = new List<ParameterExpression>();
                 var statements = new List<Expression>();
 
-                var makeVariable = new Func<Type, string, ParameterExpression>((type, name) =>
-                {
-                    var var = Expression.Parameter(type, name);
-                    variables.Add(var);
-                    return var;
-                });
+                var expr = BindArguments(create, instance, parameters, bindings, variables, statements);
 
-                var obj = default(Expression);
-                RewriteArguments(instance, bindings, makeVariable, statements, ref obj, arguments, out Expression[] writebacks);
+                // NB: Peephole for Expression.Empty() returned below.
 
-                FillOptionalParameters(parameters, arguments);
-
-                var expr = create(obj, arguments);
-
-                if (writebacks.Length != 0)
-                {
-                    if (expr.Type != typeof(void))
-                    {
-                        var resultVariable = Expression.Parameter(expr.Type, "__result");
-                        variables.Add(resultVariable);
-
-                        statements.Add(Expression.Assign(resultVariable, expr));
-                        statements.AddRange(writebacks);
-                        statements.Add(resultVariable);
-                    }
-                    else
-                    {
-                        statements.Add(expr);
-                        statements.AddRange(writebacks);
-                    }
-                }
-                else
+                if (!(expr is DefaultExpression && expr.Type == typeof(void)))
                 {
                     statements.Add(expr);
                 }
@@ -420,6 +393,48 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return res;
+        }
+
+        public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings, List<ParameterExpression> variables, List<Expression> statements)
+        {
+            var arguments = new Expression[parameters.Length];
+
+            var makeVariable = new Func<Type, string, ParameterExpression>((type, name) =>
+            {
+                var var = Expression.Parameter(type, name);
+                variables.Add(var);
+                return var;
+            });
+
+            var obj = default(Expression);
+            RewriteArguments(instance, bindings, makeVariable, statements, ref obj, arguments, out Expression[] writebacks);
+
+            FillOptionalParameters(parameters, arguments);
+
+            var expr = create(obj, arguments);
+
+            if (writebacks.Length != 0)
+            {
+                if (expr.Type != typeof(void))
+                {
+                    var resultVariable = Expression.Parameter(expr.Type, "__result");
+                    variables.Add(resultVariable);
+
+                    statements.Add(Expression.Assign(resultVariable, expr));
+                    statements.AddRange(writebacks);
+                    return resultVariable;
+                }
+                else
+                {
+                    statements.Add(expr);
+                    statements.AddRange(writebacks);
+                    return Expression.Empty();
+                }
+            }
+            else
+            {
+                return expr;
+            }
         }
 
         private static void RewriteArguments(Expression instance, ReadOnlyCollection<ParameterAssignment> bindings, Func<Type, string, ParameterExpression> makeVariable, List<Expression> statements, ref Expression obj, Expression[] arguments, out Expression[] writebacks)
@@ -967,16 +982,28 @@ namespace Microsoft.CSharp.Expressions
             // NB: This is a simplified form of ReduceAssignment without support for conversions or a differentation of prefix/postfix assignments.
             //     It also assumes the lhs is not a mutable value type that needs by ref access treatment.
 
+            var temps = new List<ParameterExpression>();
+            var stmts = new List<Expression>();
+
+            var expr = ReduceAssign(lhs, temps, stmts);
+
+            stmts.Add(assign(expr));
+
+            return Comma(temps, stmts);
+        }
+
+        public static Expression ReduceAssign(Expression lhs, List<ParameterExpression> temps, List<Expression> stmts)
+        {
             return lhs.NodeType switch
             {
                 ExpressionType.MemberAccess => ReduceAssignMember(),
                 ExpressionType.Index => ReduceAssignIndex(),
-                ExpressionType.Parameter => assign(lhs),
+                ExpressionType.Parameter => lhs,
                 _ => lhs switch
                 {
-                    IndexCSharpExpression index => index.ReduceAssign(assign),
-                    ArrayAccessCSharpExpression arrayAccess => arrayAccess.ReduceAssign(assign),
-                    IndexerAccessCSharpExpression indexerAccess => indexerAccess.ReduceAssign(assign),
+                    IndexCSharpExpression index => index.ReduceAssign(temps, stmts),
+                    ArrayAccessCSharpExpression arrayAccess => arrayAccess.ReduceAssign(temps, stmts),
+                    IndexerAccessCSharpExpression indexerAccess => indexerAccess.ReduceAssign(temps, stmts),
                     _ => throw ContractUtils.Unreachable,
                 },
             };
@@ -987,7 +1014,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (member.Expression == null)
                 {
-                    return assign(member);
+                    return member;
                 }
                 else
                 {
@@ -998,13 +1025,11 @@ namespace Microsoft.CSharp.Expressions
 
                     var lhsTemp = Expression.Parameter(member.Expression.Type, "__lhs");
                     var lhsAssign = Expression.Assign(lhsTemp, member.Expression);
-                    member = member.Update(lhsTemp);
 
-                    return Expression.Block(
-                        new[] { lhsTemp },
-                        lhsAssign,
-                        assign(member)
-                    );
+                    temps.Add(lhsTemp);
+                    stmts.Add(lhsAssign);
+
+                    return member.Update(lhsTemp);
                 }
             }
 
@@ -1019,12 +1044,10 @@ namespace Microsoft.CSharp.Expressions
 
                 var n = index.Arguments.Count;
                 var args = new Expression[n];
-                var block = new List<Expression>();
-                var temps = new List<ParameterExpression>();
 
-                ParameterExpression obj = Expression.Parameter(index.Object.Type, "__object");
+                var obj = Expression.Parameter(index.Object.Type, "__object");
                 temps.Add(obj);
-                block.Add(Expression.Assign(obj, index.Object));
+                stmts.Add(Expression.Assign(obj, index.Object));
 
                 for (var j = 0; j < n; j++)
                 {
@@ -1038,17 +1061,13 @@ namespace Microsoft.CSharp.Expressions
                     {
                         var temp = Expression.Parameter(arg.Type, "__arg" + j);
                         temps.Add(temp);
+                        stmts.Add(Expression.Assign(temp, arg));
 
-                        block.Add(Expression.Assign(temp, arg));
                         args[j] = temp;
                     }
                 }
 
-                index = index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
-
-                block.Add(assign(index));
-
-                return Expression.Block(temps, block);
+                return index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
             }
         }
 

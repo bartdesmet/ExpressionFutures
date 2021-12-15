@@ -169,14 +169,23 @@ namespace Microsoft.CSharp.Expressions
 
         internal Expression ReduceAssign(Func<Expression, Expression> assign)
         {
+            var temps = new List<ParameterExpression>();
+            var stmts = new List<Expression>();
+
+            var arrayAccess = ReduceAssign(temps, stmts);
+
+            stmts.Add(assign(arrayAccess));
+
+            return Helpers.Comma(temps, stmts);
+        }
+
+        internal IndexExpression ReduceAssign(List<ParameterExpression> temps, List<Expression> stmts)
+        {
             var firstIndex = Indexes[0];
             var indexType = firstIndex.Type;
 
             if (Indexes.Count > 1 || indexType == typeof(int))
             {
-                var temps = new List<ParameterExpression>(Indexes.Count + 1);
-                var stmts = new List<Expression>(Indexes.Count + 3);
-
                 var array = GetArrayExpression(temps, stmts);
 
                 var indexes = new List<Expression>(Indexes.Count);
@@ -200,17 +209,11 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                var access = assign(Expression.ArrayAccess(array, indexes));
-                stmts.Add(access);
-
-                return Helpers.Comma(temps, stmts);
+                return Expression.ArrayAccess(array, indexes);
             }
 
             if (indexType == typeof(Index))
             {
-                var temps = new List<ParameterExpression>(2);
-                var stmts = new List<Expression>(3);
-
                 var array = GetArrayExpression(temps, stmts);
 
                 var index = GetIntIndexExpression(array, firstIndex);
@@ -232,10 +235,7 @@ namespace Microsoft.CSharp.Expressions
                 //     for compound assignments, which is benign but may incur multiple bounds checks. Alternatively, we could
                 //     dispatch into the RuntimeOpsEx.WithByRef helper method.
 
-                var access = assign(Expression.ArrayAccess(array, index));
-                stmts.Add(access);
-
-                return Helpers.Comma(temps, stmts);
+                return Expression.ArrayAccess(array, index);
             }
 
             throw ContractUtils.Unreachable;

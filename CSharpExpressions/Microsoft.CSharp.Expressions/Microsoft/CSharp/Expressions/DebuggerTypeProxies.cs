@@ -538,6 +538,25 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.ConstantExpression Value => _node.Value;
     }
 
+    [DebuggerTypeProxy(typeof(ConversionProxy))]
+    partial class Conversion
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class ConversionProxy
+    {
+        private readonly Conversion _node;
+
+        public ConversionProxy(Conversion node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+    }
+
     [DebuggerTypeProxy(typeof(ConvertDynamicCSharpExpressionProxy))]
     partial class ConvertDynamicCSharpExpression
     {
@@ -745,6 +764,27 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Right => _node.Right;
         public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(DeconstructionConversionProxy))]
+    partial class DeconstructionConversion
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class DeconstructionConversionProxy
+    {
+        private readonly DeconstructionConversion _node;
+
+        public DeconstructionConversionProxy(DeconstructionConversion node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.Conversion> Conversions => _node.Conversions;
+        public System.Linq.Expressions.LambdaExpression Deconstruct => _node.Deconstruct;
     }
 
     [DebuggerTypeProxy(typeof(DiscardCSharpExpressionProxy))]
@@ -1692,6 +1732,26 @@ namespace Microsoft.CSharp.Expressions
         public System.Type NarrowedType => _node.NarrowedType;
         public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
         public System.Linq.Expressions.ConstantExpression Value => _node.Value;
+    }
+
+    [DebuggerTypeProxy(typeof(SimpleConversionProxy))]
+    partial class SimpleConversion
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SimpleConversionProxy
+    {
+        private readonly SimpleConversion _node;
+
+        public SimpleConversionProxy(SimpleConversion node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
     }
 
     [DebuggerTypeProxy(typeof(SwitchCSharpStatementProxy))]

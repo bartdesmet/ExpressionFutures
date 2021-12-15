@@ -345,13 +345,22 @@ namespace Microsoft.CSharp.Expressions
 
         internal Expression ReduceAssign(Func<Expression, Expression> assign)
         {
+            var temps = new List<ParameterExpression>();
+            var stmts = new List<Expression>();
+
+            var index = ReduceAssign(temps, stmts);
+
+            stmts.Add(assign(index));
+
+            return Helpers.Comma(temps, stmts);
+        }
+
+        internal IndexExpression ReduceAssign(List<ParameterExpression> temps, List<Expression> stmts)
+        {
             if (Argument.Type == typeof(Range))
             {
                 throw ContractUtils.Unreachable;
             }
-
-            var temps = new List<ParameterExpression>();
-            var stmts = new List<Expression>();
 
             var obj = GetObjectExpression(temps, stmts);
 
@@ -370,11 +379,7 @@ namespace Microsoft.CSharp.Expressions
             temps.Add(indexVar);
             stmts.Add(Expression.Assign(indexVar, expr));
 
-            var index = Expression.MakeIndex(obj, (PropertyInfo)IndexOrSlice, new[] { indexVar });
-
-            stmts.Add(assign(index));
-
-            return Helpers.Comma(temps, stmts);
+            return Expression.MakeIndex(obj, (PropertyInfo)IndexOrSlice, new[] { indexVar });
         }
 
         internal static Expression GetIndexOffset(Expression index, Expression length, out bool useLength)

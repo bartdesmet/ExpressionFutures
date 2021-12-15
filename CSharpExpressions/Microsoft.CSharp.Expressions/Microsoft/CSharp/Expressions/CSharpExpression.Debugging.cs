@@ -53,6 +53,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class Conversion
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -74,25 +79,15 @@ namespace Microsoft.CSharp.Expressions
             return _nodes.Pop();
         }
 
-        public XNode GetDebugView(DynamicCSharpArgument argument)
-        {
-            return Visit(argument);
-        }
+        public XNode GetDebugView(DynamicCSharpArgument argument) => Visit(argument);
 
-        public XNode GetDebugView(CSharpSwitchCase switchCase)
-        {
-            return Visit(switchCase);
-        }
+        public XNode GetDebugView(CSharpSwitchCase switchCase) => Visit(switchCase);
 
-        public XNode GetDebugView(ParameterAssignment assignment)
-        {
-            return Visit(assignment);
-        }
+        public XNode GetDebugView(ParameterAssignment assignment) => Visit(assignment);
 
-        public XNode GetDebugView(Interpolation interpolation)
-        {
-            return Visit(interpolation);
-        }
+        public XNode GetDebugView(Interpolation interpolation) => Visit(interpolation);
+
+        public XNode GetDebugView(Conversion conversion) => Visit(conversion);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -233,8 +228,8 @@ namespace Microsoft.CSharp.Expressions
             var args = new List<object>
             {
                 new XElement(nameof(node.Left), Visit(node.Left)),
-                new XElement(nameof(node.Right), Visit(node.Right))
-                // TODO: Add conversion.
+                new XElement(nameof(node.Right), Visit(node.Right)),
+                new XElement(nameof(node.Conversion), Visit(node.Conversion))
             };
 
             return Push(node, args);
@@ -978,6 +973,27 @@ namespace Microsoft.CSharp.Expressions
             return node;
         }
 
+        protected internal override Conversion VisitSimpleConversion(SimpleConversion node)
+        {
+            var res = new XElement(nameof(SimpleConversion), new XElement(nameof(node.Conversion), Visit(node.Conversion)));
+            _nodes.Push(res);
+
+            return node;
+        }
+
+        protected internal override Conversion VisitDeconstructionConversion(DeconstructionConversion node)
+        {
+            var res =
+                new XElement(nameof(DeconstructionConversion),
+                new XElement(nameof(node.Deconstruct), Visit(node.Deconstruct)),
+                Visit(nameof(node.Conversions), node.Conversions, Visit)
+            );
+
+            _nodes.Push(res);
+
+            return node;
+        }
+
         private XNode Visit(ParameterAssignment node)
         {
             VisitParameterAssignment(node);
@@ -1017,6 +1033,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(MemberInitializer node)
         {
             VisitMemberInitializer(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(Conversion node)
+        {
+            VisitConversion(node);
             return _nodes.Pop();
         }
 

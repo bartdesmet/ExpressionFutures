@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
@@ -61,81 +59,6 @@ namespace Microsoft.CSharp.Expressions
             (xs[0], sb.Value) = t;
         })
      */
-
-    public abstract class Conversion
-    {
-        protected internal abstract Conversion Accept(CSharpExpressionVisitor visitor);
-    }
-
-    partial class CSharpExpressionVisitor
-    {
-        protected internal virtual Conversion VisitConversion(Conversion node)
-        {
-            return node.Accept(this);
-        }
-    }
-
-    public sealed partial class SimpleConversion : Conversion
-    {
-        internal SimpleConversion(LambdaExpression conversion)
-        {
-            Conversion = conversion;
-        }
-
-        public LambdaExpression Conversion { get; }
-
-        public SimpleConversion Update(LambdaExpression conversion)
-        {
-            if (conversion == this.Conversion)
-            {
-                return this;
-            }
-
-            return CSharpExpression.Convert(conversion);
-        }
-
-        protected internal override Conversion Accept(CSharpExpressionVisitor visitor) => visitor.VisitSimpleConversion(this);
-    }
-
-    partial class CSharpExpressionVisitor
-    {
-        protected internal virtual Conversion VisitSimpleConversion(SimpleConversion node)
-        {
-            return node.Update(VisitAndConvert(node.Conversion, nameof(VisitSimpleConversion)));
-        }
-    }
-
-    public sealed partial class DeconstructionConversion : Conversion
-    {
-        internal DeconstructionConversion(LambdaExpression deconstruct, ReadOnlyCollection<Conversion> conversions)
-        {
-            Deconstruct = deconstruct;
-            Conversions = conversions;
-        }
-
-        public LambdaExpression Deconstruct { get; }
-        public ReadOnlyCollection<Conversion> Conversions { get; }
-
-        public DeconstructionConversion Update(LambdaExpression deconstruct, IEnumerable<Conversion> conversions)
-        {
-            if (deconstruct == this.Deconstruct && conversions == this.Conversions)
-            {
-                return this;
-            }
-
-            return CSharpExpression.Deconstruct(deconstruct, conversions);
-        }
-
-        protected internal override Conversion Accept(CSharpExpressionVisitor visitor) => visitor.VisitDeconstructionConversion(this);
-    }
-
-    partial class CSharpExpressionVisitor
-    {
-        protected internal virtual Conversion VisitDeconstructionConversion(DeconstructionConversion node)
-        {
-            return node.Update(VisitAndConvert(node.Deconstruct, nameof(VisitDeconstructionConversion)), Visit(node.Conversions, VisitConversion));
-        }
-    }
 
     /// <summary>
     /// Represents a deconstruction assignment.
@@ -267,6 +190,7 @@ namespace Microsoft.CSharp.Expressions
                 switch (variable)
                 {
                     case DiscardCSharpExpression _:
+                    case ParameterExpression _:
                         assignmentTargets.Add(new DeconstructionVariable(variable));
                         break;
 
@@ -275,14 +199,9 @@ namespace Microsoft.CSharp.Expressions
                         break;
 
                     default:
-                        _ = Helpers.MakeWriteable(variable); // TODO
-
-                        //var temp = this.TransformCompoundAssignmentLHS(variable, effects, temps);
-                        // use createTemp
-
-                        if (!(variable is ParameterExpression v))
-                            throw new NotImplementedException(); // TODO
-
+                        // NB: Known limitation on ref locals when needed for e.g. obj.Bar.Foo = x where Bar is a mutable struct.
+                        var expr = Helpers.MakeWriteable(variable);
+                        var v = Helpers.ReduceAssign(expr, temps, effects); // CONSIDER: Wire createTemp throughout.
                         assignmentTargets.Add(new DeconstructionVariable(v));
                         break;
                 }
@@ -538,35 +457,6 @@ namespace Microsoft.CSharp.Expressions
             // Ensure all left hand side components can be written and are assignment compatible.
 
             return new DeconstructionAssignmentCSharpExpression(type, left, right, conversion);
-        }
-
-        public static SimpleConversion Convert(LambdaExpression conversion)
-        {
-            // Check single parameter.
-
-            return new SimpleConversion(conversion);
-        }
-
-        public static DeconstructionConversion Deconstruct(params Conversion[] conversions) => Deconstruct((IEnumerable<Conversion>)conversions);
-
-        public static DeconstructionConversion Deconstruct(IEnumerable<Conversion> conversions)
-        {
-            return new DeconstructionConversion(deconstruct: null, conversions.ToReadOnly());
-        }
-
-        public static DeconstructionConversion Deconstruct(LambdaExpression deconstruct, params Conversion[] conversions) => Deconstruct(deconstruct, (IEnumerable<Conversion>)conversions);
-
-        public static DeconstructionConversion Deconstruct(LambdaExpression deconstruct, IEnumerable<Conversion> conversions)
-        {
-            // Check deconstruct has N + 1 parameters, last N are out, returns void.
-            // Check N output parameters can be bound to the conversions inputs.
-
-            return new DeconstructionConversion(deconstruct, conversions.ToReadOnly());
-        }
-
-        public static LambdaExpression DeconstructLambda(Expression body, params ParameterExpression[] parameters)
-        {
-            return Lambda(body, parameters);
         }
     }
 }
