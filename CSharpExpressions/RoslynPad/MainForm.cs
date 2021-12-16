@@ -112,7 +112,7 @@ namespace RoslynPad
             {
                 tabMain.SelectedTab = tabDebug;
                 txtResult.ForeColor = Color.Red;
-                txtResult.Text = "LIBRARY ERROR:\r\n\r\n" + ex.InnerException.Message;
+                txtResult.Text = "LIBRARY ERROR:\r\n\r\n" + ex.InnerException.ToString();
                 txtResult.SelectionStart = txtResult.SelectionLength = 0;
                 txtResult.ScrollToCaret();
             }
