@@ -287,5 +287,10 @@ namespace Microsoft.CSharp.Expressions
         /// A deconstruction assignment, such as (x, y) = (1, 2).
         /// </summary>
         DeconstructionAssignment,
+
+        /// <summary>
+        /// A switch expression, such as o switch { p => v }.
+        /// </summary>
+        SwitchExpression,
     }
 }

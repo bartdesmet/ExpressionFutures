@@ -197,6 +197,28 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         /// <summary>
+        /// Visits a <see cref="SwitchExpressionArm"/>, keeping track of the variables declared in <see cref="SwitchExpressionArm.Variables"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
+        protected internal override SwitchExpressionArm VisitSwitchExpressionArm(SwitchExpressionArm node)
+        {
+            PushScope(node.Variables);
+
+            var res =
+                node.Update(
+                    VisitAndConvert(node.Variables, nameof(VisitSwitchExpressionArm)),
+                    VisitPattern(node.Pattern),
+                    Visit(node.WhenClause),
+                    Visit(node.Value)
+                );
+
+            PopScope(node.Variables);
+
+            return base.VisitSwitchExpressionArm(node);
+        }
+
+        /// <summary>
         /// Visits a <see cref="ParameterExpression"/> representing a variable, either in a declaration or use site.
         /// </summary>
         /// <param name="node">The expression to visit.</param>

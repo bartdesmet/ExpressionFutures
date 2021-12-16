@@ -98,6 +98,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="CompilerTests\CSharp80.SwitchExpression.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp80.SwitchExpression.Generated.cs">
+      <DependentUpon>CSharp80.SwitchExpression.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="CompilerTests\CSharpN100.PatternMatching.Generated.cs">
       <DependentUpon>CSharpN100.PatternMatching.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -261,6 +267,10 @@
     <Content Include="CompilerTests\CSharp70.IsExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp80.SwitchExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.SwitchExpression.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp80.PatternMatching.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

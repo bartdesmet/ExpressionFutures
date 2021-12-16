@@ -2132,7 +2132,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Multiply) + 5;
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.UnaryPlus) - 1;
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -2350,6 +2350,56 @@ namespace Microsoft.CSharp.Expressions
             visitLeft(Left);
             visitor.Out(" = ");
             visitor.ParenthesizedVisit(this, Right);
+        }
+    }
+
+    partial class SwitchCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Multiply) + 1;
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.ParenthesizedVisit(this, Expression);
+
+            visitor.Out(" switch");
+            visitor.NewLine();
+            visitor.Out("{");
+
+            visitor.Indent();
+            
+            foreach (var arm in Arms)
+            {
+                visitor.NewLine();
+
+                visitor.Visit(arm.Pattern);
+
+                if (arm.WhenClause != null)
+                {
+                    visitor.Out(" when ");
+                    visitor.Visit(arm.WhenClause);
+                }
+
+                visitor.Out(" => ");
+
+                visitor.Visit(arm.Value);
+
+                visitor.Out(",");
+            }
+            
+            visitor.Dedent();
+            
+            visitor.NewLine();
+            visitor.Out("}");
         }
     }
 

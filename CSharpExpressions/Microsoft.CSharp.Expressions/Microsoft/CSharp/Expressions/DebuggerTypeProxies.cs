@@ -953,6 +953,7 @@ namespace Microsoft.CSharp.Expressions
 
         public string DebugView => _node.DebugView;
 
+        public Microsoft.CSharp.Expressions.AwaitInfo AwaitInfo => _node.AwaitInfo;
         public System.Linq.Expressions.Expression Body => _node.Body;
         public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
         public System.Boolean CanReduce => _node.CanReduce;
@@ -960,6 +961,8 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
         public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.LambdaExpression Deconstruction => _node.Deconstruction;
+        public System.Boolean IsAsync => _node.IsAsync;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
@@ -1754,6 +1757,31 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
     }
 
+    [DebuggerTypeProxy(typeof(SwitchCSharpExpressionProxy))]
+    partial class SwitchCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SwitchCSharpExpressionProxy
+    {
+        private readonly SwitchCSharpExpression _node;
+
+        public SwitchCSharpExpressionProxy(SwitchCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.SwitchExpressionArm> Arms => _node.Arms;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(SwitchCSharpStatementProxy))]
     partial class SwitchCSharpStatement
     {
@@ -1779,6 +1807,28 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.Expression SwitchValue => _node.SwitchValue;
         public System.Type Type => _node.Type;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
+    }
+
+    [DebuggerTypeProxy(typeof(SwitchExpressionArmProxy))]
+    partial class SwitchExpressionArm
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SwitchExpressionArmProxy
+    {
+        private readonly SwitchExpressionArm _node;
+
+        public SwitchExpressionArmProxy(SwitchExpressionArm node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public System.Linq.Expressions.Expression Value => _node.Value;
+        public System.Linq.Expressions.Expression WhenClause => _node.WhenClause;
     }
 
     [DebuggerTypeProxy(typeof(TupleBinaryCSharpExpressionProxy))]

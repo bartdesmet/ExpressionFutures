@@ -1027,6 +1027,46 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.PositionalPatternWithTupleShouldSpecifyAllIndices);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The type of a switch expression should not be void."
+        /// </summary>
+        internal static Exception SwitchExpressionTypeShouldNotBeVoid()
+        {
+            return new ArgumentException(Strings.SwitchExpressionTypeShouldNotBeVoid);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'."
+        /// </summary>
+        internal static Exception SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object p0, object p1, object p2)
+        {
+            return new ArgumentException(Strings.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(p0, p1, p2));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'."
+        /// </summary>
+        internal static Exception SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object p0, object p1, object p2)
+        {
+            return new ArgumentException(Strings.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(p0, p1, p2));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The type of a when clause should be Boolean."
+        /// </summary>
+        internal static Exception WhenClauseShouldBeBoolean()
+        {
+            return new ArgumentException(Strings.WhenClauseShouldBeBoolean);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The value of a switch expression arm should not be void."
+        /// </summary>
+        internal static Exception SwitchExpressionArmValueShouldNotBeVoid()
+        {
+            return new ArgumentException(Strings.SwitchExpressionArmValueShouldNotBeVoid);
+        }
+
     }
 
     /// <summary>
@@ -2170,6 +2210,55 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        /// <summary>
+        /// A string like "The type of a switch expression should not be void."
+        /// </summary>
+        internal static string SwitchExpressionTypeShouldNotBeVoid
+        {
+            get
+            {
+                return SR.SwitchExpressionTypeShouldNotBeVoid;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'."
+        /// </summary>
+        internal static string SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object p0, object p1, object p2)
+        {
+            return SR.Format(SR.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'."
+        /// </summary>
+        internal static string SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object p0, object p1, object p2)
+        {
+            return SR.Format(SR.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The type of a when clause should be Boolean."
+        /// </summary>
+        internal static string WhenClauseShouldBeBoolean
+        {
+            get
+            {
+                return SR.WhenClauseShouldBeBoolean;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The value of a switch expression arm should not be void."
+        /// </summary>
+        internal static string SwitchExpressionArmValueShouldNotBeVoid
+        {
+            get
+            {
+                return SR.SwitchExpressionArmValueShouldNotBeVoid;
+            }
+        }
+
     }
 }
 
@@ -2304,5 +2393,10 @@ namespace System
         public const string PositionalPatternTupleIndexOutOfRange = "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'.";
         public const string PositionalPatternTupleIndexShouldOnlyBeUsedOnce = "The tuple field index '{0}' is used more than once.";
         public const string PositionalPatternWithTupleShouldSpecifyAllIndices = "Either all or none of the tuple fields should be specified.";
+        public const string SwitchExpressionTypeShouldNotBeVoid = "The type of a switch expression should not be void.";
+        public const string SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput = "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'.";
+        public const string SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult = "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'.";
+        public const string WhenClauseShouldBeBoolean = "The type of a when clause should be Boolean.";
+        public const string SwitchExpressionArmValueShouldNotBeVoid = "The value of a switch expression arm should not be void.";
     }
 }

@@ -138,6 +138,11 @@ var errors = new[]
     new { Name = "PositionalPatternTupleIndexOutOfRange", ExceptionType = "ArgumentException", Args = 2, Message = "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'." },
     new { Name = "PositionalPatternTupleIndexShouldOnlyBeUsedOnce", ExceptionType = "ArgumentException", Args = 1, Message = "The tuple field index '{0}' is used more than once." },
     new { Name = "PositionalPatternWithTupleShouldSpecifyAllIndices", ExceptionType = "ArgumentException", Args = 0, Message = "Either all or none of the tuple fields should be specified." },
+    new { Name = "SwitchExpressionTypeShouldNotBeVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The type of a switch expression should not be void." },
+    new { Name = "SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput", ExceptionType = "ArgumentException", Args = 3, Message = "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'." },
+    new { Name = "SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult", ExceptionType = "ArgumentException", Args = 3, Message = "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'." },
+    new { Name = "WhenClauseShouldBeBoolean", ExceptionType = "ArgumentException", Args = 0, Message = "The type of a when clause should be Boolean." },
+    new { Name = "SwitchExpressionArmValueShouldNotBeVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The value of a switch expression arm should not be void." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

@@ -120,6 +120,8 @@
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\NotCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\RelationalCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\TypeCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\SwitchExpressionArm.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\WithCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\RangeCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\FromEndIndexCSharpExpression.cs" />

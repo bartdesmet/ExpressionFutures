@@ -58,6 +58,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class SwitchExpressionArm
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -88,6 +93,8 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(Interpolation interpolation) => Visit(interpolation);
 
         public XNode GetDebugView(Conversion conversion) => Visit(conversion);
+
+        public XNode GetDebugView(SwitchExpressionArm arm) => Visit(arm);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -973,6 +980,38 @@ namespace Microsoft.CSharp.Expressions
             return Push(node, nodes);
         }
 
+        protected internal override Expression VisitSwitchExpression(SwitchCSharpExpression node)
+        {
+            var nodes = new List<object>
+            {
+                new XElement(nameof(node.Expression), Visit(node.Expression)),
+                Visit(nameof(node.Arms), node.Arms, Visit),
+            };
+
+            return Push(node, nodes);
+        }
+
+        protected internal override SwitchExpressionArm VisitSwitchExpressionArm(SwitchExpressionArm node)
+        {
+            var nodes = new List<object>
+            {
+                Visit(nameof(node.Variables), node.Variables),
+                new XElement(nameof(node.Pattern), Visit(node.Pattern))
+            };
+
+            if (node.WhenClause != null)
+            {
+                nodes.Add(new XElement(nameof(node.WhenClause), Visit(node.WhenClause)));
+            }
+
+            nodes.Add(new XElement(nameof(node.Value), Visit(node.Value)));
+
+            var res = new XElement(nameof(SwitchExpressionArm), nodes);
+            _nodes.Push(res);
+
+            return node;
+        }
+
         protected override MemberInitializer VisitMemberInitializer(MemberInitializer node)
         {
             var expr = Visit(node.Expression);
@@ -1049,6 +1088,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(Conversion node)
         {
             VisitConversion(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(SwitchExpressionArm node)
+        {
+            VisitSwitchExpressionArm(node);
             return _nodes.Pop();
         }
 
