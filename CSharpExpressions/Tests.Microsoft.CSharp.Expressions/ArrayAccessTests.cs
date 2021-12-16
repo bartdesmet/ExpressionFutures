@@ -620,7 +620,7 @@ namespace Tests
             //
             //       1. Guaranteed custom reduction at a higher node (e.g. lambda).
             //       2. Changes to ref semantics in System.Linq.Expressions, e.g. allowing to peek into a comma node.
-            //       3. Changes to Reduce logic in System.Linq.Expressions, e.g. custom logic for lval reduciton versus rval reduction.
+            //       3. Changes to Reduce logic in System.Linq.Expressions, e.g. custom logic for lval reduction versus rval reduction.
             //       4. Push down Index/Range support to IndexExpression and piggyback on its by-ref support.
             //
 
