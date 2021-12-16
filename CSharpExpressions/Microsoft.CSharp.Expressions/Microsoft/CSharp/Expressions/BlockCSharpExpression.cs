@@ -201,6 +201,7 @@ namespace Microsoft.CSharp.Expressions
         public static BlockCSharpExpression Block(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget returnLabel)
         {
             var variablesList = variables.ToReadOnly();
+            RequiresNotNullItems(variablesList, nameof(variables));
 
             var uniqueVariables = new HashSet<ParameterExpression>();
 
