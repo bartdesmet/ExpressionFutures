@@ -129,19 +129,21 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var collection = Visit(node.Collection);
 
-            PushScope(node.Variable);
+            PushScope(node.Variables);
 
             var res = 
                 node.Update(
                     VisitLabelTarget(node.BreakLabel),
                     VisitLabelTarget(node.ContinueLabel),
-                    VisitAndConvert(node.Variable, nameof(VisitForEach)),
+                    VisitAndConvert(node.Variables, nameof(VisitForEach)),
                     collection,
                     VisitAndConvert(node.Conversion, nameof(VisitForEach)),
-                    Visit(node.Body)
+                    Visit(node.Body),
+                    VisitAndConvert(node.Deconstruction, nameof(VisitForEach)),
+                    VisitAwaitInfo(node.AwaitInfo)
                 );
 
-            PopScope(node.Variable);
+            PopScope(node.Variables);
 
             return res;
         }

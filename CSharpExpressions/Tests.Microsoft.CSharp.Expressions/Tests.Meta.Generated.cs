@@ -897,9 +897,9 @@ namespace Tests
 
         private Expression expr44 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty());
         private string dbg44 = @"<CSharpForEach Type=""System.Void"">
-  <Variable>
+  <Variables>
     <Parameter Type=""System.Int32"" Id=""0"" />
-  </Variable>
+  </Variables>
   <Collection>
     <Default Type=""System.Int32[]"" />
   </Collection>
@@ -916,9 +916,9 @@ namespace Tests
 
         private Expression expr45 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
         private string dbg45 = @"<CSharpForEach Type=""System.Void"">
-  <Variable>
+  <Variables>
     <Parameter Type=""System.Int32"" Id=""0"" />
-  </Variable>
+  </Variables>
   <Collection>
     <Default Type=""System.Int32[]"" />
   </Collection>
@@ -941,9 +941,9 @@ namespace Tests
 
         private Expression expr46 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int))));
         private string dbg46 = @"<CSharpForEach Type=""System.Void"">
-  <Variable>
+  <Variables>
     <Parameter Type=""System.Int32"" Id=""0"" />
-  </Variable>
+  </Variables>
   <Conversion>
     <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
       <Parameters>

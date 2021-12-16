@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using static Tests.TestHelpers;
@@ -132,12 +133,14 @@ namespace Tests
 
                 Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
                 Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(variable, res.Variable);
+                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
                 Assert.AreSame(collection, res.Collection);
                 Assert.AreSame(body, res.Body);
                 Assert.IsNull(res.BreakLabel);
                 Assert.IsNull(res.ContinueLabel);
                 Assert.IsNull(res.Conversion);
+                Assert.IsNull(res.Deconstruction);
+                Assert.IsNull(res.AwaitInfo);
             }
 
             {
@@ -145,12 +148,14 @@ namespace Tests
 
                 Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
                 Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(variable, res.Variable);
+                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
                 Assert.AreSame(collection, res.Collection);
                 Assert.AreSame(body, res.Body);
                 Assert.AreSame(breakLabel, res.BreakLabel);
                 Assert.IsNull(res.ContinueLabel);
                 Assert.IsNull(res.Conversion);
+                Assert.IsNull(res.Deconstruction);
+                Assert.IsNull(res.AwaitInfo);
             }
 
             {
@@ -158,12 +163,14 @@ namespace Tests
 
                 Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
                 Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(variable, res.Variable);
+                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
                 Assert.AreSame(collection, res.Collection);
                 Assert.AreSame(body, res.Body);
                 Assert.AreSame(breakLabel, res.BreakLabel);
                 Assert.AreSame(continueLabel, res.ContinueLabel);
                 Assert.IsNull(res.Conversion);
+                Assert.IsNull(res.Deconstruction);
+                Assert.IsNull(res.AwaitInfo);
             }
 
             {
@@ -171,12 +178,14 @@ namespace Tests
 
                 Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
                 Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(variable, res.Variable);
+                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
                 Assert.AreSame(collection, res.Collection);
                 Assert.AreSame(body, res.Body);
                 Assert.AreSame(breakLabel, res.BreakLabel);
                 Assert.AreSame(continueLabel, res.ContinueLabel);
                 Assert.AreSame(conversion, res.Conversion);
+                Assert.IsNull(res.Deconstruction);
+                Assert.IsNull(res.AwaitInfo);
             }
         }
 
@@ -192,7 +201,7 @@ namespace Tests
             var conversion = Expression.Lambda(x, x);
             var res = CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conversion);
 
-            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Variable, res.Collection, res.Conversion, res.Body));
+            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo));
 
             var newVariable = Expression.Parameter(typeof(int));
             var newCollection = Expression.Constant(new int[] { 2, 3, 5 });
@@ -201,51 +210,51 @@ namespace Tests
             var newContinueLabel = Expression.Label();
             var newConversion = Expression.Lambda(x, x);
 
-            var upd1 = res.Update(newBreakLabel, res.ContinueLabel, res.Variable, res.Collection, res.Conversion, res.Body);
-            var upd2 = res.Update(res.BreakLabel, newContinueLabel, res.Variable, res.Collection, res.Conversion, res.Body);
-            var upd3 = res.Update(res.BreakLabel, res.ContinueLabel, newVariable, res.Collection, res.Conversion, res.Body);
-            var upd4 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variable, newCollection, res.Conversion, res.Body);
-            var upd5 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variable, res.Collection, newConversion, res.Body);
-            var upd6 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variable, res.Collection, res.Conversion, newBody);
+            var upd1 = res.Update(newBreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd2 = res.Update(res.BreakLabel, newContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd3 = res.Update(res.BreakLabel, res.ContinueLabel, new[] { newVariable }, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd4 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, newCollection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd5 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, newConversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd6 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, newBody, res.Deconstruction, res.AwaitInfo);
 
             Assert.AreSame(newBreakLabel, upd1.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd1.ContinueLabel);
-            Assert.AreSame(res.Variable, upd1.Variable);
+            Assert.IsTrue(res.Variables.SequenceEqual(upd1.Variables));
             Assert.AreSame(res.Collection, upd1.Collection);
             Assert.AreSame(res.Conversion, upd1.Conversion);
             Assert.AreSame(res.Body, upd1.Body);
 
             Assert.AreSame(res.BreakLabel, upd2.BreakLabel);
             Assert.AreSame(newContinueLabel, upd2.ContinueLabel);
-            Assert.AreSame(res.Variable, upd2.Variable);
+            Assert.IsTrue(res.Variables.SequenceEqual(upd1.Variables));
             Assert.AreSame(res.Collection, upd2.Collection);
             Assert.AreSame(res.Conversion, upd2.Conversion);
             Assert.AreSame(res.Body, upd2.Body);
 
             Assert.AreSame(res.BreakLabel, upd3.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd3.ContinueLabel);
-            Assert.AreSame(newVariable, upd3.Variable);
+            Assert.IsTrue(new[] { newVariable }.SequenceEqual(upd3.Variables));
             Assert.AreSame(res.Collection, upd3.Collection);
             Assert.AreSame(res.Conversion, upd3.Conversion);
             Assert.AreSame(res.Body, upd3.Body);
 
             Assert.AreSame(res.BreakLabel, upd4.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd4.ContinueLabel);
-            Assert.AreSame(res.Variable, upd4.Variable);
+            Assert.IsTrue(res.Variables.SequenceEqual(upd4.Variables));
             Assert.AreSame(newCollection, upd4.Collection);
             Assert.AreSame(res.Conversion, upd4.Conversion);
             Assert.AreSame(res.Body, upd4.Body);
 
             Assert.AreSame(res.BreakLabel, upd5.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd5.ContinueLabel);
-            Assert.AreSame(res.Variable, upd5.Variable);
+            Assert.IsTrue(res.Variables.SequenceEqual(upd5.Variables));
             Assert.AreSame(res.Collection, upd5.Collection);
             Assert.AreSame(newConversion, upd5.Conversion);
             Assert.AreSame(res.Body, upd5.Body);
 
             Assert.AreSame(res.BreakLabel, upd6.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd6.ContinueLabel);
-            Assert.AreSame(res.Variable, upd6.Variable);
+            Assert.IsTrue(res.Variables.SequenceEqual(upd6.Variables));
             Assert.AreSame(res.Collection, upd6.Collection);
             Assert.AreSame(res.Conversion, upd6.Conversion);
             Assert.AreSame(newBody, upd6.Body);

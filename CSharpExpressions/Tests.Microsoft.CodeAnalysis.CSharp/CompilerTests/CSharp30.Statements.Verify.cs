@@ -57,15 +57,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_F7F3_AD6D() => OK();
 
             // ForEach
-            public override void CompilerTest_245A_DA7A() => OK();
-            public override void CompilerTest_DA7B_B67A() => OK();
-            public override void CompilerTest_34B8_6522() => OK();
-            public override void CompilerTest_3958_5948() => OK();
-            public override void CompilerTest_1525_79A2() => OK(); // REVIEW: Rely on runtime library to infer the right GetEnumerator method, or pass it to the factory method? (NB: No extension methods are considered, so should be able to guarantee that we can find it at runtime.)
-            public override void CompilerTest_720D_1B2C() => OK();
-            public override void CompilerTest_0041_C3E9() => OK();
-            public override void CompilerTest_AE67_91A3() => OK();
-            public override void CompilerTest_8AE9_0673() => OK();
+            public override void CompilerTest_245A_0917() => OK();
+            public override void CompilerTest_DA7B_AAFD() => OK();
+            public override void CompilerTest_34B8_D561() => OK();
+            public override void CompilerTest_3958_FB90() => OK();
+            public override void CompilerTest_1525_8CFA() => OK(); // REVIEW: Rely on runtime library to infer the right GetEnumerator method, or pass it to the factory method? (NB: No extension methods are considered, so should be able to guarantee that we can find it at runtime.)
+            public override void CompilerTest_720D_2F5A() => OK();
+            public override void CompilerTest_0041_2906() => OK();
+            public override void CompilerTest_AE67_825B() => OK();
+            public override void CompilerTest_8AE9_7D52() => OK();
 
             // Using
             public override void CompilerTest_5598_03A6() => OK();

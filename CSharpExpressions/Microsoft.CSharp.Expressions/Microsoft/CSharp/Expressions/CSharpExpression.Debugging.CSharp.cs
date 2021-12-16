@@ -485,11 +485,78 @@ namespace Microsoft.CSharp.Expressions
         {
             // TODO: break/continue label analysis?
 
+            if (IsAsync)
+            {
+                visitor.Out("await ");
+            }
+
             visitor.Out("foreach (");
 
-            visitor.Out(visitor.ToCSharp(Variable.Type));
-            visitor.Out(" ");
-            visitor.Out(visitor.GetVariableName(Variable, true));
+            if (Variables.Count == 1)
+            {
+                var variable = Variables[0];
+
+                visitor.Out(visitor.ToCSharp(variable.Type));
+                visitor.Out(" ");
+                visitor.Out(visitor.GetVariableName(variable, declarationSite: true));
+            }
+            else
+            {
+                visitor.Out("var ");
+
+                if (Deconstruction is { Body: DeconstructionAssignmentCSharpExpression { Left: TupleLiteralCSharpExpression t } })
+                {
+                    PrintTuple(t);
+
+                    void PrintTuple(TupleLiteralCSharpExpression tuple)
+                    {
+                        visitor.Out("(");
+
+                        for (int i = 0, n = tuple.Arguments.Count; i < n; i++)
+                        {
+                            var arg = tuple.Arguments[i];
+
+                            if (arg is ParameterExpression variable)
+                            {
+                                visitor.Out(visitor.GetVariableName(variable, declarationSite: true));
+                            }
+                            else if (arg is TupleLiteralCSharpExpression nested)
+                            {
+                                PrintTuple(nested);
+                            }
+                            else
+                            {
+                                visitor.Visit(arg);
+                            }
+
+                            if (i != n - 1)
+                            {
+                                visitor.Out(", ");
+                            }
+                        }
+
+                        visitor.Out(")");
+                    }
+                }
+                else
+                {
+                    visitor.Out("(");
+
+                    for (int i = 0, n = Variables.Count; i < n; i++)
+                    {
+                        var variable = Variables[i];
+
+                        visitor.Out(visitor.GetVariableName(variable, declarationSite: true));
+
+                        if (i != n - 1)
+                        {
+                            visitor.Out(", ");
+                        }
+                    }
+
+                    visitor.Out(")");
+                }
+            }
 
             visitor.Out(" in ");
 

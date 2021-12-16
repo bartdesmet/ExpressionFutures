@@ -962,7 +962,7 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
-        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
     }
 
     [DebuggerTypeProxy(typeof(FromEndIndexCSharpExpressionProxy))]

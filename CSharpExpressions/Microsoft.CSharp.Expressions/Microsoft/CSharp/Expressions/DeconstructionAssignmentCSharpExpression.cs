@@ -319,27 +319,55 @@ namespace Microsoft.CSharp.Expressions
 
         private List<Expression> InvokeDeconstructLambda(LambdaExpression deconstruction, Expression target, List<Expression> effects, List<ParameterExpression> temps, Func<Type, ParameterExpression> createTemp)
         {
-            // CONSIDER: Optimize predicated on a check for deconstruction.Body is MethodCallExpression.
-
-            var args = new List<Expression>();
             var locals = new List<Expression>();
-
-            args.Add(target);
 
             foreach (var parameter in deconstruction.Parameters.Skip(1))
             {
                 var outType = parameter.Type;
                 var outArg = createTemp(outType);
-                args.Add(outArg);
                 locals.Add(outArg);
                 temps.Add(outArg);
             }
 
-            var invocation = Expression.Invoke(deconstruction, args);
+            var deconstruct = TryOptimize();
 
-            effects.Add(invocation);
+            if (deconstruct == null)
+            {
+                var args = new List<Expression> { target };
+                args.AddRange(locals);
+
+                deconstruct = Expression.Invoke(deconstruction, args);
+            }
+
+            effects.Add(deconstruct);
 
             return locals;
+
+            Expression TryOptimize()
+            {
+                if (deconstruction.Body is MethodCallExpression m)
+                {
+                    if (m.Method.IsStatic)
+                    {
+                        if (m.Arguments.SequenceEqual(deconstruction.Parameters))
+                        {
+                            var args = new List<Expression> { target };
+                            args.AddRange(locals);
+
+                            return m.Update(@object: null, args);
+                        }
+                    }
+                    else
+                    {
+                        if (m.Object == deconstruction.Parameters[0] && m.Arguments.SequenceEqual(deconstruction.Parameters.Skip(1)))
+                        {
+                            return m.Update(target, locals);
+                        }
+                    }
+                }
+
+                return null;
+            }
         }
 
         private Expression EvaluateSideEffectingArgumentToTemp(Expression arg, List<Expression> effects, List<ParameterExpression> temps, Func<Type, ParameterExpression> createTemp)

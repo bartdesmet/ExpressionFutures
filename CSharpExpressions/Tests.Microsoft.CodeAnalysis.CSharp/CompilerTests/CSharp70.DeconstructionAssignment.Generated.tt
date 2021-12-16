@@ -17,16 +17,26 @@ var name = "CSharp70_DeconstructionAssignment";
 
 var exprs = new[]
 {
+    // Assign - tuple
     "(Expression<Action<(int, int)>>)(t => { (int x, int y) = t; })",
     "(Expression<Action<(int, int)>>)(t => { (int? x, long y) = t; })",
 
+    // Assign - tuple nested
     "(Expression<Action<(int, (bool, char))>>)(t => { var (x, bc) = t; })",
     "(Expression<Action<(int, (bool, char))>>)(t => { (int x, (bool b, char c)) = t; })",
 
+    // Assign - deconstruct method
     "(Expression<Action<Point>>)(p => { (int x, int y) = p; })",
     "(Expression<Action<(int, Point, string)>>)(t => { (long a, (double x, double y), string s) = t; })",
 
+    // Assign - variable targets
     "(Expression<Action<(int, int, int, int), StrongBox<int>, int[], int[], List<int>>>)((t, sb, xs, ys, zs) => { (sb.Value, xs[0], ys[^1], zs[2]) = t; })",
+
+    // ForEach
+    "(Expression<Action<(int, int)[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($\"{x}, {y}\"); })",
+    "(Expression<Action<(int, int)[]>>)(xs => { foreach ((int x, int y) in xs) Console.WriteLine($\"{x}, {y}\"); })",
+    "(Expression<Action<(int, int)[]>>)(xs => { foreach ((int? x, long y) in xs) Console.WriteLine($\"{x}, {y}\"); })",
+    "(Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($\"{x}, {y}\"); })",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

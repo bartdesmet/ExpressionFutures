@@ -148,12 +148,7 @@
             syntax.  If the language does not support syntax, callers should use
             <see cref="M:Microsoft.CodeAnalysis.Classification.IClassificationService.ComputeSyntacticChangeRangeAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Document,System.TimeSpan,System.Threading.CancellationToken)"/> instead.</remarks>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.Classification.IRemoteSemanticClassificationCacheService">
-            <summary>
-            Remote stubs used for a host to request cached semantic classifications from an OOP server.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Classification.IRemoteSemanticClassificationCacheService.GetCachedSemanticClassificationsAsync(Microsoft.CodeAnalysis.Storage.DocumentKey,Microsoft.CodeAnalysis.Text.TextSpan,Microsoft.CodeAnalysis.Checksum,Microsoft.CodeAnalysis.Storage.StorageDatabase,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Classification.IRemoteSemanticClassificationService.GetCachedSemanticClassificationsAsync(Microsoft.CodeAnalysis.Storage.DocumentKey,Microsoft.CodeAnalysis.Text.TextSpan,Microsoft.CodeAnalysis.Checksum,Microsoft.CodeAnalysis.Storage.StorageDatabase,System.Threading.CancellationToken)">
             <summary>
             Tries to get cached semantic classifications for the specified document and the specified <paramref
             name="textSpan"/>.  Will return an empty array not able to.
@@ -166,20 +161,6 @@
             For space efficiency, we encode classified spans as triples of ints in one large array.  The
             first int is the index of classification type in <see cref="F:Microsoft.CodeAnalysis.Classification.SerializableClassifiedSpans.ClassificationTypes"/>, and the
             second and third ints encode the span.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Classification.ISemanticClassificationCacheService">
-            <summary>
-            Service that can retrieve semantic classifications for a document cached during a previous session. This is
-            intended to help populate semantic classifications for a host during the time while a solution is loading and
-            semantics may be incomplete or unavailable.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Classification.ISemanticClassificationCacheService.GetCachedSemanticClassificationsAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,System.Threading.CancellationToken)">
-            <summary>
-            Tries to get cached semantic classifications for the specified document and the specified <paramref
-            name="textSpan"/>.  Will return a <c>default</c> array not able to.  An empty array indicates that there
-            were cached classifications, but none that intersected the provided <paramref name="textSpan"/>.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.Classification.Classifiers.ISyntaxClassifier.SyntaxNodeTypes">
@@ -15605,7 +15586,7 @@
         </member>
         <member name="F:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.CompilationTrackerGeneratorInfo.Driver">
             <summary>
-            The <see cref="T:Microsoft.CodeAnalysis.GeneratorDriver"/> that was used for the last run, to allow for incremental reuse. May
+            The <see cref="P:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.GeneratorDriver"/> that was used for the last run, to allow for incremental reuse. May
             be null if we don't have generators in the first place, haven't ran generators yet for this project,
             or had to get rid of our driver for some reason.
             </summary>
@@ -17860,11 +17841,6 @@
             Disables if the workspace creates recoverable trees when from its <see cref="T:Microsoft.CodeAnalysis.Host.ISyntaxTreeFactoryService"/>s.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.WorkspaceConfigurationOptions.DisableReferenceManagerWeakRuntimeReferences">
-            <summary>
-            Disables holding onto the assembly references for runtime (not user/nuget/etc.) dlls weakly.
-            </summary>
-        </member>
         <member name="F:Microsoft.CodeAnalysis.WorkspaceConfigurationOptions.DisableCompilationTrackerWeakCompilationReferences">
             <summary>
             Disables holding onto the assembly references for runtime (not user/nuget/etc.) dlls weakly.
@@ -19759,6 +19735,248 @@
             <summary>
             Given a context location in a provided syntax tree, returns the appropriate container
             that <paramref name="import"/> should be added to.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigFile`1">
+            <summary>
+            Base representation of an editorconfig file that has been parsed
+            </summary>
+            <typeparam name="T">The kind of options that we expect to encounter in the editorconfig file.</typeparam>
+            <param name="FilePath">The full path to the editorconfig file on disk. Optional if not doing pathwise comparisons</param>
+            <param name="Options">The set of options that were discovered in the file.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigFile`1.#ctor(System.String,System.Collections.Immutable.ImmutableArray{`0})">
+            <summary>
+            Base representation of an editorconfig file that has been parsed
+            </summary>
+            <typeparam name="T">The kind of options that we expect to encounter in the editorconfig file.</typeparam>
+            <param name="FilePath">The full path to the editorconfig file on disk. Optional if not doing pathwise comparisons</param>
+            <param name="Options">The set of options that were discovered in the file.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigFile`1.TryGetSectionForLanguage(Microsoft.CodeAnalysis.EditorConfig.Language,Microsoft.CodeAnalysis.EditorConfig.Parsing.Section@)">
+            <summary>
+            Attempts to find a section of the editorconfig file that is an exact match for the given language.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigFile`1.TryGetSectionForLanguage(Microsoft.CodeAnalysis.EditorConfig.Language,Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch,Microsoft.CodeAnalysis.EditorConfig.Parsing.Section@)">
+            <summary>
+            Attempts to find a section of the editorconfig file that applies to the given language for the given criteria.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigFile`1.TryGetSectionForFilePath(System.String,Microsoft.CodeAnalysis.EditorConfig.Parsing.Section@)">
+            <summary>
+            Attempts to find a section of the editorconfig file that applies to the given file.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigFile`1.TryGetSectionForFilePath(System.String,Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch,Microsoft.CodeAnalysis.EditorConfig.Parsing.Section@)">
+            <summary>
+            Attempts to find a section of the editorconfig file that applies to the given file for the given criteria.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption">
+            <summary>
+            Base option that all editorconfig option inherit from.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption.#ctor(Microsoft.CodeAnalysis.EditorConfig.Parsing.Section,System.Nullable{Microsoft.CodeAnalysis.Text.TextSpan})">
+            <summary>
+            Base option that all editorconfig option inherit from.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption`1">
+            <summary>
+            An abstraction over an editorconfig option that reprsents some type <typeparamref name="T"/> and the span in which that option was defined.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption`1.#ctor(Microsoft.CodeAnalysis.EditorConfig.Parsing.Section,System.Nullable{Microsoft.CodeAnalysis.Text.TextSpan},`0)">
+            <summary>
+            An abstraction over an editorconfig option that reprsents some type <typeparamref name="T"/> and the span in which that option was defined.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.EditorConfigNamingStyles">
+            <summary>
+            Represents a completed parse of a single editorconfig document
+            </summary>
+            <param name="FileName">The full file path to the file on disk. Can be null if you never need to compare if a section is valid for pathing reasons</param>
+            <param name="Rules">The set of naming style options that were parsed in the file</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.EditorConfigNamingStyles.#ctor(System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.NamingStyleOption})">
+            <summary>
+            Represents a completed parse of a single editorconfig document
+            </summary>
+            <param name="FileName">The full file path to the file on disk. Can be null if you never need to compare if a section is valid for pathing reasons</param>
+            <param name="Rules">The set of naming style options that were parsed in the file</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.EditorConfigNamingStylesParser.Parse(System.String,System.String)">
+            <summary>
+            Parses a string and returns all discovered naming style options and their locations
+            </summary>
+            <param name="editorConfigText">The text contents of the editorconfig file.</param>
+            <param name="pathToEditorConfigFile">The full path to the editorconfig file on disk.</param>
+            <returns>A type that represents all discovered naming style options in the given string.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.EditorConfigNamingStylesParser.Parse(Microsoft.CodeAnalysis.Text.SourceText,System.String)">
+            <summary>
+            Parses a <see cref="T:Microsoft.CodeAnalysis.Text.SourceText"/> and returns all discovered naming style options and their locations
+            </summary>
+            <param name="editorConfigText">The <see cref="T:Microsoft.CodeAnalysis.Text.SourceText"/> contents of the editorconfig file.</param>
+            <param name="pathToEditorConfigFile">The full path to the editorconfig file on disk.</param>
+            <returns>A type that represents all discovered naming style options in the given <see cref="T:Microsoft.CodeAnalysis.Text.SourceText"/>.</returns>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.NamingStyleOption">
+            <summary>
+            The root naming style option composed of several settings as well as a <see cref="T:Microsoft.CodeAnalysis.Text.TextSpan"/>s describing where they were all defined. 
+            </summary>
+            <param name="Section">The section of the editorconfig file this option applies to.</param>
+            <param name="RuleName">The name given to thie option in the file.</param>
+            <param name="ApplicableSymbolInfo">The kinds of symbols this option applies to.</param>
+            <param name="NamingScheme">The rules about how the specified symbols must be named.</param>
+            <param name="Severity">The keve of build error that should be produced when a matching symbol does not meetthe naming requirements.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.NamingStyleOption.#ctor(Microsoft.CodeAnalysis.EditorConfig.Parsing.Section,Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.String},Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.ApplicableSymbolInfo,Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.NamingScheme,Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{Microsoft.CodeAnalysis.ReportDiagnostic})">
+            <summary>
+            The root naming style option composed of several settings as well as a <see cref="T:Microsoft.CodeAnalysis.Text.TextSpan"/>s describing where they were all defined. 
+            </summary>
+            <param name="Section">The section of the editorconfig file this option applies to.</param>
+            <param name="RuleName">The name given to thie option in the file.</param>
+            <param name="ApplicableSymbolInfo">The kinds of symbols this option applies to.</param>
+            <param name="NamingScheme">The rules about how the specified symbols must be named.</param>
+            <param name="Severity">The keve of build error that should be produced when a matching symbol does not meetthe naming requirements.</param>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.ApplicableSymbolInfo">
+            <summary>
+            A description of the kinds of symbols a rule should apply to as well as a <see cref="T:Microsoft.CodeAnalysis.Text.TextSpan"/>s describing where they were all defined. 
+            </summary>
+            <param name="OptionName">The name given to thie option in the file.</param>
+            <param name="SymbolKinds">The kinds of symbols this option applies to.</param>
+            <param name="Accessibilities">The accessibilities of symbols this option applies to.</param>
+            <param name="Modifiers">The required modifier that must be present on symbols this option applies to.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.ApplicableSymbolInfo.#ctor(Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.String},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.Analyzers.NamingStyles.SymbolSpecification.SymbolKindOrTypeKind}},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Accessibility}},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.Analyzers.NamingStyles.SymbolSpecification.ModifierKind}})">
+            <summary>
+            A description of the kinds of symbols a rule should apply to as well as a <see cref="T:Microsoft.CodeAnalysis.Text.TextSpan"/>s describing where they were all defined. 
+            </summary>
+            <param name="OptionName">The name given to thie option in the file.</param>
+            <param name="SymbolKinds">The kinds of symbols this option applies to.</param>
+            <param name="Accessibilities">The accessibilities of symbols this option applies to.</param>
+            <param name="Modifiers">The required modifier that must be present on symbols this option applies to.</param>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.NamingScheme">
+            <summary>
+            The rules about how the specified symbols must be named as well as a <see cref="T:Microsoft.CodeAnalysis.Text.TextSpan"/>s describing where they were all defined. 
+            </summary>
+            <param name="OptionName">The name given to thie option in the file.</param>
+            <param name="Prefix">Required suffix</param>
+            <param name="Suffix">Required prefix</param>
+            <param name="WordSeparator">Required word separator characters</param>
+            <param name="Capitalization">The capitalization scheme</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.NamingStyles.NamingScheme.#ctor(Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.String},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.String},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.String},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{System.String},Microsoft.CodeAnalysis.EditorConfig.Parsing.EditorConfigOption{Microsoft.CodeAnalysis.Diagnostics.Analyzers.NamingStyles.Capitalization})">
+            <summary>
+            The rules about how the specified symbols must be named as well as a <see cref="T:Microsoft.CodeAnalysis.Text.TextSpan"/>s describing where they were all defined. 
+            </summary>
+            <param name="OptionName">The name given to thie option in the file.</param>
+            <param name="Prefix">Required suffix</param>
+            <param name="Suffix">Required prefix</param>
+            <param name="WordSeparator">Required word separator characters</param>
+            <param name="Capitalization">The capitalization scheme</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.Section.GetHeaderTextForLanguage(Microsoft.CodeAnalysis.EditorConfig.Language)">
+            <summary>
+            Returns the default section header text for the given language combination
+            </summary>
+            <param name="language">The language combination to find the default header text for.</param>
+            <returns>the default header text.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.Section.SupportsLanguage(Microsoft.CodeAnalysis.EditorConfig.Language,Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch)">
+            <summary>
+            Checks where this header supports the given language for the given match criteria
+            </summary>
+            <param name="language">The language to check support for.</param>
+            <param name="matchKind">The criteria for which we consider a language a mache the default is <see cref="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.ExactLanguageMatch"/>.</param>
+            <returns>If this section is a match for the given language, meaning options can be added here.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.EditorConfig.Parsing.Section.SupportsFilePath(System.String,Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch)">
+            <summary>
+            Checks where this header supports the given file path for the given match criteria
+            </summary>
+            <param name="codeFilePath">full path to a file</param>
+            <param name="matchKind">The criteria for which we consider a language a mache the default is <see cref="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.ExactLanguageMatch"/>.</param>
+            <remarks>
+            If the section header cannot be parsed because it it invalid this method will always return no match.
+            If no file path was given in the operation that produces this section and a relative path comparison is required to check for support this method will return no match.
+            </remarks>
+            <returns>If this section is a match for the given file, meaning options can be added here.</returns>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.ExactLanguageMatch">
+            <summary>
+            Most exact section match for a language. Will always match all files for the given language.
+            </summary>
+            <remarks>
+            - for C# this is [*.cs]
+            - for Visual Basic it is [*.vb].
+            - If both language are specified it is [*.{cs,vb}]
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.ExactLanguageMatchWithOthers">
+            <summary>
+            Exact section match for a language with unknown file patterns. Will always match all files for the given language.
+            </summary>
+            <remarks>
+            An exact match but with some unknown file patterns also matching
+            example for C#: [*.{cs,csx}] 
+            This will not be the case if only C# was specified and a VB pattern is found
+            (or vice versa)
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.AnyLanguageMatch">
+            <summary>
+            An exact section match for a language with other known language patterns. Will match all files for the given language as well as other known languages.
+            </summary>
+            <remarks>
+            Given this pattern [*.{cs,vb}] for C# this is considered a match (since it matches all C# files).
+            Even though it also matches for Visual Basic.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.SupersetFilePatternMatch">
+            <summary>
+            Matches the file pattern according to the editorconfig specification but is a superset of an exact language match.
+            </summary>
+            <remarks>
+            Patterns such as [*c*] or [*s] would match for C# in this case (being a superset of *.cs)
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.FilePatternMatch">
+            <summary>
+            Matches the file pattern according to the editorconfig specification but is a supset of an exact language match.
+            </summary>
+            <remarks>
+            Patterns such as [*.Tests.cs] would match for C# if the file being considered is UnitTests.cs
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.SplatMatch">
+            <summary>
+            Matches [*].
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.GlobalSectionMatch">
+            <summary>
+            Matched because section is global and therefore always matches.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.AnyButGlobal">
+            <summary>
+            Matches any valid pattern except for global section.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.Any">
+            <summary>
+            Matches any valid pattern.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.EditorConfig.Parsing.SectionMatch.NoMatch">
+            <summary>
+            Section did not match and is not applicable to the file or language.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Precedence.IPrecedenceService.GetPrecedenceKind(System.Int32)">
@@ -22868,6 +23086,32 @@
             </summary>
             <typeparam name="T">The type of the target value. Must be a reference type.</typeparam>
             <param name="target">The target to initialize.</param>
+            <typeparam name="U">The type of the <paramref name="state"/> argument passed to the value factory.</typeparam>
+            <param name="valueFactory">A factory delegate to create a new instance of the target value. Note that this delegate may be called
+            more than once by multiple threads, but only one of those values will successfully be written to the target.</param>
+            <param name="state">An argument passed to the value factory.</param>
+            <returns>The target value.</returns>
+        </member>
+        <member name="M:Roslyn.Utilities.LazyInitialization.EnsureInitialized``1(System.Runtime.CompilerServices.StrongBox{``0}@,System.Func{``0})">
+            <summary>
+            Ensure that the given target value is initialized in a thread-safe manner. This overload supports the
+            initialization of value types, and reference type fields where <see langword="null"/> is considered an
+            initialized value.
+            </summary>
+            <typeparam name="T">The type of the target value.</typeparam>
+            <param name="target">A target value box to initialize.</param>
+            <param name="valueFactory">A factory delegate to create a new instance of the target value. Note that this delegate may be called
+            more than once by multiple threads, but only one of those values will successfully be written to the target.</param>
+            <returns>The target value.</returns>
+        </member>
+        <member name="M:Roslyn.Utilities.LazyInitialization.EnsureInitialized``2(System.Runtime.CompilerServices.StrongBox{``0}@,System.Func{``1,``0},``1)">
+            <summary>
+            Ensure that the given target value is initialized in a thread-safe manner. This overload supports the
+            initialization of value types, and reference type fields where <see langword="null"/> is considered an
+            initialized value.
+            </summary>
+            <typeparam name="T">The type of the target value.</typeparam>
+            <param name="target">A target value box to initialize.</param>
             <typeparam name="U">The type of the <paramref name="state"/> argument passed to the value factory.</typeparam>
             <param name="valueFactory">A factory delegate to create a new instance of the target value. Note that this delegate may be called
             more than once by multiple threads, but only one of those values will successfully be written to the target.</param>

@@ -723,6 +723,11 @@
             key that can be used to identify a tree rather than the tree itself.
             </summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Shared.Extensions.LanguageVersionExtensions.CSharpNext">
+            <remarks>
+            Corresponds to Microsoft.CodeAnalysis.CSharp.LanguageVersionFacts.CSharpNext.
+            </remarks>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Utilities.FormattingRangeHelper">
             <summary>
             this help finding a range of tokens to format based on given ending token

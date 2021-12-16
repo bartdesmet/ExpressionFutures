@@ -10603,6 +10603,11 @@
             True if Optional flag is set in metadata.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol.IsNullChecked">
+            <summary>
+            True if the compiler will synthesize a null check for this parameter (the parameter is declared in source with a '!' following the parameter name). 
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol.IsMetadataIn">
             <summary>
             True if In flag is set in metadata.
@@ -16826,6 +16831,16 @@
             A type parameter for a synthesized class or method.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedThrowIfNullMethod">
+            <summary>
+            Throws a System.ArgumentNullException if 'argument' is null.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedThrowMethod">
+            <summary>
+            Throws a System.ArgumentNullException with the given 'paramName'.
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSubstitutedLocalSymbol.ValEscapeScope">
             <summary>
             Compiler should always be synthesizing locals with correct escape semantics.
@@ -19264,6 +19279,15 @@
             returns a synthesized NullableAttribute with encoded nullable transforms array.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Emit.PEModuleBuilder.EnsureThrowIfNullFunctionExists(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.SyntheticBoundNodeFactory,Microsoft.CodeAnalysis.DiagnosticBag)">
+            <summary>
+            Creates the ThrowIfNull and Throw helpers if needed.
+            </summary>
+            <remarks>
+            The ThrowIfNull and Throw helpers are modeled off of the helpers on ArgumentNullException.
+            https://github.com/dotnet/runtime/blob/22663769611ba89cd92d14cfcb76e287f8af2335/src/libraries/System.Private.CoreLib/src/System/ArgumentNullException.cs#L56-L69
+            </remarks>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Emit.SpecializedFieldReference">
             <summary>
             Represents a reference to a field of a generic type instantiation.
@@ -20652,7 +20676,7 @@
             If you pass in a method symbol, its type arguments will be re-inferred and the re-inferred method will be returned.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitArgumentConversionAndInboundAssignmentsAndPreConditions(Microsoft.CodeAnalysis.CSharp.BoundConversion,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Conversion,Microsoft.CodeAnalysis.RefKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.FlowAnalysisAnnotations,Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitArgumentResult,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitArgumentConversionAndInboundAssignmentsAndPreConditions(Microsoft.CodeAnalysis.CSharp.BoundConversion,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Conversion,Microsoft.CodeAnalysis.RefKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.FlowAnalysisAnnotations,Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitArgumentResult,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitResult},System.Boolean)">
             <summary>
             Verifies that an argument's nullability is compatible with its parameter's on the way in.
             </summary>
@@ -20728,11 +20752,10 @@
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.GetConversionIfApplicable(Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.BoundExpression)">
             <summary>
-            Gets the conversion node for passing to <see cref="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitConversion(Microsoft.CodeAnalysis.CSharp.BoundConversion,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Conversion,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.CSharp.NullableWalker.AssignmentKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.Optional{Microsoft.CodeAnalysis.CSharp.NullableWalker.LocalState},System.Boolean,Microsoft.CodeAnalysis.Location)"/>,
-            if one should be passed.
+            Gets the conversion node for passing to VisitConversion, if one should be passed.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitConversion(Microsoft.CodeAnalysis.CSharp.BoundConversion,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Conversion,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.CSharp.NullableWalker.AssignmentKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.Optional{Microsoft.CodeAnalysis.CSharp.NullableWalker.LocalState},System.Boolean,Microsoft.CodeAnalysis.Location)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitConversion(Microsoft.CodeAnalysis.CSharp.BoundConversion,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Conversion,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.CSharp.NullableWalker.AssignmentKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.Optional{Microsoft.CodeAnalysis.CSharp.NullableWalker.LocalState},System.Boolean,Microsoft.CodeAnalysis.Location,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitResult})">
             <summary>
             Apply the conversion to the type of the operand and return the resulting type.
             If the operand does not have an explicit type, the operand expression is used.
@@ -21271,6 +21294,9 @@
             Usages of TestOptions.RegularNext and LanguageVersionFacts.CSharpNext
             will be replaced with TestOptions.RegularN and LanguageVersion.CSharpN when language version N is introduced.
             </summary>
+            <remarks>
+            Corresponds to Microsoft.CodeAnalysis.CSharp.Shared.Extensions.LanguageVersionExtensions.CSharpNext.
+            </remarks>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.LanguageVersionFacts.ToDisplayString(Microsoft.CodeAnalysis.CSharp.LanguageVersion)">
             <summary>
@@ -33146,6 +33172,9 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.BracketedParameterList(Microsoft.CodeAnalysis.SeparatedSyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax})">
             <summary>Creates a new BracketedParameterListSyntax instance.</summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.Parameter(Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax},Microsoft.CodeAnalysis.SyntaxTokenList,Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax)">
+            <summary>Creates a new ParameterSyntax instance.</summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.Parameter(Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax},Microsoft.CodeAnalysis.SyntaxTokenList,Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax)">
             <summary>Creates a new ParameterSyntax instance.</summary>
         </member>
@@ -35700,6 +35729,9 @@
         <member name="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.QuestionQuestionEqualsToken">
             <summary>Represents <c>??=</c> token.</summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.ExclamationExclamationToken">
+            <summary>Represents <c>!!</c> token.</summary>
+        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.BoolKeyword">
             <summary>Represents <see langword="bool"/>.</summary>
         </member>
@@ -36804,6 +36836,9 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_FeatureTypeVariance">
             <summary>type variance</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_ParameterNullChecking">
+            <summary>parameter null-checking</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_Parameter">
             <summary>parameter</summary>
@@ -42444,6 +42479,30 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_DuplicateNullSuppression">
             <summary>Duplicate null suppression operator ('!')</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_IncorrectNullCheckSyntax">
+            <summary>Incorrect parameter null checking syntax. Should be '!!'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_MustNullCheckInImplementation">
+            <summary>Parameter '{0}' can only have exclamation-point null checking in implementation methods.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NonNullableValueTypeIsNullChecked">
+            <summary>Parameter '{0}' is a non-nullable value type and cannot be null-checked.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullCheckedHasDefaultNull">
+            <summary>Parameter '{0}' is null-checked but is null by default.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullCheckedHasDefaultNull_Title">
+            <summary>Parameter is null-checked but is null by default.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NullCheckingOnByRefParameter">
+            <summary>By-reference parameter '{0}' cannot be null-checked.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullCheckingOnNullableType">
+            <summary>Nullable type '{0}' is null-checked and will throw if null.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullCheckingOnNullableType_Title">
+            <summary>Nullable type is null-checked and will throw if null.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_ReAbstractionInNoPIAType">
             <summary>Type '{0}' cannot be embedded because it has a re-abstraction of a member from base interface. Consider setting the 'Embed Interop Types' property to false.</summary>

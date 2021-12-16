@@ -77,16 +77,18 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             // NB: If we do optimizations involving variables, we'll need to track scopes here.
 
-            var variable = VisitAndConvert(node.Variable, nameof(VisitForEach));
+            var variables = VisitAndConvert(node.Variables, nameof(VisitForEach));
             var collection = Visit(node.Collection);
             var conversion = VisitAndConvert(node.Conversion, nameof(VisitForEach));
+            var deconstruction = VisitAndConvert(node.Deconstruction, nameof(VisitForEach));
+            var awaitInfo = VisitAwaitInfo(node.AwaitInfo);
 
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
             PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
-            return node.Update(@break, @continue, variable, collection, conversion, body);
+            return node.Update(@break, @continue, variables, collection, conversion, body, deconstruction, awaitInfo);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]

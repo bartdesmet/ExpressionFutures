@@ -1798,7 +1798,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F7F3_AD6D() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_245A_DA7A()
+        public void CompilerTest_245A_0917()
         {
             // (Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })
             var actual = GetDebugView(@"(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })");
@@ -1811,9 +1811,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Char"" Id=""1"" Name=""c"" />
-          </Variable>
+          </Variables>
           <Collection>
             <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
           </Collection>
@@ -1839,13 +1839,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_245A_DA7A();
+            Verify.CompilerTest_245A_0917();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_245A_DA7A() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_245A_0917() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_DA7B_B67A()
+        public void CompilerTest_DA7B_AAFD()
         {
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -1858,9 +1858,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Collection>
             <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
           </Collection>
@@ -1886,13 +1886,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_DA7B_B67A();
+            Verify.CompilerTest_DA7B_AAFD();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_B67A() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_AAFD() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_34B8_6522()
+        public void CompilerTest_34B8_D561()
         {
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -1905,9 +1905,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
@@ -1947,13 +1947,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_34B8_6522();
+            Verify.CompilerTest_34B8_D561();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_6522() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D561() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_3958_5948()
+        public void CompilerTest_3958_FB90()
         {
             // (Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -1966,9 +1966,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Collection>
             <Parameter Type=""System.Collections.Generic.IEnumerable`1[System.Int32]"" Id=""0"" Name=""xs"" />
           </Collection>
@@ -1994,13 +1994,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_3958_5948();
+            Verify.CompilerTest_3958_FB90();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_5948() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_FB90() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_1525_79A2()
+        public void CompilerTest_1525_8CFA()
         {
             // (Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -2013,9 +2013,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Collection>
             <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
           </Collection>
@@ -2041,13 +2041,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_1525_79A2();
+            Verify.CompilerTest_1525_8CFA();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1525_79A2() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1525_8CFA() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_720D_1B2C()
+        public void CompilerTest_720D_2F5A()
         {
             // (Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -2060,9 +2060,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Collection>
             <Parameter Type=""System.Collections.Generic.IList`1[System.Int32]"" Id=""0"" Name=""xs"" />
           </Collection>
@@ -2088,13 +2088,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_720D_1B2C();
+            Verify.CompilerTest_720D_2F5A();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_1B2C() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_2F5A() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_0041_C3E9()
+        public void CompilerTest_0041_2906()
         {
             // (Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -2107,9 +2107,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
@@ -2149,13 +2149,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_0041_C3E9();
+            Verify.CompilerTest_0041_2906();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_C3E9() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_2906() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_AE67_91A3()
+        public void CompilerTest_AE67_825B()
         {
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })");
@@ -2168,9 +2168,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Collection>
             <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
           </Collection>
@@ -2239,13 +2239,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AE67_91A3();
+            Verify.CompilerTest_AE67_825B();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AE67_91A3() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AE67_825B() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_8AE9_0673()
+        public void CompilerTest_8AE9_7D52()
         {
             // (Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -2258,9 +2258,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-          </Variable>
+          </Variables>
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
@@ -2304,10 +2304,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_8AE9_0673();
+            Verify.CompilerTest_8AE9_7D52();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8AE9_0673() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8AE9_7D52() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_5598_03A6()
@@ -3774,15 +3774,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_5EF7_9418() => OK();
             public override void CompilerTest_26D5_E9FE() => OK();
             public override void CompilerTest_F7F3_AD6D() => OK();
-            public override void CompilerTest_245A_DA7A() => OK();
-            public override void CompilerTest_DA7B_B67A() => OK();
-            public override void CompilerTest_34B8_6522() => OK();
-            public override void CompilerTest_3958_5948() => OK();
-            public override void CompilerTest_1525_79A2() => OK();
-            public override void CompilerTest_720D_1B2C() => OK();
-            public override void CompilerTest_0041_C3E9() => OK();
-            public override void CompilerTest_AE67_91A3() => OK();
-            public override void CompilerTest_8AE9_0673() => OK();
+            public override void CompilerTest_245A_0917() => OK();
+            public override void CompilerTest_DA7B_AAFD() => OK();
+            public override void CompilerTest_34B8_D561() => OK();
+            public override void CompilerTest_3958_FB90() => OK();
+            public override void CompilerTest_1525_8CFA() => OK();
+            public override void CompilerTest_720D_2F5A() => OK();
+            public override void CompilerTest_0041_2906() => OK();
+            public override void CompilerTest_AE67_825B() => OK();
+            public override void CompilerTest_8AE9_7D52() => OK();
             public override void CompilerTest_5598_03A6() => OK();
             public override void CompilerTest_62CA_03A6() => OK();
             public override void CompilerTest_BB7C_2A2A() => OK();

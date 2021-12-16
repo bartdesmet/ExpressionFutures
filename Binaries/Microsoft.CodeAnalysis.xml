@@ -27198,6 +27198,11 @@
             source or metadata.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.IParameterSymbol.IsNullChecked">
+            <summary>
+            True if the compiler will synthesize a null check for this parameter (the parameter is declared in source with a <c>!!</c> following the parameter name).
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.IPointerTypeSymbol">
             <summary>
             Represents a pointer type such as "int *". Pointer types

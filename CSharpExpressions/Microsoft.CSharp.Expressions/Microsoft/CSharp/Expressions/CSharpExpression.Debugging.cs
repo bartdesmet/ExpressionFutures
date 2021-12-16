@@ -505,12 +505,22 @@ namespace Microsoft.CSharp.Expressions
         {
             var args = new List<object>
             {
-                new XElement(nameof(node.Variable), Visit(node.Variable))
+                Visit(nameof(node.Variables), node.Variables)
             };
+
+            if (node.IsAsync)
+            {
+                args.Add(new XElement(nameof(node.AwaitInfo), Visit(node.AwaitInfo)));
+            }
 
             if (node.Conversion != null)
             {
                 args.Add(new XElement(nameof(node.Conversion), Visit(node.Conversion)));
+            }
+
+            if (node.Deconstruction != null)
+            {
+                args.Add(new XElement(nameof(node.Deconstruction), Visit(node.Deconstruction)));
             }
 
             args.Add(new XElement(nameof(node.Collection), Visit(node.Collection)));

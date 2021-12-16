@@ -126,12 +126,12 @@ namespace Tests
             var e = CSharpExpression.ForEach(x, xs, CSharpExpression.ForEach(x, xs, x));
             var r = (ForEachCSharpStatement)AliasEliminator.Eliminate(e);
 
-            var v1 = r.Variable;
+            var v1 = r.Variables;
             var e1 = (ForEachCSharpStatement)r.Body;
-            var v2 = e1.Variable;
+            var v2 = e1.Variables;
             var e2 = e1.Body;
 
-            Assert.AreSame(v2, e2);
+            Assert.AreSame(v2[0], e2);
             Assert.AreNotSame(v1, v2);
         }
 
