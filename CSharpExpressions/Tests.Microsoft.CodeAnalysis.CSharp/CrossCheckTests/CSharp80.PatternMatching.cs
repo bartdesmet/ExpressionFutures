@@ -205,5 +205,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
             f(42);
         }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Positional_ITuple()
+        {
+            var f = Compile<Func<object[], bool>>("args => new MyTuple(args, Log) is (42, \"bar\", 123L)");
+            f(new object[0]);
+            f(new object[3]);
+            f(new object[2] { 42, "bar" });
+            f(new object[3] { 41, "bar", 123L });
+            f(new object[3] { 42, "foo", 123L });
+            f(new object[3] { 42, "bar", 124L });
+            f(new object[3] { 42, "bar", 123L });
+            f(new object[3] { 42, null, 123L });
+            f(new object[3] { 42L, "bar", 123L });
+            f(new object[3] { 42, "bar", 123UL });
+            f(new object[4] { 42, "bar", 123L, 99 });
+        }
     }
 }

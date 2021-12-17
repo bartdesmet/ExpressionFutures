@@ -504,3 +504,32 @@ public static class Point2DExtensions
         (x, y) = (p.X, p.Y);
     }
 }
+
+public class MyTuple : ITuple
+{
+    private readonly object[] _values;
+    private readonly Func<string, string> _log;
+
+    public MyTuple(object[] values, Func<string, string> log = null)
+    {
+        _values = values;
+    }
+
+    public object this[int index]
+    {
+        get
+        {
+            _log?.Invoke("this[" + index + "]");
+            return _values[index];
+        }
+    }
+
+    public int Length
+    {
+        get
+        {
+            _log?.Invoke("Length");
+            return _values.Length;
+        }
+    }
+}
