@@ -498,7 +498,7 @@ public struct Point2D
 
 public static class Point2DExtensions
 {
-    public static void Deconstruct(this ref Point2D p, out int x, out int y)
+    public static void Deconstruct(this in Point2D p, out int x, out int y)
     {
         p._log?.Invoke("Deconstruct");
         (x, y) = (p.X, p.Y);
@@ -531,5 +531,34 @@ public class MyTuple : ITuple
             _log?.Invoke("Length");
             return _values.Length;
         }
+    }
+}
+
+public class MyTuple<T1, T2>
+{
+    private readonly Func<string, string> _log;
+    private T1 _item1;
+    private T2 _item2;
+
+    public MyTuple(T1 item1, T2 item2, Func<string, string> log = null)
+    {
+        _item1 = item1;
+        _item2 = item2;
+    }
+
+    public T1 Item1
+    {
+        get { _log?.Invoke(nameof(Item1)); return _item1; }
+    }
+
+    public T2 Item2
+    {
+        get { _log?.Invoke(nameof(Item2)); return _item2; }
+    }
+
+    public void Deconstruct(out T1 item1, out T2 item2)
+    {
+        _log?.Invoke(nameof(Deconstruct));
+        (item1, item2) = (_item1, _item2);
     }
 }
