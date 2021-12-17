@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,12 +17,11 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents a property or field access for use in a property subpattern.
     /// </summary>
-    public sealed class PropertyCSharpSubpatternMember
+    public abstract class PropertyCSharpSubpatternMember
     {
-        internal PropertyCSharpSubpatternMember(PropertyCSharpSubpatternMember receiver, MemberInfo member)
+        internal PropertyCSharpSubpatternMember(PropertyCSharpSubpatternMember receiver)
         {
             Receiver = receiver;
-            Member = member;
         }
 
         /// <summary>
@@ -32,45 +32,118 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the member accessed by the subpattern.
         /// </summary>
-        public MemberInfo Member { get; }
+        public abstract MemberInfo Member { get; }
+
+        /// <summary>
+        /// Gets the tuple field accessed by the subpattern.
+        /// </summary>
+        public abstract TupleFieldInfo TupleField { get; }
 
         /// <summary>
         /// Gets the type returned by the member.
         /// </summary>
-        public Type Type => Member switch
-        {
-            PropertyInfo p => p.PropertyType,
-            FieldInfo f => f.FieldType,
-            _ => throw Unreachable,
-        };
+        public abstract Type Type { get; }
 
         /// <summary>
         /// Gets a value indicating whether the property represents a Count or Length property.
         /// </summary>
-        public bool IsLengthOrCount
-        {
-            get
-            {
-                if (Member is PropertyInfo p && p.PropertyType == typeof(int))
-                {
-                    if (p.Name == nameof(ICollection.Count) || p.Name == nameof(Array.Length))
-                    {
-                        return true;
-                    }
-                }
+        public abstract bool IsLengthOrCount { get; }
 
-                return false;
-            }
-        }
-
-        internal Expression Reduce(Expression @object)
+        internal Expression Reduce(Expression @object, List<ParameterExpression> vars, List<Expression> stmts, Action<Expression> addFailIfNot)
         {
             if (Receiver != null)
             {
-                @object = Receiver.Reduce(@object);
+                @object = Receiver.Reduce(@object, vars, stmts, addFailIfNot);
             }
 
-            return Expression.MakeMemberAccess(@object, Member);
+            return PatternHelpers.Reduce(@object, obj =>
+            {
+                // NB: The parent pattern checks for null on the input to the left-most property, but for all subsequent accesses
+                //     we need to take care of the checks. An alternative strategy would have been to lower { A.B: p } to { A: { B: p } }
+                //     and let the checks naturally emerge.
+
+                if (Receiver != null)
+                {
+                    if (obj.Type.IsNullableType())
+                    {
+                        var nonNullType = obj.Type.GetNonNullableType();
+
+                        addFailIfNot(Expression.TypeIs(obj, nonNullType));
+                        obj = Expression.Convert(obj, nonNullType);
+                    }
+                    else if (!obj.Type.IsValueType)
+                    {
+                        addFailIfNot(Expression.ReferenceNotEqual(obj, Expression.Constant(null, obj.Type)));
+                    }
+                }
+
+                return ReduceCore(obj);
+            }, vars, stmts);
+        }
+
+        internal abstract Expression ReduceCore(Expression @object);
+
+        internal sealed class WithMemberInfo : PropertyCSharpSubpatternMember
+        {
+            public WithMemberInfo(PropertyCSharpSubpatternMember receiver, MemberInfo member)
+                : base(receiver)
+            {
+                Member = member;
+            }
+
+            public override MemberInfo Member { get; }
+
+            public override TupleFieldInfo TupleField => null;
+
+            public override Type Type => Member switch
+            {
+                PropertyInfo p => p.PropertyType,
+                FieldInfo f => f.FieldType,
+                _ => throw Unreachable,
+            };
+
+            public override bool IsLengthOrCount
+            {
+                get
+                {
+                    if (Member is PropertyInfo p && p.PropertyType == typeof(int))
+                    {
+                        if (p.Name == nameof(ICollection.Count) || p.Name == nameof(Array.Length))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            }
+
+            internal override Expression ReduceCore(Expression @object)
+            {
+                return Expression.MakeMemberAccess(@object, Member);
+            }
+        }
+
+        internal sealed class WithTupleField : PropertyCSharpSubpatternMember
+        {
+            public WithTupleField(PropertyCSharpSubpatternMember receiver, TupleFieldInfo field)
+                : base(receiver)
+            {
+                TupleField = field;
+            }
+
+            public override MemberInfo Member => null;
+
+            public override TupleFieldInfo TupleField { get; }
+
+            public override Type Type => TupleField.Type;
+
+            public override bool IsLengthOrCount => false;
+
+            internal override Expression ReduceCore(Expression @object)
+            {
+                return Helpers.GetTupleItemAccess(@object, TupleField.Index);
+            }
         }
     }
 
@@ -82,6 +155,13 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="member">The member to access.</param>
         /// <returns>A <see cref="PropertyCSharpSubpatternMember" /> representing a member accessed by a property subpattern.</returns>
         public static PropertyCSharpSubpatternMember PropertySubpatternMember(MemberInfo member) => PropertySubpatternMember(receiver: null, member);
+
+        /// <summary>
+        /// Creates a tuple field access for use in a property subpattern.
+        /// </summary>
+        /// <param name="field">The tuple field to access.</param>
+        /// <returns>A <see cref="PropertyCSharpSubpatternMember" /> representing a tuple field accessed by a property subpattern.</returns>
+        public static PropertyCSharpSubpatternMember PropertySubpatternMember(TupleFieldInfo field) => PropertySubpatternMember(receiver: null, field);
 
         /// <summary>
         /// Creates a nested property or field access for use in a property subpattern.
@@ -118,13 +198,28 @@ namespace Microsoft.CSharp.Expressions
 
             if (receiver != null)
             {
-                if (!TypeUtils.IsValidInstanceType(member, receiver.Type))
+                var nonNullReceiverType = receiver.Type.GetNonNullableType();
+
+                if (!TypeUtils.IsValidInstanceType(member, nonNullReceiverType))
                 {
-                    throw Error.PropertyPatternMemberIsNotCompatibleWithReceiver(member, receiver.Type);
+                    throw Error.PropertyPatternMemberIsNotCompatibleWithReceiver(member, nonNullReceiverType);
                 }
             }
 
-            return new PropertyCSharpSubpatternMember(receiver, member);
+            return new PropertyCSharpSubpatternMember.WithMemberInfo(receiver, member);
+        }
+
+        /// <summary>
+        /// Creates a nested tuple field access for use in a property subpattern.
+        /// </summary>
+        /// <param name="receiver">The subpattern member to access the member on.</param>
+        /// <param name="field">The tuple field to access.</param>
+        /// <returns>A <see cref="PropertyCSharpSubpatternMember" /> representing a tuple field accessed by a property subpattern.</returns>
+        public static PropertyCSharpSubpatternMember PropertySubpatternMember(PropertyCSharpSubpatternMember receiver, TupleFieldInfo field)
+        {
+            RequiresNotNull(field, nameof(field));
+
+            return new PropertyCSharpSubpatternMember.WithTupleField(receiver, field);
         }
     }
 }

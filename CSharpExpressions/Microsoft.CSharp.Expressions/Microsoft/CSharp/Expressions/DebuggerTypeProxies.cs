@@ -1828,6 +1828,7 @@ namespace Microsoft.CSharp.Expressions
 
         public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
         public System.Linq.Expressions.Expression Value => _node.Value;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
         public System.Linq.Expressions.Expression WhenClause => _node.WhenClause;
     }
 

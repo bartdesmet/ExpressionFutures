@@ -440,19 +440,67 @@ public struct NestedMemberInitStruct
 
 public struct Point
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+    private readonly Func<string, string> _log;
+    private int _x, _y;
 
-    public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
+    public Point(Func<string, string> log)
+    {
+        _log = log;
+     
+        _x = 0;
+        _y = 0;
+    }
+
+    public int X
+    {
+        get { _log?.Invoke("get_X"); return _x; }
+        set { _log?.Invoke("set_X"); _x = value; }
+    }
+
+    public int Y
+    {
+        get { _log?.Invoke("get_Y"); return _y; }
+        set { _log?.Invoke("set_Y"); _y = value; }
+    }
+
+    public void Deconstruct(out int x, out int y)
+    {
+        _log?.Invoke("Deconstruct");
+        (x, y) = (_x, _y);
+    }
 }
 
 public struct Point2D
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+    internal readonly Func<string, string> _log;
+    private int _x, _y;
+
+    public Point2D(Func<string, string> log)
+    {
+        _log = log;
+
+        _x = 0;
+        _y = 0;
+    }
+
+    public int X
+    {
+        get { _log?.Invoke("get_X"); return _x; }
+        set { _log?.Invoke("set_X"); _x = value; }
+    }
+
+    public int Y
+    {
+        get { _log?.Invoke("get_Y"); return _y; }
+        set { _log?.Invoke("set_Y"); _y = value; }
+    }
 }
 
 public static class Point2DExtensions
 {
-    public static void Deconstruct(this ref Point2D p, out int x, out int y) => (x, y) = (p.X, p.Y);
+    public static void Deconstruct(this ref Point2D p, out int x, out int y)
+    {
+        p._log?.Invoke("Deconstruct");
+        (x, y) = (p.X, p.Y);
+    }
 }

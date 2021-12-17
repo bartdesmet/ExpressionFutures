@@ -213,7 +213,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     foreach (var prop in Properties)
                     {
-                        addFailIfNot(prop.Reduce(obj));
+                        addFailIfNot(prop.Reduce(obj, vars, stmts, addFailIfNot));
                     }
                 }
 
@@ -581,15 +581,23 @@ namespace Microsoft.CSharp.Expressions
 
                     var member = findTopMostMember(propertyPattern.Member);
 
-                    // TODO: Inline the check.
-                    _ = Expression.MakeMemberAccess(objParam, member);
+                    if (member.Member != null)
+                    {
+                        // TODO: Inline the check.
+                        _ = Expression.MakeMemberAccess(objParam, member.Member);
+                    }
+                    else
+                    {
+                        // TODO: Inline the check.
+                        _ = Helpers.GetTupleItemAccess(objParam, member.TupleField.Index);
+                    }
                 }
 
-                static MemberInfo findTopMostMember(PropertyCSharpSubpatternMember member)
+                static PropertyCSharpSubpatternMember findTopMostMember(PropertyCSharpSubpatternMember member)
                 {
                     if (member.Receiver == null)
                     {
-                        return member.Member;
+                        return member;
                     }
 
                     return findTopMostMember(member.Receiver);

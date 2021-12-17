@@ -245,7 +245,21 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Out(".");
             }
 
-            visitor.Out(member.Member.Name);
+            if (member.Member != null)
+            {
+                visitor.Out(member.Member.Name);
+            }
+            else
+            {
+                if (member.TupleField.Name != null)
+                {
+                    visitor.Out(member.TupleField.Name);
+                }
+                else
+                {
+                    visitor.Out("Item" + (member.TupleField.Index + 1));
+                }
+            }
         }
     }
 }

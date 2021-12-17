@@ -216,10 +216,16 @@ namespace Microsoft.CSharp.Expressions
 
         protected XNode Visit(PropertyCSharpSubpatternMember node)
         {
-            var nodes = new List<object>
+            var nodes = new List<object>();
+
+            if (node.Member != null)
             {
-                new XAttribute(nameof(node.Member), node.Member),
-            };
+                nodes.Add(new XAttribute(nameof(node.Member), node.Member));
+            }
+            else
+            {
+                nodes.Add(new XAttribute(nameof(node.TupleField), node.TupleField));
+            }
 
             if (node.Receiver != null)
             {

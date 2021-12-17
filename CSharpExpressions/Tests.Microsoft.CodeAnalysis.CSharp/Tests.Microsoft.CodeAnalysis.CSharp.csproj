@@ -206,6 +206,8 @@
       <DependentUpon>CSharp30.Original.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="CrossCheckTests\CSharp30.MultiDimensionalArrayInitializers.cs" />
+    <Compile Include="CrossCheckTests\CSharpN100.PatternMatching.cs" />
+    <Compile Include="CrossCheckTests\CSharp80.PatternMatching.cs" />
     <Compile Include="CrossCheckTests\CSharp70.IsExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp90.WithExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp80.NullCoalescingAssignment.cs" />

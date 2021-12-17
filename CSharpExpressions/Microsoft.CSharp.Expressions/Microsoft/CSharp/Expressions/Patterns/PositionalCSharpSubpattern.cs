@@ -133,18 +133,6 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a positional subpattern that matches a component of a tuple.
-        /// </summary>
-        /// <param name="pattern">The pattern to apply to the object in the corresponding position.</param>
-        /// <param name="fieldName">The name of the field in the tuple to match.</param>
-        /// <param name="fieldIndex">The index of the field in the tuple to match.</param>
-        /// <returns>A <see cref="PositionalCSharpSubpattern" /> representing a positional subpattern.</returns>
-        public static PositionalCSharpSubpattern PositionalSubpattern(CSharpPattern pattern, string fieldName, int fieldIndex)
-        {
-            return PositionalSubpattern(pattern, new TupleFieldInfo(fieldName, fieldIndex));
-        }
-
-        /// <summary>
         /// Creates a positional subpattern that matches a component extracted by calling a Deconstruct method.
         /// </summary>
         /// <param name="pattern">The pattern to apply to the object in the corresponding position.</param>

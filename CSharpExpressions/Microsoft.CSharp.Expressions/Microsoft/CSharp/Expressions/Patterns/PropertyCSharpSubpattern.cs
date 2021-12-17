@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using static System.Dynamic.Utils.ContractUtils;
@@ -57,16 +59,16 @@ namespace Microsoft.CSharp.Expressions
             return CSharpPattern.PropertySubpattern(pattern, Member, IsLengthOrCount);
         }
 
-        internal Expression Reduce(Expression @object)
+        internal Expression Reduce(Expression @object, List<ParameterExpression> vars, List<Expression> stmts, Action<Expression> addFailIfNot)
         {
             // NB: LengthOrCount is only used to refine the range of Int32 to >= 0. We don't yet use it for reduction.
 
             Expression createTest(Expression obj)
             {
-                return Pattern.Reduce(Member.Reduce(obj));
+                return Pattern.Reduce(Member.Reduce(obj, vars, stmts, addFailIfNot));
             }
 
-            return PatternHelpers.Reduce(@object, createTest);
+            return PatternHelpers.Reduce(@object, createTest, vars, stmts);
         }
     }
 

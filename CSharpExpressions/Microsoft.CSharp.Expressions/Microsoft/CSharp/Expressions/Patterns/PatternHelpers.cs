@@ -3,6 +3,7 @@
 // bartde - December 2021
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
@@ -26,6 +27,21 @@ namespace Microsoft.CSharp.Expressions
                         Expression.Assign(p, @object),
                         reduce(p)
                     );
+            }
+        }
+
+        public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce, List<ParameterExpression> vars, List<Expression> stmts)
+        {
+            if (@object.NodeType == ExpressionType.Parameter)
+            {
+                return reduce(@object);
+            }
+            else
+            {
+                var p = Expression.Parameter(@object.Type, "__obj");
+                vars.Add(p);
+                stmts.Add(Expression.Assign(p, @object));
+                return reduce(p);
             }
         }
 
