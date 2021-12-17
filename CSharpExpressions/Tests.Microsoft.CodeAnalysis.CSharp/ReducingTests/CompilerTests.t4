@@ -1,5 +1,5 @@
 ﻿<#
-bool reduce = false;
-bool generateCSharp = false;
+bool reduce = true;
+bool generateCSharp = true;
 #>
 <#@ include file="..\CompilerTestsBase.t4" #>

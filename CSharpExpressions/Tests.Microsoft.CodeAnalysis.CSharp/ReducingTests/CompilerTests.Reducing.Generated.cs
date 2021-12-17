@@ -1,6 +1,6 @@
 ﻿// Prototyping extended expression trees for C#.
 //
-// bartde - December 2015
+// bartde - November 2015
 
 // NB: Running these tests can take a *VERY LONG* time because it invokes the C# compiler for every test
 //     case in order to obtain an expression tree object. Be patient when running these tests.
@@ -36,7 +36,8 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests
+    [TestClass]
+    public partial class CompilerTests_Reducing
     {
         [TestMethod]
         public void CompilerTest_6A97_3CC7()
@@ -613,6 +614,18 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B038_1EAB() => INCONCLUSIVE(); }
 
+        partial class Review
+        {
+            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+        }
+
+        partial class Reviewed : Review
+        {
+            private void OK() { }
+            private void FAIL(string message = "") { Assert.Fail(message); }
+        }
+
+        private readonly Reviewed Verify = new Reviewed();
     }
 
 /*
@@ -623,7 +636,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests
+    partial class CompilerTests_Reducing
     {
         partial class Reviewed
         {

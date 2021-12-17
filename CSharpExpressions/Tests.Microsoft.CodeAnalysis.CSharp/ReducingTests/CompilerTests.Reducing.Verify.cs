@@ -4,7 +4,7 @@
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests
+    partial class CompilerTests_Reducing
     {
         partial class Reviewed
         {
