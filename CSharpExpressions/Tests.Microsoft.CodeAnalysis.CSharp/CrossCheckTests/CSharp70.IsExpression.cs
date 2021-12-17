@@ -25,21 +25,159 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     partial class CompilerTests
     {
         [TestMethod]
-        public void CrossCheck_IsExpression_Constant()
+        public void CrossCheck_IsExpression_Constant_Object_Int32()
         {
-            var f = Compile<Func<object, bool>>("o => Return(0) is 42");
+            var f = Compile<Func<object, bool>>("o => Return(o) is 42");
             f(null);
             f(1);
+            f(42);
+            f(42L);
+            f("foo");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Int32_Int32()
+        {
+            var f = Compile<Func<int, bool>>("x => Return(x) is 42");
+            f(1);
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_NullableInt32_Int32()
+        {
+            var f = Compile<Func<int?, bool>>("x => Return(x) is 42");
+            f(null);
+            f(1);
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Object_Decimal()
+        {
+            var f = Compile<Func<object, bool>>("o => Return(o) is 42.95m");
+            f(null);
+            f(1M);
+            f(42.95m);
+            f(42.95);
+            f("foo");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Decimal_Decimal()
+        {
+            var f = Compile<Func<decimal, bool>>("x => Return(x) is 42.95m");
+            f(1m);
+            f(42.95m);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_NullableDecimal_Decimal()
+        {
+            var f = Compile<Func<decimal?, bool>>("x => Return(x) is 42.95m");
+            f(null);
+            f(1m);
+            f(42.95m);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Object_Enum()
+        {
+            var f = Compile<Func<object, bool>>("o => Return(o) is ConsoleColor.Red");
+            f(null);
+            f(ConsoleColor.Red);
+            f(ConsoleColor.Yellow);
+            f((int)ConsoleColor.Red);
+            f("Red");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Enum_Enum()
+        {
+            var f = Compile<Func<ConsoleColor, bool>>("x => Return(x) is ConsoleColor.Red");
+            f(ConsoleColor.Red);
+            f(ConsoleColor.Yellow);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_NullableEnum_Enum()
+        {
+            var f = Compile<Func<ConsoleColor?, bool>>("x => Return(x) is ConsoleColor.Red");
+            f(null);
+            f(ConsoleColor.Red);
+            f(ConsoleColor.Yellow);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Object_String()
+        {
+            var f = Compile<Func<object, bool>>("o => Return(o) is \"foo\"");
+            f(null);
+            f("");
+            f("foo");
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_String_String()
+        {
+            var f = Compile<Func<string, bool>>("s => Return(s) is \"foo\"");
+            f(null);
+            f("");
+            f("foo");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Null_Object()
+        {
+            var f = Compile<Func<object, bool>>("o => Return(o) is null");
+            f(null);
             f(42);
             f("foo");
         }
 
         [TestMethod]
-        public void CrossCheck_IsExpression_Declaration()
+        public void CrossCheck_IsExpression_Constant_Null_NullableInt32()
+        {
+            var f = Compile<Func<int?, bool>>("x => Return(x) is null");
+            f(null);
+            f(42);
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Constant_Null_String()
+        {
+            var f = Compile<Func<string, bool>>("s => Return(s) is null");
+            f(null);
+            f("foo");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Declaration_String()
         {
             var f = Compile<Func<object, bool>>("o => Return(o) is string s && s.Length > 0");
             f(null);
             f(42);
+            f("");
+            f("foo");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Declaration_Int32()
+        {
+            var f = Compile<Func<object, bool>>("o => Return(o) is int x && x > 0");
+            f(null);
+            f(-42);
+            f(0);
+            f(42);
+            f("foo");
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Var_String()
+        {
+            var f = Compile<Func<string, bool>>("s => Return(s) is var t && t.Length > 0");
+            AssertEx.Throws<NullReferenceException>(() => f(null));
             f("");
             f("foo");
         }
