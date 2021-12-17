@@ -126,11 +126,13 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
+            var statementCount = Statements.Count;
+
             ReadOnlyCollection<Expression> statements;
 
             if (ReturnLabel == null)
             {
-                if (Statements.Count == 0)
+                if (statementCount == 0)
                 {
                     // NB: Can ignore variables; there's no expression that can use them anyway, and they don't have side-effects.
                     return Expression.Empty();
@@ -153,14 +155,42 @@ namespace Microsoft.CSharp.Expressions
                     returnLabel = Expression.Label(ReturnLabel);
                 }
 
-                if (Statements.Count == 0)
+                if (statementCount == 0)
                 {
                     // NB: Can ignore variables; there's no expression that can use them anyway, and they don't have side-effects.
                     return returnLabel;
                 }
                 else
                 {
-                    statements = new TrueReadOnlyCollection<Expression>(Statements.AddLast(returnLabel));
+                    var lastStatement = Statements[statementCount - 1];
+
+                    // REVIEW: The check below is problematic and works around the case where Roslyn generates a block for an
+                    //         expression lambda body that has locals, e.g. "o => o is string s && s.Length > 0". This ends
+                    //         up having a block with locals and a return label, which ends up in the tree. As a workaround,
+                    //         we promote the last statement of the block to be an implicit return (not unlike Block in the
+                    //         LINQ expression tree APIs) if the types line up. However, it'd likely be better if compiler-
+                    //         generated blocks (with generated return labels etc.) don't end up in the tree, and we may want
+                    //         to then have a Lambda node that has a Locals collection so we can do away with the top-level
+                    //         block as a coathanger for local variables.
+
+                    if (ReturnLabel.Type != typeof(void) && TypeUtils.AreReferenceAssignable(ReturnLabel.Type, lastStatement.Type))
+                    {
+                        var newStatements = new Expression[statementCount + 1];
+
+                        for (var i = 0; i < statementCount - 1; i++)
+                        {
+                            newStatements[i] = Statements[i];
+                        }
+
+                        newStatements[statementCount - 1] = Expression.Return(ReturnLabel, lastStatement);
+                        newStatements[statementCount] = returnLabel;
+
+                        statements = new TrueReadOnlyCollection<Expression>(newStatements);
+                    }
+                    else
+                    {
+                        statements = new TrueReadOnlyCollection<Expression>(Statements.AddLast(returnLabel));
+                    }
                 }
             }
 
