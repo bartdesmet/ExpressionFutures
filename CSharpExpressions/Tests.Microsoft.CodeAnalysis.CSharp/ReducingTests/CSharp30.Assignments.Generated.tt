@@ -13,15 +13,10 @@
 <#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
 <#
-var name = "Reducing";
+var name = "CSharp30_Assignments_Reducing";
 
 var exprs = new[]
 {
-    // By-ref with named parameters
-    "(Expression<Func<int, int>>)(x => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref x))",
-    "(Expression<Func<StrongBox<int>, int>>)(b => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref b.Value))",
-    "(Expression<Func<int[], int>>)(xs => System.Threading.Interlocked.Exchange(value: int.Parse(\"1\"), location1: ref xs[int.Parse(\"0\")]))",
-
     // Assign
     "(Expression<Action<int>>)(x => { x = 1; })",
     "(Expression<Action<int[]>>)(xs => { xs[0] = 1; })",
@@ -49,19 +44,6 @@ var exprs = new[]
     "(Expression<Action<int[,]>>)(xs => { xs[0, 0]++; })",
     "(Expression<Action<List<int>>>)(xs => { xs[0]++; })",
     "(Expression<Action<StrongBox<int>>>)(b => { b.Value++; })",
-
-    // Lock
-    "(Expression<Action<object>>)(l => { lock(l) { Console.WriteLine(\"In lock\"); } })",
-
-    // Tuple equality
-    "(Expression<Func<bool>>)(() => (1, 2) == (3, 4))",
-    "(Expression<Func<bool>>)(() => (1, int.Parse(\"2\")) != (int.Parse(\"3\"), 4))",
-    "(Expression<Func<(int, int), bool>>)(t => t == (3, 4))",
-    "(Expression<Func<(int, int), bool>>)(t => (1, 2) != t)",
-    "(Expression<Func<bool>>)(() => (1, (true, \"foo\")) == (3, (false, \"bar\")))",
-    "(Expression<Func<bool>>)(() => (int.Parse(\"1\"), (true, \"foo\".ToUpper())) != (3, (\"qux\".StartsWith(\"z\"), \"bar\")))",
-    "(Expression<Func<(bool, string), bool>>)(t => (1, t) == (3, (false, \"bar\")))",
-    "(Expression<Func<(bool, string), bool>>)(t => (1, (true, \"foo\")) != (3, t))",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

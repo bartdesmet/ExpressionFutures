@@ -222,12 +222,30 @@
     <Compile Include="CrossCheckTests\CSharp30.Original.cs" />
     <Compile Include="LogAndResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReducingTests\CompilerTests.Reducing.Generated.cs">
-      <DependentUpon>CompilerTests.Reducing.Generated.tt</DependentUpon>
+    <Compile Include="ReducingTests\CSharp30.Statements.Generated.cs">
+      <DependentUpon>CSharp30.Statements.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="ReducingTests\CompilerTests.Reducing.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp40.NamedAndOptionalParameters.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp73.TupleEquality.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp30.Assignments.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp30_Statements.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp30.Assignments.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Assignments.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReducingTests\CSharp73.TupleEquality.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp73.TupleEquality.Generated.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BclExtensions\BclExtensions.csproj">
@@ -340,9 +358,21 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Original.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="ReducingTests\CompilerTests.Reducing.Generated.tt">
+    <Content Include="ReducingTests\CSharp30.Statements.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CompilerTests.Reducing.Generated.cs</LastGenOutput>
+      <LastGenOutput>CSharp30.Statements.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="ReducingTests\CSharp30.Assignments.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp40.NamedAndOptionalParameters.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="ReducingTests\CSharp73.TupleEquality.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
