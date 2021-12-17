@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
@@ -77,6 +78,11 @@ namespace Microsoft.CSharp.Expressions
 
             var temp = Expression.Parameter(Expression.Type, "__lock");
             var lockTaken = Expression.Parameter(typeof(bool), "__lockWasTaken");
+
+            var enterExpr = Expression.Call(enterMethod, temp, lockTaken);
+            var body = Body is BlockExpression block
+                ? block.Update(block.Variables, block.Expressions.AddFirst(enterExpr))
+                : Expression.Block(enterExpr, Body);
             
             var res =
                 Expression.Block(
@@ -88,10 +94,7 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Assign(lockTaken, Expression.Constant(false)),
                     Expression.Assign(temp, Expression),
                     Expression.TryFinally(
-                        Expression.Block(
-                            Expression.Call(enterMethod, temp, lockTaken),
-                            Body
-                        ),
+                        body,
                         Expression.IfThen(lockTaken,
                             Expression.Call(exitMethod, temp)
                         )

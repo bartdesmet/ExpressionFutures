@@ -40,7 +40,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     public partial class CompilerTests_CSharp30_Statements_Reducing
     {
         [TestMethod]
-        public void CompilerTest_9551_2A52()
+        public void CompilerTest_9551_85DA()
         {
             // (Expression<Action<object>>)(l => { lock(l) { Console.WriteLine("In lock"); } })
             var actual = ToCSharp(@"(Expression<Action<object>>)(l => { lock(l) { Console.WriteLine(""In lock""); } })", reduce: true);
@@ -55,9 +55,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         try
         {
             System.Threading.Monitor.Enter(__lock, ref __lockWasTaken);
-            {
-                Console.WriteLine(""In lock"");
-            }
+            Console.WriteLine(""In lock"");
         }
         finally
         {
@@ -68,10 +66,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     L0 /*(null)*/:
 }";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_9551_2A52();
+            Verify.CompilerTest_9551_85DA();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9551_2A52() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9551_85DA() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -99,7 +97,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         partial class Reviewed
         {
-            public override void CompilerTest_9551_2A52() => OK();
+            public override void CompilerTest_9551_85DA() => OK();
         }
     }
 }
