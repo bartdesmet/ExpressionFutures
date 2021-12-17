@@ -4,6 +4,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -210,5 +211,53 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             f(1, 2, 3, 4);
         }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_LhsNonTrivialVariables()
+        {
+            var f = Compile<Action<int, int>>(@"(px, py) => {
+                var xs = new int[1];
+                var sb = new StrongBox<int>();
+                var p = new Point(Log) { X = px, Y = py };
+                (Return(xs)[Return(0)], Return(sb).Value) = Return(p);
+                Log(xs[0]);
+                Log(sb.Value);
+            }");
+
+            f(1, 2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_Conversion()
+        {
+            var f = Compile<Action<int, int>>(@"(px, py) => {
+                var p = new Point(Log) { X = px, Y = py };
+                (int? x, long y) = p;
+                Log(x);
+                Log(y);
+            }");
+
+            f(1, 2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_ForEach()
+        {
+            var f = Compile<Action>(@"() => {
+                foreach (var (x, y) in new[] {
+                    new Point(Log) { X = 1, Y = 2 },
+                    new Point(Log) { X = 3, Y = 4 },
+                })
+                {
+                    Log($""({x}, {y})"");
+                }
+            }");
+
+            f();
+        }
+
+        // TODO: Add more tests with other variable targets.
+        // TODO: Add more tests for foreach.
+        // TODO: Add more tests involving conversions.
     }
 }
