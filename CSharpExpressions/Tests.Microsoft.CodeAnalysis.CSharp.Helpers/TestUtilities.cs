@@ -378,7 +378,7 @@ public static class {typeName}
                 throw new InvalidOperationException("Could not find IL code.");
         }
 
-        public static FuncEval<TDelegate> FuncEval<TDelegate>(string expr)
+        public static FuncEval<TDelegate> FuncEval<TDelegate>(string expr, params Assembly[] references)
         {
             // TODO: Investigate using the scripting APIs here instead.
 
@@ -459,6 +459,9 @@ public static class {typeName}
 
                 // Test utilities
                 .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
+
+                // Extra references
+                .AddReferences(references.Select(r => MetadataReference.CreateFromFile(r.Location)))
 
                 // Helper types
                 .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode))

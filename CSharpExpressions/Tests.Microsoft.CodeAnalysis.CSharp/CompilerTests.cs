@@ -14,9 +14,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     [TestClass]
     public partial class CompilerTests
     {
-        private TDelegate Compile<TDelegate>(string code)
+        private TDelegate Compile<TDelegate>(string code, params Assembly[] references)
         {
-            var res = TestUtilities.FuncEval<TDelegate>(code);
+            var res = TestUtilities.FuncEval<TDelegate>(code, references);
 
             var exp = res.Expression.Compile();
             var fnc = res.Function;
