@@ -513,6 +513,7 @@ public class MyTuple : ITuple
     public MyTuple(object[] values, Func<string, string> log = null)
     {
         _values = values;
+        _log = log;
     }
 
     public object this[int index]
@@ -544,6 +545,7 @@ public class MyTuple<T1, T2>
     {
         _item1 = item1;
         _item2 = item2;
+        _log = log;
     }
 
     public T1 Item1
