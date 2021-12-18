@@ -52,8 +52,7 @@ namespace Microsoft.CSharp.Expressions
                 if (isRelational)
                     throw Error.CannotUseNullValueInRelationalPattern();
 
-                if (value.Type == typeof(object))
-                    return;
+                return;
             }
 
             if (value.Type.IsNullableType() && value.Value != null)
