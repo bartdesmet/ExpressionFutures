@@ -4,6 +4,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -195,7 +196,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_SwitchExpression_Positional()
+        public void CrossCheck_SwitchExpression_Positional_Deconstruct()
         {
             var f = Compile<Func<Point, string>>(@"
                 point => point switch
@@ -213,7 +214,178 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new Point { X = 1, Y = 1 });
         }
 
-        // TODO: Continue to add tests derived from samples.
+        [TestMethod]
+        public void CrossCheck_SwitchExpression_Positional_Tuple()
+        {
+            var f = Compile<Func<int, DateTime, decimal>>(@"
+                (groupSize, visitDate) => (groupSize, visitDate.DayOfWeek) switch
+                {
+                    (<= 0, _) => throw new ArgumentException(""Group size must be positive.""),
+                    (_, DayOfWeek.Saturday or DayOfWeek.Sunday) => 0.0m,
+                    (>= 5 and < 10, DayOfWeek.Monday) => 20.0m,
+                    (>= 10, DayOfWeek.Monday) => 30.0m,
+                    (>= 5 and < 10, _) => 12.0m,
+                    (>= 10, _) => 15.0m,
+                    _ => 0.0m,
+                }
+            ");
+
+            AssertEx.Throws<ArgumentException>(() => f(-1, new DateTime(1983, 2, 11)));
+            AssertEx.Throws<ArgumentException>(() => f(0, new DateTime(1983, 2, 11)));
+
+            for (int groupSize = 1; groupSize <= 12; groupSize++)
+            {
+                for (int day = 1; day <= 7; day++)
+                {
+                    var visitDate = new DateTime(1983, 2, day);
+
+                    f(groupSize, visitDate);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_SwitchExpression_Positional_Declaration()
+        {
+            var f = Compile<Func<object, string>>(@"
+                point => point switch
+                {
+                    Point2DRecord (> 0, > 0) p => p.ToString(),
+                    Point3DRecord (> 0, > 0, > 0) p => p.ToString(),
+                    _ => string.Empty,
+                }
+            ", typeof(Point2DRecord).Assembly);
+
+            f(null);
+            f(42);
+
+            for (int x = 0; x < 1; x++)
+            {
+                for (int y = 0; y < 1; y++)
+                {
+                    f(new Point2DRecord(x, y));
+
+                    for (int z = 0; z < 1; z++)
+                    {
+                        f(new Point3DRecord(x, y, z));
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_PositionalAndProperty()
+        {
+            var f = Compile<Func<WeightedPoint, bool>>("point => point is (>= 1, >= 2) { Weight: >= 3.0 }", typeof(WeightedPoint).Assembly);
+
+            f(null);
+            f(new WeightedPoint(0, 0) { Weight = 0.0 });
+            f(new WeightedPoint(1, 0) { Weight = 0.0 });
+            f(new WeightedPoint(0, 2) { Weight = 0.0 });
+            f(new WeightedPoint(0, 0) { Weight = 3.0 });
+            f(new WeightedPoint(1, 2) { Weight = 0.0 });
+            f(new WeightedPoint(0, 2) { Weight = 3.0 });
+            f(new WeightedPoint(1, 2) { Weight = 3.0 });
+            f(new WeightedPoint(2, 3) { Weight = 4.0 });
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_PositionalAndProperty_Declaration()
+        {
+            var f = Compile<Action<WeightedPoint>>(@"
+                point =>
+                {
+                    if (point is (>= 1, >= 2) { Weight: >= 3.0 } p)
+                    {
+                        Log(p.ToString());
+                    }
+                }", typeof(WeightedPoint).Assembly);
+
+            f(null);
+            f(new WeightedPoint(0, 0) { Weight = 0.0 });
+            f(new WeightedPoint(1, 0) { Weight = 0.0 });
+            f(new WeightedPoint(0, 2) { Weight = 0.0 });
+            f(new WeightedPoint(0, 0) { Weight = 3.0 });
+            f(new WeightedPoint(1, 2) { Weight = 0.0 });
+            f(new WeightedPoint(0, 2) { Weight = 3.0 });
+            f(new WeightedPoint(1, 2) { Weight = 3.0 });
+            f(new WeightedPoint(2, 3) { Weight = 4.0 });
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Var()
+        {
+            var f = Compile<Func<Func<int, int[]>, int, int, bool>>(@"
+                (SimulateDataFetch, id, absLimit) =>
+                    SimulateDataFetch(id) is var results
+                    && results.Min() >= -absLimit
+                    && results.Max() <= absLimit");
+
+            for (int id = 0; id < 10; id++)
+            {
+                for (int absLimit = -10; absLimit <= 10; absLimit++)
+                {
+                    f(SimulateDataFetch, id, absLimit);
+                }
+            }
+
+            int[] SimulateDataFetch(int id)
+            {
+                var rand = new Random(id);
+                return Enumerable
+                           .Range(start: 0, count: 5)
+                           .Select(s => rand.Next(minValue: -10, maxValue: 11))
+                           .ToArray();
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_SwitchExpression_Var()
+        {
+            var f = Compile<Func<Point2DRecord, Point2DRecord>>(@"
+                point => point switch
+                {
+                    var (x, y) when x < y => new Point2DRecord(-x, y),
+                    var (x, y) when x > y => new Point2DRecord(x, -y),
+                    var (x, y) => new Point2DRecord(x, y),
+                }
+            ", typeof(Point2DRecord).Assembly);
+
+            for (int x = 0; x < 2; x++)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    f(new Point2DRecord(x, y));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void CrossCheck_SwitchExpression_Discard()
+        {
+            var f = Compile<Func<DayOfWeek?, decimal>>(@"
+                dayOfWeek => dayOfWeek switch
+                {
+                    DayOfWeek.Monday => 0.5m,
+                    DayOfWeek.Tuesday => 12.5m,
+                    DayOfWeek.Wednesday => 7.5m,
+                    DayOfWeek.Thursday => 12.5m,
+                    DayOfWeek.Friday => 5.0m,
+                    DayOfWeek.Saturday => 2.5m,
+                    DayOfWeek.Sunday => 2.0m,
+                    _ => 0.0m,
+                }
+            ");
+
+            f(null);
+            f(DayOfWeek.Monday);
+            f(DayOfWeek.Tuesday);
+            f(DayOfWeek.Wednesday);
+            f(DayOfWeek.Thursday);
+            f(DayOfWeek.Friday);
+            f(DayOfWeek.Saturday);
+            f(DayOfWeek.Sunday);
+        }
     }
 }
 
@@ -221,3 +393,55 @@ public abstract class Vehicle { }
 public class Car : Vehicle { }
 public class Truck : Vehicle { }
 public class Bike : Vehicle { }
+
+public class Point2DRecord : IEquatable<Point2DRecord>
+{
+    public Point2DRecord(int x, int y) => (X, Y) = (x, y);
+
+    public int X { get; }
+    public int Y { get; }
+
+    public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
+
+    public override bool Equals(object obj) => obj is Point2DRecord p && Equals(p);
+
+    public override int GetHashCode() => (X, Y).GetHashCode();
+
+    public bool Equals(Point2DRecord other) => other != null && (X, Y) == (other.X, other.Y);
+
+    public override string ToString() => $"{{X = {X}, Y = {Y}}}";
+}
+
+public class Point3DRecord : IEquatable<Point3DRecord>
+{
+    public Point3DRecord(int x, int y, int z) => (X, Y, Z) = (x, y, z);
+
+    public int X { get; }
+    public int Y { get; }
+    public int Z { get; }
+
+    public void Deconstruct(out int x, out int y, out int z) => (x, y, z) = (X, Y, Z);
+
+    public override bool Equals(object obj) => obj is Point3DRecord p && Equals(p);
+
+    public override int GetHashCode() => (X, Y).GetHashCode();
+
+    public bool Equals(Point3DRecord other) => other != null && (X, Y, Z) == (other.X, other.Y, other.Z);
+
+
+    public override string ToString() => $"{{X = {X}, Y = {Y}, Z = {Z}}}";
+}
+
+public class WeightedPoint
+{
+    public WeightedPoint(int x, int y) => (X, Y) = (x, y);
+
+    public int X { get; }
+    public int Y { get; }
+
+    public double Weight { get; set; }
+
+    public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
+
+    public override string ToString() => $"{{X = {X}, Y = {Y}, Weight = {Weight}}}";
+}
