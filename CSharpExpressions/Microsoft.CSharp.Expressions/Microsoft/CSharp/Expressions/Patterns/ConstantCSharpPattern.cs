@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
@@ -86,9 +87,29 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                MethodInfo CheckNaN() => Value.Value switch
+                {
+                    float f when float.IsNaN(f) => FloatIsNaN,
+                    double d when double.IsNaN(d) => DoubleIsNaN,
+                    _ => null
+                };
+
+                var checkNaN = CheckNaN();
+
+                if (checkNaN != null)
+                {
+                    return PatternHelpers.Reduce(@object, obj => Expression.Call(checkNaN, obj));
+                }
+
                 return RelationalCSharpPattern.MakeTest(this, @object, ExpressionType.Equal, Value);
             }
         }
+
+        private static MethodInfo _floatIsNaN;
+        private static MethodInfo FloatIsNaN => _floatIsNaN ??= typeof(float).GetMethod(nameof(float.IsNaN), new[] { typeof(float) });
+
+        private static MethodInfo _doubleIsNaN;
+        private static MethodInfo DoubleIsNaN => _doubleIsNaN ??= typeof(double).GetMethod(nameof(double.IsNaN), new[] { typeof(double) });
     }
 
     partial class CSharpPattern
