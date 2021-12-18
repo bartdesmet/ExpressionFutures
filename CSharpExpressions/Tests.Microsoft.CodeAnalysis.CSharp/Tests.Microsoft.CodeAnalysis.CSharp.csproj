@@ -207,6 +207,7 @@
     </Compile>
     <Compile Include="CrossCheckTests\CSharp30.MultiDimensionalArrayInitializers.cs" />
     <Compile Include="CrossCheckTests\CSharp70.DeconstructionAssignment.cs" />
+    <Compile Include="CrossCheckTests\CSharp80.SwitchExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp90.PatternMatching.cs" />
     <Compile Include="CrossCheckTests\CSharpN100.PatternMatching.cs" />
     <Compile Include="CrossCheckTests\CSharp80.PatternMatching.cs" />
