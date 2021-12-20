@@ -563,7 +563,120 @@ Nodes of this type reduce to a `TupleLiteralCSharpExpression` that constructs a 
 
 ##### Deconstructing Assignment
 
-TODO - Partial implementation; pending support in foreach.
+Deconstructing assignment is not supported in expression trees as shown below:
+
+```csharp
+Expression<Action<(int, int), int, int>> e = (t, x, y) => (x, y) = t;
+```
+
+This fails to compile with:
+
+```
+error CS8143: An expression tree may not contain a tuple literal.
+```
+
+while highlighting the `(x, y)` literal on the left hand side of the assignment.
+
+Support for deconstruction assignment is added by a new `CSharpExpression.DeconstructionAssignment(Type type, TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)` method:
+
+```csharp
+var lhs = CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), new[] { x, y }, argumentNames: null);
+var p1 = Expression.Parameter(typeof(int));
+var convert1 = CSharpExpression.Convert(Expression.Lambda(p1, p1));
+var p2 = Expression.Parameter(typeof(int));
+var convert2 = CSharpExpression.Convert(Expression.Lambda(p2, p2));
+var convert = CSharpExpression.Deconstruct(convert1, convert2);
+CSharpExpression.DeconstructionAssignment(typeof(ValueTuple<int, int>), lhs, t, convert)
+```
+
+The first parameter of type `Type` represents the result of the assignment, which is a `ValueTuple<int, int>`. This is similar to every other assignment in C# which produces a result (that may get discarded in an expression statement).
+
+The second parameter represents the left-hand side of the assignment, which is a `TupleLiteral` that can have arbitrary levels of nesting. The components of these tuples are the variables to assign to, where every assignable node is supported.
+
+The third parameter represents the right-hand side of the assignment, which can be any expression with a type that's deconstructible, e.g. tuples or types with a `Deconstruct` method (such as record types).
+
+The fourth and final parameter represents the conversions to apply to the components obtained by recursively deconstructing the right-hand side according to the shape of the tuple literal on the left-hand side.
+
+In the example shown above, the expression being deconstructed is of an `(int, int)` tuple type, where the components get assigned to variables `x` and `y` in the `(x, y)` tuple literal on the left. Trivial identity conversions are applied to these components, represented using `CSharpExpression.Convert(LambdaExpression)`:
+
+```csharp
+var px = Expression.Parameter(typeof(int));
+CSharpExpression.Convert(Expression.Lambda(px, px))
+```
+
+If the left-hand side of the assignment in the sample were to contain, for example, a variable of type `long`:
+
+```csharp
+(long x, int y) = t;
+```
+
+then the resulting conversion for component `x` would involve an `Expression.Convert` node:
+
+```csharp
+var px = Expression.Parameter(typeof(int));
+CSharpExpression.Convert(Expression.Lambda(Expression.Convert(px, typeof(long)), px))
+```
+
+The `CSharpExpression.Convert` method returns a node of type `SimpleConversion` which derives from the `Conversion` base class. To combine different `Conversion` instances to apply to the respective components of a deconstruction step, a `DeconstructionConversion` is used:
+
+```csharp
+var px = Expression.Parameter(typeof(int));
+var convertX = CSharpExpression.Convert(Expression.Lambda(px, px));
+var py = Expression.Parameter(typeof(int));
+var convertY = CSharpExpression.Convert(Expression.Lambda(py, py));
+CSharpExpression.Deconstruct(convertX, convertY)
+```
+
+The `CSharpExpression.Deconstruct` method has several overloads to support deconstructing tuples or types with a `Deconstruct` method. In case of tuples, the `Deconstruct(params Conversion[] conversions)` overload is used, where the `Conversion[]` array contains the conversiond applied to the components of the tuple.
+
+For types with a custom `Deconstruct` method, the `Deconstruct(LambdaExpression deconstruct, params Conversion[] conversions)` overload is used where the `deconstruct` parameter represents the invocation of the `Deconstruct` method. For example, consider the following example:
+
+```csharp
+Expression<Action<Point>> e = p =>
+{
+  var (x, y) = p;
+  Console.WriteLine($"({x},{y})");
+};
+```
+
+where `Point` is a type with a `void Deconstruct(out int x, out int y)` deconstruction instance method. (Note that extension methods are also supported.) The deconstruction assignment is translated to:
+
+```csharp
+// Left hand side.
+var x = Expression.Parameter(typeof(int), x);
+var y = Expression.Parameter(typeof(int), y);
+var lhs = CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), new[] { x, y }, argumentNames: null);
+
+// Deconstruct
+var obj = Expression.Parameter(typeof(Point));
+var out1 = Expression.Parameter(typeof(int).MakeByRefType());
+var out2 = Expression.Parameter(typeof(int).MakeByRefType());
+var deconstruct = CSharpExpression.DeconstructLambda(Expression.Call(obj, /* methodinfoof(Point.Deconstruct) */, out1, out2));
+
+// Element conversions
+var p1 = Expression.Parameter(typeof(int));
+var convert1 = CSharpExpression.Convert(Expression.Lambda(p1, p1));
+var p2 = Expression.Parameter(typeof(int));
+var convert2 = CSharpExpression.Convert(Expression.Lambda(p2, p2));
+
+// Conversion
+var convert = CSharpExpression.Deconstruct(deconstruct, convert1, convert2);
+
+// Assignment
+CSharpExpression.DeconstructionAssignment(typeof(ValueTuple<int, int>), lhs, p, convert)
+```
+
+In here, the `DeconstructLambda` is a specialized factory for `LambdaExpression` nodes where the return type is `void` and all input parameters are passed by reference. This corresponds to a snippet to invoke the `Deconstruct` method, like this:
+
+```csharp
+DeconstructAction<Point, int, int> deconstruct = (Point p, ref int x, ref int y) => p.Deconstruct(ref x, ref y);
+```
+
+The factory uses `DeconstructAction<TInput, TOutput1, ..., TOutputN>` delegate types for arities 2 through 16 in order to avoid runtime code generation of custom delegate types.
+
+Upon reduction of the `DeconstructionAssignmentCSharpExpression` node, any deconstruction lambdas representing an invocation to a `Deconstruct` method get inlined.
+
+Finally, note that deconstruction assignment is also supported in `foreach` loops using a `ForEachCSharpStatement.Deconstruction` property that represents the deconstruction step applied to an element of the collection enumeration in order to assign the loop variables in `ForEachCSharpStatement.Variables`.
 
 ##### Pattern Matching
 
