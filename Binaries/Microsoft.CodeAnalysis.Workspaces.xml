@@ -70,7 +70,7 @@
             strings containing regex and/or escape characters.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Classification.ClassifierHelper.GetClassifiedSpansAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Classification.ClassifierHelper.GetClassifiedSpansAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,System.Threading.CancellationToken,System.Boolean,System.Boolean)">
             <summary>
             Classifies the provided <paramref name="span"/> in the given <paramref name="document"/>.
             This will do this using an appropriate <see cref="T:Microsoft.CodeAnalysis.Classification.IClassificationService"/>

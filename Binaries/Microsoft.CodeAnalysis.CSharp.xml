@@ -43202,6 +43202,9 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_LambdaWithAttributesToExpressionTree">
             <summary>A lambda expression with attributes cannot be converted to an expression tree</summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RecordStructConstructorCallsDefaultConstructor">
+            <summary>A 'this' initializer for a 'record struct' constructor must call the primary constructor or an explicitly declared constructor.</summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_CompileTimeCheckedOverflow">
             <summary>The operation may overflow '{0}' at runtime (use 'unchecked' syntax to override)</summary>
         </member>
