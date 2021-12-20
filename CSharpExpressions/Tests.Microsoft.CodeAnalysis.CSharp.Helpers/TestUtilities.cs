@@ -16,6 +16,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using CSharpDynamic = Microsoft.CSharp.RuntimeBinder;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -205,6 +206,8 @@ public static class {typeName}
 
                 // BCL extensions for C# 8
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(IAsyncDisposable).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTask).Assembly.Location))
 
                 // Our custom assembly
                 .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
@@ -450,6 +453,8 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(IAsyncDisposable).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTask).Assembly.Location))
 
                 // Our custom assembly
                 .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) })

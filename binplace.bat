@@ -33,5 +33,6 @@ copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\Microsoft.CodeAnalysis.CSharp.Wo
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\Microsoft.CodeAnalysis.CSharp.Workspaces.xml" "Binaries\"
 
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\Microsoft.Bcl.AsyncInterfaces.dll" "Binaries\"
+copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Threading.Tasks.Extensions.dll" "Binaries\"
 
 :exit
