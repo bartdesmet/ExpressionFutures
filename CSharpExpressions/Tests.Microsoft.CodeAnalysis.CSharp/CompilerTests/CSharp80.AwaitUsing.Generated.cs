@@ -40,10 +40,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     public partial class CompilerTests_CSharp80_AwaitUsing
     {
         [TestMethod]
-        public void CompilerTest_A100_D276()
+        public void CompilerTest_5CA8_D276()
         {
-            // (Expression<Func<IAsyncDisposable, Task>>)(async d =>  { await using (d) ; })
-            var actual = GetDebugView(@"(Expression<Func<IAsyncDisposable, Task>>)(async d =>  { await using (d) ; })");
+            // (Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d) ; })
+            var actual = GetDebugView(@"(Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d) ; })");
             var expected = @"
 <Lambda Type=""System.Func`2[System.IAsyncDisposable,System.Threading.Tasks.Task]"">
   <Parameters>
@@ -105,10 +105,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_A100_D276();
+            Verify.CompilerTest_5CA8_D276();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A100_D276() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CA8_D276() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -136,7 +136,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         partial class Reviewed
         {
-            public override void CompilerTest_A100_D276() => OK();
+            public override void CompilerTest_5CA8_D276() => OK();
         }
     }
 }

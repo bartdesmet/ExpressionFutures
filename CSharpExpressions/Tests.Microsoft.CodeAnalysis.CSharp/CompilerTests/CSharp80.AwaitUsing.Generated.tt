@@ -17,7 +17,7 @@ var name = "CSharp80_AwaitUsing";
 
 var exprs = new[]
 {
-    "(Expression<Func<IAsyncDisposable, Task>>)(async d =>  { await using (d) ; })",
+    "(Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d) ; })",
 };
 #>
 <#@ include file="CompilerTests.t4" #>
