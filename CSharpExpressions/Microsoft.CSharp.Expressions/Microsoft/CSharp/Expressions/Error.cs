@@ -1067,6 +1067,86 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.SwitchExpressionArmValueShouldNotBeVoid);
         }
 
+        /// <summary>
+        /// ArgumentException with message like "A conversion cannot return void."
+        /// </summary>
+        internal static Exception ConversionCannotReturnVoid()
+        {
+            return new ArgumentException(Strings.ConversionCannotReturnVoid);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A conversion lambda expression should have a single parameter."
+        /// </summary>
+        internal static Exception ConversionShouldHaveOneParameter()
+        {
+            return new ArgumentException(Strings.ConversionShouldHaveOneParameter);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A deconstruction lambda expression should return void."
+        /// </summary>
+        internal static Exception DeconstructionShouldReturnVoid()
+        {
+            return new ArgumentException(Strings.DeconstructionShouldReturnVoid);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction."
+        /// </summary>
+        internal static Exception DeconstructionShouldHaveThreeOrMoreParameters()
+        {
+            return new ArgumentException(Strings.DeconstructionShouldHaveThreeOrMoreParameters);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference."
+        /// </summary>
+        internal static Exception DeconstructionParameterShouldBeByRef(object p0)
+        {
+            return new ArgumentException(Strings.DeconstructionParameterShouldBeByRef(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The number of deconstruction output parameter should match the number of elements conversions."
+        /// </summary>
+        internal static Exception DeconstructionParameterCountShouldMatchConversionCount()
+        {
+            return new ArgumentException(Strings.DeconstructionParameterCountShouldMatchConversionCount);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'."
+        /// </summary>
+        internal static Exception DeconstructionParameterNotAssignableToConversion(object p0, object p1, object p2)
+        {
+            return new ArgumentException(Strings.DeconstructionParameterNotAssignableToConversion(p0, p1, p2));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'."
+        /// </summary>
+        internal static Exception DeconstructingAssignmentStructureMismatch(object p0, object p1)
+        {
+            return new ArgumentException(Strings.DeconstructingAssignmentStructureMismatch(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The computed result tuple type '{0}' does not match the specified expression type '{1}'."
+        /// </summary>
+        internal static Exception DeconstructingAssignmentTypeMismatch(object p0, object p1)
+        {
+            return new ArgumentException(Strings.DeconstructingAssignmentTypeMismatch(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'."
+        /// </summary>
+        internal static Exception DeconstructingComponentAndConversionIncompatible(object p0, object p1, object p2, object p3)
+        {
+            return new ArgumentException(Strings.DeconstructingComponentAndConversionIncompatible(p0, p1, p2, p3));
+        }
+
     }
 
     /// <summary>
@@ -2259,6 +2339,101 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        /// <summary>
+        /// A string like "A conversion cannot return void."
+        /// </summary>
+        internal static string ConversionCannotReturnVoid
+        {
+            get
+            {
+                return SR.ConversionCannotReturnVoid;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A conversion lambda expression should have a single parameter."
+        /// </summary>
+        internal static string ConversionShouldHaveOneParameter
+        {
+            get
+            {
+                return SR.ConversionShouldHaveOneParameter;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A deconstruction lambda expression should return void."
+        /// </summary>
+        internal static string DeconstructionShouldReturnVoid
+        {
+            get
+            {
+                return SR.DeconstructionShouldReturnVoid;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction."
+        /// </summary>
+        internal static string DeconstructionShouldHaveThreeOrMoreParameters
+        {
+            get
+            {
+                return SR.DeconstructionShouldHaveThreeOrMoreParameters;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference."
+        /// </summary>
+        internal static string DeconstructionParameterShouldBeByRef(object p0)
+        {
+            return SR.Format(SR.DeconstructionParameterShouldBeByRef, p0);
+        }
+
+        /// <summary>
+        /// A string like "The number of deconstruction output parameter should match the number of elements conversions."
+        /// </summary>
+        internal static string DeconstructionParameterCountShouldMatchConversionCount
+        {
+            get
+            {
+                return SR.DeconstructionParameterCountShouldMatchConversionCount;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'."
+        /// </summary>
+        internal static string DeconstructionParameterNotAssignableToConversion(object p0, object p1, object p2)
+        {
+            return SR.Format(SR.DeconstructionParameterNotAssignableToConversion, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'."
+        /// </summary>
+        internal static string DeconstructingAssignmentStructureMismatch(object p0, object p1)
+        {
+            return SR.Format(SR.DeconstructingAssignmentStructureMismatch, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The computed result tuple type '{0}' does not match the specified expression type '{1}'."
+        /// </summary>
+        internal static string DeconstructingAssignmentTypeMismatch(object p0, object p1)
+        {
+            return SR.Format(SR.DeconstructingAssignmentTypeMismatch, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'."
+        /// </summary>
+        internal static string DeconstructingComponentAndConversionIncompatible(object p0, object p1, object p2, object p3)
+        {
+            return SR.Format(SR.DeconstructingComponentAndConversionIncompatible, p0, p1, p2, p3);
+        }
+
     }
 }
 
@@ -2398,5 +2573,15 @@ namespace System
         public const string SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult = "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'.";
         public const string WhenClauseShouldBeBoolean = "The type of a when clause should be Boolean.";
         public const string SwitchExpressionArmValueShouldNotBeVoid = "The value of a switch expression arm should not be void.";
+        public const string ConversionCannotReturnVoid = "A conversion cannot return void.";
+        public const string ConversionShouldHaveOneParameter = "A conversion lambda expression should have a single parameter.";
+        public const string DeconstructionShouldReturnVoid = "A deconstruction lambda expression should return void.";
+        public const string DeconstructionShouldHaveThreeOrMoreParameters = "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction.";
+        public const string DeconstructionParameterShouldBeByRef = "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference.";
+        public const string DeconstructionParameterCountShouldMatchConversionCount = "The number of deconstruction output parameter should match the number of elements conversions.";
+        public const string DeconstructionParameterNotAssignableToConversion = "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'.";
+        public const string DeconstructingAssignmentStructureMismatch = "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'.";
+        public const string DeconstructingAssignmentTypeMismatch = "The computed result tuple type '{0}' does not match the specified expression type '{1}'.";
+        public const string DeconstructingComponentAndConversionIncompatible = "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'.";
     }
 }

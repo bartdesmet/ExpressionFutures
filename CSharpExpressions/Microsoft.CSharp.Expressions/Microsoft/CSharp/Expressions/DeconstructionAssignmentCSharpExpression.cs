@@ -8,6 +8,9 @@ using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
+using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -430,12 +433,90 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        /// <summary>
+        /// Creates a deconstruction assignment expression.
+        /// </summary>
+        /// <param name="left">The tuple literal containing the assignment targets, which may involve nested tuple literals.</param>
+        /// <param name="right">The expression representing the object to deconstruct.</param>
+        /// <param name="conversion">The deconstruction conversion specifying the deconstruction step and the conversions to the elements obtained from deconstructing the object.</param>
+        /// <returns>A <see cref="DeconstructionAssignmentCSharpExpression"/> representing the deconstruction assignment.</returns>
+        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion) => DeconstructionAssignment(type: null, left, right, conversion);
+
+        /// <summary>
+        /// Creates a deconstruction assignment expression.
+        /// </summary>
+        /// <param name="type">The return type of the deconstruction assignment.</param>
+        /// <param name="left">The tuple literal containing the assignment targets, which may involve nested tuple literals.</param>
+        /// <param name="right">The expression representing the object to deconstruct.</param>
+        /// <param name="conversion">The deconstruction conversion specifying the deconstruction step and the conversions to the elements obtained from deconstructing the object.</param>
+        /// <returns>A <see cref="DeconstructionAssignmentCSharpExpression"/> representing the deconstruction assignment.</returns>
         public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(Type type, TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)
         {
-            // Check use of type.
-            // Ensure all left hand side components can be written and are assignment compatible.
+            // NB: The Roslyn compiler binds to this overload.
+
+            RequiresCanRead(right, nameof(right));
+            RequiresNotNull(conversion, nameof(conversion));
+
+            var resultType = ValidateDeconstruction(left, right.Type, conversion, depth: 0, component: 0);
+
+            if (type != null)
+            {
+                ValidateType(type);
+
+                if (!AreEquivalent(type, resultType))
+                    throw Error.DeconstructingAssignmentTypeMismatch(resultType, type);
+            }
+            else
+            {
+                type = resultType;
+            }
 
             return new DeconstructionAssignmentCSharpExpression(type, left, right, conversion);
+
+            Type ValidateDeconstruction(Expression left, Type rhsType, Conversion rightConversion, int depth, int component)
+            {
+                if (rightConversion is DeconstructionConversion deconstruct)
+                {
+                    if (!(left is TupleLiteralCSharpExpression tuple))
+                        throw Error.DeconstructingAssignmentStructureMismatch(depth, component);
+
+                    var rightConversions = deconstruct.Conversions;
+                    var leftArguments = tuple.Arguments;
+
+                    if (rightConversions.Count != leftArguments.Count)
+                        throw Error.DeconstructingAssignmentStructureMismatch(depth, component);
+
+                    var n = rightConversions.Count;
+
+                    var types = new Type[n];
+
+                    for (var i = 0; i < n; i++)
+                    {
+                        var nestedRightConversion = rightConversions[i];
+                        var nestedLeftArgument = leftArguments[i];
+
+                        types[i] = ValidateDeconstruction(nestedLeftArgument, nestedRightConversion.InputType, nestedRightConversion, depth + 1, i);
+                    }
+
+                    return Helpers.MakeTupleType(types);
+                }
+                else if (left is TupleLiteralCSharpExpression)
+                {
+                    throw Error.DeconstructingAssignmentStructureMismatch(depth, component);
+                }
+                else
+                {
+                    Helpers.RequiresCanWrite(left, nameof(left));
+
+                    if (!AreReferenceAssignable(rightConversion.InputType, rhsType))
+                        throw Error.DeconstructingComponentAndConversionIncompatible(rightConversion.InputType, rhsType, depth, component);
+
+                    if (!AreReferenceAssignable(left.Type, rightConversion.ResultType))
+                        throw Error.DeconstructingComponentAndConversionIncompatible(left.Type, rightConversion.ResultType, depth, component);
+
+                    return left.Type;
+                }
+            }
         }
     }
 }

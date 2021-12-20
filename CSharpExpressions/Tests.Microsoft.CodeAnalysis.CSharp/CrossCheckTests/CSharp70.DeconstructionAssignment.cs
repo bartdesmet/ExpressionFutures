@@ -228,7 +228,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_DeconstructionAssignment_Conversion()
+        public void CrossCheck_DeconstructionAssignment_Conversion_Simple()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
                 var p = new Point(Log) { X = px, Y = py };
@@ -238,6 +238,39 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }");
 
             f(1, 2);
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_Conversion_Nested_Tuple()
+        {
+            var f = Compile<Action<((int, int), int)>>(@"t => {
+                ((int? a, long b), double c) = t;
+                Log(a); Log(b); Log(c);
+            }");
+
+            f(((1, 2), 3));
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_Conversion_Nested_Deconstruct()
+        {
+            var f = Compile<Action<MyTuple<MyTuple<int, int>, int>>>(@"t => {
+                ((int? a, long b), double c) = t;
+                Log(a); Log(b); Log(c);
+            }");
+
+            f(new MyTuple<MyTuple<int, int>, int>(new MyTuple<int, int>(1, 2), 3));
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_Conversion_Nested_TupleConversion()
+        {
+            var f = Compile<Action<((int, int), int)>>(@"t => {
+                ((int?, long) ab, double c) = t;
+                Log(ab); Log(c);
+            }");
+
+            f(((1, 2), 3));
         }
 
         [TestMethod]

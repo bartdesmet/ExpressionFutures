@@ -143,6 +143,16 @@ var errors = new[]
     new { Name = "SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult", ExceptionType = "ArgumentException", Args = 3, Message = "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'." },
     new { Name = "WhenClauseShouldBeBoolean", ExceptionType = "ArgumentException", Args = 0, Message = "The type of a when clause should be Boolean." },
     new { Name = "SwitchExpressionArmValueShouldNotBeVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The value of a switch expression arm should not be void." },
+    new { Name = "ConversionCannotReturnVoid", ExceptionType = "ArgumentException", Args = 0, Message = "A conversion cannot return void." },
+    new { Name = "ConversionShouldHaveOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "A conversion lambda expression should have a single parameter." },
+    new { Name = "DeconstructionShouldReturnVoid", ExceptionType = "ArgumentException", Args = 0, Message = "A deconstruction lambda expression should return void." },
+    new { Name = "DeconstructionShouldHaveThreeOrMoreParameters", ExceptionType = "ArgumentException", Args = 0, Message = "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction." },
+    new { Name = "DeconstructionParameterShouldBeByRef", ExceptionType = "ArgumentException", Args = 1, Message = "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference." },
+    new { Name = "DeconstructionParameterCountShouldMatchConversionCount", ExceptionType = "ArgumentException", Args = 0, Message = "The number of deconstruction output parameter should match the number of elements conversions." },
+    new { Name = "DeconstructionParameterNotAssignableToConversion", ExceptionType = "ArgumentException", Args = 3, Message = "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'." },
+    new { Name = "DeconstructingAssignmentStructureMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'." },
+    new { Name = "DeconstructingAssignmentTypeMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The computed result tuple type '{0}' does not match the specified expression type '{1}'." },
+    new { Name = "DeconstructingComponentAndConversionIncompatible", ExceptionType = "ArgumentException", Args = 4, Message = "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

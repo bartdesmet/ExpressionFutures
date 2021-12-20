@@ -24,5 +24,10 @@ namespace System
         {
             return String.Format(resourceFormat, p1, p2, p3);
         }
+
+        internal static string Format(string resourceFormat, object p1, object p2, object p3, object p4)
+        {
+            return String.Format(resourceFormat, p1, p2, p3, p4);
+        }
     }
 }
