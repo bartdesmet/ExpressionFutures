@@ -25,23 +25,140 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     partial class CompilerTests
     {
         [TestMethod]
-        public void CrossCheck_WithExpression_Record()
+        public void CrossCheck_WithExpression_Record1()
         {
-            var f = Compile<Func<string>>("() => { var q = Return(new Person { }) with { Name = Return(\"Homer\"), Age = Return(21) }; return q.Name; }");
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new Person { Name = ""Bart"", Age = 8 }) with
+                    {
+                        Name = Return(""Homer""),
+                        Age = Return(21)
+                    };
+                return q.ToString();
+            }");
+
             f();
         }
 
         [TestMethod]
-        public void CrossCheck_WithExpression_Struct()
+        public void CrossCheck_WithExpression_Record2()
         {
-            var f = Compile<Func<int>>("() => { var q = Return(new Point { X = 1, Y = 2 }) with { Y = Return(4), X = Return(3) }; return q.X + q.Y; }");
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new Person { Name = ""Bart"", Age = 8 }) with
+                    {
+                        Name = Return(""Homer"")
+                    };
+                return q.ToString();
+            }");
+
             f();
         }
 
         [TestMethod]
-        public void CrossCheck_WithExpression_Anonymous()
+        public void CrossCheck_WithExpression_Record3()
         {
-            var f = Compile<Func<int>>("() => { var q = Return(new { x = 1, y = 2 }) with { y = Return(4), x = Return(3) }; return q.x + q.y; }");
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new Person { Name = ""Bart"", Age = 8 }) with
+                    {
+                        Age = Return(21)
+                    };
+                return q.ToString();
+            }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_WithExpression_Struct1()
+        {
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new Point { X = 1, Y = 2 }) with
+                    {
+                        Y = Return(4),
+                        X = Return(3)
+                    };
+                return $""{q.X}, {q.Y}"";
+            }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_WithExpression_Struct2()
+        {
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new Point { X = 1, Y = 2 }) with
+                    {
+                        Y = Return(4)
+                    };
+                return $""{q.X}, {q.Y}"";
+            }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_WithExpression_Struct3()
+        {
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new Point { X = 1, Y = 2 }) with
+                    {
+                        X = Return(3)
+                    };
+                return $""{q.X}, {q.Y}"";
+            }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_WithExpression_Anonymous1()
+        {
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new { x = 1, y = 2 }) with
+                    {
+                        y = Return(4),
+                        x = Return(3)
+                    };
+                return ""{q.x}, {q.y}"";
+            }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_WithExpression_Anonymous2()
+        {
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new { x = 1, y = 2 }) with
+                    {
+                        y = Return(4)
+                    };
+                return ""{q.x}, {q.y}"";
+            }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_WithExpression_Anonymous3()
+        {
+            var f = Compile<Func<string>>(@"() => {
+                var q =
+                    Return(new { x = 1, y = 2 }) with
+                    {
+                        x = Return(3)
+                    };
+                return ""{q.x}, {q.y}"";
+            }");
+
             f();
         }
     }
