@@ -238,7 +238,7 @@ namespace Microsoft.CSharp.Expressions
             return new BlockCSharpExpression(variablesList, statementsList, returnLabel);
         }
 
-        private static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
+        internal static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
         {
             var variablesList = variables.ToReadOnly();
             RequiresNotNullItems(variablesList, paramName);
