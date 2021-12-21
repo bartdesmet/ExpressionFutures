@@ -230,8 +230,18 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="BlockCSharpExpression"/>.</returns>
         public static BlockCSharpExpression Block(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget returnLabel)
         {
+            var variablesList = CheckUniqueVariables(variables, nameof(variables));
+
+            var statementsList = statements.ToReadOnly();
+            RequiresNotNullItems(statementsList, nameof(statements));
+
+            return new BlockCSharpExpression(variablesList, statementsList, returnLabel);
+        }
+
+        private static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
+        {
             var variablesList = variables.ToReadOnly();
-            RequiresNotNullItems(variablesList, nameof(variables));
+            RequiresNotNullItems(variablesList, paramName);
 
             var uniqueVariables = new HashSet<ParameterExpression>();
 
@@ -243,10 +253,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            var statementsList = statements.ToReadOnly();
-            RequiresNotNullItems(statementsList, nameof(statements));
-
-            return new BlockCSharpExpression(variablesList, statementsList, returnLabel);
+            return variablesList;
         }
     }
 

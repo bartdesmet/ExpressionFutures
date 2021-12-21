@@ -77,19 +77,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="SwitchExpressionArm"/>.</returns>
         public static SwitchExpressionArm SwitchExpressionArm(IEnumerable<ParameterExpression> variables, CSharpPattern pattern, Expression whenClause, Expression value)
         {
-            var variablesList = variables.ToReadOnly();
-
-            RequiresNotNullItems(variablesList, nameof(variables));
-
-            var uniqueVariables = new HashSet<ParameterExpression>();
-
-            foreach (var variable in variablesList)
-            {
-                if (!uniqueVariables.Add(variable))
-                {
-                    throw LinqError.DuplicateVariable(variable);
-                }
-            }
+            var variablesList = CheckUniqueVariables(variables, nameof(variables));
 
             RequiresNotNull(pattern, nameof(pattern));
 
