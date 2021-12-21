@@ -826,6 +826,11 @@ namespace Microsoft.CSharp.Expressions
                 args.Add(Visit(nameof(node.Declarations), node.Declarations, Visit));
             }
 
+            if (node.PatternDispose != null)
+            {
+                args.Add(new XElement(nameof(node.PatternDispose), Visit(node.PatternDispose)));
+            }
+
             args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
 
             return Push(node, args);

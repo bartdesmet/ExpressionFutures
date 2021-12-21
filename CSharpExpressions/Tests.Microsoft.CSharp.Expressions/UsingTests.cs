@@ -72,13 +72,13 @@ namespace Tests
             var body = Expression.Empty();
             var res = CSharpExpression.Using(resource, body);
 
-            Assert.AreSame(res, res.Update(res.Variables, res.Resource, res.Declarations, res.Body, res.AwaitInfo));
+            Assert.AreSame(res, res.Update(res.Variables, res.Resource, res.Declarations, res.Body, res.AwaitInfo, res.PatternDispose));
 
             var newResource = Expression.Default(typeof(IDisposable));
             var newBody = Expression.Empty();
 
-            var upd1 = res.Update(res.Variables, newResource, res.Declarations, res.Body, res.AwaitInfo);
-            var upd2 = res.Update(res.Variables, res.Resource, res.Declarations, newBody, res.AwaitInfo);
+            var upd1 = res.Update(res.Variables, newResource, res.Declarations, res.Body, res.AwaitInfo, res.PatternDispose);
+            var upd2 = res.Update(res.Variables, res.Resource, res.Declarations, newBody, res.AwaitInfo, res.PatternDispose);
 
             Assert.AreSame(res.Variables, upd1.Variables);
             Assert.AreSame(newResource, upd1.Resource);
@@ -104,7 +104,7 @@ namespace Tests
             Assert.AreSame(variable, res.Declarations[0].Variable);
             Assert.AreSame(resource, res.Declarations[0].Expression);
 
-            Assert.AreSame(res, res.Update(res.Variables, res.Resource, res.Declarations, res.Body, res.AwaitInfo));
+            Assert.AreSame(res, res.Update(res.Variables, res.Resource, res.Declarations, res.Body, res.AwaitInfo, res.PatternDispose));
 
             // REVIEW: The overlap between variables and declarations is a bit messy.
 
@@ -115,8 +115,8 @@ namespace Tests
             var newResources = new[] { newDeclaration };
             var newBody = Expression.Empty();
 
-            var upd1 = res.Update(newVariables, res.Resource, newResources, res.Body, res.AwaitInfo);
-            var upd2 = res.Update(res.Variables, res.Resource, res.Declarations, newBody, res.AwaitInfo);
+            var upd1 = res.Update(newVariables, res.Resource, newResources, res.Body, res.AwaitInfo, res.PatternDispose);
+            var upd2 = res.Update(res.Variables, res.Resource, res.Declarations, newBody, res.AwaitInfo, res.PatternDispose);
 
             Assert.IsTrue(newVariables.SequenceEqual(upd1.Variables));
             Assert.IsTrue(newResources.SequenceEqual(upd1.Declarations));

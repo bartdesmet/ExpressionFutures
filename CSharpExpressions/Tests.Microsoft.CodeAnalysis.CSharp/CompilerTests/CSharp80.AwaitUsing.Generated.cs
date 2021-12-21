@@ -110,6 +110,97 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CA8_D276() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_F768_2A76()
+        {
+            // (Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d.ConfigureAwait(false)) ; })
+            var actual = GetDebugView(@"(Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d.ConfigureAwait(false)) ; })");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.IAsyncDisposable,System.Threading.Tasks.Task]"">
+  <Parameters>
+    <Parameter Type=""System.IAsyncDisposable"" Id=""0"" Name=""d"" />
+  </Parameters>
+  <Body>
+    <Invoke Type=""System.Threading.Tasks.Task"">
+      <Expression>
+        <CSharpAsyncLambda Type=""System.Func`2[System.IAsyncDisposable,System.Threading.Tasks.Task]"">
+          <Parameters>
+            <Parameter Type=""System.IAsyncDisposable"" Id=""0"" Name=""d"" />
+          </Parameters>
+          <Body>
+            <CSharpBlock Type=""System.Void"">
+              <Statements>
+                <CSharpUsing Type=""System.Void"">
+                  <AwaitInfo>
+                    <StaticAwaitInfo IsCompleted=""Boolean IsCompleted"" GetResult=""Void GetResult()"">
+                      <GetAwaiter>
+                        <Lambda Type=""System.Func`2[System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable,System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable+ConfiguredValueTaskAwaiter]"">
+                          <Parameters>
+                            <Parameter Type=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable"" Id=""1"" Name=""p"" />
+                          </Parameters>
+                          <Body>
+                            <Call Type=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable+ConfiguredValueTaskAwaiter"" Method=""ConfiguredValueTaskAwaiter GetAwaiter()"">
+                              <Object>
+                                <Parameter Type=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable"" Id=""1"" Name=""p"" />
+                              </Object>
+                              <Arguments />
+                            </Call>
+                          </Body>
+                        </Lambda>
+                      </GetAwaiter>
+                    </StaticAwaitInfo>
+                  </AwaitInfo>
+                  <Resource>
+                    <Call Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Method=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable ConfigureAwait(System.IAsyncDisposable, Boolean)"">
+                      <Arguments>
+                        <Parameter Type=""System.IAsyncDisposable"" Id=""0"" Name=""d"" />
+                        <Constant Type=""System.Boolean"" Value=""false"" />
+                      </Arguments>
+                    </Call>
+                  </Resource>
+                  <PatternDispose>
+                    <Lambda Type=""System.Func`2[System.Runtime.CompilerServices.ConfiguredAsyncDisposable,System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable]"">
+                      <Parameters>
+                        <Parameter Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Id=""2"" Name=""d"" />
+                      </Parameters>
+                      <Body>
+                        <Call Type=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable"" Method=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable DisposeAsync()"">
+                          <Object>
+                            <Parameter Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Id=""2"" Name=""d"" />
+                          </Object>
+                          <Arguments />
+                        </Call>
+                      </Body>
+                    </Lambda>
+                  </PatternDispose>
+                  <Body>
+                    <Block Type=""System.Void"">
+                      <Expressions>
+                        <Default Type=""System.Void"" />
+                      </Expressions>
+                    </Block>
+                  </Body>
+                </CSharpUsing>
+              </Statements>
+              <ReturnLabel>
+                <LabelTarget Type=""System.Void"" Id=""3"" />
+              </ReturnLabel>
+            </CSharpBlock>
+          </Body>
+        </CSharpAsyncLambda>
+      </Expression>
+      <Arguments>
+        <Parameter Type=""System.IAsyncDisposable"" Id=""0"" Name=""d"" />
+      </Arguments>
+    </Invoke>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_F768_2A76();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F768_2A76() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -137,6 +228,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Reviewed
         {
             public override void CompilerTest_5CA8_D276() => OK();
+            public override void CompilerTest_F768_2A76() => OK();
         }
     }
 }

@@ -169,7 +169,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         resource: null,
                         declarations,
                         body,
-                        node.AwaitInfo
+                        node.AwaitInfo,
+                        VisitAndConvert(node.PatternDispose, nameof(VisitUsing))
                     );
 
                 return res;
@@ -178,16 +179,21 @@ namespace Microsoft.CSharp.Expressions.Compiler
             {
                 PushScope(node.Variables);
 
-                var res =
-                    node.Update(
-                        VisitAndConvert(node.Variables, nameof(VisitUsing)),
-                        Visit(node.Resource),
-                        declarations: null,
-                        Visit(node.Body),
-                        node.AwaitInfo
-                    );
+                var variables = VisitAndConvert(node.Variables, nameof(VisitUsing));
+                var resource = Visit(node.Resource);
+                var body = Visit(node.Body);
 
                 PopScope(node.Variables);
+
+                var res =
+                    node.Update(
+                        variables,
+                        resource,
+                        declarations: null,
+                        body,
+                        node.AwaitInfo,
+                        VisitAndConvert(node.PatternDispose, nameof(VisitUsing))
+                    );
 
                 return res;
             }

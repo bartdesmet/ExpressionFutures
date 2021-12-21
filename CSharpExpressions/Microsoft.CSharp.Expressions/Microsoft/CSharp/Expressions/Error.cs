@@ -1171,6 +1171,30 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.UsingVariableNotInScope(p0));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The Dispose method of a using statement should return void."
+        /// </summary>
+        internal static Exception UsingDisposeShouldReturnVoid()
+        {
+            return new ArgumentException(Strings.UsingDisposeShouldReturnVoid);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A pattern dispose lambda for a using statement should have one parameter."
+        /// </summary>
+        internal static Exception UsingPatternDisposeShouldHaveOneParameter()
+        {
+            return new ArgumentException(Strings.UsingPatternDisposeShouldHaveOneParameter);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement."
+        /// </summary>
+        internal static Exception UsingPatternDisposeInputNotCompatibleWithResource(object p0, object p1)
+        {
+            return new ArgumentException(Strings.UsingPatternDisposeInputNotCompatibleWithResource(p0, p1));
+        }
+
     }
 
     /// <summary>
@@ -2488,6 +2512,36 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.UsingVariableNotInScope, p0);
         }
 
+        /// <summary>
+        /// A string like "The Dispose method of a using statement should return void."
+        /// </summary>
+        internal static string UsingDisposeShouldReturnVoid
+        {
+            get
+            {
+                return SR.UsingDisposeShouldReturnVoid;
+            }
+        }
+
+        /// <summary>
+        /// A string like "A pattern dispose lambda for a using statement should have one parameter."
+        /// </summary>
+        internal static string UsingPatternDisposeShouldHaveOneParameter
+        {
+            get
+            {
+                return SR.UsingPatternDisposeShouldHaveOneParameter;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement."
+        /// </summary>
+        internal static string UsingPatternDisposeInputNotCompatibleWithResource(object p0, object p1)
+        {
+            return SR.Format(SR.UsingPatternDisposeInputNotCompatibleWithResource, p0, p1);
+        }
+
     }
 }
 
@@ -2640,5 +2694,8 @@ namespace System
         public const string InvalidUsingStatement = "A using statement should either have a single expression or a declaration list.";
         public const string UsingVariableDeclarationsShouldBeConsistentlyTyped = "All variables declared in a using statement should have the same type.";
         public const string UsingVariableNotInScope = "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement.";
+        public const string UsingDisposeShouldReturnVoid = "The Dispose method of a using statement should return void.";
+        public const string UsingPatternDisposeShouldHaveOneParameter = "A pattern dispose lambda for a using statement should have one parameter.";
+        public const string UsingPatternDisposeInputNotCompatibleWithResource = "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement.";
     }
 }

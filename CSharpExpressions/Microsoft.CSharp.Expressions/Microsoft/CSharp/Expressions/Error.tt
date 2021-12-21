@@ -156,6 +156,9 @@ var errors = new[]
     new { Name = "InvalidUsingStatement", ExceptionType = "ArgumentException", Args = 0, Message = "A using statement should either have a single expression or a declaration list." },
     new { Name = "UsingVariableDeclarationsShouldBeConsistentlyTyped", ExceptionType = "ArgumentException", Args = 0, Message = "All variables declared in a using statement should have the same type." },
     new { Name = "UsingVariableNotInScope", ExceptionType = "ArgumentException", Args = 1, Message = "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement." },
+    new { Name = "UsingDisposeShouldReturnVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The Dispose method of a using statement should return void." },
+    new { Name = "UsingPatternDisposeShouldHaveOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "A pattern dispose lambda for a using statement should have one parameter." },
+    new { Name = "UsingPatternDisposeInputNotCompatibleWithResource", ExceptionType = "ArgumentException", Args = 2, Message = "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

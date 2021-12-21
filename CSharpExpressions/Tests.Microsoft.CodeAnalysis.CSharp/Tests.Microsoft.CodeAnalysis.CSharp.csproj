@@ -55,6 +55,10 @@
     <Reference Include="System.Reflection.Metadata">
       <HintPath>..\..\Binaries\System.Reflection.Metadata.dll</HintPath>
     </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -300,6 +304,7 @@
     <Compile Include="CrossCheckTests\CSharp30.Statements.Switch.cs" />
     <Compile Include="CrossCheckTests\CSharp30.Statements.If.cs" />
     <Compile Include="CrossCheckTests\CSharp70.DeconstructionAssignment.cs" />
+    <Compile Include="CrossCheckTests\CSharp80.AwaitUsing.cs" />
     <Compile Include="CrossCheckTests\CSharp80.SwitchExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp90.PatternMatching.cs" />
     <Compile Include="CrossCheckTests\CSharpN100.PatternMatching.cs" />

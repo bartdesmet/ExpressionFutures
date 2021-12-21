@@ -2036,6 +2036,7 @@ namespace Microsoft.CSharp.Expressions
         public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.LocalDeclaration> Declarations => _node.Declarations;
         public System.Boolean IsAsync => _node.IsAsync;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.LambdaExpression PatternDispose => _node.PatternDispose;
         public System.Linq.Expressions.Expression Resource => _node.Resource;
         public System.Type Type => _node.Type;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;

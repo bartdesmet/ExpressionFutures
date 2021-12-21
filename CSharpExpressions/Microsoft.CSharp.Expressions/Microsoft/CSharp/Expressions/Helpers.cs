@@ -400,7 +400,7 @@ namespace Microsoft.CSharp.Expressions
 
             // REVIEW: This may pose challenges on .NET Native
             var map = type.GetInterfaceMap(disposableInterface);
-            return map.TargetMethods.Single(); // NB: IDisposable has only one method
+            return map.TargetMethods.Single(); // NB: I[Async]Disposable has only one method
         }
 
         public static bool IsVector(this Type type)
