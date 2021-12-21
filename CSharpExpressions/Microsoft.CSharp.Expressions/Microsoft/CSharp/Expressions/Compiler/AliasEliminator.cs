@@ -34,7 +34,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             protected override void Push(IEnumerable<ParameterExpression> variables)
             {
-                var subst = new Dictionary<ParameterExpression, ParameterExpression>();
+                var subst = new Dictionary<ParameterExpression, Expression>();
 
                 foreach (var var in variables)
                 {

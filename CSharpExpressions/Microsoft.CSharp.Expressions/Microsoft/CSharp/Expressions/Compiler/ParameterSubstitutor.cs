@@ -13,22 +13,22 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class ParameterSubstitutor
     {
-        public static Expression Substitute(Expression expression, ParameterExpression original, ParameterExpression replacement)
+        public static Expression Substitute(Expression expression, ParameterExpression original, Expression replacement)
         {
-            return Substitute(expression, new Dictionary<ParameterExpression, ParameterExpression> { { original, replacement } });
+            return Substitute(expression, new Dictionary<ParameterExpression, Expression> { { original, replacement } });
         }
 
-        public static Expression Substitute(Expression expression, IDictionary<ParameterExpression, ParameterExpression> substitutions)
+        public static Expression Substitute(Expression expression, IDictionary<ParameterExpression, Expression> substitutions)
         {
             return new Impl(substitutions).Visit(expression);
         }
 
-        class Impl : ParameterSubstitutionVisitor
+        private sealed class Impl : ParameterSubstitutionVisitor
         {
-            private readonly IDictionary<ParameterExpression, ParameterExpression> _substitutions;
+            private readonly IDictionary<ParameterExpression, Expression> _substitutions;
             private readonly Stack<HashSet<ParameterExpression>> _env = new Stack<HashSet<ParameterExpression>>();
 
-            public Impl(IDictionary<ParameterExpression, ParameterExpression> substitutions)
+            public Impl(IDictionary<ParameterExpression, Expression> substitutions)
             {
                 _substitutions = substitutions;
             }
@@ -45,7 +45,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-                if (_substitutions.TryGetValue(node, out ParameterExpression replacement))
+                if (_substitutions.TryGetValue(node, out Expression replacement))
                 {
                     var found = false;
 

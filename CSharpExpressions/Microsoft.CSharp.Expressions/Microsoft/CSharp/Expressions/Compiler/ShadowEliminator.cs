@@ -36,7 +36,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             protected override void Push(IEnumerable<ParameterExpression> variables)
             {
                 var newEnv = new HashSet<ParameterExpression>(variables);
-                var subst = new Dictionary<ParameterExpression, ParameterExpression>();
+                var subst = new Dictionary<ParameterExpression, Expression>();
 
                 foreach (var env in _env)
                 {
