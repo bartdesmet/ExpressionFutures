@@ -18,6 +18,9 @@ var name = "CSharp80_AwaitUsing";
 var exprs = new[]
 {
     "(Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d) ; })",
+    // "(Expression<Action<object>>)(o => { using (o is IDisposable d ? d : null) {} })",
+    // "(Expression<Action>)(() => { using (var fs = File.OpenRead("foo.txt")) {} })",
+    // NB: Need to update scope tracking visitor when we noodle around with Using.
 };
 #>
 <#@ include file="CompilerTests.t4" #>

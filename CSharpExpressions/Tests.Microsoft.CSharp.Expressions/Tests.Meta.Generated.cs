@@ -1110,12 +1110,19 @@ namespace Tests
 
         private Expression expr55 = CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Empty());
         private string dbg55 = @"<CSharpUsing Type=""System.Void"">
-  <Variable>
+  <Variables>
     <Parameter Type=""System.IDisposable"" Id=""0"" />
-  </Variable>
-  <Resource>
-    <Default Type=""System.IDisposable"" />
-  </Resource>
+  </Variables>
+  <Declarations>
+    <LocalDeclaration>
+      <Variable>
+        <Parameter Type=""System.IDisposable"" Id=""0"" />
+      </Variable>
+      <Expression>
+        <Default Type=""System.IDisposable"" />
+      </Expression>
+    </LocalDeclaration>
+  </Declarations>
   <Body>
     <Default Type=""System.Void"" />
   </Body>

@@ -153,6 +153,9 @@ var errors = new[]
     new { Name = "DeconstructingAssignmentStructureMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'." },
     new { Name = "DeconstructingAssignmentTypeMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The computed result tuple type '{0}' does not match the specified expression type '{1}'." },
     new { Name = "DeconstructingComponentAndConversionIncompatible", ExceptionType = "ArgumentException", Args = 4, Message = "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'." },
+    new { Name = "InvalidUsingStatement", ExceptionType = "ArgumentException", Args = 0, Message = "A using statement should either have a single expression or a declaration list." },
+    new { Name = "UsingVariableDeclarationsShouldBeConsistentlyTyped", ExceptionType = "ArgumentException", Args = 0, Message = "All variables declared in a using statement should have the same type." },
+    new { Name = "UsingVariableNotInScope", ExceptionType = "ArgumentException", Args = 1, Message = "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

@@ -63,6 +63,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class LocalDeclaration
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -95,6 +100,8 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(Conversion conversion) => Visit(conversion);
 
         public XNode GetDebugView(SwitchExpressionArm arm) => Visit(arm);
+
+        public XNode GetDebugView(LocalDeclaration declaration) => Visit(declaration);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -805,16 +812,37 @@ namespace Microsoft.CSharp.Expressions
                 args.Add(new XElement(nameof(node.AwaitInfo), Visit(node.AwaitInfo)));
             }
 
-            if (node.Variable != null)
+            if (node.Variables.Count > 0)
             {
-                args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
+                args.Add(Visit(nameof(node.Variables), node.Variables));
             }
 
-            args.Add(new XElement(nameof(node.Resource), Visit(node.Resource)));
+            if (node.Resource != null)
+            {
+                args.Add(new XElement(nameof(node.Resource), Visit(node.Resource)));
+            }
+            else
+            {
+                args.Add(Visit(nameof(node.Declarations), node.Declarations, Visit));
+            }
 
             args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
 
             return Push(node, args);
+        }
+
+        protected internal override LocalDeclaration VisitLocalDeclaration(LocalDeclaration node)
+        {
+            var nodes = new List<object>
+            {
+                new XElement(nameof(node.Variable), Visit(node.Variable)),
+                new XElement(nameof(node.Expression), Visit(node.Expression))
+            };
+
+            var res = new XElement(nameof(LocalDeclaration), nodes);
+            _nodes.Push(res);
+
+            return node;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -1094,6 +1122,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(SwitchExpressionArm node)
         {
             VisitSwitchExpressionArm(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(LocalDeclaration node)
+        {
+            VisitLocalDeclaration(node);
             return _nodes.Pop();
         }
 

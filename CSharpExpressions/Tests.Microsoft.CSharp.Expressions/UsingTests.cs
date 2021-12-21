@@ -5,7 +5,9 @@
 using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Dynamic.Utils;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using static Tests.TestHelpers;
 
@@ -45,7 +47,7 @@ namespace Tests
 
                 Assert.AreEqual(CSharpExpressionType.Using, res.CSharpNodeType);
                 Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsNull(res.Variable);
+                Assert.IsNull(res.Declarations);
                 Assert.AreSame(resource, res.Resource);
                 Assert.AreSame(body, res.Body);
             }
@@ -55,41 +57,74 @@ namespace Tests
 
                 Assert.AreEqual(CSharpExpressionType.Using, res.CSharpNodeType);
                 Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(variable, res.Variable);
-                Assert.AreSame(resource, res.Resource);
+                Assert.IsNull(res.Resource);
+                Assert.AreEqual(1, res.Declarations.Count);
+                Assert.AreSame(variable, res.Declarations[0].Variable);
+                Assert.AreSame(resource, res.Declarations[0].Expression);
                 Assert.AreSame(body, res.Body);
             }
         }
 
         [TestMethod]
-        public void Using_Update()
+        public void Using_Update_WithResource()
+        {
+            var resource = Expression.Default(typeof(IDisposable));
+            var body = Expression.Empty();
+            var res = CSharpExpression.Using(resource, body);
+
+            Assert.AreSame(res, res.Update(res.Variables, res.Resource, res.Declarations, res.Body, res.AwaitInfo));
+
+            var newResource = Expression.Default(typeof(IDisposable));
+            var newBody = Expression.Empty();
+
+            var upd1 = res.Update(res.Variables, newResource, res.Declarations, res.Body, res.AwaitInfo);
+            var upd2 = res.Update(res.Variables, res.Resource, res.Declarations, newBody, res.AwaitInfo);
+
+            Assert.AreSame(res.Variables, upd1.Variables);
+            Assert.AreSame(newResource, upd1.Resource);
+            Assert.AreSame(res.Declarations, upd1.Declarations);
+            Assert.AreSame(res.Body, upd1.Body);
+
+            Assert.AreSame(res.Variables, upd2.Variables);
+            Assert.AreSame(res.Resource, upd2.Resource);
+            Assert.AreSame(res.Declarations, upd2.Declarations);
+            Assert.AreSame(newBody, upd2.Body);
+        }
+
+        [TestMethod]
+        public void Using_Update_WithDeclarations()
         {
             var variable = Expression.Parameter(typeof(IDisposable));
             var resource = Expression.Default(typeof(IDisposable));
             var body = Expression.Empty();
             var res = CSharpExpression.Using(variable, resource, body);
 
-            Assert.AreSame(res, res.Update(res.Variable, res.Resource, res.Body, res.AwaitInfo));
+            Assert.IsTrue(res.Variables.SequenceEqual(new[] { variable }));
+            Assert.AreEqual(1, res.Declarations.Count);
+            Assert.AreSame(variable, res.Declarations[0].Variable);
+            Assert.AreSame(resource, res.Declarations[0].Expression);
+
+            Assert.AreSame(res, res.Update(res.Variables, res.Resource, res.Declarations, res.Body, res.AwaitInfo));
+
+            // REVIEW: The overlap between variables and declarations is a bit messy.
 
             var newVariable = Expression.Parameter(typeof(IDisposable));
+            var newVariables = new[] { newVariable };
             var newResource = Expression.Default(typeof(IDisposable));
+            var newDeclaration = res.Declarations[0].Update(newVariable, newResource);
+            var newResources = new[] { newDeclaration };
             var newBody = Expression.Empty();
 
-            var upd1 = res.Update(newVariable, res.Resource, res.Body, res.AwaitInfo);
-            var upd2 = res.Update(res.Variable, newResource, res.Body, res.AwaitInfo);
-            var upd3 = res.Update(res.Variable, res.Resource, newBody, res.AwaitInfo);
+            var upd1 = res.Update(newVariables, res.Resource, newResources, res.Body, res.AwaitInfo);
+            var upd2 = res.Update(res.Variables, res.Resource, res.Declarations, newBody, res.AwaitInfo);
 
-            Assert.AreSame(newVariable, upd1.Variable);
-            Assert.AreSame(res.Resource, upd1.Resource);
+            Assert.IsTrue(newVariables.SequenceEqual(upd1.Variables));
+            Assert.IsTrue(newResources.SequenceEqual(upd1.Declarations));
             Assert.AreSame(res.Body, upd1.Body);
 
-            Assert.AreSame(res.Variable, upd2.Variable);
-            Assert.AreSame(newResource, upd2.Resource);
-            Assert.AreSame(res.Body, upd2.Body);
-
-            Assert.AreSame(res.Variable, upd3.Variable);
-            Assert.AreSame(res.Resource, upd3.Resource);
-            Assert.AreSame(newBody, upd3.Body);
+            Assert.AreSame(res.Variables, upd2.Variables);
+            Assert.AreSame(res.Declarations, upd2.Declarations);
+            Assert.AreSame(newBody, upd2.Body);
         }
 
         [TestMethod]

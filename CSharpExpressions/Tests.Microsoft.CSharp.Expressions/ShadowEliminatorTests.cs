@@ -6,6 +6,7 @@ using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Tests
@@ -134,13 +135,13 @@ namespace Tests
             var e = CSharpExpression.Using(x, y, CSharpExpression.Using(x, y, x));
             var r = (UsingCSharpStatement)ShadowEliminator.Eliminate(e);
 
-            var v1 = r.Variable;
+            var v1 = r.Variables;
             var e1 = (UsingCSharpStatement)r.Body;
-            var v2 = e1.Variable;
+            var v2 = e1.Variables;
             var e2 = e1.Body;
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.AreSame(v2.Single(), e2);
+            Assert.AreNotSame(v1.Single(), v2.Single());
         }
 
         [TestMethod]

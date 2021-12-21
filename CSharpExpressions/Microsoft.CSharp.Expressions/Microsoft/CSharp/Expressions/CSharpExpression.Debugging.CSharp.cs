@@ -800,15 +800,29 @@ namespace Microsoft.CSharp.Expressions
 
             visitor.Out("using (");
 
-            if (Variable != null)
+            if (Resource != null)
             {
-                visitor.Out(visitor.ToCSharp(Variable.Type));
-                visitor.Out(" ");
-                visitor.Out(visitor.GetVariableName(Variable, true));
-                visitor.Out(" = ");
+                visitor.VisitExpression(Resource);
             }
+            else
+            {
+                visitor.Out(visitor.ToCSharp(Declarations[0].Variable.Type));
+                visitor.Out(" ");
 
-            visitor.VisitExpression(Resource);
+                for (int i = 0, n = Declarations.Count; i < n; i++)
+                {
+                    var resource = Declarations[i];
+
+                    visitor.Out(visitor.GetVariableName(resource.Variable, true));
+                    visitor.Out(" = ");
+                    visitor.VisitExpression(resource.Expression);
+
+                    if (i != n - 1)
+                    {
+                        visitor.Out(", ");
+                    }
+                }
+            }
 
             visitor.Out(")");
 

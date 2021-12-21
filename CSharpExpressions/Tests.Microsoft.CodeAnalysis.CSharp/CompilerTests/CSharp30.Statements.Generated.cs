@@ -2394,7 +2394,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_62CA_03A6() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_BB7C_2A2A()
+        public void CompilerTest_BB7C_25AF()
         {
             // (Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (var e = d) Console.WriteLine(e); })");
@@ -2407,12 +2407,19 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpUsing Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.IDisposable"" Id=""1"" Name=""e"" />
-          </Variable>
-          <Resource>
-            <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
-          </Resource>
+          </Variables>
+          <Declarations>
+            <LocalDeclaration>
+              <Variable>
+                <Parameter Type=""System.IDisposable"" Id=""1"" Name=""e"" />
+              </Variable>
+              <Expression>
+                <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
+              </Expression>
+            </LocalDeclaration>
+          </Declarations>
           <Body>
             <Call Type=""System.Void"" Method=""Void WriteLine(System.Object)"">
               <Arguments>
@@ -2429,13 +2436,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_BB7C_2A2A();
+            Verify.CompilerTest_BB7C_25AF();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_2A2A() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BB7C_25AF() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_51A3_E043()
+        public void CompilerTest_51A3_8AB4()
         {
             // (Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })
             var actual = GetDebugView(@"(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })");
@@ -2448,12 +2455,19 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpUsing Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.IDisposable"" Id=""1"" Name=""e"" />
-          </Variable>
-          <Resource>
-            <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
-          </Resource>
+          </Variables>
+          <Declarations>
+            <LocalDeclaration>
+              <Variable>
+                <Parameter Type=""System.IDisposable"" Id=""1"" Name=""e"" />
+              </Variable>
+              <Expression>
+                <Parameter Type=""System.IDisposable"" Id=""0"" Name=""d"" />
+              </Expression>
+            </LocalDeclaration>
+          </Declarations>
           <Body>
             <Block Type=""System.Void"">
               <Expressions>
@@ -2474,13 +2488,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_51A3_E043();
+            Verify.CompilerTest_51A3_8AB4();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_51A3_E043() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_51A3_8AB4() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_57C3_49DB()
+        public void CompilerTest_57C3_FE40()
         {
             // (Expression<Action>)(() => { using (var fs = File.OpenRead("foo.txt")) { } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { using (var fs = File.OpenRead(""foo.txt"")) { } })");
@@ -2491,16 +2505,23 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpUsing Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.IO.FileStream"" Id=""0"" Name=""fs"" />
-          </Variable>
-          <Resource>
-            <Call Type=""System.IO.FileStream"" Method=""System.IO.FileStream OpenRead(System.String)"">
-              <Arguments>
-                <Constant Type=""System.String"" Value=""foo.txt"" />
-              </Arguments>
-            </Call>
-          </Resource>
+          </Variables>
+          <Declarations>
+            <LocalDeclaration>
+              <Variable>
+                <Parameter Type=""System.IO.FileStream"" Id=""0"" Name=""fs"" />
+              </Variable>
+              <Expression>
+                <Call Type=""System.IO.FileStream"" Method=""System.IO.FileStream OpenRead(System.String)"">
+                  <Arguments>
+                    <Constant Type=""System.String"" Value=""foo.txt"" />
+                  </Arguments>
+                </Call>
+              </Expression>
+            </LocalDeclaration>
+          </Declarations>
           <Body>
             <Default Type=""System.Void"" />
           </Body>
@@ -2513,13 +2534,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_57C3_49DB();
+            Verify.CompilerTest_57C3_FE40();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_57C3_49DB() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_57C3_FE40() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_7AF8_8902()
+        public void CompilerTest_7AF8_56F5()
         {
             // (Expression<Action>)(() => { using (FileStream fs1 = File.OpenRead("foo.txt"), fs2 = File.OpenRead("bar.txt")) { } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { using (FileStream fs1 = File.OpenRead(""foo.txt""), fs2 = File.OpenRead(""bar.txt"")) { } })");
@@ -2530,32 +2551,38 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpUsing Type=""System.Void"">
-          <Variable>
+          <Variables>
             <Parameter Type=""System.IO.FileStream"" Id=""0"" Name=""fs1"" />
-          </Variable>
-          <Resource>
-            <Call Type=""System.IO.FileStream"" Method=""System.IO.FileStream OpenRead(System.String)"">
-              <Arguments>
-                <Constant Type=""System.String"" Value=""foo.txt"" />
-              </Arguments>
-            </Call>
-          </Resource>
-          <Body>
-            <CSharpUsing Type=""System.Void"">
+            <Parameter Type=""System.IO.FileStream"" Id=""1"" Name=""fs2"" />
+          </Variables>
+          <Declarations>
+            <LocalDeclaration>
+              <Variable>
+                <Parameter Type=""System.IO.FileStream"" Id=""0"" Name=""fs1"" />
+              </Variable>
+              <Expression>
+                <Call Type=""System.IO.FileStream"" Method=""System.IO.FileStream OpenRead(System.String)"">
+                  <Arguments>
+                    <Constant Type=""System.String"" Value=""foo.txt"" />
+                  </Arguments>
+                </Call>
+              </Expression>
+            </LocalDeclaration>
+            <LocalDeclaration>
               <Variable>
                 <Parameter Type=""System.IO.FileStream"" Id=""1"" Name=""fs2"" />
               </Variable>
-              <Resource>
+              <Expression>
                 <Call Type=""System.IO.FileStream"" Method=""System.IO.FileStream OpenRead(System.String)"">
                   <Arguments>
                     <Constant Type=""System.String"" Value=""bar.txt"" />
                   </Arguments>
                 </Call>
-              </Resource>
-              <Body>
-                <Default Type=""System.Void"" />
-              </Body>
-            </CSharpUsing>
+              </Expression>
+            </LocalDeclaration>
+          </Declarations>
+          <Body>
+            <Default Type=""System.Void"" />
           </Body>
         </CSharpUsing>
       </Statements>
@@ -2566,10 +2593,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_7AF8_8902();
+            Verify.CompilerTest_7AF8_56F5();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7AF8_8902() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7AF8_56F5() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_2CF2_18B2()
@@ -3785,10 +3812,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_8AE9_7D52() => OK();
             public override void CompilerTest_5598_03A6() => OK();
             public override void CompilerTest_62CA_03A6() => OK();
-            public override void CompilerTest_BB7C_2A2A() => OK();
-            public override void CompilerTest_51A3_E043() => OK();
-            public override void CompilerTest_57C3_49DB() => OK();
-            public override void CompilerTest_7AF8_8902() => OK();
+            public override void CompilerTest_BB7C_25AF() => OK();
+            public override void CompilerTest_51A3_8AB4() => OK();
+            public override void CompilerTest_57C3_FE40() => OK();
+            public override void CompilerTest_7AF8_56F5() => OK();
             public override void CompilerTest_2CF2_18B2() => OK();
             public override void CompilerTest_CD60_A086() => OK();
             public override void CompilerTest_880F_A24B() => OK();

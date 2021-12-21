@@ -87,32 +87,110 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         /// <summary>
-        /// Visits a <see cref="UsingCSharpStatement"/>, keeping track of the (optional) variable declared in <see cref="UsingCSharpStatement.Variable"/>.
+        /// Visits a <see cref="UsingCSharpStatement"/>, keeping track of the (optional) variables declared in <see cref="UsingCSharpStatement.Variables"/>.
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
-            // NB: The variable is not in scope of the resource. In a LINQ expression tree, the ParameterExpression
-            //     could be reused in several nested scopes, so the same variable could be used within the resource
-            //     expression and bind to a declaration in a surrounding scope.
+            if (node.Declarations != null)
+            {
+                // NB: There are two sets of variables, those declared by the using statement directly, and those that get introduced
+                //     in support of e.g. pattern matching. We apply a form of rigorous scope tracking for the former, and float up
+                //     the latter to the top level. For example:
+                //
+                //       using (T r1 = o1 is T x ? x : null, r2 = F1(o2)) ...
+                //                     <--------e1-------->       <-e2->
+                //
+                //     introduces three variables, namely r1, x, and r2. It also references variables o1 and o2. For purposes of scope
+                //     tracking, we assume that x is in scope for e1 and e2. This is a simplifying assumption because we don't have a
+                //     more narrow scope at hand. However, for variables r1 and r2, we apply more scrutiny and want to ensure that r1
+                //     is not in scope of e1, but is in scope of e2. Similarly, r2 would not be in scope of a subsequent e3 if we'd
+                //     have more declarations. Finally, all of the variables are in scope of the body of the statement.
 
-            var resource = Visit(node.Resource);
+                // REVIEW: The variable handling here is icky at best. It'd be easier if the locals did not include the declared variables.
 
-            PushScope(node.Variable);
+                var nonDeclaredVariables = new List<ParameterExpression>(node.Variables);
 
-            var res =
-                node.Update(
-                    VisitAndConvert(node.Variable, nameof(VisitUsing)),
-                    resource,
-                    Visit(node.Body),
-                    node.AwaitInfo
-                );
+                foreach (var resource in node.Declarations)
+                {
+                    nonDeclaredVariables.Remove(resource.Variable);
+                }
 
-            PopScope(node.Variable);
+                PushScope(nonDeclaredVariables);
 
-            return res;
+                var variables = new List<ParameterExpression>(node.Variables.Count);
+
+                foreach (var nonDeclaredVariable in nonDeclaredVariables)
+                {
+                    variables.Add(VisitAndConvert(nonDeclaredVariable, nameof(VisitUsing)));
+                }
+
+                Expression VisitDeclarations(int index, List<ParameterExpression> variables, List<LocalDeclaration> newDeclarations)
+                {
+                    if (index == node.Declarations.Count)
+                    {
+                        return Visit(node.Body);
+                    }
+                    else
+                    {
+                        var resource = node.Declarations[index];
+
+                        var expression = Visit(resource.Expression);
+
+                        PushScope(resource.Variable);
+
+                        var variable = VisitAndConvert(resource.Variable, nameof(VisitUsing));
+
+                        variables.Add(variable);
+
+                        var newResource = resource.Update(variable, expression);
+
+                        newDeclarations.Add(newResource);
+
+                        var newBody = VisitDeclarations(index + 1, variables, newDeclarations);
+
+                        PopScope(resource.Variable);
+
+                        return newBody;
+                    }
+                }
+
+                var declarations = new List<LocalDeclaration>();
+
+                var body = VisitDeclarations(index: 0, variables, declarations);
+
+                PopScope(nonDeclaredVariables);
+
+                var res =
+                    node.Update(
+                        variables,
+                        resource: null,
+                        declarations,
+                        body,
+                        node.AwaitInfo
+                    );
+
+                return res;
+            }
+            else
+            {
+                PushScope(node.Variables);
+
+                var res =
+                    node.Update(
+                        VisitAndConvert(node.Variables, nameof(VisitUsing)),
+                        Visit(node.Resource),
+                        declarations: null,
+                        Visit(node.Body),
+                        node.AwaitInfo
+                    );
+
+                PopScope(node.Variables);
+
+                return res;
+            }
         }
 
         /// <summary>

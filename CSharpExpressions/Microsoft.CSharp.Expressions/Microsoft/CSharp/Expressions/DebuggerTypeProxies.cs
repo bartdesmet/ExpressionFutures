@@ -555,6 +555,8 @@ namespace Microsoft.CSharp.Expressions
 
         public string DebugView => _node.DebugView;
 
+        public System.Type InputType => _node.InputType;
+        public System.Type ResultType => _node.ResultType;
     }
 
     [DebuggerTypeProxy(typeof(ConvertDynamicCSharpExpressionProxy))]
@@ -785,6 +787,8 @@ namespace Microsoft.CSharp.Expressions
 
         public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.Conversion> Conversions => _node.Conversions;
         public System.Linq.Expressions.LambdaExpression Deconstruct => _node.Deconstruct;
+        public System.Type InputType => _node.InputType;
+        public System.Type ResultType => _node.ResultType;
     }
 
     [DebuggerTypeProxy(typeof(DiscardCSharpExpressionProxy))]
@@ -1443,6 +1447,27 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
     }
 
+    [DebuggerTypeProxy(typeof(LocalDeclarationProxy))]
+    partial class LocalDeclaration
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class LocalDeclarationProxy
+    {
+        private readonly LocalDeclaration _node;
+
+        public LocalDeclarationProxy(LocalDeclaration node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.Expression Expression => _node.Expression;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+    }
+
     [DebuggerTypeProxy(typeof(LockCSharpStatementProxy))]
     partial class LockCSharpStatement
     {
@@ -1755,6 +1780,8 @@ namespace Microsoft.CSharp.Expressions
         public string DebugView => _node.DebugView;
 
         public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
+        public System.Type InputType => _node.InputType;
+        public System.Type ResultType => _node.ResultType;
     }
 
     [DebuggerTypeProxy(typeof(SwitchCSharpExpressionProxy))]
@@ -2006,11 +2033,12 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.Expression Body => _node.Body;
         public System.Boolean CanReduce => _node.CanReduce;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.LocalDeclaration> Declarations => _node.Declarations;
         public System.Boolean IsAsync => _node.IsAsync;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Resource => _node.Resource;
         public System.Type Type => _node.Type;
-        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
     }
 
     [DebuggerTypeProxy(typeof(VarCSharpPatternProxy))]

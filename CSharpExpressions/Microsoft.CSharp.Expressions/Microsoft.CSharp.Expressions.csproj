@@ -102,6 +102,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\CSharp\Expressions\LocalDeclaration.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MemberInitializer.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\BinaryCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\ConstantCSharpPattern.cs" />

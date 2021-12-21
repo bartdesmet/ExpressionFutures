@@ -1147,6 +1147,30 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.DeconstructingComponentAndConversionIncompatible(p0, p1, p2, p3));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "A using statement should either have a single expression or a declaration list."
+        /// </summary>
+        internal static Exception InvalidUsingStatement()
+        {
+            return new ArgumentException(Strings.InvalidUsingStatement);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "All variables declared in a using statement should have the same type."
+        /// </summary>
+        internal static Exception UsingVariableDeclarationsShouldBeConsistentlyTyped()
+        {
+            return new ArgumentException(Strings.UsingVariableDeclarationsShouldBeConsistentlyTyped);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement."
+        /// </summary>
+        internal static Exception UsingVariableNotInScope(object p0)
+        {
+            return new ArgumentException(Strings.UsingVariableNotInScope(p0));
+        }
+
     }
 
     /// <summary>
@@ -2434,6 +2458,36 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.DeconstructingComponentAndConversionIncompatible, p0, p1, p2, p3);
         }
 
+        /// <summary>
+        /// A string like "A using statement should either have a single expression or a declaration list."
+        /// </summary>
+        internal static string InvalidUsingStatement
+        {
+            get
+            {
+                return SR.InvalidUsingStatement;
+            }
+        }
+
+        /// <summary>
+        /// A string like "All variables declared in a using statement should have the same type."
+        /// </summary>
+        internal static string UsingVariableDeclarationsShouldBeConsistentlyTyped
+        {
+            get
+            {
+                return SR.UsingVariableDeclarationsShouldBeConsistentlyTyped;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement."
+        /// </summary>
+        internal static string UsingVariableNotInScope(object p0)
+        {
+            return SR.Format(SR.UsingVariableNotInScope, p0);
+        }
+
     }
 }
 
@@ -2583,5 +2637,8 @@ namespace System
         public const string DeconstructingAssignmentStructureMismatch = "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'.";
         public const string DeconstructingAssignmentTypeMismatch = "The computed result tuple type '{0}' does not match the specified expression type '{1}'.";
         public const string DeconstructingComponentAndConversionIncompatible = "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'.";
+        public const string InvalidUsingStatement = "A using statement should either have a single expression or a declaration list.";
+        public const string UsingVariableDeclarationsShouldBeConsistentlyTyped = "All variables declared in a using statement should have the same type.";
+        public const string UsingVariableNotInScope = "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement.";
     }
 }

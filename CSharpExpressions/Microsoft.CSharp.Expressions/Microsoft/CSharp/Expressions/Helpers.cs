@@ -19,6 +19,56 @@ namespace Microsoft.CSharp.Expressions
 {
     static class Helpers
     {
+        public static bool SameElements<T>(ref IEnumerable<T> replacement, IReadOnlyList<T> current) where T : class
+        {
+            if (replacement == current) // Relatively common case, so particularly useful to take the short-circuit.
+            {
+                return true;
+            }
+
+            if (replacement == null) // Treat null as empty.
+            {
+                return current.Count == 0;
+            }
+
+            // Ensure arguments is safe to enumerate twice.
+            // If we have to build a collection, build a TrueReadOnlyCollection<T>
+            // so it won't be built a second time if used.
+            if (!(replacement is ICollection<T> replacementCol))
+            {
+                replacement = replacementCol = replacement.ToReadOnly();
+            }
+
+            return SameElementsInCollection(replacementCol, current);
+        }
+
+        public static bool SameElementsInCollection<T>(ICollection<T> replacement, IReadOnlyList<T> current) where T : class
+        {
+            int count = current.Count;
+
+            if (replacement.Count != count)
+            {
+                return false;
+            }
+
+            if (count != 0)
+            {
+                int index = 0;
+
+                foreach (T replacementObject in replacement)
+                {
+                    if (replacementObject != current[index])
+                    {
+                        return false;
+                    }
+
+                    index++;
+                }
+            }
+
+            return true;
+        }
+
         public static bool IsConst(Expression e, bool value)
         {
             return e is ConstantExpression { Value: var val } && val is bool b && b == value;
