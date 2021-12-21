@@ -2599,6 +2599,64 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7AF8_56F5() => INCONCLUSIVE(); }
 
         [TestMethod]
+        public void CompilerTest_7005_B197()
+        {
+            // (Expression<Action<object>>)(o => { using (o is IDisposable d ? d : null) {} })
+            var actual = GetDebugView(@"(Expression<Action<object>>)(o => { using (o is IDisposable d ? d : null) {} })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.Object]"">
+  <Parameters>
+    <Parameter Type=""System.Object"" Id=""0"" Name=""o"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpUsing Type=""System.Void"">
+          <Variables>
+            <Parameter Type=""System.IDisposable"" Id=""1"" Name=""d"" />
+          </Variables>
+          <Resource>
+            <Conditional Type=""System.IDisposable"">
+              <Test>
+                <CSharpIsPattern Type=""System.Boolean"">
+                  <Expression>
+                    <Parameter Type=""System.Object"" Id=""0"" Name=""o"" />
+                  </Expression>
+                  <Pattern>
+                    <DeclarationPattern InputType=""System.Object"" NarrowedType=""System.IDisposable"" Type=""System.IDisposable"">
+                      <Variable>
+                        <Parameter Type=""System.IDisposable"" Id=""1"" Name=""d"" />
+                      </Variable>
+                    </DeclarationPattern>
+                  </Pattern>
+                </CSharpIsPattern>
+              </Test>
+              <IfTrue>
+                <Parameter Type=""System.IDisposable"" Id=""1"" Name=""d"" />
+              </IfTrue>
+              <IfFalse>
+                <Constant Type=""System.IDisposable"" Value=""null"" />
+              </IfFalse>
+            </Conditional>
+          </Resource>
+          <Body>
+            <Default Type=""System.Void"" />
+          </Body>
+        </CSharpUsing>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""2"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7005_B197();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7005_B197() => INCONCLUSIVE(); }
+
+        [TestMethod]
         public void CompilerTest_2CF2_18B2()
         {
             // (Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })
@@ -3816,6 +3874,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_51A3_8AB4() => OK();
             public override void CompilerTest_57C3_FE40() => OK();
             public override void CompilerTest_7AF8_56F5() => OK();
+            public override void CompilerTest_7005_B197() => OK();
             public override void CompilerTest_2CF2_18B2() => OK();
             public override void CompilerTest_CD60_A086() => OK();
             public override void CompilerTest_880F_A24B() => OK();

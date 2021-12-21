@@ -84,6 +84,7 @@ var exprs = new[]
     "(Expression<Action<IDisposable>>)(d => { using (var e = d) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { using (var fs = File.OpenRead(\"foo.txt\")) { } })",
     "(Expression<Action>)(() => { using (FileStream fs1 = File.OpenRead(\"foo.txt\"), fs2 = File.OpenRead(\"bar.txt\")) { } })",
+    "(Expression<Action<object>>)(o => { using (o is IDisposable d ? d : null) {} })",
 
     // Lock
     "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
