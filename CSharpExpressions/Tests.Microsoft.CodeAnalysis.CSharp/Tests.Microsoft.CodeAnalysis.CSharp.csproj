@@ -83,6 +83,89 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CompilerTests\CSharp30.Assignments.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Block.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Block.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Do.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Do.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Empty.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Empty.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.For.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.For.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.ForEach.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.ForEach.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Goto.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Goto.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.If.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.If.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Lock.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Lock.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Return.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Return.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Switch.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Switch.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Throw.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Throw.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Try.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Try.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Using.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Using.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Throw.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Try.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Switch.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Return.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Lock.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.If.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Goto.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.ForEach.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.For.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Empty.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Do.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.Block.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.While.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp30.Statements.While.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.While.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Include="CompilerTests\CSharp50.AsyncAwait.Verify.cs" />
     <Compile Include="CompilerTests\CSharp70.DeconstructionAssignment.Generated.cs">
       <DependentUpon>CSharp70.DeconstructionAssignment.Generated.tt</DependentUpon>
@@ -172,12 +255,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Generated.cs">
-      <DependentUpon>CSharp30.Statements.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <Compile Include="CompilerTests\CSharp30.Statements.Using.Verify.cs" />
     <Compile Include="CompilerTests\CSharp40.Dynamic.Verify.cs" />
     <Compile Include="CompilerTests\CSharp60.NullConditionalExpressions.Verify.cs" />
     <Compile Include="CompilerTests\CSharp60.NullConditionalExpressions.Generated.cs">
@@ -210,6 +288,17 @@
       <DependentUpon>CSharp30.Original.Generated.tt</DependentUpon>
     </Compile>
     <Compile Include="CrossCheckTests\CSharp30.MultiDimensionalArrayInitializers.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Try.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Goto.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Return.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Lock.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Using.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.ForEach.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.For.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Do.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.While.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Switch.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.If.cs" />
     <Compile Include="CrossCheckTests\CSharp70.DeconstructionAssignment.cs" />
     <Compile Include="CrossCheckTests\CSharp80.SwitchExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp90.PatternMatching.cs" />
@@ -227,7 +316,7 @@
     <Compile Include="CrossCheckTests\CSharp50.AsyncAwait.cs" />
     <Compile Include="CrossCheckTests\CSharp40.Dynamic.cs" />
     <Compile Include="CrossCheckTests\CSharp40.NamedAndOptionalParameters.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.cs" />
+    <Compile Include="CrossCheckTests\CSharp30.Statements.Lambda.cs" />
     <Compile Include="CrossCheckTests\CSharp30.Assignments.cs" />
     <Compile Include="CrossCheckTests\CSharp30.Original.cs" />
     <Compile Include="LogAndResult.cs" />
@@ -238,8 +327,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="ReducingTests\CSharp30.Statements.Generated.cs">
-      <DependentUpon>CSharp30.Statements.Generated.tt</DependentUpon>
+    <Compile Include="ReducingTests\CSharp30.Statements.Lock.Generated.cs">
+      <DependentUpon>CSharp30.Statements.Lock.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -251,7 +340,7 @@
     <Compile Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Verify.cs" />
     <Compile Include="ReducingTests\CSharp73.TupleEquality.Verify.cs" />
     <Compile Include="ReducingTests\CSharp30.Assignments.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp30_Statements.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp30_Statements.Lock.Verify.cs" />
     <Compile Include="ReducingTests\CSharp30.Assignments.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -289,6 +378,62 @@
     <Content Include="CompilerTests\CSharp30.Assignments.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Block.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Block.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Do.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Do.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Empty.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Empty.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.For.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.For.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.ForEach.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.ForEach.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Goto.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Goto.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.If.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.If.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Lock.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Lock.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Return.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Return.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Switch.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Switch.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Throw.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Throw.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Try.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Try.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.Using.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Using.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharp30.Statements.While.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.While.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp70.DeconstructionAssignment.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -350,10 +495,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp80.IndexRange.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Generated.cs</LastGenOutput>
-    </Content>
     <Content Include="CompilerTests\CSharp40.Dynamic.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp40.Dynamic.Generated.cs</LastGenOutput>
@@ -378,9 +519,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="ReducingTests\CSharp30.Statements.Generated.tt">
+    <Content Include="ReducingTests\CSharp30.Statements.Lock.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Generated.cs</LastGenOutput>
+      <LastGenOutput>CSharp30.Statements.Lock.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="ReducingTests\CSharp30.Assignments.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

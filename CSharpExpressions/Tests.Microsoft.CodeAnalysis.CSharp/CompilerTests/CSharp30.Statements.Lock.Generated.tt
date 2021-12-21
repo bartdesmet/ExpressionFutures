@@ -1,0 +1,24 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp30_Statements_Lock";
+
+var exprs = new[]
+{
+    "(Expression<Action<object>>)(o => { lock (o) { Console.Write('.'); } })",
+    "(Expression<Action>)(() => { lock (new object()) { Console.Write('.'); } })",
+};
+#>
+<#@ include file="CompilerTests.t4" #>

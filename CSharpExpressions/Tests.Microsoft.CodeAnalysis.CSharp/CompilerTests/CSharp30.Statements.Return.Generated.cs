@@ -37,39 +37,97 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     [TestClass]
-    public partial class CompilerTests_CSharp30_Statements_Reducing
+    public partial class CompilerTests_CSharp30_Statements_Return
     {
         [TestMethod]
-        public void CompilerTest_9551_85DA()
+        public void CompilerTest_6102_7F8E()
         {
-            // (Expression<Action<object>>)(l => { lock(l) { Console.WriteLine("In lock"); } })
-            var actual = ToCSharp(@"(Expression<Action<object>>)(l => { lock(l) { Console.WriteLine(""In lock""); } })", reduce: true);
+            // (Expression<Action>)(() => { return; })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { return; })");
             var expected = @"
-(object l) =>
-{
-    {
-        bool __lockWasTaken;
-        object __lock;
-        __lockWasTaken = false;
-        __lock = l;
-        try
-        {
-            System.Threading.Monitor.Enter(__lock, ref __lockWasTaken);
-            Console.WriteLine(""In lock"");
-        }
-        finally
-        {
-            if (__lockWasTaken)
-                System.Threading.Monitor.Exit(__lock);
-        }
-    }
-    L0 /*(null)*/:
-}";
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <Goto Type=""System.Void"" Kind=""Return"">
+          <Target>
+            <LabelTarget Type=""System.Void"" Id=""0"" />
+          </Target>
+        </Goto>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""0"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_9551_85DA();
+            Verify.CompilerTest_6102_7F8E();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9551_85DA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6102_7F8E() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_AEF8_BB4B()
+        {
+            // (Expression<Func<int>>)(() => { int x = 42; return x; })
+            var actual = GetDebugView(@"(Expression<Func<int>>)(() => { int x = 42; return x; })");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32]"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Int32"">
+      <Variables>
+        <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+      </Variables>
+      <Statements>
+        <CSharpAssign Type=""System.Int32"">
+          <Left>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </Left>
+          <Right>
+            <Constant Type=""System.Int32"" Value=""42"" />
+          </Right>
+        </CSharpAssign>
+        <Goto Type=""System.Void"" Kind=""Return"">
+          <Target>
+            <LabelTarget Type=""System.Int32"" Id=""1"" />
+          </Target>
+          <Value>
+            <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
+          </Value>
+        </Goto>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Int32"" Id=""1"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_AEF8_BB4B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AEF8_BB4B() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_7381_AA02()
+        {
+            // (Expression<Func<int>>)(() => { return 42; })
+            var actual = GetDebugView(@"(Expression<Func<int>>)(() => { return 42; })");
+            var expected = @"
+<Lambda Type=""System.Func`1[System.Int32]"">
+  <Parameters />
+  <Body>
+    <Constant Type=""System.Int32"" Value=""42"" />
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7381_AA02();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7381_AA02() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -93,11 +151,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp30_Statements_Reducing
+    partial class CompilerTests_CSharp30_Statements_Return
     {
         partial class Reviewed
         {
-            public override void CompilerTest_9551_85DA() => OK();
+            public override void CompilerTest_6102_7F8E() => OK();
+            public override void CompilerTest_AEF8_BB4B() => OK();
+            public override void CompilerTest_7381_AA02() => OK();
         }
     }
 }

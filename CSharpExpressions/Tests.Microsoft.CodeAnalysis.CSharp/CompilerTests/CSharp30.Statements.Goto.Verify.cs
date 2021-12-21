@@ -4,12 +4,12 @@
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp30_Statements_Reducing
+    partial class CompilerTests_CSharp30_Statements_Goto
     {
         partial class Reviewed
         {
-            // Lock
-            public override void CompilerTest_9551_85DA() => OK();
+            public override void CompilerTest_BBBC_6128() => OK();
+            public override void CompilerTest_6FC7_B4A6() => OK();
         }
     }
 }

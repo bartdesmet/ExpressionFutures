@@ -1,0 +1,30 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp30_Statements_While";
+
+var exprs = new[]
+{
+    "(Expression<Action>)(() => { while (true) Console.Write('.'); })",
+    "(Expression<Action>)(() => { while (true) { Console.Write('.'); } })",
+    "(Expression<Action>)(() => { while (true) { break; } })",
+    "(Expression<Action>)(() => { while (true) { continue; } })",
+    "(Expression<Action>)(() => { while (true) { return; } })",
+    "(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
+    "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })",
+    "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })",
+};
+#>
+<#@ include file="CompilerTests.t4" #>

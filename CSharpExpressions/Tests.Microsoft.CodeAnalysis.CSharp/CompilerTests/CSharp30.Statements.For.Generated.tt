@@ -13,12 +13,17 @@
 <#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
 <#
-var name = "CSharp30_Statements_Reducing";
+var name = "CSharp30_Statements_For";
 
 var exprs = new[]
 {
-    // Lock
-    "(Expression<Action<object>>)(l => { lock(l) { Console.WriteLine(\"In lock\"); } })",
+    // For
+    "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { Console.Write(i); } })",
+    "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })",
+    "(Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })",
+    // TODO: for with initializer statement
 };
 #>
 <#@ include file="CompilerTests.t4" #>

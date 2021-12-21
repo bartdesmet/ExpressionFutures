@@ -1,0 +1,33 @@
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - November 2015
+
+<#
+// NB: When ading a test, it will be *SKIPPED* by default. In order to enable it, review the generated
+//     test code and go to the .Verify.cs file to add an entry acknowledging the manual inspection by
+//     providing an outcome.
+
+// NB: Editing and saving this file can take a *VERY LONG* time because it invokes the C# compiler at
+//     text template processing time. Be patient while Visual Studio appears to hang.
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var name = "CSharp30_Statements_Switch";
+
+var exprs = new[]
+{
+    "(Expression<Action<int>>)(x => { switch (x) {} })",
+    "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })",
+    "(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })",
+    "(Expression<Action<int>>)(x => { switch (x) { default: break; } })",
+    "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { } })",
+    "(Expression<Action>)(() => { switch (int.Parse(\"1\")) { default: break; } })",
+};
+#>
+<#@ include file="CompilerTests.t4" #>
