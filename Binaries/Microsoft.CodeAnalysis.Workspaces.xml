@@ -2394,9 +2394,9 @@
             multiple instances of the analyzer list and thus not share the info.
             </remarks>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Diagnostics.HostDiagnosticAnalyzers.GetHostAnalyzerReferencesMap">
+        <member name="P:Microsoft.CodeAnalysis.Diagnostics.HostDiagnosticAnalyzers.HostAnalyzerReferences">
             <summary>
-            It returns a map with <see cref="P:Microsoft.CodeAnalysis.Diagnostics.AnalyzerReference.Id"/> as key and <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerReference"/> as value
+            List of host <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerReference"/>s
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Diagnostics.HostDiagnosticAnalyzers.GetOrCreateHostDiagnosticAnalyzersPerReference(System.String)">
@@ -15628,10 +15628,8 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.CompilationTrackerState.CompilationWithoutGeneratedDocuments">
             <summary>
-            The best compilation that is available that source generators have not ran on. May be an in-progress,
-            full declaration,  a final compilation, or <see langword="null"/>.
-            The value is an <see cref="T:Microsoft.CodeAnalysis.Optional`1"/> to represent the
-            possibility of the compilation already having been garabage collected.
+            The best compilation that is available that source generators have not ran on. May be an
+            in-progress, full declaration,  a final compilation, or <see langword="null"/>.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.CompilationTrackerState.HasSuccessfullyLoaded">
@@ -15643,8 +15641,6 @@
         <member name="P:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.CompilationTrackerState.FinalCompilationWithGeneratedDocuments">
             <summary>
             The final compilation is potentially available, otherwise <see langword="null"/>.
-            The value is an <see cref="T:Microsoft.CodeAnalysis.Optional`1"/> to represent the
-            possibility of the compilation already having been garabage collected.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.NoCompilationState">
@@ -15701,14 +15697,15 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.FinalState.FinalCompilationWithGeneratedDocuments">
             <summary>
-            The final compilation, with all references and source generators run. This is distinct from
-            <see cref="T:Microsoft.CodeAnalysis.Compilation"/>, which in the <see cref="T:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.FinalState"/> case will be the compilation
-            before any source generators were ran. This ensures that a later invocation of the source generators
-            consumes <see cref="T:Microsoft.CodeAnalysis.Compilation"/> which will avoid generators being ran a second time on a compilation that
-            already contains the output of other generators. If source generators are not active, this is equal to <see cref="T:Microsoft.CodeAnalysis.Compilation"/>.
+            The final compilation, with all references and source generators run. This is distinct from <see
+            cref="T:Microsoft.CodeAnalysis.Compilation"/>, which in the <see cref="T:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.FinalState"/> case will be the compilation before any
+            source generators were ran. This ensures that a later invocation of the source generators consumes
+            <see cref="T:Microsoft.CodeAnalysis.Compilation"/> which will avoid generators being ran a second time on a compilation that
+            already contains the output of other generators. If source generators are not active, this is equal
+            to <see cref="T:Microsoft.CodeAnalysis.Compilation"/>.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.FinalState.Create(Roslyn.Utilities.ValueSource{Microsoft.CodeAnalysis.Optional{Microsoft.CodeAnalysis.Compilation}},Roslyn.Utilities.ValueSource{Microsoft.CodeAnalysis.Optional{Microsoft.CodeAnalysis.Compilation}},Microsoft.CodeAnalysis.Compilation,System.Boolean,Microsoft.CodeAnalysis.SolutionState.CompilationTracker.CompilationTrackerGeneratorInfo,Microsoft.CodeAnalysis.Compilation,Microsoft.CodeAnalysis.ProjectId,System.Collections.Generic.Dictionary{Microsoft.CodeAnalysis.MetadataReference,Microsoft.CodeAnalysis.ProjectId})">
+        <member name="M:Microsoft.CodeAnalysis.SolutionState.CompilationTracker.FinalState.Create(Microsoft.CodeAnalysis.Compilation,Microsoft.CodeAnalysis.Compilation,System.Boolean,Microsoft.CodeAnalysis.SolutionState.CompilationTracker.CompilationTrackerGeneratorInfo,Microsoft.CodeAnalysis.Compilation,Microsoft.CodeAnalysis.ProjectId,System.Collections.Generic.Dictionary{Microsoft.CodeAnalysis.MetadataReference,Microsoft.CodeAnalysis.ProjectId})">
             <param name="finalCompilation">Not held onto</param>
             <param name="projectId">Not held onto</param>
             <param name="metadataReferenceToProjectId">Not held onto</param>
@@ -17839,11 +17836,6 @@
         <member name="F:Microsoft.CodeAnalysis.WorkspaceConfigurationOptions.DisableRecoverableTrees">
             <summary>
             Disables if the workspace creates recoverable trees when from its <see cref="T:Microsoft.CodeAnalysis.Host.ISyntaxTreeFactoryService"/>s.
-            </summary>
-        </member>
-        <member name="F:Microsoft.CodeAnalysis.WorkspaceConfigurationOptions.DisableCompilationTrackerWeakCompilationReferences">
-            <summary>
-            Disables holding onto the assembly references for runtime (not user/nuget/etc.) dlls weakly.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.WorkspaceKind">
@@ -23527,11 +23519,6 @@
         <member name="T:Roslyn.Utilities.ValueSource`1">
             <summary>
             A class that abstracts the accessing of a value that is guaranteed to be available at some point.
-            </summary>
-        </member>
-        <member name="T:Roslyn.Utilities.WeakValueSource`1">
-            <summary>
-            A <see cref="T:Roslyn.Utilities.ValueSource`1"/> that keeps a weak reference to a value.
             </summary>
         </member>
         <member name="M:Roslyn.Utilities.WeakEventHandler`1.Create``1(``0,System.Action{``0,System.Object,`0})">

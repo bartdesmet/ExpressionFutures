@@ -68,6 +68,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class CSharpCatchBlock
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -102,6 +107,8 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(SwitchExpressionArm arm) => Visit(arm);
 
         public XNode GetDebugView(LocalDeclaration declaration) => Visit(declaration);
+
+        public XNode GetDebugView(CSharpCatchBlock catchBlock) => Visit(catchBlock);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -850,6 +857,56 @@ namespace Microsoft.CSharp.Expressions
             return node;
         }
 
+        protected internal override Expression VisitTry(TryCSharpStatement node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.TryBlock), Visit(node.TryBlock))
+            };
+
+            if (node.CatchBlocks.Count > 0)
+            {
+                args.Add(Visit(nameof(node.CatchBlocks), node.CatchBlocks, Visit));
+            }
+
+            if (node.FinallyBlock != null)
+            {
+                args.Add(new XElement(nameof(node.FinallyBlock), Visit(node.FinallyBlock)));
+            }
+
+            return Push(node, args);
+        }
+
+        protected internal override CSharpCatchBlock VisitCatchBlock(CSharpCatchBlock node)
+        {
+            var args = new List<object>();
+
+            if (node.Variables.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Variables), node.Variables));
+            }
+
+            if (node.Variable != null)
+            {
+                args.Add(new XElement(nameof(node.Variable), Visit(node.Variable)));
+            }
+            else
+            {
+                args.Add(new XAttribute(nameof(node.Test), node.Test));
+            }
+
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+
+            if (node.Filter != null)
+            {
+                args.Add(new XElement(nameof(node.Filter), Visit(node.Filter)));
+            }
+
+            _nodes.Push(new XElement(nameof(CSharpCatchBlock), args));
+
+            return node;
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
         {
@@ -1133,6 +1190,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(LocalDeclaration node)
         {
             VisitLocalDeclaration(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(CSharpCatchBlock node)
+        {
+            VisitCatchBlock(node);
             return _nodes.Pop();
         }
 

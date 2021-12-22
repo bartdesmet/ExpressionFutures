@@ -292,5 +292,10 @@ namespace Microsoft.CSharp.Expressions
         /// A switch expression, such as o switch { p => v }.
         /// </summary>
         SwitchExpression,
+
+        /// <summary>
+        /// A try statement, such as try { ... } catch { ... } finally { ... }.
+        /// </summary>
+        Try,
     }
 }

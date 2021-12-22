@@ -24,6 +24,7 @@ var exprs = new[]
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e != null) { Console.WriteLine(e); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (InvalidOperationException) { Console.Write('I'); } catch (OverflowException) { Console.Write('O'); } })",
     "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) { Console.WriteLine(e); } finally { Console.Write('F'); } })",
+    "(Expression<Action>)(() => { try { Console.Write('T'); } catch (Exception e) when (e is ArgumentException a) { Console.WriteLine(a); } })",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

@@ -68,7 +68,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9329_A4F3() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_F778_9166()
+        public void CompilerTest_F778_2DE0()
         {
             // (Expression<Action>)(() => { try { } catch { throw; } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { } catch { throw; } })");
@@ -78,12 +78,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   <Body>
     <CSharpBlock Type=""System.Void"">
       <Statements>
-        <Try Type=""System.Void"">
-          <Body>
+        <CSharpTry Type=""System.Void"">
+          <TryBlock>
             <Default Type=""System.Void"" />
-          </Body>
-          <Handlers>
-            <CatchBlock Test=""System.Exception"">
+          </TryBlock>
+          <CatchBlocks>
+            <CSharpCatchBlock Test=""System.Object"">
               <Body>
                 <Block Type=""System.Void"">
                   <Expressions>
@@ -91,9 +91,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   </Expressions>
                 </Block>
               </Body>
-            </CatchBlock>
-          </Handlers>
-        </Try>
+            </CSharpCatchBlock>
+          </CatchBlocks>
+        </CSharpTry>
       </Statements>
       <ReturnLabel>
         <LabelTarget Type=""System.Void"" Id=""0"" />
@@ -102,13 +102,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_F778_9166();
+            Verify.CompilerTest_F778_2DE0();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F778_9166() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F778_2DE0() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_34FC_99EF()
+        public void CompilerTest_34FC_EEF8()
         {
             // (Expression<Action>)(() => { try { } catch (Exception ex) { throw ex; } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { try { } catch (Exception ex) { throw ex; } })");
@@ -118,12 +118,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   <Body>
     <CSharpBlock Type=""System.Void"">
       <Statements>
-        <Try Type=""System.Void"">
-          <Body>
+        <CSharpTry Type=""System.Void"">
+          <TryBlock>
             <Default Type=""System.Void"" />
-          </Body>
-          <Handlers>
-            <CatchBlock>
+          </TryBlock>
+          <CatchBlocks>
+            <CSharpCatchBlock>
+              <Variables>
+                <Parameter Type=""System.Exception"" Id=""0"" Name=""ex"" />
+              </Variables>
               <Variable>
                 <Parameter Type=""System.Exception"" Id=""0"" Name=""ex"" />
               </Variable>
@@ -138,9 +141,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   </Expressions>
                 </Block>
               </Body>
-            </CatchBlock>
-          </Handlers>
-        </Try>
+            </CSharpCatchBlock>
+          </CatchBlocks>
+        </CSharpTry>
       </Statements>
       <ReturnLabel>
         <LabelTarget Type=""System.Void"" Id=""1"" />
@@ -149,10 +152,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_34FC_99EF();
+            Verify.CompilerTest_34FC_EEF8();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34FC_99EF() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34FC_EEF8() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -181,8 +184,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Reviewed
         {
             public override void CompilerTest_9329_A4F3() => OK();
-            public override void CompilerTest_F778_9166() => OK();
-            public override void CompilerTest_34FC_99EF() => OK();
+            public override void CompilerTest_F778_2DE0() => OK();
+            public override void CompilerTest_34FC_EEF8() => OK();
         }
     }
 }

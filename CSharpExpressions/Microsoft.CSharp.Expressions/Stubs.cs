@@ -1503,13 +1503,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_12 = s_mtds["OperandTypesDoNotMatchParameters"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_12 = s_mtds["TryMustHaveCatchFinallyOrFault"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception OperandTypesDoNotMatchParameters(System.Object p0, System.Object p1)
+        public static System.Exception TryMustHaveCatchFinallyOrFault()
         {
             try
             {
-                var args = new object[] { p0, p1 };
+                var args = new object[] {  };
                 var res = s_12.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1519,13 +1519,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_13 = s_mtds["ArgumentMustBeArray"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_13 = s_mtds["OperandTypesDoNotMatchParameters"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception ArgumentMustBeArray()
+        public static System.Exception OperandTypesDoNotMatchParameters(System.Object p0, System.Object p1)
         {
             try
             {
-                var args = new object[] {  };
+                var args = new object[] { p0, p1 };
                 var res = s_13.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1535,9 +1535,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_14 = s_mtds["ArgumentMustBeBoolean"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_14 = s_mtds["ArgumentMustBeArray"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception ArgumentMustBeBoolean()
+        public static System.Exception ArgumentMustBeArray()
         {
             try
             {
@@ -1551,9 +1551,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_15 = s_mtds["ArgumentMustBeFieldInfoOrPropertInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_15 = s_mtds["ArgumentMustBeBoolean"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception ArgumentMustBeFieldInfoOrPropertInfo()
+        public static System.Exception ArgumentMustBeBoolean()
         {
             try
             {
@@ -1567,9 +1567,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_16 = s_mtds["ArgumentMustBeInteger"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_16 = s_mtds["ArgumentMustBeFieldInfoOrPropertInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception ArgumentMustBeInteger()
+        public static System.Exception ArgumentMustBeFieldInfoOrPropertInfo()
         {
             try
             {
@@ -1583,9 +1583,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_17 = s_mtds["ArgumentMustBeArrayIndexType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_17 = s_mtds["ArgumentMustBeInteger"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception ArgumentMustBeArrayIndexType()
+        public static System.Exception ArgumentMustBeInteger()
         {
             try
             {
@@ -1599,9 +1599,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_18 = s_mtds["ArgumentTypesMustMatch"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_18 = s_mtds["ArgumentMustBeArrayIndexType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception ArgumentTypesMustMatch()
+        public static System.Exception ArgumentMustBeArrayIndexType()
         {
             try
             {
@@ -1615,13 +1615,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_19 = s_mtds["CannotAutoInitializeValueTypeElementThroughProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_19 = s_mtds["ArgumentTypesMustMatch"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception CannotAutoInitializeValueTypeElementThroughProperty(System.Object p0)
+        public static System.Exception ArgumentTypesMustMatch()
         {
             try
             {
-                var args = new object[] { p0 };
+                var args = new object[] {  };
                 var res = s_19.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1631,9 +1631,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_20 = s_mtds["CannotAutoInitializeValueTypeMemberThroughProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_20 = s_mtds["CannotAutoInitializeValueTypeElementThroughProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
-        public static System.Exception CannotAutoInitializeValueTypeMemberThroughProperty(System.Object p0)
+        public static System.Exception CannotAutoInitializeValueTypeElementThroughProperty(System.Object p0)
         {
             try
             {
@@ -1647,13 +1647,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_21 = s_mtds["ExpressionTypeCannotInitializeArrayType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_21 = s_mtds["CannotAutoInitializeValueTypeMemberThroughProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
-        public static System.Exception ExpressionTypeCannotInitializeArrayType(System.Object p0, System.Object p1)
+        public static System.Exception CannotAutoInitializeValueTypeMemberThroughProperty(System.Object p0)
         {
             try
             {
-                var args = new object[] { p0, p1 };
+                var args = new object[] { p0 };
                 var res = s_21.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1663,9 +1663,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_22 = s_mtds["ArgumentMemberNotDeclOnType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_22 = s_mtds["ExpressionTypeCannotInitializeArrayType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception ArgumentMemberNotDeclOnType(System.Object p0, System.Object p1)
+        public static System.Exception ExpressionTypeCannotInitializeArrayType(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1679,9 +1679,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_23 = s_mtds["ExpressionTypeDoesNotMatchParameter"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_23 = s_mtds["ArgumentMemberNotDeclOnType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception ExpressionTypeDoesNotMatchParameter(System.Object p0, System.Object p1)
+        public static System.Exception ArgumentMemberNotDeclOnType(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1695,9 +1695,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_24 = s_mtds["ExpressionTypeDoesNotMatchReturn"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_24 = s_mtds["ExpressionTypeDoesNotMatchParameter"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception ExpressionTypeDoesNotMatchReturn(System.Object p0, System.Object p1)
+        public static System.Exception ExpressionTypeDoesNotMatchParameter(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1711,9 +1711,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_25 = s_mtds["ExpressionTypeDoesNotMatchAssignment"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_25 = s_mtds["ExpressionTypeDoesNotMatchReturn"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception ExpressionTypeDoesNotMatchAssignment(System.Object p0, System.Object p1)
+        public static System.Exception ExpressionTypeDoesNotMatchReturn(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1727,9 +1727,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_26 = s_mtds["InstanceFieldNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_26 = s_mtds["ExpressionTypeDoesNotMatchAssignment"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception InstanceFieldNotDefinedForType(System.Object p0, System.Object p1)
+        public static System.Exception ExpressionTypeDoesNotMatchAssignment(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1743,13 +1743,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_27 = s_mtds["FieldInfoNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_27 = s_mtds["InstanceFieldNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception FieldInfoNotDefinedForType(System.Object p0, System.Object p1, System.Object p2)
+        public static System.Exception InstanceFieldNotDefinedForType(System.Object p0, System.Object p1)
         {
             try
             {
-                var args = new object[] { p0, p1, p2 };
+                var args = new object[] { p0, p1 };
                 var res = s_27.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1759,13 +1759,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_28 = s_mtds["IncorrectNumberOfIndexes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_28 = s_mtds["FieldInfoNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception IncorrectNumberOfIndexes()
+        public static System.Exception FieldInfoNotDefinedForType(System.Object p0, System.Object p1, System.Object p2)
         {
             try
             {
-                var args = new object[] {  };
+                var args = new object[] { p0, p1, p2 };
                 var res = s_28.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1775,9 +1775,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_29 = s_mtds["IncorrectNumberOfLambdaDeclarationParameters"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_29 = s_mtds["IncorrectNumberOfIndexes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception IncorrectNumberOfLambdaDeclarationParameters()
+        public static System.Exception IncorrectNumberOfIndexes()
         {
             try
             {
@@ -1791,13 +1791,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_30 = s_mtds["IncorrectNumberOfMethodCallArguments"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_30 = s_mtds["IncorrectNumberOfLambdaDeclarationParameters"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception IncorrectNumberOfMethodCallArguments(System.Object p0)
+        public static System.Exception IncorrectNumberOfLambdaDeclarationParameters()
         {
             try
             {
-                var args = new object[] { p0 };
+                var args = new object[] {  };
                 var res = s_30.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1807,13 +1807,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_31 = s_mtds["LambdaTypeMustBeDerivedFromSystemDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_31 = s_mtds["IncorrectNumberOfMethodCallArguments"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
-        public static System.Exception LambdaTypeMustBeDerivedFromSystemDelegate()
+        public static System.Exception IncorrectNumberOfMethodCallArguments(System.Object p0)
         {
             try
             {
-                var args = new object[] {  };
+                var args = new object[] { p0 };
                 var res = s_31.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1823,13 +1823,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_32 = s_mtds["MemberNotFieldOrProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_32 = s_mtds["LambdaTypeMustBeDerivedFromSystemDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
 
-        public static System.Exception MemberNotFieldOrProperty(System.Object p0)
+        public static System.Exception LambdaTypeMustBeDerivedFromSystemDelegate()
         {
             try
             {
-                var args = new object[] { p0 };
+                var args = new object[] {  };
                 var res = s_32.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1839,9 +1839,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_33 = s_mtds["PropertyDoesNotHaveAccessor"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_33 = s_mtds["MemberNotFieldOrProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
-        public static System.Exception PropertyDoesNotHaveAccessor(System.Object p0)
+        public static System.Exception MemberNotFieldOrProperty(System.Object p0)
         {
             try
             {
@@ -1855,13 +1855,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_34 = s_mtds["NotAMemberOfType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_34 = s_mtds["PropertyDoesNotHaveAccessor"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
-        public static System.Exception NotAMemberOfType(System.Object p0, System.Object p1)
+        public static System.Exception PropertyDoesNotHaveAccessor(System.Object p0)
         {
             try
             {
-                var args = new object[] { p0, p1 };
+                var args = new object[] { p0 };
                 var res = s_34.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1871,9 +1871,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_35 = s_mtds["ParameterExpressionNotValidAsDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_35 = s_mtds["NotAMemberOfType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception ParameterExpressionNotValidAsDelegate(System.Object p0, System.Object p1)
+        public static System.Exception NotAMemberOfType(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1887,9 +1887,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_36 = s_mtds["PropertyNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_36 = s_mtds["ParameterExpressionNotValidAsDelegate"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception PropertyNotDefinedForType(System.Object p0, System.Object p1)
+        public static System.Exception ParameterExpressionNotValidAsDelegate(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1903,9 +1903,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_37 = s_mtds["InstancePropertyNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
+        private static readonly MethodInfo s_37 = s_mtds["PropertyNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception InstancePropertyNotDefinedForType(System.Object p0, System.Object p1)
+        public static System.Exception PropertyNotDefinedForType(System.Object p0, System.Object p1)
         {
             try
             {
@@ -1919,13 +1919,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_38 = s_mtds["UnhandledBinary"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_38 = s_mtds["InstancePropertyNotDefinedForType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object), typeof(System.Object) }));
 
-        public static System.Exception UnhandledBinary(System.Object p0)
+        public static System.Exception InstancePropertyNotDefinedForType(System.Object p0, System.Object p1)
         {
             try
             {
-                var args = new object[] { p0 };
+                var args = new object[] { p0, p1 };
                 var res = s_38.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1935,13 +1935,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_39 = s_mtds["UnhandledBinding"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+        private static readonly MethodInfo s_39 = s_mtds["UnhandledBinary"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
-        public static System.Exception UnhandledBinding()
+        public static System.Exception UnhandledBinary(System.Object p0)
         {
             try
             {
-                var args = new object[] {  };
+                var args = new object[] { p0 };
                 var res = s_39.Invoke(null, args);
                 return (System.Exception)res;
             }
@@ -1951,14 +1951,30 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_40 = s_mtds["UnhandledUnary"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
+        private static readonly MethodInfo s_40 = s_mtds["UnhandledBinding"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] {  }));
+
+        public static System.Exception UnhandledBinding()
+        {
+            try
+            {
+                var args = new object[] {  };
+                var res = s_40.Invoke(null, args);
+                return (System.Exception)res;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_41 = s_mtds["UnhandledUnary"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Object) }));
 
         public static System.Exception UnhandledUnary(System.Object p0)
         {
             try
             {
                 var args = new object[] { p0 };
-                var res = s_40.Invoke(null, args);
+                var res = s_41.Invoke(null, args);
                 return (System.Exception)res;
             }
             catch (TargetInvocationException ex)

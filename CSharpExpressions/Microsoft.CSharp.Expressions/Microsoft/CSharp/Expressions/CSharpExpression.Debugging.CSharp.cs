@@ -783,6 +783,58 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class TryCSharpStatement
+    {
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Out("try");
+
+            visitor.VisitBlockLike(TryBlock, needsCurlies: true);
+
+            foreach (var catchBlock in CatchBlocks)
+            {
+                VisitCatchBlock(catchBlock);
+            }
+
+            if (FinallyBlock != null)
+            {
+                visitor.NewLine();
+                visitor.Out("finally");
+                visitor.VisitBlockLike(FinallyBlock, needsCurlies: true);
+            }
+
+            void VisitCatchBlock(CSharpCatchBlock node)
+            {
+                visitor.NewLine();
+                visitor.Out("catch");
+
+                if (node.Variable != null)
+                {
+                    visitor.Out($" ({visitor.ToCSharp(node.Variable.Type)} {visitor.GetVariableName(node.Variable, true)})");
+                }
+                else if (node.Test != typeof(object))
+                {
+                    visitor.Out($" ({visitor.ToCSharp(node.Test)})");
+                }
+
+                if (node.Filter != null)
+                {
+                    visitor.Out(" when (");
+                    visitor.VisitExpression(node.Filter);
+                    visitor.Out(")");
+                }
+
+                visitor.VisitBlockLike(node.Body, needsCurlies: true);
+            }
+        }
+    }
+
     partial class UsingCSharpStatement
     {
         /// <summary>

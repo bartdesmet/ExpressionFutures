@@ -172,6 +172,12 @@
             Determines whether await should be suggested in a given position.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsInRefContext(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SyntaxNode@)">
+            <summary>
+            Returns true if this expression is in some <c>ref</c> keyword context.  If <see langword="true"/> then
+            <paramref name="refParent"/> will be the node containing the <see langword="ref"/> keyword.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions.IsExpressionOfArgumentInDeconstruction(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax)">
              <summary>
              If this declaration or identifier is part of a deconstruction, find the deconstruction.

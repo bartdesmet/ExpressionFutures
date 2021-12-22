@@ -9,8 +9,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Reviewed
         {
             public override void CompilerTest_9329_A4F3() => OK();
-            public override void CompilerTest_F778_9166() => OK();
-            public override void CompilerTest_34FC_99EF() => OK();
+            public override void CompilerTest_F778_2DE0() => OK();
+            public override void CompilerTest_34FC_EEF8() => OK();
         }
     }
 }

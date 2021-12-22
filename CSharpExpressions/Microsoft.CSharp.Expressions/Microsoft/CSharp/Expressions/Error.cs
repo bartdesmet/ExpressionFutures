@@ -1195,6 +1195,22 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.UsingPatternDisposeInputNotCompatibleWithResource(p0, p1));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block."
+        /// </summary>
+        internal static Exception CatchVariableNotInScope(object p0)
+        {
+            return new ArgumentException(Strings.CatchVariableNotInScope(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The catch block exception type '{0}' is not equivalent to the variable type '{1}'."
+        /// </summary>
+        internal static Exception CatchTypeNotEquivalentWithVariableType(object p0, object p1)
+        {
+            return new ArgumentException(Strings.CatchTypeNotEquivalentWithVariableType(p0, p1));
+        }
+
     }
 
     /// <summary>
@@ -2542,6 +2558,22 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.UsingPatternDisposeInputNotCompatibleWithResource, p0, p1);
         }
 
+        /// <summary>
+        /// A string like "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block."
+        /// </summary>
+        internal static string CatchVariableNotInScope(object p0)
+        {
+            return SR.Format(SR.CatchVariableNotInScope, p0);
+        }
+
+        /// <summary>
+        /// A string like "The catch block exception type '{0}' is not equivalent to the variable type '{1}'."
+        /// </summary>
+        internal static string CatchTypeNotEquivalentWithVariableType(object p0, object p1)
+        {
+            return SR.Format(SR.CatchTypeNotEquivalentWithVariableType, p0, p1);
+        }
+
     }
 }
 
@@ -2697,5 +2729,7 @@ namespace System
         public const string UsingDisposeShouldReturnVoid = "The Dispose method of a using statement should return void.";
         public const string UsingPatternDisposeShouldHaveOneParameter = "A pattern dispose lambda for a using statement should have one parameter.";
         public const string UsingPatternDisposeInputNotCompatibleWithResource = "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement.";
+        public const string CatchVariableNotInScope = "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block.";
+        public const string CatchTypeNotEquivalentWithVariableType = "The catch block exception type '{0}' is not equivalent to the variable type '{1}'.";
     }
 }

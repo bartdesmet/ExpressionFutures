@@ -326,6 +326,12 @@
     <Compile Include="CrossCheckTests\CSharp30.Original.cs" />
     <Compile Include="LogAndResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReducingTests\CSharp30.Statements.Try.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp30.Statements.Try.Generated.cs">
+      <DependentUpon>CSharp30.Statements.Try.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="ReducingTests\CSharp70.IsExpression.Verify.cs" />
     <Compile Include="ReducingTests\CSharp70.IsExpression.Generated.cs">
       <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
@@ -345,7 +351,7 @@
     <Compile Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Verify.cs" />
     <Compile Include="ReducingTests\CSharp73.TupleEquality.Verify.cs" />
     <Compile Include="ReducingTests\CSharp30.Assignments.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp30_Statements.Lock.Verify.cs" />
+    <Compile Include="ReducingTests\CSharp30.Statements.Lock.Verify.cs" />
     <Compile Include="ReducingTests\CSharp30.Assignments.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -519,6 +525,10 @@
     <Content Include="CompilerTests\CSharp30.Original.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Original.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="ReducingTests\CSharp30.Statements.Try.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Try.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="ReducingTests\CSharp70.IsExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

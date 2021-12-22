@@ -47,6 +47,23 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         /// <summary>
+        /// Visits a <see cref="CSharpCatchBlock"/>, keeping track of the variables declared in <see cref="CSharpCatchBlock.Variables"/>.
+        /// </summary>
+        /// <param name="node">The node to visit.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override CSharpCatchBlock VisitCatchBlock(CSharpCatchBlock node)
+        {
+            PushScope(node.Variables);
+
+            var res = base.VisitCatchBlock(node);
+
+            PopScope(node.Variables);
+
+            return res;
+        }
+
+        /// <summary>
         /// Visits a <see cref="LambdaExpression"/>, keeping track of the variables declared in <see cref="LambdaExpression.Parameters"/>.
         /// </summary>
         /// <typeparam name="T">The type of the delegate represented by the lambda expression.</typeparam>

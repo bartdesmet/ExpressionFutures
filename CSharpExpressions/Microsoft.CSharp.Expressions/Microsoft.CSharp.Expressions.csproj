@@ -55,6 +55,7 @@
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\DeconstructionConversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\Conversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\SimpleConversion.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\CSharpCatchBlock.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\IsPatternCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DeconstructionAssignmentCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ArrayAccessCSharpExpression.cs" />
