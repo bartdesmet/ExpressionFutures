@@ -265,11 +265,15 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDo(DoCSharpStatement node)
         {
-            var args = new List<object>
+            var args = new List<object>();
+
+            if (node.Locals.Count > 0)
             {
-                new XElement(nameof(node.Body), Visit(node.Body)),
-                new XElement(nameof(node.Test), Visit(node.Test))
-            };
+                args.Add(Visit(nameof(node.Locals), node.Locals));
+            }
+
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
+            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
 
             if (node.BreakLabel != null)
             {
@@ -494,6 +498,11 @@ namespace Microsoft.CSharp.Expressions
             if (node.Initializers.Count > 0)
             {
                 args.Add(Visit(nameof(node.Initializers), node.Initializers));
+            }
+
+            if (node.Locals.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Locals), node.Locals));
             }
 
             if (node.Test != null)
@@ -790,11 +799,15 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
-            var args = new List<object>
+            var args = new List<object>();
+
+            if (node.Locals.Count > 0)
             {
-                new XElement(nameof(node.Test), Visit(node.Test)),
-                new XElement(nameof(node.Body), Visit(node.Body))
-            };
+                args.Add(Visit(nameof(node.Locals), node.Locals));
+            }
+
+            args.Add(new XElement(nameof(node.Test), Visit(node.Test)));
+            args.Add(new XElement(nameof(node.Body), Visit(node.Body)));
 
             if (node.BreakLabel != null)
             {

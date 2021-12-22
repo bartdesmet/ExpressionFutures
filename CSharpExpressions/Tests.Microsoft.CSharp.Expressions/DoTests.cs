@@ -90,37 +90,41 @@ namespace Tests
             var continueLabel = Expression.Label();
             var res = CSharpExpression.Do(body, test, breakLabel, continueLabel);
 
-            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Body, res.Test));
+            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Body, res.Test, res.Locals));
 
             var newTest = Expression.Constant(true);
             var newBody = Expression.Empty();
             var newBreakLabel = Expression.Label();
             var newContinueLabel = Expression.Label();
 
-            var upd1 = res.Update(newBreakLabel, res.ContinueLabel, res.Body, res.Test);
-            var upd2 = res.Update(res.BreakLabel, newContinueLabel, res.Body, res.Test);
-            var upd3 = res.Update(res.BreakLabel, res.ContinueLabel, newBody, res.Test);
-            var upd4 = res.Update(res.BreakLabel, res.ContinueLabel, res.Body, newTest);
+            var upd1 = res.Update(newBreakLabel, res.ContinueLabel, res.Body, res.Test, res.Locals);
+            var upd2 = res.Update(res.BreakLabel, newContinueLabel, res.Body, res.Test, res.Locals);
+            var upd3 = res.Update(res.BreakLabel, res.ContinueLabel, newBody, res.Test, res.Locals);
+            var upd4 = res.Update(res.BreakLabel, res.ContinueLabel, res.Body, newTest, res.Locals);
 
             Assert.AreSame(newBreakLabel, upd1.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd1.ContinueLabel);
             Assert.AreSame(res.Body, upd1.Body);
             Assert.AreSame(res.Test, upd1.Test);
+            Assert.AreSame(res.Locals, upd1.Locals);
 
             Assert.AreSame(res.BreakLabel, upd2.BreakLabel);
             Assert.AreSame(newContinueLabel, upd2.ContinueLabel);
             Assert.AreSame(res.Body, upd2.Body);
             Assert.AreSame(res.Test, upd2.Test);
+            Assert.AreSame(res.Locals, upd2.Locals);
 
             Assert.AreSame(res.BreakLabel, upd3.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd3.ContinueLabel);
             Assert.AreSame(newBody, upd3.Body);
             Assert.AreSame(res.Test, upd3.Test);
+            Assert.AreSame(res.Locals, upd3.Locals);
 
             Assert.AreSame(res.BreakLabel, upd4.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd4.ContinueLabel);
             Assert.AreSame(res.Body, upd4.Body);
             Assert.AreSame(newTest, upd4.Test);
+            Assert.AreSame(res.Locals, upd4.Locals);
         }
 
         [TestMethod]

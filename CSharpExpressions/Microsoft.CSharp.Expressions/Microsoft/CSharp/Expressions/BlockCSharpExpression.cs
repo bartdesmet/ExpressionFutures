@@ -243,7 +243,7 @@ namespace Microsoft.CSharp.Expressions
             var variablesList = variables.ToReadOnly();
             RequiresNotNullItems(variablesList, paramName);
 
-            var uniqueVariables = new HashSet<ParameterExpression>();
+            var uniqueVariables = new HashSet<ParameterExpression>(variablesList.Count);
 
             foreach (var variable in variablesList)
             {

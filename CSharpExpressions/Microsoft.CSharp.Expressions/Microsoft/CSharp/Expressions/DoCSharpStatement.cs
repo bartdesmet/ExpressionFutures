@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -11,8 +13,8 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class DoCSharpStatement : ConditionalLoopCSharpStatement
     {
-        internal DoCSharpStatement(Expression body, Expression test, LabelTarget breakLabel, LabelTarget continueLabel)
-            : base(test, body, breakLabel, continueLabel)
+        internal DoCSharpStatement(Expression body, Expression test, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> locals)
+            : base(test, body, breakLabel, continueLabel, locals)
         {
         }
 
@@ -28,10 +30,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDo(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDo(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -40,15 +39,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continueLabel">The <see cref="LoopCSharpStatement.ContinueLabel" /> property of the result.</param>
         /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
         /// <param name="test">The <see cref="ConditionalLoopCSharpStatement.Test" /> property of the result.</param>
+        /// <param name="locals">The <see cref="ConditionalLoopCSharpStatement.Locals" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public DoCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression body, Expression test)
+        public DoCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression body, Expression test, IEnumerable<ParameterExpression> locals)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && body == this.Body && test == this.Test)
+            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && body == this.Body && test == this.Test && Helpers.SameElements(ref locals, this.Locals))
             {
                 return this;
             }
 
-            return CSharpExpression.Do(body, test, breakLabel, continueLabel);
+            return CSharpExpression.Do(body, test, breakLabel, continueLabel, locals);
         }
 
         /// <summary>
@@ -98,9 +98,13 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Label(BreakLabel);
             }
 
+            // NB: We consider all variables to be in scope of the condition and body of the loop, even though
+            //     in C# e.g. `out` variables in the condition are not usable in the body.
+
             var loop =
                 Expression.Block(
                     typeof(void),
+                    Locals,
                     exprs
                 );
 
@@ -116,10 +120,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="test">The condition of the loop.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
-        public static DoCSharpStatement Do(Expression body, Expression test)
-        {
-            return Do(body, test, null, null);
-        }
+        public static DoCSharpStatement Do(Expression body, Expression test) => Do(body, test, @break: null, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="DoCSharpStatement"/> that represents a do...while loop.
@@ -128,10 +129,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="test">The condition of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
-        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break)
-        {
-            return Do(body, test, @break, null);
-        }
+        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break) => Do(body, test, @break, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="DoCSharpStatement"/> that represents a do...while loop.
@@ -141,11 +139,24 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
-        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break, LabelTarget @continue)
+        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break, LabelTarget @continue) => Do(body, test, @break, @continue, locals: null);
+
+        /// <summary>
+        /// Creates a <see cref="DoCSharpStatement"/> that represents a do...while loop.
+        /// </summary>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="test">The condition of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <param name="locals">The variables that are in scope of the loop.</param>
+        /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
+        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break, LabelTarget @continue, IEnumerable<ParameterExpression> locals)
         {
+            var localsList = CheckUniqueVariables(locals, nameof(locals)); 
+
             ValidateLoop(test, body, @break, @continue);
 
-            return new DoCSharpStatement(body, test, @break, @continue);
+            return new DoCSharpStatement(body, test, @break, @continue, localsList);
         }
     }
 
@@ -159,7 +170,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitDo(DoCSharpStatement node)
         {
-            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), Visit(node.Body), Visit(node.Test));
+            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), Visit(node.Body), Visit(node.Test), VisitAndConvert(node.Locals, nameof(VisitDo)));
         }
     }
 }

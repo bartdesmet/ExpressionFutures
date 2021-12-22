@@ -259,11 +259,58 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             // NB: See notes in ForCSharpStatement.ReduceCore for the scoping rules applied here.
 
+            var breakLabel = VisitLabelTarget(node.BreakLabel);
+            var continueLabel = VisitLabelTarget(node.ContinueLabel);
+
             PushScope(node.Variables);
 
-            var res = base.VisitFor(node);
+            var variables = VisitAndConvert(node.Variables, nameof(VisitFor));
+            var initializers = Visit(node.Initializers);
+
+            PushScope(node.Locals);
+
+            var locals = VisitAndConvert(node.Locals, nameof(VisitFor));
+            var test = Visit(node.Test);
+            var iterators = Visit(node.Iterators);
+            var body = Visit(node.Body);
+
+            PopScope(node.Locals);
 
             PopScope(node.Variables);
+            
+            return node.Update(breakLabel, continueLabel, variables, initializers, test, iterators, body, locals);
+        }
+
+        /// <summary>
+        /// Visits a <see cref="DoCSharpStatement"/>, keeping track of the variables declared in <see cref="ConditionalLoopCSharpStatement.Locals"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitDo(DoCSharpStatement node)
+        {
+            PushScope(node.Locals);
+
+            var res = base.VisitDo(node);
+
+            PopScope(node.Locals);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Visits a <see cref="WhileCSharpStatement"/>, keeping track of the variables declared in <see cref="ConditionalLoopCSharpStatement.Locals"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitWhile(WhileCSharpStatement node)
+        {
+            PushScope(node.Locals);
+
+            var res = base.VisitWhile(node);
+
+            PopScope(node.Locals);
 
             return res;
         }

@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -11,8 +13,8 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class WhileCSharpStatement : ConditionalLoopCSharpStatement
     {
-        internal WhileCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
-            : base(test, body, breakLabel, continueLabel)
+        internal WhileCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> locals)
+            : base(test, body, breakLabel, continueLabel, locals)
         {
         }
 
@@ -28,10 +30,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitWhile(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitWhile(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -40,15 +39,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continueLabel">The <see cref="LoopCSharpStatement.ContinueLabel" /> property of the result.</param>
         /// <param name="test">The <see cref="ConditionalLoopCSharpStatement.Test" /> property of the result.</param>
         /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
+        /// <param name="locals">The <see cref="ConditionalLoopCSharpStatement.Locals" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public WhileCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression test, Expression body)
+        public WhileCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression test, Expression body, IEnumerable<ParameterExpression> locals)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && test == this.Test && body == this.Body)
+            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && test == this.Test && body == this.Body && Helpers.SameElements(ref locals, this.Locals))
             {
                 return this;
             }
 
-            return CSharpExpression.While(test, body, breakLabel, continueLabel);
+            return CSharpExpression.While(test, body, breakLabel, continueLabel, locals);
         }
 
         /// <summary>
@@ -73,6 +73,16 @@ namespace Microsoft.CSharp.Expressions
                     @continue
                 );
 
+            if (Locals.Count > 0)
+            {
+                return
+                    Expression.Block(
+                        typeof(void),
+                        Locals,
+                        loop
+                    );
+            }
+
             return loop;
         }
     }
@@ -85,10 +95,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="test">The condition of the loop.</param>
         /// <param name="body">The body of the loop.</param>
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
-        public static WhileCSharpStatement While(Expression test, Expression body)
-        {
-            return While(test, body, null, null);
-        }
+        public static WhileCSharpStatement While(Expression test, Expression body) => While(test, body, @break: null, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="WhileCSharpStatement"/> that represents a while loop.
@@ -97,10 +104,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
-        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break)
-        {
-            return While(test, body, @break, null);
-        }
+        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break) => While(test, body, @break, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="WhileCSharpStatement"/> that represents a while loop.
@@ -110,11 +114,24 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
-        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break, LabelTarget @continue)
+        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break, LabelTarget @continue) => While(test, body, @break, @continue, locals: null);
+
+        /// <summary>
+        /// Creates a <see cref="WhileCSharpStatement"/> that represents a while loop.
+        /// </summary>
+        /// <param name="test">The condition of the loop.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <param name="locals">The variables that are in scope of the loop.</param>
+        /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
+        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break, LabelTarget @continue, IEnumerable<ParameterExpression> locals)
         {
+            var localsList = CheckUniqueVariables(locals, nameof(locals));
+
             ValidateLoop(test, body, @break, @continue);
 
-            return new WhileCSharpStatement(test, body, @break, @continue);
+            return new WhileCSharpStatement(test, body, @break, @continue, localsList);
         }
     }
 
@@ -128,7 +145,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitWhile(WhileCSharpStatement node)
         {
-            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), Visit(node.Test), Visit(node.Body));
+            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), Visit(node.Test), Visit(node.Body), VisitAndConvert(node.Locals, nameof(VisitDo)));
         }
     }
 }

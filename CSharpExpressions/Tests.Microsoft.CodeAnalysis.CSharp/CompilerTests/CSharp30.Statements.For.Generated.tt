@@ -17,12 +17,12 @@ var name = "CSharp30_Statements_For";
 
 var exprs = new[]
 {
-    // For
     "(Expression<Action>)(() => { for (;;) Console.Write('.'); })",
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) Console.Write(i); })",
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { Console.Write(i); } })",
     "(Expression<Action>)(() => { for (var i = 0; i < 10; i++) { if (i == 5) continue; if (i == 8) break; } })",
     "(Expression<Action>)(() => { for (int i = 1, j = 2; i < 3; i += 4, j -= 5) Console.Write('.'); })",
+    "(Expression<Action>)(() => { for (string s = \"0\"; int.TryParse(s, out var x); s += s.Length) Console.Write(x); })",
     // TODO: for with initializer statement
 };
 #>

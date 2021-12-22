@@ -150,5 +150,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f();
         }
+
+        [TestMethod]
+        public void CrossCheck_For_Locals()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    for (var s = Return(""0""); int.TryParse(s, out var x); s += Return(s.Length))
+    {
+        Log($""body({x})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
     }
 }

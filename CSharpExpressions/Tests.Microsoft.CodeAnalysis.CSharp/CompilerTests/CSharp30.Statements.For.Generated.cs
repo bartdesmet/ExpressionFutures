@@ -418,6 +418,87 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F7F3_AD6D() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_C446_5291()
+        {
+            // (Expression<Action>)(() => { for (string s = "0"; int.TryParse(s, out var x); s += s.Length) Console.Write(x); })
+            var actual = GetDebugView(@"(Expression<Action>)(() => { for (string s = ""0""; int.TryParse(s, out var x); s += s.Length) Console.Write(x); })");
+            var expected = @"
+<Lambda Type=""System.Action"">
+  <Parameters />
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpFor Type=""System.Void"">
+          <Variables>
+            <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+          </Variables>
+          <Initializers>
+            <CSharpAssign Type=""System.String"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+              </Left>
+              <Right>
+                <Constant Type=""System.String"" Value=""0"" />
+              </Right>
+            </CSharpAssign>
+          </Initializers>
+          <Locals>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Locals>
+          <Test>
+            <Call Type=""System.Boolean"" Method=""Boolean TryParse(System.String, Int32 ByRef)"">
+              <Arguments>
+                <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Test>
+          <Iterators>
+            <CSharpAddAssign Type=""System.String"" Method=""System.String Concat(System.Object, System.Object)"">
+              <Left>
+                <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+              </Left>
+              <Right>
+                <Convert Type=""System.Object"">
+                  <Operand>
+                    <MemberAccess Type=""System.Int32"" Member=""Int32 Length"">
+                      <Expression>
+                        <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+                      </Expression>
+                    </MemberAccess>
+                  </Operand>
+                </Convert>
+              </Right>
+            </CSharpAddAssign>
+          </Iterators>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void Write(Int32)"">
+              <Arguments>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </ContinueLabel>
+        </CSharpFor>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C446_5291();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C446_5291() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -449,6 +530,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_5EF7_9418() => OK();
             public override void CompilerTest_26D5_E9FE() => OK();
             public override void CompilerTest_F7F3_AD6D() => OK();
+            public override void CompilerTest_C446_5291() => OK();
         }
     }
 }

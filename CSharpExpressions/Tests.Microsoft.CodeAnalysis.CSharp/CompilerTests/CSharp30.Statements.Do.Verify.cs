@@ -8,8 +8,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         partial class Reviewed
         {
-            public override void CompilerTest_6674_1E31() => OK(); // REVIEW: Infinite loop, so no CSharpBlock at the top level?
+            public override void CompilerTest_6674_1E31() => OK();
             public override void CompilerTest_B6D5_79C3() => OK();
+            public override void CompilerTest_28EF_7DCA() => OK();
         }
     }
 }

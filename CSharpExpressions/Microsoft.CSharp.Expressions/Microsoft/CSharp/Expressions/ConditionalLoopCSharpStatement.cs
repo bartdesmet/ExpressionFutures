@@ -2,6 +2,7 @@
 //
 // bartde - October 2015
 
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -11,16 +12,22 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class ConditionalLoopCSharpStatement : LoopCSharpStatement
     {
-        internal ConditionalLoopCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        internal ConditionalLoopCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> locals)
             : base(body, breakLabel, continueLabel)
         {
             Test = test;
+            Locals = locals;
         }
 
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the loop condition.
         /// </summary>
         public Expression Test { get; }
+
+        /// <summary>
+        /// Gets a collection of <see cref="ParameterExpression"/> representing the variables that are in scope of the loop.
+        /// </summary>
+        public ReadOnlyCollection<ParameterExpression> Locals { get; }
     }
 
     partial class CSharpExpression

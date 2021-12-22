@@ -99,5 +99,26 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 }");
             f();
         }
+
+        [TestMethod]
+        public void CrossCheck_While_Locals()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    var s = Return(""0"");
+
+    while (int.TryParse(s, out var x))
+    {
+        Log($""body({x})"");
+
+        Return(s += s.Length);
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
     }
 }

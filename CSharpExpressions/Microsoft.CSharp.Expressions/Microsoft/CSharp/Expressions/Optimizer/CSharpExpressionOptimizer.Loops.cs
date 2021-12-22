@@ -31,6 +31,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
+            // NB: If we do optimizations involving variables, we'll need to track scopes here.
+
+            var variables = VisitAndConvert(node.Locals, nameof(VisitFor));
+
             var test = Visit(node.Test);
 
             PushLabelInfo(node);
@@ -38,12 +42,16 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var body = Visit(node.Body);
             PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
-            return node.Update(@break, @continue, test, body);
+            return node.Update(@break, @continue, test, body, variables);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDo(DoCSharpStatement node)
         {
+            // NB: If we do optimizations involving variables, we'll need to track scopes here.
+
+            var variables = VisitAndConvert(node.Locals, nameof(VisitFor));
+
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
@@ -51,7 +59,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var test = Visit(node.Test);
 
-            return node.Update(@break, @continue, body, test);
+            return node.Update(@break, @continue, body, test, variables);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -61,6 +69,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var variables = VisitAndConvert(node.Variables, nameof(VisitFor));
             var initializers = Visit(node.Initializers);
+            var locals = VisitAndConvert(node.Locals, nameof(VisitFor));
             var test = Visit(node.Test);
             var iterators = OptimizeIterators(Visit(node.Iterators));
 
@@ -69,7 +78,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             var body = Visit(node.Body);
             PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
 
-            return node.Update(@break, @continue, variables, initializers, test, iterators, body);
+            return node.Update(@break, @continue, variables, initializers, test, iterators, body, locals);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]

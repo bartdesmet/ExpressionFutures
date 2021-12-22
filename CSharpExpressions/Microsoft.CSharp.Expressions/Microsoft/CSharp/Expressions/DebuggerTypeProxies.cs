@@ -429,6 +429,7 @@ namespace Microsoft.CSharp.Expressions
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Locals => _node.Locals;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
         public System.Type Type => _node.Type;
@@ -583,6 +584,30 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags Flags => _node.Flags;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(CSharpCatchBlockProxy))]
+    partial class CSharpCatchBlock
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class CSharpCatchBlockProxy
+    {
+        private readonly CSharpCatchBlock _node;
+
+        public CSharpCatchBlockProxy(CSharpCatchBlock node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.Expression Body => _node.Body;
+        public System.Linq.Expressions.Expression Filter => _node.Filter;
+        public System.Type Test => _node.Test;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
     }
 
     [DebuggerTypeProxy(typeof(CSharpExpressionProxy))]
@@ -858,6 +883,7 @@ namespace Microsoft.CSharp.Expressions
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Locals => _node.Locals;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
         public System.Type Type => _node.Type;
@@ -934,6 +960,7 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Initializers => _node.Initializers;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Iterators => _node.Iterators;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Locals => _node.Locals;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
         public System.Type Type => _node.Type;
@@ -1859,6 +1886,32 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.Expression WhenClause => _node.WhenClause;
     }
 
+    [DebuggerTypeProxy(typeof(TryCSharpStatementProxy))]
+    partial class TryCSharpStatement
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class TryCSharpStatementProxy
+    {
+        private readonly TryCSharpStatement _node;
+
+        public TryCSharpStatementProxy(TryCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.CSharpCatchBlock> CatchBlocks => _node.CatchBlocks;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.Expression FinallyBlock => _node.FinallyBlock;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression TryBlock => _node.TryBlock;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(TupleBinaryCSharpExpressionProxy))]
     partial class TupleBinaryCSharpExpression
     {
@@ -2087,6 +2140,7 @@ namespace Microsoft.CSharp.Expressions
         public System.Boolean CanReduce => _node.CanReduce;
         public System.Linq.Expressions.LabelTarget ContinueLabel => _node.ContinueLabel;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Locals => _node.Locals;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Linq.Expressions.Expression Test => _node.Test;
         public System.Type Type => _node.Type;

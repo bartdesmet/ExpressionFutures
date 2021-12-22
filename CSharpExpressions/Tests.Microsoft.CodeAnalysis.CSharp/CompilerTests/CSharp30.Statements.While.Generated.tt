@@ -25,6 +25,7 @@ var exprs = new[]
     "(Expression<Action>)(() => { int i = 0; while (i < 10) { if (i == 5) continue; if (i == 8) break; i++; } })",
     "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { break; } continue; } })",
     "(Expression<Action<int, int>>)((x, y) => { while (x < 1) { while (y < 2) { continue; } break; } })",
+    "(Expression<Action<string>>)(s => { while (int.TryParse(s, out var x)) { Console.WriteLine(x); } })",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

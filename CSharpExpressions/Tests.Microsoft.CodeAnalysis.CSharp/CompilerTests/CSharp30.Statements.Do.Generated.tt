@@ -19,6 +19,7 @@ var exprs = new[]
 {
     "(Expression<Action>)(() => { do { Console.Write('.'); } while (true); })",
     "(Expression<Action>)(() => { int i = 0; do { if (i == 5) continue; if (i == 8) break; i++; } while (i < 10); })",
+    "(Expression<Action<string>>)(s => { do { Console.Write('.'); } while (int.TryParse(s, out var x) && x > 0); })",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

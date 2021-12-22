@@ -534,6 +534,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2503_AEF6() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_4582_9EB5()
+        {
+            // (Expression<Action<string>>)(s => { while (int.TryParse(s, out var x)) { Console.WriteLine(x); } })
+            var actual = GetDebugView(@"(Expression<Action<string>>)(s => { while (int.TryParse(s, out var x)) { Console.WriteLine(x); } })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.String]"">
+  <Parameters>
+    <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpWhile Type=""System.Void"">
+          <Locals>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+          </Locals>
+          <Test>
+            <Call Type=""System.Boolean"" Method=""Boolean TryParse(System.String, Int32 ByRef)"">
+              <Arguments>
+                <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+              </Arguments>
+            </Call>
+          </Test>
+          <Body>
+            <Block Type=""System.Void"">
+              <Expressions>
+                <Call Type=""System.Void"" Method=""Void WriteLine(Int32)"">
+                  <Arguments>
+                    <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                  </Arguments>
+                </Call>
+              </Expressions>
+            </Block>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""2"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""3"" />
+          </ContinueLabel>
+        </CSharpWhile>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""4"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_4582_9EB5();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4582_9EB5() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -568,6 +624,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6C15_9FA8() => OK();
             public override void CompilerTest_242C_68A7() => OK();
             public override void CompilerTest_2503_AEF6() => OK();
+            public override void CompilerTest_4582_9EB5() => OK();
         }
     }
 }
