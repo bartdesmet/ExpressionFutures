@@ -1101,6 +1101,7 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.LabelTarget Target => _node.Target;
         public System.Type Type => _node.Type;
         public System.Object Value => _node.Value;
     }
@@ -1126,6 +1127,7 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.LabelTarget Target => _node.Target;
         public System.Type Type => _node.Type;
     }
 
@@ -1150,6 +1152,7 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public Microsoft.CSharp.Expressions.CSharpGotoKind Kind => _node.Kind;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.LabelTarget Target => _node.Target;
         public System.Type Type => _node.Type;
     }
 
@@ -1666,6 +1669,33 @@ namespace Microsoft.CSharp.Expressions
         public System.Reflection.ParameterInfo Parameter => _node.Parameter;
     }
 
+    [DebuggerTypeProxy(typeof(PatternSwitchCSharpStatementProxy))]
+    partial class PatternSwitchCSharpStatement
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class PatternSwitchCSharpStatementProxy
+    {
+        private readonly PatternSwitchCSharpStatement _node;
+
+        public PatternSwitchCSharpStatementProxy(PatternSwitchCSharpStatement node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.SwitchSection> Sections => _node.Sections;
+        public System.Linq.Expressions.Expression SwitchValue => _node.SwitchValue;
+        public System.Type Type => _node.Type;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
+    }
+
     [DebuggerTypeProxy(typeof(PositionalCSharpSubpatternProxy))]
     partial class PositionalCSharpSubpattern
     {
@@ -1863,6 +1893,32 @@ namespace Microsoft.CSharp.Expressions
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
     }
 
+    [DebuggerTypeProxy(typeof(SwitchCSharpStatementBaseProxy))]
+    partial class SwitchCSharpStatementBase
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SwitchCSharpStatementBaseProxy
+    {
+        private readonly SwitchCSharpStatementBase _node;
+
+        public SwitchCSharpStatementBaseProxy(SwitchCSharpStatementBase node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LabelTarget BreakLabel => _node.BreakLabel;
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression SwitchValue => _node.SwitchValue;
+        public System.Type Type => _node.Type;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
+    }
+
     [DebuggerTypeProxy(typeof(SwitchExpressionArmProxy))]
     partial class SwitchExpressionArm
     {
@@ -1884,6 +1940,50 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.Expression Value => _node.Value;
         public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Variables => _node.Variables;
         public System.Linq.Expressions.Expression WhenClause => _node.WhenClause;
+    }
+
+    [DebuggerTypeProxy(typeof(SwitchLabelProxy))]
+    partial class SwitchLabel
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SwitchLabelProxy
+    {
+        private readonly SwitchLabel _node;
+
+        public SwitchLabelProxy(SwitchLabel node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LabelTarget Label => _node.Label;
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public System.Linq.Expressions.Expression WhenClause => _node.WhenClause;
+    }
+
+    [DebuggerTypeProxy(typeof(SwitchSectionProxy))]
+    partial class SwitchSection
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SwitchSectionProxy
+    {
+        private readonly SwitchSection _node;
+
+        public SwitchSectionProxy(SwitchSection node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.SwitchLabel> Labels => _node.Labels;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.ParameterExpression> Locals => _node.Locals;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> Statements => _node.Statements;
     }
 
     [DebuggerTypeProxy(typeof(TryCSharpStatementProxy))]

@@ -56,7 +56,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static void Visit(this ICSharpPrintingVisitor visitor, ConstantCSharpPattern pattern)
         {
-            visitor.Visit(pattern.Value);
+            visitor.VisitExpression(pattern.Value);
         }
         
         private static void Visit(this ICSharpPrintingVisitor visitor, BinaryCSharpPattern pattern)
@@ -181,7 +181,7 @@ namespace Microsoft.CSharp.Expressions
             if (pattern.Variable != null)
             {
                 visitor.Out(" ");
-                visitor.Visit(pattern.Variable);
+                visitor.Out(visitor.GetVariableName(pattern.Variable, declarationSite: true));
             }
             else if (!noDiscard)
             {

@@ -5,11 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {

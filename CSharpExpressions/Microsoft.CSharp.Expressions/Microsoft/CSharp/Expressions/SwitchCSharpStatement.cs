@@ -10,44 +10,26 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
-    // NB: We have a separate node for switch statements in order to address a few shortcomings in LINQ:
-    //     - Ability to have an empty switch
-    //     - Support for "goto case" and "goto default" in case bodies
 
     /// <summary>
     /// Represents a switch statement.
     /// </summary>
-    public sealed partial class SwitchCSharpStatement : CSharpStatement
+    public sealed partial class SwitchCSharpStatement : SwitchCSharpStatementBase
     {
         internal SwitchCSharpStatement(Expression switchValue, LabelTarget breakLabel, ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<CSharpSwitchCase> cases)
+            : base(switchValue, breakLabel, variables)
         {
-            SwitchValue = switchValue;
-            BreakLabel = breakLabel;
-            Variables = variables;
             Cases = cases;
         }
-
-        /// <summary>
-        /// Gets the <see cref="Expression" /> representing the value to be tested against each case.
-        /// </summary>
-        public Expression SwitchValue { get; }
-
-        /// <summary>
-        /// Gets the <see cref="LabelTarget"/> representing the break label of the switch statement.
-        /// </summary>
-        public LabelTarget BreakLabel { get; }
-
-        /// <summary>
-        /// Gets a collection of variables in scope for the switch cases.
-        /// </summary>
-        public ReadOnlyCollection<ParameterExpression> Variables { get; }
 
         /// <summary>
         /// Gets the collection of switch cases.
@@ -55,21 +37,12 @@ namespace Microsoft.CSharp.Expressions
         public ReadOnlyCollection<CSharpSwitchCase> Cases { get; }
 
         /// <summary>
-        /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
-        /// </summary>
-        /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.Switch;
-
-        /// <summary>
         /// Dispatches to the specific visit method for this node type.
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitSwitch(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitSwitch(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -81,7 +54,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public SwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<CSharpSwitchCase> cases)
         {
-            if (switchValue == this.SwitchValue && breakLabel == this.BreakLabel && variables == this.Variables && cases == this.Cases)
+            if (switchValue == SwitchValue && breakLabel == BreakLabel && variables == Variables && Helpers.SameElements(ref cases, Cases))
             {
                 return this;
             }
@@ -617,7 +590,7 @@ namespace Microsoft.CSharp.Expressions
                     //   {
                     //     case 1:
                     //     case 2:
-                    //     case default:
+                    //     default:
                     //       ...
                     //       break;
                     //   }
@@ -626,7 +599,7 @@ namespace Microsoft.CSharp.Expressions
                     //
                     //  switch (x)
                     //  {
-                    //    case default:
+                    //    default:
                     //       ...
                     //       break;
                     //  }
@@ -745,9 +718,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            var variableList = variables.ToReadOnly();
-
-            // NB: No check for DefaultBody to be of type void; we'll make it void in Reduce if need be.
+            var variableList = CheckUniqueVariables(variables, nameof(variables));
 
             return new SwitchCSharpStatement(switchValue, breakLabel, variableList, casesList);
         }
@@ -778,6 +749,8 @@ namespace Microsoft.CSharp.Expressions
         {
             if (defaultBody != null)
             {
+                // NB: No check for DefaultBody to be of type void; we'll make it void in Reduce if need be.
+
                 var @default = new[] { CSharpStatement.SwitchCaseDefault(defaultBody) };
 
                 if (cases != null)

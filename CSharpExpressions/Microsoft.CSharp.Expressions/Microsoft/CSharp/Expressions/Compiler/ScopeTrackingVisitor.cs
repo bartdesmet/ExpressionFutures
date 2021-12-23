@@ -353,17 +353,56 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             PushScope(node.Variables);
 
+            var res = base.VisitSwitchExpressionArm(node);
+
+            PopScope(node.Variables);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Visits a <see cref="PatternSwitchCSharpStatement"/>, keeping track of the variables declared in <see cref="PatternSwitchCSharpStatement.Variables"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitSwitch(PatternSwitchCSharpStatement node)
+        {
+            // NB: The variables are not in scope of the switch value. In a LINQ expression tree, the ParameterExpressions
+            //     could be reused in several nested scopes, so the same variables could be used within the switch value
+            //     expression and bind to a declaration in a surrounding scope.
+
+            var switchValue = Visit(node.SwitchValue);
+
+            PushScope(node.Variables);
+
             var res =
                 node.Update(
-                    VisitAndConvert(node.Variables, nameof(VisitSwitchExpressionArm)),
-                    VisitPattern(node.Pattern),
-                    Visit(node.WhenClause),
-                    Visit(node.Value)
+                    switchValue,
+                    VisitLabelTarget(node.BreakLabel),
+                    VisitAndConvert(node.Variables, nameof(VisitSwitch)),
+                    Visit(node.Sections, VisitSwitchSection)
                 );
 
             PopScope(node.Variables);
 
-            return base.VisitSwitchExpressionArm(node);
+            return res;
+        }
+
+        /// <summary>
+        /// Visits a <see cref="SwitchSection"/>, keeping track of the variables declared in <see cref="SwitchSection.Locals"/>.
+        /// </summary>
+        /// <param name="node">The expression to visit.</param>
+        /// <returns>The result of visiting the expression.</returns>
+        protected internal override SwitchSection VisitSwitchSection(SwitchSection node)
+        {
+            PushScope(node.Locals);
+
+            var res = base.VisitSwitchSection(node);
+
+            PopScope(node.Locals);
+
+            return res;
         }
 
         /// <summary>

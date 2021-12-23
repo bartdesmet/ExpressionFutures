@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="Microsoft\CSharp\Expressions\LocalDeclaration.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\MemberInitializer.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\PatternSwitchCSharpStatement.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\BinaryCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\ConstantCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpObjectPattern.cs" />
@@ -130,8 +131,11 @@
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\NotCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\RelationalCSharpPattern.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Patterns\TypeCSharpPattern.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpStatementBase.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\SwitchExpressionArm.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\SwitchLabel.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\SwitchSection.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\WithCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\RangeCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\FromEndIndexCSharpExpression.cs" />

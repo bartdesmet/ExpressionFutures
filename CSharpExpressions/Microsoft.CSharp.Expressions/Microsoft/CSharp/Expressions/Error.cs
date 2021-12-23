@@ -412,6 +412,14 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// ArgumentException with message like "The label of a switch case should be of type 'void'."
+        /// </summary>
+        internal static Exception SwitchLabelTargetShouldBeVoid()
+        {
+            return new ArgumentException(Strings.SwitchLabelTargetShouldBeVoid);
+        }
+
+        /// <summary>
         /// InvalidOperationException with message like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
         /// </summary>
         internal static Exception InvalidGotoCase(object p0)
@@ -1211,6 +1219,30 @@ namespace Microsoft.CSharp.Expressions
             return new ArgumentException(Strings.CatchTypeNotEquivalentWithVariableType(p0, p1));
         }
 
+        /// <summary>
+        /// ArgumentException with message like "The label '{0}' is used in multiple switch sections."
+        /// </summary>
+        internal static Exception DuplicateLabelInSwitchStatement(object p0)
+        {
+            return new ArgumentException(Strings.DuplicateLabelInSwitchStatement(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
+        /// </summary>
+        internal static Exception SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1)
+        {
+            return new ArgumentException(Strings.SwitchValueTypeDoesNotMatchPatternInputType(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "A switch statement should contain at most one default case."
+        /// </summary>
+        internal static Exception FoundMoreThanOneDefaultLabel()
+        {
+            return new ArgumentException(Strings.FoundMoreThanOneDefaultLabel);
+        }
+
     }
 
     /// <summary>
@@ -1678,6 +1710,17 @@ namespace Microsoft.CSharp.Expressions
             get
             {
                 return SR.SwitchBreakLabelShouldBeVoid;
+            }
+        }
+
+        /// <summary>
+        /// A string like "The label of a switch case should be of type 'void'."
+        /// </summary>
+        internal static string SwitchLabelTargetShouldBeVoid
+        {
+            get
+            {
+                return SR.SwitchLabelTargetShouldBeVoid;
             }
         }
 
@@ -2574,6 +2617,33 @@ namespace Microsoft.CSharp.Expressions
             return SR.Format(SR.CatchTypeNotEquivalentWithVariableType, p0, p1);
         }
 
+        /// <summary>
+        /// A string like "The label '{0}' is used in multiple switch sections."
+        /// </summary>
+        internal static string DuplicateLabelInSwitchStatement(object p0)
+        {
+            return SR.Format(SR.DuplicateLabelInSwitchStatement, p0);
+        }
+
+        /// <summary>
+        /// A string like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
+        /// </summary>
+        internal static string SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1)
+        {
+            return SR.Format(SR.SwitchValueTypeDoesNotMatchPatternInputType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "A switch statement should contain at most one default case."
+        /// </summary>
+        internal static string FoundMoreThanOneDefaultLabel
+        {
+            get
+            {
+                return SR.FoundMoreThanOneDefaultLabel;
+            }
+        }
+
     }
 }
 
@@ -2631,6 +2701,7 @@ namespace System
         public const string SwitchCaseHasIncompatibleType = "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'.";
         public const string TestValuesShouldHaveConsistentType = "All specified test values should have the same type.";
         public const string SwitchBreakLabelShouldBeVoid = "The break label of a switch statement should be of type 'void'.";
+        public const string SwitchLabelTargetShouldBeVoid = "The label of a switch case should be of type 'void'.";
         public const string InvalidGotoCase = "A 'goto case {0}' statement was found but the containing switch statement has no such label.";
         public const string InvalidGotoDefault = "A 'goto default' statement was found but the containing switch statement has no default label.";
         public const string GotoCanOnlyBeReducedInSwitch = "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node.";
@@ -2731,5 +2802,8 @@ namespace System
         public const string UsingPatternDisposeInputNotCompatibleWithResource = "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement.";
         public const string CatchVariableNotInScope = "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block.";
         public const string CatchTypeNotEquivalentWithVariableType = "The catch block exception type '{0}' is not equivalent to the variable type '{1}'.";
+        public const string DuplicateLabelInSwitchStatement = "The label '{0}' is used in multiple switch sections.";
+        public const string SwitchValueTypeDoesNotMatchPatternInputType = "The pattern input type '{0}' is not compatible with the switch value type '{1}'.";
+        public const string FoundMoreThanOneDefaultLabel = "A switch statement should contain at most one default case.";
     }
 }

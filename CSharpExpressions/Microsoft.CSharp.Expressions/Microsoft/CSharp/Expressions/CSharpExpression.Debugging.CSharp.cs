@@ -783,6 +783,99 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class PatternSwitchCSharpStatement
+    {
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            visitor.Out("switch (");
+            visitor.VisitExpression(SwitchValue);
+            visitor.Out(")");
+
+            visitor.NewLine();
+            visitor.Out("{");
+            visitor.Indent();
+            visitor.NewLine();
+
+            visitor.PushBreak(BreakLabel);
+
+            for (int i = 0, n = Sections.Count; i < n; i++)
+            {
+                var section = Sections[i];
+
+                for (int j = 0, m = section.Labels.Count; j < m; j++)
+                {
+                    var label = section.Labels[j];
+
+                    if (label.Pattern.PatternType == CSharpPatternType.Discard)
+                    {
+                        visitor.Out("default");
+                    }
+                    else
+                    {
+                        visitor.Out("case ");
+                        visitor.Visit(label.Pattern);
+                    }
+
+                    if (label.WhenClause != null)
+                    {
+                        visitor.Out(" when ");
+                        visitor.VisitExpression(label.WhenClause);
+                    }
+
+                    visitor.Out(":");
+
+                    if (j != m - 1)
+                    {
+                        visitor.NewLine();
+                    }
+                }
+
+                visitor.Indent();
+                visitor.NewLine();
+
+                for (int k = 0, o = section.Statements.Count; k < o; k++)
+                {
+                    var stmt = section.Statements[k];
+
+                    visitor.Visit(stmt);
+
+                    if (k != o - 1)
+                    {
+                        visitor.NewLine();
+                    }
+                    else
+                    {
+                        var @goto = stmt as GotoExpression;
+                        if (@goto?.Kind != GotoExpressionKind.Break)
+                        {
+                            visitor.NewLine();
+                            visitor.Out("break;");
+                        }
+                    }
+                }
+
+                visitor.Dedent();
+
+                if (i != n - 1)
+                {
+                    visitor.NewLine();
+                }
+            }
+
+            visitor.PopBreak();
+
+            visitor.Dedent();
+            visitor.NewLine();
+            visitor.Out("}");
+        }
+    }
+
     partial class TryCSharpStatement
     {
         /// <summary>
@@ -2452,12 +2545,12 @@ namespace Microsoft.CSharp.Expressions
                 if (arm.WhenClause != null)
                 {
                     visitor.Out(" when ");
-                    visitor.Visit(arm.WhenClause);
+                    visitor.VisitExpression(arm.WhenClause);
                 }
 
                 visitor.Out(" => ");
 
-                visitor.Visit(arm.Value);
+                visitor.VisitExpression(arm.Value);
 
                 visitor.Out(",");
             }

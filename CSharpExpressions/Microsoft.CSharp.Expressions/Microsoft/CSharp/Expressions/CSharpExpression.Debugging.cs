@@ -73,6 +73,16 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class SwitchSection
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
+    partial class SwitchLabel
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -109,6 +119,10 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(LocalDeclaration declaration) => Visit(declaration);
 
         public XNode GetDebugView(CSharpCatchBlock catchBlock) => Visit(catchBlock);
+
+        public XNode GetDebugView(SwitchSection switchSection) => Visit(switchSection);
+
+        public XNode GetDebugView(SwitchLabel switchLabel) => Visit(switchLabel);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -797,6 +811,65 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override Expression VisitSwitch(PatternSwitchCSharpStatement node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.SwitchValue), Visit(node.SwitchValue))
+            };
+
+            if (node.Variables.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Variables), node.Variables));
+            }
+
+            args.Add(Visit(nameof(node.Sections), node.Sections, Visit));
+
+            args.Add(new XElement(nameof(node.BreakLabel), _parent.GetDebugView(node.BreakLabel)));
+
+            return Push(node, args);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override SwitchSection VisitSwitchSection(SwitchSection node)
+        {
+            var args = new List<object>();
+
+            if (node.Locals.Count > 0)
+            {
+                args.Add(Visit(nameof(node.Locals), node.Locals));
+            }
+
+            args.Add(Visit(nameof(node.Labels), node.Labels, Visit));
+
+            args.Add(Visit(nameof(node.Statements), node.Statements));
+
+            _nodes.Push(new XElement(nameof(SwitchSection), args));
+            return node;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
+        protected internal override SwitchLabel VisitSwitchLabel(SwitchLabel node)
+        {
+            var args = new List<object>();
+
+            if (node.Label != null)
+            {
+                args.Add(new XElement(nameof(node.Label), _parent.GetDebugView(node.Label)));
+            }
+
+            args.Add(new XElement(nameof(node.Pattern), Visit(node.Pattern)));
+
+            if (node.WhenClause != null)
+            {
+                args.Add(new XElement(nameof(node.WhenClause), Visit(node.WhenClause)));
+            }
+
+            _nodes.Push(new XElement(nameof(SwitchLabel), args));
+            return node;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
             var args = new List<object>();
@@ -1209,6 +1282,18 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(CSharpCatchBlock node)
         {
             VisitCatchBlock(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(SwitchSection node)
+        {
+            VisitSwitchSection(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(SwitchLabel node)
+        {
+            VisitSwitchLabel(node);
             return _nodes.Pop();
         }
 

@@ -139,8 +139,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, IEnumerable<Expression> statements)
         {
-            ContractUtils.RequiresNotNull(testValues, nameof(testValues));
-            ContractUtils.RequiresNotNull(statements, nameof(statements));
+            RequiresNotNull(testValues, nameof(testValues));
+            RequiresNotNull(statements, nameof(statements));
 
             // NB: We don't check the body for Break statements; worst case we'll insert one at the end during Reduce.
             //     Note that the semantics are nonetheless consistent with C#, i.e. no implicit fall-through.

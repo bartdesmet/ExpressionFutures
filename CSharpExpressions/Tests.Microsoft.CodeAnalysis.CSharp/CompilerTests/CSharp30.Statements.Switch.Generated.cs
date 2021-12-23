@@ -40,7 +40,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     public partial class CompilerTests_CSharp30_Statements_Switch
     {
         [TestMethod]
-        public void CompilerTest_2156_D7F7()
+        public void CompilerTest_2156_3E42()
         {
             // (Expression<Action<int>>)(x => { switch (x) {} })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) {} })");
@@ -56,7 +56,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases />
+          <Sections />
           <BreakLabel>
             <LabelTarget Type=""System.Void"" Id=""1"" />
           </BreakLabel>
@@ -69,13 +69,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_2156_D7F7();
+            Verify.CompilerTest_2156_3E42();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_D7F7() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2156_3E42() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_FCA9_3B3F()
+        public void CompilerTest_FCA9_2ACE()
         {
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('0'); break; } })");
@@ -91,8 +91,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""0"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case 0:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""0"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -101,31 +113,31 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""2"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""3"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_FCA9_3B3F();
+            Verify.CompilerTest_FCA9_2ACE();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_3B3F() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_FCA9_2ACE() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_6832_C62D()
+        public void CompilerTest_6832_8C06()
         {
             // (Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: case 1: Console.Write('A'); break; } })");
@@ -141,8 +153,30 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""0, 1"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case 0:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""0"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""2"" Name=""case 1:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""1"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -151,31 +185,31 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""3"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""3"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""4"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_6832_C62D();
+            Verify.CompilerTest_6832_8C06();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_C62D() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6832_8C06() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_4E9F_42FD()
+        public void CompilerTest_4E9F_B13C()
         {
             // (Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { case 0: Console.Write('A'); break; default: Console.Write('D'); break; } })");
@@ -191,8 +225,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""0"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case 0:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Int32"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""0"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -201,12 +247,22 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-            <CSharpSwitchCase TestValues=""default"">
+            </SwitchSection>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""3"" Name=""default"" />
+                  </Label>
+                  <Pattern>
+                    <DiscardPattern InputType=""System.Int32"" NarrowedType=""System.Int32"" />
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -215,31 +271,31 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""2"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""4"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_4E9F_42FD();
+            Verify.CompilerTest_4E9F_B13C();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_42FD() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_4E9F_B13C() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_30E5_8D77()
+        public void CompilerTest_30E5_36B1()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: case null: Console.Write('N'); break; } })");
@@ -255,8 +311,30 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""0, null"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case 0:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""0"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""2"" Name=""case null:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Nullable`1[System.Int32]"">
+                      <Constant Type=""System.Nullable`1[System.Int32]"" Value=""null"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -265,31 +343,31 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""3"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""3"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""4"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_30E5_8D77();
+            Verify.CompilerTest_30E5_36B1();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_8D77() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_30E5_36B1() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_1754_0766()
+        public void CompilerTest_1754_E641()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: goto case null; case null: Console.Write('N'); break; } })");
@@ -305,13 +383,37 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""0"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case 0:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""0"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <CSharpGotoCase Type=""System.Void"" Value=""null"" />
               </Statements>
-            </CSharpSwitchCase>
-            <CSharpSwitchCase TestValues=""null"">
+            </SwitchSection>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""2"" Name=""case null:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Nullable`1[System.Int32]"">
+                      <Constant Type=""System.Nullable`1[System.Int32]"" Value=""null"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -320,31 +422,31 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""3"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""3"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""4"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_1754_0766();
+            Verify.CompilerTest_1754_E641();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_0766() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1754_E641() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_AD7C_C86B()
+        public void CompilerTest_AD7C_8957()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case 0: Console.Write('N'); break; case null: goto case 0; } })");
@@ -360,8 +462,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""0"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case 0:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Int32"">
+                      <Constant Type=""System.Int32"" Value=""0"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -370,36 +484,48 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-            <CSharpSwitchCase TestValues=""null"">
+            </SwitchSection>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""3"" Name=""case null:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Nullable`1[System.Int32]"">
+                      <Constant Type=""System.Nullable`1[System.Int32]"" Value=""null"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <CSharpGotoCase Type=""System.Void"" Value=""0"" />
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""2"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""4"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AD7C_C86B();
+            Verify.CompilerTest_AD7C_8957();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_C86B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AD7C_8957() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_3E56_6022()
+        public void CompilerTest_3E56_25F5()
         {
             // (Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })
             var actual = GetDebugView(@"(Expression<Action<int?>>)(x => { switch (x) { case null: goto default; default: Console.Write('N'); break; } })");
@@ -415,13 +541,35 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""null"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""case null:"" />
+                  </Label>
+                  <Pattern>
+                    <ConstantPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Nullable`1[System.Int32]"">
+                      <Constant Type=""System.Nullable`1[System.Int32]"" Value=""null"" />
+                    </ConstantPattern>
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <CSharpGotoDefault Type=""System.Void"" />
               </Statements>
-            </CSharpSwitchCase>
-            <CSharpSwitchCase TestValues=""default"">
+            </SwitchSection>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""2"" Name=""default"" />
+                  </Label>
+                  <Pattern>
+                    <DiscardPattern InputType=""System.Nullable`1[System.Int32]"" NarrowedType=""System.Nullable`1[System.Int32]"" />
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Call Type=""System.Void"" Method=""Void Write(Char)"">
                   <Arguments>
@@ -430,31 +578,31 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 </Call>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""3"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""3"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""4"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_3E56_6022();
+            Verify.CompilerTest_3E56_25F5();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_6022() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3E56_25F5() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_6D08_923C()
+        public void CompilerTest_6D08_2E80()
         {
             // (Expression<Action<int>>)(x => { switch (x) { default: break; } })
             var actual = GetDebugView(@"(Expression<Action<int>>)(x => { switch (x) { default: break; } })");
@@ -470,36 +618,46 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <SwitchValue>
             <Parameter Type=""System.Int32"" Id=""0"" Name=""x"" />
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""default"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""1"" Name=""default"" />
+                  </Label>
+                  <Pattern>
+                    <DiscardPattern InputType=""System.Int32"" NarrowedType=""System.Int32"" />
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""1"" />
+                    <LabelTarget Type=""System.Void"" Id=""2"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""1"" />
+            <LabelTarget Type=""System.Void"" Id=""2"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""2"" />
+        <LabelTarget Type=""System.Void"" Id=""3"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_6D08_923C();
+            Verify.CompilerTest_6D08_2E80();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6D08_923C() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6D08_2E80() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_205E_7D00()
+        public void CompilerTest_205E_15CD()
         {
             // (Expression<Action>)(() => { switch (int.Parse("1")) { } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { switch (int.Parse(""1"")) { } })");
@@ -517,7 +675,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
               </Arguments>
             </Call>
           </SwitchValue>
-          <Cases />
+          <Sections />
           <BreakLabel>
             <LabelTarget Type=""System.Void"" Id=""0"" />
           </BreakLabel>
@@ -530,13 +688,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_205E_7D00();
+            Verify.CompilerTest_205E_15CD();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_205E_7D00() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_205E_15CD() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_A00C_0847()
+        public void CompilerTest_A00C_829E()
         {
             // (Expression<Action>)(() => { switch (int.Parse("1")) { default: break; } })
             var actual = GetDebugView(@"(Expression<Action>)(() => { switch (int.Parse(""1"")) { default: break; } })");
@@ -554,33 +712,43 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
               </Arguments>
             </Call>
           </SwitchValue>
-          <Cases>
-            <CSharpSwitchCase TestValues=""default"">
+          <Sections>
+            <SwitchSection>
+              <Labels>
+                <SwitchLabel>
+                  <Label>
+                    <LabelTarget Type=""System.Void"" Id=""0"" Name=""default"" />
+                  </Label>
+                  <Pattern>
+                    <DiscardPattern InputType=""System.Int32"" NarrowedType=""System.Int32"" />
+                  </Pattern>
+                </SwitchLabel>
+              </Labels>
               <Statements>
                 <Goto Type=""System.Void"" Kind=""Break"">
                   <Target>
-                    <LabelTarget Type=""System.Void"" Id=""0"" />
+                    <LabelTarget Type=""System.Void"" Id=""1"" />
                   </Target>
                 </Goto>
               </Statements>
-            </CSharpSwitchCase>
-          </Cases>
+            </SwitchSection>
+          </Sections>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""0"" />
+            <LabelTarget Type=""System.Void"" Id=""1"" />
           </BreakLabel>
         </CSharpSwitch>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""1"" />
+        <LabelTarget Type=""System.Void"" Id=""2"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_A00C_0847();
+            Verify.CompilerTest_A00C_829E();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A00C_0847() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A00C_829E() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -608,17 +776,17 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         partial class Reviewed
         {
-            public override void CompilerTest_2156_D7F7() => OK();
-            public override void CompilerTest_FCA9_3B3F() => OK();
-            public override void CompilerTest_6832_C62D() => OK();
-            public override void CompilerTest_4E9F_42FD() => OK();
-            public override void CompilerTest_30E5_8D77() => OK();
-            public override void CompilerTest_1754_0766() => OK();
-            public override void CompilerTest_AD7C_C86B() => OK();
-            public override void CompilerTest_3E56_6022() => OK();
-            public override void CompilerTest_6D08_923C() => OK();
-            public override void CompilerTest_205E_7D00() => OK();
-            public override void CompilerTest_A00C_0847() => OK();
+            public override void CompilerTest_2156_3E42() => OK();
+            public override void CompilerTest_FCA9_2ACE() => OK();
+            public override void CompilerTest_6832_8C06() => OK();
+            public override void CompilerTest_4E9F_B13C() => OK();
+            public override void CompilerTest_30E5_36B1() => OK();
+            public override void CompilerTest_1754_E641() => OK();
+            public override void CompilerTest_AD7C_8957() => OK();
+            public override void CompilerTest_3E56_25F5() => OK();
+            public override void CompilerTest_6D08_2E80() => OK();
+            public override void CompilerTest_205E_15CD() => OK();
+            public override void CompilerTest_A00C_829E() => OK();
         }
     }
 }
