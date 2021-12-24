@@ -16,25 +16,17 @@ namespace System.Runtime.CompilerServices
         /// Creates a new runtime async state machine using the specified MoveNext implementation delegate.
         /// </summary>
         /// <param name="moveNext">Delegate to implement the MoveNext method.</param>
-        public RuntimeAsyncStateMachine(Action moveNext)
-        {
-            _moveNext = moveNext;
-        }
+        public RuntimeAsyncStateMachine(Action moveNext) => _moveNext = moveNext;
 
         /// <summary>
         /// Advances the state machine.
         /// </summary>
-        public void MoveNext()
-        {
-            _moveNext();
-        }
+        public void MoveNext() => _moveNext();
 
         /// <summary>
         /// Set the state machine.
         /// </summary>
         /// <param name="stateMachine">State machine.</param>
-        public void SetStateMachine(IAsyncStateMachine stateMachine)
-        {
-        }
+        public void SetStateMachine(IAsyncStateMachine stateMachine) { }
     }
 }
