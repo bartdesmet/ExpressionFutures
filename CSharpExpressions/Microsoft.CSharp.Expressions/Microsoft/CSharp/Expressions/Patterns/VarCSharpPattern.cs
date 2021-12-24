@@ -37,7 +37,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public VarCSharpPattern Update(ParameterExpression variable)
         {
-            if (variable == this.Variable)
+            if (variable == Variable)
             {
                 return this;
             }
@@ -55,7 +55,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The original pattern rewritten to use the specified input type.</returns>
         public override CSharpPattern ChangeType(Type inputType)
         {
-            if (inputType == this.InputType)
+            if (inputType == InputType)
             {
                 return this;
             }

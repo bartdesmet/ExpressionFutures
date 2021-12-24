@@ -39,7 +39,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The original pattern rewritten to use the specified input type.</returns>
         public override CSharpPattern ChangeType(Type inputType)
         {
-            if (inputType == this.InputType)
+            if (inputType == InputType)
             {
                 return this;
             }

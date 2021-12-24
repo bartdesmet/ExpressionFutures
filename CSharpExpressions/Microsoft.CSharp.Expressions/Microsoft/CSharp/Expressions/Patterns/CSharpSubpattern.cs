@@ -9,10 +9,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class CSharpSubpattern
     {
-        internal CSharpSubpattern(CSharpPattern pattern)
-        {
-            Pattern = pattern;
-        }
+        internal CSharpSubpattern(CSharpPattern pattern) => Pattern = pattern;
 
         /// <summary>
         /// Gets the type of the subpattern.

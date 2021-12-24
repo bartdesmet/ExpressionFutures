@@ -66,7 +66,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The original pattern rewritten to use the specified input type.</returns>
         public override CSharpPattern ChangeType(Type inputType)
         {
-            if (inputType == this.InputType)
+            if (inputType == InputType)
             {
                 return this;
             }
@@ -142,7 +142,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ITupleCSharpPattern Update(ReadOnlyCollection<PositionalCSharpSubpattern> deconstruction)
         {
-            if (deconstruction == this.Deconstruction)
+            if (deconstruction == Deconstruction)
             {
                 return this;
             }
@@ -244,11 +244,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual CSharpPattern VisitITuplePattern(ITupleCSharpPattern node)
-        {
-            return node.Update(
-                Visit(node.Deconstruction, VisitPositionalSubpattern)
-            );
-        }
+        protected internal virtual CSharpPattern VisitITuplePattern(ITupleCSharpPattern node) => node.Update(Visit(node.Deconstruction, VisitPositionalSubpattern));
     }
 }

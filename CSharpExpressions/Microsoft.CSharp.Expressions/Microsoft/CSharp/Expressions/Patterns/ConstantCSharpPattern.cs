@@ -46,7 +46,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConstantCSharpPattern Update(ConstantExpression value)
         {
-            if (value == this.Value)
+            if (value == Value)
             {
                 return this;
             }

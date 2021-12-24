@@ -51,7 +51,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public PropertyCSharpSubpattern Update(CSharpPattern pattern)
         {
-            if (pattern == this.Pattern)
+            if (pattern == Pattern)
             {
                 return this;
             }
@@ -115,9 +115,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual PropertyCSharpSubpattern VisitPropertySubpattern(PropertyCSharpSubpattern node)
-        {
-            return node.Update(VisitPattern(node.Pattern));
-        }
+        protected internal virtual PropertyCSharpSubpattern VisitPropertySubpattern(PropertyCSharpSubpattern node) => node.Update(VisitPattern(node.Pattern));
     }
 }
