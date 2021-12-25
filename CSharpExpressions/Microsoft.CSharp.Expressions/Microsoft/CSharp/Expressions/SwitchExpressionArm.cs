@@ -2,15 +2,17 @@
 //
 // bartde - December 2021
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a switch expression arm.
     /// </summary>
@@ -54,7 +56,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public SwitchExpressionArm Update(IEnumerable<ParameterExpression> variables, CSharpPattern pattern, Expression whenClause, Expression value)
         {
-            if (variables == this.Variables && pattern == this.Pattern && whenClause == this.WhenClause && value == this.Value)
+            if (SameElements(ref variables, Variables) && pattern == Pattern && whenClause == WhenClause && value == Value)
             {
                 return this;
             }
@@ -104,9 +106,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The switch expression arm to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual SwitchExpressionArm VisitSwitchExpressionArm(SwitchExpressionArm node)
-        {
-            return node.Update(VisitAndConvert(node.Variables, nameof(VisitSwitchExpressionArm)), VisitPattern(node.Pattern), Visit(node.WhenClause), Visit(node.Value));
-        }
+        protected internal virtual SwitchExpressionArm VisitSwitchExpressionArm(SwitchExpressionArm node) =>
+            node.Update(
+                VisitAndConvert(node.Variables, nameof(VisitSwitchExpressionArm)),
+                VisitPattern(node.Pattern),
+                Visit(node.WhenClause),
+                Visit(node.Value)
+            );
     }
 }

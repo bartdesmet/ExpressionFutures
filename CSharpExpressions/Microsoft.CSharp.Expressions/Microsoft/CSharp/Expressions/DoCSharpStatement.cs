@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a do...while loop.
     /// </summary>
@@ -43,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public DoCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression body, Expression test, IEnumerable<ParameterExpression> locals)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && body == this.Body && test == this.Test && Helpers.SameElements(ref locals, this.Locals))
+            if (breakLabel == BreakLabel && continueLabel == ContinueLabel && body == Body && test == Test && SameElements(ref locals, this.Locals))
             {
                 return this;
             }
@@ -168,9 +170,13 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDo(DoCSharpStatement node)
-        {
-            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), Visit(node.Body), Visit(node.Test), VisitAndConvert(node.Locals, nameof(VisitDo)));
-        }
+        protected internal virtual Expression VisitDo(DoCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.BreakLabel),
+                VisitLabelTarget(node.ContinueLabel),
+                Visit(node.Body),
+                Visit(node.Test),
+                VisitAndConvert(node.Locals, nameof(VisitDo))
+            );
     }
 }

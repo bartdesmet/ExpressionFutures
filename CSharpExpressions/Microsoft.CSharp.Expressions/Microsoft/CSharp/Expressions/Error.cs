@@ -1228,11 +1228,27 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// ArgumentException with message like "The label '{0}' is used more than once in the switch section."
+        /// </summary>
+        internal static Exception DuplicateLabelInSwitchSection(object p0)
+        {
+            return new ArgumentException(Strings.DuplicateLabelInSwitchSection(p0));
+        }
+
+        /// <summary>
         /// ArgumentException with message like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
         /// </summary>
         internal static Exception SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1)
         {
             return new ArgumentException(Strings.SwitchValueTypeDoesNotMatchPatternInputType(p0, p1));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section."
+        /// </summary>
+        internal static Exception InconsistentPatternInputType(object p0, object p1)
+        {
+            return new ArgumentException(Strings.InconsistentPatternInputType(p0, p1));
         }
 
         /// <summary>
@@ -2626,11 +2642,27 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
+        /// A string like "The label '{0}' is used more than once in the switch section."
+        /// </summary>
+        internal static string DuplicateLabelInSwitchSection(object p0)
+        {
+            return SR.Format(SR.DuplicateLabelInSwitchSection, p0);
+        }
+
+        /// <summary>
         /// A string like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
         /// </summary>
         internal static string SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1)
         {
             return SR.Format(SR.SwitchValueTypeDoesNotMatchPatternInputType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section."
+        /// </summary>
+        internal static string InconsistentPatternInputType(object p0, object p1)
+        {
+            return SR.Format(SR.InconsistentPatternInputType, p0, p1);
         }
 
         /// <summary>
@@ -2803,7 +2835,9 @@ namespace System
         public const string CatchVariableNotInScope = "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block.";
         public const string CatchTypeNotEquivalentWithVariableType = "The catch block exception type '{0}' is not equivalent to the variable type '{1}'.";
         public const string DuplicateLabelInSwitchStatement = "The label '{0}' is used in multiple switch sections.";
+        public const string DuplicateLabelInSwitchSection = "The label '{0}' is used more than once in the switch section.";
         public const string SwitchValueTypeDoesNotMatchPatternInputType = "The pattern input type '{0}' is not compatible with the switch value type '{1}'.";
+        public const string InconsistentPatternInputType = "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section.";
         public const string FoundMoreThanOneDefaultLabel = "A switch statement should contain at most one default case.";
     }
 }

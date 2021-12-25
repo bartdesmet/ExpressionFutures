@@ -10,11 +10,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents an array access operation.
     /// </summary>
@@ -54,10 +58,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitArrayAccess(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitArrayAccess(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -67,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ArrayAccessCSharpExpression Update(Expression array, IEnumerable<Expression> indexes)
         {
-            if (array == Array && indexes == Indexes)
+            if (array == Array && SameElements(ref indexes, Indexes))
             {
                 return this;
             }
@@ -115,7 +116,7 @@ namespace Microsoft.CSharp.Expressions
 
                 stmts.Add(Expression.ArrayAccess(array, index));
 
-                return Helpers.Comma(temps, stmts);
+                return Comma(temps, stmts);
             }
 
             Expression ReduceRange()
@@ -302,10 +303,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="array">The array to access.</param>
         /// <param name="index">The index to access.</param>
         /// <returns>A new <see cref="ArrayAccessCSharpExpression"/> instance representing the array access operation.</returns>
-        public static ArrayAccessCSharpExpression ArrayAccess(Expression array, Expression index)
-        {
-            return ArrayAccess(array, new[] { index });
-        }
+        public static ArrayAccessCSharpExpression ArrayAccess(Expression array, Expression index) => ArrayAccess(array, new[] { index });
 
         /// <summary>
         /// Creates an expression representing an array access operation.
@@ -313,10 +311,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="array">The array to access.</param>
         /// <param name="indexes">The indexes used to access the array.</param>
         /// <returns>A new <see cref="ArrayAccessCSharpExpression"/> instance representing the array access operation.</returns>
-        public static new ArrayAccessCSharpExpression ArrayAccess(Expression array, params Expression[] indexes)
-        {
-            return ArrayAccess(array, (IEnumerable<Expression>)indexes);
-        }
+        public static new ArrayAccessCSharpExpression ArrayAccess(Expression array, params Expression[] indexes) => ArrayAccess(array, (IEnumerable<Expression>)indexes);
 
         /// <summary>
         /// Creates an expression representing an array access operation.
@@ -331,16 +326,12 @@ namespace Microsoft.CSharp.Expressions
             var arrayType = array.Type;
 
             if (!arrayType.IsArray)
-            {
                 throw LinqError.ArgumentMustBeArray();
-            }
 
             var indexesList = indexes.ToReadOnly();
 
             if (arrayType.GetArrayRank() != indexesList.Count)
-            {
                 throw LinqError.IncorrectNumberOfIndexes();
-            }
 
             foreach (var index in indexesList)
             {
@@ -360,9 +351,7 @@ namespace Microsoft.CSharp.Expressions
             foreach (var index in indexesList)
             {
                 if (index.Type != typeof(int))
-                {
                     throw LinqError.ArgumentMustBeArrayIndexType();
-                }
             }
 
             return new ArrayAccessCSharpExpression(array, indexesList);
@@ -377,9 +366,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
-        {
-            return node.Update(Visit(node.Array), Visit(node.Indexes));
-        }
+        protected internal virtual Expression VisitArrayAccess(ArrayAccessCSharpExpression node) =>
+            node.Update(
+                Visit(node.Array),
+                Visit(node.Indexes)
+            );
     }
 }

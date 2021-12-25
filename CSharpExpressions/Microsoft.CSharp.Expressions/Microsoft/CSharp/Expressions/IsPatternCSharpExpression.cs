@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
@@ -58,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public IsPatternCSharpExpression Update(Expression expression, CSharpPattern pattern)
         {
-            if (expression == this.Expression && Pattern == this.Pattern)
+            if (expression == Expression && pattern == Pattern)
             {
                 return this;
             }
@@ -101,17 +102,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitIsPattern(IsPatternCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression), VisitPattern(node.Pattern));
-        }
-
-        /// <summary>
-        /// Visits the children of the <see cref="CSharpPattern" />.
-        /// </summary>
-        /// <param name="node">The expression to visit.</param>
-        /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual CSharpPattern VisitPattern(CSharpPattern node) => node.Accept(this);
+        protected internal virtual Expression VisitIsPattern(IsPatternCSharpExpression node) =>
+            node.Update(
+                Visit(node.Expression),
+                VisitPattern(node.Pattern)
+            );
     }
 }

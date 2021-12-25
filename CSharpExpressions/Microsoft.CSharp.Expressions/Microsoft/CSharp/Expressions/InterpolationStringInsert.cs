@@ -86,9 +86,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Interpolation VisitInterpolationStringInsert(InterpolationStringInsert node)
-        {
-            return node.Update(Visit(node.Value));
-        }
+        protected internal virtual Interpolation VisitInterpolationStringInsert(InterpolationStringInsert node) =>
+            node.Update(
+                Visit(node.Value)
+            );
     }
 }

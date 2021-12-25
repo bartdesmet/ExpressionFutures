@@ -2,19 +2,22 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
-using Microsoft.CSharp.Expressions.Compiler;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a dynamically bound lookup of a member.
     /// </summary>
@@ -65,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: By-ref passing for the receiver seems to be omitted in Roslyn here; see https://github.com/dotnet/roslyn/issues/6818.
             //     We're choosing to be consistent with that behavior until further notice.
             expressions[0] = Object;
-            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
+            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, name: null);
 
             argumentTypes = null;
             CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
@@ -80,10 +83,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicGetMember(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicGetMember(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -93,7 +93,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public GetMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
         {
-            if (@object == this.Object && arguments == this.Arguments)
+            if (@object == Object && SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -175,10 +175,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to lookup.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the member upon lookup.</param>
         /// <returns>A new expression representing a dynamically bound member lookup.</returns>
-        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, params Expression[] arguments)
-        {
-            return DynamicGetMember(@object, name, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, params Expression[] arguments) =>
+            DynamicGetMember(@object, name, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member lookup.
@@ -187,10 +185,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to lookup.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the member upon lookup.</param>
         /// <returns>A new expression representing a dynamically bound member lookup.</returns>
-        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<Expression> arguments)
-        {
-            return DynamicGetMember(@object, name, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<Expression> arguments) =>
+            DynamicGetMember(@object, name, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member lookup.
@@ -199,10 +195,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to lookup.</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon lookup.</param>
         /// <returns>A new expression representing a dynamically bound member lookup.</returns>
-        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicGetMember(@object, name, arguments, CSharpBinderFlags.None, null);
-        }
+        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, DynamicCSharpArgument[] arguments) =>
+            DynamicGetMember(@object, name, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member lookup.
@@ -211,10 +205,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to lookup.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the member upon lookup.</param>
         /// <returns>A new expression representing a dynamically bound member lookup.</returns>
-        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicGetMember(@object, name, arguments, CSharpBinderFlags.None, null);
-        }
+        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicGetMember(@object, name, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member lookup with the specified binder flags.
@@ -224,10 +216,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the member upon lookup.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound member lookup.</returns>
-        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags)
-        {
-            return DynamicGetMember(@object, name, arguments, binderFlags, null);
-        }
+        public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+            DynamicGetMember(@object, name, arguments, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member lookup with the specified binder flags and the specified type context.
@@ -241,7 +231,7 @@ namespace Microsoft.CSharp.Expressions
         public static GetMemberDynamicCSharpExpression DynamicGetMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context)
         {
             RequiresCanRead(@object, nameof(@object));
-            ContractUtils.RequiresNotNull(name, nameof(name));
+            RequiresNotNull(name, nameof(name));
 
             var argList = arguments.ToReadOnly();
 
@@ -257,9 +247,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicGetMember(GetMemberDynamicCSharpExpression node)
-        {
-            return node.Update(Visit(node.Object), Visit(node.Arguments, VisitDynamicArgument));
-        }
+        protected internal virtual Expression VisitDynamicGetMember(GetMemberDynamicCSharpExpression node) =>
+            node.Update(
+                Visit(node.Object),
+                Visit(node.Arguments, VisitDynamicArgument)
+            );
     }
 }

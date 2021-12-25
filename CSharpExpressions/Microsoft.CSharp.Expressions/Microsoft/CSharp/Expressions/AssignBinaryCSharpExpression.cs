@@ -7,12 +7,16 @@ using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     // DESIGN: Does FinalConversion leak too many C# details that are hard to make sense of by the user?
     //         For one thing, the node is losely mirrored to the BoundNodes in Roslyn, which could be the
     //         strategy for expression tree APIs going forward. Also, 7.17.2 is pretty clear about the use
@@ -75,7 +79,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (Left.Type.IsNullableType())
                 {
-                    return Method == null || !TypeUtils.AreEquivalent(Method.GetParametersCached()[0].ParameterType.GetNonRefType(), Left.Type);
+                    return Method == null || !AreEquivalent(Method.GetParametersCached()[0].ParameterType.GetNonRefType(), Left.Type);
                 }
 
                 return false;
@@ -94,10 +98,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitBinaryAssign(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitBinaryAssign(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -109,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AssignBinaryCSharpExpression Update(Expression left, LambdaExpression leftConversion, Expression right, LambdaExpression finalConversion)
         {
-            if (left == base.Left && leftConversion == this.LeftConversion && right == base.Right && finalConversion == this.FinalConversion)
+            if (left == Left && leftConversion == LeftConversion && right == Right && finalConversion == FinalConversion)
             {
                 return this;
             }
@@ -125,12 +126,10 @@ namespace Microsoft.CSharp.Expressions
         {
             var left = MakeWriteable(Left);
 
-            if (CSharpNodeType == CSharpExpressionType.NullCoalescingAssign)
-            {
-                // NB: NullCoalescingAssign is handled by the Reduce implementation on the derived type.
+            // NB: NullCoalescingAssign is handled by the Reduce implementation on the derived type.
 
+            if (CSharpNodeType == CSharpExpressionType.NullCoalescingAssign)
                 throw ContractUtils.Unreachable;
-            }
 
             if (CSharpNodeType == CSharpExpressionType.Assign)
             {
@@ -163,9 +162,8 @@ namespace Microsoft.CSharp.Expressions
             });
         }
 
-        internal static BinaryExpression FunctionalOp(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method)
-        {
-            return binaryType switch
+        internal static BinaryExpression FunctionalOp(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method) =>
+            binaryType switch
             {
                 CSharpExpressionType.Assign => Expression.Assign(left, right),
                 CSharpExpressionType.AddAssign => Expression.Add(left, right, method),
@@ -183,26 +181,16 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.SubtractAssignChecked => Expression.SubtractChecked(left, right, method),
                 _ => throw LinqError.UnhandledBinary(binaryType),
             };
-        }
 
-        internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
-        {
-            if (binaryType == CSharpExpressionType.NullCoalescingAssign)
-            {
-                return MakeNullCoalescingAssign(left, right, method, leftConversion, finalConversion);
-            }
-            else
-            {
-                return MakeCustomBinaryAssign(binaryType, left, right, method, leftConversion, finalConversion);
-            }
-        }
+        internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion) =>
+            binaryType == CSharpExpressionType.NullCoalescingAssign
+                ? MakeNullCoalescingAssign(left, right, method, leftConversion, finalConversion)
+                : MakeCustomBinaryAssign(binaryType, left, right, method, leftConversion, finalConversion);
 
         private static AssignBinaryCSharpExpression MakeNullCoalescingAssign(Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
         {
             if (method != null || leftConversion != null || finalConversion != null)
-            {
                 throw Error.InvalidNullCoalescingAssignmentArguments();
-            }
 
             ValidateCoalesceArgTypes(left.Type, right.Type);
 
@@ -253,10 +241,8 @@ namespace Microsoft.CSharp.Expressions
                 resultType = ValidateConversion(binaryType, resultType, finalConversion);
             }
 
-            if (!TypeUtils.AreEquivalent(resultType, left.Type))
-            {
+            if (!AreEquivalent(resultType, left.Type))
                 throw Error.InvalidCompoundAssignmentWithOperands(binaryType, left.Type, right.Type);
-            }
         }
 
         private static Type ValidateConversion(CSharpExpressionType nodeType, Type inputType, LambdaExpression conversion)
@@ -265,19 +251,15 @@ namespace Microsoft.CSharp.Expressions
 
             var invokeParameters = invoke.GetParametersCached();
             if (invokeParameters.Length != 1)
-            {
                 throw LinqError.IncorrectNumberOfMethodCallArguments(conversion);
-            }
 
-            if (!TypeUtils.AreEquivalent(invokeParameters[0].ParameterType, inputType))
-            {
+            if (!AreEquivalent(invokeParameters[0].ParameterType, inputType))
                 throw LinqError.OperandTypesDoNotMatchParameters(nodeType, conversion.ToString());
-            }
 
             return invoke.ReturnType;
         }
 
-        internal class WithConversions : AssignBinaryCSharpExpression
+        internal sealed class WithConversions : AssignBinaryCSharpExpression
         {
             internal WithConversions(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
                 : base(binaryType, left, right)
@@ -292,7 +274,7 @@ namespace Microsoft.CSharp.Expressions
             public override LambdaExpression FinalConversion { get; }
         }
 
-        internal class NullCoalescingAssignment : AssignBinaryCSharpExpression
+        internal sealed class NullCoalescingAssignment : AssignBinaryCSharpExpression
         {
             internal NullCoalescingAssignment(Expression left, Expression right)
                 : base(CSharpExpressionType.NullCoalescingAssign, left, right)
@@ -365,11 +347,11 @@ namespace Microsoft.CSharp.Expressions
                             lhsVal = lhsValVar;
                         }
 
-                        var assignTmp = Expression.Assign(tmp, Helpers.MakeNullableGetValueOrDefault(lhsVal));
+                        var assignTmp = Expression.Assign(tmp, MakeNullableGetValueOrDefault(lhsVal));
                         stmts.Add(assignTmp);
 
                         var assignLhs = Expression.Block(Expression.Assign(tmp, Right), Expression.Assign(lhs, Expression.Convert(tmp, lhs.Type)), tmp);
-                        var conditional = Expression.Condition(Helpers.MakeNullableHasValue(lhsVal), tmp, assignLhs);
+                        var conditional = Expression.Condition(MakeNullableHasValue(lhsVal), tmp, assignLhs);
                         stmts.Add(conditional);
 
                         return Expression.Block(temps, stmts);
@@ -419,9 +401,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="leftConversion">The conversion function used to convert the left hand side of the compound assignment prior to use by the underlying operation.</param>
         /// <param name="finalConversion">The conversion function used to convert the result of the underlying operation prior to assignment to the left hand side of the compound assignment operation.</param>
         /// <returns>A new <see cref="AssignBinaryCSharpExpression"/> instance representing the binary assignment.</returns>
-        public static AssignBinaryCSharpExpression MakeBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
-        {
-            return binaryType switch
+        public static AssignBinaryCSharpExpression MakeBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion) =>
+            binaryType switch
             {
                 CSharpExpressionType.Assign => Assign(left, right),
                 CSharpExpressionType.AddAssign => AddAssign(left, right, method, leftConversion, finalConversion),
@@ -440,7 +421,6 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.NullCoalescingAssign => NullCoalescingAssign(left, right),
                 _ => throw LinqError.UnhandledBinary(binaryType),
             };
-        }
 
         private static AssignBinaryCSharpExpression MakeBinaryAssignCore(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)
         {
@@ -472,7 +452,7 @@ namespace Microsoft.CSharp.Expressions
                             {
                                 method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(object) });
 
-                                if (!TypeUtils.AreReferenceAssignable(typeof(object), rightType))
+                                if (!AreReferenceAssignable(typeof(object), rightType))
                                 {
                                     // DESIGN: Should our factory do this our just reject the input?
                                     right = Expression.Convert(right, typeof(object));
@@ -488,9 +468,7 @@ namespace Microsoft.CSharp.Expressions
                 else if (typeof(MulticastDelegate).IsAssignableFrom(leftType))
                 {
                     if (leftType == typeof(MulticastDelegate))
-                    {
                         throw Error.InvalidCompoundAssignmentWithOperands(binaryType, leftType, rightType);
-                    }
 
                     // NB: This checks for assignment with variance checks in mind, e.g.
                     //
@@ -498,10 +476,8 @@ namespace Microsoft.CSharp.Expressions
                     //       Action<object> o = ...;
                     //       s += o;
 
-                    if (!TypeUtils.AreReferenceAssignable(leftType, rightType))
-                    {
+                    if (!AreReferenceAssignable(leftType, rightType))
                         throw Error.InvalidCompoundAssignmentWithOperands(binaryType, leftType, rightType);
-                    }
 
                     if (method == null)
                     {
@@ -616,9 +592,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitBinaryAssign(AssignBinaryCSharpExpression node)
-        {
-            return node.Update(Visit(node.Left), VisitAndConvert(node.LeftConversion, nameof(VisitBinaryAssign)), Visit(node.Right), VisitAndConvert(node.FinalConversion, nameof(VisitBinaryAssign)));
-        }
+        protected internal virtual Expression VisitBinaryAssign(AssignBinaryCSharpExpression node) =>
+            node.Update(
+                Visit(node.Left),
+                VisitAndConvert(node.LeftConversion, nameof(VisitBinaryAssign)),
+                Visit(node.Right),
+                VisitAndConvert(node.FinalConversion, nameof(VisitBinaryAssign))
+            );
     }
 }

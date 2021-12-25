@@ -2,15 +2,17 @@
 //
 // bartde - December 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using static Microsoft.CSharp.Expressions.Helpers;
+
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     partial class AssignBinaryDynamicCSharpExpression
     {
         private Expression ReduceAssign()
@@ -85,10 +87,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The expression representing the left operand of the operation.</param>
         /// <param name="right">The expression representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicAssign(Expression left, Expression right)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.Assign, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, null);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicAssign(Expression left, Expression right) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.Assign, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary assignment operation.
@@ -96,10 +96,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, CSharpBinderFlags.None, null);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary assignment operation with the specified binder flags.
@@ -108,10 +106,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, binderFlags, null);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary assignment operation with the specified binder flags and the specified type context.
@@ -121,10 +117,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, binderFlags, context);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, binderFlags, context);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary null-coalescing assignment operation.
@@ -132,10 +126,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The expression representing the left operand of the operation.</param>
         /// <param name="right">The expression representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(Expression left, Expression right)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, null);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(Expression left, Expression right) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary null-coalescing assignment operation.
@@ -143,10 +135,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, CSharpBinderFlags.None, null);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary null-coalescing assignment operation with the specified binder flags.
@@ -155,10 +145,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, binderFlags, null);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary null-coalescing assignment operation with the specified binder flags and the specified type context.
@@ -168,9 +156,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
-        {
-            return MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, binderFlags, context);
-        }
+        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+            MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, binderFlags, context);
     }
 }

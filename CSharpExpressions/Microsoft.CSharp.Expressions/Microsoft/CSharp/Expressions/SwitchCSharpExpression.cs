@@ -9,12 +9,15 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a switch expression.
     /// </summary>
@@ -62,9 +65,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The <see cref="Expression" /> property of the result.</param>
         /// <param name="arms">The <see cref="Arms" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchCSharpExpression Update(Expression expression, ReadOnlyCollection<SwitchExpressionArm> arms)
+        public SwitchCSharpExpression Update(Expression expression, IEnumerable<SwitchExpressionArm> arms)
         {
-            if (expression == this.Expression && arms == this.Arms)
+            if (expression == Expression && SameElements(ref arms, Arms))
             {
                 return this;
             }
@@ -191,10 +194,10 @@ namespace Microsoft.CSharp.Expressions
             {
                 var arm = armsCollection[i];
 
-                if (!TypeUtils.AreReferenceAssignable(arm.Pattern.InputType, expression.Type))
+                if (!AreReferenceAssignable(arm.Pattern.InputType, expression.Type))
                     throw Error.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(i, arm.Pattern.InputType, expression.Type);
 
-                if (!TypeUtils.AreReferenceAssignable(type, arm.Value.Type))
+                if (!AreReferenceAssignable(type, arm.Value.Type))
                     throw Error.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(i, arm.Value.Type, type);
             }
 
@@ -210,9 +213,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitSwitchExpression(SwitchCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression), Visit(node.Arms, VisitSwitchExpressionArm));
-        }
+        protected internal virtual Expression VisitSwitchExpression(SwitchCSharpExpression node) =>
+            node.Update(
+                Visit(node.Expression),
+                Visit(node.Arms, VisitSwitchExpressionArm)
+            );
     }
 }

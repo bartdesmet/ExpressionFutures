@@ -8,11 +8,14 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
 using static System.Dynamic.Utils.ContractUtils;
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     // DESIGN: This node could be removed by fusing it with custom Lambda nodes for statements lambdas emitted by the C#
     //         compiler. Its current use is to emit the body of a statement lambda without introducing artificial nodes
     //         for the compiler-generated return label, e.g.
@@ -98,10 +101,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitBlock(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitBlock(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -112,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public BlockCSharpExpression Update(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget returnLabel)
         {
-            if (variables == this.Variables && statements == this.Statements && returnLabel == this.ReturnLabel)
+            if (SameElements(ref variables, Variables) && SameElements(ref statements, Statements) && returnLabel == ReturnLabel)
             {
                 return this;
             }
@@ -144,16 +144,9 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                LabelExpression returnLabel;
-
-                if (ReturnLabel.Type != typeof(void))
-                {
-                    returnLabel = Expression.Label(ReturnLabel, Expression.Default(ReturnLabel.Type));
-                }
-                else
-                {
-                    returnLabel = Expression.Label(ReturnLabel);
-                }
+                var returnLabel = ReturnLabel.Type != typeof(void)
+                    ? Expression.Label(ReturnLabel, Expression.Default(ReturnLabel.Type))
+                    : Expression.Label(ReturnLabel);
 
                 if (statementCount == 0)
                 {
@@ -173,7 +166,7 @@ namespace Microsoft.CSharp.Expressions
                     //         to then have a Lambda node that has a Locals collection so we can do away with the top-level
                     //         block as a coathanger for local variables.
 
-                    if (ReturnLabel.Type != typeof(void) && TypeUtils.AreReferenceAssignable(ReturnLabel.Type, lastStatement.Type))
+                    if (ReturnLabel.Type != typeof(void) && AreReferenceAssignable(ReturnLabel.Type, lastStatement.Type))
                     {
                         var newStatements = new Expression[statementCount + 1];
 
@@ -216,10 +209,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The statements in the block.</param>
         /// <param name="returnLabel">The return label used to exist the block.</param>
         /// <returns>The created <see cref="BlockCSharpExpression"/>.</returns>
-        public static BlockCSharpExpression Block(IEnumerable<Expression> statements, LabelTarget returnLabel)
-        {
-            return Block(Array.Empty<ParameterExpression>(), statements, returnLabel);
-        }
+        public static BlockCSharpExpression Block(IEnumerable<Expression> statements, LabelTarget returnLabel) => Block(Array.Empty<ParameterExpression>(), statements, returnLabel);
 
         /// <summary>
         /// Creates a <see cref="BlockCSharpExpression"/> that represents a block.
@@ -237,24 +227,6 @@ namespace Microsoft.CSharp.Expressions
 
             return new BlockCSharpExpression(variablesList, statementsList, returnLabel);
         }
-
-        internal static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
-        {
-            var variablesList = variables.ToReadOnly();
-            RequiresNotNullItems(variablesList, paramName);
-
-            var uniqueVariables = new HashSet<ParameterExpression>(variablesList.Count);
-
-            foreach (var variable in variablesList)
-            {
-                if (!uniqueVariables.Add(variable))
-                {
-                    throw LinqError.DuplicateVariable(variable);
-                }
-            }
-
-            return variablesList;
-        }
     }
 
     partial class CSharpExpressionVisitor
@@ -265,9 +237,11 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitBlock(BlockCSharpExpression node)
-        {
-            return node.Update(VisitAndConvert(node.Variables, nameof(VisitBlock)), Visit(node.Statements), VisitLabelTarget(node.ReturnLabel));
-        }
+        protected internal virtual Expression VisitBlock(BlockCSharpExpression node) =>
+            node.Update(
+                VisitAndConvert(node.Variables, nameof(VisitBlock)),
+                Visit(node.Statements),
+                VisitLabelTarget(node.ReturnLabel)
+            );
     }
 }

@@ -17,6 +17,8 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a catch block used in a try statement.
     /// </summary>
@@ -69,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public CSharpCatchBlock Update(IEnumerable<ParameterExpression> variables, ParameterExpression variable, Expression body, Expression filter)
         {
-            if (Helpers.SameElements(ref variables, this.Variables) && variable == this.Variable && body == this.Body && filter == this.Filter)
+            if (SameElements(ref variables, Variables) && variable == Variable && body == Body && filter == Filter)
             {
                 return this;
             }
@@ -144,15 +146,13 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual CSharpCatchBlock VisitCatchBlock(CSharpCatchBlock node)
-        {
-            return node.Update(
+        protected internal virtual CSharpCatchBlock VisitCatchBlock(CSharpCatchBlock node) =>
+            node.Update(
                 VisitAndConvert(node.Variables, nameof(VisitCatchBlock)),
                 VisitAndConvert(node.Variable, nameof(VisitCatchBlock)),
                 Visit(node.Body),
                 Visit(node.Filter)
             );
-        }
     }
 
     partial class CSharpStatement
@@ -321,9 +321,7 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCanRead(filter, nameof(filter));
 
                 if (filter.Type != typeof(bool))
-                {
                     throw LinqError.ArgumentMustBeBoolean();
-                }
             }
 
             return new CSharpCatchBlock(variablesList, type, variable, body, filter);

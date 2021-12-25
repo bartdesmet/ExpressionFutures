@@ -8,10 +8,13 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
-using static Microsoft.CSharp.Expressions.Helpers;
+
+using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a constructor call.
     /// </summary>
@@ -51,10 +54,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitNew(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitNew(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -63,7 +63,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public NewCSharpExpression Update(IEnumerable<ParameterAssignment> arguments)
         {
-            if (arguments == Arguments)
+            if (SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -93,10 +93,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static NewCSharpExpression New(ConstructorInfo constructor, params ParameterAssignment[] arguments)
-        {
-            return New(constructor, (IEnumerable<ParameterAssignment>)arguments);
-        }
+        public static NewCSharpExpression New(ConstructorInfo constructor, params ParameterAssignment[] arguments) => New(constructor, (IEnumerable<ParameterAssignment>)arguments);
 
         /// <summary>
         /// Creates a <see cref="NewCSharpExpression" /> that represents calling the specified constructor with the specified arguments.
@@ -106,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and the <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<ParameterAssignment> arguments)
         {
-            ContractUtils.RequiresNotNull(constructor, nameof(constructor));
+            RequiresNotNull(constructor, nameof(constructor));
 
             ValidateConstructor(constructor);
 
@@ -119,11 +116,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static new NewCSharpExpression New(ConstructorInfo constructor, Expression[] arguments)
-        {
+        public static new NewCSharpExpression New(ConstructorInfo constructor, Expression[] arguments) =>
             // NB: no params array to avoid overload resolution ambiguity
-            return New(constructor, (IEnumerable<Expression>)arguments);
-        }
+            New(constructor, (IEnumerable<Expression>)arguments);
 
         /// <summary>
         /// Creates a <see cref="NewCSharpExpression" /> that represents calling the specified constructor with the specified arguments.
@@ -133,7 +128,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and the <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         public static new NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<Expression> arguments)
         {
-            ContractUtils.RequiresNotNull(constructor, nameof(constructor));
+            RequiresNotNull(constructor, nameof(constructor));
 
             ValidateConstructor(constructor);
 
@@ -166,9 +161,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = "Nonsense API guidance provided by FxCop.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitNew(NewCSharpExpression node)
-        {
-            return node.Update(Visit(node.Arguments, VisitParameterAssignment));
-        }
+        protected internal virtual Expression VisitNew(NewCSharpExpression node) =>
+            node.Update(
+                Visit(node.Arguments, VisitParameterAssignment)
+            );
     }
 }

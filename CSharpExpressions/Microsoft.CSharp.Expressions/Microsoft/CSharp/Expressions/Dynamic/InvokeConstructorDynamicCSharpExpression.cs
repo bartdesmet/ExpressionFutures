@@ -2,18 +2,22 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a dynamically bound invocation of a constructor.
     /// </summary>
@@ -71,10 +75,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicInvokeConstructor(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicInvokeConstructor(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -83,7 +84,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public InvokeConstructorDynamicCSharpExpression Update(IEnumerable<DynamicCSharpArgument> arguments)
         {
-            if (arguments == this.Arguments)
+            if (SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -100,10 +101,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, params Expression[] arguments)
-        {
-            return DynamicInvokeConstructor(type, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, params Expression[] arguments) =>
+            DynamicInvokeConstructor(type, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound constructor invocation.
@@ -111,10 +110,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<Expression> arguments)
-        {
-            return DynamicInvokeConstructor(type, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<Expression> arguments) =>
+            DynamicInvokeConstructor(type, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound constructor invocation.
@@ -122,10 +119,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An array of expressions dynamic arguments the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicInvokeConstructor(type, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, DynamicCSharpArgument[] arguments) =>
+            DynamicInvokeConstructor(type, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound constructor invocation.
@@ -133,10 +128,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicInvokeConstructor(type, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicInvokeConstructor(type, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound constructor invocation with the specified binder flags.
@@ -145,10 +138,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the constructor upon object creation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags)
-        {
-            return DynamicInvokeConstructor(type, arguments, binderFlags, null);
-        }
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+            DynamicInvokeConstructor(type, arguments, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound constructor invocation with the specified binder flags and the specified type context.
@@ -160,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
         public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(type, nameof(type));
+            RequiresNotNull(type, nameof(type));
 
             ValidateType(type);
 
@@ -178,9 +169,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicInvokeConstructor(InvokeConstructorDynamicCSharpExpression node)
-        {
-            return node.Update(Visit(node.Arguments, VisitDynamicArgument));
-        }
+        protected internal virtual Expression VisitDynamicInvokeConstructor(InvokeConstructorDynamicCSharpExpression node) =>
+            node.Update(
+                Visit(node.Arguments, VisitDynamicArgument)
+            );
     }
 }

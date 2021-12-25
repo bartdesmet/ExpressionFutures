@@ -2,18 +2,21 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
 using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a dynamically bound indexing operation.
     /// </summary>
@@ -58,7 +61,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: By-ref passing for the receiver seems to be omitted in Roslyn here; see https://github.com/dotnet/roslyn/issues/6818.
             //     We're choosing to be consistent with that behavior until further notice.
             expressions[0] = Object;
-            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
+            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, name: null);
 
             argumentTypes = null;
             CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
@@ -73,10 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicGetIndex(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicGetIndex(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -86,7 +86,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public GetIndexDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
         {
-            if (@object == this.Object && arguments == this.Arguments)
+            if (@object == Object && SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -173,10 +173,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, params Expression[] arguments)
-        {
-            return DynamicGetIndex(@object, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, params Expression[] arguments) =>
+            DynamicGetIndex(@object, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound indexing operation.
@@ -184,10 +182,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<Expression> arguments)
-        {
-            return DynamicGetIndex(@object, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<Expression> arguments) =>
+            DynamicGetIndex(@object, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound indexing operation.
@@ -195,10 +191,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicGetIndex(@object, arguments, CSharpBinderFlags.None, null);
-        }
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, DynamicCSharpArgument[] arguments) =>
+            DynamicGetIndex(@object, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound indexing operation.
@@ -206,10 +200,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicGetIndex(@object, arguments, CSharpBinderFlags.None, null);
-        }
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicGetIndex(@object, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound indexing operation with the specified binder flags.
@@ -218,10 +210,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the indexing operaton.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags)
-        {
-            return DynamicGetIndex(@object, arguments, binderFlags, null);
-        }
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+            DynamicGetIndex(@object, arguments, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound indexing operation with the specified binder flags and the specified type context.
@@ -249,9 +239,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicGetIndex(GetIndexDynamicCSharpExpression node)
-        {
-            return node.Update(Visit(node.Object), Visit(node.Arguments, VisitDynamicArgument));
-        }
+        protected internal virtual Expression VisitDynamicGetIndex(GetIndexDynamicCSharpExpression node) =>
+            node.Update(
+                Visit(node.Object),
+                Visit(node.Arguments, VisitDynamicArgument)
+            );
     }
 }

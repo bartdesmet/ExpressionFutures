@@ -10,7 +10,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -66,10 +70,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitIndexerAccess(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitIndexerAccess(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -358,9 +359,7 @@ namespace Microsoft.CSharp.Expressions
         internal IndexExpression ReduceAssign(List<ParameterExpression> temps, List<Expression> stmts)
         {
             if (Argument.Type == typeof(Range))
-            {
-                throw ContractUtils.Unreachable;
-            }
+                throw Unreachable;
 
             var obj = GetObjectExpression(temps, stmts);
 
@@ -510,9 +509,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(argument, nameof(argument));
 
             if (argument.Type != typeof(Index) && argument.Type != typeof(Range))
-            {
                 throw Error.InvalidIndexerAccessArgumentType(argument.Type);
-            }
 
             //
             // A type is Countable if it has a property named Length or Count with an accessible getter and a return type of int.
@@ -522,34 +519,24 @@ namespace Microsoft.CSharp.Expressions
 
             PropertyInfo FindCountProperty(string name) => @object.Type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance, binder: null, typeof(int), Type.EmptyTypes, modifiers: null);
 
-            ContractUtils.RequiresNotNull(lengthOrCount, nameof(lengthOrCount));
+            RequiresNotNull(lengthOrCount, nameof(lengthOrCount));
 
             var lengthOrCountGetMethod = lengthOrCount.GetGetMethod(nonPublic: true); // NB: System.Linq.Expressions allows non-public properties.
 
             if (lengthOrCountGetMethod == null)
-            {
                 throw LinqError.PropertyDoesNotHaveAccessor(lengthOrCount);
-            }
 
             if (lengthOrCountGetMethod.IsStatic)
-            {
                 throw Error.AccessorCannotBeStatic(lengthOrCountGetMethod);
-            }
 
             if (lengthOrCountGetMethod.GetParametersCached().Length != 0)
-            {
                 throw LinqError.IncorrectNumberOfMethodCallArguments(lengthOrCountGetMethod);
-            }
 
-            if (!TypeUtils.IsValidInstanceType(lengthOrCount, @object.Type))
-            {
+            if (!IsValidInstanceType(lengthOrCount, @object.Type))
                 throw LinqError.PropertyNotDefinedForType(lengthOrCount, @object.Type);
-            }
 
             if (lengthOrCount.PropertyType != typeof(int))
-            {
                 throw Error.InvalidLengthOrCountPropertyType(lengthOrCount);
-            }
 
             ValidateMethodInfo(lengthOrCountGetMethod);
 
@@ -572,7 +559,7 @@ namespace Microsoft.CSharp.Expressions
                     return indexers.Length == 1 ? indexers[0] : null;
                 }
 
-                ContractUtils.RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
+                RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
                 var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice));
 
@@ -585,9 +572,7 @@ namespace Microsoft.CSharp.Expressions
                     indexAccessor = index.GetSetMethod(nonPublic: true) ?? throw LinqError.PropertyDoesNotHaveAccessor(indexOrSlice);
 
                     if (indexAccessor.GetParametersCached().Length != 2)
-                    {
                         throw LinqError.IncorrectNumberOfMethodCallArguments(indexAccessor);
-                    }
                 }
                 else if (indexAccessor.GetParametersCached().Length != 1)
                 {
@@ -595,19 +580,13 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 if (indexAccessor.IsStatic)
-                {
                     throw Error.AccessorCannotBeStatic(indexAccessor);
-                }
 
-                if (!TypeUtils.IsValidInstanceType(indexAccessor, @object.Type))
-                {
+                if (!IsValidInstanceType(indexAccessor, @object.Type))
                     throw LinqError.PropertyNotDefinedForType(indexAccessor, @object.Type);
-                }
 
                 if (indexAccessor.GetParametersCached()[0].ParameterType != typeof(int))
-                {
                     throw Error.InvalidIndexerParameterType(indexOrSlice);
-                }
 
                 ValidateMethodInfo(indexAccessor);
             }
@@ -623,25 +602,21 @@ namespace Microsoft.CSharp.Expressions
 
                 MethodInfo FindSliceMethod() => @object.Type.GetMethod(@object.Type == typeof(string) ? "Substring" : "Slice", BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null);
 
-                ContractUtils.RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
+                RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
                 var slice = indexOrSlice as MethodInfo ?? throw Error.InvalidSliceMember(indexOrSlice);
 
                 ValidateMethodInfo(slice);
 
                 if (slice.IsStatic)
-                {
                     throw Error.SliceMethodMustNotBeStatic(slice);
-                }
 
                 ValidateCallInstanceType(@object.Type, slice);
 
                 var sliceParams = slice.GetParametersCached();
 
                 if (sliceParams.Length != 2 || sliceParams[0].ParameterType != typeof(int) || sliceParams[1].ParameterType != typeof(int))
-                {
                     throw Error.InvalidSliceParameters(slice);
-                }
             }
 
             return new IndexerAccessCSharpExpression(@object, argument, lengthOrCount, indexOrSlice);
@@ -656,9 +631,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitIndexerAccess(IndexerAccessCSharpExpression node)
-        {
-            return node.Update(Visit(node.Object), Visit(node.Argument));
-        }
+        protected internal virtual Expression VisitIndexerAccess(IndexerAccessCSharpExpression node) =>
+            node.Update(
+                Visit(node.Object),
+                Visit(node.Argument)
+            );
     }
 }

@@ -9,12 +9,16 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using static Microsoft.CSharp.Expressions.Helpers;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents creating a new multi-dimensional array and possibly initializing the elements of the new array.
     /// </summary>
@@ -57,12 +61,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public Expression GetExpression(params int[] indexes)
         {
-            ContractUtils.RequiresNotNull(indexes, nameof(indexes));
+            RequiresNotNull(indexes, nameof(indexes));
 
             if (indexes.Length != Bounds.Count)
-            {
                 throw Error.RankMismatch();
-            }
 
             var index = 0;
             for (var i = 0; i < indexes.Length; i++)
@@ -71,9 +73,7 @@ namespace Microsoft.CSharp.Expressions
                 var bound = Bounds[i];
 
                 if (idx < 0 || idx >= bound)
-                {
                     throw Error.IndexOutOfRange();
-                }
 
                 index = index * bound + idx;
             }
@@ -99,7 +99,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public NewMultidimensionalArrayInitCSharpExpression Update(IEnumerable<Expression> expressions)
         {
-            if (expressions == Expressions)
+            if (SameElements(ref expressions, Expressions))
             {
                 return this;
             }
@@ -221,10 +221,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="initializers">An IEnumerable{T} that contains Expression objects that represent the elements in the array.</param>
         /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, IEnumerable<Expression> initializers)
-        {
-            return NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
-        }
+        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, IEnumerable<Expression> initializers) =>
+            NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
 
         /// <summary>
         /// Creates a <see cref="NewMultidimensionalArrayInitCSharpExpression"/> that represents creating a multi-dimensional array that has the specified bounds and elements. 
@@ -236,31 +234,25 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, IEnumerable<int> bounds, IEnumerable<Expression> initializers)
         {
-            ContractUtils.RequiresNotNull(type, nameof(type));
-            ContractUtils.RequiresNotNull(bounds, nameof(bounds));
-            ContractUtils.RequiresNotNull(initializers, nameof(initializers));
+            RequiresNotNull(type, nameof(type));
+            RequiresNotNull(bounds, nameof(bounds));
+            RequiresNotNull(initializers, nameof(initializers));
 
             if (type.Equals(typeof(void)))
-            {
                 throw LinqError.ArgumentCannotBeOfTypeVoid();
-            }
 
             var boundsList = bounds.ToReadOnly();
 
             int dimensions = boundsList.Count;
             if (dimensions <= 0)
-            {
                 throw LinqError.BoundsCannotBeLessThanOne();
-            }
 
             var length = 1;
 
             foreach (var bound in boundsList)
             {
                 if (bound < 0)
-                {
                     throw Error.BoundCannotBeLessThanZero();
-                }
 
                 checked
                 {
@@ -271,9 +263,7 @@ namespace Microsoft.CSharp.Expressions
             var initializerList = initializers.ToReadOnly();
 
             if (initializerList.Count != length)
-            {
                 throw Error.ArrayBoundsElementCountMismatch();
-            }
 
             var newList = default(Expression[]);
             for (int i = 0, n = initializerList.Count; i < n; i++)
@@ -284,9 +274,7 @@ namespace Microsoft.CSharp.Expressions
                 if (!TypeUtils.AreReferenceAssignable(type, expr.Type))
                 {
                     if (!TryQuote(type, ref expr))
-                    {
                         throw LinqError.ExpressionTypeCannotInitializeArrayType(expr.Type, type);
-                    }
 
                     if (newList == null)
                     {
@@ -321,9 +309,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expressions));
-        }
+        protected internal virtual Expression VisitNewMultidimensionalArrayInit(NewMultidimensionalArrayInitCSharpExpression node) =>
+            node.Update(
+                Visit(node.Expressions)
+            );
     }
 }

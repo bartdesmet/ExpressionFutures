@@ -76,10 +76,12 @@ namespace Tests
             Assert.AreSame(res.Indexes, upd1.Indexes);
             Assert.AreSame(obj1, upd1.Array);
 
-            var upd2 = res.Update(array, new[] { indexes[0] });
+            var newIndexes = new[] { Expression.Constant(1) };
+
+            var upd2 = res.Update(array, newIndexes);
             Assert.AreNotSame(upd2, res);
             Assert.AreSame(res.Array, upd2.Array);
-            Assert.IsTrue(upd2.Indexes.SequenceEqual(new[] { indexes[0] }));
+            Assert.IsTrue(upd2.Indexes.SequenceEqual(newIndexes));
         }
 
         [TestMethod]

@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using LinqError = System.Linq.Expressions.Error;
+
 using static System.Dynamic.Utils.ContractUtils;
+
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -67,7 +69,14 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ForCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, IEnumerable<ParameterExpression> locals)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && variables == this.Variables && initializers == this.Initializers && test == this.Test && iterators == this.Iterators && body == this.Body && Helpers.SameElements(ref locals, this.Locals))
+            if (breakLabel == BreakLabel &&
+                continueLabel == ContinueLabel &&
+                Helpers.SameElements(ref variables, Variables) &&
+                Helpers.SameElements(ref initializers, Initializers) &&
+                test == Test &&
+                Helpers.SameElements(ref iterators, Iterators) &&
+                body == Body &&
+                Helpers.SameElements(ref locals, Locals))
             {
                 return this;
             }
@@ -75,12 +84,9 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.For(variables, initializers, test, iterators, body, breakLabel, continueLabel, locals);
         }
 
-        internal static ForCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals)
-        {
+        internal static ForCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals) =>
             // TODO: optimized nodes for for(;;) and loops with a single initializer and single iterator
-
-            return new ForCSharpStatement(variables, initializers, test, iterators, body, breakLabel, continueLabel, innerLocals);
-        }
+            new ForCSharpStatement(variables, initializers, test, iterators, body, breakLabel, continueLabel, innerLocals);
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.
@@ -262,16 +268,12 @@ namespace Microsoft.CSharp.Expressions
             foreach (BinaryExpression initializer in initializerList)
             {
                 if (initializer.NodeType != ExpressionType.Assign || initializer.Left.NodeType != ExpressionType.Parameter)
-                {
                     throw Error.InvalidInitializer();
-                }
 
                 var variable = (ParameterExpression)initializer.Left;
 
                 if (!uniqueVariables.Add(variable))
-                {
                     throw LinqError.DuplicateVariable(variable);
-                }
 
                 // NB: We keep them in the order specified and don't rely on the hash set.
                 variables.Add(variable);
@@ -296,8 +298,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="iterators">The loop iterators.</param>
         /// <param name="body">The body of the loop.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body)
-            => For(variables, initializers, test, iterators, body, @break: null, @continue: null, locals: null);
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body) =>
+            For(variables, initializers, test, iterators, body, @break: null, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="ForCSharpStatement"/> that represents a for loop.
@@ -309,8 +311,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break)
-            => For(variables, initializers, test, iterators, body, @break, @continue: null, locals: null);
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break) =>
+            For(variables, initializers, test, iterators, body, @break, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="ForCSharpStatement"/> that represents a for loop.
@@ -323,8 +325,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue)
-            => For(variables, initializers, test, iterators, body, @break, @continue, locals: null);
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue) =>
+            For(variables, initializers, test, iterators, body, @break, @continue, locals: null);
 
         /// <summary>
         /// Creates a <see cref="ForCSharpStatement"/> that represents a for loop.
@@ -367,9 +369,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitFor(ForCSharpStatement node)
-        {
-            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), VisitAndConvert(node.Variables, nameof(VisitFor)), Visit(node.Initializers), Visit(node.Test), Visit(node.Iterators), Visit(node.Body), VisitAndConvert(node.Locals, nameof(VisitFor)));
-        }
+        protected internal virtual Expression VisitFor(ForCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.BreakLabel),
+                VisitLabelTarget(node.ContinueLabel),
+                VisitAndConvert(node.Variables, nameof(VisitFor)),
+                Visit(node.Initializers),
+                Visit(node.Test),
+                Visit(node.Iterators),
+                Visit(node.Body),
+                VisitAndConvert(node.Locals, nameof(VisitFor))
+            );
     }
 }

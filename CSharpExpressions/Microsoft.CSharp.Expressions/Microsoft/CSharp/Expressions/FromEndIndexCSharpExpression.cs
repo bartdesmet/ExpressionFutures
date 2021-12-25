@@ -7,6 +7,8 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using static System.Linq.Expressions.ExpressionStubs;
+
 namespace Microsoft.CSharp.Expressions
 {
     /// <summary>
@@ -62,7 +64,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public FromEndIndexCSharpExpression Update(Expression operand)
         {
-            if (operand == this.Operand)
+            if (operand == Operand)
             {
                 return this;
             }
@@ -178,24 +180,18 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="FromEndIndexCSharpExpression"/>.</returns>
         public static FromEndIndexCSharpExpression FromEndIndex(Expression operand, MethodBase method, Type type)
         {
-            ExpressionStubs.RequiresCanRead(operand, nameof(operand));
+            RequiresCanRead(operand, nameof(operand));
 
             if (operand.Type != typeof(int) && operand.Type != typeof(int?))
-            {
                 throw Error.InvalidFromEndIndexOperandType(operand.Type);
-            }
 
             if (method != null)
             {
                 if (method.IsGenericMethodDefinition || method.GetReturnType() != typeof(Index))
-                {
                     throw Error.InvalidFromEndIndexMethod();
-                }
 
                 if (method.MemberType == MemberTypes.Method && !method.IsStatic)
-                {
                     throw Error.InvalidFromEndIndexMethod();
-                }
 
                 var parameters = method.GetParametersCached();
 
@@ -203,15 +199,11 @@ namespace Microsoft.CSharp.Expressions
                 {
                     case 1:
                         if (parameters[0].ParameterType != typeof(int))
-                        {
                             throw Error.InvalidFromEndIndexMethod();
-                        }
                         break;
                     case 2:
                         if (parameters[0].ParameterType != typeof(int) || parameters[1].ParameterType != typeof(bool))
-                        {
                             throw Error.InvalidFromEndIndexMethod();
-                        }
                         break;
                     default:
                         throw Error.InvalidFromEndIndexMethod();
@@ -223,16 +215,12 @@ namespace Microsoft.CSharp.Expressions
                 if (type == typeof(Index))
                 {
                     if (operand.Type != typeof(int))
-                    {
                         throw Error.InvalidIndexType(type);
-                    }
                 }
                 else if (type == typeof(Index?))
                 {
                     if (operand.Type != typeof(int?))
-                    {
                         throw Error.InvalidIndexType(type);
-                    }
                 }
                 else
                 {
@@ -252,9 +240,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitFromEndIndex(FromEndIndexCSharpExpression node)
-        {
-            return node.Update(Visit(node.Operand));
-        }
+        protected internal virtual Expression VisitFromEndIndex(FromEndIndexCSharpExpression node) => node.Update(Visit(node.Operand));
     }
 }

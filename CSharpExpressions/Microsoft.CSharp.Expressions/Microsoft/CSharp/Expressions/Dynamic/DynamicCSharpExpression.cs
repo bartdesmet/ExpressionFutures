@@ -2,11 +2,12 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Microsoft.CSharp.Expressions
 {

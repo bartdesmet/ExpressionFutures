@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.Expressions.Compiler;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,12 +11,15 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a foreach loop.
     /// </summary>
@@ -72,10 +74,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitForEach(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitForEach(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -89,7 +88,14 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ForEachCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, Expression collection, LambdaExpression conversion, Expression body, LambdaExpression deconstruction, AwaitInfo awaitInfo)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && variables == this.Variables && collection == this.Collection && conversion == this.Conversion && body == this.Body && deconstruction == this.Deconstruction && awaitInfo == this.AwaitInfo)
+            if (breakLabel == BreakLabel &&
+                continueLabel == ContinueLabel &&
+                SameElements(ref variables, Variables) &&
+                collection == Collection &&
+                conversion == Conversion &&
+                body == Body &&
+                deconstruction == Deconstruction &&
+                awaitInfo == AwaitInfo)
             {
                 return this;
             }
@@ -373,7 +379,7 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i++] =
                     Expression.Assign(collection, Collection);
                 exprs[i++] =
-                    Expression.Assign(index, Helpers.CreateConstantInt32(0));
+                    Expression.Assign(index, CreateConstantInt32(0));
                 exprs[i++] =
                     Expression.Goto(check);
                 exprs[i++] =
@@ -455,7 +461,7 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i++] =
                     Expression.Assign(collection, Collection);
                 exprs[i++] =
-                    Expression.Assign(index, Helpers.CreateConstantInt32(0));
+                    Expression.Assign(index, CreateConstantInt32(0));
                 exprs[i++] =
                     Expression.Goto(check);
                 exprs[i++] =
@@ -654,10 +660,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="collection">The collection to iterate over.</param>
         /// <param name="body">The body of the loop.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body)
-        {
-            return ForEach(variable, collection, body, null, null, null);
-        }
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body) =>
+            ForEach(variable, collection, body, @break: null, @continue: null, conversion: null);
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
@@ -667,10 +671,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break)
-        {
-            return ForEach(variable, collection, body, @break, null, null);
-        }
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break) =>
+            ForEach(variable, collection, body, @break, @continue: null, conversion: null);
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
@@ -681,10 +683,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue)
-        {
-            return ForEach(variable, collection, body, @break, @continue, null);
-        }
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue) =>
+            ForEach(variable, collection, body, @break, @continue, conversion: null);
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
@@ -696,10 +696,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion)
-        {
-            return ForEach(new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null, awaitInfo: null);
-        }
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion) =>
+            ForEach(new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null, awaitInfo: null);
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
@@ -712,10 +710,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction)
-        {
-            return ForEach(variables, collection, body, @break, @continue, conversion, deconstruction, awaitInfo: null);
-        }
+        public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
+            ForEach(variables, collection, body, @break, @continue, conversion, deconstruction, awaitInfo: null);
 
         // TODO: AwaitForEach
 
@@ -754,19 +750,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitForEach(ForEachCSharpStatement node)
-        {
-            return
-                node.Update(
-                    VisitLabelTarget(node.BreakLabel),
-                    VisitLabelTarget(node.ContinueLabel),
-                    VisitAndConvert(node.Variables, nameof(VisitForEach)),
-                    Visit(node.Collection),
-                    VisitAndConvert(node.Conversion, nameof(VisitForEach)),
-                    Visit(node.Body),
-                    VisitAndConvert(node.Deconstruction, nameof(VisitForEach)),
-                    VisitAwaitInfo(node.AwaitInfo)
-                );
-        }
+        protected internal virtual Expression VisitForEach(ForEachCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.BreakLabel),
+                VisitLabelTarget(node.ContinueLabel),
+                VisitAndConvert(node.Variables, nameof(VisitForEach)),
+                Visit(node.Collection),
+                VisitAndConvert(node.Conversion, nameof(VisitForEach)),
+                Visit(node.Body),
+                VisitAndConvert(node.Deconstruction, nameof(VisitForEach)),
+                VisitAwaitInfo(node.AwaitInfo)
+            );
     }
 }

@@ -5,6 +5,8 @@
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
@@ -56,7 +58,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
         public static ParameterAssignment Bind(ParameterInfo parameter, Expression expression)
         {
-            ContractUtils.RequiresNotNull(parameter, nameof(parameter));
+            RequiresNotNull(parameter, nameof(parameter));
 
             expression = ValidateOneArgument(parameter, expression);
 
@@ -73,8 +75,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ParameterAssignment Bind(MethodBase method, string parameter, Expression expression)
         {
-            ContractUtils.RequiresNotNull(method, nameof(method));
-            ContractUtils.RequiresNotNull(parameter, nameof(parameter));
+            RequiresNotNull(method, nameof(method));
+            RequiresNotNull(parameter, nameof(parameter));
 
             var parameterInfo = default(ParameterInfo);
 
@@ -108,14 +110,12 @@ namespace Microsoft.CSharp.Expressions
             // NB: This overload is needed for the compiler to emit factory calls;
             //     we can't emit a `ldtoken` instruction to obtain a ParameterInfo.
 
-            ContractUtils.RequiresNotNull(method, nameof(method));
+            RequiresNotNull(method, nameof(method));
 
             var parameters = method.GetParametersCached();
 
             if (index < 0 || index >= parameters.Length)
-            {
                 throw Error.ParameterIndexOutOfBounds(index, method.Name);
-            }
 
             return Bind(parameters[index], expression);
         }
@@ -136,14 +136,9 @@ namespace Microsoft.CSharp.Expressions
 
             TypeUtils.ValidateType(pType);
 
-            if (!TypeUtils.AreReferenceAssignable(pType, expression.Type))
-            {
-                if (!TryQuote(pType, ref expression))
-                {
-                    throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType);
-                }
-            }
-
+            if (!TypeUtils.AreReferenceAssignable(pType, expression.Type) && !TryQuote(pType, ref expression))
+                throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType);
+            
             return expression;
         }
     }
@@ -156,9 +151,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected virtual ParameterAssignment VisitParameterAssignment(ParameterAssignment node)
-        {
-            return node.Update(Visit(node.Expression));
-        }
+        protected virtual ParameterAssignment VisitParameterAssignment(ParameterAssignment node) =>
+            node.Update(
+                Visit(node.Expression)
+            );
     }
 }

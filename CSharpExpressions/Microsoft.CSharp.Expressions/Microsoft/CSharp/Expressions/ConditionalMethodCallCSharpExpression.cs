@@ -8,12 +8,14 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using static Microsoft.CSharp.Expressions.Helpers;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
-using System;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a conditional (null-propagating) call to a method.
     /// </summary>
@@ -60,10 +62,8 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-        {
-            return new ConditionalMethodCallCSharpExpression(expression, method, arguments); // TODO: remove layer of indirection if not needed
-        }
+        internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments) =>
+            new ConditionalMethodCallCSharpExpression(expression, method, arguments); // TODO: remove layer of indirection if not needed
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the instance whose method is called.
@@ -93,7 +93,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConditionalMethodCallCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
         {
-            if (expression == Expression && arguments == Arguments)
+            if (expression == Expression && SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -102,15 +102,10 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalMethodCall(this);
-        }
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalMethodCall(this);
 
-        internal override ConditionalAccessCSharpExpression<MethodCallCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MethodCallCSharpExpression whenNotNull)
-        {
-            return new ConditionalMethodCallCSharpExpression(receiver, nonNullReceiver, whenNotNull);
-        }
+        internal override ConditionalAccessCSharpExpression<MethodCallCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MethodCallCSharpExpression whenNotNull) =>
+            new ConditionalMethodCallCSharpExpression(receiver, nonNullReceiver, whenNotNull);
     }
 
     partial class CSharpExpression
@@ -122,10 +117,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, params ParameterAssignment[] arguments)
-        {
-            return ConditionalCall(instance, method, (IEnumerable<ParameterAssignment>)arguments);
-        }
+        public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, params ParameterAssignment[] arguments) =>
+            ConditionalCall(instance, method, (IEnumerable<ParameterAssignment>)arguments);
 
         /// <summary>
         /// Creates a <see cref="ConditionalMethodCallCSharpExpression" /> that represents a conditional (null-propagating) method call.
@@ -149,11 +142,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="ConditionalMethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="ConditionalAccessCSharpExpression{MethodCallExpression}.Receiver" /> and the <see cref="ConditionalMethodCallCSharpExpression.Object" />, <see cref="ConditionalMethodCallCSharpExpression.Method" />, and <see cref="ConditionalMethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, Expression[] arguments)
-        {
+        public static ConditionalMethodCallCSharpExpression ConditionalCall(Expression instance, MethodInfo method, Expression[] arguments) =>
             // NB: no params array to avoid overload resolution ambiguity
-            return ConditionalCall(instance, method, (IEnumerable<Expression>)arguments);
-        }
+            ConditionalCall(instance, method, (IEnumerable<Expression>)arguments);
 
         /// <summary>
         /// Creates a <see cref="ConditionalMethodCallCSharpExpression" /> that represents a conditional (null-propagating) method call.
@@ -183,7 +174,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static void ValidateConditionalMethod(ref Expression instance, MethodInfo method)
         {
-            ContractUtils.RequiresNotNull(method, nameof(method));
+            RequiresNotNull(method, nameof(method));
 
             ValidateMethodInfo(method);
 
@@ -192,14 +183,10 @@ namespace Microsoft.CSharp.Expressions
                 var parameters = method.GetParametersCached();
 
                 if (!method.IsDefined(typeof(ExtensionAttribute), false) || parameters.Length == 0 /* NB: someone could craft a method with [ExtensionAttribute] in IL */)
-                {
                     throw Error.ConditionalAccessRequiresNonStaticMember();
-                }
 
                 if (instance == null)
-                {
                     throw Error.ExtensionMethodRequiresInstance();
-                }
 
                 instance = ValidateOneArgument(parameters[0], instance);
             }
@@ -229,9 +216,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
-        }
+        protected internal virtual Expression VisitConditionalMethodCall(ConditionalMethodCallCSharpExpression node) =>
+            node.Update(Visit(node.Expression), Visit(node.Arguments, VisitParameterAssignment));
     }
 }

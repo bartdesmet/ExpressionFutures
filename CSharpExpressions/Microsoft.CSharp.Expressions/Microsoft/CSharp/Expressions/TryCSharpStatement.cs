@@ -2,7 +2,6 @@
 //
 // bartde - December 2015
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -15,6 +14,8 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a try statement.
     /// </summary>
@@ -54,10 +55,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitTry(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitTry(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -68,7 +66,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public TryCSharpStatement Update(Expression tryBlock, IEnumerable<CSharpCatchBlock> catchBlocks, Expression finallyBlock)
         {
-            if (tryBlock == this.TryBlock && Helpers.SameElements(ref catchBlocks, this.CatchBlocks) && finallyBlock == this.FinallyBlock)
+            if (tryBlock == TryBlock && SameElements(ref catchBlocks, CatchBlocks) && finallyBlock == FinallyBlock)
             {
                 return this;
             }
@@ -110,14 +108,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitTry(TryCSharpStatement node)
-        {
-            return node.Update(
+        protected internal virtual Expression VisitTry(TryCSharpStatement node) =>
+            node.Update(
                 Visit(node.TryBlock),
                 Visit(node.CatchBlocks, VisitCatchBlock),
                 Visit(node.FinallyBlock)
             );
-        }
     }
 
     partial class CSharpStatement

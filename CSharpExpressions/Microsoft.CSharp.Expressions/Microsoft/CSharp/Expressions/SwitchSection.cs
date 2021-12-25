@@ -7,10 +7,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a section of a switch statement.
     /// </summary>
@@ -47,7 +50,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public SwitchSection Update(IEnumerable<ParameterExpression> locals, IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements)
         {
-            if (Helpers.SameElements(ref locals, Locals) && Helpers.SameElements(ref labels, Labels) && Helpers.SameElements(ref statements, Statements))
+            if (SameElements(ref locals, Locals) && SameElements(ref labels, Labels) && SameElements(ref statements, Statements))
             {
                 return this;
             }
@@ -80,9 +83,7 @@ namespace Microsoft.CSharp.Expressions
             foreach (var label in labelsList)
             {
                 if (label.Label != null && !allLabels.Add(label.Label))
-                {
-                    throw new Exception(); // TODO
-                }
+                    throw Error.DuplicateLabelInSwitchSection(label.Label);
 
                 if (patternInputType == null)
                 {
@@ -90,7 +91,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else if (patternInputType != label.Pattern.InputType)
                 {
-                    throw new Exception(); // TODO
+                    throw Error.InconsistentPatternInputType(label.Pattern.InputType, patternInputType);
                 }
             }
 
@@ -108,9 +109,11 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The switch section to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual SwitchSection VisitSwitchSection(SwitchSection node)
-        {
-            return node.Update(VisitAndConvert(node.Locals, nameof(VisitSwitchSection)), Visit(node.Labels, VisitSwitchLabel), Visit(node.Statements));
-        }
+        protected internal virtual SwitchSection VisitSwitchSection(SwitchSection node) =>
+            node.Update(
+                VisitAndConvert(node.Locals, nameof(VisitSwitchSection)),
+                Visit(node.Labels, VisitSwitchLabel),
+                Visit(node.Statements)
+            );
     }
 }

@@ -3,9 +3,11 @@
 // bartde - December 2021
 
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -64,9 +66,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: No non-null value to nullable value assignment allowed here. This is consistent with Assign,
             //     and the C# compiler should insert the Convert node.
             if (!AreReferenceAssignable(variable.Type, expression.Type))
-            {
                 throw LinqError.ExpressionTypeDoesNotMatchAssignment(expression.Type, variable.Type);
-            }
 
             return new LocalDeclaration(variable, expression);
         }
@@ -79,9 +79,10 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        protected internal virtual LocalDeclaration VisitLocalDeclaration(LocalDeclaration node)
-        {
-            return node.Update(VisitAndConvert(node.Variable, nameof(VisitLocalDeclaration)), Visit(node.Expression));
-        }
+        protected internal virtual LocalDeclaration VisitLocalDeclaration(LocalDeclaration node) =>
+            node.Update(
+                VisitAndConvert(node.Variable, nameof(VisitLocalDeclaration)),
+                Visit(node.Expression)
+            );
     }
 }

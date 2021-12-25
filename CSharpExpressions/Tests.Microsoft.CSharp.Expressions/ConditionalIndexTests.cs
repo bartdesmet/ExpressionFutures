@@ -166,10 +166,13 @@ namespace Tests
             Assert.AreSame(res.Arguments, upd1.Arguments);
             Assert.AreSame(obj1, upd1.Object);
 
-            var upd2 = res.Update(obj, new[] { arg });
+            var newValue = Expression.Constant(1);
+            var newArg = CSharpExpression.Bind(parameter, newValue);
+
+            var upd2 = res.Update(obj, new[] { newArg });
             Assert.AreNotSame(upd2, res);
             Assert.AreSame(res.Object, upd2.Object);
-            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { arg }));
+            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { newArg }));
         }
 
         [TestMethod]

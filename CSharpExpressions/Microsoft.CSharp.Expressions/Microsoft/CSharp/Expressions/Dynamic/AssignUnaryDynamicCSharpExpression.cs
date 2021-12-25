@@ -2,16 +2,19 @@
 //
 // bartde - December 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using static Microsoft.CSharp.Expressions.DynamicHelpers;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static DynamicHelpers;
+
     /// <summary>
     /// Represents a dynamically bound unary assignment operation.
     /// </summary>
@@ -72,12 +75,12 @@ namespace Microsoft.CSharp.Expressions
                         break;
 
                     default:
-                        throw ContractUtils.Unreachable;
+                        throw Unreachable;
                 }
 
                 var args = new[]
                 {
-                    CSharpArgumentInfo.Create(Operand.Flags, null)
+                    CSharpArgumentInfo.Create(Operand.Flags, name: null)
                 };
 
                 var binder = Binder.UnaryOperation(Flags, operation, Context, args);
@@ -90,7 +93,7 @@ namespace Microsoft.CSharp.Expressions
 
             var flags = Flags | CSharpBinderFlags.ValueFromCompoundAssignment;
 
-            var res = DynamicHelpers.ReduceDynamicAssignment(Operand, functionalOp, flags, IsPrefix);
+            var res = ReduceDynamicAssignment(Operand, functionalOp, flags, IsPrefix);
 
             return res;
         }
@@ -118,10 +121,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
-        {
-            throw ContractUtils.Unreachable;
-        }
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes) => throw Unreachable;
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -129,10 +129,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicUnaryAssign(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicUnaryAssign(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -141,7 +138,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AssignUnaryDynamicCSharpExpression Update(DynamicCSharpArgument operand)
         {
-            if (operand == this.Operand)
+            if (operand == Operand)
             {
                 return this;
             }
@@ -158,10 +155,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="unaryType">The type of the unary operation to perform.</param>
         /// <param name="operand">The expression representing the operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound unary assignment operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, Expression operand)
-        {
-            return MakeDynamicUnaryAssign(unaryType, DynamicArgument(operand), CSharpBinderFlags.None, null);
-        }
+        public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, Expression operand) =>
+            MakeDynamicUnaryAssign(unaryType, DynamicArgument(operand), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary assignment operation.
@@ -169,10 +164,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="unaryType">The type of the unary operation to perform.</param>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound unary assignment operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand)
-        {
-            return MakeDynamicUnaryAssign(unaryType, operand, CSharpBinderFlags.None, null);
-        }
+        public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand) =>
+            MakeDynamicUnaryAssign(unaryType, operand, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary assignment operation with the specified binder flags.
@@ -181,10 +174,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary assignment operation.</returns>
-        public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicUnaryAssign(unaryType, operand, binderFlags, null);
-        }
+        public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags) =>
+            MakeDynamicUnaryAssign(unaryType, operand, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary assignment operation with the specified binder flags and the specified type context.
@@ -197,7 +188,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AssignUnaryDynamicCSharpExpression MakeDynamicUnaryAssign(CSharpExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(operand, nameof(operand));
+            RequiresNotNull(operand, nameof(operand));
 
             RequiresCanRead(operand.Expression, nameof(operand));
             RequiresCanWrite(operand.Expression, nameof(operand));
@@ -226,9 +217,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicUnaryAssign(AssignUnaryDynamicCSharpExpression node)
-        {
-            return node.Update(VisitDynamicArgument(node.Operand));
-        }
+        protected internal virtual Expression VisitDynamicUnaryAssign(AssignUnaryDynamicCSharpExpression node) =>
+            node.Update(
+                VisitDynamicArgument(node.Operand)
+            );
     }
 }

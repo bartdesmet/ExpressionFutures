@@ -2,7 +2,6 @@
 //
 // bartde - December 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +9,13 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Runtime.CompilerServices;
-using static Microsoft.CSharp.Expressions.Helpers;
+
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     internal static class DynamicHelpers
     {
         public static Expression MakeDynamic(Type type, CallSiteBinder binder, IEnumerable<Expression> arguments, Type[] argumentTypes)

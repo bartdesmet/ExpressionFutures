@@ -8,6 +8,8 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using static System.Linq.Expressions.ExpressionStubs;
+
 namespace Microsoft.CSharp.Expressions
 {
     /// <summary>
@@ -70,7 +72,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public RangeCSharpExpression Update(Expression left, Expression right)
         {
-            if (left == this.Left && right == this.Right)
+            if (left == Left && right == Right)
             {
                 return this;
             }
@@ -218,7 +220,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The expression representing the lower bound index of the range.</param>
         /// <param name="right">The expression representing the upper bound index of the range.</param>
         /// <returns>The created <see cref="RangeCSharpExpression"/>.</returns>
-        public static RangeCSharpExpression Range(Expression left, Expression right) => Range(left, right, null, null);
+        public static RangeCSharpExpression Range(Expression left, Expression right) => Range(left, right, method: null, type: null);
 
         /// <summary>
         /// Creates a <see cref="RangeCSharpExpression"/> that represents a range in a sliceable object.
@@ -239,28 +241,20 @@ namespace Microsoft.CSharp.Expressions
             if (method != null)
             {
                 if (method.IsGenericMethodDefinition || method.GetReturnType() != typeof(Range))
-                {
                     throw Error.InvalidRangeMethod();
-                }
 
                 if (method.MemberType == MemberTypes.Method && !method.IsStatic)
-                {
                     throw Error.InvalidRangeMethod();
-                }
 
                 var parameters = method.GetParametersCached();
 
                 if (parameters.Length != operandCount)
-                {
                     throw Error.InvalidRangeMethod();
-                }
 
                 for (int i = 0; i < operandCount; i++)
                 {
                     if (parameters[i].ParameterType != typeof(Index))
-                    {
                         throw Error.InvalidRangeMethod();
-                    }
                 }
             }
 
@@ -269,16 +263,12 @@ namespace Microsoft.CSharp.Expressions
                 if (type == typeof(Range))
                 {
                     if (lifted)
-                    {
                         throw Error.InvalidRangeType(type);
-                    }
                 }
                 else if (type == typeof(Range?))
                 {
                     if (!lifted)
-                    {
                         throw Error.InvalidRangeType(type);
-                    }
                 }
                 else
                 {
@@ -297,7 +287,7 @@ namespace Microsoft.CSharp.Expressions
 
                 operandCount++;
 
-                ExpressionStubs.RequiresCanRead(operand, paramName);
+                RequiresCanRead(operand, paramName);
 
                 if (operand.Type != typeof(Index) && operand.Type != typeof(Index?))
                 {
@@ -320,9 +310,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitRange(RangeCSharpExpression node)
-        {
-            return node.Update(Visit(node.Left), Visit(node.Right));
-        }
+        protected internal virtual Expression VisitRange(RangeCSharpExpression node) =>
+            node.Update(
+                Visit(node.Left),
+                Visit(node.Right)
+            );
     }
 }

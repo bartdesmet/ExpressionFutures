@@ -7,7 +7,10 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -70,10 +73,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitAwaitInfo(this);
-        }
+        protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor) => visitor.VisitAwaitInfo(this);
 
         internal override void RequiresCanBind(Expression operand)
         {
@@ -108,15 +108,9 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Invoke(GetAwaiter, operand);
         }
 
-        internal override Expression ReduceGetResult(Expression awaiter)
-        {
-            return Expression.Call(awaiter, GetResult);
-        }
+        internal override Expression ReduceGetResult(Expression awaiter) => Expression.Call(awaiter, GetResult);
 
-        internal override Expression ReduceIsCompleted(Expression awaiter)
-        {
-            return Expression.Property(awaiter, IsCompleted);
-        }
+        internal override Expression ReduceIsCompleted(Expression awaiter) => Expression.Property(awaiter, IsCompleted);
     }
 
     partial class CSharpExpression
@@ -128,14 +122,12 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing binding information for await operations.</returns>
         public static StaticAwaitInfo AwaitInfo(Type awaitableType)
         {
-            ContractUtils.RequiresNotNull(awaitableType, nameof(awaitableType));
+            RequiresNotNull(awaitableType, nameof(awaitableType));
 
             var getAwaiterMethod = GetGetAwaiter(awaitableType);
 
             if (getAwaiterMethod == null)
-            {
                 throw Error.AwaitableTypeShouldHaveGetAwaiterMethod(awaitableType);
-            }
 
             return AwaitInfo(awaitableType, getAwaiterMethod);
         }
@@ -148,8 +140,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing binding information for await operations.</returns>
         public static StaticAwaitInfo AwaitInfo(Type awaitableType, MethodInfo getAwaiterMethod)
         {
-            ContractUtils.RequiresNotNull(awaitableType, nameof(awaitableType));
-            ContractUtils.RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
+            RequiresNotNull(awaitableType, nameof(awaitableType));
+            RequiresNotNull(getAwaiterMethod, nameof(getAwaiterMethod));
 
             ValidateGetAwaiterMethod(awaitableType, getAwaiterMethod);
 
@@ -183,12 +175,10 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing binding information for await operations.</returns>
         public static StaticAwaitInfo AwaitInfo(LambdaExpression getAwaiter, PropertyInfo isCompleted, MethodInfo getResult)
         {
-            ContractUtils.RequiresNotNull(getAwaiter, nameof(getAwaiter));
+            RequiresNotNull(getAwaiter, nameof(getAwaiter));
 
             if (getAwaiter.Parameters.Count != 1)
-            {
                 throw Error.GetAwaiterExpressionOneParameter();
-            }
 
             //
             // Resolve awaiter members if not specified.
@@ -198,8 +188,8 @@ namespace Microsoft.CSharp.Expressions
 
             ResolveAwaiterInfo(awaiterType, ref isCompleted, ref getResult);
 
-            ContractUtils.RequiresNotNull(isCompleted, nameof(isCompleted));
-            ContractUtils.RequiresNotNull(getResult, nameof(getResult));
+            RequiresNotNull(isCompleted, nameof(isCompleted));
+            RequiresNotNull(getResult, nameof(getResult));
 
             ValidateAwaiterType(awaiterType, isCompleted, getResult);
 
@@ -221,10 +211,8 @@ namespace Microsoft.CSharp.Expressions
             getResult ??= awaiterType.GetNonGenericMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
         }
 
-        internal static MethodInfo GetGetAwaiter(Type awaiterType)
-        {
-            return awaiterType.GetNonGenericMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
-        }
+        internal static MethodInfo GetGetAwaiter(Type awaiterType) =>
+            awaiterType.GetNonGenericMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
 
         private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
         {
@@ -241,70 +229,49 @@ namespace Microsoft.CSharp.Expressions
             if (getAwaiterMethod.IsStatic)
             {
                 if (getAwaiterParams.Length != 1)
-                {
                     throw Error.GetAwaiterShouldTakeZeroParameters();
-                }
 
                 var firstParam = getAwaiterParams[0];
+
                 if (!TypeUtils.AreReferenceAssignable(firstParam.ParameterType, operandType))
-                {
                     throw LinqError.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType);
-                }
             }
             else
             {
                 if (getAwaiterParams.Length != 0)
-                {
                     throw Error.GetAwaiterShouldTakeZeroParameters();
-                }
 
                 if (getAwaiterMethod.IsGenericMethod)
-                {
                     throw Error.GetAwaiterShouldNotBeGeneric();
-                }
             }
 
             var returnType = getAwaiterMethod.ReturnType;
 
             if (returnType == typeof(void) || returnType.IsByRef || returnType.IsPointer)
-            {
                 throw Error.GetAwaiterShouldReturnAwaiterType();
-            }
         }
 
         private static void ValidateAwaiterType(Type awaiterType, PropertyInfo isCompleted, MethodInfo getResult)
         {
             if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
-            {
                 throw Error.AwaiterTypeShouldImplementINotifyCompletion(awaiterType);
-            }
 
             if (isCompleted == null || isCompleted.GetMethod == null)
-            {
                 throw Error.AwaiterTypeShouldHaveIsCompletedProperty(awaiterType);
-            }
 
             if (isCompleted.PropertyType != typeof(bool))
-            {
                 throw Error.AwaiterIsCompletedShouldReturnBool(awaiterType);
-            }
 
             if (isCompleted.GetIndexParameters().Length != 0)
-            {
                 throw Error.AwaiterIsCompletedShouldNotBeIndexer(awaiterType);
-            }
 
             if (getResult == null || getResult.IsGenericMethodDefinition)
-            {
                 throw Error.AwaiterTypeShouldHaveGetResultMethod(awaiterType);
-            }
 
             var returnType = getResult.ReturnType;
 
             if (returnType.IsByRef || returnType.IsPointer)
-            {
                 throw Error.AwaiterGetResultTypeInvalid(awaiterType);
-            }
         }
 
         private static LambdaExpression GetGetAwaiterExpression(Type awaitableType, MethodInfo getAwaiterMethod)
@@ -325,9 +292,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The object to visit.</param>
         /// <returns>The modified object, if it or any subexpression was modified; otherwise, returns the original object.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual AwaitInfo VisitAwaitInfo(StaticAwaitInfo node)
-        {
-            return node.Update(VisitAndConvert(node.GetAwaiter, nameof(VisitAwaitInfo)));
-        }
+        protected internal virtual AwaitInfo VisitAwaitInfo(StaticAwaitInfo node) =>
+            node.Update(
+                VisitAndConvert(node.GetAwaiter, nameof(VisitAwaitInfo))
+            );
     }
 }

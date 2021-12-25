@@ -2,16 +2,20 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     // DESIGN: How about ConditionalArrayAccess which returns ConditionalIndexCSharpExpression?
 
     /// <summary>
@@ -34,10 +38,8 @@ namespace Microsoft.CSharp.Expressions
         {
         }
 
-        private static IndexExpression MakeAccess(ConditionalReceiver receiver, ReadOnlyCollection<Expression> indexes)
-        {
-            return Expression.ArrayAccess(receiver, indexes); // TODO: call ctor directly
-        }
+        private static IndexExpression MakeAccess(ConditionalReceiver receiver, ReadOnlyCollection<Expression> indexes) =>
+            Expression.ArrayAccess(receiver, indexes); // TODO: call ctor directly
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the array to index.
@@ -57,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConditionalArrayIndexCSharpExpression Update(Expression array, IEnumerable<Expression> indexes)
         {
-            if (array == Array && indexes == Indexes)
+            if (array == Array && SameElements(ref indexes, Indexes))
             {
                 return this;
             }
@@ -66,15 +68,10 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalArrayIndex(this);
-        }
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalArrayIndex(this);
 
-        internal override ConditionalAccessCSharpExpression<IndexExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexExpression whenNotNull)
-        {
-            return new ConditionalArrayIndexCSharpExpression(receiver, nonNullReceiver, whenNotNull);
-        }
+        internal override ConditionalAccessCSharpExpression<IndexExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexExpression whenNotNull) =>
+            new ConditionalArrayIndexCSharpExpression(receiver, nonNullReceiver, whenNotNull);
     }
 
     partial class CSharpExpression
@@ -85,10 +82,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="array">An <see cref="Expression" /> that specifies the array to index.</param>
         /// <param name="indexes">An array of one or more of <see cref="Expression" /> objects that represent the indexes.</param>
         /// <returns>A <see cref="ConditionalArrayIndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalArrayIndexCSharpExpression.Array" /> and <see cref="ConditionalArrayIndexCSharpExpression.Indexes" /> properties set to the specified values.</returns>
-        public static ConditionalArrayIndexCSharpExpression ConditionalArrayIndex(Expression array, params Expression[] indexes)
-        {
-            return ConditionalArrayIndex(array, (IEnumerable<Expression>)indexes);
-        }
+        public static ConditionalArrayIndexCSharpExpression ConditionalArrayIndex(Expression array, params Expression[] indexes) => ConditionalArrayIndex(array, (IEnumerable<Expression>)indexes);
 
         /// <summary>
         /// Creates a <see cref="ConditionalArrayIndexCSharpExpression" /> that represents accessing an element in an array.
@@ -100,28 +94,22 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalArrayIndexCSharpExpression ConditionalArrayIndex(Expression array, IEnumerable<Expression> indexes)
         {
             RequiresCanRead(array, nameof(array));
-            ContractUtils.RequiresNotNull(indexes, nameof(indexes));
+            RequiresNotNull(indexes, nameof(indexes));
 
             if (!array.Type.IsArray)
-            {
                 throw LinqError.ArgumentMustBeArray();
-            }
 
             var indexList = indexes.ToReadOnly();
 
             if (array.Type.GetArrayRank() != indexList.Count)
-            {
                 throw LinqError.IncorrectNumberOfIndexes();
-            }
 
             foreach (var index in indexList)
             {
                 RequiresCanRead(index, "indexes");
 
                 if (index.Type != typeof(int))
-                {
                     throw LinqError.ArgumentMustBeArrayIndexType();
-                }
             }
 
             return new ConditionalArrayIndexCSharpExpression(array, indexList);
@@ -136,9 +124,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node)
-        {
-            return node.Update(Visit(node.Array), Visit(node.Indexes));
-        }
+        protected internal virtual Expression VisitConditionalArrayIndex(ConditionalArrayIndexCSharpExpression node) =>
+            node.Update(
+                Visit(node.Array),
+                Visit(node.Indexes)
+            );
     }
 }

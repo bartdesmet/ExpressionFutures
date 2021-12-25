@@ -7,6 +7,9 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
+
 namespace Microsoft.CSharp.Expressions
 {
     /// <summary>
@@ -14,10 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class DiscardCSharpExpression : CSharpExpression
     {
-        internal DiscardCSharpExpression(Type type)
-        {
-            Type = type;
-        }
+        internal DiscardCSharpExpression(Type type) => Type = type;
 
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
@@ -37,17 +37,13 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDiscard(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDiscard(this);
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
-        public override Expression Reduce()
-        {
+        public override Expression Reduce() =>
             // REVIEW: It'd be easier to have discard support in System.Linq.Expressions so we can emit a parameter
             //         expression that does not require to be "in scope" and behaves as expression-to-void conversion,
             //         or a temporary local (e.g. for out parameters).
@@ -59,8 +55,7 @@ namespace Microsoft.CSharp.Expressions
             //     type works fine with all factory methods because these don't require that the argument passed to an
             //     out parameter is indeed an lval (presumably due to VB compat).
 
-            return Expression.Field(null, typeof(Discard<>).MakeGenericType(Type), "_");
-        }
+            Expression.Field(null, typeof(Discard<>).MakeGenericType(Type), nameof(Discard<object>._));
     }
 
     partial class CSharpExpression
@@ -74,9 +69,9 @@ namespace Microsoft.CSharp.Expressions
         {
             // REVIEW: See remarks in Reduce method above.
 
-            ContractUtils.RequiresNotNull(type, nameof(type));
+            RequiresNotNull(type, nameof(type));
 
-            TypeUtils.ValidateType(type);
+            ValidateType(type);
 
             if (type.IsByRef)
                 throw Error.TypeMustNotBeByRef();
@@ -96,9 +91,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDiscard(DiscardCSharpExpression node)
-        {
-            return node;
-        }
+        protected internal virtual Expression VisitDiscard(DiscardCSharpExpression node) => node;
     }
 }

@@ -8,11 +8,17 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a with expression.
     /// </summary>
@@ -73,12 +79,12 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public WithCSharpExpression Update(Expression @object, IEnumerable<MemberInitializer> initializers)
         {
-            if (@object == this.Object && initializers == this.Initializers)
+            if (@object == Object && SameElements(ref initializers, Initializers))
             {
                 return this;
             }
 
-            return CSharpExpression.With(@object, this.Clone, initializers);
+            return CSharpExpression.With(@object, Clone, initializers);
         }
 
         /// <summary>
@@ -230,8 +236,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="WithCSharpExpression"/>.</returns>
         public static WithCSharpExpression With(Expression @object, MethodInfo clone, IEnumerable<MemberInitializer> initializers)
         {
-            ContractUtils.RequiresNotNull(@object, nameof(@object));
-            ContractUtils.RequiresNotNull(initializers, nameof(initializers));
+            RequiresNotNull(@object, nameof(@object));
+            RequiresNotNull(initializers, nameof(initializers));
 
             var initializersCollection = initializers.ToReadOnly();
 
@@ -240,40 +246,28 @@ namespace Microsoft.CSharp.Expressions
             if (@object.Type.IsValueType)
             {
                 if (clone != null)
-                {
                     throw Error.WithExpressionCannotHaveCloneForValueType(@object.Type);
-                }
             }
             else
             {
                 clone ??= @object.Type.GetNonGenericMethod("Clone", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes);
 
                 if (clone == null)
-                {
                     throw Error.WithExpressionShouldHaveClone(@object.Type);
-                }
 
                 ValidateMethodInfo(clone);
 
                 if (clone.IsStatic)
-                {
                     throw Error.CloneMethodMustNotBeStatic(clone.Name);
-                }
 
                 if (!clone.DeclaringType.IsAssignableFrom(@object.Type))
-                {
                     throw LinqError.NotAMemberOfType(clone.Name, @object.Type);
-                }
 
                 if (clone.GetParametersCached().Length != 0)
-                {
                     throw Error.CloneMethodShouldHaveNoParameters(clone.Name);
-                }
 
-                if (!TypeUtils.HasReferenceConversion(clone.ReturnType, @object.Type))
-                {
+                if (!HasReferenceConversion(clone.ReturnType, @object.Type))
                     throw Error.CloneMethodShouldReturnCompatibleType(clone.Name, @object.Type);
-                }
             }
 
             return new WithCSharpExpression(@object, initializersCollection, clone, members: null);
@@ -297,9 +291,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="WithCSharpExpression"/>.</returns>
         public static WithCSharpExpression With(Expression @object, IEnumerable<MemberInfo> members, IEnumerable<MemberInitializer> initializers)
         {
-            ContractUtils.RequiresNotNull(@object, nameof(@object));
-            ContractUtils.RequiresNotNull(members, nameof(members));
-            ContractUtils.RequiresNotNull(initializers, nameof(initializers));
+            RequiresNotNull(@object, nameof(@object));
+            RequiresNotNull(members, nameof(members));
+            RequiresNotNull(initializers, nameof(initializers));
 
             var membersCollection = members.ToReadOnly();
             var initializersCollection = initializers.ToReadOnly();
@@ -315,12 +309,10 @@ namespace Microsoft.CSharp.Expressions
             {
                 var member = membersCollection[i];
 
-                ContractUtils.RequiresNotNull(member, nameof(member));
+                RequiresNotNull(member, nameof(member));
 
-                if (!TypeUtils.AreEquivalent(member.DeclaringType, @object.Type))
-                {
+                if (!AreEquivalent(member.DeclaringType, @object.Type))
                     throw LinqError.ArgumentMemberNotDeclOnType(member.Name, @object.Type.Name);
-                }
 
                 ValidateAnonymousTypeMember(ref member, out var memberType);
 
@@ -333,9 +325,7 @@ namespace Microsoft.CSharp.Expressions
             var ctor = @object.Type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, memberTypes, modifiers: null);
 
             if (ctor == null)
-            {
                 throw Error.NoAnonymousTypeConstructorFound(@object.Type);
-            }
 
             return new WithCSharpExpression(@object, initializersCollection, clone: null, membersCollection);
         }
@@ -348,14 +338,12 @@ namespace Microsoft.CSharp.Expressions
             {
                 var initializer = initializers[i];
 
-                ContractUtils.RequiresNotNull(initializer, nameof(initializers));
+                RequiresNotNull(initializer, nameof(initializers));
 
                 var member = initializer.Member;
 
                 if (!member.DeclaringType.IsAssignableFrom(@object.Type))
-                {
                     throw LinqError.NotAMemberOfType(member.Name, @object.Type);
-                }
 
                 if (requiresCanAssign)
                 {
@@ -385,9 +373,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitWith(WithCSharpExpression node)
-        {
-            return node.Update(Visit(node.Object), Visit(node.Initializers, VisitMemberInitializer));
-        }
+        protected internal virtual Expression VisitWith(WithCSharpExpression node) =>
+            node.Update(
+                Visit(node.Object),
+                Visit(node.Initializers, VisitMemberInitializer)
+            );
     }
 }

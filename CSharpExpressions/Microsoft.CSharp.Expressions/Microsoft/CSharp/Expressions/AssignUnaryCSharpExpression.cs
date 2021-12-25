@@ -6,12 +6,16 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
-using static Microsoft.CSharp.Expressions.Helpers;
+
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a unary assignment operation.
     /// </summary>
@@ -46,10 +50,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitUnaryAssign(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitUnaryAssign(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -58,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AssignUnaryCSharpExpression Update(Expression operand)
         {
-            if (operand == base.Operand)
+            if (operand == Operand)
             {
                 return this;
             }
@@ -176,9 +177,8 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static Expression GetConstantOne(Type type)
-        {
-            return (type.GetNonNullableType().GetTypeCode()) switch
+        private static Expression GetConstantOne(Type type) =>
+            type.GetNonNullableType().GetTypeCode() switch
             {
                 TypeCode.UInt16 => Expression.Constant((ushort)1, type),
                 TypeCode.UInt32 => Expression.Constant((uint)1, type),
@@ -190,7 +190,6 @@ namespace Microsoft.CSharp.Expressions
                 TypeCode.Double => Expression.Constant((double)1, type),
                 _ => throw ContractUtils.Unreachable,
             };
-        }
 
         internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
         {
@@ -215,18 +214,13 @@ namespace Microsoft.CSharp.Expressions
                 var operandDummy = Expression.Parameter(operandType, "__operand");
                 var functionalOp = FunctionalOp(unaryType, operandDummy, method);
 
-                if (method == null)
-                {
-                    method = functionalOp.Method;
-                }
+                method ??= functionalOp.Method;
 
                 resultType = functionalOp.Type;
             }
 
-            if (!TypeUtils.AreEquivalent(resultType, operand.Type))
-            {
+            if (!AreEquivalent(resultType, operand.Type))
                 throw Error.InvalidUnaryAssignmentWithOperands(unaryType, operand.Type);
-            }
         }
 
         private static UnaryExpression FunctionalOp(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
@@ -250,7 +244,7 @@ namespace Microsoft.CSharp.Expressions
             throw LinqError.UnhandledUnary(unaryType);
         }
 
-        internal class Custom : AssignUnaryCSharpExpression
+        internal sealed class Custom : AssignUnaryCSharpExpression
         {
             public Custom(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
                 : base(unaryType, operand)
@@ -271,9 +265,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The operand of the assignment operation, i.e. the assignment target.</param>
         /// <param name="method">The method implementing the assignment operation.</param>
         /// <returns>A new <see cref="AssignUnaryCSharpExpression"/> instance representing the unary assignment.</returns>
-        public static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
-        {
-            return unaryType switch
+        public static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, Expression operand, MethodInfo method) =>
+            unaryType switch
             {
                 CSharpExpressionType.PreIncrementAssign => PreIncrementAssign(operand, method),
                 CSharpExpressionType.PreIncrementAssignChecked => PreIncrementAssignChecked(operand, method),
@@ -285,7 +278,6 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.PostDecrementAssignChecked => PostDecrementAssignChecked(operand, method),
                 _ => throw LinqError.UnhandledUnary(unaryType),
             };
-        }
 
         private static AssignUnaryCSharpExpression MakeUnaryAssignCore(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
         {
@@ -326,9 +318,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitUnaryAssign(AssignUnaryCSharpExpression node)
-        {
-            return node.Update(Visit(node.Operand));
-        }
+        protected internal virtual Expression VisitUnaryAssign(AssignUnaryCSharpExpression node) =>
+            node.Update(
+                Visit(node.Operand)
+            );
     }
 }

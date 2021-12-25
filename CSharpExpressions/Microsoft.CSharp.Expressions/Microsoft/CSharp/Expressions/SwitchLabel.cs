@@ -78,11 +78,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="SwitchLabel"/>.</returns>
         public static SwitchLabel SwitchLabel(LabelTarget label, CSharpPattern pattern, Expression whenClause)
         {
-            if (label != null)
-            {
-                if (label.Type != typeof(void))
-                    throw Error.SwitchLabelTargetShouldBeVoid();
-            }
+            if (label != null && label.Type != typeof(void))
+                throw Error.SwitchLabelTargetShouldBeVoid();
 
             RequiresNotNull(pattern, nameof(pattern));
 
@@ -106,9 +103,11 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The switch label to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual SwitchLabel VisitSwitchLabel(SwitchLabel node)
-        {
-            return node.Update(VisitLabelTarget(node.Label), VisitPattern(node.Pattern), Visit(node.WhenClause));
-        }
+        protected internal virtual SwitchLabel VisitSwitchLabel(SwitchLabel node) =>
+            node.Update(
+                VisitLabelTarget(node.Label),
+                VisitPattern(node.Pattern),
+                Visit(node.WhenClause)
+            );
     }
 }

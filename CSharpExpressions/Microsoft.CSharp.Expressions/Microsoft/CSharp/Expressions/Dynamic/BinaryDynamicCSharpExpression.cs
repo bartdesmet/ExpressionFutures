@@ -2,12 +2,14 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -150,10 +152,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicBinary(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicBinary(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -163,7 +162,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public BinaryDynamicCSharpExpression Update(DynamicCSharpArgument left, DynamicCSharpArgument right)
         {
-            if (left == this.Left && right == this.Right)
+            if (left == Left && right == Right)
             {
                 return this;
             }
@@ -181,10 +180,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The expression representing the left operand of the operation.</param>
         /// <param name="right">The expression representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, Expression left, Expression right)
-        {
-            return MakeDynamicBinary(binaryType, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, null);
-        }
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, Expression left, Expression right) =>
+            MakeDynamicBinary(binaryType, DynamicArgument(left), DynamicArgument(right), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary operation.
@@ -193,10 +190,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The dynamic argument representing the left operand of the operation.</param>
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right)
-        {
-            return MakeDynamicBinary(binaryType, left, right, CSharpBinderFlags.None, null);
-        }
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right) =>
+            MakeDynamicBinary(binaryType, left, right, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary operation with the specified binder flags.
@@ -206,10 +201,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The dynamic argument representing the right operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicBinary(binaryType, left, right, binderFlags, null);
-        }
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags) =>
+            MakeDynamicBinary(binaryType, left, right, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound binary operation with the specified binder flags and the specified type context.
@@ -222,8 +215,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
         public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(left, nameof(left));
-            ContractUtils.RequiresNotNull(right, nameof(right));
+            RequiresNotNull(left, nameof(left));
+            RequiresNotNull(right, nameof(right));
 
             CheckBinary(binaryType);
 
@@ -252,9 +245,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node)
-        {
-            return node.Update(VisitDynamicArgument(node.Left), VisitDynamicArgument(node.Right));
-        }
+        protected internal virtual Expression VisitDynamicBinary(BinaryDynamicCSharpExpression node) =>
+            node.Update(
+                VisitDynamicArgument(node.Left),
+                VisitDynamicArgument(node.Right)
+            );
     }
 }

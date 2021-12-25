@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a while loop.
     /// </summary>
@@ -43,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public WhileCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression test, Expression body, IEnumerable<ParameterExpression> locals)
         {
-            if (breakLabel == this.BreakLabel && continueLabel == this.ContinueLabel && test == this.Test && body == this.Body && Helpers.SameElements(ref locals, this.Locals))
+            if (breakLabel == BreakLabel && continueLabel == ContinueLabel && test == Test && body == Body && SameElements(ref locals, Locals))
             {
                 return this;
             }
@@ -143,9 +145,13 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitWhile(WhileCSharpStatement node)
-        {
-            return node.Update(VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel), Visit(node.Test), Visit(node.Body), VisitAndConvert(node.Locals, nameof(VisitDo)));
-        }
+        protected internal virtual Expression VisitWhile(WhileCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.BreakLabel),
+                VisitLabelTarget(node.ContinueLabel),
+                Visit(node.Test),
+                Visit(node.Body),
+                VisitAndConvert(node.Locals, nameof(VisitDo))
+            );
     }
 }

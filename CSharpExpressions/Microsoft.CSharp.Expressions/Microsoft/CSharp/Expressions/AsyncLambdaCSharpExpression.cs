@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.Expressions.Compiler;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,11 +13,18 @@ using System.Linq.Expressions.Compiler;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
+using Microsoft.CSharp.Expressions.Compiler;
+
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents an asynchronous lambda expression.
     /// </summary>
@@ -59,10 +65,7 @@ namespace Microsoft.CSharp.Expressions
         /// Produces a delegate that represents the asynchronous lambda expression.
         /// </summary>
         /// <returns>A <see cref="Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
-        public Delegate Compile()
-        {
-            return CompileCore();
-        }
+        public Delegate Compile() => CompileCore();
 
         /// <summary>
         /// Produces a delegate that represents the asynchronous lambda expression.
@@ -89,10 +92,7 @@ namespace Microsoft.CSharp.Expressions
         {
         }
 
-        internal static AsyncCSharpExpression<TDelegate> Create(Expression body, ReadOnlyCollection<ParameterExpression> parameters)
-        {
-            return new AsyncCSharpExpression<TDelegate>(body, parameters);
-        }
+        internal static AsyncCSharpExpression<TDelegate> Create(Expression body, ReadOnlyCollection<ParameterExpression> parameters) => new AsyncCSharpExpression<TDelegate>(body, parameters);
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -100,10 +100,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitAsyncLambda(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitAsyncLambda(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -113,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AsyncCSharpExpression<TDelegate> Update(Expression body, IEnumerable<ParameterExpression> parameters)
         {
-            if (body == base.Body && parameters == base.Parameters)
+            if (body == Body && SameElements(ref parameters, Parameters))
             {
                 return this;
             }
@@ -125,19 +122,13 @@ namespace Microsoft.CSharp.Expressions
         /// Compiles the asynchronous lambda expression described by the expression tree into executable code and produces a delegate that represents the lambda expression.
         /// </summary>
         /// <returns>A delegate of type <typeparamref name="TDelegate" /> that represents the compiled asynchronous lambda expression described by the <see cref="AsyncCSharpExpression{TDelegate}" />.</returns>
-        public new TDelegate Compile()
-        {
-            return (TDelegate)(object)CompileCore();
-        }
+        public new TDelegate Compile() => (TDelegate)(object)CompileCore();
 
         /// <summary>
         /// Produces a delegate that represents the asynchronous lambda expression.
         /// </summary>
         /// <returns>A <see cref="Delegate" /> that contains the compiled version of the asynchronous lambda expression.</returns>
-        protected override Delegate CompileCore()
-        {
-            return ((LambdaExpression)ReduceCore()).Compile();
-        }
+        protected override Delegate CompileCore() => ((LambdaExpression)ReduceCore()).Compile();
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.
@@ -172,7 +163,7 @@ namespace Microsoft.CSharp.Expressions
             var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
             var returnType = invokeMethod.ReturnType;
 
-            var builderInfo = Helpers.GetAsyncMethodBuilderInfo(returnType);
+            var builderInfo = GetAsyncMethodBuilderInfo(returnType);
             var builderType = builderInfo.BuilderType;
 
             Expression[] exprs;
@@ -226,7 +217,7 @@ namespace Microsoft.CSharp.Expressions
             //
             // __state = -1;
             //
-            exprs[i++] = Expression.Assign(stateVar, Helpers.CreateConstantInt32(-1));
+            exprs[i++] = Expression.Assign(stateVar, CreateConstantInt32(-1));
 
             //
             // __builder.Start(ref __statemachine);
@@ -466,7 +457,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                newBody = Helpers.CreateVoid(newBody);
+                newBody = CreateVoid(newBody);
             }
 
             //
@@ -492,7 +483,7 @@ namespace Microsoft.CSharp.Expressions
                     newBody,
                     Expression.Catch(ex,
                         Expression.Block(
-                            Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2)),
+                            Expression.Assign(stateVar, CreateConstantInt32(-2)),
                             Expression.Call(builderVar, builderInfo.SetException, ex),
                             Expression.Return(exit)
                         )
@@ -502,7 +493,7 @@ namespace Microsoft.CSharp.Expressions
             //
             // __state = -2;
             //
-            exprs[i++] = Expression.Assign(stateVar, Helpers.CreateConstantInt32(-2));
+            exprs[i++] = Expression.Assign(stateVar, CreateConstantInt32(-2));
 
             //
             // __builder.SetResult(__result);
@@ -543,10 +534,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncLambdaCSharpExpression AsyncLambda(Expression body, params ParameterExpression[] parameters)
-        {
-            return AsyncLambda(body, (IEnumerable<ParameterExpression>)parameters);
-        }
+        public static AsyncLambdaCSharpExpression AsyncLambda(Expression body, params ParameterExpression[] parameters) => AsyncLambda(body, (IEnumerable<ParameterExpression>)parameters);
 
         /// <summary>
         /// Creates an <see cref="AsyncLambdaCSharpExpression" /> by first constructing a delegate type.
@@ -572,14 +560,12 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var parameter = parameterList[i];
 
-                    ValidateAsyncParameter(parameter);
+                    ValidateAsyncParameter(parameter, nameof(parameters));
 
                     types[i] = parameter.Type;
 
                     if (set.Contains(parameter))
-                    {
                         throw LinqError.DuplicateVariable(parameter);
-                    }
 
                     set.Add(parameter);
                 }
@@ -604,10 +590,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, params ParameterExpression[] parameters)
-        {
-            return AsyncLambda(delegateType, body, (IEnumerable<ParameterExpression>)parameters);
-        }
+        public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, params ParameterExpression[] parameters) => AsyncLambda(delegateType, body, (IEnumerable<ParameterExpression>)parameters);
 
         /// <summary>
         /// Creates an <see cref="AsyncLambdaCSharpExpression" /> using the specified delegate type.
@@ -631,10 +614,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, params ParameterExpression[] parameters)
-        {
-            return AsyncLambda<TDelegate>(body, (IEnumerable<ParameterExpression>)parameters);
-        }
+        public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, params ParameterExpression[] parameters) => AsyncLambda<TDelegate>(body, (IEnumerable<ParameterExpression>)parameters);
 
         /// <summary>
         /// Creates an <see cref="AsyncCSharpExpression{TDelegate}" /> where the delegate type is known at compile time.
@@ -692,9 +672,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(body, nameof(body));
 
             if (!typeof(MulticastDelegate).IsAssignableFrom(delegateType) || delegateType == typeof(MulticastDelegate))
-            {
                 throw LinqError.LambdaTypeMustBeDerivedFromSystemDelegate();
-            }
 
             var count = parameters.Count;
 
@@ -704,28 +682,22 @@ namespace Microsoft.CSharp.Expressions
             if (parametersCached.Length != 0)
             {
                 if (parametersCached.Length != count)
-                {
                     throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
-                }
 
                 var set = new Set<ParameterExpression>(count);
 
                 for (var i = 0; i < count; i++)
                 {
                     var parameter = parameters[i];
-                    ValidateAsyncParameter(parameter);
+                    ValidateAsyncParameter(parameter, nameof(parameters));
 
                     var parameterType = parametersCached[i].ParameterType;
 
-                    if (!TypeUtils.AreReferenceAssignable(parameter.Type, parameterType))
-                    {
+                    if (!AreReferenceAssignable(parameter.Type, parameterType))
                         throw LinqError.ParameterExpressionNotValidAsDelegate(parameter.Type, parameterType);
-                    }
 
                     if (set.Contains(parameter))
-                    {
                         throw LinqError.DuplicateVariable(parameter);
-                    }
 
                     set.Add(parameter);
                 }
@@ -735,12 +707,10 @@ namespace Microsoft.CSharp.Expressions
                 throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
             }
 
-            if (Helpers.IsTaskLikeType(method.ReturnType, out var resultType))
+            if (IsTaskLikeType(method.ReturnType, out var resultType))
             {
-                if (resultType != typeof(void) && !TypeUtils.AreReferenceAssignable(resultType, body.Type) && !TryQuote(resultType, ref body))
-                {
+                if (resultType != typeof(void) && !AreReferenceAssignable(resultType, body.Type) && !TryQuote(resultType, ref body))
                     throw LinqError.ExpressionTypeDoesNotMatchReturn(body.Type, method.ReturnType);
-                }
             }
             else
             {
@@ -755,14 +725,12 @@ namespace Microsoft.CSharp.Expressions
             return (AsyncLambdaCSharpExpression)create.Invoke(null, new object[] { body, parameters });
         }
 
-        private static void ValidateAsyncParameter(ParameterExpression parameter)
+        private static void ValidateAsyncParameter(ParameterExpression parameter, string paramName)
         {
-            RequiresCanRead(parameter, "parameters");
+            RequiresCanRead(parameter, paramName);
 
             if (parameter.IsByRef)
-            {
                 throw Error.AsyncLambdaCantHaveByRefParameter(parameter);
-            }
         }
     }
 
@@ -774,9 +742,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node)
-        {
-            return node.Update(Visit(node.Body), VisitAndConvert<ParameterExpression>(node.Parameters, nameof(VisitAsyncLambda)));
-        }
+        protected internal virtual Expression VisitAsyncLambda<TDelegate>(AsyncCSharpExpression<TDelegate> node) =>
+            node.Update(
+                Visit(node.Body),
+                VisitAndConvert(node.Parameters, nameof(VisitAsyncLambda))
+            );
     }
 }

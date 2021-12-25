@@ -7,6 +7,8 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
@@ -37,10 +39,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the indexer arguments.</param>
         /// <param name="value">The <see cref="Expression"/> that represents the value to assign to the indexer.</param>
         /// <returns>An <see cref="ElementInit" /> that assigns the specified value to the specified indexer using the specified arguments.</returns>
-        public static ElementInit IndexInit(MethodInfo indexer, Expression[] arguments, Expression value)
-        {
-            return IndexInit(indexer, (IEnumerable<Expression>)arguments, value);
-        }
+        public static ElementInit IndexInit(MethodInfo indexer, Expression[] arguments, Expression value) =>
+            IndexInit(indexer, (IEnumerable<Expression>)arguments, value);
 
         /// <summary>
         /// Creates an <see cref="ElementInit" /> that represents assignment to an indexer.
@@ -51,7 +51,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An <see cref="ElementInit" /> that assigns the specified value to the specified indexer using the specified arguments.</returns>
         public static ElementInit IndexInit(MethodInfo indexer, IEnumerable<Expression> arguments, Expression value)
         {
-            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
+            RequiresNotNull(indexer, nameof(indexer));
 
             return IndexInit(GetProperty(indexer), arguments, value);
         }
@@ -63,10 +63,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the indexer arguments.</param>
         /// <param name="value">The <see cref="Expression"/> that represents the value to assign to the indexer.</param>
         /// <returns>An <see cref="ElementInit" /> that assigns the specified value to the specified indexer using the specified arguments.</returns>
-        public static ElementInit IndexInit(PropertyInfo indexer, Expression[] arguments, Expression value)
-        {
-            return IndexInit(indexer, (IEnumerable<Expression>)arguments, value);
-        }
+        public static ElementInit IndexInit(PropertyInfo indexer, Expression[] arguments, Expression value) =>
+            IndexInit(indexer, (IEnumerable<Expression>)arguments, value);
 
         /// <summary>
         /// Creates an <see cref="ElementInit" /> that represents assignment to an indexer.
@@ -78,18 +76,17 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ElementInit IndexInit(PropertyInfo indexer, IEnumerable<Expression> arguments, Expression value)
         {
-            ContractUtils.RequiresNotNull(indexer, nameof(indexer));
-            ContractUtils.RequiresNotNull(arguments, nameof(arguments));
-            ContractUtils.RequiresNotNull(value, nameof(value));
+            RequiresNotNull(indexer, nameof(indexer));
+            RequiresNotNull(arguments, nameof(arguments));
+            RequiresNotNull(value, nameof(value));
 
             var argList = arguments.Concat(new[] { value }).ToReadOnly();
             RequiresCanRead(argList, nameof(arguments));
 
-            var setter = indexer.GetSetMethod(true);
+            var setter = indexer.GetSetMethod(nonPublic: true);
+
             if (setter == null)
-            {
                 throw Error.PropertyDoesNotHaveSetAccessor(indexer);
-            }
 
             ValidateIndexer(indexer.DeclaringType, indexer);
 

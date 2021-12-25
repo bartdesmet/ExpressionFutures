@@ -3,10 +3,13 @@
 // bartde - December 2021
 
 using System;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -58,7 +61,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="MemberInitializer"/>.</returns>
         public static MemberInitializer MemberInitializer(MemberInfo member, Expression expression)
         {
-            ContractUtils.RequiresNotNull(member, nameof(member));
+            RequiresNotNull(member, nameof(member));
 
             //
             // NB: System.Linq.Expressions fails to checks for static members in ValidateSettableFieldOrPropertyMember.
@@ -86,6 +89,7 @@ namespace Microsoft.CSharp.Expressions
 
                     if (f.IsStatic)
                         throw Error.MemberInitializerMemberMustNotBeStatic(member.Name);
+
                     break;
 
                 case PropertyInfo p:
@@ -97,8 +101,9 @@ namespace Microsoft.CSharp.Expressions
                     
                     if (accessor.IsStatic)
                         throw Error.MemberInitializerMemberMustNotBeStatic(member.Name);
-                    
+
                     break;
+
                 default:
                     throw LinqError.ArgumentMustBeFieldInfoOrPropertInfo();
             }
@@ -111,16 +116,12 @@ namespace Microsoft.CSharp.Expressions
             //
 
             if (!memberType.IsAssignableFrom(expression.Type))
-            {
                 throw LinqError.ArgumentTypesMustMatch();
-            }
 
             if (member.DeclaringType == null)
-            {
                 throw Error.NotAMemberOfAnyType(member);
-            }
 
-            TypeUtils.ValidateType(member.DeclaringType);
+            ValidateType(member.DeclaringType);
 
             return new MemberInitializer(member, expression);
         }
@@ -133,8 +134,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="MemberInitializer"/>.</returns>
         public static MemberInitializer MemberInitializer(MethodInfo propertyAccessor, Expression expression)
         {
-            ContractUtils.RequiresNotNull(propertyAccessor, nameof(propertyAccessor));
-            ContractUtils.RequiresNotNull(expression, nameof(expression));
+            RequiresNotNull(propertyAccessor, nameof(propertyAccessor));
+            RequiresNotNull(expression, nameof(expression));
 
             ValidateMethodInfo(propertyAccessor);
 
@@ -150,9 +151,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected virtual MemberInitializer VisitMemberInitializer(MemberInitializer node)
-        {
-            return node.Update(Visit(node.Expression));
-        }
+        protected virtual MemberInitializer VisitMemberInitializer(MemberInitializer node) =>
+            node.Update(
+                Visit(node.Expression)
+            );
     }
 }

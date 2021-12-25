@@ -19,10 +19,7 @@ namespace Microsoft.CSharp.Expressions
         /// Returns the node type of this <see cref="CSharpExpression" />.
         /// </summary>
         /// <returns>The <see cref="CSharpExpressionType"/> that represents this expression.</returns>
-        public abstract CSharpExpressionType CSharpNodeType
-        {
-            get;
-        }
+        public abstract CSharpExpressionType CSharpNodeType { get; }
 
         /// <summary>
         /// Gets a value that indicates whether the expression tree node can be reduced. 

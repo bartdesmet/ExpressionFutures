@@ -2,11 +2,13 @@
 //
 // bartde - October 2015
 
-using System;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -31,15 +33,11 @@ namespace Microsoft.CSharp.Expressions
         {
         }
 
-        private static MemberExpression MakeAccess(ConditionalReceiver receiver, MemberInfo member)
-        {
-            return Expression.MakeMemberAccess(receiver, member); // TODO: call ctor directly
-        }
+        private static MemberExpression MakeAccess(ConditionalReceiver receiver, MemberInfo member) =>
+            Expression.MakeMemberAccess(receiver, member); // TODO: call ctor directly
 
-        internal static ConditionalMemberCSharpExpression Make(Expression expression, MemberInfo member)
-        {
-            return new ConditionalMemberCSharpExpression(expression, member); // TODO: remove layer of indirection if not needed
-        }
+        internal static ConditionalMemberCSharpExpression Make(Expression expression, MemberInfo member) =>
+            new ConditionalMemberCSharpExpression(expression, member); // TODO: remove layer of indirection if not needed
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the instance whose member is accessed.
@@ -67,15 +65,10 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalMember(this);
-        }
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalMember(this);
 
-        internal override ConditionalAccessCSharpExpression<MemberExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MemberExpression whenNotNull)
-        {
-            return new ConditionalMemberCSharpExpression(receiver, nonNullReceiver, whenNotNull);
-        }
+        internal override ConditionalAccessCSharpExpression<MemberExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MemberExpression whenNotNull) =>
+            new ConditionalMemberCSharpExpression(receiver, nonNullReceiver, whenNotNull);
     }
 
     partial class CSharpExpression
@@ -88,23 +81,16 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalAccessCSharpExpression{MemberExpression}.Receiver" /> and <see cref="Microsoft.CSharp.Expressions.ConditionalMemberCSharpExpression.Member" /> properties set to the specified values.</returns>
         public static ConditionalMemberCSharpExpression MakeConditionalMemberAccess(Expression expression, MemberInfo member)
         {
-            ContractUtils.RequiresNotNull(member, nameof(member));
+            RequiresNotNull(member, nameof(member));
 
-            var fieldInfo = member as FieldInfo;
-            if (fieldInfo != null)
+            return member switch
             {
-                return ConditionalField(expression, fieldInfo);
-            }
+                FieldInfo fieldInfo => ConditionalField(expression, fieldInfo),
+                PropertyInfo propertyInfo => ConditionalProperty(expression, propertyInfo),
 
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                return ConditionalProperty(expression, propertyInfo);
-            }
-
-            // NB: LINQ doesn't allow a MethodInfo for a property getter here either; should we change this?
-
-            throw LinqError.MemberNotFieldOrProperty(member);
+                // NB: LINQ doesn't allow a MethodInfo for a property getter here either; should we change this?
+                _ => throw LinqError.MemberNotFieldOrProperty(member)
+            };
         }
 
         /// <summary>
@@ -117,19 +103,15 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalMemberCSharpExpression ConditionalField(Expression expression, FieldInfo field)
         {
             RequiresCanRead(expression, nameof(expression));
-            ContractUtils.RequiresNotNull(field, nameof(field));
+            RequiresNotNull(field, nameof(field));
 
             if (field.IsStatic)
-            {
                 throw Error.ConditionalAccessRequiresNonStaticMember();
-            }
 
             var type = expression.Type.GetNonNullReceiverType();
 
-            if (!TypeUtils.AreReferenceAssignable(field.DeclaringType, type))
-            {
+            if (!AreReferenceAssignable(field.DeclaringType, type))
                 throw LinqError.FieldInfoNotDefinedForType(field.DeclaringType, field.Name, type);
-            }
 
             return ConditionalMemberCSharpExpression.Make(expression, field);
         }
@@ -144,21 +126,16 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalMemberCSharpExpression ConditionalField(Expression expression, string fieldName)
         {
             RequiresCanRead(expression, nameof(expression));
-            ContractUtils.RequiresNotNull(fieldName, nameof(fieldName));
+            RequiresNotNull(fieldName, nameof(fieldName));
 
             var type = expression.Type.GetNonNullReceiverType();
 
-            var field = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+            var field =
+                   type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                ?? type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
             if (field == null)
-            {
-                field = type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            }
-
-            if (field == null)
-            {
                 throw LinqError.InstanceFieldNotDefinedForType(fieldName, type);
-            }
 
             return ConditionalField(expression, field);
         }
@@ -173,29 +150,21 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, PropertyInfo property)
         {
             RequiresCanRead(expression, nameof(expression));
-            ContractUtils.RequiresNotNull(property, nameof(property));
+            RequiresNotNull(property, nameof(property));
 
             if (!property.CanRead)
-            {
                 throw Error.ConditionalAccessRequiresReadableProperty();
-            }
 
             if (property.GetIndexParameters().Length != 0)
-            {
                 throw Error.ConditionalAccessRequiresReadableProperty();
-            }
 
-            if (property.GetGetMethod(true).IsStatic)
-            {
+            if (property.GetGetMethod(nonPublic: true).IsStatic)
                 throw Error.ConditionalAccessRequiresNonStaticMember();
-            }
 
             var type = expression.Type.GetNonNullReceiverType();
 
-            if (!TypeUtils.IsValidInstanceType(property, type))
-            {
+            if (!IsValidInstanceType(property, type))
                 throw LinqError.PropertyNotDefinedForType(property, type);
-            }
 
             return ConditionalMemberCSharpExpression.Make(expression, property);
         }
@@ -210,21 +179,16 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, string propertyName)
         {
             RequiresCanRead(expression, nameof(expression));
-            ContractUtils.RequiresNotNull(propertyName, nameof(propertyName));
+            RequiresNotNull(propertyName, nameof(propertyName));
 
             var type = expression.Type.GetNonNullReceiverType();
 
-            var property = type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+            var property =
+                   type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                ?? type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
             if (property == null)
-            {
-                property = type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            }
-
-            if (property == null)
-            {
                 throw LinqError.InstancePropertyNotDefinedForType(propertyName, type);
-            }
 
             return ConditionalProperty(expression, property);
         }
@@ -237,13 +201,13 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="ConditionalMemberCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" />, the <see cref="ConditionalAccessCSharpExpression{MemberExpression}.Receiver" /> property set to <paramref name="expression" /> and the <see cref="ConditionalMemberCSharpExpression.Member" /> property set to the <see cref="PropertyInfo" /> that represents the property accessed in <paramref name="propertyAccessor" />.</returns>
         public static ConditionalMemberCSharpExpression ConditionalProperty(Expression expression, MethodInfo propertyAccessor)
         {
-            ContractUtils.RequiresNotNull(propertyAccessor, nameof(propertyAccessor));
+            RequiresNotNull(propertyAccessor, nameof(propertyAccessor));
 
             ValidateMethodInfo(propertyAccessor);
 
             return ConditionalProperty(expression, GetProperty(propertyAccessor));
         }
-        
+
         // TODO: Add PropertyOrField equivalent?
     }
 
@@ -255,9 +219,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalMember(ConditionalMemberCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression));
-        }
+        protected internal virtual Expression VisitConditionalMember(ConditionalMemberCSharpExpression node) => node.Update(Visit(node.Expression));
     }
 }

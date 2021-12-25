@@ -2,7 +2,6 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,12 +9,17 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a dynamically bound invocation of a member.
     /// </summary>
@@ -67,10 +71,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicInvokeMember(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicInvokeMember(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -109,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
 
         public override InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
         {
-            if (@object == this.Object && arguments == this.Arguments)
+            if (@object == Object && SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -136,7 +137,7 @@ namespace Microsoft.CSharp.Expressions
             var expressions = new Expression[n + 1];
 
             expressions[0] = Expression.Constant(Target, typeof(Type));
-            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType | CSharpArgumentInfoFlags.IsStaticType, null);
+            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType | CSharpArgumentInfoFlags.IsStaticType, name: null);
 
             argumentTypes = null;
             CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
@@ -147,7 +148,7 @@ namespace Microsoft.CSharp.Expressions
 
         public override InvokeMemberDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
         {
-            if (@object == this.Object && arguments == this.Arguments)
+            if (@object == Object && SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -167,10 +168,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, params Expression[] arguments)
-        {
-            return DynamicInvokeMember(@object, name, null, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, params Expression[] arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments: null, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member invocation.
@@ -179,10 +178,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Expression> arguments)
-        {
-            return DynamicInvokeMember(@object, name, null, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Expression> arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments: null, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member invocation.
@@ -191,10 +188,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicInvokeMember(@object, name, null, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, DynamicCSharpArgument[] arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments: null, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member invocation.
@@ -203,10 +198,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicInvokeMember(@object, name, null, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments: null, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -216,10 +209,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, params Expression[] arguments)
-        {
-            return DynamicInvokeMember(@object, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, params Expression[] arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -229,10 +220,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<Expression> arguments)
-        {
-            return DynamicInvokeMember(@object, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<Expression> arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -242,10 +231,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicInvokeMember(@object, name, typeArguments, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, DynamicCSharpArgument[] arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -255,10 +242,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicInvokeMember(@object, name, typeArguments, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicInvokeMember(@object, name, typeArguments, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation with the specified binder flags.
@@ -269,10 +254,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags)
-        {
-            return DynamicInvokeMember(@object, name, typeArguments, arguments, binderFlags, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+            DynamicInvokeMember(@object, name, typeArguments, arguments, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation with the specified binder flags and the specified type context.
@@ -287,7 +270,7 @@ namespace Microsoft.CSharp.Expressions
         public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Expression @object, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context)
         {
             RequiresCanRead(@object, nameof(@object));
-            ContractUtils.RequiresNotNull(name, nameof(name));
+            RequiresNotNull(name, nameof(name));
 
             var typeArgList = typeArguments.ToReadOnly();
 
@@ -308,10 +291,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, params Expression[] arguments)
-        {
-            return DynamicInvokeMember(type, name, null, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, params Expression[] arguments) =>
+            DynamicInvokeMember(type, name, typeArguments: null, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member invocation.
@@ -320,10 +301,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Expression> arguments)
-        {
-            return DynamicInvokeMember(type, name, null, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Expression> arguments) =>
+            DynamicInvokeMember(type, name, typeArguments: null, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member invocation.
@@ -332,10 +311,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicInvokeMember(type, name, null, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, DynamicCSharpArgument[] arguments) =>
+            DynamicInvokeMember(type, name, typeArguments: null, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound member invocation.
@@ -344,10 +321,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the member to invoke.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicInvokeMember(type, name, null, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicInvokeMember(type, name, typeArguments: null, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -357,10 +332,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, params Expression[] arguments)
-        {
-            return DynamicInvokeMember(type, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, params Expression[] arguments) =>
+            DynamicInvokeMember(type, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -370,10 +343,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<Expression> arguments)
-        {
-            return DynamicInvokeMember(type, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<Expression> arguments) =>
+            DynamicInvokeMember(type, name, typeArguments, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -383,10 +354,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicInvokeMember(type, name, typeArguments, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, DynamicCSharpArgument[] arguments) =>
+            DynamicInvokeMember(type, name, typeArguments, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation.
@@ -396,10 +365,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="typeArguments">An enumerable sequence of type arguments to pass to the generic member. (Specify null for non-generic members.)</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicInvokeMember(type, name, typeArguments, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicInvokeMember(type, name, typeArguments, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation with the specified binder flags.
@@ -410,10 +377,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the member upon invocation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
-        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags)
-        {
-            return DynamicInvokeMember(type, name, typeArguments, arguments, binderFlags, null);
-        }
+        public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+            DynamicInvokeMember(type, name, typeArguments, arguments, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound (possibly generic) member invocation with the specified binder flags and the specified type context.
@@ -427,8 +392,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound member invocation.</returns>
         public static InvokeMemberDynamicCSharpExpression DynamicInvokeMember(Type type, string name, IEnumerable<Type> typeArguments, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(type, nameof(type));
-            ContractUtils.RequiresNotNull(name, nameof(name));
+            RequiresNotNull(type, nameof(type));
+            RequiresNotNull(name, nameof(name));
 
             ValidateType(type);
 
@@ -444,10 +409,8 @@ namespace Microsoft.CSharp.Expressions
             return new InvokeStaticMemberDynamicCSharpExpression(context, binderFlags, type, name, typeArgList, argList);
         }
 
-        private static ReadOnlyCollection<DynamicCSharpArgument> GetDynamicArguments(IEnumerable<Expression> arguments)
-        {
-            return arguments.Select(DynamicArgument).ToReadOnly();
-        }
+        private static ReadOnlyCollection<DynamicCSharpArgument> GetDynamicArguments(IEnumerable<Expression> arguments) =>
+            arguments.Select(DynamicArgument).ToReadOnly();
     }
 
     partial class CSharpExpressionVisitor
@@ -458,9 +421,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicInvokeMember(InvokeMemberDynamicCSharpExpression node)
-        {
-            return node.Update(Visit(node.Object), Visit(node.Arguments, VisitDynamicArgument));
-        }
+        protected internal virtual Expression VisitDynamicInvokeMember(InvokeMemberDynamicCSharpExpression node) =>
+            node.Update(
+                Visit(node.Object),
+                Visit(node.Arguments, VisitDynamicArgument)
+            );
     }
 }

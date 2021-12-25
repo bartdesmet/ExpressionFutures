@@ -5,11 +5,14 @@
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a null-conditional access operation.
     /// </summary>
@@ -21,15 +24,10 @@ namespace Microsoft.CSharp.Expressions
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalAccess(this);
-        }
+        internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalAccess(this);
 
-        internal override ConditionalAccessCSharpExpression<Expression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
-        {
-            return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
-        }
+        internal override ConditionalAccessCSharpExpression<Expression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull) =>
+            new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
     }
 
     /// <summary>
@@ -104,10 +102,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalAccess(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitConditionalAccess(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -118,7 +113,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ConditionalAccessCSharpExpression<TExpression> Update(Expression receiver, ConditionalReceiver nonNullReceiver, TExpression whenNotNull)
         {
-            if (receiver == this.Receiver && nonNullReceiver == this.NonNullReceiver && whenNotNull == this.WhenNotNull)
+            if (receiver == Receiver && nonNullReceiver == NonNullReceiver && whenNotNull == WhenNotNull)
             {
                 return this;
             }
@@ -149,8 +144,8 @@ namespace Microsoft.CSharp.Expressions
 
             if (receiverType.IsNullableType())
             {
-                nonNullCheck = Helpers.MakeNullableHasValue(receiver);
-                nonNull = Helpers.MakeNullableGetValueOrDefault(receiver);
+                nonNullCheck = MakeNullableHasValue(receiver);
+                nonNull = MakeNullableGetValueOrDefault(receiver);
             }
             else
             {
@@ -201,7 +196,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        class SubstituteConditionalReceiver : CSharpExpressionVisitor
+        private sealed class SubstituteConditionalReceiver : CSharpExpressionVisitor
         {
             private readonly ConditionalReceiver _receiver;
             private readonly Expression _nonNull;
@@ -237,10 +232,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal static ConditionalReceiver MakeReceiver(Expression receiver)
-        {
-            return CSharpExpression.ConditionalReceiver(receiver.Type.GetNonNullableType());
-        }
+        internal static ConditionalReceiver MakeReceiver(Expression receiver) => CSharpExpression.ConditionalReceiver(receiver.Type.GetNonNullableType());
     }
 
     partial class CSharpExpressionVisitor
@@ -268,10 +260,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node)
-        {
-            return node.Update(Visit(node.Receiver), VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)), Visit(node.WhenNotNull));
-        }
+        protected internal virtual Expression VisitConditionalAccess(ConditionalAccessCSharpExpression node) =>
+            node.Update(
+                Visit(node.Receiver),
+                VisitAndConvert(node.NonNullReceiver, nameof(VisitConditionalAccess)),
+                Visit(node.WhenNotNull)
+            );
     }
 
     partial class CSharpExpression
@@ -363,16 +357,14 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(whenNotNull, nameof(whenNotNull));
 
             var receiverType = receiver.Type;
+
             if (receiverType == typeof(void) || receiverType.IsByRef || (receiverType.IsValueType && !receiverType.IsNullableType()))
-            {
                 throw Error.InvalidConditionalReceiverExpressionType(receiverType);
-            }
 
             var nonNullReceiverType = receiverType.GetNonNullReceiverType();
+
             if (nonNullReceiverType != nonNullReceiver.Type)
-            {
                 throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType);
-            }
         }
     }
 }

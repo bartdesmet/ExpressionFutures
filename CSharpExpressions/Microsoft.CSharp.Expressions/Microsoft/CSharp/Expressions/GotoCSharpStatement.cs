@@ -3,7 +3,9 @@
 // bartde - November 2015
 
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -255,10 +257,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitGotoLabel(GotoLabelCSharpStatement node)
-        {
-            return node.Update(VisitLabelTarget(node.Target));
-        }
+        protected internal virtual Expression VisitGotoLabel(GotoLabelCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.Target)
+            );
 
         /// <summary>
         /// Visits the children of the <see cref="GotoCaseCSharpStatement" />.
@@ -266,10 +268,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitGotoCase(GotoCaseCSharpStatement node)
-        {
-            return node.Update(VisitLabelTarget(node.Target));
-        }
+        protected internal virtual Expression VisitGotoCase(GotoCaseCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.Target)
+            );
 
         /// <summary>
         /// Visits the children of the <see cref="GotoDefaultCSharpStatement" />.
@@ -277,9 +279,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitGotoDefault(GotoDefaultCSharpStatement node)
-        {
-            return node.Update(VisitLabelTarget(node.Target));
-        }
+        protected internal virtual Expression VisitGotoDefault(GotoDefaultCSharpStatement node) =>
+            node.Update(
+                VisitLabelTarget(node.Target)
+            );
     }
 }

@@ -6,6 +6,8 @@ using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
+using static System.Dynamic.Utils.ContractUtils;
+
 namespace Microsoft.CSharp.Expressions
 {
     //NB: We use a custom node instead of a ParameterExpression in order to ensure it's not writeable and such that we
@@ -16,10 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class ConditionalReceiver : CSharpExpression
     {
-        internal ConditionalReceiver(Type type)
-        {
-            Type = type;
-        }
+        internal ConditionalReceiver(Type type) => Type = type;
 
         /// <summary>
         /// Gets the static type of the expression that this <see cref="System.Linq.Expressions.Expression" /> represents. (Inherited from <see cref="System.Linq.Expressions.Expression"/>.)
@@ -44,10 +43,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitConditionalReceiver(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitConditionalReceiver(this);
     }
 
     partial class CSharpExpressionVisitor
@@ -58,10 +54,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitConditionalReceiver(ConditionalReceiver node)
-        {
-            return node;
-        }
+        protected internal virtual Expression VisitConditionalReceiver(ConditionalReceiver node) => node;
     }
 
     partial class CSharpExpression
@@ -74,12 +67,10 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalReceiver ConditionalReceiver(Type type)
         {
-            ContractUtils.RequiresNotNull(type, nameof(type));
+            RequiresNotNull(type, nameof(type));
 
             if (type == typeof(void) || type.IsByRef || type.IsNullableType())
-            {
                 throw Error.InvalidConditionalReceiverType(type);
-            }
 
             return new ConditionalReceiver(type);
         }

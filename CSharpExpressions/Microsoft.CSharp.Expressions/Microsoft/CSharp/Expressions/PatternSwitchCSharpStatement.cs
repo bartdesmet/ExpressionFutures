@@ -17,6 +17,8 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a switch statement.
     /// </summary>
@@ -51,7 +53,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public PatternSwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<SwitchSection> sections)
         {
-            if (switchValue == SwitchValue && breakLabel == BreakLabel && Helpers.SameElements(ref variables, Variables) && Helpers.SameElements(ref sections, Sections))
+            if (switchValue == SwitchValue && breakLabel == BreakLabel && SameElements(ref variables, Variables) && SameElements(ref sections, Sections))
             {
                 return this;
             }
@@ -207,14 +209,10 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(breakLabel, nameof(breakLabel));
 
             if (switchValue.Type == typeof(void))
-            {
                 throw LinqError.ArgumentCannotBeOfTypeVoid();
-            }
 
             if (breakLabel.Type != typeof(void))
-            {
                 throw Error.SwitchBreakLabelShouldBeVoid();
-            }
 
             var sectionsList = sections.ToReadOnly();
 
@@ -230,9 +228,7 @@ namespace Microsoft.CSharp.Expressions
                     foreach (var label in section.Labels)
                     {
                         if (label.Label != null && !allLabels.Add(label.Label))
-                        {
                             throw Error.DuplicateLabelInSwitchStatement(label.Label);
-                        }
 
                         if (label.IsDefault)
                         {
@@ -270,9 +266,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitSwitch(PatternSwitchCSharpStatement node)
-        {
-            return node.Update(Visit(node.SwitchValue), VisitLabelTarget(node.BreakLabel), VisitAndConvert(node.Variables, nameof(VisitSwitch)), Visit(node.Sections, VisitSwitchSection));
-        }
+        protected internal virtual Expression VisitSwitch(PatternSwitchCSharpStatement node) =>
+            node.Update(
+                Visit(node.SwitchValue),
+                VisitLabelTarget(node.BreakLabel),
+                VisitAndConvert(node.Variables, nameof(VisitSwitch)),
+                Visit(node.Sections, VisitSwitchSection)
+            );
     }
 }

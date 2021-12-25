@@ -2,8 +2,10 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System.Linq.Expressions;
+
+using Microsoft.CSharp.RuntimeBinder;
+
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
@@ -47,7 +49,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public DynamicCSharpArgument Update(Expression expression)
         {
-            if (expression == this.Expression)
+            if (expression == Expression)
             {
                 return this;
             }
@@ -63,10 +65,8 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="expression">The expression representing the value of the argument.</param>
         /// <returns>An object representing a dynamically bound argument.</returns>
-        public static DynamicCSharpArgument DynamicArgument(Expression expression)
-        {
-            return DynamicArgument(expression, null, GetFlags(expression));
-        }
+        public static DynamicCSharpArgument DynamicArgument(Expression expression) =>
+            DynamicArgument(expression, null, GetFlags(expression));
 
         /// <summary>
         /// Creates an object representing a dynamically bound argument with the specified name.
@@ -74,10 +74,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the value of the argument.</param>
         /// <param name="name">The name of the argument to bind.</param>
         /// <returns>An object representing a dynamically bound argument.</returns>
-        public static DynamicCSharpArgument DynamicArgument(Expression expression, string name)
-        {
-            return DynamicArgument(expression, name, GetFlags(expression));
-        }
+        public static DynamicCSharpArgument DynamicArgument(Expression expression, string name) =>
+            DynamicArgument(expression, name, GetFlags(expression));
 
         /// <summary>
         /// Creates an object representing a dynamically bound argument with the specified name and the specified argument flags.
@@ -127,9 +125,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual DynamicCSharpArgument VisitDynamicArgument(DynamicCSharpArgument node)
-        {
-            return node.Update(Visit(node.Expression));
-        }
+        protected internal virtual DynamicCSharpArgument VisitDynamicArgument(DynamicCSharpArgument node) =>
+            node.Update(
+                Visit(node.Expression)
+            );
     }
 }

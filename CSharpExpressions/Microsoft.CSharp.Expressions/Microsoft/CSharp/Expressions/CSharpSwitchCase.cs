@@ -9,10 +9,13 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
 using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     // DESIGN: With the C# 7.0 proposal for pattern matching, it may make more sense to
     //         represent test values as expressions rather than objects. This also impacts
     //         our `goto case` support. See https://github.com/dotnet/roslyn/issues/5757.
@@ -47,7 +50,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public CSharpSwitchCase Update(IEnumerable<Expression> statements)
         {
-            if (statements == this.Statements)
+            if (SameElements(ref statements, Statements))
             {
                 return this;
             }
@@ -76,10 +79,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="testValues">The collection of values to test for.</param>
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        public static CSharpSwitchCase SwitchCase<T>(IEnumerable<T> testValues, params Expression[] statements)
-        {
-            return SwitchCase(testValues, (IEnumerable<Expression>)statements);
-        }
+        public static CSharpSwitchCase SwitchCase<T>(IEnumerable<T> testValues, params Expression[] statements) =>
+            SwitchCase(testValues, (IEnumerable<Expression>)statements);
 
         /// <summary>
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
@@ -91,8 +92,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase<T>(IEnumerable<T> testValues, IEnumerable<Expression> statements)
         {
-            ContractUtils.RequiresNotNull(testValues, nameof(testValues));
-            ContractUtils.RequiresNotNull(statements, nameof(statements));
+            RequiresNotNull(testValues, nameof(testValues));
+            RequiresNotNull(statements, nameof(statements));
 
             // NB: We don't check the body for Break statements; worst case we'll insert one at the end during Reduce.
             //     Note that the semantics are nonetheless consistent with C#, i.e. no implicit fall-through.
@@ -125,10 +126,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, params Expression[] statements)
-        {
-            return SwitchCase(testValues, (IEnumerable<Expression>)statements);
-        }
+        public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, params Expression[] statements) =>
+            SwitchCase(testValues, (IEnumerable<Expression>)statements);
 
         /// <summary>
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a switch case.
@@ -155,9 +154,7 @@ namespace Microsoft.CSharp.Expressions
             foreach (var testValue in testValuesList)
             {
                 if (!uniqueTestValues.Add(testValue))
-                {
                     throw Error.DuplicateTestValue(testValue);
-                }
 
                 // NB: Null is fine; every valid governing type in C# has a nullable variant (trivial for string).
 
@@ -171,9 +168,7 @@ namespace Microsoft.CSharp.Expressions
                     else
                     {
                         if (testType != testValueType)
-                        {
                             throw Error.TestValuesShouldHaveConsistentType();
-                        }
                     }
                 }
             }
@@ -202,7 +197,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCaseDefault(IEnumerable<Expression> statements)
         {
-            var testValues = s_default ?? (s_default = new TrueReadOnlyCollection<object>(new[] { s_SwitchCaseDefaultValue }));
+            var testValues = s_default ??= new TrueReadOnlyCollection<object>(new[] { s_SwitchCaseDefaultValue });
             return SwitchCase(testValues, statements);
         }
 
@@ -219,12 +214,9 @@ namespace Microsoft.CSharp.Expressions
             return statementsList;
         }
 
-        class SwitchDefaultValue
+        private sealed class SwitchDefaultValue
         {
-            public override string ToString()
-            {
-                return "default";
-            }
+            public override string ToString() => "default";
         }
     }
 
@@ -236,9 +228,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
-        {
-            return node.Update(Visit(node.Statements));
-        }
+        protected internal virtual CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node) =>
+            node.Update(
+                Visit(node.Statements)
+            );
     }
 }

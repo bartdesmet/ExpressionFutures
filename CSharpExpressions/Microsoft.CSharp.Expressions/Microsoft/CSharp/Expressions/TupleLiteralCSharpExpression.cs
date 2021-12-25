@@ -10,8 +10,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using static System.Dynamic.Utils.ContractUtils;
+
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a tuple literal.
     /// </summary>
@@ -60,7 +64,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public TupleLiteralCSharpExpression Update(IEnumerable<Expression> arguments)
         {
-            if (arguments == this.Arguments)
+            if (SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -97,7 +101,7 @@ namespace Microsoft.CSharp.Expressions
                 var current = Type;
                 Push(current);
 
-                while (current.GetGenericTypeDefinition() == Helpers.MaxTupleType)
+                while (current.GetGenericTypeDefinition() == MaxTupleType)
                 {
                     current = current.GetGenericArguments()[^1];
                     Push(current);
@@ -167,9 +171,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
         public static TupleLiteralCSharpExpression TupleLiteral(Type type, IEnumerable<Expression> arguments, IEnumerable<string> argumentNames)
         {
-            ContractUtils.RequiresNotNull(type, nameof(type));
+            RequiresNotNull(type, nameof(type));
 
-            if (!Helpers.IsTupleType(type))
+            if (!IsTupleType(type))
             {
                 throw Error.InvalidTupleType(type);
             }
@@ -184,7 +188,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var def = type.GetGenericTypeDefinition();
 
-                    if (def == Helpers.MaxTupleType)
+                    if (def == MaxTupleType)
                     {
                         for (int i = 0; i < parameters.Length - 1; i++)
                         {
@@ -239,9 +243,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitTupleLiteral(TupleLiteralCSharpExpression node)
-        {
-            return node.Update(Visit(node.Arguments));
-        }
+        protected internal virtual Expression VisitTupleLiteral(TupleLiteralCSharpExpression node) =>
+            node.Update(
+                Visit(node.Arguments)
+            );
     }
 }

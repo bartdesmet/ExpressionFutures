@@ -19,6 +19,7 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
 
     /// <summary>
     /// Represents a switch statement.
@@ -54,7 +55,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public SwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<CSharpSwitchCase> cases)
         {
-            if (switchValue == SwitchValue && breakLabel == BreakLabel && variables == Variables && Helpers.SameElements(ref cases, Cases))
+            if (switchValue == SwitchValue && breakLabel == BreakLabel && SameElements(ref variables, Variables) && SameElements(ref cases, Cases))
             {
                 return this;
             }
@@ -298,8 +299,8 @@ namespace Microsoft.CSharp.Expressions
                     // We found a case with only a 'null' test value; we can lower to a null-check followed by a non-null switch,
                     // and move the 'null' case to an else branch.
 
-                    var hasValue = Helpers.MakeNullableHasValue(valueLocal);
-                    var value = Helpers.MakeNullableGetValueOrDefault(valueLocal);
+                    var hasValue = MakeNullableHasValue(valueLocal);
+                    var value = MakeNullableGetValueOrDefault(valueLocal);
 
                     var lowered = LowerSwitchStatement(analysis, governingTypeNonNull, hoistNull: true);
 
@@ -321,8 +322,8 @@ namespace Microsoft.CSharp.Expressions
             {
                 // We have no 'null' test value whatsoever; we can lower to a null-check followed by a non-null switch.
 
-                var hasValue = Helpers.MakeNullableHasValue(valueLocal);
-                var value = Helpers.MakeNullableGetValueOrDefault(valueLocal);
+                var hasValue = MakeNullableHasValue(valueLocal);
+                var value = MakeNullableGetValueOrDefault(valueLocal);
 
                 var lowered = LowerSwitchStatement(analysis, governingTypeNonNull, hoistNull: false);
 
@@ -420,17 +421,15 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private static SwitchCase ConvertSwitchCase(CSharpSwitchCase @case, Type type)
-        {
-            return Expression.SwitchCase(MakeBlock(@case.Statements), @case.TestValues.Select(testValue => Expression.Constant(testValue, type)));
-        }
+        private static SwitchCase ConvertSwitchCase(CSharpSwitchCase @case, Type type) =>
+            Expression.SwitchCase(
+                MakeBlock(@case.Statements),
+                @case.TestValues.Select(testValue => Expression.Constant(testValue, type))
+            );
 
-        private static Expression MakeBlock(IList<Expression> expressions)
-        {
-            return Helpers.CreateVoid(expressions);
-        }
+        private static Expression MakeBlock(IList<Expression> expressions) => CreateVoid(expressions);
 
-        class ShallowSwitchCSharpExpressionVisitor : CSharpExpressionVisitor
+        private class ShallowSwitchCSharpExpressionVisitor : CSharpExpressionVisitor
         {
             protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
             {
@@ -446,7 +445,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        class SwitchCaseGotoAnalyzer : ShallowSwitchCSharpExpressionVisitor
+        private sealed class SwitchCaseGotoAnalyzer : ShallowSwitchCSharpExpressionVisitor
         {
             public readonly IDictionary<CSharpSwitchCase, SwitchCaseInfo> SwitchCaseInfos = new Dictionary<CSharpSwitchCase, SwitchCaseInfo>();
 
@@ -494,7 +493,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        class SwitchCaseRewriter : ShallowSwitchCSharpExpressionVisitor
+        private sealed class SwitchCaseRewriter : ShallowSwitchCSharpExpressionVisitor
         {
             private readonly Func<object, LabelTarget> _getGotoCaseLabel;
             private readonly LabelTarget _gotoDefaultLabel;
@@ -517,13 +516,13 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        struct SwitchCaseInfo
+        private struct SwitchCaseInfo
         {
             public HashSet<object> GotoCases;
             public bool HasGotoDefault;
         }
 
-        struct LoweredSwitchStatement
+        private struct LoweredSwitchStatement
         {
             public IList<SwitchCase> Cases;
             public Expression NullCase;
@@ -565,12 +564,12 @@ namespace Microsoft.CSharp.Expressions
                         }
                     }
 
-                    return Helpers.CreateVoid(exprs);
+                    return CreateVoid(exprs);
                 }
             }
         }
 
-        class SwitchAnalysis
+        private sealed class SwitchAnalysis
         {
             public bool IsDefaultLonely;
             public CSharpSwitchCase DefaultCase;
@@ -804,9 +803,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitSwitch(SwitchCSharpStatement node)
-        {
-            return node.Update(Visit(node.SwitchValue), VisitLabelTarget(node.BreakLabel), VisitAndConvert(node.Variables, nameof(VisitSwitch)), Visit(node.Cases, VisitSwitchCase));
-        }
+        protected internal virtual Expression VisitSwitch(SwitchCSharpStatement node) =>
+            node.Update(
+                Visit(node.SwitchValue),
+                VisitLabelTarget(node.BreakLabel),
+                VisitAndConvert(node.Variables, nameof(VisitSwitch)),
+                Visit(node.Cases, VisitSwitchCase)
+            );
     }
 }

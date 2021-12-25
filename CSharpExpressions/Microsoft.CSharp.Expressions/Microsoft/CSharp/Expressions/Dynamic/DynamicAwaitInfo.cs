@@ -2,10 +2,11 @@
 //
 // bartde - February 2020
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -46,10 +47,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitAwaitInfo(this);
-        }
+        protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor) => visitor.VisitAwaitInfo(this);
 
         internal override void RequiresCanBind(Expression operand)
         {
@@ -112,12 +110,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The context in which the dynamic operation is bound.</param>
         /// <param name="resultDiscarded">Indicates whether the result of the await operation is discarded.</param>
         /// <returns>An object representing binding information for await operations.</returns>
-        public static DynamicAwaitInfo DynamicAwaitInfo(Type context, bool resultDiscarded)
-        {
+        public static DynamicAwaitInfo DynamicAwaitInfo(Type context, bool resultDiscarded) =>
             // NB: This is the overload the C# compiler binds to.
-
-            return new DynamicAwaitInfo(context, resultDiscarded);
-        }
+            new DynamicAwaitInfo(context, resultDiscarded);
     }
 
     partial class CSharpExpressionVisitor
@@ -127,9 +122,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The object to visit.</param>
         /// <returns>The modified object, if it or any subexpression was modified; otherwise, returns the original object.</returns>
-        protected internal virtual AwaitInfo VisitAwaitInfo(DynamicAwaitInfo node)
-        {
-            return node;
-        }
+        protected internal virtual AwaitInfo VisitAwaitInfo(DynamicAwaitInfo node) => node;
     }
 }

@@ -6,6 +6,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
+
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
@@ -46,10 +47,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitLock(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitLock(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -59,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public LockCSharpStatement Update(Expression expression, Expression body)
         {
-            if (expression == this.Expression && body == this.Body)
+            if (expression == Expression && body == Body)
             {
                 return this;
             }
@@ -122,9 +120,7 @@ namespace Microsoft.CSharp.Expressions
             ValidateType(expression.Type);
 
             if (expression.Type.IsValueType)
-            {
                 throw Error.LockNeedsReferenceType(expression.Type);
-            }
 
             return new LockCSharpStatement(expression, body);
         }
@@ -138,9 +134,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitLock(LockCSharpStatement node)
-        {
-            return node.Update(Visit(node.Expression), Visit(node.Body));
-        }
+        protected internal virtual Expression VisitLock(LockCSharpStatement node) =>
+            node.Update(
+                Visit(node.Expression),
+                Visit(node.Body)
+            );
     }
 }

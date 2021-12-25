@@ -8,12 +8,15 @@ using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a deconstruction assignment.
     /// </summary>
@@ -73,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public DeconstructionAssignmentCSharpExpression Update(TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)
         {
-            if (left == this.Left && right == this.Right && conversion == this.Conversion)
+            if (left == Left && right == Right && conversion == Conversion)
             {
                 return this;
             }
@@ -89,10 +92,7 @@ namespace Microsoft.CSharp.Expressions
         {
             int tempCounter = 0;
 
-            ParameterExpression CreateTemporary(Type type)
-            {
-                return Expression.Parameter(type, "__t" + (tempCounter++));
-            }
+            ParameterExpression CreateTemporary(Type type) => Expression.Parameter(type, "__t" + (tempCounter++));
 
             var lhsTemps = new List<ParameterExpression>();
             var stmts = new List<Expression>();
@@ -154,8 +154,8 @@ namespace Microsoft.CSharp.Expressions
 
                     default:
                         // NB: Known limitation on ref locals when needed for e.g. obj.Bar.Foo = x where Bar is a mutable struct.
-                        var expr = Helpers.MakeWriteable(variable);
-                        var v = Helpers.ReduceAssign(expr, temps, effects); // CONSIDER: Wire createTemp throughout.
+                        var expr = MakeWriteable(variable);
+                        var v = ReduceAssign(expr, temps, effects); // CONSIDER: Wire createTemp throughout.
                         assignmentTargets.Add(new DeconstructionVariable(v));
                         break;
                 }
@@ -209,7 +209,7 @@ namespace Microsoft.CSharp.Expressions
                 builder.Add(resultPart);
             }
 
-            var tupleType = Helpers.MakeTupleType(builder.Select(e => e.Type).ToArray());
+            var tupleType = MakeTupleType(builder.Select(e => e.Type).ToArray());
 
             return new TupleLiteralCSharpExpression(tupleType, builder.ToReadOnly(), argumentNames: null);
         }
@@ -257,7 +257,7 @@ namespace Microsoft.CSharp.Expressions
             // var (x, y) = GetTuple();
             // var (x, y) = ((byte, byte)) (1, 2);
             // var (a, _) = ((short, short))((int, int))(1L, 2L);
-            if (Helpers.IsTupleType(right.Type))
+            if (IsTupleType(right.Type))
             {
                 inInit = false;
                 return AccessTupleFields(right, temps, effects.deconstructions, createTemp);
@@ -270,10 +270,10 @@ namespace Microsoft.CSharp.Expressions
 
         private List<Expression> AccessTupleFields(Expression expression, List<ParameterExpression> temps, List<Expression> effects, Func<Type, ParameterExpression> createTemp)
         {
-            Debug.Assert(Helpers.IsTupleType(expression.Type));
+            Debug.Assert(IsTupleType(expression.Type));
 
             var tupleType = expression.Type;
-            var tupleElementTypes = Helpers.GetTupleComponentTypes(tupleType).ToArray();
+            var tupleElementTypes = GetTupleComponentTypes(tupleType).ToArray();
 
             var numElements = tupleElementTypes.Length;
 
@@ -286,7 +286,7 @@ namespace Microsoft.CSharp.Expressions
 
             for (int i = 0; i < numElements; i++)
             {
-                var fieldAccess = Helpers.GetTupleItemAccess(tuple, i);
+                var fieldAccess = GetTupleItemAccess(tuple, i);
                 builder.Add(fieldAccess);
             }
 
@@ -425,10 +425,12 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDeconstructionAssignment(DeconstructionAssignmentCSharpExpression node)
-        {
-            return node.Update(VisitAndConvert(node.Left, nameof(VisitDeconstructionAssignment)), Visit(node.Right), (DeconstructionConversion)VisitConversion(node.Conversion));
-        }
+        protected internal virtual Expression VisitDeconstructionAssignment(DeconstructionAssignmentCSharpExpression node) =>
+            node.Update(
+                VisitAndConvert(node.Left, nameof(VisitDeconstructionAssignment)),
+                Visit(node.Right),
+                (DeconstructionConversion)VisitConversion(node.Conversion)
+            );
     }
 
     partial class CSharpExpression
@@ -440,7 +442,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The expression representing the object to deconstruct.</param>
         /// <param name="conversion">The deconstruction conversion specifying the deconstruction step and the conversions to the elements obtained from deconstructing the object.</param>
         /// <returns>A <see cref="DeconstructionAssignmentCSharpExpression"/> representing the deconstruction assignment.</returns>
-        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion) => DeconstructionAssignment(type: null, left, right, conversion);
+        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)
+            => DeconstructionAssignment(type: null, left, right, conversion);
 
         /// <summary>
         /// Creates a deconstruction assignment expression.
@@ -498,7 +501,7 @@ namespace Microsoft.CSharp.Expressions
                         types[i] = ValidateDeconstruction(nestedLeftArgument, nestedRightConversion.InputType, nestedRightConversion, depth + 1, i);
                     }
 
-                    return Helpers.MakeTupleType(types);
+                    return MakeTupleType(types);
                 }
                 else if (left is TupleLiteralCSharpExpression)
                 {

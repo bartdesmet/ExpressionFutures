@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
+
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
@@ -15,10 +16,8 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
         /// <returns>An instance of the <see cref="DynamicAwaitCSharpExpression"/>.</returns>
-        public static AwaitCSharpExpression DynamicAwait(Expression operand)
-        {
-            return DynamicAwait(operand, resultDiscarded: false, context: null);
-        }
+        public static AwaitCSharpExpression DynamicAwait(Expression operand) =>
+            DynamicAwait(operand, resultDiscarded: false, context: null);
 
         /// <summary>
         /// Creates an <see cref="AwaitCSharpExpression"/> that represents awaiting an asynchronous operation.
@@ -26,10 +25,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
         /// <param name="resultDiscarded">Indicates whether the result of the await operation is discarded, causing the expression to have type <see cref="System.Void"/>.</param>
         /// <returns>An instance of the <see cref="DynamicAwaitCSharpExpression"/>.</returns>
-        public static AwaitCSharpExpression DynamicAwait(Expression operand, bool resultDiscarded)
-        {
-            return DynamicAwait(operand, resultDiscarded, context: null);
-        }
+        public static AwaitCSharpExpression DynamicAwait(Expression operand, bool resultDiscarded) =>
+            DynamicAwait(operand, resultDiscarded, context: null);
 
         /// <summary>
         /// Creates an <see cref="AwaitCSharpExpression"/> that represents awaiting an asynchronous operation.

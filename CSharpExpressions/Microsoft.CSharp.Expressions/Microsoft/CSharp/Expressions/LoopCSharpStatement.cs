@@ -3,7 +3,9 @@
 // bartde - October 2015
 
 using System.Linq.Expressions;
+
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
@@ -42,21 +44,15 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresCanRead(body, nameof(body));
             
+            // DESIGN: C# statement behavior; can be revisited.
             if (@break != null && @break.Type != typeof(void))
-            {
-                // DESIGN: C# statement behavior; can be revisited.
                 throw LinqError.LabelTypeMustBeVoid();
-            }
 
             if (@continue != null && @continue.Type != typeof(void))
-            {
                 throw LinqError.LabelTypeMustBeVoid();
-            }
 
             if (@break != null && @continue != null && @break == @continue)
-            {
                 throw Error.DuplicateLabels();
-            }
         }
     }
 }

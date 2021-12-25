@@ -12,8 +12,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using static System.Dynamic.Utils.ContractUtils;
+
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents an interpolated string expression.
     /// </summary>
@@ -22,10 +26,7 @@ namespace Microsoft.CSharp.Expressions
         private static MethodInfo s_format_params;
         private static MethodInfo[] s_format_args;
 
-        internal InterpolatedStringCSharpExpression(ReadOnlyCollection<Interpolation> interpolations)
-        {
-            Interpolations = interpolations;
-        }
+        internal InterpolatedStringCSharpExpression(ReadOnlyCollection<Interpolation> interpolations) => Interpolations = interpolations;
 
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
@@ -50,10 +51,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitInterpolatedString(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitInterpolatedString(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -62,7 +60,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public InterpolatedStringCSharpExpression Update(IEnumerable<Interpolation> interpolations)
         {
-            if (interpolations == Interpolations)
+            if (SameElements(ref interpolations, Interpolations))
             {
                 return this;
             }
@@ -253,10 +251,8 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="interpolations">The interpolations that make up the interpolated string.</param>
         /// <returns>An instance of the <see cref="InterpolatedStringCSharpExpression"/>.</returns>
-        public static InterpolatedStringCSharpExpression InterpolatedString(params Interpolation[] interpolations)
-        {
-            return InterpolatedString((IEnumerable<Interpolation>)interpolations);
-        }
+        public static InterpolatedStringCSharpExpression InterpolatedString(params Interpolation[] interpolations) =>
+            InterpolatedString((IEnumerable<Interpolation>)interpolations);
 
         /// <summary>
         /// Creates a <see cref="InterpolatedStringCSharpExpression"/> that represents an interpolated string expression.
@@ -265,7 +261,11 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An instance of the <see cref="InterpolatedStringCSharpExpression"/>.</returns>
         public static InterpolatedStringCSharpExpression InterpolatedString(IEnumerable<Interpolation> interpolations)
         {
-            return new InterpolatedStringCSharpExpression(interpolations.ToReadOnly());
+            var interpolationsList = interpolations.ToReadOnly();
+
+            RequiresNotNullItems(interpolationsList, nameof(interpolations));
+
+            return new InterpolatedStringCSharpExpression(interpolationsList);
         }
 
         /// <summary>
@@ -274,10 +274,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the interpolated string. This can be any of <see cref="string"/>, <see cref="FormattableString"/>, or <see cref="IFormattable"/>.</param>
         /// <param name="interpolations">The interpolations that make up the interpolated string.</param>
         /// <returns>An instance of the <see cref="InterpolatedStringCSharpExpression"/>.</returns>
-        public static InterpolatedStringCSharpExpression InterpolatedString(Type type, params Interpolation[] interpolations)
-        {
-            return InterpolatedString(type, (IEnumerable<Interpolation>)interpolations);
-        }
+        public static InterpolatedStringCSharpExpression InterpolatedString(Type type, params Interpolation[] interpolations) =>
+            InterpolatedString(type, (IEnumerable<Interpolation>)interpolations);
 
         /// <summary>
         /// Creates a <see cref="InterpolatedStringCSharpExpression"/> that represents an interpolated string expression.
@@ -287,19 +285,19 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An instance of the <see cref="InterpolatedStringCSharpExpression"/>.</returns>
         public static InterpolatedStringCSharpExpression InterpolatedString(Type type, IEnumerable<Interpolation> interpolations)
         {
-            ContractUtils.RequiresNotNull(type, nameof(type));
+            RequiresNotNull(type, nameof(type));
 
             if (type == typeof(string))
-            {
                 return InterpolatedString(interpolations);
-            }
 
             if (type != typeof(FormattableString) && type != typeof(IFormattable))
-            {
                 throw Error.InvalidInterpolatedStringType(type);
-            }
 
-            return new FormattableInterpolatedStringCSharpExpression(type, interpolations.ToReadOnly());
+            var interpolationsList = interpolations.ToReadOnly();
+            
+            RequiresNotNullItems(interpolationsList, nameof(interpolations));
+
+            return new FormattableInterpolatedStringCSharpExpression(type, interpolationsList);
         }
     }
 
@@ -311,9 +309,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitInterpolatedString(InterpolatedStringCSharpExpression node)
-        {
-            return node.Update(Visit(node.Interpolations, VisitInterpolation));
-        }
+        protected internal virtual Expression VisitInterpolatedString(InterpolatedStringCSharpExpression node) =>
+            node.Update(
+                Visit(node.Interpolations, VisitInterpolation)
+            );
     }
 }

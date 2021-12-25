@@ -2,12 +2,14 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
-using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -86,10 +88,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicUnary(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicUnary(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -98,7 +97,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public UnaryDynamicCSharpExpression Update(DynamicCSharpArgument operand)
         {
-            if (operand == this.Operand)
+            if (operand == Operand)
             {
                 return this;
             }
@@ -115,10 +114,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="unaryType">The type of the unary operation to perform.</param>
         /// <param name="operand">The expression representing the operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound unary operation.</returns>
-        public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, Expression operand)
-        {
-            return MakeDynamicUnary(unaryType, DynamicArgument(operand), CSharpBinderFlags.None, null);
-        }
+        public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, Expression operand) =>
+            MakeDynamicUnary(unaryType, DynamicArgument(operand), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary operation.
@@ -126,10 +123,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="unaryType">The type of the unary operation to perform.</param>
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <returns>A new expression representing a dynamically bound unary operation.</returns>
-        public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, DynamicCSharpArgument operand)
-        {
-            return MakeDynamicUnary(unaryType, operand, CSharpBinderFlags.None, null);
-        }
+        public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, DynamicCSharpArgument operand) =>
+            MakeDynamicUnary(unaryType, operand, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary operation with the specified binder flags.
@@ -138,10 +133,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The dynamic argument representing the operand of the operation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound unary operation.</returns>
-        public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags)
-        {
-            return MakeDynamicUnary(unaryType, operand, binderFlags, null);
-        }
+        public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags) =>
+            MakeDynamicUnary(unaryType, operand, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically bound unary operation with the specified binder flags and the specified type context.
@@ -153,7 +146,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new expression representing a dynamically bound unary operation.</returns>
         public static UnaryDynamicCSharpExpression MakeDynamicUnary(ExpressionType unaryType, DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context)
         {
-            ContractUtils.RequiresNotNull(operand, nameof(operand));
+            RequiresNotNull(operand, nameof(operand));
 
             CheckUnary(unaryType);
 
@@ -176,9 +169,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicUnary(UnaryDynamicCSharpExpression node)
-        {
-            return node.Update(VisitDynamicArgument(node.Operand));
-        }
+        protected internal virtual Expression VisitDynamicUnary(UnaryDynamicCSharpExpression node) =>
+            node.Update(
+                VisitDynamicArgument(node.Operand)
+            );
     }
 }

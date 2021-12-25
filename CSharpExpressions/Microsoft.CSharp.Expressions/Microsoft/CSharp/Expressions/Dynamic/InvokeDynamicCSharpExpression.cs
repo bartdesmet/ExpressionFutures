@@ -2,18 +2,21 @@
 //
 // bartde - October 2015
 
-using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
+using Microsoft.CSharp.RuntimeBinder;
+
 using static System.Linq.Expressions.ExpressionStubs;
-using static Microsoft.CSharp.Expressions.Helpers;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a dynamically bound invocation of a delegate or lambda.
     /// </summary>
@@ -56,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
             var expressions = new Expression[n + 1];
 
             expressions[0] = Expression;
-            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null);
+            argumentInfos[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, name: null);
 
             argumentTypes = null;
             CopyArguments(Arguments, argumentInfos, expressions, ref argumentTypes);
@@ -71,10 +74,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Expression Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitDynamicInvoke(this);
-        }
+        protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitDynamicInvoke(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -84,7 +84,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public InvokeDynamicCSharpExpression Update(Expression expression, IEnumerable<DynamicCSharpArgument> arguments)
         {
-            if (expression == this.Expression && arguments == this.Arguments)
+            if (expression == Expression && SameElements(ref arguments, Arguments))
             {
                 return this;
             }
@@ -103,10 +103,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the lambda or delegate to invoke.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the lambda or delegate upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound lambda or delegate invocation.</returns>
-        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, params Expression[] arguments)
-        {
-            return DynamicInvoke(expression, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, params Expression[] arguments) =>
+            DynamicInvoke(expression, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically lambda or delegate invocation.
@@ -114,10 +112,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the lambda or delegate to invoke.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the lambda or delegate upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound lambda or delegate invocation.</returns>
-        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, IEnumerable<Expression> arguments)
-        {
-            return DynamicInvoke(expression, GetDynamicArguments(arguments), CSharpBinderFlags.None, null);
-        }
+        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, IEnumerable<Expression> arguments) =>
+            DynamicInvoke(expression, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically lambda or delegate invocation.
@@ -125,10 +121,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the lambda or delegate to invoke.</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the lambda or delegate upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound lambda or delegate invocation.</returns>
-        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, DynamicCSharpArgument[] arguments)
-        {
-            return DynamicInvoke(expression, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, DynamicCSharpArgument[] arguments) =>
+            DynamicInvoke(expression, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically lambda or delegate invocation.
@@ -136,10 +130,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the lambda or delegate to invoke.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the lambda or delegate upon invocation.</param>
         /// <returns>A new expression representing a dynamically bound lambda or delegate invocation.</returns>
-        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, IEnumerable<DynamicCSharpArgument> arguments)
-        {
-            return DynamicInvoke(expression, arguments, CSharpBinderFlags.None, null);
-        }
+        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, IEnumerable<DynamicCSharpArgument> arguments) =>
+            DynamicInvoke(expression, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically lambda or delegate invocation with the specified binder flags.
@@ -148,10 +140,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the lambda or delegate upon invocation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound lambda or delegate invocation.</returns>
-        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags)
-        {
-            return DynamicInvoke(expression, arguments, binderFlags, null);
-        }
+        public static InvokeDynamicCSharpExpression DynamicInvoke(Expression expression, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+            DynamicInvoke(expression, arguments, binderFlags, context: null);
 
         /// <summary>
         /// Creates a new expression representing a dynamically lambda or delegate invocation with the specified binder flags and the specified type context.
@@ -179,9 +169,10 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitDynamicInvoke(InvokeDynamicCSharpExpression node)
-        {
-            return node.Update(Visit(node.Expression), Visit(node.Arguments, VisitDynamicArgument));
-        }
+        protected internal virtual Expression VisitDynamicInvoke(InvokeDynamicCSharpExpression node) =>
+            node.Update(
+                Visit(node.Expression),
+                Visit(node.Arguments, VisitDynamicArgument)
+            );
     }
 }

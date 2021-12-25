@@ -2,7 +2,7 @@
 //
 // bartde - February 2020
 
-using System.Dynamic.Utils;
+using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -11,10 +11,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class InterpolationStringLiteral : Interpolation
     {
-        internal InterpolationStringLiteral(string value)
-        {
-            Value = value;
-        }
+        internal InterpolationStringLiteral(string value) => Value = value;
 
         /// <summary>
         /// Gets the string literal used in the interpolation.
@@ -27,10 +24,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Interpolation Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitInterpolationStringLiteral(this);
-        }
+        protected internal override Interpolation Accept(CSharpExpressionVisitor visitor) => visitor.VisitInterpolationStringLiteral(this);
     }
 
     partial class CSharpExpression
@@ -42,7 +36,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An instance of the <see cref="InterpolationStringLiteral"/>.</returns>
         public static InterpolationStringLiteral InterpolationStringLiteral(string value)
         {
-            ContractUtils.RequiresNotNull(value, nameof(value));
+            RequiresNotNull(value, nameof(value));
 
             return new InterpolationStringLiteral(value);
         }
@@ -56,9 +50,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Interpolation VisitInterpolationStringLiteral(InterpolationStringLiteral node)
-        {
-            return node;
-        }
+        protected internal virtual Interpolation VisitInterpolationStringLiteral(InterpolationStringLiteral node) => node;
     }
 }
