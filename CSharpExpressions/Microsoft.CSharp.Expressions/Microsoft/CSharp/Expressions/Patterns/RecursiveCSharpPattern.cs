@@ -302,8 +302,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
         /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
-        public static RecursiveCSharpPattern Property(Type type, ParameterExpression variable, params PropertyCSharpSubpattern[] properties)
-            => Property(type, variable, (IEnumerable<PropertyCSharpSubpattern>)properties);
+        public static RecursiveCSharpPattern Property(Type type, ParameterExpression variable, params PropertyCSharpSubpattern[] properties) =>
+            Property(type, variable, (IEnumerable<PropertyCSharpSubpattern>)properties);
 
         /// <summary>
         /// Creates a property pattern that matches on properties.
@@ -329,8 +329,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
         /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
-        public static RecursiveCSharpPattern Property(CSharpPatternInfo info, Type type, ParameterExpression variable, params PropertyCSharpSubpattern[] properties)
-            => Property(info, type, variable, (IEnumerable<PropertyCSharpSubpattern>)properties);
+        public static RecursiveCSharpPattern Property(CSharpPatternInfo info, Type type, ParameterExpression variable, params PropertyCSharpSubpattern[] properties) =>
+            Property(info, type, variable, (IEnumerable<PropertyCSharpSubpattern>)properties);
 
         /// <summary>
         /// Creates a property pattern that matches on properties.
@@ -340,8 +340,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
         /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
-        public static RecursiveCSharpPattern Property(CSharpPatternInfo info, Type type, ParameterExpression variable, IEnumerable<PropertyCSharpSubpattern> properties)
-            => Recursive(ObjectPatternInfo(info, variable), type, deconstructMethod: null, deconstruction: null, properties);
+        public static RecursiveCSharpPattern Property(CSharpPatternInfo info, Type type, ParameterExpression variable, IEnumerable<PropertyCSharpSubpattern> properties) =>
+            Recursive(ObjectPatternInfo(info, variable), type, deconstructMethod: null, deconstruction: null, properties);
 
         /// <summary>
         /// Creates a property pattern that matches on properties.
@@ -350,8 +350,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type to check for.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
         /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
-        public static RecursiveCSharpPattern Property(CSharpObjectPatternInfo info, Type type, params PropertyCSharpSubpattern[] properties)
-            => Property(info, type, (IEnumerable<PropertyCSharpSubpattern>)properties);
+        public static RecursiveCSharpPattern Property(CSharpObjectPatternInfo info, Type type, params PropertyCSharpSubpattern[] properties) =>
+            Property(info, type, (IEnumerable<PropertyCSharpSubpattern>)properties);
 
         /// <summary>
         /// Creates a property pattern that matches on properties.
@@ -360,8 +360,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type to check for.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
         /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
-        public static RecursiveCSharpPattern Property(CSharpObjectPatternInfo info, Type type, IEnumerable<PropertyCSharpSubpattern> properties)
-            => Recursive(info, type, deconstructMethod: null, deconstruction: null, properties);
+        public static RecursiveCSharpPattern Property(CSharpObjectPatternInfo info, Type type, IEnumerable<PropertyCSharpSubpattern> properties) =>
+            Recursive(info, type, deconstructMethod: null, deconstruction: null, properties);
 
         /// <summary>
         /// Creates a recursive pattern that can perform positional matching and/or matching on properties.

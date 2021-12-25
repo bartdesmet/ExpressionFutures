@@ -64,6 +64,52 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="SwitchSection"/> that represents a switch statement section.
         /// </summary>
+        /// <param name="label">The single label handled by the section.</param>
+        /// <param name="statements">The statements in the body of the section.</param>
+        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        public static SwitchSection SwitchSection(SwitchLabel label, params Expression[] statements) =>
+            SwitchSection(locals: null, new[] { label }, (IEnumerable<Expression>)statements);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchSection"/> that represents a switch statement section.
+        /// </summary>
+        /// <param name="label">The single label handled by the section.</param>
+        /// <param name="statements">The statements in the body of the section.</param>
+        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        public static SwitchSection SwitchSection(SwitchLabel label, IEnumerable<Expression> statements) =>
+            SwitchSection(locals: null, new[] { label }, statements);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchSection"/> that represents a switch statement section.
+        /// </summary>
+        /// <param name="labels">The labels handled by the section.</param>
+        /// <param name="statements">The statements in the body of the section.</param>
+        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        public static SwitchSection SwitchSection(IEnumerable<SwitchLabel> labels, params Expression[] statements) =>
+            SwitchSection(locals: null, labels, (IEnumerable<Expression>)statements);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchSection"/> that represents a switch statement section.
+        /// </summary>
+        /// <param name="labels">The labels handled by the section.</param>
+        /// <param name="statements">The statements in the body of the section.</param>
+        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        public static SwitchSection SwitchSection(IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements) =>
+            SwitchSection(locals: null, labels, statements);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchSection"/> that represents a switch statement section.
+        /// </summary>
+        /// <param name="locals">The locals that are in scope of the section.</param>
+        /// <param name="labels">The labels handled by the section.</param>
+        /// <param name="statements">The statements in the body of the section.</param>
+        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        public static SwitchSection SwitchSection(IEnumerable<ParameterExpression> locals, IEnumerable<SwitchLabel> labels, params Expression[] statements) =>
+            SwitchSection(locals, labels, (IEnumerable<Expression>)statements);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchSection"/> that represents a switch statement section.
+        /// </summary>
         /// <param name="locals">The locals that are in scope of the section.</param>
         /// <param name="labels">The labels handled by the section.</param>
         /// <param name="statements">The statements in the body of the section.</param>

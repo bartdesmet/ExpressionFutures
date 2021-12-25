@@ -442,8 +442,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The expression representing the object to deconstruct.</param>
         /// <param name="conversion">The deconstruction conversion specifying the deconstruction step and the conversions to the elements obtained from deconstructing the object.</param>
         /// <returns>A <see cref="DeconstructionAssignmentCSharpExpression"/> representing the deconstruction assignment.</returns>
-        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)
-            => DeconstructionAssignment(type: null, left, right, conversion);
+        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion) =>
+            DeconstructionAssignment(type: null, left, right, conversion);
 
         /// <summary>
         /// Creates a deconstruction assignment expression.

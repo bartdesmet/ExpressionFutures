@@ -70,6 +70,35 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="SwitchExpressionArm"/> that represents a switch expression arm.
         /// </summary>
+        /// <param name="pattern">The pattern matched by the arm.</param>
+        /// <param name="value">The expression representing the value returned by the arm.</param>
+        /// <returns>The created <see cref="SwitchExpressionArm"/>.</returns>
+        public static SwitchExpressionArm SwitchExpressionArm(CSharpPattern pattern, Expression value) =>
+            SwitchExpressionArm(variables: null, pattern, whenClause: null, value);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchExpressionArm"/> that represents a switch expression arm.
+        /// </summary>
+        /// <param name="variables">The variables that are in scope of the arm.</param>
+        /// <param name="pattern">The pattern matched by the arm.</param>
+        /// <param name="value">The expression representing the value returned by the arm.</param>
+        /// <returns>The created <see cref="SwitchExpressionArm"/>.</returns>
+        public static SwitchExpressionArm SwitchExpressionArm(IEnumerable<ParameterExpression> variables, CSharpPattern pattern, Expression value) =>
+            SwitchExpressionArm(variables, pattern, whenClause: null, value);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchExpressionArm"/> that represents a switch expression arm.
+        /// </summary>
+        /// <param name="pattern">The pattern matched by the arm.</param>
+        /// <param name="whenClause">The expression representing the optional when clause.</param>
+        /// <param name="value">The expression representing the value returned by the arm.</param>
+        /// <returns>The created <see cref="SwitchExpressionArm"/>.</returns>
+        public static SwitchExpressionArm SwitchExpressionArm(CSharpPattern pattern, Expression whenClause, Expression value) =>
+            SwitchExpressionArm(variables: null, pattern, whenClause, value);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchExpressionArm"/> that represents a switch expression arm.
+        /// </summary>
         /// <param name="variables">The variables that are in scope of the arm.</param>
         /// <param name="pattern">The pattern matched by the arm.</param>
         /// <param name="whenClause">The expression representing the optional when clause.</param>

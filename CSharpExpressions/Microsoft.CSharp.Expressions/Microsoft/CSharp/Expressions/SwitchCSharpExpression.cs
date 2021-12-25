@@ -164,7 +164,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the object to switch on.</param>
         /// <param name="arms">The arms representing the patterns to match.</param>
         /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
-        public static SwitchCSharpExpression SwitchExpression(Type type, Expression expression, params SwitchExpressionArm[] arms) => SwitchExpression(type, expression, (IEnumerable<SwitchExpressionArm>)arms);
+        public static SwitchCSharpExpression SwitchExpression(Type type, Expression expression, params SwitchExpressionArm[] arms) =>
+            SwitchExpression(type, expression, (IEnumerable<SwitchExpressionArm>)arms);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpExpression"/> that represents a switch expression.

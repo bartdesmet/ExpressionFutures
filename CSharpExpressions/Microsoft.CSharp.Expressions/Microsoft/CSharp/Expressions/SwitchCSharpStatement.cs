@@ -630,10 +630,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="breakLabel">The break label of the switch statement.</param>
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, params CSharpSwitchCase[] cases)
-        {
-            return Switch(switchValue, breakLabel, default(IEnumerable<ParameterExpression>), (IEnumerable<CSharpSwitchCase>)cases);
-        }
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, params CSharpSwitchCase[] cases) =>
+            Switch(switchValue, breakLabel, variables: null, cases);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpStatement"/> that represents a switch statement.
@@ -643,10 +641,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<CSharpSwitchCase> cases)
-        {
-            return Switch(switchValue, breakLabel, default(IEnumerable<ParameterExpression>), cases);
-        }
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<CSharpSwitchCase> cases) =>
+            Switch(switchValue, breakLabel, variables: null, cases);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpStatement"/> that represents a switch statement.
@@ -730,10 +726,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="defaultBody">The body of the default case.</param>
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, Expression defaultBody, params CSharpSwitchCase[] cases)
-        {
-            return Switch(switchValue, breakLabel, defaultBody, (IEnumerable<CSharpSwitchCase>)cases);
-        }
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, Expression defaultBody, params CSharpSwitchCase[] cases) =>
+            Switch(switchValue, breakLabel, defaultBody, (IEnumerable<CSharpSwitchCase>)cases);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpStatement"/> that represents a switch statement.

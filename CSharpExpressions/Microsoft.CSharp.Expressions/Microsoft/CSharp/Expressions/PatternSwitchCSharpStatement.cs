@@ -2,7 +2,6 @@
 //
 // bartde - December 2021
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -58,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.Switch(switchValue, breakLabel, variables, sections);
+            return CSharpExpression.SwitchStatement(switchValue, breakLabel, variables, sections);
         }
 
         /// <summary>
@@ -200,10 +199,41 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="switchValue">The value to be tested against each case.</param>
         /// <param name="breakLabel">The break label of the switch statement.</param>
+        /// <param name="sections">The list of sections.</param>
+        /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, params SwitchSection[] sections) =>
+            SwitchStatement(switchValue, breakLabel, variables: null, (IEnumerable<SwitchSection>)sections);
+
+        /// <summary>
+        /// Creates a <see cref="PatternSwitchCSharpStatement"/> that represents a switch statement.
+        /// </summary>
+        /// <param name="switchValue">The value to be tested against each case.</param>
+        /// <param name="breakLabel">The break label of the switch statement.</param>
+        /// <param name="sections">The list of sections.</param>
+        /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<SwitchSection> sections) =>
+            SwitchStatement(switchValue, breakLabel, variables: null, sections);
+
+        /// <summary>
+        /// Creates a <see cref="PatternSwitchCSharpStatement"/> that represents a switch statement.
+        /// </summary>
+        /// <param name="switchValue">The value to be tested against each case.</param>
+        /// <param name="breakLabel">The break label of the switch statement.</param>
         /// <param name="variables">The variables in scope of the sections.</param>
         /// <param name="sections">The list of sections.</param>
         /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
-        public static PatternSwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<SwitchSection> sections)
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, params SwitchSection[] sections) =>
+            SwitchStatement(switchValue, breakLabel, variables, (IEnumerable<SwitchSection>)sections);
+
+        /// <summary>
+        /// Creates a <see cref="PatternSwitchCSharpStatement"/> that represents a switch statement.
+        /// </summary>
+        /// <param name="switchValue">The value to be tested against each case.</param>
+        /// <param name="breakLabel">The break label of the switch statement.</param>
+        /// <param name="variables">The variables in scope of the sections.</param>
+        /// <param name="sections">The list of sections.</param>
+        /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<SwitchSection> sections)
         {
             RequiresCanRead(switchValue, nameof(switchValue));
             RequiresNotNull(breakLabel, nameof(breakLabel));
@@ -233,9 +263,7 @@ namespace Microsoft.CSharp.Expressions
                         if (label.IsDefault)
                         {
                             if (foundDefaultLabel)
-                            {
                                 throw Error.FoundMoreThanOneDefaultLabel();
-                            }
 
                             foundDefaultLabel = true;
                         }
@@ -246,9 +274,7 @@ namespace Microsoft.CSharp.Expressions
                     var inputType = section.Labels[0].Pattern.InputType;
 
                     if (!AreReferenceAssignable(inputType, switchValue.Type))
-                    {
                         throw Error.SwitchValueTypeDoesNotMatchPatternInputType(inputType, switchValue.Type);
-                    }
                 }
             }
 

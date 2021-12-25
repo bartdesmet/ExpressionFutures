@@ -35,15 +35,19 @@ namespace Microsoft.CSharp.Expressions
         internal static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
         {
             var variablesList = variables.ToReadOnly();
-            RequiresNotNullItems(variablesList, paramName);
 
-            var uniqueVariables = new HashSet<ParameterExpression>(variablesList.Count);
-
-            foreach (var variable in variablesList)
+            if (variablesList.Count > 0)
             {
-                if (!uniqueVariables.Add(variable))
+                RequiresNotNullItems(variablesList, paramName);
+
+                var uniqueVariables = new HashSet<ParameterExpression>(variablesList.Count);
+
+                foreach (var variable in variablesList)
                 {
-                    throw LinqError.DuplicateVariable(variable);
+                    if (!uniqueVariables.Add(variable))
+                    {
+                        throw LinqError.DuplicateVariable(variable);
+                    }
                 }
             }
 
