@@ -3,6 +3,7 @@
 // bartde - December 2021
 
 using System.Linq.Expressions;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions

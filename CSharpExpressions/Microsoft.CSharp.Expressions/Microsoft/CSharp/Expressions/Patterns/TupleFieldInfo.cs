@@ -3,6 +3,7 @@
 // bartde - December 2021
 
 using System;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 

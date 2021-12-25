@@ -9,11 +9,14 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     // REVIEW: Consider merging this with RecursiveCSharpPattern.
 
     /// <summary>
@@ -140,9 +143,9 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="deconstruction">The <see cref="Deconstruction" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ITupleCSharpPattern Update(ReadOnlyCollection<PositionalCSharpSubpattern> deconstruction)
+        public ITupleCSharpPattern Update(IEnumerable<PositionalCSharpSubpattern> deconstruction)
         {
-            if (deconstruction == Deconstruction)
+            if (SameElements(ref deconstruction, Deconstruction))
             {
                 return this;
             }
@@ -244,6 +247,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual CSharpPattern VisitITuplePattern(ITupleCSharpPattern node) => node.Update(Visit(node.Deconstruction, VisitPositionalSubpattern));
+        protected internal virtual CSharpPattern VisitITuplePattern(ITupleCSharpPattern node) =>
+            node.Update(
+                Visit(node.Deconstruction, VisitPositionalSubpattern)
+            );
     }
 }

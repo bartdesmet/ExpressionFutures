@@ -9,11 +9,14 @@ using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     // REVIEW: Consider reflecting the C# grammar instead of "recursive" (despite the C# 8.0 feature being titled "Recurive pattern matching").
 
     /// <summary>
@@ -236,9 +239,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="deconstruction">The <see cref="Deconstruction" /> property of the result.</param>
         /// <param name="properties">The <see cref="Properties" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public RecursiveCSharpPattern Update(ReadOnlyCollection<PositionalCSharpSubpattern> deconstruction, ReadOnlyCollection<PropertyCSharpSubpattern> properties)
+        public RecursiveCSharpPattern Update(IEnumerable<PositionalCSharpSubpattern> deconstruction, IEnumerable<PropertyCSharpSubpattern> properties)
         {
-            if (deconstruction == this.Deconstruction && properties == this.Properties)
+            if (SameElements(ref deconstruction, Deconstruction) && SameElements(ref properties, Properties))
             {
                 return this;
             }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
@@ -115,6 +116,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual PropertyCSharpSubpattern VisitPropertySubpattern(PropertyCSharpSubpattern node) => node.Update(VisitPattern(node.Pattern));
+        protected internal virtual PropertyCSharpSubpattern VisitPropertySubpattern(PropertyCSharpSubpattern node) =>
+            node.Update(
+                VisitPattern(node.Pattern)
+            );
     }
 }

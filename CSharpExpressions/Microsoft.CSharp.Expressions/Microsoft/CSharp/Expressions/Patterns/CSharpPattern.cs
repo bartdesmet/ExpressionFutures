@@ -4,8 +4,10 @@
 
 using System;
 using System.Linq.Expressions;
-using LinqError = System.Linq.Expressions.Error;
+
 using static System.Dynamic.Utils.TypeUtils;
+
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {

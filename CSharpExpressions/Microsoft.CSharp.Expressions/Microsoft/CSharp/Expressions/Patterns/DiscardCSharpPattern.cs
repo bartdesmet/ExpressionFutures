@@ -107,5 +107,4 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual CSharpPattern VisitDiscardPattern(DiscardCSharpPattern node) => node;
     }
-
 }

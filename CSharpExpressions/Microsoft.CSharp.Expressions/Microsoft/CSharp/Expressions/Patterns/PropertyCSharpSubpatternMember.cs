@@ -19,10 +19,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract class PropertyCSharpSubpatternMember
     {
-        internal PropertyCSharpSubpatternMember(PropertyCSharpSubpatternMember receiver)
-        {
-            Receiver = receiver;
-        }
+        internal PropertyCSharpSubpatternMember(PropertyCSharpSubpatternMember receiver) => Receiver = receiver;
 
         /// <summary>
         /// Gets the receiver to access the member on, if any.
