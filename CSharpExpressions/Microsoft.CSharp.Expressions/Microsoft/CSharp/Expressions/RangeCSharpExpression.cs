@@ -235,8 +235,8 @@ namespace Microsoft.CSharp.Expressions
             int operandCount = 0;
             bool lifted = false;
 
-            CheckOperand(left, nameof(left), ref operandCount, ref lifted);
-            CheckOperand(right, nameof(right), ref operandCount, ref lifted);
+            CheckOperand(ref left, nameof(left), ref operandCount, ref lifted);
+            CheckOperand(ref right, nameof(right), ref operandCount, ref lifted);
 
             if (method != null)
             {
@@ -278,7 +278,7 @@ namespace Microsoft.CSharp.Expressions
 
             return new RangeCSharpExpression(left, right, method, type);
 
-            static void CheckOperand(Expression operand, string paramName, ref int operandCount, ref bool lifted)
+            static void CheckOperand(ref Expression operand, string paramName, ref int operandCount, ref bool lifted)
             {
                 if (operand == null)
                 {
@@ -291,7 +291,18 @@ namespace Microsoft.CSharp.Expressions
 
                 if (operand.Type != typeof(Index) && operand.Type != typeof(Index?))
                 {
-                    throw Error.InvalidRangeOperandType(operand.Type);
+                    if (operand.Type == typeof(int))
+                    {
+                        operand = Expression.Convert(operand, typeof(Index));
+                    }
+                    else if (operand.Type == typeof(int?))
+                    {
+                        operand = Expression.Convert(operand, typeof(Index?));
+                    }
+                    else
+                    {
+                        throw Error.InvalidRangeOperandType(operand.Type);
+                    }
                 }
 
                 if (operand.Type.IsNullableType())
