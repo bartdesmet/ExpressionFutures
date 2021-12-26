@@ -1073,7 +1073,9 @@ namespace Tests
 
             public int Length { get; set; }
 
+#pragma warning disable CS0649 // Assigned through expression trees.
             public int LengthField;
+#pragma warning restore
 
             public string LengthString { get; set; }
 
