@@ -191,10 +191,7 @@ foreach (var error in errors)
         /// <summary>
         /// <#=error.ExceptionType#> with message like "<#=msg#>"
         /// </summary>
-        internal static Exception <#=error.Name#>(<#=pars#>)
-        {
-            return new <#=error.ExceptionType#>(Strings.<#=error.Name#><#=strArgs#>);
-        }
+        internal static Exception <#=error.Name#>(<#=pars#>) => new <#=error.ExceptionType#>(Strings.<#=error.Name#><#=strArgs#>);
 
 <#
 }
@@ -220,26 +217,20 @@ foreach (var error in errors)
         /// <summary>
         /// A string like "<#=msg#>"
         /// </summary>
-        internal static string <#=error.Name#><#=pars#>
-        {
 <#
     if (error.Args == 0)
     {
 #>
-            get
-            {
-                return SR.<#=error.Name#>;
-            }
+        internal static string <#=error.Name#><#=pars#> => SR.<#=error.Name#>;
 <#
     }
     else
     {
 #>
-            return SR.Format(SR.<#=error.Name#>, <#=args#>);
+        internal static string <#=error.Name#><#=pars#> => SR.Format(SR.<#=error.Name#>, <#=args#>);
 <#
     }
 #>
-        }
 
 <#
 }

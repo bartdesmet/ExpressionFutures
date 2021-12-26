@@ -14,1250 +14,782 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' is not defined for method '{1}'"
         /// </summary>
-        internal static Exception ParameterNotDefinedForMethod(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ParameterNotDefinedForMethod(p0, p1));
-        }
+        internal static Exception ParameterNotDefinedForMethod(object p0, object p1) => new ArgumentException(Strings.ParameterNotDefinedForMethod(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Parameter index '{0}' is out of bounds for method '{1}'"
         /// </summary>
-        internal static Exception ParameterIndexOutOfBounds(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ParameterIndexOutOfBounds(p0, p1));
-        }
+        internal static Exception ParameterIndexOutOfBounds(object p0, object p1) => new ArgumentException(Strings.ParameterIndexOutOfBounds(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
         /// </summary>
-        internal static Exception ExpressionTypeDoesNotMatchParameter(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1));
-        }
+        internal static Exception ExpressionTypeDoesNotMatchParameter(object p0, object p1) => new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' has multiple bindings"
         /// </summary>
-        internal static Exception DuplicateParameterBinding(object p0)
-        {
-            return new ArgumentException(Strings.DuplicateParameterBinding(p0));
-        }
+        internal static Exception DuplicateParameterBinding(object p0) => new ArgumentException(Strings.DuplicateParameterBinding(p0));
 
         /// <summary>
         /// ArgumentException with message like "Non-optional parameter '{0}' has no binding"
         /// </summary>
-        internal static Exception UnboundParameter(object p0)
-        {
-            return new ArgumentException(Strings.UnboundParameter(p0));
-        }
+        internal static Exception UnboundParameter(object p0) => new ArgumentException(Strings.UnboundParameter(p0));
 
         /// <summary>
         /// ArgumentException with message like "A non-static constructor is required"
         /// </summary>
-        internal static Exception NonStaticConstructorRequired()
-        {
-            return new ArgumentException(Strings.NonStaticConstructorRequired);
-        }
+        internal static Exception NonStaticConstructorRequired() => new ArgumentException(Strings.NonStaticConstructorRequired);
 
         /// <summary>
         /// ArgumentException with message like "The property '{0}' has no 'get' accessor"
         /// </summary>
-        internal static Exception PropertyDoesNotHaveGetAccessor(object p0)
-        {
-            return new ArgumentException(Strings.PropertyDoesNotHaveGetAccessor(p0));
-        }
+        internal static Exception PropertyDoesNotHaveGetAccessor(object p0) => new ArgumentException(Strings.PropertyDoesNotHaveGetAccessor(p0));
 
         /// <summary>
         /// ArgumentException with message like "The property '{0}' has no 'set' accessor"
         /// </summary>
-        internal static Exception PropertyDoesNotHaveSetAccessor(object p0)
-        {
-            return new ArgumentException(Strings.PropertyDoesNotHaveSetAccessor(p0));
-        }
+        internal static Exception PropertyDoesNotHaveSetAccessor(object p0) => new ArgumentException(Strings.PropertyDoesNotHaveSetAccessor(p0));
 
         /// <summary>
         /// ArgumentException with message like "A non-static 'get' accessor is required for property '{0}'"
         /// </summary>
-        internal static Exception AccessorCannotBeStatic(object p0)
-        {
-            return new ArgumentException(Strings.AccessorCannotBeStatic(p0));
-        }
+        internal static Exception AccessorCannotBeStatic(object p0) => new ArgumentException(Strings.AccessorCannotBeStatic(p0));
 
         /// <summary>
         /// ArgumentException with message like "The number of indexes specified does not match the array rank"
         /// </summary>
-        internal static Exception RankMismatch()
-        {
-            return new ArgumentException(Strings.RankMismatch);
-        }
+        internal static Exception RankMismatch() => new ArgumentException(Strings.RankMismatch);
 
         /// <summary>
         /// ArgumentOutOfRangeException with message like "The specified index is out of range"
         /// </summary>
-        internal static Exception IndexOutOfRange()
-        {
-            return new ArgumentOutOfRangeException(Strings.IndexOutOfRange);
-        }
+        internal static Exception IndexOutOfRange() => new ArgumentOutOfRangeException(Strings.IndexOutOfRange);
 
         /// <summary>
         /// ArgumentException with message like "An array dimension cannot be less than 0"
         /// </summary>
-        internal static Exception BoundCannotBeLessThanZero()
-        {
-            return new ArgumentException(Strings.BoundCannotBeLessThanZero);
-        }
+        internal static Exception BoundCannotBeLessThanZero() => new ArgumentException(Strings.BoundCannotBeLessThanZero);
 
         /// <summary>
         /// ArgumentException with message like "The number of elements does not match the length of the array"
         /// </summary>
-        internal static Exception ArrayBoundsElementCountMismatch()
-        {
-            return new ArgumentException(Strings.ArrayBoundsElementCountMismatch);
-        }
+        internal static Exception ArrayBoundsElementCountMismatch() => new ArgumentException(Strings.ArrayBoundsElementCountMismatch);
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method should take zero parameters"
         /// </summary>
-        internal static Exception GetAwaiterShouldTakeZeroParameters()
-        {
-            return new ArgumentException(Strings.GetAwaiterShouldTakeZeroParameters);
-        }
+        internal static Exception GetAwaiterShouldTakeZeroParameters() => new ArgumentException(Strings.GetAwaiterShouldTakeZeroParameters);
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method should not be generic"
         /// </summary>
-        internal static Exception GetAwaiterShouldNotBeGeneric()
-        {
-            return new ArgumentException(Strings.GetAwaiterShouldNotBeGeneric);
-        }
+        internal static Exception GetAwaiterShouldNotBeGeneric() => new ArgumentException(Strings.GetAwaiterShouldNotBeGeneric);
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method has an unsupported return type"
         /// </summary>
-        internal static Exception GetAwaiterShouldReturnAwaiterType()
-        {
-            return new ArgumentException(Strings.GetAwaiterShouldReturnAwaiterType);
-        }
+        internal static Exception GetAwaiterShouldReturnAwaiterType() => new ArgumentException(Strings.GetAwaiterShouldReturnAwaiterType);
 
         /// <summary>
         /// ArgumentException with message like "Awaitable type '{0}' should have a 'GetAwaiter' method."
         /// </summary>
-        internal static Exception AwaitableTypeShouldHaveGetAwaiterMethod(object p0)
-        {
-            return new ArgumentException(Strings.AwaitableTypeShouldHaveGetAwaiterMethod(p0));
-        }
+        internal static Exception AwaitableTypeShouldHaveGetAwaiterMethod(object p0) => new ArgumentException(Strings.AwaitableTypeShouldHaveGetAwaiterMethod(p0));
 
         /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should implement 'INotifyCompletion'"
         /// </summary>
-        internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object p0)
-        {
-            return new ArgumentException(Strings.AwaiterTypeShouldImplementINotifyCompletion(p0));
-        }
+        internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object p0) => new ArgumentException(Strings.AwaiterTypeShouldImplementINotifyCompletion(p0));
 
         /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor"
         /// </summary>
-        internal static Exception AwaiterTypeShouldHaveIsCompletedProperty(object p0)
-        {
-            return new ArgumentException(Strings.AwaiterTypeShouldHaveIsCompletedProperty(p0));
-        }
+        internal static Exception AwaiterTypeShouldHaveIsCompletedProperty(object p0) => new ArgumentException(Strings.AwaiterTypeShouldHaveIsCompletedProperty(p0));
 
         /// <summary>
         /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'"
         /// </summary>
-        internal static Exception AwaiterIsCompletedShouldReturnBool(object p0)
-        {
-            return new ArgumentException(Strings.AwaiterIsCompletedShouldReturnBool(p0));
-        }
+        internal static Exception AwaiterIsCompletedShouldReturnBool(object p0) => new ArgumentException(Strings.AwaiterIsCompletedShouldReturnBool(p0));
 
         /// <summary>
         /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters"
         /// </summary>
-        internal static Exception AwaiterIsCompletedShouldNotBeIndexer(object p0)
-        {
-            return new ArgumentException(Strings.AwaiterIsCompletedShouldNotBeIndexer(p0));
-        }
+        internal static Exception AwaiterIsCompletedShouldNotBeIndexer(object p0) => new ArgumentException(Strings.AwaiterIsCompletedShouldNotBeIndexer(p0));
 
         /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should have a 'GetResult' method"
         /// </summary>
-        internal static Exception AwaiterTypeShouldHaveGetResultMethod(object p0)
-        {
-            return new ArgumentException(Strings.AwaiterTypeShouldHaveGetResultMethod(p0));
-        }
+        internal static Exception AwaiterTypeShouldHaveGetResultMethod(object p0) => new ArgumentException(Strings.AwaiterTypeShouldHaveGetResultMethod(p0));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type"
         /// </summary>
-        internal static Exception AwaiterGetResultTypeInvalid(object p0)
-        {
-            return new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
-        }
+        internal static Exception AwaiterGetResultTypeInvalid(object p0) => new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
 
         /// <summary>
         /// ArgumentException with message like "Dynamically bound await operations cannot have a 'GetAwaiter' expression."
         /// </summary>
-        internal static Exception DynamicAwaitNoGetAwaiter()
-        {
-            return new ArgumentException(Strings.DynamicAwaitNoGetAwaiter);
-        }
+        internal static Exception DynamicAwaitNoGetAwaiter() => new ArgumentException(Strings.DynamicAwaitNoGetAwaiter);
 
         /// <summary>
         /// ArgumentException with message like "Dynamically bound await operations cannot have an 'IsCompleted' property."
         /// </summary>
-        internal static Exception DynamicAwaitNoIsCompleted()
-        {
-            return new ArgumentException(Strings.DynamicAwaitNoIsCompleted);
-        }
+        internal static Exception DynamicAwaitNoIsCompleted() => new ArgumentException(Strings.DynamicAwaitNoIsCompleted);
 
         /// <summary>
         /// ArgumentException with message like "Dynamically bound await operations cannot have a 'GetResult' method."
         /// </summary>
-        internal static Exception DynamicAwaitNoGetResult()
-        {
-            return new ArgumentException(Strings.DynamicAwaitNoGetResult);
-        }
+        internal static Exception DynamicAwaitNoGetResult() => new ArgumentException(Strings.DynamicAwaitNoGetResult);
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' expression should have one parameter."
         /// </summary>
-        internal static Exception GetAwaiterExpressionOneParameter()
-        {
-            return new ArgumentException(Strings.GetAwaiterExpressionOneParameter);
-        }
+        internal static Exception GetAwaiterExpressionOneParameter() => new ArgumentException(Strings.GetAwaiterExpressionOneParameter);
 
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions"
         /// </summary>
-        internal static Exception AsyncLambdaCantHaveByRefParameter(object p0)
-        {
-            return new ArgumentException(Strings.AsyncLambdaCantHaveByRefParameter(p0));
-        }
+        internal static Exception AsyncLambdaCantHaveByRefParameter(object p0) => new ArgumentException(Strings.AsyncLambdaCantHaveByRefParameter(p0));
 
         /// <summary>
         /// ArgumentException with message like "Return type '{0}' is not valid for an asynchronous lambda expression"
         /// </summary>
-        internal static Exception AsyncLambdaInvalidReturnType(object p0)
-        {
-            return new ArgumentException(Strings.AsyncLambdaInvalidReturnType(p0));
-        }
+        internal static Exception AsyncLambdaInvalidReturnType(object p0) => new ArgumentException(Strings.AsyncLambdaInvalidReturnType(p0));
 
         /// <summary>
         /// InvalidOperationException with message like "Await expression cannot occur in '{0}'"
         /// </summary>
-        internal static Exception AwaitForbiddenHere(object p0)
-        {
-            return new InvalidOperationException(Strings.AwaitForbiddenHere(p0));
-        }
+        internal static Exception AwaitForbiddenHere(object p0) => new InvalidOperationException(Strings.AwaitForbiddenHere(p0));
 
         /// <summary>
         /// ArgumentException with message like "An expression of type '{0}' can't be used as a lock"
         /// </summary>
-        internal static Exception LockNeedsReferenceType(object p0)
-        {
-            return new ArgumentException(Strings.LockNeedsReferenceType(p0));
-        }
+        internal static Exception LockNeedsReferenceType(object p0) => new ArgumentException(Strings.LockNeedsReferenceType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The conversion lambda should have one parameter"
         /// </summary>
-        internal static Exception ConversionNeedsOneParameter()
-        {
-            return new ArgumentException(Strings.ConversionNeedsOneParameter);
-        }
+        internal static Exception ConversionNeedsOneParameter() => new ArgumentException(Strings.ConversionNeedsOneParameter);
 
         /// <summary>
         /// ArgumentException with message like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'"
         /// </summary>
-        internal static Exception ConversionInvalidArgument(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ConversionInvalidArgument(p0, p1));
-        }
+        internal static Exception ConversionInvalidArgument(object p0, object p1) => new ArgumentException(Strings.ConversionInvalidArgument(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'"
         /// </summary>
-        internal static Exception ConversionInvalidResult(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ConversionInvalidResult(p0, p1));
-        }
+        internal static Exception ConversionInvalidResult(object p0, object p1) => new ArgumentException(Strings.ConversionInvalidResult(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor"
         /// </summary>
-        internal static Exception EnumeratorShouldHaveCurrentProperty(object p0)
-        {
-            return new ArgumentException(Strings.EnumeratorShouldHaveCurrentProperty(p0));
-        }
+        internal static Exception EnumeratorShouldHaveCurrentProperty(object p0) => new ArgumentException(Strings.EnumeratorShouldHaveCurrentProperty(p0));
 
         /// <summary>
         /// ArgumentException with message like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type"
         /// </summary>
-        internal static Exception EnumeratorShouldHaveMoveNextMethod(object p0)
-        {
-            return new ArgumentException(Strings.EnumeratorShouldHaveMoveNextMethod(p0));
-        }
+        internal static Exception EnumeratorShouldHaveMoveNextMethod(object p0) => new ArgumentException(Strings.EnumeratorShouldHaveMoveNextMethod(p0));
 
         /// <summary>
         /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'"
         /// </summary>
-        internal static Exception MoreThanOneIEnumerableFound(object p0)
-        {
-            return new ArgumentException(Strings.MoreThanOneIEnumerableFound(p0));
-        }
+        internal static Exception MoreThanOneIEnumerableFound(object p0) => new ArgumentException(Strings.MoreThanOneIEnumerableFound(p0));
 
         /// <summary>
         /// ArgumentException with message like "Collection type '{0}' has no valid enumerable pattern"
         /// </summary>
-        internal static Exception NoEnumerablePattern(object p0)
-        {
-            return new ArgumentException(Strings.NoEnumerablePattern(p0));
-        }
+        internal static Exception NoEnumerablePattern(object p0) => new ArgumentException(Strings.NoEnumerablePattern(p0));
 
         /// <summary>
         /// ArgumentException with message like "Initializers should be assignments to variables"
         /// </summary>
-        internal static Exception InvalidInitializer()
-        {
-            return new ArgumentException(Strings.InvalidInitializer);
-        }
+        internal static Exception InvalidInitializer() => new ArgumentException(Strings.InvalidInitializer);
 
         /// <summary>
         /// ArgumentException with message like "Break and continue lables should be different"
         /// </summary>
-        internal static Exception DuplicateLabels()
-        {
-            return new ArgumentException(Strings.DuplicateLabels);
-        }
+        internal static Exception DuplicateLabels() => new ArgumentException(Strings.DuplicateLabels);
 
         /// <summary>
         /// ArgumentException with message like "Conditional access expressions require non-static members or extension methods."
         /// </summary>
-        internal static Exception ConditionalAccessRequiresNonStaticMember()
-        {
-            return new ArgumentException(Strings.ConditionalAccessRequiresNonStaticMember);
-        }
+        internal static Exception ConditionalAccessRequiresNonStaticMember() => new ArgumentException(Strings.ConditionalAccessRequiresNonStaticMember);
 
         /// <summary>
         /// ArgumentException with message like "Conditional access expressions require readable properties."
         /// </summary>
-        internal static Exception ConditionalAccessRequiresReadableProperty()
-        {
-            return new ArgumentException(Strings.ConditionalAccessRequiresReadableProperty);
-        }
+        internal static Exception ConditionalAccessRequiresReadableProperty() => new ArgumentException(Strings.ConditionalAccessRequiresReadableProperty);
 
         /// <summary>
         /// ArgumentException with message like "Too many arguments have been specified."
         /// </summary>
-        internal static Exception TooManyArguments()
-        {
-            return new ArgumentException(Strings.TooManyArguments);
-        }
+        internal static Exception TooManyArguments() => new ArgumentException(Strings.TooManyArguments);
 
         /// <summary>
         /// ArgumentException with message like "Conditional call expressions for extensions methods should specify an instance expression."
         /// </summary>
-        internal static Exception ExtensionMethodRequiresInstance()
-        {
-            return new ArgumentException(Strings.ExtensionMethodRequiresInstance);
-        }
+        internal static Exception ExtensionMethodRequiresInstance() => new ArgumentException(Strings.ExtensionMethodRequiresInstance);
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid governing type for a switch statement."
         /// </summary>
-        internal static Exception InvalidSwitchType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidSwitchType(p0));
-        }
+        internal static Exception InvalidSwitchType(object p0) => new ArgumentException(Strings.InvalidSwitchType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The test value '{0}' occurs more than once."
         /// </summary>
-        internal static Exception DuplicateTestValue(object p0)
-        {
-            return new ArgumentException(Strings.DuplicateTestValue(p0));
-        }
+        internal static Exception DuplicateTestValue(object p0) => new ArgumentException(Strings.DuplicateTestValue(p0));
 
         /// <summary>
         /// ArgumentException with message like "A 'null' test value cannot be used in a switch statement with governing type '{0}'."
         /// </summary>
-        internal static Exception SwitchCantHaveNullCase(object p0)
-        {
-            return new ArgumentException(Strings.SwitchCantHaveNullCase(p0));
-        }
+        internal static Exception SwitchCantHaveNullCase(object p0) => new ArgumentException(Strings.SwitchCantHaveNullCase(p0));
 
         /// <summary>
         /// ArgumentException with message like "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'."
         /// </summary>
-        internal static Exception SwitchCaseHasIncompatibleType(object p0, object p1)
-        {
-            return new ArgumentException(Strings.SwitchCaseHasIncompatibleType(p0, p1));
-        }
+        internal static Exception SwitchCaseHasIncompatibleType(object p0, object p1) => new ArgumentException(Strings.SwitchCaseHasIncompatibleType(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "All specified test values should have the same type."
         /// </summary>
-        internal static Exception TestValuesShouldHaveConsistentType()
-        {
-            return new ArgumentException(Strings.TestValuesShouldHaveConsistentType);
-        }
+        internal static Exception TestValuesShouldHaveConsistentType() => new ArgumentException(Strings.TestValuesShouldHaveConsistentType);
 
         /// <summary>
         /// ArgumentException with message like "The break label of a switch statement should be of type 'void'."
         /// </summary>
-        internal static Exception SwitchBreakLabelShouldBeVoid()
-        {
-            return new ArgumentException(Strings.SwitchBreakLabelShouldBeVoid);
-        }
+        internal static Exception SwitchBreakLabelShouldBeVoid() => new ArgumentException(Strings.SwitchBreakLabelShouldBeVoid);
 
         /// <summary>
         /// ArgumentException with message like "The label of a switch case should be of type 'void'."
         /// </summary>
-        internal static Exception SwitchLabelTargetShouldBeVoid()
-        {
-            return new ArgumentException(Strings.SwitchLabelTargetShouldBeVoid);
-        }
+        internal static Exception SwitchLabelTargetShouldBeVoid() => new ArgumentException(Strings.SwitchLabelTargetShouldBeVoid);
 
         /// <summary>
         /// InvalidOperationException with message like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
         /// </summary>
-        internal static Exception InvalidGotoCase(object p0)
-        {
-            return new InvalidOperationException(Strings.InvalidGotoCase(p0));
-        }
+        internal static Exception InvalidGotoCase(object p0) => new InvalidOperationException(Strings.InvalidGotoCase(p0));
 
         /// <summary>
         /// InvalidOperationException with message like "A 'goto default' statement was found but the containing switch statement has no default label."
         /// </summary>
-        internal static Exception InvalidGotoDefault()
-        {
-            return new InvalidOperationException(Strings.InvalidGotoDefault);
-        }
+        internal static Exception InvalidGotoDefault() => new InvalidOperationException(Strings.InvalidGotoDefault);
 
         /// <summary>
         /// InvalidOperationException with message like "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node."
         /// </summary>
-        internal static Exception GotoCanOnlyBeReducedInSwitch()
-        {
-            return new InvalidOperationException(Strings.GotoCanOnlyBeReducedInSwitch);
-        }
+        internal static Exception GotoCanOnlyBeReducedInSwitch() => new InvalidOperationException(Strings.GotoCanOnlyBeReducedInSwitch);
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for a conditional receiver."
         /// </summary>
-        internal static Exception InvalidConditionalReceiverType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidConditionalReceiverType(p0));
-        }
+        internal static Exception InvalidConditionalReceiverType(object p0) => new ArgumentException(Strings.InvalidConditionalReceiverType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for a receiver in a conditional access expression."
         /// </summary>
-        internal static Exception InvalidConditionalReceiverExpressionType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidConditionalReceiverExpressionType(p0));
-        }
+        internal static Exception InvalidConditionalReceiverExpressionType(object p0) => new ArgumentException(Strings.InvalidConditionalReceiverExpressionType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver."
         /// </summary>
-        internal static Exception ConditionalReceiverTypeMismatch(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ConditionalReceiverTypeMismatch(p0, p1));
-        }
+        internal static Exception ConditionalReceiverTypeMismatch(object p0, object p1) => new ArgumentException(Strings.ConditionalReceiverTypeMismatch(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Compound assignment operation '{0}' is not supported for type '{1}'."
         /// </summary>
-        internal static Exception InvalidCompoundAssignment(object p0, object p1)
-        {
-            return new ArgumentException(Strings.InvalidCompoundAssignment(p0, p1));
-        }
+        internal static Exception InvalidCompoundAssignment(object p0, object p1) => new ArgumentException(Strings.InvalidCompoundAssignment(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'."
         /// </summary>
-        internal static Exception InvalidCompoundAssignmentWithOperands(object p0, object p1, object p2)
-        {
-            return new ArgumentException(Strings.InvalidCompoundAssignmentWithOperands(p0, p1, p2));
-        }
+        internal static Exception InvalidCompoundAssignmentWithOperands(object p0, object p1, object p2) => new ArgumentException(Strings.InvalidCompoundAssignmentWithOperands(p0, p1, p2));
 
         /// <summary>
         /// ArgumentException with message like "Unary assignment operation '{0}' is not supported for an operand of type '{1}'."
         /// </summary>
-        internal static Exception InvalidUnaryAssignmentWithOperands(object p0, object p1)
-        {
-            return new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1));
-        }
+        internal static Exception InvalidUnaryAssignmentWithOperands(object p0, object p1) => new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Type must not be ByRef"
         /// </summary>
-        internal static Exception TypeMustNotBeByRef()
-        {
-            return new ArgumentException(Strings.TypeMustNotBeByRef);
-        }
+        internal static Exception TypeMustNotBeByRef() => new ArgumentException(Strings.TypeMustNotBeByRef);
 
         /// <summary>
         /// ArgumentException with message like "Type must not be a pointer type"
         /// </summary>
-        internal static Exception TypeMustNotBePointer()
-        {
-            return new ArgumentException(Strings.TypeMustNotBePointer);
-        }
+        internal static Exception TypeMustNotBePointer() => new ArgumentException(Strings.TypeMustNotBePointer);
 
         /// <summary>
         /// ArgumentException with message like "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations."
         /// </summary>
-        internal static Exception InvalidNullCoalescingAssignmentArguments()
-        {
-            return new ArgumentException(Strings.InvalidNullCoalescingAssignmentArguments);
-        }
+        internal static Exception InvalidNullCoalescingAssignmentArguments() => new ArgumentException(Strings.InvalidNullCoalescingAssignmentArguments);
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidInterpolatedStringType(p0));
-        }
+        internal static Exception InvalidInterpolatedStringType(object p0) => new ArgumentException(Strings.InvalidInterpolatedStringType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for an index operand. Supported types are int or int?."
         /// </summary>
-        internal static Exception InvalidFromEndIndexOperandType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidFromEndIndexOperandType(p0));
-        }
+        internal static Exception InvalidFromEndIndexOperandType(object p0) => new ArgumentException(Strings.InvalidFromEndIndexOperandType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The specified method is not valid to construct an object of type Index."
         /// </summary>
-        internal static Exception InvalidFromEndIndexMethod()
-        {
-            return new ArgumentException(Strings.InvalidFromEndIndexMethod);
-        }
+        internal static Exception InvalidFromEndIndexMethod() => new ArgumentException(Strings.InvalidFromEndIndexMethod);
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid index type. Supported types are Index or Index?."
         /// </summary>
-        internal static Exception InvalidIndexType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidIndexType(p0));
-        }
+        internal static Exception InvalidIndexType(object p0) => new ArgumentException(Strings.InvalidIndexType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?."
         /// </summary>
-        internal static Exception InvalidRangeOperandType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidRangeOperandType(p0));
-        }
+        internal static Exception InvalidRangeOperandType(object p0) => new ArgumentException(Strings.InvalidRangeOperandType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The specified method is not valid to construct an object of type Range."
         /// </summary>
-        internal static Exception InvalidRangeMethod()
-        {
-            return new ArgumentException(Strings.InvalidRangeMethod);
-        }
+        internal static Exception InvalidRangeMethod() => new ArgumentException(Strings.InvalidRangeMethod);
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid range type. Supported types are Range or Range?."
         /// </summary>
-        internal static Exception InvalidRangeType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidRangeType(p0));
-        }
+        internal static Exception InvalidRangeType(object p0) => new ArgumentException(Strings.InvalidRangeType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range."
         /// </summary>
-        internal static Exception InvalidIndexerAccessArgumentType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidIndexerAccessArgumentType(p0));
-        }
+        internal static Exception InvalidIndexerAccessArgumentType(object p0) => new ArgumentException(Strings.InvalidIndexerAccessArgumentType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Property '{0}' should be of type int."
         /// </summary>
-        internal static Exception InvalidLengthOrCountPropertyType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidLengthOrCountPropertyType(p0));
-        }
+        internal static Exception InvalidLengthOrCountPropertyType(object p0) => new ArgumentException(Strings.InvalidLengthOrCountPropertyType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo."
         /// </summary>
-        internal static Exception InvalidIndexMember(object p0)
-        {
-            return new ArgumentException(Strings.InvalidIndexMember(p0));
-        }
+        internal static Exception InvalidIndexMember(object p0) => new ArgumentException(Strings.InvalidIndexMember(p0));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' is not a valid member for a slice method."
         /// </summary>
-        internal static Exception InvalidSliceMember(object p0)
-        {
-            return new ArgumentException(Strings.InvalidSliceMember(p0));
-        }
+        internal static Exception InvalidSliceMember(object p0) => new ArgumentException(Strings.InvalidSliceMember(p0));
 
         /// <summary>
         /// ArgumentException with message like "Indexer '{0}' does not have an 'int' parameter type."
         /// </summary>
-        internal static Exception InvalidIndexerParameterType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidIndexerParameterType(p0));
-        }
+        internal static Exception InvalidIndexerParameterType(object p0) => new ArgumentException(Strings.InvalidIndexerParameterType(p0));
 
         /// <summary>
         /// ArgumentException with message like "Slice method '{0}' should be an instance method."
         /// </summary>
-        internal static Exception SliceMethodMustNotBeStatic(object p0)
-        {
-            return new ArgumentException(Strings.SliceMethodMustNotBeStatic(p0));
-        }
+        internal static Exception SliceMethodMustNotBeStatic(object p0) => new ArgumentException(Strings.SliceMethodMustNotBeStatic(p0));
 
         /// <summary>
         /// ArgumentException with message like "Slice method '{0}' should be have exactly two parameters of type 'int'."
         /// </summary>
-        internal static Exception InvalidSliceParameters(object p0)
-        {
-            return new ArgumentException(Strings.InvalidSliceParameters(p0));
-        }
+        internal static Exception InvalidSliceParameters(object p0) => new ArgumentException(Strings.InvalidSliceParameters(p0));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid tuple type."
         /// </summary>
-        internal static Exception InvalidTupleType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidTupleType(p0));
-        }
+        internal static Exception InvalidTupleType(object p0) => new ArgumentException(Strings.InvalidTupleType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The number of arguments does not match the number of components of tuple type '{0}'."
         /// </summary>
-        internal static Exception InvalidTupleArgumentCount(object p0)
-        {
-            return new ArgumentException(Strings.InvalidTupleArgumentCount(p0));
-        }
+        internal static Exception InvalidTupleArgumentCount(object p0) => new ArgumentException(Strings.InvalidTupleArgumentCount(p0));
 
         /// <summary>
         /// ArgumentException with message like "The number of argument names does not match the number of components of tuple type '{0}'."
         /// </summary>
-        internal static Exception InvalidTupleArgumentNamesCount(object p0)
-        {
-            return new ArgumentException(Strings.InvalidTupleArgumentNamesCount(p0));
-        }
+        internal static Exception InvalidTupleArgumentNamesCount(object p0) => new ArgumentException(Strings.InvalidTupleArgumentNamesCount(p0));
 
         /// <summary>
         /// ArgumentException with message like "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'."
         /// </summary>
-        internal static Exception TupleComponentCountMismatch(object p0, object p1)
-        {
-            return new ArgumentException(Strings.TupleComponentCountMismatch(p0, p1));
-        }
+        internal static Exception TupleComponentCountMismatch(object p0, object p1) => new ArgumentException(Strings.TupleComponentCountMismatch(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The number of element conversion expressions does not match tuple arity '{0}'."
         /// </summary>
-        internal static Exception InvalidElementConversionCount(object p0)
-        {
-            return new ArgumentException(Strings.InvalidElementConversionCount(p0));
-        }
+        internal static Exception InvalidElementConversionCount(object p0) => new ArgumentException(Strings.InvalidElementConversionCount(p0));
 
         /// <summary>
         /// ArgumentException with message like "The number of equality check expressions does not match tuple arity '{0}'."
         /// </summary>
-        internal static Exception InvalidEqualityCheckCount(object p0)
-        {
-            return new ArgumentException(Strings.InvalidEqualityCheckCount(p0));
-        }
+        internal static Exception InvalidEqualityCheckCount(object p0) => new ArgumentException(Strings.InvalidEqualityCheckCount(p0));
 
         /// <summary>
         /// ArgumentException with message like "'{0}' is not a member of any type."
         /// </summary>
-        internal static Exception NotAMemberOfAnyType(object p0)
-        {
-            return new ArgumentException(Strings.NotAMemberOfAnyType(p0));
-        }
+        internal static Exception NotAMemberOfAnyType(object p0) => new ArgumentException(Strings.NotAMemberOfAnyType(p0));
 
         /// <summary>
         /// ArgumentException with message like "A 'with' expression for value type '{0}' cannot specify a 'Clone' method."
         /// </summary>
-        internal static Exception WithExpressionCannotHaveCloneForValueType(object p0)
-        {
-            return new ArgumentException(Strings.WithExpressionCannotHaveCloneForValueType(p0));
-        }
+        internal static Exception WithExpressionCannotHaveCloneForValueType(object p0) => new ArgumentException(Strings.WithExpressionCannotHaveCloneForValueType(p0));
 
         /// <summary>
         /// ArgumentException with message like "A 'with' expression for type '{0}' should specify a 'Clone' method."
         /// </summary>
-        internal static Exception WithExpressionShouldHaveClone(object p0)
-        {
-            return new ArgumentException(Strings.WithExpressionShouldHaveClone(p0));
-        }
+        internal static Exception WithExpressionShouldHaveClone(object p0) => new ArgumentException(Strings.WithExpressionShouldHaveClone(p0));
 
         /// <summary>
         /// ArgumentException with message like "Clone method '{0}' should have no parameters."
         /// </summary>
-        internal static Exception CloneMethodShouldHaveNoParameters(object p0)
-        {
-            return new ArgumentException(Strings.CloneMethodShouldHaveNoParameters(p0));
-        }
+        internal static Exception CloneMethodShouldHaveNoParameters(object p0) => new ArgumentException(Strings.CloneMethodShouldHaveNoParameters(p0));
 
         /// <summary>
         /// ArgumentException with message like "Clone method '{0}' should be an instance method."
         /// </summary>
-        internal static Exception CloneMethodMustNotBeStatic(object p0)
-        {
-            return new ArgumentException(Strings.CloneMethodMustNotBeStatic(p0));
-        }
+        internal static Exception CloneMethodMustNotBeStatic(object p0) => new ArgumentException(Strings.CloneMethodMustNotBeStatic(p0));
 
         /// <summary>
         /// ArgumentException with message like "Clone method '{0}' should return a type that can be converted to '{1}'."
         /// </summary>
-        internal static Exception CloneMethodShouldReturnCompatibleType(object p0, object p1)
-        {
-            return new ArgumentException(Strings.CloneMethodShouldReturnCompatibleType(p0, p1));
-        }
+        internal static Exception CloneMethodShouldReturnCompatibleType(object p0, object p1) => new ArgumentException(Strings.CloneMethodShouldReturnCompatibleType(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' cannot be static."
         /// </summary>
-        internal static Exception MemberInitializerMemberMustNotBeStatic(object p0)
-        {
-            return new ArgumentException(Strings.MemberInitializerMemberMustNotBeStatic(p0));
-        }
+        internal static Exception MemberInitializerMemberMustNotBeStatic(object p0) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeStatic(p0));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' must be writeable."
         /// </summary>
-        internal static Exception MemberInitializerMemberMustBeWriteable(object p0)
-        {
-            return new ArgumentException(Strings.MemberInitializerMemberMustBeWriteable(p0));
-        }
+        internal static Exception MemberInitializerMemberMustBeWriteable(object p0) => new ArgumentException(Strings.MemberInitializerMemberMustBeWriteable(p0));
 
         /// <summary>
         /// ArgumentException with message like "No suitable constructor found for type '{0}' using the specified members."
         /// </summary>
-        internal static Exception NoAnonymousTypeConstructorFound(object p0)
-        {
-            return new ArgumentException(Strings.NoAnonymousTypeConstructorFound(p0));
-        }
+        internal static Exception NoAnonymousTypeConstructorFound(object p0) => new ArgumentException(Strings.NoAnonymousTypeConstructorFound(p0));
 
         /// <summary>
         /// ArgumentException with message like "A pattern can never produce a value of a nullable type."
         /// </summary>
-        internal static Exception CannotHaveNullablePatternType()
-        {
-            return new ArgumentException(Strings.CannotHaveNullablePatternType);
-        }
+        internal static Exception CannotHaveNullablePatternType() => new ArgumentException(Strings.CannotHaveNullablePatternType);
 
         /// <summary>
         /// ArgumentException with message like "The input and narrowed type for a pattern of type '{0}' should be equal."
         /// </summary>
-        internal static Exception PatternInputAndNarrowedTypeShouldMatch(object p0)
-        {
-            return new ArgumentException(Strings.PatternInputAndNarrowedTypeShouldMatch(p0));
-        }
+        internal static Exception PatternInputAndNarrowedTypeShouldMatch(object p0) => new ArgumentException(Strings.PatternInputAndNarrowedTypeShouldMatch(p0));
 
         /// <summary>
         /// ArgumentException with message like "The variable type '{0}' should be equal to the pattern result type '{1}'."
         /// </summary>
-        internal static Exception CannotAssignPatternResultToVariable(object p0, object p1)
-        {
-            return new ArgumentException(Strings.CannotAssignPatternResultToVariable(p0, p1));
-        }
+        internal static Exception CannotAssignPatternResultToVariable(object p0, object p1) => new ArgumentException(Strings.CannotAssignPatternResultToVariable(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The pattern type '{0}' is not compatible with a subpattern type '{1}'."
         /// </summary>
-        internal static Exception PatternTypeMismatch(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PatternTypeMismatch(p0, p1));
-        }
+        internal static Exception PatternTypeMismatch(object p0, object p1) => new ArgumentException(Strings.PatternTypeMismatch(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The pattern type '{0}' is not a valid binary pattern type."
         /// </summary>
-        internal static Exception InvalidBinaryPatternType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidBinaryPatternType(p0));
-        }
+        internal static Exception InvalidBinaryPatternType(object p0) => new ArgumentException(Strings.InvalidBinaryPatternType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The pattern type '{0}' is not a valid relational pattern type."
         /// </summary>
-        internal static Exception InvalidRelationalPatternType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidRelationalPatternType(p0));
-        }
+        internal static Exception InvalidRelationalPatternType(object p0) => new ArgumentException(Strings.InvalidRelationalPatternType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' cannot be used for a constant in a pattern."
         /// </summary>
-        internal static Exception InvalidPatternConstantType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidPatternConstantType(p0));
-        }
+        internal static Exception InvalidPatternConstantType(object p0) => new ArgumentException(Strings.InvalidPatternConstantType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' cannot be used for a constant in a relational pattern."
         /// </summary>
-        internal static Exception InvalidRelationalPatternConstantType(object p0)
-        {
-            return new ArgumentException(Strings.InvalidRelationalPatternConstantType(p0));
-        }
+        internal static Exception InvalidRelationalPatternConstantType(object p0) => new ArgumentException(Strings.InvalidRelationalPatternConstantType(p0));
 
         /// <summary>
         /// ArgumentException with message like "The value NaN cannot be used for a constant in a relational pattern."
         /// </summary>
-        internal static Exception CannotUsePatternConstantNaN()
-        {
-            return new ArgumentException(Strings.CannotUsePatternConstantNaN);
-        }
+        internal static Exception CannotUsePatternConstantNaN() => new ArgumentException(Strings.CannotUsePatternConstantNaN);
 
         /// <summary>
         /// ArgumentException with message like "A null pattern should use a constant of type object."
         /// </summary>
-        internal static Exception NullValueShouldUseObjectType()
-        {
-            return new ArgumentException(Strings.NullValueShouldUseObjectType);
-        }
+        internal static Exception NullValueShouldUseObjectType() => new ArgumentException(Strings.NullValueShouldUseObjectType);
 
         /// <summary>
         /// ArgumentException with message like "A null value cannot be used in a relational pattern."
         /// </summary>
-        internal static Exception CannotUseNullValueInRelationalPattern()
-        {
-            return new ArgumentException(Strings.CannotUseNullValueInRelationalPattern);
-        }
+        internal static Exception CannotUseNullValueInRelationalPattern() => new ArgumentException(Strings.CannotUseNullValueInRelationalPattern);
 
         /// <summary>
         /// ArgumentException with message like "The 'GetLengthMethod' of an 'ITuple' pattern should return an integer value."
         /// </summary>
-        internal static Exception ITupleGetLengthShouldReturnInt32()
-        {
-            return new ArgumentException(Strings.ITupleGetLengthShouldReturnInt32);
-        }
+        internal static Exception ITupleGetLengthShouldReturnInt32() => new ArgumentException(Strings.ITupleGetLengthShouldReturnInt32);
 
         /// <summary>
         /// ArgumentException with message like "The 'GetItemMethod' of an 'ITuple' pattern should return an object of type Object."
         /// </summary>
-        internal static Exception ITupleGetItemShouldReturnObject()
-        {
-            return new ArgumentException(Strings.ITupleGetItemShouldReturnObject);
-        }
+        internal static Exception ITupleGetItemShouldReturnObject() => new ArgumentException(Strings.ITupleGetItemShouldReturnObject);
 
         /// <summary>
         /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' cannot have a field specified."
         /// </summary>
-        internal static Exception ITuplePositionalPatternCannotHaveField(object p0)
-        {
-            return new ArgumentException(Strings.ITuplePositionalPatternCannotHaveField(p0));
-        }
+        internal static Exception ITuplePositionalPatternCannotHaveField(object p0) => new ArgumentException(Strings.ITuplePositionalPatternCannotHaveField(p0));
 
         /// <summary>
         /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' cannot have a parameter specified."
         /// </summary>
-        internal static Exception ITuplePositionalPatternCannotHaveParameter(object p0)
-        {
-            return new ArgumentException(Strings.ITuplePositionalPatternCannotHaveParameter(p0));
-        }
+        internal static Exception ITuplePositionalPatternCannotHaveParameter(object p0) => new ArgumentException(Strings.ITuplePositionalPatternCannotHaveParameter(p0));
 
         /// <summary>
         /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' has type '{1}'. Only type Object is supported."
         /// </summary>
-        internal static Exception ITuplePositionalPatternInvalidInputType(object p0, object p1)
-        {
-            return new ArgumentException(Strings.ITuplePositionalPatternInvalidInputType(p0, p1));
-        }
+        internal static Exception ITuplePositionalPatternInvalidInputType(object p0, object p1) => new ArgumentException(Strings.ITuplePositionalPatternInvalidInputType(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "A positional pattern should either be applied to a tuple type or provide a Deconstruct method."
         /// </summary>
-        internal static Exception InvalidPositionalPattern()
-        {
-            return new ArgumentException(Strings.InvalidPositionalPattern);
-        }
+        internal static Exception InvalidPositionalPattern() => new ArgumentException(Strings.InvalidPositionalPattern);
 
         /// <summary>
         /// ArgumentException with message like "The number of positional subpatterns does not match the number of components in input type '{0}'."
         /// </summary>
-        internal static Exception InvalidPositionalPatternCount(object p0)
-        {
-            return new ArgumentException(Strings.InvalidPositionalPatternCount(p0));
-        }
+        internal static Exception InvalidPositionalPatternCount(object p0) => new ArgumentException(Strings.InvalidPositionalPatternCount(p0));
 
         /// <summary>
         /// ArgumentException with message like "Deconstruct method '{0}' should return void."
         /// </summary>
-        internal static Exception DeconstructShouldReturnVoid(object p0)
-        {
-            return new ArgumentException(Strings.DeconstructShouldReturnVoid(p0));
-        }
+        internal static Exception DeconstructShouldReturnVoid(object p0) => new ArgumentException(Strings.DeconstructShouldReturnVoid(p0));
 
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter."
         /// </summary>
-        internal static Exception DeconstructParameterShouldBeOut(object p0, object p1)
-        {
-            return new ArgumentException(Strings.DeconstructParameterShouldBeOut(p0, p1));
-        }
+        internal static Exception DeconstructParameterShouldBeOut(object p0, object p1) => new ArgumentException(Strings.DeconstructParameterShouldBeOut(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "Deconstruct method '{0}' should have at least one parameter."
         /// </summary>
-        internal static Exception DeconstructExtensionMethodMissingThis(object p0)
-        {
-            return new ArgumentException(Strings.DeconstructExtensionMethodMissingThis(p0));
-        }
+        internal static Exception DeconstructExtensionMethodMissingThis(object p0) => new ArgumentException(Strings.DeconstructExtensionMethodMissingThis(p0));
 
         /// <summary>
         /// ArgumentException with message like "A tuple field index must be positive."
         /// </summary>
-        internal static Exception TupleFieldIndexMustBePositive()
-        {
-            return new ArgumentException(Strings.TupleFieldIndexMustBePositive);
-        }
+        internal static Exception TupleFieldIndexMustBePositive() => new ArgumentException(Strings.TupleFieldIndexMustBePositive);
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter must be declared on a method used for deconstruction."
         /// </summary>
-        internal static Exception PositionalPatternParameterMustBeOnMethod(object p0)
-        {
-            return new ArgumentException(Strings.PositionalPatternParameterMustBeOnMethod(p0));
-        }
+        internal static Exception PositionalPatternParameterMustBeOnMethod(object p0) => new ArgumentException(Strings.PositionalPatternParameterMustBeOnMethod(p0));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter must be an out parameter used for deconstruction."
         /// </summary>
-        internal static Exception PositionalPatternParameterMustBeOut(object p0)
-        {
-            return new ArgumentException(Strings.PositionalPatternParameterMustBeOut(p0));
-        }
+        internal static Exception PositionalPatternParameterMustBeOut(object p0) => new ArgumentException(Strings.PositionalPatternParameterMustBeOut(p0));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' should not be static."
         /// </summary>
-        internal static Exception PropertyPatternMemberShouldNotBeStatic(object p0)
-        {
-            return new ArgumentException(Strings.PropertyPatternMemberShouldNotBeStatic(p0));
-        }
+        internal static Exception PropertyPatternMemberShouldNotBeStatic(object p0) => new ArgumentException(Strings.PropertyPatternMemberShouldNotBeStatic(p0));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' should be readable."
         /// </summary>
-        internal static Exception PropertyPatternMemberShouldBeReadable(object p0)
-        {
-            return new ArgumentException(Strings.PropertyPatternMemberShouldBeReadable(p0));
-        }
+        internal static Exception PropertyPatternMemberShouldBeReadable(object p0) => new ArgumentException(Strings.PropertyPatternMemberShouldBeReadable(p0));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' should not be an indexer property."
         /// </summary>
-        internal static Exception PropertyPatternMemberShouldNotBeIndexer(object p0)
-        {
-            return new ArgumentException(Strings.PropertyPatternMemberShouldNotBeIndexer(p0));
-        }
+        internal static Exception PropertyPatternMemberShouldNotBeIndexer(object p0) => new ArgumentException(Strings.PropertyPatternMemberShouldNotBeIndexer(p0));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' is not compatible with a receiver of type '{1}'."
         /// </summary>
-        internal static Exception PropertyPatternMemberIsNotCompatibleWithReceiver(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PropertyPatternMemberIsNotCompatibleWithReceiver(p0, p1));
-        }
+        internal static Exception PropertyPatternMemberIsNotCompatibleWithReceiver(object p0, object p1) => new ArgumentException(Strings.PropertyPatternMemberIsNotCompatibleWithReceiver(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "A positional pattern using a Deconstruct method cannot specify a tuple field."
         /// </summary>
-        internal static Exception PositionalPatternWithDeconstructMethodCannotSpecifyField()
-        {
-            return new ArgumentException(Strings.PositionalPatternWithDeconstructMethodCannotSpecifyField);
-        }
+        internal static Exception PositionalPatternWithDeconstructMethodCannotSpecifyField() => new ArgumentException(Strings.PositionalPatternWithDeconstructMethodCannotSpecifyField);
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter is not declared on the '{1}' method."
         /// </summary>
-        internal static Exception PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(p0, p1));
-        }
+        internal static Exception PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object p0, object p1) => new ArgumentException(Strings.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter is used more than once."
         /// </summary>
-        internal static Exception PositionalPatternParameterShouldOnlyBeUsedOnce(object p0)
-        {
-            return new ArgumentException(Strings.PositionalPatternParameterShouldOnlyBeUsedOnce(p0));
-        }
+        internal static Exception PositionalPatternParameterShouldOnlyBeUsedOnce(object p0) => new ArgumentException(Strings.PositionalPatternParameterShouldOnlyBeUsedOnce(p0));
 
         /// <summary>
         /// ArgumentException with message like "Either all or none of the Deconstruct method parameters should be specified."
         /// </summary>
-        internal static Exception PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters()
-        {
-            return new ArgumentException(Strings.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters);
-        }
+        internal static Exception PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters() => new ArgumentException(Strings.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters);
 
         /// <summary>
         /// ArgumentException with message like "A positional pattern for a tuple type cannot specify a Deconstruct method parameter."
         /// </summary>
-        internal static Exception PositionalPatternWithTupleCannotSpecifyParameter()
-        {
-            return new ArgumentException(Strings.PositionalPatternWithTupleCannotSpecifyParameter);
-        }
+        internal static Exception PositionalPatternWithTupleCannotSpecifyParameter() => new ArgumentException(Strings.PositionalPatternWithTupleCannotSpecifyParameter);
 
         /// <summary>
         /// ArgumentException with message like "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'."
         /// </summary>
-        internal static Exception PositionalPatternTupleIndexOutOfRange(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PositionalPatternTupleIndexOutOfRange(p0, p1));
-        }
+        internal static Exception PositionalPatternTupleIndexOutOfRange(object p0, object p1) => new ArgumentException(Strings.PositionalPatternTupleIndexOutOfRange(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The tuple field index '{0}' is used more than once."
         /// </summary>
-        internal static Exception PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object p0)
-        {
-            return new ArgumentException(Strings.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(p0));
-        }
+        internal static Exception PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object p0) => new ArgumentException(Strings.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(p0));
 
         /// <summary>
         /// ArgumentException with message like "Either all or none of the tuple fields should be specified."
         /// </summary>
-        internal static Exception PositionalPatternWithTupleShouldSpecifyAllIndices()
-        {
-            return new ArgumentException(Strings.PositionalPatternWithTupleShouldSpecifyAllIndices);
-        }
+        internal static Exception PositionalPatternWithTupleShouldSpecifyAllIndices() => new ArgumentException(Strings.PositionalPatternWithTupleShouldSpecifyAllIndices);
 
         /// <summary>
         /// ArgumentException with message like "The type of a switch expression should not be void."
         /// </summary>
-        internal static Exception SwitchExpressionTypeShouldNotBeVoid()
-        {
-            return new ArgumentException(Strings.SwitchExpressionTypeShouldNotBeVoid);
-        }
+        internal static Exception SwitchExpressionTypeShouldNotBeVoid() => new ArgumentException(Strings.SwitchExpressionTypeShouldNotBeVoid);
 
         /// <summary>
         /// ArgumentException with message like "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'."
         /// </summary>
-        internal static Exception SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object p0, object p1, object p2)
-        {
-            return new ArgumentException(Strings.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(p0, p1, p2));
-        }
+        internal static Exception SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object p0, object p1, object p2) => new ArgumentException(Strings.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(p0, p1, p2));
 
         /// <summary>
         /// ArgumentException with message like "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'."
         /// </summary>
-        internal static Exception SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object p0, object p1, object p2)
-        {
-            return new ArgumentException(Strings.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(p0, p1, p2));
-        }
+        internal static Exception SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object p0, object p1, object p2) => new ArgumentException(Strings.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(p0, p1, p2));
 
         /// <summary>
         /// ArgumentException with message like "The type of a when clause should be Boolean."
         /// </summary>
-        internal static Exception WhenClauseShouldBeBoolean()
-        {
-            return new ArgumentException(Strings.WhenClauseShouldBeBoolean);
-        }
+        internal static Exception WhenClauseShouldBeBoolean() => new ArgumentException(Strings.WhenClauseShouldBeBoolean);
 
         /// <summary>
         /// ArgumentException with message like "The value of a switch expression arm should not be void."
         /// </summary>
-        internal static Exception SwitchExpressionArmValueShouldNotBeVoid()
-        {
-            return new ArgumentException(Strings.SwitchExpressionArmValueShouldNotBeVoid);
-        }
+        internal static Exception SwitchExpressionArmValueShouldNotBeVoid() => new ArgumentException(Strings.SwitchExpressionArmValueShouldNotBeVoid);
 
         /// <summary>
         /// ArgumentException with message like "A conversion cannot return void."
         /// </summary>
-        internal static Exception ConversionCannotReturnVoid()
-        {
-            return new ArgumentException(Strings.ConversionCannotReturnVoid);
-        }
+        internal static Exception ConversionCannotReturnVoid() => new ArgumentException(Strings.ConversionCannotReturnVoid);
 
         /// <summary>
         /// ArgumentException with message like "A conversion lambda expression should have a single parameter."
         /// </summary>
-        internal static Exception ConversionShouldHaveOneParameter()
-        {
-            return new ArgumentException(Strings.ConversionShouldHaveOneParameter);
-        }
+        internal static Exception ConversionShouldHaveOneParameter() => new ArgumentException(Strings.ConversionShouldHaveOneParameter);
 
         /// <summary>
         /// ArgumentException with message like "A deconstruction lambda expression should return void."
         /// </summary>
-        internal static Exception DeconstructionShouldReturnVoid()
-        {
-            return new ArgumentException(Strings.DeconstructionShouldReturnVoid);
-        }
+        internal static Exception DeconstructionShouldReturnVoid() => new ArgumentException(Strings.DeconstructionShouldReturnVoid);
 
         /// <summary>
         /// ArgumentException with message like "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction."
         /// </summary>
-        internal static Exception DeconstructionShouldHaveThreeOrMoreParameters()
-        {
-            return new ArgumentException(Strings.DeconstructionShouldHaveThreeOrMoreParameters);
-        }
+        internal static Exception DeconstructionShouldHaveThreeOrMoreParameters() => new ArgumentException(Strings.DeconstructionShouldHaveThreeOrMoreParameters);
 
         /// <summary>
         /// ArgumentException with message like "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference."
         /// </summary>
-        internal static Exception DeconstructionParameterShouldBeByRef(object p0)
-        {
-            return new ArgumentException(Strings.DeconstructionParameterShouldBeByRef(p0));
-        }
+        internal static Exception DeconstructionParameterShouldBeByRef(object p0) => new ArgumentException(Strings.DeconstructionParameterShouldBeByRef(p0));
 
         /// <summary>
         /// ArgumentException with message like "The number of deconstruction output parameter should match the number of elements conversions."
         /// </summary>
-        internal static Exception DeconstructionParameterCountShouldMatchConversionCount()
-        {
-            return new ArgumentException(Strings.DeconstructionParameterCountShouldMatchConversionCount);
-        }
+        internal static Exception DeconstructionParameterCountShouldMatchConversionCount() => new ArgumentException(Strings.DeconstructionParameterCountShouldMatchConversionCount);
 
         /// <summary>
         /// ArgumentException with message like "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'."
         /// </summary>
-        internal static Exception DeconstructionParameterNotAssignableToConversion(object p0, object p1, object p2)
-        {
-            return new ArgumentException(Strings.DeconstructionParameterNotAssignableToConversion(p0, p1, p2));
-        }
+        internal static Exception DeconstructionParameterNotAssignableToConversion(object p0, object p1, object p2) => new ArgumentException(Strings.DeconstructionParameterNotAssignableToConversion(p0, p1, p2));
 
         /// <summary>
         /// ArgumentException with message like "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'."
         /// </summary>
-        internal static Exception DeconstructingAssignmentStructureMismatch(object p0, object p1)
-        {
-            return new ArgumentException(Strings.DeconstructingAssignmentStructureMismatch(p0, p1));
-        }
+        internal static Exception DeconstructingAssignmentStructureMismatch(object p0, object p1) => new ArgumentException(Strings.DeconstructingAssignmentStructureMismatch(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The computed result tuple type '{0}' does not match the specified expression type '{1}'."
         /// </summary>
-        internal static Exception DeconstructingAssignmentTypeMismatch(object p0, object p1)
-        {
-            return new ArgumentException(Strings.DeconstructingAssignmentTypeMismatch(p0, p1));
-        }
+        internal static Exception DeconstructingAssignmentTypeMismatch(object p0, object p1) => new ArgumentException(Strings.DeconstructingAssignmentTypeMismatch(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'."
         /// </summary>
-        internal static Exception DeconstructingComponentAndConversionIncompatible(object p0, object p1, object p2, object p3)
-        {
-            return new ArgumentException(Strings.DeconstructingComponentAndConversionIncompatible(p0, p1, p2, p3));
-        }
+        internal static Exception DeconstructingComponentAndConversionIncompatible(object p0, object p1, object p2, object p3) => new ArgumentException(Strings.DeconstructingComponentAndConversionIncompatible(p0, p1, p2, p3));
 
         /// <summary>
         /// ArgumentException with message like "A using statement should either have a single expression or a declaration list."
         /// </summary>
-        internal static Exception InvalidUsingStatement()
-        {
-            return new ArgumentException(Strings.InvalidUsingStatement);
-        }
+        internal static Exception InvalidUsingStatement() => new ArgumentException(Strings.InvalidUsingStatement);
 
         /// <summary>
         /// ArgumentException with message like "All variables declared in a using statement should have the same type."
         /// </summary>
-        internal static Exception UsingVariableDeclarationsShouldBeConsistentlyTyped()
-        {
-            return new ArgumentException(Strings.UsingVariableDeclarationsShouldBeConsistentlyTyped);
-        }
+        internal static Exception UsingVariableDeclarationsShouldBeConsistentlyTyped() => new ArgumentException(Strings.UsingVariableDeclarationsShouldBeConsistentlyTyped);
 
         /// <summary>
         /// ArgumentException with message like "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement."
         /// </summary>
-        internal static Exception UsingVariableNotInScope(object p0)
-        {
-            return new ArgumentException(Strings.UsingVariableNotInScope(p0));
-        }
+        internal static Exception UsingVariableNotInScope(object p0) => new ArgumentException(Strings.UsingVariableNotInScope(p0));
 
         /// <summary>
         /// ArgumentException with message like "The Dispose method of a using statement should return void."
         /// </summary>
-        internal static Exception UsingDisposeShouldReturnVoid()
-        {
-            return new ArgumentException(Strings.UsingDisposeShouldReturnVoid);
-        }
+        internal static Exception UsingDisposeShouldReturnVoid() => new ArgumentException(Strings.UsingDisposeShouldReturnVoid);
 
         /// <summary>
         /// ArgumentException with message like "A pattern dispose lambda for a using statement should have one parameter."
         /// </summary>
-        internal static Exception UsingPatternDisposeShouldHaveOneParameter()
-        {
-            return new ArgumentException(Strings.UsingPatternDisposeShouldHaveOneParameter);
-        }
+        internal static Exception UsingPatternDisposeShouldHaveOneParameter() => new ArgumentException(Strings.UsingPatternDisposeShouldHaveOneParameter);
 
         /// <summary>
         /// ArgumentException with message like "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement."
         /// </summary>
-        internal static Exception UsingPatternDisposeInputNotCompatibleWithResource(object p0, object p1)
-        {
-            return new ArgumentException(Strings.UsingPatternDisposeInputNotCompatibleWithResource(p0, p1));
-        }
+        internal static Exception UsingPatternDisposeInputNotCompatibleWithResource(object p0, object p1) => new ArgumentException(Strings.UsingPatternDisposeInputNotCompatibleWithResource(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block."
         /// </summary>
-        internal static Exception CatchVariableNotInScope(object p0)
-        {
-            return new ArgumentException(Strings.CatchVariableNotInScope(p0));
-        }
+        internal static Exception CatchVariableNotInScope(object p0) => new ArgumentException(Strings.CatchVariableNotInScope(p0));
 
         /// <summary>
         /// ArgumentException with message like "The catch block exception type '{0}' is not equivalent to the variable type '{1}'."
         /// </summary>
-        internal static Exception CatchTypeNotEquivalentWithVariableType(object p0, object p1)
-        {
-            return new ArgumentException(Strings.CatchTypeNotEquivalentWithVariableType(p0, p1));
-        }
+        internal static Exception CatchTypeNotEquivalentWithVariableType(object p0, object p1) => new ArgumentException(Strings.CatchTypeNotEquivalentWithVariableType(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The label '{0}' is used in multiple switch sections."
         /// </summary>
-        internal static Exception DuplicateLabelInSwitchStatement(object p0)
-        {
-            return new ArgumentException(Strings.DuplicateLabelInSwitchStatement(p0));
-        }
+        internal static Exception DuplicateLabelInSwitchStatement(object p0) => new ArgumentException(Strings.DuplicateLabelInSwitchStatement(p0));
 
         /// <summary>
         /// ArgumentException with message like "The label '{0}' is used more than once in the switch section."
         /// </summary>
-        internal static Exception DuplicateLabelInSwitchSection(object p0)
-        {
-            return new ArgumentException(Strings.DuplicateLabelInSwitchSection(p0));
-        }
+        internal static Exception DuplicateLabelInSwitchSection(object p0) => new ArgumentException(Strings.DuplicateLabelInSwitchSection(p0));
 
         /// <summary>
         /// ArgumentException with message like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
         /// </summary>
-        internal static Exception SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1)
-        {
-            return new ArgumentException(Strings.SwitchValueTypeDoesNotMatchPatternInputType(p0, p1));
-        }
+        internal static Exception SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1) => new ArgumentException(Strings.SwitchValueTypeDoesNotMatchPatternInputType(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section."
         /// </summary>
-        internal static Exception InconsistentPatternInputType(object p0, object p1)
-        {
-            return new ArgumentException(Strings.InconsistentPatternInputType(p0, p1));
-        }
+        internal static Exception InconsistentPatternInputType(object p0, object p1) => new ArgumentException(Strings.InconsistentPatternInputType(p0, p1));
 
         /// <summary>
         /// ArgumentException with message like "A switch statement should contain at most one default case."
         /// </summary>
-        internal static Exception FoundMoreThanOneDefaultLabel()
-        {
-            return new ArgumentException(Strings.FoundMoreThanOneDefaultLabel);
-        }
+        internal static Exception FoundMoreThanOneDefaultLabel() => new ArgumentException(Strings.FoundMoreThanOneDefaultLabel);
 
     }
 
@@ -1269,1412 +801,782 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// A string like "Parameter '{0}' is not defined for method '{1}'"
         /// </summary>
-        internal static string ParameterNotDefinedForMethod(object p0, object p1)
-        {
-            return SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
-        }
+        internal static string ParameterNotDefinedForMethod(object p0, object p1) => SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
 
         /// <summary>
         /// A string like "Parameter index '{0}' is out of bounds for method '{1}'"
         /// </summary>
-        internal static string ParameterIndexOutOfBounds(object p0, object p1)
-        {
-            return SR.Format(SR.ParameterIndexOutOfBounds, p0, p1);
-        }
+        internal static string ParameterIndexOutOfBounds(object p0, object p1) => SR.Format(SR.ParameterIndexOutOfBounds, p0, p1);
 
         /// <summary>
         /// A string like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
         /// </summary>
-        internal static string ExpressionTypeDoesNotMatchParameter(object p0, object p1)
-        {
-            return SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
-        }
+        internal static string ExpressionTypeDoesNotMatchParameter(object p0, object p1) => SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
 
         /// <summary>
         /// A string like "Parameter '{0}' has multiple bindings"
         /// </summary>
-        internal static string DuplicateParameterBinding(object p0)
-        {
-            return SR.Format(SR.DuplicateParameterBinding, p0);
-        }
+        internal static string DuplicateParameterBinding(object p0) => SR.Format(SR.DuplicateParameterBinding, p0);
 
         /// <summary>
         /// A string like "Non-optional parameter '{0}' has no binding"
         /// </summary>
-        internal static string UnboundParameter(object p0)
-        {
-            return SR.Format(SR.UnboundParameter, p0);
-        }
+        internal static string UnboundParameter(object p0) => SR.Format(SR.UnboundParameter, p0);
 
         /// <summary>
         /// A string like "A non-static constructor is required"
         /// </summary>
-        internal static string NonStaticConstructorRequired
-        {
-            get
-            {
-                return SR.NonStaticConstructorRequired;
-            }
-        }
+        internal static string NonStaticConstructorRequired => SR.NonStaticConstructorRequired;
 
         /// <summary>
         /// A string like "The property '{0}' has no 'get' accessor"
         /// </summary>
-        internal static string PropertyDoesNotHaveGetAccessor(object p0)
-        {
-            return SR.Format(SR.PropertyDoesNotHaveGetAccessor, p0);
-        }
+        internal static string PropertyDoesNotHaveGetAccessor(object p0) => SR.Format(SR.PropertyDoesNotHaveGetAccessor, p0);
 
         /// <summary>
         /// A string like "The property '{0}' has no 'set' accessor"
         /// </summary>
-        internal static string PropertyDoesNotHaveSetAccessor(object p0)
-        {
-            return SR.Format(SR.PropertyDoesNotHaveSetAccessor, p0);
-        }
+        internal static string PropertyDoesNotHaveSetAccessor(object p0) => SR.Format(SR.PropertyDoesNotHaveSetAccessor, p0);
 
         /// <summary>
         /// A string like "A non-static 'get' accessor is required for property '{0}'"
         /// </summary>
-        internal static string AccessorCannotBeStatic(object p0)
-        {
-            return SR.Format(SR.AccessorCannotBeStatic, p0);
-        }
+        internal static string AccessorCannotBeStatic(object p0) => SR.Format(SR.AccessorCannotBeStatic, p0);
 
         /// <summary>
         /// A string like "The number of indexes specified does not match the array rank"
         /// </summary>
-        internal static string RankMismatch
-        {
-            get
-            {
-                return SR.RankMismatch;
-            }
-        }
+        internal static string RankMismatch => SR.RankMismatch;
 
         /// <summary>
         /// A string like "The specified index is out of range"
         /// </summary>
-        internal static string IndexOutOfRange
-        {
-            get
-            {
-                return SR.IndexOutOfRange;
-            }
-        }
+        internal static string IndexOutOfRange => SR.IndexOutOfRange;
 
         /// <summary>
         /// A string like "An array dimension cannot be less than 0"
         /// </summary>
-        internal static string BoundCannotBeLessThanZero
-        {
-            get
-            {
-                return SR.BoundCannotBeLessThanZero;
-            }
-        }
+        internal static string BoundCannotBeLessThanZero => SR.BoundCannotBeLessThanZero;
 
         /// <summary>
         /// A string like "The number of elements does not match the length of the array"
         /// </summary>
-        internal static string ArrayBoundsElementCountMismatch
-        {
-            get
-            {
-                return SR.ArrayBoundsElementCountMismatch;
-            }
-        }
+        internal static string ArrayBoundsElementCountMismatch => SR.ArrayBoundsElementCountMismatch;
 
         /// <summary>
         /// A string like "The 'GetAwaiter' method should take zero parameters"
         /// </summary>
-        internal static string GetAwaiterShouldTakeZeroParameters
-        {
-            get
-            {
-                return SR.GetAwaiterShouldTakeZeroParameters;
-            }
-        }
+        internal static string GetAwaiterShouldTakeZeroParameters => SR.GetAwaiterShouldTakeZeroParameters;
 
         /// <summary>
         /// A string like "The 'GetAwaiter' method should not be generic"
         /// </summary>
-        internal static string GetAwaiterShouldNotBeGeneric
-        {
-            get
-            {
-                return SR.GetAwaiterShouldNotBeGeneric;
-            }
-        }
+        internal static string GetAwaiterShouldNotBeGeneric => SR.GetAwaiterShouldNotBeGeneric;
 
         /// <summary>
         /// A string like "The 'GetAwaiter' method has an unsupported return type"
         /// </summary>
-        internal static string GetAwaiterShouldReturnAwaiterType
-        {
-            get
-            {
-                return SR.GetAwaiterShouldReturnAwaiterType;
-            }
-        }
+        internal static string GetAwaiterShouldReturnAwaiterType => SR.GetAwaiterShouldReturnAwaiterType;
 
         /// <summary>
         /// A string like "Awaitable type '{0}' should have a 'GetAwaiter' method."
         /// </summary>
-        internal static string AwaitableTypeShouldHaveGetAwaiterMethod(object p0)
-        {
-            return SR.Format(SR.AwaitableTypeShouldHaveGetAwaiterMethod, p0);
-        }
+        internal static string AwaitableTypeShouldHaveGetAwaiterMethod(object p0) => SR.Format(SR.AwaitableTypeShouldHaveGetAwaiterMethod, p0);
 
         /// <summary>
         /// A string like "Awaiter type '{0}' should implement 'INotifyCompletion'"
         /// </summary>
-        internal static string AwaiterTypeShouldImplementINotifyCompletion(object p0)
-        {
-            return SR.Format(SR.AwaiterTypeShouldImplementINotifyCompletion, p0);
-        }
+        internal static string AwaiterTypeShouldImplementINotifyCompletion(object p0) => SR.Format(SR.AwaiterTypeShouldImplementINotifyCompletion, p0);
 
         /// <summary>
         /// A string like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor"
         /// </summary>
-        internal static string AwaiterTypeShouldHaveIsCompletedProperty(object p0)
-        {
-            return SR.Format(SR.AwaiterTypeShouldHaveIsCompletedProperty, p0);
-        }
+        internal static string AwaiterTypeShouldHaveIsCompletedProperty(object p0) => SR.Format(SR.AwaiterTypeShouldHaveIsCompletedProperty, p0);
 
         /// <summary>
         /// A string like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'"
         /// </summary>
-        internal static string AwaiterIsCompletedShouldReturnBool(object p0)
-        {
-            return SR.Format(SR.AwaiterIsCompletedShouldReturnBool, p0);
-        }
+        internal static string AwaiterIsCompletedShouldReturnBool(object p0) => SR.Format(SR.AwaiterIsCompletedShouldReturnBool, p0);
 
         /// <summary>
         /// A string like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters"
         /// </summary>
-        internal static string AwaiterIsCompletedShouldNotBeIndexer(object p0)
-        {
-            return SR.Format(SR.AwaiterIsCompletedShouldNotBeIndexer, p0);
-        }
+        internal static string AwaiterIsCompletedShouldNotBeIndexer(object p0) => SR.Format(SR.AwaiterIsCompletedShouldNotBeIndexer, p0);
 
         /// <summary>
         /// A string like "Awaiter type '{0}' should have a 'GetResult' method"
         /// </summary>
-        internal static string AwaiterTypeShouldHaveGetResultMethod(object p0)
-        {
-            return SR.Format(SR.AwaiterTypeShouldHaveGetResultMethod, p0);
-        }
+        internal static string AwaiterTypeShouldHaveGetResultMethod(object p0) => SR.Format(SR.AwaiterTypeShouldHaveGetResultMethod, p0);
 
         /// <summary>
         /// A string like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type"
         /// </summary>
-        internal static string AwaiterGetResultTypeInvalid(object p0)
-        {
-            return SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
-        }
+        internal static string AwaiterGetResultTypeInvalid(object p0) => SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
 
         /// <summary>
         /// A string like "Dynamically bound await operations cannot have a 'GetAwaiter' expression."
         /// </summary>
-        internal static string DynamicAwaitNoGetAwaiter
-        {
-            get
-            {
-                return SR.DynamicAwaitNoGetAwaiter;
-            }
-        }
+        internal static string DynamicAwaitNoGetAwaiter => SR.DynamicAwaitNoGetAwaiter;
 
         /// <summary>
         /// A string like "Dynamically bound await operations cannot have an 'IsCompleted' property."
         /// </summary>
-        internal static string DynamicAwaitNoIsCompleted
-        {
-            get
-            {
-                return SR.DynamicAwaitNoIsCompleted;
-            }
-        }
+        internal static string DynamicAwaitNoIsCompleted => SR.DynamicAwaitNoIsCompleted;
 
         /// <summary>
         /// A string like "Dynamically bound await operations cannot have a 'GetResult' method."
         /// </summary>
-        internal static string DynamicAwaitNoGetResult
-        {
-            get
-            {
-                return SR.DynamicAwaitNoGetResult;
-            }
-        }
+        internal static string DynamicAwaitNoGetResult => SR.DynamicAwaitNoGetResult;
 
         /// <summary>
         /// A string like "The 'GetAwaiter' expression should have one parameter."
         /// </summary>
-        internal static string GetAwaiterExpressionOneParameter
-        {
-            get
-            {
-                return SR.GetAwaiterExpressionOneParameter;
-            }
-        }
+        internal static string GetAwaiterExpressionOneParameter => SR.GetAwaiterExpressionOneParameter;
 
         /// <summary>
         /// A string like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions"
         /// </summary>
-        internal static string AsyncLambdaCantHaveByRefParameter(object p0)
-        {
-            return SR.Format(SR.AsyncLambdaCantHaveByRefParameter, p0);
-        }
+        internal static string AsyncLambdaCantHaveByRefParameter(object p0) => SR.Format(SR.AsyncLambdaCantHaveByRefParameter, p0);
 
         /// <summary>
         /// A string like "Return type '{0}' is not valid for an asynchronous lambda expression"
         /// </summary>
-        internal static string AsyncLambdaInvalidReturnType(object p0)
-        {
-            return SR.Format(SR.AsyncLambdaInvalidReturnType, p0);
-        }
+        internal static string AsyncLambdaInvalidReturnType(object p0) => SR.Format(SR.AsyncLambdaInvalidReturnType, p0);
 
         /// <summary>
         /// A string like "Await expression cannot occur in '{0}'"
         /// </summary>
-        internal static string AwaitForbiddenHere(object p0)
-        {
-            return SR.Format(SR.AwaitForbiddenHere, p0);
-        }
+        internal static string AwaitForbiddenHere(object p0) => SR.Format(SR.AwaitForbiddenHere, p0);
 
         /// <summary>
         /// A string like "An expression of type '{0}' can't be used as a lock"
         /// </summary>
-        internal static string LockNeedsReferenceType(object p0)
-        {
-            return SR.Format(SR.LockNeedsReferenceType, p0);
-        }
+        internal static string LockNeedsReferenceType(object p0) => SR.Format(SR.LockNeedsReferenceType, p0);
 
         /// <summary>
         /// A string like "The conversion lambda should have one parameter"
         /// </summary>
-        internal static string ConversionNeedsOneParameter
-        {
-            get
-            {
-                return SR.ConversionNeedsOneParameter;
-            }
-        }
+        internal static string ConversionNeedsOneParameter => SR.ConversionNeedsOneParameter;
 
         /// <summary>
         /// A string like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'"
         /// </summary>
-        internal static string ConversionInvalidArgument(object p0, object p1)
-        {
-            return SR.Format(SR.ConversionInvalidArgument, p0, p1);
-        }
+        internal static string ConversionInvalidArgument(object p0, object p1) => SR.Format(SR.ConversionInvalidArgument, p0, p1);
 
         /// <summary>
         /// A string like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'"
         /// </summary>
-        internal static string ConversionInvalidResult(object p0, object p1)
-        {
-            return SR.Format(SR.ConversionInvalidResult, p0, p1);
-        }
+        internal static string ConversionInvalidResult(object p0, object p1) => SR.Format(SR.ConversionInvalidResult, p0, p1);
 
         /// <summary>
         /// A string like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor"
         /// </summary>
-        internal static string EnumeratorShouldHaveCurrentProperty(object p0)
-        {
-            return SR.Format(SR.EnumeratorShouldHaveCurrentProperty, p0);
-        }
+        internal static string EnumeratorShouldHaveCurrentProperty(object p0) => SR.Format(SR.EnumeratorShouldHaveCurrentProperty, p0);
 
         /// <summary>
         /// A string like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type"
         /// </summary>
-        internal static string EnumeratorShouldHaveMoveNextMethod(object p0)
-        {
-            return SR.Format(SR.EnumeratorShouldHaveMoveNextMethod, p0);
-        }
+        internal static string EnumeratorShouldHaveMoveNextMethod(object p0) => SR.Format(SR.EnumeratorShouldHaveMoveNextMethod, p0);
 
         /// <summary>
         /// A string like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'"
         /// </summary>
-        internal static string MoreThanOneIEnumerableFound(object p0)
-        {
-            return SR.Format(SR.MoreThanOneIEnumerableFound, p0);
-        }
+        internal static string MoreThanOneIEnumerableFound(object p0) => SR.Format(SR.MoreThanOneIEnumerableFound, p0);
 
         /// <summary>
         /// A string like "Collection type '{0}' has no valid enumerable pattern"
         /// </summary>
-        internal static string NoEnumerablePattern(object p0)
-        {
-            return SR.Format(SR.NoEnumerablePattern, p0);
-        }
+        internal static string NoEnumerablePattern(object p0) => SR.Format(SR.NoEnumerablePattern, p0);
 
         /// <summary>
         /// A string like "Initializers should be assignments to variables"
         /// </summary>
-        internal static string InvalidInitializer
-        {
-            get
-            {
-                return SR.InvalidInitializer;
-            }
-        }
+        internal static string InvalidInitializer => SR.InvalidInitializer;
 
         /// <summary>
         /// A string like "Break and continue lables should be different"
         /// </summary>
-        internal static string DuplicateLabels
-        {
-            get
-            {
-                return SR.DuplicateLabels;
-            }
-        }
+        internal static string DuplicateLabels => SR.DuplicateLabels;
 
         /// <summary>
         /// A string like "Conditional access expressions require non-static members or extension methods."
         /// </summary>
-        internal static string ConditionalAccessRequiresNonStaticMember
-        {
-            get
-            {
-                return SR.ConditionalAccessRequiresNonStaticMember;
-            }
-        }
+        internal static string ConditionalAccessRequiresNonStaticMember => SR.ConditionalAccessRequiresNonStaticMember;
 
         /// <summary>
         /// A string like "Conditional access expressions require readable properties."
         /// </summary>
-        internal static string ConditionalAccessRequiresReadableProperty
-        {
-            get
-            {
-                return SR.ConditionalAccessRequiresReadableProperty;
-            }
-        }
+        internal static string ConditionalAccessRequiresReadableProperty => SR.ConditionalAccessRequiresReadableProperty;
 
         /// <summary>
         /// A string like "Too many arguments have been specified."
         /// </summary>
-        internal static string TooManyArguments
-        {
-            get
-            {
-                return SR.TooManyArguments;
-            }
-        }
+        internal static string TooManyArguments => SR.TooManyArguments;
 
         /// <summary>
         /// A string like "Conditional call expressions for extensions methods should specify an instance expression."
         /// </summary>
-        internal static string ExtensionMethodRequiresInstance
-        {
-            get
-            {
-                return SR.ExtensionMethodRequiresInstance;
-            }
-        }
+        internal static string ExtensionMethodRequiresInstance => SR.ExtensionMethodRequiresInstance;
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid governing type for a switch statement."
         /// </summary>
-        internal static string InvalidSwitchType(object p0)
-        {
-            return SR.Format(SR.InvalidSwitchType, p0);
-        }
+        internal static string InvalidSwitchType(object p0) => SR.Format(SR.InvalidSwitchType, p0);
 
         /// <summary>
         /// A string like "The test value '{0}' occurs more than once."
         /// </summary>
-        internal static string DuplicateTestValue(object p0)
-        {
-            return SR.Format(SR.DuplicateTestValue, p0);
-        }
+        internal static string DuplicateTestValue(object p0) => SR.Format(SR.DuplicateTestValue, p0);
 
         /// <summary>
         /// A string like "A 'null' test value cannot be used in a switch statement with governing type '{0}'."
         /// </summary>
-        internal static string SwitchCantHaveNullCase(object p0)
-        {
-            return SR.Format(SR.SwitchCantHaveNullCase, p0);
-        }
+        internal static string SwitchCantHaveNullCase(object p0) => SR.Format(SR.SwitchCantHaveNullCase, p0);
 
         /// <summary>
         /// A string like "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'."
         /// </summary>
-        internal static string SwitchCaseHasIncompatibleType(object p0, object p1)
-        {
-            return SR.Format(SR.SwitchCaseHasIncompatibleType, p0, p1);
-        }
+        internal static string SwitchCaseHasIncompatibleType(object p0, object p1) => SR.Format(SR.SwitchCaseHasIncompatibleType, p0, p1);
 
         /// <summary>
         /// A string like "All specified test values should have the same type."
         /// </summary>
-        internal static string TestValuesShouldHaveConsistentType
-        {
-            get
-            {
-                return SR.TestValuesShouldHaveConsistentType;
-            }
-        }
+        internal static string TestValuesShouldHaveConsistentType => SR.TestValuesShouldHaveConsistentType;
 
         /// <summary>
         /// A string like "The break label of a switch statement should be of type 'void'."
         /// </summary>
-        internal static string SwitchBreakLabelShouldBeVoid
-        {
-            get
-            {
-                return SR.SwitchBreakLabelShouldBeVoid;
-            }
-        }
+        internal static string SwitchBreakLabelShouldBeVoid => SR.SwitchBreakLabelShouldBeVoid;
 
         /// <summary>
         /// A string like "The label of a switch case should be of type 'void'."
         /// </summary>
-        internal static string SwitchLabelTargetShouldBeVoid
-        {
-            get
-            {
-                return SR.SwitchLabelTargetShouldBeVoid;
-            }
-        }
+        internal static string SwitchLabelTargetShouldBeVoid => SR.SwitchLabelTargetShouldBeVoid;
 
         /// <summary>
         /// A string like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
         /// </summary>
-        internal static string InvalidGotoCase(object p0)
-        {
-            return SR.Format(SR.InvalidGotoCase, p0);
-        }
+        internal static string InvalidGotoCase(object p0) => SR.Format(SR.InvalidGotoCase, p0);
 
         /// <summary>
         /// A string like "A 'goto default' statement was found but the containing switch statement has no default label."
         /// </summary>
-        internal static string InvalidGotoDefault
-        {
-            get
-            {
-                return SR.InvalidGotoDefault;
-            }
-        }
+        internal static string InvalidGotoDefault => SR.InvalidGotoDefault;
 
         /// <summary>
         /// A string like "A 'goto case' or 'goto default' statement node can only be reduced when embedded in a switch statement node."
         /// </summary>
-        internal static string GotoCanOnlyBeReducedInSwitch
-        {
-            get
-            {
-                return SR.GotoCanOnlyBeReducedInSwitch;
-            }
-        }
+        internal static string GotoCanOnlyBeReducedInSwitch => SR.GotoCanOnlyBeReducedInSwitch;
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid type for a conditional receiver."
         /// </summary>
-        internal static string InvalidConditionalReceiverType(object p0)
-        {
-            return SR.Format(SR.InvalidConditionalReceiverType, p0);
-        }
+        internal static string InvalidConditionalReceiverType(object p0) => SR.Format(SR.InvalidConditionalReceiverType, p0);
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid type for a receiver in a conditional access expression."
         /// </summary>
-        internal static string InvalidConditionalReceiverExpressionType(object p0)
-        {
-            return SR.Format(SR.InvalidConditionalReceiverExpressionType, p0);
-        }
+        internal static string InvalidConditionalReceiverExpressionType(object p0) => SR.Format(SR.InvalidConditionalReceiverExpressionType, p0);
 
         /// <summary>
         /// A string like "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver."
         /// </summary>
-        internal static string ConditionalReceiverTypeMismatch(object p0, object p1)
-        {
-            return SR.Format(SR.ConditionalReceiverTypeMismatch, p0, p1);
-        }
+        internal static string ConditionalReceiverTypeMismatch(object p0, object p1) => SR.Format(SR.ConditionalReceiverTypeMismatch, p0, p1);
 
         /// <summary>
         /// A string like "Compound assignment operation '{0}' is not supported for type '{1}'."
         /// </summary>
-        internal static string InvalidCompoundAssignment(object p0, object p1)
-        {
-            return SR.Format(SR.InvalidCompoundAssignment, p0, p1);
-        }
+        internal static string InvalidCompoundAssignment(object p0, object p1) => SR.Format(SR.InvalidCompoundAssignment, p0, p1);
 
         /// <summary>
         /// A string like "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'."
         /// </summary>
-        internal static string InvalidCompoundAssignmentWithOperands(object p0, object p1, object p2)
-        {
-            return SR.Format(SR.InvalidCompoundAssignmentWithOperands, p0, p1, p2);
-        }
+        internal static string InvalidCompoundAssignmentWithOperands(object p0, object p1, object p2) => SR.Format(SR.InvalidCompoundAssignmentWithOperands, p0, p1, p2);
 
         /// <summary>
         /// A string like "Unary assignment operation '{0}' is not supported for an operand of type '{1}'."
         /// </summary>
-        internal static string InvalidUnaryAssignmentWithOperands(object p0, object p1)
-        {
-            return SR.Format(SR.InvalidUnaryAssignmentWithOperands, p0, p1);
-        }
+        internal static string InvalidUnaryAssignmentWithOperands(object p0, object p1) => SR.Format(SR.InvalidUnaryAssignmentWithOperands, p0, p1);
 
         /// <summary>
         /// A string like "Type must not be ByRef"
         /// </summary>
-        internal static string TypeMustNotBeByRef
-        {
-            get
-            {
-                return SR.TypeMustNotBeByRef;
-            }
-        }
+        internal static string TypeMustNotBeByRef => SR.TypeMustNotBeByRef;
 
         /// <summary>
         /// A string like "Type must not be a pointer type"
         /// </summary>
-        internal static string TypeMustNotBePointer
-        {
-            get
-            {
-                return SR.TypeMustNotBePointer;
-            }
-        }
+        internal static string TypeMustNotBePointer => SR.TypeMustNotBePointer;
 
         /// <summary>
         /// A string like "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations."
         /// </summary>
-        internal static string InvalidNullCoalescingAssignmentArguments
-        {
-            get
-            {
-                return SR.InvalidNullCoalescingAssignmentArguments;
-            }
-        }
+        internal static string InvalidNullCoalescingAssignmentArguments => SR.InvalidNullCoalescingAssignmentArguments;
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable."
         /// </summary>
-        internal static string InvalidInterpolatedStringType(object p0)
-        {
-            return SR.Format(SR.InvalidInterpolatedStringType, p0);
-        }
+        internal static string InvalidInterpolatedStringType(object p0) => SR.Format(SR.InvalidInterpolatedStringType, p0);
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid type for an index operand. Supported types are int or int?."
         /// </summary>
-        internal static string InvalidFromEndIndexOperandType(object p0)
-        {
-            return SR.Format(SR.InvalidFromEndIndexOperandType, p0);
-        }
+        internal static string InvalidFromEndIndexOperandType(object p0) => SR.Format(SR.InvalidFromEndIndexOperandType, p0);
 
         /// <summary>
         /// A string like "The specified method is not valid to construct an object of type Index."
         /// </summary>
-        internal static string InvalidFromEndIndexMethod
-        {
-            get
-            {
-                return SR.InvalidFromEndIndexMethod;
-            }
-        }
+        internal static string InvalidFromEndIndexMethod => SR.InvalidFromEndIndexMethod;
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid index type. Supported types are Index or Index?."
         /// </summary>
-        internal static string InvalidIndexType(object p0)
-        {
-            return SR.Format(SR.InvalidIndexType, p0);
-        }
+        internal static string InvalidIndexType(object p0) => SR.Format(SR.InvalidIndexType, p0);
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?."
         /// </summary>
-        internal static string InvalidRangeOperandType(object p0)
-        {
-            return SR.Format(SR.InvalidRangeOperandType, p0);
-        }
+        internal static string InvalidRangeOperandType(object p0) => SR.Format(SR.InvalidRangeOperandType, p0);
 
         /// <summary>
         /// A string like "The specified method is not valid to construct an object of type Range."
         /// </summary>
-        internal static string InvalidRangeMethod
-        {
-            get
-            {
-                return SR.InvalidRangeMethod;
-            }
-        }
+        internal static string InvalidRangeMethod => SR.InvalidRangeMethod;
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid range type. Supported types are Range or Range?."
         /// </summary>
-        internal static string InvalidRangeType(object p0)
-        {
-            return SR.Format(SR.InvalidRangeType, p0);
-        }
+        internal static string InvalidRangeType(object p0) => SR.Format(SR.InvalidRangeType, p0);
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range."
         /// </summary>
-        internal static string InvalidIndexerAccessArgumentType(object p0)
-        {
-            return SR.Format(SR.InvalidIndexerAccessArgumentType, p0);
-        }
+        internal static string InvalidIndexerAccessArgumentType(object p0) => SR.Format(SR.InvalidIndexerAccessArgumentType, p0);
 
         /// <summary>
         /// A string like "Property '{0}' should be of type int."
         /// </summary>
-        internal static string InvalidLengthOrCountPropertyType(object p0)
-        {
-            return SR.Format(SR.InvalidLengthOrCountPropertyType, p0);
-        }
+        internal static string InvalidLengthOrCountPropertyType(object p0) => SR.Format(SR.InvalidLengthOrCountPropertyType, p0);
 
         /// <summary>
         /// A string like "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo."
         /// </summary>
-        internal static string InvalidIndexMember(object p0)
-        {
-            return SR.Format(SR.InvalidIndexMember, p0);
-        }
+        internal static string InvalidIndexMember(object p0) => SR.Format(SR.InvalidIndexMember, p0);
 
         /// <summary>
         /// A string like "Member '{0}' is not a valid member for a slice method."
         /// </summary>
-        internal static string InvalidSliceMember(object p0)
-        {
-            return SR.Format(SR.InvalidSliceMember, p0);
-        }
+        internal static string InvalidSliceMember(object p0) => SR.Format(SR.InvalidSliceMember, p0);
 
         /// <summary>
         /// A string like "Indexer '{0}' does not have an 'int' parameter type."
         /// </summary>
-        internal static string InvalidIndexerParameterType(object p0)
-        {
-            return SR.Format(SR.InvalidIndexerParameterType, p0);
-        }
+        internal static string InvalidIndexerParameterType(object p0) => SR.Format(SR.InvalidIndexerParameterType, p0);
 
         /// <summary>
         /// A string like "Slice method '{0}' should be an instance method."
         /// </summary>
-        internal static string SliceMethodMustNotBeStatic(object p0)
-        {
-            return SR.Format(SR.SliceMethodMustNotBeStatic, p0);
-        }
+        internal static string SliceMethodMustNotBeStatic(object p0) => SR.Format(SR.SliceMethodMustNotBeStatic, p0);
 
         /// <summary>
         /// A string like "Slice method '{0}' should be have exactly two parameters of type 'int'."
         /// </summary>
-        internal static string InvalidSliceParameters(object p0)
-        {
-            return SR.Format(SR.InvalidSliceParameters, p0);
-        }
+        internal static string InvalidSliceParameters(object p0) => SR.Format(SR.InvalidSliceParameters, p0);
 
         /// <summary>
         /// A string like "Type '{0}' is not a valid tuple type."
         /// </summary>
-        internal static string InvalidTupleType(object p0)
-        {
-            return SR.Format(SR.InvalidTupleType, p0);
-        }
+        internal static string InvalidTupleType(object p0) => SR.Format(SR.InvalidTupleType, p0);
 
         /// <summary>
         /// A string like "The number of arguments does not match the number of components of tuple type '{0}'."
         /// </summary>
-        internal static string InvalidTupleArgumentCount(object p0)
-        {
-            return SR.Format(SR.InvalidTupleArgumentCount, p0);
-        }
+        internal static string InvalidTupleArgumentCount(object p0) => SR.Format(SR.InvalidTupleArgumentCount, p0);
 
         /// <summary>
         /// A string like "The number of argument names does not match the number of components of tuple type '{0}'."
         /// </summary>
-        internal static string InvalidTupleArgumentNamesCount(object p0)
-        {
-            return SR.Format(SR.InvalidTupleArgumentNamesCount, p0);
-        }
+        internal static string InvalidTupleArgumentNamesCount(object p0) => SR.Format(SR.InvalidTupleArgumentNamesCount, p0);
 
         /// <summary>
         /// A string like "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'."
         /// </summary>
-        internal static string TupleComponentCountMismatch(object p0, object p1)
-        {
-            return SR.Format(SR.TupleComponentCountMismatch, p0, p1);
-        }
+        internal static string TupleComponentCountMismatch(object p0, object p1) => SR.Format(SR.TupleComponentCountMismatch, p0, p1);
 
         /// <summary>
         /// A string like "The number of element conversion expressions does not match tuple arity '{0}'."
         /// </summary>
-        internal static string InvalidElementConversionCount(object p0)
-        {
-            return SR.Format(SR.InvalidElementConversionCount, p0);
-        }
+        internal static string InvalidElementConversionCount(object p0) => SR.Format(SR.InvalidElementConversionCount, p0);
 
         /// <summary>
         /// A string like "The number of equality check expressions does not match tuple arity '{0}'."
         /// </summary>
-        internal static string InvalidEqualityCheckCount(object p0)
-        {
-            return SR.Format(SR.InvalidEqualityCheckCount, p0);
-        }
+        internal static string InvalidEqualityCheckCount(object p0) => SR.Format(SR.InvalidEqualityCheckCount, p0);
 
         /// <summary>
         /// A string like "'{0}' is not a member of any type."
         /// </summary>
-        internal static string NotAMemberOfAnyType(object p0)
-        {
-            return SR.Format(SR.NotAMemberOfAnyType, p0);
-        }
+        internal static string NotAMemberOfAnyType(object p0) => SR.Format(SR.NotAMemberOfAnyType, p0);
 
         /// <summary>
         /// A string like "A 'with' expression for value type '{0}' cannot specify a 'Clone' method."
         /// </summary>
-        internal static string WithExpressionCannotHaveCloneForValueType(object p0)
-        {
-            return SR.Format(SR.WithExpressionCannotHaveCloneForValueType, p0);
-        }
+        internal static string WithExpressionCannotHaveCloneForValueType(object p0) => SR.Format(SR.WithExpressionCannotHaveCloneForValueType, p0);
 
         /// <summary>
         /// A string like "A 'with' expression for type '{0}' should specify a 'Clone' method."
         /// </summary>
-        internal static string WithExpressionShouldHaveClone(object p0)
-        {
-            return SR.Format(SR.WithExpressionShouldHaveClone, p0);
-        }
+        internal static string WithExpressionShouldHaveClone(object p0) => SR.Format(SR.WithExpressionShouldHaveClone, p0);
 
         /// <summary>
         /// A string like "Clone method '{0}' should have no parameters."
         /// </summary>
-        internal static string CloneMethodShouldHaveNoParameters(object p0)
-        {
-            return SR.Format(SR.CloneMethodShouldHaveNoParameters, p0);
-        }
+        internal static string CloneMethodShouldHaveNoParameters(object p0) => SR.Format(SR.CloneMethodShouldHaveNoParameters, p0);
 
         /// <summary>
         /// A string like "Clone method '{0}' should be an instance method."
         /// </summary>
-        internal static string CloneMethodMustNotBeStatic(object p0)
-        {
-            return SR.Format(SR.CloneMethodMustNotBeStatic, p0);
-        }
+        internal static string CloneMethodMustNotBeStatic(object p0) => SR.Format(SR.CloneMethodMustNotBeStatic, p0);
 
         /// <summary>
         /// A string like "Clone method '{0}' should return a type that can be converted to '{1}'."
         /// </summary>
-        internal static string CloneMethodShouldReturnCompatibleType(object p0, object p1)
-        {
-            return SR.Format(SR.CloneMethodShouldReturnCompatibleType, p0, p1);
-        }
+        internal static string CloneMethodShouldReturnCompatibleType(object p0, object p1) => SR.Format(SR.CloneMethodShouldReturnCompatibleType, p0, p1);
 
         /// <summary>
         /// A string like "Member '{0}' used in a 'MemberInitializer' cannot be static."
         /// </summary>
-        internal static string MemberInitializerMemberMustNotBeStatic(object p0)
-        {
-            return SR.Format(SR.MemberInitializerMemberMustNotBeStatic, p0);
-        }
+        internal static string MemberInitializerMemberMustNotBeStatic(object p0) => SR.Format(SR.MemberInitializerMemberMustNotBeStatic, p0);
 
         /// <summary>
         /// A string like "Member '{0}' used in a 'MemberInitializer' must be writeable."
         /// </summary>
-        internal static string MemberInitializerMemberMustBeWriteable(object p0)
-        {
-            return SR.Format(SR.MemberInitializerMemberMustBeWriteable, p0);
-        }
+        internal static string MemberInitializerMemberMustBeWriteable(object p0) => SR.Format(SR.MemberInitializerMemberMustBeWriteable, p0);
 
         /// <summary>
         /// A string like "No suitable constructor found for type '{0}' using the specified members."
         /// </summary>
-        internal static string NoAnonymousTypeConstructorFound(object p0)
-        {
-            return SR.Format(SR.NoAnonymousTypeConstructorFound, p0);
-        }
+        internal static string NoAnonymousTypeConstructorFound(object p0) => SR.Format(SR.NoAnonymousTypeConstructorFound, p0);
 
         /// <summary>
         /// A string like "A pattern can never produce a value of a nullable type."
         /// </summary>
-        internal static string CannotHaveNullablePatternType
-        {
-            get
-            {
-                return SR.CannotHaveNullablePatternType;
-            }
-        }
+        internal static string CannotHaveNullablePatternType => SR.CannotHaveNullablePatternType;
 
         /// <summary>
         /// A string like "The input and narrowed type for a pattern of type '{0}' should be equal."
         /// </summary>
-        internal static string PatternInputAndNarrowedTypeShouldMatch(object p0)
-        {
-            return SR.Format(SR.PatternInputAndNarrowedTypeShouldMatch, p0);
-        }
+        internal static string PatternInputAndNarrowedTypeShouldMatch(object p0) => SR.Format(SR.PatternInputAndNarrowedTypeShouldMatch, p0);
 
         /// <summary>
         /// A string like "The variable type '{0}' should be equal to the pattern result type '{1}'."
         /// </summary>
-        internal static string CannotAssignPatternResultToVariable(object p0, object p1)
-        {
-            return SR.Format(SR.CannotAssignPatternResultToVariable, p0, p1);
-        }
+        internal static string CannotAssignPatternResultToVariable(object p0, object p1) => SR.Format(SR.CannotAssignPatternResultToVariable, p0, p1);
 
         /// <summary>
         /// A string like "The pattern type '{0}' is not compatible with a subpattern type '{1}'."
         /// </summary>
-        internal static string PatternTypeMismatch(object p0, object p1)
-        {
-            return SR.Format(SR.PatternTypeMismatch, p0, p1);
-        }
+        internal static string PatternTypeMismatch(object p0, object p1) => SR.Format(SR.PatternTypeMismatch, p0, p1);
 
         /// <summary>
         /// A string like "The pattern type '{0}' is not a valid binary pattern type."
         /// </summary>
-        internal static string InvalidBinaryPatternType(object p0)
-        {
-            return SR.Format(SR.InvalidBinaryPatternType, p0);
-        }
+        internal static string InvalidBinaryPatternType(object p0) => SR.Format(SR.InvalidBinaryPatternType, p0);
 
         /// <summary>
         /// A string like "The pattern type '{0}' is not a valid relational pattern type."
         /// </summary>
-        internal static string InvalidRelationalPatternType(object p0)
-        {
-            return SR.Format(SR.InvalidRelationalPatternType, p0);
-        }
+        internal static string InvalidRelationalPatternType(object p0) => SR.Format(SR.InvalidRelationalPatternType, p0);
 
         /// <summary>
         /// A string like "The type '{0}' cannot be used for a constant in a pattern."
         /// </summary>
-        internal static string InvalidPatternConstantType(object p0)
-        {
-            return SR.Format(SR.InvalidPatternConstantType, p0);
-        }
+        internal static string InvalidPatternConstantType(object p0) => SR.Format(SR.InvalidPatternConstantType, p0);
 
         /// <summary>
         /// A string like "The type '{0}' cannot be used for a constant in a relational pattern."
         /// </summary>
-        internal static string InvalidRelationalPatternConstantType(object p0)
-        {
-            return SR.Format(SR.InvalidRelationalPatternConstantType, p0);
-        }
+        internal static string InvalidRelationalPatternConstantType(object p0) => SR.Format(SR.InvalidRelationalPatternConstantType, p0);
 
         /// <summary>
         /// A string like "The value NaN cannot be used for a constant in a relational pattern."
         /// </summary>
-        internal static string CannotUsePatternConstantNaN
-        {
-            get
-            {
-                return SR.CannotUsePatternConstantNaN;
-            }
-        }
+        internal static string CannotUsePatternConstantNaN => SR.CannotUsePatternConstantNaN;
 
         /// <summary>
         /// A string like "A null pattern should use a constant of type object."
         /// </summary>
-        internal static string NullValueShouldUseObjectType
-        {
-            get
-            {
-                return SR.NullValueShouldUseObjectType;
-            }
-        }
+        internal static string NullValueShouldUseObjectType => SR.NullValueShouldUseObjectType;
 
         /// <summary>
         /// A string like "A null value cannot be used in a relational pattern."
         /// </summary>
-        internal static string CannotUseNullValueInRelationalPattern
-        {
-            get
-            {
-                return SR.CannotUseNullValueInRelationalPattern;
-            }
-        }
+        internal static string CannotUseNullValueInRelationalPattern => SR.CannotUseNullValueInRelationalPattern;
 
         /// <summary>
         /// A string like "The 'GetLengthMethod' of an 'ITuple' pattern should return an integer value."
         /// </summary>
-        internal static string ITupleGetLengthShouldReturnInt32
-        {
-            get
-            {
-                return SR.ITupleGetLengthShouldReturnInt32;
-            }
-        }
+        internal static string ITupleGetLengthShouldReturnInt32 => SR.ITupleGetLengthShouldReturnInt32;
 
         /// <summary>
         /// A string like "The 'GetItemMethod' of an 'ITuple' pattern should return an object of type Object."
         /// </summary>
-        internal static string ITupleGetItemShouldReturnObject
-        {
-            get
-            {
-                return SR.ITupleGetItemShouldReturnObject;
-            }
-        }
+        internal static string ITupleGetItemShouldReturnObject => SR.ITupleGetItemShouldReturnObject;
 
         /// <summary>
         /// A string like "The 'ITuple' positional subpattern with index '{0}' cannot have a field specified."
         /// </summary>
-        internal static string ITuplePositionalPatternCannotHaveField(object p0)
-        {
-            return SR.Format(SR.ITuplePositionalPatternCannotHaveField, p0);
-        }
+        internal static string ITuplePositionalPatternCannotHaveField(object p0) => SR.Format(SR.ITuplePositionalPatternCannotHaveField, p0);
 
         /// <summary>
         /// A string like "The 'ITuple' positional subpattern with index '{0}' cannot have a parameter specified."
         /// </summary>
-        internal static string ITuplePositionalPatternCannotHaveParameter(object p0)
-        {
-            return SR.Format(SR.ITuplePositionalPatternCannotHaveParameter, p0);
-        }
+        internal static string ITuplePositionalPatternCannotHaveParameter(object p0) => SR.Format(SR.ITuplePositionalPatternCannotHaveParameter, p0);
 
         /// <summary>
         /// A string like "The 'ITuple' positional subpattern with index '{0}' has type '{1}'. Only type Object is supported."
         /// </summary>
-        internal static string ITuplePositionalPatternInvalidInputType(object p0, object p1)
-        {
-            return SR.Format(SR.ITuplePositionalPatternInvalidInputType, p0, p1);
-        }
+        internal static string ITuplePositionalPatternInvalidInputType(object p0, object p1) => SR.Format(SR.ITuplePositionalPatternInvalidInputType, p0, p1);
 
         /// <summary>
         /// A string like "A positional pattern should either be applied to a tuple type or provide a Deconstruct method."
         /// </summary>
-        internal static string InvalidPositionalPattern
-        {
-            get
-            {
-                return SR.InvalidPositionalPattern;
-            }
-        }
+        internal static string InvalidPositionalPattern => SR.InvalidPositionalPattern;
 
         /// <summary>
         /// A string like "The number of positional subpatterns does not match the number of components in input type '{0}'."
         /// </summary>
-        internal static string InvalidPositionalPatternCount(object p0)
-        {
-            return SR.Format(SR.InvalidPositionalPatternCount, p0);
-        }
+        internal static string InvalidPositionalPatternCount(object p0) => SR.Format(SR.InvalidPositionalPatternCount, p0);
 
         /// <summary>
         /// A string like "Deconstruct method '{0}' should return void."
         /// </summary>
-        internal static string DeconstructShouldReturnVoid(object p0)
-        {
-            return SR.Format(SR.DeconstructShouldReturnVoid, p0);
-        }
+        internal static string DeconstructShouldReturnVoid(object p0) => SR.Format(SR.DeconstructShouldReturnVoid, p0);
 
         /// <summary>
         /// A string like "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter."
         /// </summary>
-        internal static string DeconstructParameterShouldBeOut(object p0, object p1)
-        {
-            return SR.Format(SR.DeconstructParameterShouldBeOut, p0, p1);
-        }
+        internal static string DeconstructParameterShouldBeOut(object p0, object p1) => SR.Format(SR.DeconstructParameterShouldBeOut, p0, p1);
 
         /// <summary>
         /// A string like "Deconstruct method '{0}' should have at least one parameter."
         /// </summary>
-        internal static string DeconstructExtensionMethodMissingThis(object p0)
-        {
-            return SR.Format(SR.DeconstructExtensionMethodMissingThis, p0);
-        }
+        internal static string DeconstructExtensionMethodMissingThis(object p0) => SR.Format(SR.DeconstructExtensionMethodMissingThis, p0);
 
         /// <summary>
         /// A string like "A tuple field index must be positive."
         /// </summary>
-        internal static string TupleFieldIndexMustBePositive
-        {
-            get
-            {
-                return SR.TupleFieldIndexMustBePositive;
-            }
-        }
+        internal static string TupleFieldIndexMustBePositive => SR.TupleFieldIndexMustBePositive;
 
         /// <summary>
         /// A string like "The '{0}' parameter must be declared on a method used for deconstruction."
         /// </summary>
-        internal static string PositionalPatternParameterMustBeOnMethod(object p0)
-        {
-            return SR.Format(SR.PositionalPatternParameterMustBeOnMethod, p0);
-        }
+        internal static string PositionalPatternParameterMustBeOnMethod(object p0) => SR.Format(SR.PositionalPatternParameterMustBeOnMethod, p0);
 
         /// <summary>
         /// A string like "The '{0}' parameter must be an out parameter used for deconstruction."
         /// </summary>
-        internal static string PositionalPatternParameterMustBeOut(object p0)
-        {
-            return SR.Format(SR.PositionalPatternParameterMustBeOut, p0);
-        }
+        internal static string PositionalPatternParameterMustBeOut(object p0) => SR.Format(SR.PositionalPatternParameterMustBeOut, p0);
 
         /// <summary>
         /// A string like "The property pattern member '{0}' should not be static."
         /// </summary>
-        internal static string PropertyPatternMemberShouldNotBeStatic(object p0)
-        {
-            return SR.Format(SR.PropertyPatternMemberShouldNotBeStatic, p0);
-        }
+        internal static string PropertyPatternMemberShouldNotBeStatic(object p0) => SR.Format(SR.PropertyPatternMemberShouldNotBeStatic, p0);
 
         /// <summary>
         /// A string like "The property pattern member '{0}' should be readable."
         /// </summary>
-        internal static string PropertyPatternMemberShouldBeReadable(object p0)
-        {
-            return SR.Format(SR.PropertyPatternMemberShouldBeReadable, p0);
-        }
+        internal static string PropertyPatternMemberShouldBeReadable(object p0) => SR.Format(SR.PropertyPatternMemberShouldBeReadable, p0);
 
         /// <summary>
         /// A string like "The property pattern member '{0}' should not be an indexer property."
         /// </summary>
-        internal static string PropertyPatternMemberShouldNotBeIndexer(object p0)
-        {
-            return SR.Format(SR.PropertyPatternMemberShouldNotBeIndexer, p0);
-        }
+        internal static string PropertyPatternMemberShouldNotBeIndexer(object p0) => SR.Format(SR.PropertyPatternMemberShouldNotBeIndexer, p0);
 
         /// <summary>
         /// A string like "The property pattern member '{0}' is not compatible with a receiver of type '{1}'."
         /// </summary>
-        internal static string PropertyPatternMemberIsNotCompatibleWithReceiver(object p0, object p1)
-        {
-            return SR.Format(SR.PropertyPatternMemberIsNotCompatibleWithReceiver, p0, p1);
-        }
+        internal static string PropertyPatternMemberIsNotCompatibleWithReceiver(object p0, object p1) => SR.Format(SR.PropertyPatternMemberIsNotCompatibleWithReceiver, p0, p1);
 
         /// <summary>
         /// A string like "A positional pattern using a Deconstruct method cannot specify a tuple field."
         /// </summary>
-        internal static string PositionalPatternWithDeconstructMethodCannotSpecifyField
-        {
-            get
-            {
-                return SR.PositionalPatternWithDeconstructMethodCannotSpecifyField;
-            }
-        }
+        internal static string PositionalPatternWithDeconstructMethodCannotSpecifyField => SR.PositionalPatternWithDeconstructMethodCannotSpecifyField;
 
         /// <summary>
         /// A string like "The '{0}' parameter is not declared on the '{1}' method."
         /// </summary>
-        internal static string PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object p0, object p1)
-        {
-            return SR.Format(SR.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod, p0, p1);
-        }
+        internal static string PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object p0, object p1) => SR.Format(SR.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod, p0, p1);
 
         /// <summary>
         /// A string like "The '{0}' parameter is used more than once."
         /// </summary>
-        internal static string PositionalPatternParameterShouldOnlyBeUsedOnce(object p0)
-        {
-            return SR.Format(SR.PositionalPatternParameterShouldOnlyBeUsedOnce, p0);
-        }
+        internal static string PositionalPatternParameterShouldOnlyBeUsedOnce(object p0) => SR.Format(SR.PositionalPatternParameterShouldOnlyBeUsedOnce, p0);
 
         /// <summary>
         /// A string like "Either all or none of the Deconstruct method parameters should be specified."
         /// </summary>
-        internal static string PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters
-        {
-            get
-            {
-                return SR.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters;
-            }
-        }
+        internal static string PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters => SR.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters;
 
         /// <summary>
         /// A string like "A positional pattern for a tuple type cannot specify a Deconstruct method parameter."
         /// </summary>
-        internal static string PositionalPatternWithTupleCannotSpecifyParameter
-        {
-            get
-            {
-                return SR.PositionalPatternWithTupleCannotSpecifyParameter;
-            }
-        }
+        internal static string PositionalPatternWithTupleCannotSpecifyParameter => SR.PositionalPatternWithTupleCannotSpecifyParameter;
 
         /// <summary>
         /// A string like "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'."
         /// </summary>
-        internal static string PositionalPatternTupleIndexOutOfRange(object p0, object p1)
-        {
-            return SR.Format(SR.PositionalPatternTupleIndexOutOfRange, p0, p1);
-        }
+        internal static string PositionalPatternTupleIndexOutOfRange(object p0, object p1) => SR.Format(SR.PositionalPatternTupleIndexOutOfRange, p0, p1);
 
         /// <summary>
         /// A string like "The tuple field index '{0}' is used more than once."
         /// </summary>
-        internal static string PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object p0)
-        {
-            return SR.Format(SR.PositionalPatternTupleIndexShouldOnlyBeUsedOnce, p0);
-        }
+        internal static string PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object p0) => SR.Format(SR.PositionalPatternTupleIndexShouldOnlyBeUsedOnce, p0);
 
         /// <summary>
         /// A string like "Either all or none of the tuple fields should be specified."
         /// </summary>
-        internal static string PositionalPatternWithTupleShouldSpecifyAllIndices
-        {
-            get
-            {
-                return SR.PositionalPatternWithTupleShouldSpecifyAllIndices;
-            }
-        }
+        internal static string PositionalPatternWithTupleShouldSpecifyAllIndices => SR.PositionalPatternWithTupleShouldSpecifyAllIndices;
 
         /// <summary>
         /// A string like "The type of a switch expression should not be void."
         /// </summary>
-        internal static string SwitchExpressionTypeShouldNotBeVoid
-        {
-            get
-            {
-                return SR.SwitchExpressionTypeShouldNotBeVoid;
-            }
-        }
+        internal static string SwitchExpressionTypeShouldNotBeVoid => SR.SwitchExpressionTypeShouldNotBeVoid;
 
         /// <summary>
         /// A string like "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'."
         /// </summary>
-        internal static string SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object p0, object p1, object p2)
-        {
-            return SR.Format(SR.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput, p0, p1, p2);
-        }
+        internal static string SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object p0, object p1, object p2) => SR.Format(SR.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput, p0, p1, p2);
 
         /// <summary>
         /// A string like "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'."
         /// </summary>
-        internal static string SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object p0, object p1, object p2)
-        {
-            return SR.Format(SR.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult, p0, p1, p2);
-        }
+        internal static string SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object p0, object p1, object p2) => SR.Format(SR.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult, p0, p1, p2);
 
         /// <summary>
         /// A string like "The type of a when clause should be Boolean."
         /// </summary>
-        internal static string WhenClauseShouldBeBoolean
-        {
-            get
-            {
-                return SR.WhenClauseShouldBeBoolean;
-            }
-        }
+        internal static string WhenClauseShouldBeBoolean => SR.WhenClauseShouldBeBoolean;
 
         /// <summary>
         /// A string like "The value of a switch expression arm should not be void."
         /// </summary>
-        internal static string SwitchExpressionArmValueShouldNotBeVoid
-        {
-            get
-            {
-                return SR.SwitchExpressionArmValueShouldNotBeVoid;
-            }
-        }
+        internal static string SwitchExpressionArmValueShouldNotBeVoid => SR.SwitchExpressionArmValueShouldNotBeVoid;
 
         /// <summary>
         /// A string like "A conversion cannot return void."
         /// </summary>
-        internal static string ConversionCannotReturnVoid
-        {
-            get
-            {
-                return SR.ConversionCannotReturnVoid;
-            }
-        }
+        internal static string ConversionCannotReturnVoid => SR.ConversionCannotReturnVoid;
 
         /// <summary>
         /// A string like "A conversion lambda expression should have a single parameter."
         /// </summary>
-        internal static string ConversionShouldHaveOneParameter
-        {
-            get
-            {
-                return SR.ConversionShouldHaveOneParameter;
-            }
-        }
+        internal static string ConversionShouldHaveOneParameter => SR.ConversionShouldHaveOneParameter;
 
         /// <summary>
         /// A string like "A deconstruction lambda expression should return void."
         /// </summary>
-        internal static string DeconstructionShouldReturnVoid
-        {
-            get
-            {
-                return SR.DeconstructionShouldReturnVoid;
-            }
-        }
+        internal static string DeconstructionShouldReturnVoid => SR.DeconstructionShouldReturnVoid;
 
         /// <summary>
         /// A string like "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction."
         /// </summary>
-        internal static string DeconstructionShouldHaveThreeOrMoreParameters
-        {
-            get
-            {
-                return SR.DeconstructionShouldHaveThreeOrMoreParameters;
-            }
-        }
+        internal static string DeconstructionShouldHaveThreeOrMoreParameters => SR.DeconstructionShouldHaveThreeOrMoreParameters;
 
         /// <summary>
         /// A string like "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference."
         /// </summary>
-        internal static string DeconstructionParameterShouldBeByRef(object p0)
-        {
-            return SR.Format(SR.DeconstructionParameterShouldBeByRef, p0);
-        }
+        internal static string DeconstructionParameterShouldBeByRef(object p0) => SR.Format(SR.DeconstructionParameterShouldBeByRef, p0);
 
         /// <summary>
         /// A string like "The number of deconstruction output parameter should match the number of elements conversions."
         /// </summary>
-        internal static string DeconstructionParameterCountShouldMatchConversionCount
-        {
-            get
-            {
-                return SR.DeconstructionParameterCountShouldMatchConversionCount;
-            }
-        }
+        internal static string DeconstructionParameterCountShouldMatchConversionCount => SR.DeconstructionParameterCountShouldMatchConversionCount;
 
         /// <summary>
         /// A string like "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'."
         /// </summary>
-        internal static string DeconstructionParameterNotAssignableToConversion(object p0, object p1, object p2)
-        {
-            return SR.Format(SR.DeconstructionParameterNotAssignableToConversion, p0, p1, p2);
-        }
+        internal static string DeconstructionParameterNotAssignableToConversion(object p0, object p1, object p2) => SR.Format(SR.DeconstructionParameterNotAssignableToConversion, p0, p1, p2);
 
         /// <summary>
         /// A string like "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'."
         /// </summary>
-        internal static string DeconstructingAssignmentStructureMismatch(object p0, object p1)
-        {
-            return SR.Format(SR.DeconstructingAssignmentStructureMismatch, p0, p1);
-        }
+        internal static string DeconstructingAssignmentStructureMismatch(object p0, object p1) => SR.Format(SR.DeconstructingAssignmentStructureMismatch, p0, p1);
 
         /// <summary>
         /// A string like "The computed result tuple type '{0}' does not match the specified expression type '{1}'."
         /// </summary>
-        internal static string DeconstructingAssignmentTypeMismatch(object p0, object p1)
-        {
-            return SR.Format(SR.DeconstructingAssignmentTypeMismatch, p0, p1);
-        }
+        internal static string DeconstructingAssignmentTypeMismatch(object p0, object p1) => SR.Format(SR.DeconstructingAssignmentTypeMismatch, p0, p1);
 
         /// <summary>
         /// A string like "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'."
         /// </summary>
-        internal static string DeconstructingComponentAndConversionIncompatible(object p0, object p1, object p2, object p3)
-        {
-            return SR.Format(SR.DeconstructingComponentAndConversionIncompatible, p0, p1, p2, p3);
-        }
+        internal static string DeconstructingComponentAndConversionIncompatible(object p0, object p1, object p2, object p3) => SR.Format(SR.DeconstructingComponentAndConversionIncompatible, p0, p1, p2, p3);
 
         /// <summary>
         /// A string like "A using statement should either have a single expression or a declaration list."
         /// </summary>
-        internal static string InvalidUsingStatement
-        {
-            get
-            {
-                return SR.InvalidUsingStatement;
-            }
-        }
+        internal static string InvalidUsingStatement => SR.InvalidUsingStatement;
 
         /// <summary>
         /// A string like "All variables declared in a using statement should have the same type."
         /// </summary>
-        internal static string UsingVariableDeclarationsShouldBeConsistentlyTyped
-        {
-            get
-            {
-                return SR.UsingVariableDeclarationsShouldBeConsistentlyTyped;
-            }
-        }
+        internal static string UsingVariableDeclarationsShouldBeConsistentlyTyped => SR.UsingVariableDeclarationsShouldBeConsistentlyTyped;
 
         /// <summary>
         /// A string like "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement."
         /// </summary>
-        internal static string UsingVariableNotInScope(object p0)
-        {
-            return SR.Format(SR.UsingVariableNotInScope, p0);
-        }
+        internal static string UsingVariableNotInScope(object p0) => SR.Format(SR.UsingVariableNotInScope, p0);
 
         /// <summary>
         /// A string like "The Dispose method of a using statement should return void."
         /// </summary>
-        internal static string UsingDisposeShouldReturnVoid
-        {
-            get
-            {
-                return SR.UsingDisposeShouldReturnVoid;
-            }
-        }
+        internal static string UsingDisposeShouldReturnVoid => SR.UsingDisposeShouldReturnVoid;
 
         /// <summary>
         /// A string like "A pattern dispose lambda for a using statement should have one parameter."
         /// </summary>
-        internal static string UsingPatternDisposeShouldHaveOneParameter
-        {
-            get
-            {
-                return SR.UsingPatternDisposeShouldHaveOneParameter;
-            }
-        }
+        internal static string UsingPatternDisposeShouldHaveOneParameter => SR.UsingPatternDisposeShouldHaveOneParameter;
 
         /// <summary>
         /// A string like "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement."
         /// </summary>
-        internal static string UsingPatternDisposeInputNotCompatibleWithResource(object p0, object p1)
-        {
-            return SR.Format(SR.UsingPatternDisposeInputNotCompatibleWithResource, p0, p1);
-        }
+        internal static string UsingPatternDisposeInputNotCompatibleWithResource(object p0, object p1) => SR.Format(SR.UsingPatternDisposeInputNotCompatibleWithResource, p0, p1);
 
         /// <summary>
         /// A string like "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block."
         /// </summary>
-        internal static string CatchVariableNotInScope(object p0)
-        {
-            return SR.Format(SR.CatchVariableNotInScope, p0);
-        }
+        internal static string CatchVariableNotInScope(object p0) => SR.Format(SR.CatchVariableNotInScope, p0);
 
         /// <summary>
         /// A string like "The catch block exception type '{0}' is not equivalent to the variable type '{1}'."
         /// </summary>
-        internal static string CatchTypeNotEquivalentWithVariableType(object p0, object p1)
-        {
-            return SR.Format(SR.CatchTypeNotEquivalentWithVariableType, p0, p1);
-        }
+        internal static string CatchTypeNotEquivalentWithVariableType(object p0, object p1) => SR.Format(SR.CatchTypeNotEquivalentWithVariableType, p0, p1);
 
         /// <summary>
         /// A string like "The label '{0}' is used in multiple switch sections."
         /// </summary>
-        internal static string DuplicateLabelInSwitchStatement(object p0)
-        {
-            return SR.Format(SR.DuplicateLabelInSwitchStatement, p0);
-        }
+        internal static string DuplicateLabelInSwitchStatement(object p0) => SR.Format(SR.DuplicateLabelInSwitchStatement, p0);
 
         /// <summary>
         /// A string like "The label '{0}' is used more than once in the switch section."
         /// </summary>
-        internal static string DuplicateLabelInSwitchSection(object p0)
-        {
-            return SR.Format(SR.DuplicateLabelInSwitchSection, p0);
-        }
+        internal static string DuplicateLabelInSwitchSection(object p0) => SR.Format(SR.DuplicateLabelInSwitchSection, p0);
 
         /// <summary>
         /// A string like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
         /// </summary>
-        internal static string SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1)
-        {
-            return SR.Format(SR.SwitchValueTypeDoesNotMatchPatternInputType, p0, p1);
-        }
+        internal static string SwitchValueTypeDoesNotMatchPatternInputType(object p0, object p1) => SR.Format(SR.SwitchValueTypeDoesNotMatchPatternInputType, p0, p1);
 
         /// <summary>
         /// A string like "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section."
         /// </summary>
-        internal static string InconsistentPatternInputType(object p0, object p1)
-        {
-            return SR.Format(SR.InconsistentPatternInputType, p0, p1);
-        }
+        internal static string InconsistentPatternInputType(object p0, object p1) => SR.Format(SR.InconsistentPatternInputType, p0, p1);
 
         /// <summary>
         /// A string like "A switch statement should contain at most one default case."
         /// </summary>
-        internal static string FoundMoreThanOneDefaultLabel
-        {
-            get
-            {
-                return SR.FoundMoreThanOneDefaultLabel;
-            }
-        }
+        internal static string FoundMoreThanOneDefaultLabel => SR.FoundMoreThanOneDefaultLabel;
 
     }
 }
