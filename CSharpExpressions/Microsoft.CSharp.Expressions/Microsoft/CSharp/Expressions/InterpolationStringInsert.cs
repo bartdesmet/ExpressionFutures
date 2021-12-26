@@ -40,10 +40,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal override Interpolation Accept(CSharpExpressionVisitor visitor)
-        {
-            return visitor.VisitInterpolationStringInsert(this);
-        }
+        protected internal override Interpolation Accept(CSharpExpressionVisitor visitor) => visitor.VisitInterpolationStringInsert(this);
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -63,6 +60,29 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
+        /// <summary>
+        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert.
+        /// </summary>
+        /// <param name="value">The expression representing the value being interpolated.</param>
+        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        public static InterpolationStringInsert InterpolationStringInsert(Expression value) => InterpolationStringInsert(value, format: null, alignment: null);
+
+        /// <summary>
+        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional format specifier.
+        /// </summary>
+        /// <param name="value">The expression representing the value being interpolated.</param>
+        /// <param name="format">The expression representing the format specifier, if any.</param>
+        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        public static InterpolationStringInsert InterpolationStringInsert(Expression value, string format) => InterpolationStringInsert(value, format, alignment: null);
+
+        /// <summary>
+        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional alignment specifier.
+        /// </summary>
+        /// <param name="value">The expression representing the value being interpolated.</param>
+        /// <param name="alignment">The expression representing the alignment specifier, if any.</param>
+        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        public static InterpolationStringInsert InterpolationStringInsert(Expression value, int? alignment) => InterpolationStringInsert(value, format: null, alignment);
+
         /// <summary>
         /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert with optional format and alignment specifiers.
         /// </summary>
