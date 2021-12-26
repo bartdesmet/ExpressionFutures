@@ -1154,13 +1154,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_7 = s_mtds["RequiresCanRead"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.String) }));
+        private static readonly MethodInfo s_7 = s_mtds["ValidateSwitchCaseType"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.Boolean), typeof(System.Type), typeof(System.String) }));
 
-        public static void RequiresCanRead(System.Linq.Expressions.Expression expression, System.String paramName)
+        public static void ValidateSwitchCaseType(System.Linq.Expressions.Expression @case, System.Boolean customType, System.Type resultType, System.String parameterName)
         {
             try
             {
-                var args = new object[] { expression, paramName };
+                var args = new object[] { @case, customType, resultType, parameterName };
                 var res = s_7.Invoke(null, args);
                 
             }
@@ -1170,13 +1170,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_8 = s_mtds["RequiresCanRead"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Collections.Generic.IEnumerable<System.Linq.Expressions.Expression>), typeof(System.String) }));
+        private static readonly MethodInfo s_8 = s_mtds["RequiresCanRead"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.String) }));
 
-        public static void RequiresCanRead(System.Collections.Generic.IEnumerable<System.Linq.Expressions.Expression> items, System.String paramName)
+        public static void RequiresCanRead(System.Linq.Expressions.Expression expression, System.String paramName)
         {
             try
             {
-                var args = new object[] { items, paramName };
+                var args = new object[] { expression, paramName };
                 var res = s_8.Invoke(null, args);
                 
             }
@@ -1186,13 +1186,13 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_9 = s_mtds["RequiresCanWrite"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.String) }));
+        private static readonly MethodInfo s_9 = s_mtds["RequiresCanRead"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Collections.Generic.IEnumerable<System.Linq.Expressions.Expression>), typeof(System.String) }));
 
-        public static void RequiresCanWrite(System.Linq.Expressions.Expression expression, System.String paramName)
+        public static void RequiresCanRead(System.Collections.Generic.IEnumerable<System.Linq.Expressions.Expression> items, System.String paramName)
         {
             try
             {
-                var args = new object[] { expression, paramName };
+                var args = new object[] { items, paramName };
                 var res = s_9.Invoke(null, args);
                 
             }
@@ -1202,14 +1202,30 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_10 = s_mtds["ValidateIndexedProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.Reflection.PropertyInfo), typeof(System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression>).MakeByRefType() }));
+        private static readonly MethodInfo s_10 = s_mtds["RequiresCanWrite"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.String) }));
+
+        public static void RequiresCanWrite(System.Linq.Expressions.Expression expression, System.String paramName)
+        {
+            try
+            {
+                var args = new object[] { expression, paramName };
+                var res = s_10.Invoke(null, args);
+                
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_11 = s_mtds["ValidateIndexedProperty"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression), typeof(System.Reflection.PropertyInfo), typeof(System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression>).MakeByRefType() }));
 
         public static void ValidateIndexedProperty(System.Linq.Expressions.Expression instance, System.Reflection.PropertyInfo property, ref System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression> argList)
         {
             try
             {
                 var args = new object[] { instance, property, argList };
-                var res = s_10.Invoke(null, args);
+                var res = s_11.Invoke(null, args);
                 argList = (System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.Expression>)args[2];
                 
             }
@@ -1219,14 +1235,14 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_11 = s_mtds["GetInvokeMethod"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression) }));
+        private static readonly MethodInfo s_12 = s_mtds["GetInvokeMethod"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Linq.Expressions.Expression) }));
 
         public static System.Reflection.MethodInfo GetInvokeMethod(System.Linq.Expressions.Expression expression)
         {
             try
             {
                 var args = new object[] { expression };
-                var res = s_11.Invoke(null, args);
+                var res = s_12.Invoke(null, args);
                 return (System.Reflection.MethodInfo)res;
             }
             catch (TargetInvocationException ex)
@@ -1235,14 +1251,14 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_12 = s_mtds["ParameterIsAssignable"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.ParameterInfo), typeof(System.Type) }));
+        private static readonly MethodInfo s_13 = s_mtds["ParameterIsAssignable"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.ParameterInfo), typeof(System.Type) }));
 
         public static System.Boolean ParameterIsAssignable(System.Reflection.ParameterInfo pi, System.Type argType)
         {
             try
             {
                 var args = new object[] { pi, argType };
-                var res = s_12.Invoke(null, args);
+                var res = s_13.Invoke(null, args);
                 return (System.Boolean)res;
             }
             catch (TargetInvocationException ex)
@@ -1251,25 +1267,9 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_13 = s_mtds["ValidateOperator"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+        private static readonly MethodInfo s_14 = s_mtds["ValidateOperator"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
 
         public static void ValidateOperator(System.Reflection.MethodInfo method)
-        {
-            try
-            {
-                var args = new object[] { method };
-                var res = s_13.Invoke(null, args);
-                
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
-
-        private static readonly MethodInfo s_14 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
-
-        public static void ValidateMethodInfo(System.Reflection.MethodInfo method)
         {
             try
             {
@@ -1283,14 +1283,30 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_15 = s_mtds["ValidateCoalesceArgTypes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Type), typeof(System.Type) }));
+        private static readonly MethodInfo s_15 = s_mtds["ValidateMethodInfo"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Reflection.MethodInfo) }));
+
+        public static void ValidateMethodInfo(System.Reflection.MethodInfo method)
+        {
+            try
+            {
+                var args = new object[] { method };
+                var res = s_15.Invoke(null, args);
+                
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static readonly MethodInfo s_16 = s_mtds["ValidateCoalesceArgTypes"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(System.Type), typeof(System.Type) }));
 
         public static System.Type ValidateCoalesceArgTypes(System.Type left, System.Type right)
         {
             try
             {
                 var args = new object[] { left, right };
-                var res = s_15.Invoke(null, args);
+                var res = s_16.Invoke(null, args);
                 return (System.Type)res;
             }
             catch (TargetInvocationException ex)

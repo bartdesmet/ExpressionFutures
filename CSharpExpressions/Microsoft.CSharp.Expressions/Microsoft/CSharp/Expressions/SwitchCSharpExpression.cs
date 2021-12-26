@@ -160,6 +160,24 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="SwitchCSharpExpression"/> that represents a switch expression.
         /// </summary>
+        /// <param name="expression">The expression representing the object to switch on.</param>
+        /// <param name="arms">The arms representing the patterns to match.</param>
+        /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
+        public static SwitchCSharpExpression SwitchExpression(Expression expression, params SwitchExpressionArm[] arms) =>
+            SwitchExpression(type: null, expression, (IEnumerable<SwitchExpressionArm>)arms);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchCSharpExpression"/> that represents a switch expression.
+        /// </summary>
+        /// <param name="expression">The expression representing the object to switch on.</param>
+        /// <param name="arms">The arms representing the patterns to match.</param>
+        /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
+        public static SwitchCSharpExpression SwitchExpression(Expression expression, IEnumerable<SwitchExpressionArm> arms) =>
+            SwitchExpression(type: null, expression, arms);
+
+        /// <summary>
+        /// Creates a <see cref="SwitchCSharpExpression"/> that represents a switch expression.
+        /// </summary>
         /// <param name="type">The type of the expression.</param>
         /// <param name="expression">The expression representing the object to switch on.</param>
         /// <param name="arms">The arms representing the patterns to match.</param>
@@ -176,20 +194,28 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
         public static SwitchCSharpExpression SwitchExpression(Type type, Expression expression, IEnumerable<SwitchExpressionArm> arms)
         {
-            // CONSIDER: Overload that infers the type from all the arms.
-
-            RequiresNotNull(type, nameof(type));
-            ValidateType(type);
-
-            if (type == typeof(void))
-                throw Error.SwitchExpressionTypeShouldNotBeVoid();
-
             RequiresCanRead(expression, nameof(expression));
-            RequiresNotNull(arms, nameof(arms));
 
             var armsCollection = arms.ToReadOnly();
-
             RequiresNotNullItems(armsCollection, nameof(arms));
+
+            var customType = false;
+
+            if (type != null)
+            {
+                ValidateType(type);
+
+                if (type == typeof(void))
+                    throw Error.SwitchExpressionTypeShouldNotBeVoid();
+
+                customType = true;
+            }
+            else
+            {
+                RequiresNotEmpty(armsCollection, nameof(arms));
+
+                type = armsCollection[0].Value.Type;
+            }
 
             for (int i = 0, n = armsCollection.Count; i < n; i++)
             {
@@ -198,8 +224,15 @@ namespace Microsoft.CSharp.Expressions
                 if (!AreReferenceAssignable(arm.Pattern.InputType, expression.Type))
                     throw Error.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(i, arm.Pattern.InputType, expression.Type);
 
-                if (!AreReferenceAssignable(type, arm.Value.Type))
-                    throw Error.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(i, arm.Value.Type, type);
+                if (customType)
+                {
+                    if (!AreReferenceAssignable(type, arm.Value.Type))
+                        throw Error.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(i, arm.Value.Type, type);
+                }
+                else
+                {
+                    ValidateSwitchCaseType(arm.Value, customType, type, nameof(arms));
+                }
             }
 
             return new SwitchCSharpExpression(type, expression, armsCollection);
