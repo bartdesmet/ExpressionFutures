@@ -141,7 +141,7 @@ namespace Microsoft.CSharp.Expressions
                             case 1:
                                 return Expression.Call(m, operand);
                             case 2:
-                                return Expression.Call(m, operand, Expression.Constant(true));
+                                return Expression.Call(m, operand, ConstantTrue);
                         }
                         break;
                     case ConstructorInfo c:
@@ -150,7 +150,7 @@ namespace Microsoft.CSharp.Expressions
                             case 1:
                                 return Expression.New(c, operand);
                             case 2:
-                                return Expression.New(c, operand, Expression.Constant(true));
+                                return Expression.New(c, operand, ConstantTrue);
                         }
                         break;
                 }

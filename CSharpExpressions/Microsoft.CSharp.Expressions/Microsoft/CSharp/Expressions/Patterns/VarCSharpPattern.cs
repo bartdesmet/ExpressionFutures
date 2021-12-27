@@ -9,6 +9,8 @@ using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a pattern that always matches and assigns the input to a variable.
     /// </summary>
@@ -80,13 +82,13 @@ namespace Microsoft.CSharp.Expressions
                 return
                     Expression.Block(
                         Expression.Assign(Variable, @object),
-                        Expression.Constant(true)
+                        ConstantTrue
                     );
             }
             else
             {
                 // NB: Ensure any side-effects in evaluating @object are retained.
-                return PatternHelpers.Reduce(@object, _ => Expression.Constant(true));
+                return PatternHelpers.Reduce(@object, _ => ConstantTrue);
             }
         }
     }

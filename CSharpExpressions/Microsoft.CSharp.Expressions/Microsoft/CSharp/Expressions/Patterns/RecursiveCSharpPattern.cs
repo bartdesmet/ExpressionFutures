@@ -111,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
                     var expr =
                         Expression.IfThen(
                             Expression.Not(test),
-                            Expression.Goto(exit, Expression.Constant(false))
+                            Expression.Goto(exit, ConstantFalse)
                         );
 
                     stmts.Add(expr);
@@ -204,7 +204,7 @@ namespace Microsoft.CSharp.Expressions
                             var deconstruction = Deconstruction[i];
 
                             var index = deconstruction.Field?.Index ?? i;
-                            var item = Helpers.GetTupleItemAccess(obj, index);
+                            var item = GetTupleItemAccess(obj, index);
                             var test = deconstruction.Pattern.Reduce(item);
 
                             addFailIfNot(test);
@@ -225,7 +225,7 @@ namespace Microsoft.CSharp.Expressions
                     stmts.Add(Expression.Assign(Variable, obj));
                 }
 
-                stmts.Add(Expression.Label(exit, Expression.Constant(true)));
+                stmts.Add(Expression.Label(exit, ConstantTrue));
 
                 return Expression.Block(vars, stmts);
             }

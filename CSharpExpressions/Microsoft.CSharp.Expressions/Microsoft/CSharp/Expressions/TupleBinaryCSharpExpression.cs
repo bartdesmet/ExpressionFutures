@@ -212,15 +212,15 @@ namespace Microsoft.CSharp.Expressions
                         }
                         else
                         {
-                            return (Expression.Constant(true), operand);
+                            return (ConstantTrue, operand);
                         }
                     }
 
                     var (leftHasValue, leftValue) = GetNullableExpressions(left);
                     var (rightHasValue, rightValue) = GetNullableExpressions(right);
 
-                    var nullNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleEqual);
-                    var nullNonNull = Expression.Constant(CSharpNodeType == CSharpExpressionType.TupleNotEqual);
+                    var nullNull = CreateConstantBoolean(CSharpNodeType == CSharpExpressionType.TupleEqual);
+                    var nullNonNull = CreateConstantBoolean(CSharpNodeType == CSharpExpressionType.TupleNotEqual);
 
                     var nonNullNonNull = ReduceNonNull(leftValue, rightValue, equalityChecks);
 
@@ -307,7 +307,7 @@ namespace Microsoft.CSharp.Expressions
                         var expr = equalityCheck.Body switch
                         {
                             ConstantExpression c => (Expression)c, // NB: This is commonly emitted by the C# compiler for null == null and null != null checks that occur in tuple literals.
-                            DefaultExpression _ => Expression.Constant(false),
+                            DefaultExpression _ => ConstantFalse,
                             BinaryExpression binary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
                                 => binary.Update(lhs, null, rhs),
                             UnaryExpression { Operand: BinaryExpression binary, NodeType: ExpressionType.Convert } unary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)

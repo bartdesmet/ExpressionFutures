@@ -104,7 +104,7 @@ namespace Microsoft.CSharp.Expressions
                     var expr =
                         Expression.IfThen(
                             Expression.Not(test),
-                            Expression.Goto(exit, Expression.Constant(false))
+                            Expression.Goto(exit, ConstantFalse)
                         );
 
                     stmts.Add(expr);
@@ -118,19 +118,19 @@ namespace Microsoft.CSharp.Expressions
 
                 var deconstructionCount = Deconstruction.Count;
 
-                addFailIfNot(Expression.Equal(Expression.Call(obj, GetLengthMethod), Expression.Constant(deconstructionCount)));
+                addFailIfNot(Expression.Equal(Expression.Call(obj, GetLengthMethod), CreateConstantInt32(deconstructionCount)));
 
                 for (var i = 0; i < deconstructionCount; i++)
                 {
                     var deconstruction = Deconstruction[i];
 
-                    var item = Expression.Call(obj, GetItemMethod, Expression.Constant(i));
+                    var item = Expression.Call(obj, GetItemMethod, CreateConstantInt32(i));
                     var test = deconstruction.Pattern.Reduce(item);
 
                     addFailIfNot(test);
                 }
 
-                stmts.Add(Expression.Label(exit, Expression.Constant(true)));
+                stmts.Add(Expression.Label(exit, ConstantTrue));
 
                 return Expression.Block(new[] { temp }, stmts);
             }

@@ -19,6 +19,8 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents an array access operation.
     /// </summary>
@@ -187,7 +189,7 @@ namespace Microsoft.CSharp.Expressions
                     {
                         //  ..*  ->  0
 
-                        startExpr = Expression.Constant(0);
+                        startExpr = CreateConstantInt32(0);
                     }
                     else
                     {
@@ -253,7 +255,7 @@ namespace Microsoft.CSharp.Expressions
                     {
                         // a..b    ->  (b - a)
 
-                        sizeExpr = Expression.Constant((int)endConst.Value - (int)startConst.Value);
+                        sizeExpr = CreateConstantInt32((int)endConst.Value - (int)startConst.Value);
                     }
                     else if (startExpr is BinaryExpression { NodeType: ExpressionType.Subtract } s && s.Left == length &&
                              endExpr is BinaryExpression { NodeType: ExpressionType.Subtract } e && e.Left == length &&
@@ -392,16 +394,16 @@ namespace Microsoft.CSharp.Expressions
                     if (indexValue.IsFromEnd)
                     {
                         useLength = true;
-                        return MakeSubtract(length, Expression.Constant(indexValue.Value));
+                        return MakeSubtract(length, CreateConstantInt32(indexValue.Value));
                     }
                     else
                     {
                         useLength = false;
-                        return Expression.Constant(indexValue.Value);
+                        return CreateConstantInt32(indexValue.Value);
                     }
                 case DefaultExpression _:
                     useLength = false;
-                    return Expression.Constant(0); // NB: This simplifies optimization.
+                    return CreateConstantInt32(0); // NB: This simplifies optimization.
                 case UnaryExpression ue when ue.NodeType == ExpressionType.Convert && ue.Operand.Type == typeof(int):
                     useLength = false;
                     return MakeConstantIfDefault(ue.Operand);
@@ -455,13 +457,13 @@ namespace Microsoft.CSharp.Expressions
 
             if (left is ConstantExpression l && right is ConstantExpression r)
             {
-                return Expression.Constant((int)l.Value - (int)r.Value);
+                return CreateConstantInt32((int)l.Value - (int)r.Value);
             }
 
             return Expression.Subtract(left, right);
         }
 
-        private static Expression MakeConstantIfDefault(Expression e) => e is DefaultExpression ? Expression.Constant(0) : e;
+        private static Expression MakeConstantIfDefault(Expression e) => e is DefaultExpression ? CreateConstantInt32(0) : e;
 
         private static MethodInfo s_getOffset;
         private static MethodInfo GetOffsetMethod => s_getOffset ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), BindingFlags.Public | BindingFlags.Instance, new[] { typeof(int) });

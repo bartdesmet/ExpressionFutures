@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a pattern that always matches.
     /// </summary>
@@ -57,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: RecursiveCSharpPattern has a peephole optimization for the pattern below.
 
             // NB: Ensure any side-effects in evaluating @object are retained.
-            return PatternHelpers.Reduce(@object, _ => Expression.Constant(true));
+            return PatternHelpers.Reduce(@object, _ => ConstantTrue);
         }
     }
 

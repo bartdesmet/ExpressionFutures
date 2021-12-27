@@ -12,6 +12,8 @@ using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents a lock statement.
     /// </summary>
@@ -89,7 +91,7 @@ namespace Microsoft.CSharp.Expressions
                     //     a loop is repeatedly entering and exiting the lock. If the variable is still
                     //     set to true from the last iteration, the `Enter` method won't re-acquire the
                     //     lock thus causing `Exit` to complain with a `SynchronizationLockException`.
-                    Expression.Assign(lockTaken, Expression.Constant(false)),
+                    Expression.Assign(lockTaken, ConstantFalse),
                     Expression.Assign(temp, Expression),
                     Expression.TryFinally(
                         body,

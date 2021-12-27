@@ -10,6 +10,7 @@ using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
     using static PatternHelpers;
 
     /// <summary>
@@ -84,7 +85,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 // REVIEW: Value types, nullable value types, etc.
                 //         Ensure no operator== is called.
-                return Expression.Equal(Expression.Convert(@object, typeof(object)), Expression.Constant(null));
+                return Expression.Equal(Expression.Convert(@object, typeof(object)), ConstantNull);
             }
             else
             {
@@ -151,7 +152,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a pattern that checks for null.
         /// </summary>
         /// <returns>A pattern that checks for null.</returns>
-        public static ConstantCSharpPattern Null() => Constant(info: null, Expression.Constant(null));
+        public static ConstantCSharpPattern Null() => Constant(info: null, ConstantNull);
 
         // NB: Omitting 'NotNull' because it could be represented as 'is not null' or 'is { }'.
     }
