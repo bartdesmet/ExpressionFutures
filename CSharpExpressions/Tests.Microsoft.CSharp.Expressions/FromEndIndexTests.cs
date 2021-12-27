@@ -6,6 +6,7 @@ using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using System.Xml.XPath;
 
 namespace Tests
 {
@@ -37,6 +38,44 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TwoArgsInvalid1)), typeof(Index)));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TwoArgsInvalid2)), typeof(Index)));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TooManyArgs)), typeof(Index)));
+        }
+
+        [TestMethod]
+        public void FromEndIndex_Update()
+        {
+            var i = Expression.Constant(1);
+            var e1 = CSharpExpression.FromEndIndex(i);
+
+            var e2 = e1.Update(i);
+            Assert.AreSame(e1, e2);
+
+            var j = Expression.Constant(2);
+
+            var e3 = e1.Update(j);
+            Assert.AreNotSame(e1, e3);
+            Assert.AreSame(j, e3.Operand);
+        }
+
+        [TestMethod]
+        public void FromEndIndex_Visitor()
+        {
+            var res = CSharpExpression.FromEndIndex(Expression.Constant(1));
+
+            var v = new V();
+            Assert.AreSame(res, v.Visit(res));
+            Assert.IsTrue(v.Visited);
+        }
+
+        class V : CSharpExpressionVisitor
+        {
+            public bool Visited = false;
+
+            protected internal override Expression VisitFromEndIndex(FromEndIndexCSharpExpression node)
+            {
+                Visited = true;
+
+                return base.VisitFromEndIndex(node);
+            }
         }
 
         [TestMethod]
