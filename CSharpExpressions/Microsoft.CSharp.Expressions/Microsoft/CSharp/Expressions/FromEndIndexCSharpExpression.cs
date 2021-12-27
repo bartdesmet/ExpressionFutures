@@ -11,6 +11,8 @@ using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents an index from the end of an indexable object.
     /// </summary>
@@ -80,18 +82,18 @@ namespace Microsoft.CSharp.Expressions
         {
             if (IsLifted)
             {
-                if (Helpers.IsAlwaysNull(Operand))
+                if (IsAlwaysNull(Operand))
                 {
                     return Expression.Default(Type);
                 }
                 
-                if (Helpers.IsNeverNull(Operand))
+                if (IsNeverNull(Operand))
                 {
                     // CONSIDER: Peek into Operand and try to extract non-null value.
 
                     return
                         Expression.Convert(
-                            MakeFromEnd(Helpers.MakeNullableGetValueOrDefault(Operand)),
+                            MakeFromEnd(MakeNullableGetValueOrDefault(Operand)),
                             Type
                         );
                 }
@@ -119,9 +121,9 @@ namespace Microsoft.CSharp.Expressions
 
             Expression MakeLiftedFromEnd(ParameterExpression operand) =>
                 Expression.Condition(
-                    Helpers.MakeNullableHasValue(operand),
+                    MakeNullableHasValue(operand),
                     Expression.Convert(
-                        MakeFromEnd(Helpers.MakeNullableGetValueOrDefault(operand)),
+                        MakeFromEnd(MakeNullableGetValueOrDefault(operand)),
                         Type
                     ),
                     Expression.Default(Type)
@@ -240,6 +242,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual Expression VisitFromEndIndex(FromEndIndexCSharpExpression node) => node.Update(Visit(node.Operand));
+        protected internal virtual Expression VisitFromEndIndex(FromEndIndexCSharpExpression node) =>
+            node.Update(
+                Visit(node.Operand)
+            );
     }
 }
