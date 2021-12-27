@@ -6,7 +6,6 @@ using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
-using System.Xml.XPath;
 
 namespace Tests
 {

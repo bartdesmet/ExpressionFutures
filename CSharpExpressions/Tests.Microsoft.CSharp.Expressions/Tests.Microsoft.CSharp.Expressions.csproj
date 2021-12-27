@@ -94,6 +94,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="DynamicTests.cs" />
+    <Compile Include="RangeTests.cs" />
     <Compile Include="FromEndIndexTests.cs" />
     <Compile Include="GotoTests.cs" />
     <Compile Include="HelpersTests.cs" />
