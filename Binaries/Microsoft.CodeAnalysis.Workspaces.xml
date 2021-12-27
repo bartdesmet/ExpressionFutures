@@ -20529,6 +20529,13 @@
             such as <code>a ??= b</code>.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.OperationExtensions.WalkDownConversion(Microsoft.CodeAnalysis.IOperation)">
+            <summary>
+            Walks down consecutive conversion operations until an operand is reached that isn't a conversion operation.
+            </summary>
+            <param name="operation">The starting operation.</param>
+            <returns>The inner non conversion operation or the starting operation if it wasn't a conversion operation.</returns>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.SymbolUsageInfo">
             <summary>
             Provides information about the way a particular symbol is being used at a symbol reference node.
