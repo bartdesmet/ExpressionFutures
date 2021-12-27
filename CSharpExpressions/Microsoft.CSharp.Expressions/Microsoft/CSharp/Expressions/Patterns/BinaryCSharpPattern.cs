@@ -60,7 +60,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.MakeBinary(PatternInfo(InputType, NarrowedType), PatternType, left, right);
+            return CSharpPattern.MakeBinary(_info, PatternType, left, right);
         }
 
         /// <summary>

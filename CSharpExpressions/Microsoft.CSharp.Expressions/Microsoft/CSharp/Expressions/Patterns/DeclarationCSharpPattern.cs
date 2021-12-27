@@ -49,7 +49,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.Declaration(ObjectPatternInfo(PatternInfo(InputType, NarrowedType), variable), Type);
+            return CSharpPattern.Declaration(ObjectPatternInfo(_info, variable), Type);
         }
 
         /// <summary>

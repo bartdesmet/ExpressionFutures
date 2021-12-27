@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
 
 namespace Microsoft.CSharp.Expressions
 {

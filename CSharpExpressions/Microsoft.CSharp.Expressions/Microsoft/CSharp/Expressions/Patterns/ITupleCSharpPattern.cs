@@ -150,7 +150,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.ITuple(PatternInfo(InputType, NarrowedType), GetLengthMethod, GetItemMethod, deconstruction);
+            return CSharpPattern.ITuple(_info, GetLengthMethod, GetItemMethod, deconstruction);
         }
     }
 

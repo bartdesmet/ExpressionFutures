@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return Make(PatternInfo(InputType, NarrowedType), PatternType, value);
+            return Make(_info, PatternType, value);
         }
 
         /// <summary>

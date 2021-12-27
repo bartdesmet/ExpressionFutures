@@ -1153,5 +1153,221 @@ namespace Tests
             Assert.AreEqual(dbg121, expr121.ToCSharp());
         }
 
+        private Expression expr122 = CSharpExpression.InterpolatedString();
+        private string dbg122 = <#=toEscapedString(CSharpExpression.InterpolatedString().ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test122()
+        {
+            Assert.AreEqual(dbg122, expr122.ToCSharp());
+        }
+
+        private Expression expr123 = CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("foo"));
+        private string dbg123 = <#=toEscapedString(CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("foo")).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test123()
+        {
+            Assert.AreEqual(dbg123, expr123.ToCSharp());
+        }
+
+        private Expression expr124 = CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42)));
+        private string dbg124 = <#=toEscapedString(CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test124()
+        {
+            Assert.AreEqual(dbg124, expr124.ToCSharp());
+        }
+
+        private Expression expr125 = CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), "N"));
+        private string dbg125 = <#=toEscapedString(CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), "N")).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test125()
+        {
+            Assert.AreEqual(dbg125, expr125.ToCSharp());
+        }
+
+        private Expression expr126 = CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), "N", 2));
+        private string dbg126 = <#=toEscapedString(CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), "N", 2)).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test126()
+        {
+            Assert.AreEqual(dbg126, expr126.ToCSharp());
+        }
+
+        private Expression expr127 = CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), 2));
+        private string dbg127 = <#=toEscapedString(CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral("x = "), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), 2)).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test127()
+        {
+            Assert.AreEqual(dbg127, expr127.ToCSharp());
+        }
+
+        private Expression expr128 = CSharpExpression.Discard(typeof(int));
+        private string dbg128 = <#=toEscapedString(CSharpExpression.Discard(typeof(int)).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test128()
+        {
+            Assert.AreEqual(dbg128, expr128.ToCSharp());
+        }
+
+        private Expression expr129 = CSharpExpression.FromEndIndex(Expression.Constant(1));
+        private string dbg129 = <#=toEscapedString(CSharpExpression.FromEndIndex(Expression.Constant(1)).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test129()
+        {
+            Assert.AreEqual(dbg129, expr129.ToCSharp());
+        }
+
+        private Expression expr130 = CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2));
+        private string dbg130 = <#=toEscapedString(CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2)).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test130()
+        {
+            Assert.AreEqual(dbg130, expr130.ToCSharp());
+        }
+
+        private Expression expr131 = CSharpExpression.Range(Expression.Constant(1), null);
+        private string dbg131 = <#=toEscapedString(CSharpExpression.Range(Expression.Constant(1), null).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test131()
+        {
+            Assert.AreEqual(dbg131, expr131.ToCSharp());
+        }
+
+        private Expression expr132 = CSharpExpression.Range(null, Expression.Constant(2));
+        private string dbg132 = <#=toEscapedString(CSharpExpression.Range(null, Expression.Constant(2)).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test132()
+        {
+            Assert.AreEqual(dbg132, expr132.ToCSharp());
+        }
+
+        private Expression expr133 = CSharpExpression.Range(null, null);
+        private string dbg133 = <#=toEscapedString(CSharpExpression.Range(null, null).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test133()
+        {
+            Assert.AreEqual(dbg133, expr133.ToCSharp());
+        }
+
+        private Expression expr134 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Null());
+        private string dbg134 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Null()).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test134()
+        {
+            Assert.AreEqual(dbg134, expr134.ToCSharp());
+        }
+
+        private Expression expr135 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Constant(Expression.Constant(42)));
+        private string dbg135 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Constant(Expression.Constant(42))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test135()
+        {
+            Assert.AreEqual(dbg135, expr135.ToCSharp());
+        }
+
+        private Expression expr136 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Var(Expression.Parameter(typeof(int), "x")));
+        private string dbg136 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Var(Expression.Parameter(typeof(int), "x"))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test136()
+        {
+            Assert.AreEqual(dbg136, expr136.ToCSharp());
+        }
+
+        private Expression expr137 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Declaration(Expression.Parameter(typeof(int), "x")));
+        private string dbg137 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Declaration(Expression.Parameter(typeof(int), "x"))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test137()
+        {
+            Assert.AreEqual(dbg137, expr137.ToCSharp());
+        }
+
+        private Expression expr138 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Type(typeof(int)));
+        private string dbg138 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Type(typeof(int))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test138()
+        {
+            Assert.AreEqual(dbg138, expr138.ToCSharp());
+        }
+
+        private Expression expr139 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Discard());
+        private string dbg139 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Discard()).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test139()
+        {
+            Assert.AreEqual(dbg139, expr139.ToCSharp());
+        }
+
+        private Expression expr140 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThan(Expression.Constant(42)));
+        private string dbg140 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThan(Expression.Constant(42))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test140()
+        {
+            Assert.AreEqual(dbg140, expr140.ToCSharp());
+        }
+
+        private Expression expr141 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThanOrEqual(Expression.Constant(42)));
+        private string dbg141 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThanOrEqual(Expression.Constant(42))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test141()
+        {
+            Assert.AreEqual(dbg141, expr141.ToCSharp());
+        }
+
+        private Expression expr142 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThan(Expression.Constant(42)));
+        private string dbg142 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThan(Expression.Constant(42))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test142()
+        {
+            Assert.AreEqual(dbg142, expr142.ToCSharp());
+        }
+
+        private Expression expr143 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThanOrEqual(Expression.Constant(42)));
+        private string dbg143 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThanOrEqual(Expression.Constant(42))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test143()
+        {
+            Assert.AreEqual(dbg143, expr143.ToCSharp());
+        }
+
+        private Expression expr144 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Not(CSharpPattern.Null()));
+        private string dbg144 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Not(CSharpPattern.Null())).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test144()
+        {
+            Assert.AreEqual(dbg144, expr144.ToCSharp());
+        }
+
+        private Expression expr145 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))));
+        private string dbg145 = <#=toEscapedString(CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43)))).ToCSharp())#>;
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test145()
+        {
+            Assert.AreEqual(dbg145, expr145.ToCSharp());
+        }
+
     }
 }

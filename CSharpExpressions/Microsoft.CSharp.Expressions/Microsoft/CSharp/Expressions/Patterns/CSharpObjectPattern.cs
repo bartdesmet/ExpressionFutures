@@ -11,15 +11,17 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class CSharpObjectPattern : CSharpPattern
     {
+        protected readonly CSharpObjectPatternInfo _objectInfo;
+
         internal CSharpObjectPattern(CSharpObjectPatternInfo info)
             : base(info.Info)
         {
-            Variable = info.Variable;
+            _objectInfo = info;
         }
 
         /// <summary>
         /// Gets the variable to assign to.
         /// </summary>
-        public ParameterExpression Variable { get; }
+        public ParameterExpression Variable => _objectInfo.Variable;
     }
 }

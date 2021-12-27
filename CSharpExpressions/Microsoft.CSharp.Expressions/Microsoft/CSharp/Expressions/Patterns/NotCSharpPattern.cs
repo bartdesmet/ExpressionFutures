@@ -49,7 +49,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.Not(PatternInfo(InputType, NarrowedType), negated);
+            return CSharpPattern.Not(_info, negated);
         }
 
         /// <summary>

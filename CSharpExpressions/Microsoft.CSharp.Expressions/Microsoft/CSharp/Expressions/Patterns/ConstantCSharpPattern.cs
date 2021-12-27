@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.Constant(PatternInfo(InputType, NarrowedType), value);
+            return CSharpPattern.Constant(_info, value);
         }
 
         /// <summary>

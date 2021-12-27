@@ -43,7 +43,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.Var(PatternInfo(InputType, NarrowedType), Variable);
+            return CSharpPattern.Var(_info, Variable);
         }
 
         /// <summary>

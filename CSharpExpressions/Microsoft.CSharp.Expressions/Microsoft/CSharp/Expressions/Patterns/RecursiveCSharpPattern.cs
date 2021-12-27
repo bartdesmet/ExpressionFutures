@@ -236,17 +236,18 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
+        /// <param name="variable">The <see cref="Variable" /> property of the result.</param>
         /// <param name="deconstruction">The <see cref="Deconstruction" /> property of the result.</param>
         /// <param name="properties">The <see cref="Properties" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public RecursiveCSharpPattern Update(IEnumerable<PositionalCSharpSubpattern> deconstruction, IEnumerable<PropertyCSharpSubpattern> properties)
+        public RecursiveCSharpPattern Update(ParameterExpression variable, IEnumerable<PositionalCSharpSubpattern> deconstruction, IEnumerable<PropertyCSharpSubpattern> properties)
         {
-            if (SameElements(ref deconstruction, Deconstruction) && SameElements(ref properties, Properties))
+            if (variable == Variable && SameElements(ref deconstruction, Deconstruction) && SameElements(ref properties, Properties))
             {
                 return this;
             }
 
-            return CSharpPattern.Recursive(ObjectPatternInfo(PatternInfo(InputType, NarrowedType), Variable), Type, DeconstructMethod, deconstruction, properties);
+            return CSharpPattern.Recursive(ObjectPatternInfo(_info, variable), Type, DeconstructMethod, deconstruction, properties);
         }
     }
 
@@ -297,7 +298,6 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a property pattern that matches on properties.
         /// </summary>
-        /// <param name="info">Type information about the pattern.</param>
         /// <param name="type">The type to check for.</param>
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
@@ -308,7 +308,6 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a property pattern that matches on properties.
         /// </summary>
-        /// <param name="info">Type information about the pattern.</param>
         /// <param name="type">The type to check for.</param>
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="properties">The property subpatterns to apply.</param>
@@ -618,6 +617,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual CSharpPattern VisitRecursivePattern(RecursiveCSharpPattern node) =>
             node.Update(
+                VisitAndConvert(node.Variable, nameof(VisitRecursivePattern)),
                 Visit(node.Deconstruction, VisitPositionalSubpattern),
                 Visit(node.Properties, VisitPropertySubpattern)
             );

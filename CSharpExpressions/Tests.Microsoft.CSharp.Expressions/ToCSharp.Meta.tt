@@ -119,7 +119,7 @@ var exprs = new string[]
 
     "CSharpStatement.Using(Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"body\")))",
     "CSharpStatement.Using(Expression.Parameter(typeof(IDisposable)), Expression.Default(typeof(IDisposable)), Expression.Call(null, typeof(Console).GetMethod(\"WriteLine\", new[] { typeof(string) }), Expression.Constant(\"body\")))",
-    
+
     "Expression.AddChecked(CSharpExpression.PostIncrementAssign(_par1), Expression.Constant(1))",
     "Expression.AddChecked(CSharpExpression.PostIncrementAssignChecked(_par1), Expression.Constant(1))",
     "Expression.NegateChecked(CSharpExpression.PostIncrementAssign(_par1))",
@@ -140,7 +140,7 @@ var exprs = new string[]
     "DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Decrement, _par1)",
     "DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.IsTrue, _par1)",
     "DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.IsFalse, _par1)",
-    
+
     "DynamicCSharpExpression.DynamicPreIncrementAssign(_par1)",
     "DynamicCSharpExpression.DynamicPreDecrementAssign(_par1)",
     "DynamicCSharpExpression.DynamicPostIncrementAssign(_par1)",
@@ -149,6 +149,36 @@ var exprs = new string[]
     "DynamicCSharpExpression.DynamicPreDecrementAssignChecked(_par1)",
     "DynamicCSharpExpression.DynamicPostIncrementAssignChecked(_par1)",
     "DynamicCSharpExpression.DynamicPostDecrementAssignChecked(_par1)",
+
+    "CSharpExpression.InterpolatedString()",
+    "CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral(\"foo\"))",
+    "CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral(\"x = \"), CSharpExpression.InterpolationStringInsert(Expression.Constant(42)))",
+    "CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral(\"x = \"), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), \"N\"))",
+    "CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral(\"x = \"), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), \"N\", 2))",
+    "CSharpExpression.InterpolatedString(CSharpExpression.InterpolationStringLiteral(\"x = \"), CSharpExpression.InterpolationStringInsert(Expression.Constant(42), 2))",
+
+    "CSharpExpression.Discard(typeof(int))",
+
+    "CSharpExpression.FromEndIndex(Expression.Constant(1))",
+
+    "CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2))",
+    "CSharpExpression.Range(Expression.Constant(1), null)",
+    "CSharpExpression.Range(null, Expression.Constant(2))",
+    "CSharpExpression.Range(null, null)",
+
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Null())",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Constant(Expression.Constant(42)))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Var(Expression.Parameter(typeof(int), \"x\")))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Declaration(Expression.Parameter(typeof(int), \"x\")))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Type(typeof(int)))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Discard())",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.LessThan(Expression.Constant(42)))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.LessThanOrEqual(Expression.Constant(42)))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.GreaterThan(Expression.Constant(42)))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.GreaterThanOrEqual(Expression.Constant(42)))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Not(CSharpPattern.Null()))",
+    // !!! REVIEW - Type inference !!! "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.And(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))))",
 };
 #>
 \<#@ template debug="false" hostspecific="false" language="C#" \#>
