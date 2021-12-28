@@ -177,6 +177,12 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CompilerTests\CSharp70.DeconstructionAssignment.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.TupleConvert.Generated.cs">
+      <DependentUpon>CSharp70.TupleConvert.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharp70.TupleConvert.Verify.cs" />
     <Compile Include="CompilerTests\CSharp80.PatternSwitchStatement.Verify.cs" />
     <Compile Include="CompilerTests\CSharp80.PatternSwitchStatement.Generated.cs">
       <DependentUpon>CSharp80.PatternSwitchStatement.Generated.tt</DependentUpon>
@@ -232,9 +238,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CompilerTests\CSharp70.Tuples.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.Tuples.Generated.cs">
-      <DependentUpon>CSharp70.Tuples.Generated.tt</DependentUpon>
+    <Compile Include="CompilerTests\CSharp70.TupleLiterals.Verify.cs" />
+    <Compile Include="CompilerTests\CSharp70.TupleLiterals.Generated.cs">
+      <DependentUpon>CSharp70.TupleLiterals.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -322,6 +328,7 @@
     <Compile Include="CrossCheckTests\CSharp30.Statements.Switch.cs" />
     <Compile Include="CrossCheckTests\CSharp30.Statements.If.cs" />
     <Compile Include="CrossCheckTests\CSharp70.DeconstructionAssignment.cs" />
+    <Compile Include="CrossCheckTests\CSharp70.TupleConvert.cs" />
     <Compile Include="CrossCheckTests\CSharp80.AwaitUsing.cs" />
     <Compile Include="CrossCheckTests\CSharp80.SwitchExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp90.PatternMatching.cs" />
@@ -332,7 +339,7 @@
     <Compile Include="CrossCheckTests\CSharp80.NullCoalescingAssignment.cs" />
     <Compile Include="CrossCheckTests\CSharp80.IndexRange.cs" />
     <Compile Include="CrossCheckTests\CSharp73.TupleEquality.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.Tuples.cs" />
+    <Compile Include="CrossCheckTests\CSharp70.TupleLiterals.cs" />
     <Compile Include="CrossCheckTests\CSharp70.ThrowExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp70.Discard.cs" />
     <Compile Include="CrossCheckTests\CSharp60.NullConditionalExpressions.cs" />
@@ -468,6 +475,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp70.DeconstructionAssignment.Generated.cs</LastGenOutput>
     </Content>
+    <Content Include="CompilerTests\CSharp70.TupleConvert.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.TupleConvert.Generated.cs</LastGenOutput>
+    </Content>
     <Content Include="CompilerTests\CSharp80.PatternSwitchStatement.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp80.PatternSwitchStatement.Generated.cs</LastGenOutput>
@@ -500,9 +511,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="CompilerTests\CSharp70.Tuples.Generated.tt">
+    <Content Include="CompilerTests\CSharp70.TupleLiterals.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.Tuples.Generated.cs</LastGenOutput>
+      <LastGenOutput>CSharp70.TupleLiterals.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharp70.Discard.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

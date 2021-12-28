@@ -37,7 +37,7 @@ using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     [TestClass]
-    public partial class CompilerTests_CSharp70_Tuples
+    public partial class CompilerTests_CSharp70_TupleLiterals
     {
         [TestMethod]
         public void CompilerTest_4091_A89E()
@@ -122,80 +122,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_694F_FB96() => INCONCLUSIVE(); }
 
-        [TestMethod]
-        public void CompilerTest_5948_DA1F()
-        {
-            // (Expression<Func<(int, DateTime), (int, DateTime)?>>)(t => t)
-            var actual = GetDebugView(@"(Expression<Func<(int, DateTime), (int, DateTime)?>>)(t => t)");
-            var expected = @"
-<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.DateTime],System.Nullable`1[System.ValueTuple`2[System.Int32,System.DateTime]]]"">
-  <Parameters>
-    <Parameter Type=""System.ValueTuple`2[System.Int32,System.DateTime]"" Id=""0"" Name=""t"" />
-  </Parameters>
-  <Body>
-    <Convert Type=""System.Nullable`1[System.ValueTuple`2[System.Int32,System.DateTime]]"" IsLifted=""true"" IsLiftedToNull=""true"">
-      <Operand>
-        <Parameter Type=""System.ValueTuple`2[System.Int32,System.DateTime]"" Id=""0"" Name=""t"" />
-      </Operand>
-    </Convert>
-  </Body>
-</Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_5948_DA1F();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5948_DA1F() => INCONCLUSIVE(); }
-
-        [TestMethod]
-        public void CompilerTest_D7DE_3D5E()
-        {
-            // (Expression<Func<(int, DateTime), (long, DateTimeOffset)>>)(t => t)
-            var actual = GetDebugView(@"(Expression<Func<(int, DateTime), (long, DateTimeOffset)>>)(t => t)");
-            var expected = @"
-<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.DateTime],System.ValueTuple`2[System.Int64,System.DateTimeOffset]]"">
-  <Parameters>
-    <Parameter Type=""System.ValueTuple`2[System.Int32,System.DateTime]"" Id=""0"" Name=""t"" />
-  </Parameters>
-  <Body>
-    <CSharpTupleConvert Type=""System.ValueTuple`2[System.Int64,System.DateTimeOffset]"">
-      <Operand>
-        <Parameter Type=""System.ValueTuple`2[System.Int32,System.DateTime]"" Id=""0"" Name=""t"" />
-      </Operand>
-      <ElementConversions>
-        <Lambda Type=""System.Func`2[System.Int32,System.Int64]"">
-          <Parameters>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""p"" />
-          </Parameters>
-          <Body>
-            <Convert Type=""System.Int64"">
-              <Operand>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""p"" />
-              </Operand>
-            </Convert>
-          </Body>
-        </Lambda>
-        <Lambda Type=""System.Func`2[System.DateTime,System.DateTimeOffset]"">
-          <Parameters>
-            <Parameter Type=""System.DateTime"" Id=""2"" Name=""p"" />
-          </Parameters>
-          <Body>
-            <Convert Type=""System.DateTimeOffset"" Method=""System.DateTimeOffset op_Implicit(System.DateTime)"">
-              <Operand>
-                <Parameter Type=""System.DateTime"" Id=""2"" Name=""p"" />
-              </Operand>
-            </Convert>
-          </Body>
-        </Lambda>
-      </ElementConversions>
-    </CSharpTupleConvert>
-  </Body>
-</Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_D7DE_3D5E();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D7DE_3D5E() => INCONCLUSIVE(); }
-
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -218,15 +144,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    partial class CompilerTests_CSharp70_Tuples
+    partial class CompilerTests_CSharp70_TupleLiterals
     {
         partial class Reviewed
         {
             public override void CompilerTest_4091_A89E() => OK();
             public override void CompilerTest_ACFD_39F6() => OK();
             public override void CompilerTest_694F_FB96() => OK();
-            public override void CompilerTest_5948_DA1F() => OK();
-            public override void CompilerTest_D7DE_3D5E() => OK();
         }
     }
 }

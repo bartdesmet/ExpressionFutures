@@ -13,16 +13,10 @@
 <#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
 <#
-var name = "CSharp70_Tuples";
+var name = "CSharp70_TupleConvert";
 
 var exprs = new[]
 {
-    // Literal
-    "(Expression<Func<(int, string)>>)(() => (42, \"bar\"))",
-    "(Expression<Func<int, string, (int, string)>>)((i, s) => (i, s))",
-    "(Expression<Func<int, string, (int, string)>>)((i, s) => (x: i, name: s))",
-
-    // Convert
     "(Expression<Func<(int, DateTime), (int, DateTime)?>>)(t => t)",
     "(Expression<Func<(int, DateTime), (long, DateTimeOffset)>>)(t => t)",
 };
