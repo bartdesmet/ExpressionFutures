@@ -214,9 +214,112 @@ namespace Tests
             })
             {
                 var expr = e();
-                Func<Range> f = Expression.Lambda<Func<Range>>(expr).Compile();
+                var f = Expression.Lambda<Func<Range>>(expr).Compile();
                 var res = f();
                 Assert.AreEqual(Range.All, res);
+            }
+        }
+
+        [TestMethod]
+        public void Range_Compile_Lifted()
+        {
+            var idx1 = new Index(1);
+            var idx2 = new Index(2);
+            var arg1 = Expression.Constant(idx1);
+            var arg2 = Expression.Constant(idx2);
+            var arg1n = Expression.Constant(idx1, typeof(Index?));
+            var arg2n = Expression.Constant(idx2, typeof(Index?));
+            var argn = Expression.Constant(null, typeof(Index?));
+
+            foreach (var e in new Func<Expression, Expression, RangeCSharpExpression>[]
+            {
+                (l, r) => CSharpExpression.Range(l, r),
+                (l, r) => CSharpExpression.Range(l, r, method: null, typeof(Range?)),
+            })
+            {
+                foreach (var i in new (Expression start, Expression end, Range? value)[]
+                {
+                    (arg1n, arg2, new Range(idx1, idx2)),
+                    (arg1, arg2n, new Range(idx1, idx2)),
+                    (arg1n, arg2n, new Range(idx1, idx2)),
+                    (arg1n, null, Range.StartAt(idx1)),
+                    (null, arg2n, Range.EndAt(idx2)),
+
+                    (argn, arg2, null),
+                    (arg1, argn, null),
+                    (argn, argn, null),
+                })
+                {
+                    var expr = e(i.start, i.end);
+                    var f = Expression.Lambda<Func<Range?>>(expr).Compile();
+                    var res = f();
+                    Assert.AreEqual(i.value, res);
+                }
+            }
+
+            foreach (var e in new Func<Expression, Expression, RangeCSharpExpression>[]
+            {
+                (l, r) => CSharpExpression.Range(l, r),
+                (l, r) => CSharpExpression.Range(l, r, method: null, typeof(Range?)),
+                (l, r) => CSharpExpression.Range(l, r, method: typeof(Range).GetConstructor(new[] { typeof(Index), typeof(Index) }), typeof(Range?)),
+            })
+            {
+                foreach (var i in new (Expression start, Expression end, Range? value)[]
+                {
+                    (arg1n, arg2, new Range(idx1, idx2)),
+                    (arg1, arg2n, new Range(idx1, idx2)),
+                    (arg1n, arg2n, new Range(idx1, idx2)),
+
+                    (argn, arg2, null),
+                    (arg1, argn, null),
+                    (argn, argn, null),
+                })
+                {
+                    var expr = e(i.start, i.end);
+                    var f = Expression.Lambda<Func<Range?>>(expr).Compile();
+                    var res = f();
+                    Assert.AreEqual(i.value, res);
+                }
+            }
+
+            foreach (var e in new Func<Expression, RangeCSharpExpression>[]
+            {
+                l => CSharpExpression.Range(l, null),
+                l => CSharpExpression.Range(l, null, method: null, typeof(Range?)),
+                l => CSharpExpression.Range(l, null, method: typeof(Range).GetMethod(nameof(Range.StartAt)), typeof(Range?)),
+            })
+            {
+                foreach (var i in new (Expression start, Range? value)[]
+                {
+                    (arg1n, Range.StartAt(idx1)),
+                    (argn, null),
+                })
+                {
+                    var expr = e(i.start);
+                    var f = Expression.Lambda<Func<Range?>>(expr).Compile();
+                    var res = f();
+                    Assert.AreEqual(i.value, res);
+                }
+            }
+
+            foreach (var e in new Func<Expression, RangeCSharpExpression>[]
+            {
+                r => CSharpExpression.Range(null, r),
+                r => CSharpExpression.Range(null, r, method: null, typeof(Range?)),
+                r => CSharpExpression.Range(null, r, method: typeof(Range).GetMethod(nameof(Range.EndAt)), typeof(Range?)),
+            })
+            {
+                foreach (var i in new (Expression end, Range? value)[]
+                {
+                    (arg2n, Range.EndAt(idx2)),
+                    (argn, null),
+                })
+                {
+                    var expr = e(i.end);
+                    var f = Expression.Lambda<Func<Range?>>(expr).Compile();
+                    var res = f();
+                    Assert.AreEqual(i.value, res);
+                }
             }
         }
 

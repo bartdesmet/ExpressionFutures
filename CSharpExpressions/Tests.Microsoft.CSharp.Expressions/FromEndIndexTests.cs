@@ -96,7 +96,7 @@ namespace Tests
                 })
                 {
                     var expr = e(i.op);
-                    Func<Index> f = Expression.Lambda<Func<Index>>(expr).Compile();
+                    var f = Expression.Lambda<Func<Index>>(expr).Compile();
                     var res = f();
                     Assert.AreEqual(i.value, res);
                 }
@@ -122,7 +122,7 @@ namespace Tests
                 })
                 {
                     var expr = e(i.op);
-                    Func<Index?> f = Expression.Lambda<Func<Index?>>(expr).Compile();
+                    var f = Expression.Lambda<Func<Index?>>(expr).Compile();
                     var res = f();
                     Assert.AreEqual(i.value, res);
                 }
