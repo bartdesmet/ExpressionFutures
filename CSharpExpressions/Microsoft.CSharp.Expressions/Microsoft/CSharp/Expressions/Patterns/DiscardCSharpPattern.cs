@@ -5,6 +5,10 @@
 using System;
 using System.Linq.Expressions;
 
+using static System.Dynamic.Utils.TypeUtils;
+
+using LinqError = System.Linq.Expressions.Error;
+
 namespace Microsoft.CSharp.Expressions
 {
     using static Helpers;
@@ -56,6 +60,9 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The expression representing the pattern applied to the specified object.</returns>
         internal override Expression Reduce(Expression @object)
         {
+            if (!AreReferenceAssignable(InputType, @object.Type))
+                throw LinqError.ExpressionTypeDoesNotMatchAssignment(@object.Type, InputType);
+
             // NB: RecursiveCSharpPattern has a peephole optimization for the pattern below.
 
             // NB: Ensure any side-effects in evaluating @object are retained.

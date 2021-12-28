@@ -95,6 +95,8 @@
     </Compile>
     <Compile Include="DynamicTests.cs" />
     <Compile Include="MemberInitializerTests.cs" />
+    <Compile Include="Patterns\DiscardPatternTests.cs" />
+    <Compile Include="Patterns\VarPatternTests.cs" />
     <Compile Include="WithTests.cs" />
     <Compile Include="InterpolatedStringTests.cs" />
     <Compile Include="RangeTests.cs" />
@@ -208,6 +210,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

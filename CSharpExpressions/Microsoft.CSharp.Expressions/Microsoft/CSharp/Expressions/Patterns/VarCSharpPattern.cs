@@ -45,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpPattern.Var(_info, Variable);
+            return CSharpPattern.Var(_info, variable);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
 
             // NB: This can fail if there's a variable and the input type is not compatible. See Var factory.
 
-            return CSharpPattern.Var(PatternInfo(inputType, inputType), Variable);
+            return CSharpPattern.Var(ObjectPatternInfo(PatternInfo(inputType, inputType), Variable));
         }
 
         /// <summary>
