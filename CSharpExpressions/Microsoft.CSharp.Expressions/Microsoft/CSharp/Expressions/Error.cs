@@ -791,6 +791,11 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception FoundMoreThanOneDefaultLabel() => new ArgumentException(Strings.FoundMoreThanOneDefaultLabel);
 
+        /// <summary>
+        /// ArgumentException with message like "A string interpolation format string cannot be empty."
+        /// </summary>
+        internal static Exception EmptyFormatSpecifier() => new ArgumentException(Strings.EmptyFormatSpecifier);
+
     }
 
     /// <summary>
@@ -1578,6 +1583,11 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string FoundMoreThanOneDefaultLabel => SR.FoundMoreThanOneDefaultLabel;
 
+        /// <summary>
+        /// A string like "A string interpolation format string cannot be empty."
+        /// </summary>
+        internal static string EmptyFormatSpecifier => SR.EmptyFormatSpecifier;
+
     }
 }
 
@@ -1741,5 +1751,6 @@ namespace System
         public const string SwitchValueTypeDoesNotMatchPatternInputType = "The pattern input type '{0}' is not compatible with the switch value type '{1}'.";
         public const string InconsistentPatternInputType = "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section.";
         public const string FoundMoreThanOneDefaultLabel = "A switch statement should contain at most one default case.";
+        public const string EmptyFormatSpecifier = "A string interpolation format string cannot be empty.";
     }
 }

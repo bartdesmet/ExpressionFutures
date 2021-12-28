@@ -94,6 +94,9 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresCanRead(value, nameof(value));
 
+            if (format != null && format == "")
+                throw Error.EmptyFormatSpecifier();
+
             return new InterpolationStringInsert(value, format, alignment);
         }
     }

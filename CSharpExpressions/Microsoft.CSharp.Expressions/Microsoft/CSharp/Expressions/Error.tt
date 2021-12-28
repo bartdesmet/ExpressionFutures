@@ -167,6 +167,7 @@ var errors = new[]
     new { Name = "SwitchValueTypeDoesNotMatchPatternInputType", ExceptionType = "ArgumentException", Args = 2, Message = "The pattern input type '{0}' is not compatible with the switch value type '{1}'." },
     new { Name = "InconsistentPatternInputType", ExceptionType = "ArgumentException", Args = 2, Message = "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section." },
     new { Name = "FoundMoreThanOneDefaultLabel", ExceptionType = "ArgumentException", Args = 0, Message = "A switch statement should contain at most one default case." },
+    new { Name = "EmptyFormatSpecifier", ExceptionType = "ArgumentException", Args = 0, Message = "A string interpolation format string cannot be empty." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

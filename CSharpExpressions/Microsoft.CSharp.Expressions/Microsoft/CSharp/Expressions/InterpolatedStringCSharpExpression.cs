@@ -168,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
 
                 foreach (var method in typeof(string).GetMethods(BindingFlags.Public | BindingFlags.Static))
                 {
-                    if (!method.IsGenericMethodDefinition && method.Name == "Format")
+                    if (!method.IsGenericMethodDefinition && method.Name == nameof(string.Format))
                     {
                         var parameters = method.GetParametersCached();
 
@@ -231,7 +231,7 @@ namespace Microsoft.CSharp.Expressions
 
         protected override Expression MakeStringFormat(string format, List<Expression> args)
         {
-            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod("Create", BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) });
+            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod(nameof(FormattableStringFactory.Create), BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) });
 
             var call = Expression.Call(s_create, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
 
