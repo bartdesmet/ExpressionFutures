@@ -18,21 +18,29 @@ namespace Tests
         public void TupleBinary_Factory_ArgumentChecking()
         {
             // null checks
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(null, Expression.Constant((1, 2))));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), null));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(null, Expression.Constant((1, 2)), new LambdaExpression[0]));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[2] { null, null }));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(null, Expression.Constant((1, 2))));
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), null));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(null, Expression.Constant((1, 2)), new LambdaExpression[0]));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[2] { null, null }));
 
             // not a tuple type
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant(1), Expression.Constant((1, 2))));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant(1), Expression.Constant((1, 2)), new LambdaExpression[0]));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant(1), new LambdaExpression[0]));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant(1), Expression.Constant((1, 2))));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant(1), Expression.Constant((1, 2)), new LambdaExpression[0]));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant(1), new LambdaExpression[0]));
 
             // mismatched tuple arities
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3))));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3)), new LambdaExpression[0]));
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3))));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3)), new LambdaExpression[0]));
 
             // invalid check count
@@ -58,6 +66,15 @@ namespace Tests
             // NB: exception type derived from LINQ helpers
             AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
             AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+
+            // can't infer equality check
+            // NB: exception type derived from LINQ helpers
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1L, 2)), Expression.Constant((1, 2))));
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, (2, 3))), Expression.Constant((1, 2L))));
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2L)), Expression.Constant((1, (2, 3)))));
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1L, 2)), Expression.Constant((1, 2))));
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, (2, 3))), Expression.Constant((1, 2L))));
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2L)), Expression.Constant((1, (2, 3)))));
 
             // TODO: Contravariance allowed for checks?
         }
@@ -96,7 +113,7 @@ namespace Tests
             var nullableLeft = Expression.Convert(left, nullableType);
             var nullableRight = Expression.Convert(right, nullableType);
 
-            var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight, new LambdaExpression[] { check1, check2 }); ;
+            var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight, new LambdaExpression[] { check1, check2 });
 
             Assert.AreEqual(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
             Assert.AreEqual(typeof(bool), liftedEq.Type);
@@ -107,7 +124,7 @@ namespace Tests
             Assert.AreSame(check2, liftedEq.EqualityChecks[1]);
             Assert.IsTrue(liftedEq.IsLifted);
 
-            var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight, new LambdaExpression[] { check1, check2 }); ;
+            var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight, new LambdaExpression[] { check1, check2 });
 
             Assert.AreEqual(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
             Assert.AreEqual(typeof(bool), liftedNe.Type);
@@ -117,6 +134,159 @@ namespace Tests
             Assert.AreSame(check1, liftedNe.EqualityChecks[0]);
             Assert.AreSame(check2, liftedNe.EqualityChecks[1]);
             Assert.IsTrue(liftedNe.IsLifted);
+        }
+
+        [TestMethod]
+        public void TupleBinary_Factory_Properties_InferChecks()
+        {
+            var left = Expression.Constant((1, "bar"));
+            var right = Expression.Constant((2, "foo"));
+
+            var eq = CSharpExpression.TupleEqual(left, right);
+
+            Assert.AreEqual(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), eq.Type);
+            Assert.AreSame(left, eq.Left);
+            Assert.AreSame(right, eq.Right);
+            Assert.AreEqual(2, eq.EqualityChecks.Count);
+            AssertCheck(eq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
+            AssertCheck(eq.EqualityChecks[1], typeof(string), ExpressionType.Equal);
+            Assert.IsFalse(eq.IsLifted);
+
+            var ne = CSharpExpression.TupleNotEqual(left, right);
+
+            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), ne.Type);
+            Assert.AreSame(left, ne.Left);
+            Assert.AreSame(right, ne.Right);
+            Assert.AreEqual(2, ne.EqualityChecks.Count);
+            AssertCheck(ne.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
+            AssertCheck(ne.EqualityChecks[1], typeof(string), ExpressionType.NotEqual);
+            Assert.IsFalse(ne.IsLifted);
+
+            var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
+            var nullableLeft = Expression.Convert(left, nullableType);
+            var nullableRight = Expression.Convert(right, nullableType);
+
+            var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight);
+
+            Assert.AreEqual(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), liftedEq.Type);
+            Assert.AreSame(nullableLeft, liftedEq.Left);
+            Assert.AreSame(nullableRight, liftedEq.Right);
+            Assert.AreEqual(2, liftedEq.EqualityChecks.Count);
+            AssertCheck(liftedEq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
+            AssertCheck(liftedEq.EqualityChecks[1], typeof(string), ExpressionType.Equal);
+            Assert.IsTrue(liftedEq.IsLifted);
+
+            var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight);
+
+            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), liftedNe.Type);
+            Assert.AreSame(nullableLeft, liftedNe.Left);
+            Assert.AreSame(nullableRight, liftedNe.Right);
+            Assert.AreEqual(2, liftedNe.EqualityChecks.Count);
+            AssertCheck(liftedNe.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
+            AssertCheck(liftedNe.EqualityChecks[1], typeof(string), ExpressionType.NotEqual);
+            Assert.IsTrue(liftedNe.IsLifted);
+
+            void AssertCheck(LambdaExpression check, Type type, ExpressionType kind)
+            {
+                Assert.AreEqual(2, check.Parameters.Count);
+                Assert.AreEqual(type, check.Parameters[0].Type);
+                Assert.AreEqual(type, check.Parameters[1].Type);
+                var b = check.Body as BinaryExpression;
+                Assert.IsNotNull(b);
+                Assert.IsTrue(b.NodeType == kind);
+                Assert.IsTrue(b.Left == check.Parameters[0]);
+                Assert.IsTrue(b.Right == check.Parameters[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TupleBinary_Factory_Properties_InferChecks_Nested()
+        {
+            var left = Expression.Constant((1, ("bar", TimeSpan.FromSeconds(1))));
+            var right = Expression.Constant((2, ("foo", TimeSpan.FromSeconds(2))));
+
+            var eq = CSharpExpression.TupleEqual(left, right);
+
+            Assert.AreEqual(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), eq.Type);
+            Assert.AreSame(left, eq.Left);
+            Assert.AreSame(right, eq.Right);
+            Assert.AreEqual(2, eq.EqualityChecks.Count);
+            AssertCheck(eq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
+            AssertNestedCheck(eq.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleEqual);
+            Assert.IsFalse(eq.IsLifted);
+
+            var ne = CSharpExpression.TupleNotEqual(left, right);
+
+            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), ne.Type);
+            Assert.AreSame(left, ne.Left);
+            Assert.AreSame(right, ne.Right);
+            Assert.AreEqual(2, ne.EqualityChecks.Count);
+            AssertCheck(ne.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
+            AssertNestedCheck(ne.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleNotEqual);
+            Assert.IsFalse(ne.IsLifted);
+
+            var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
+            var nullableLeft = Expression.Convert(left, nullableType);
+            var nullableRight = Expression.Convert(right, nullableType);
+
+            var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight);
+
+            Assert.AreEqual(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), liftedEq.Type);
+            Assert.AreSame(nullableLeft, liftedEq.Left);
+            Assert.AreSame(nullableRight, liftedEq.Right);
+            Assert.AreEqual(2, liftedEq.EqualityChecks.Count);
+            AssertCheck(liftedEq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
+            AssertNestedCheck(liftedEq.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleEqual);
+            Assert.IsTrue(liftedEq.IsLifted);
+
+            var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight);
+
+            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
+            Assert.AreEqual(typeof(bool), liftedNe.Type);
+            Assert.AreSame(nullableLeft, liftedNe.Left);
+            Assert.AreSame(nullableRight, liftedNe.Right);
+            Assert.AreEqual(2, liftedNe.EqualityChecks.Count);
+            AssertCheck(liftedNe.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
+            AssertNestedCheck(liftedNe.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleNotEqual);
+            Assert.IsTrue(liftedNe.IsLifted);
+
+            void AssertCheck(LambdaExpression check, Type type, ExpressionType kind)
+            {
+                Assert.AreEqual(2, check.Parameters.Count);
+                Assert.AreEqual(type, check.Parameters[0].Type);
+                Assert.AreEqual(type, check.Parameters[1].Type);
+                var b = check.Body as BinaryExpression;
+                Assert.IsNotNull(b);
+                Assert.IsTrue(b.NodeType == kind);
+                Assert.IsTrue(b.Left == check.Parameters[0]);
+                Assert.IsTrue(b.Right == check.Parameters[1]);
+            }
+
+            void AssertNestedCheck(LambdaExpression check, Type type, CSharpExpressionType kind)
+            {
+                Assert.AreEqual(2, check.Parameters.Count);
+                Assert.AreEqual(type, check.Parameters[0].Type);
+                Assert.AreEqual(type, check.Parameters[1].Type);
+                var b = check.Body as TupleBinaryCSharpExpression;
+                Assert.IsNotNull(b);
+                Assert.IsTrue(b.CSharpNodeType == kind);
+                Assert.IsTrue(b.Left == check.Parameters[0]);
+                Assert.IsTrue(b.Right == check.Parameters[1]);
+
+                var types = Helpers.GetTupleComponentTypes(type).ToArray();
+
+                for (var i = 0; i < types.Length; i++)
+                {
+                    AssertCheck(b.EqualityChecks[i], types[i], kind == CSharpExpressionType.TupleEqual ? ExpressionType.Equal : ExpressionType.NotEqual);
+                }
+            }
         }
 
         [TestMethod]

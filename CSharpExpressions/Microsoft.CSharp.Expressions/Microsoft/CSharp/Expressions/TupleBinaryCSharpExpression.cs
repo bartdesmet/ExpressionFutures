@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
-
+using System.Runtime.CompilerServices;
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 using static System.Linq.Expressions.ExpressionStubs;
@@ -380,21 +380,50 @@ namespace Microsoft.CSharp.Expressions
             if (arityLeft != arityRight)
                 throw Error.TupleComponentCountMismatch(leftType, rightType);
 
-            // CONSIDER: If no equality checks are specified, generate default ones (using Equal/NotEqual or TupleEqual/TupleNotEqual for elements)?
-
-            var checks = equalityChecks.ToReadOnly();
-
-            if (checks.Count != arityLeft)
-                throw Error.InvalidEqualityCheckCount(arityLeft);
-
-            RequiresNotNullItems(checks, nameof(equalityChecks));
-
             var leftTypes = GetTupleComponentTypes(leftType).ToArray();
             var rightTypes = GetTupleComponentTypes(rightType).ToArray();
 
-            for (int i = 0; i < arityLeft; i++)
+            // CONSIDER: If no equality checks are specified, generate default ones (using Equal/NotEqual or TupleEqual/TupleNotEqual for elements)?
+
+            ReadOnlyCollection<LambdaExpression> checks;
+
+            if (equalityChecks == null)
             {
-                CheckEqualityCheck(kind, checks[i], leftTypes[i], rightTypes[i]);
+                var inferredChecks = new LambdaExpression[arityLeft];
+
+                for (int i = 0; i < arityLeft; i++)
+                {
+                    var leftComponentType = leftTypes[i];
+                    var rightComponentType = rightTypes[i];
+
+                    var leftComponentParameter = Expression.Parameter(leftComponentType);
+                    var rightComponentParameter = Expression.Parameter(rightComponentType);
+
+                    var equalityCheckBody =
+                        IsTupleType(leftComponentType) && IsTupleType(rightComponentType)
+                            ? (Expression)Make(kind, leftComponentParameter, rightComponentParameter, equalityChecks: null)
+                            : kind == CSharpExpressionType.TupleEqual
+                                ? Expression.Equal(leftComponentParameter, rightComponentParameter)
+                                : Expression.NotEqual(leftComponentParameter, rightComponentParameter);
+
+                    inferredChecks[i] = Expression.Lambda(equalityCheckBody, leftComponentParameter, rightComponentParameter);
+                }
+
+                checks = new TrueReadOnlyCollection<LambdaExpression>(inferredChecks);
+            }
+            else
+            {
+                checks = equalityChecks.ToReadOnly();
+
+                if (checks.Count != arityLeft)
+                    throw Error.InvalidEqualityCheckCount(arityLeft);
+
+                RequiresNotNullItems(checks, nameof(equalityChecks));
+
+                for (int i = 0; i < arityLeft; i++)
+                {
+                    CheckEqualityCheck(kind, checks[i], leftTypes[i], rightTypes[i]);
+                }
             }
 
             if (kind == CSharpExpressionType.TupleEqual)
@@ -442,6 +471,15 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="left">The <see cref="Expression" /> representing the left operand.</param>
         /// <param name="right">The <see cref="Expression" /> representing the right operand.</param>
+        /// <returns>A <see cref="TupleBinaryCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleEqual" /> and the <see cref="TupleBinaryCSharpExpression.Left" />, <see cref="TupleBinaryCSharpExpression.Right" />, and <see cref="TupleBinaryCSharpExpression.EqualityChecks" /> properties set to the specified values.</returns>
+        public static TupleBinaryCSharpExpression TupleEqual(Expression left, Expression right) =>
+            TupleBinaryCSharpExpression.Make(CSharpExpressionType.TupleEqual, left, right, equalityChecks: null);
+
+        /// <summary>
+        /// Creates a <see cref="TupleBinaryCSharpExpression" /> that represents a tuple equality expression.
+        /// </summary>
+        /// <param name="left">The <see cref="Expression" /> representing the left operand.</param>
+        /// <param name="right">The <see cref="Expression" /> representing the right operand.</param>
         /// <param name="equalityChecks">An array of one or more of <see cref="LambdaExpression" /> objects that represent the equality checks to apply to the tuple elements.</param>
         /// <returns>A <see cref="TupleBinaryCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleEqual" /> and the <see cref="TupleBinaryCSharpExpression.Left" />, <see cref="TupleBinaryCSharpExpression.Right" />, and <see cref="TupleBinaryCSharpExpression.EqualityChecks" /> properties set to the specified values.</returns>
         public static TupleBinaryCSharpExpression TupleEqual(Expression left, Expression right, params LambdaExpression[] equalityChecks) =>
@@ -456,6 +494,15 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A <see cref="TupleBinaryCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleEqual" /> and the <see cref="TupleBinaryCSharpExpression.Left" />, <see cref="TupleBinaryCSharpExpression.Right" />, and <see cref="TupleBinaryCSharpExpression.EqualityChecks" /> properties set to the specified values.</returns>
         public static TupleBinaryCSharpExpression TupleEqual(Expression left, Expression right, IEnumerable<LambdaExpression> equalityChecks) =>
             TupleBinaryCSharpExpression.Make(CSharpExpressionType.TupleEqual, left, right, equalityChecks);
+
+        /// <summary>
+        /// Creates a <see cref="TupleBinaryCSharpExpression" /> that represents a tuple inequality expression.
+        /// </summary>
+        /// <param name="left">The <see cref="Expression" /> representing the left operand.</param>
+        /// <param name="right">The <see cref="Expression" /> representing the right operand.</param>
+        /// <returns>A <see cref="TupleBinaryCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleNotEqual" /> and the <see cref="TupleBinaryCSharpExpression.Left" />, <see cref="TupleBinaryCSharpExpression.Right" />, and <see cref="TupleBinaryCSharpExpression.EqualityChecks" /> properties set to the specified values.</returns>
+        public static TupleBinaryCSharpExpression TupleNotEqual(Expression left, Expression right) =>
+            TupleBinaryCSharpExpression.Make(CSharpExpressionType.TupleNotEqual, left, right, equalityChecks: null);
 
         /// <summary>
         /// Creates a <see cref="TupleBinaryCSharpExpression" /> that represents a tuple inequality expression.
