@@ -509,7 +509,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
-                    Helpers.RequiresCanWrite(left, nameof(left));
+                    RequiresCanWrite(left, nameof(left));
 
                     if (!AreReferenceAssignable(rightConversion.InputType, rhsType))
                         throw Error.DeconstructingComponentAndConversionIncompatible(rightConversion.InputType, rhsType, depth, component);
