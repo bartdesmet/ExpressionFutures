@@ -1188,7 +1188,7 @@ namespace Microsoft.CSharp.Expressions
             return node;
         }
 
-        protected override MemberInitializer VisitMemberInitializer(MemberInitializer node)
+        protected internal override MemberInitializer VisitMemberInitializer(MemberInitializer node)
         {
             var expr = Visit(node.Expression);
 

@@ -84,7 +84,9 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.With(@object, Clone, initializers);
+            return Members != null
+                ? CSharpExpression.With(@object, Members, initializers)
+                : CSharpExpression.With(@object, Clone, initializers);
         }
 
         /// <summary>

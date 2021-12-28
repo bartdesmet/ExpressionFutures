@@ -101,6 +101,7 @@ var errors = new[]
     new { Name = "CloneMethodMustNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "Clone method '{0}' should be an instance method." },
     new { Name = "CloneMethodShouldReturnCompatibleType", ExceptionType = "ArgumentException", Args = 2, Message = "Clone method '{0}' should return a type that can be converted to '{1}'." },
     new { Name = "MemberInitializerMemberMustNotBeStatic", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' used in a 'MemberInitializer' cannot be static." },
+    new { Name = "MemberInitializerMemberMustNotBeIndexer", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' used in a 'MemberInitializer' cannot be an indexer." },
     new { Name = "MemberInitializerMemberMustBeWriteable", ExceptionType = "ArgumentException", Args = 1, Message = "Member '{0}' used in a 'MemberInitializer' must be writeable." },
     new { Name = "NoAnonymousTypeConstructorFound", ExceptionType = "ArgumentException", Args = 1, Message = "No suitable constructor found for type '{0}' using the specified members." },
     new { Name = "CannotHaveNullablePatternType", ExceptionType = "ArgumentException", Args = 0, Message = "A pattern can never produce a value of a nullable type." },

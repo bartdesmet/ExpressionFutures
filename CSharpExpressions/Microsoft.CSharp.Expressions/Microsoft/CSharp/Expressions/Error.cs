@@ -462,6 +462,11 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception MemberInitializerMemberMustNotBeStatic(object p0) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeStatic(p0));
 
         /// <summary>
+        /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' cannot be an indexer."
+        /// </summary>
+        internal static Exception MemberInitializerMemberMustNotBeIndexer(object p0) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeIndexer(p0));
+
+        /// <summary>
         /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' must be writeable."
         /// </summary>
         internal static Exception MemberInitializerMemberMustBeWriteable(object p0) => new ArgumentException(Strings.MemberInitializerMemberMustBeWriteable(p0));
@@ -1254,6 +1259,11 @@ namespace Microsoft.CSharp.Expressions
         internal static string MemberInitializerMemberMustNotBeStatic(object p0) => SR.Format(SR.MemberInitializerMemberMustNotBeStatic, p0);
 
         /// <summary>
+        /// A string like "Member '{0}' used in a 'MemberInitializer' cannot be an indexer."
+        /// </summary>
+        internal static string MemberInitializerMemberMustNotBeIndexer(object p0) => SR.Format(SR.MemberInitializerMemberMustNotBeIndexer, p0);
+
+        /// <summary>
         /// A string like "Member '{0}' used in a 'MemberInitializer' must be writeable."
         /// </summary>
         internal static string MemberInitializerMemberMustBeWriteable(object p0) => SR.Format(SR.MemberInitializerMemberMustBeWriteable, p0);
@@ -1685,6 +1695,7 @@ namespace System
         public const string CloneMethodMustNotBeStatic = "Clone method '{0}' should be an instance method.";
         public const string CloneMethodShouldReturnCompatibleType = "Clone method '{0}' should return a type that can be converted to '{1}'.";
         public const string MemberInitializerMemberMustNotBeStatic = "Member '{0}' used in a 'MemberInitializer' cannot be static.";
+        public const string MemberInitializerMemberMustNotBeIndexer = "Member '{0}' used in a 'MemberInitializer' cannot be an indexer.";
         public const string MemberInitializerMemberMustBeWriteable = "Member '{0}' used in a 'MemberInitializer' must be writeable.";
         public const string NoAnonymousTypeConstructorFound = "No suitable constructor found for type '{0}' using the specified members.";
         public const string CannotHaveNullablePatternType = "A pattern can never produce a value of a nullable type.";
