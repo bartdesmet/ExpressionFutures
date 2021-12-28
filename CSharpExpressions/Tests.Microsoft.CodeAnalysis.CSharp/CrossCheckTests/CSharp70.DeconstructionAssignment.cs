@@ -4,7 +4,6 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -31,6 +30,30 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             var f = Compile<Action<(int, int)>>("t => { var (x, y) = t; Log(x); Log(y); }");
 
             f((1, 2));
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_TupleLiteral()
+        {
+            var f = Compile<Action>("() => { var (x, y) = (1, 2); Log(x); Log(y); }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_TupleConvert1()
+        {
+            var f = Compile<Action>("() => { (byte x, byte y) = (1, 2); Log(x); Log(y); }");
+
+            f();
+        }
+
+        [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_TupleConvert2()
+        {
+            var f = Compile<Action>("() => { (int x, string y) = (1, null); Log(x); Log(y); }");
+
+            f();
         }
 
         [TestMethod]
@@ -225,6 +248,34 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }");
 
             f(1, 2);
+        }
+
+        [TestMethod]
+        [Ignore] // NB: Known limitation on mutable structs; need support for ref locals.
+         public void CrossCheck_DeconstructionAssignment_LhsTuple()
+        {
+            var f = Compile<Action<int, int>>(@"(px, py) => {
+                var t = (x: 1, y: 2);
+                (t.x, t.y) = (px, py);
+                Log(t.x);
+                Log(t.y);
+            }");
+
+            f(1, 2);
+        }
+
+        [TestMethod]
+        [Ignore] // NB: Known limitation on mutable structs; need support for ref locals.
+        public void CrossCheck_DeconstructionAssignment_OrderOfEffects()
+        {
+            var f = Compile<Action>(@"() => {
+                (int x, StrongBox<int> y) t = (1, new StrongBox<int> { Value = 2 });
+                (t.x, t.y.Value) = ((t.y = new StrongBox<int>(-1)).Value, -2);
+                Log(t.x);
+                Log(t.y.Value);
+            }");
+
+            f();
         }
 
         [TestMethod]

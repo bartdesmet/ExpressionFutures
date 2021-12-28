@@ -234,6 +234,7 @@
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Generated.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
+    <Compile Include="System\Runtime\CompilerServices\RefHolder.cs" />
     <Compile Include="System\Runtime\CompilerServices\DeconstructDelegates.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
