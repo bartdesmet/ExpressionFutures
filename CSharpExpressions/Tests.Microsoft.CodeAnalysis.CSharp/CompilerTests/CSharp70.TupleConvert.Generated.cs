@@ -113,6 +113,106 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D7DE_3D5E() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_2695_BEC3()
+        {
+            // (Expression<Func<(int, DateTime), (int?, DateTime?)>>)(t => t)
+            var actual = GetDebugView(@"(Expression<Func<(int, DateTime), (int?, DateTime?)>>)(t => t)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.DateTime],System.ValueTuple`2[System.Nullable`1[System.Int32],System.Nullable`1[System.DateTime]]]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.DateTime]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleConvert Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.Nullable`1[System.DateTime]]"">
+      <Operand>
+        <Parameter Type=""System.ValueTuple`2[System.Int32,System.DateTime]"" Id=""0"" Name=""t"" />
+      </Operand>
+      <ElementConversions>
+        <Lambda Type=""System.Func`2[System.Int32,System.Nullable`1[System.Int32]]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""p"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""p"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`2[System.DateTime,System.Nullable`1[System.DateTime]]"">
+          <Parameters>
+            <Parameter Type=""System.DateTime"" Id=""2"" Name=""p"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Nullable`1[System.DateTime]"" IsLifted=""true"" IsLiftedToNull=""true"">
+              <Operand>
+                <Parameter Type=""System.DateTime"" Id=""2"" Name=""p"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </ElementConversions>
+    </CSharpTupleConvert>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2695_BEC3();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2695_BEC3() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_7419_0AE5()
+        {
+            // (Expression<Func<(int, int), (object, IFormattable)>>)(t => t)
+            var actual = GetDebugView(@"(Expression<Func<(int, int), (object, IFormattable)>>)(t => t)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.Int32],System.ValueTuple`2[System.Object,System.IFormattable]]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <CSharpTupleConvert Type=""System.ValueTuple`2[System.Object,System.IFormattable]"">
+      <Operand>
+        <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""0"" Name=""t"" />
+      </Operand>
+      <ElementConversions>
+        <Lambda Type=""System.Func`2[System.Int32,System.Object]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""1"" Name=""p"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Object"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""1"" Name=""p"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+        <Lambda Type=""System.Func`2[System.Int32,System.IFormattable]"">
+          <Parameters>
+            <Parameter Type=""System.Int32"" Id=""2"" Name=""p"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.IFormattable"">
+              <Operand>
+                <Parameter Type=""System.Int32"" Id=""2"" Name=""p"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </ElementConversions>
+    </CSharpTupleConvert>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7419_0AE5();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7419_0AE5() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -141,6 +241,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             public override void CompilerTest_5948_DA1F() => OK();
             public override void CompilerTest_D7DE_3D5E() => OK();
+            public override void CompilerTest_2695_BEC3() => OK();
+            public override void CompilerTest_7419_0AE5() => OK();
         }
     }
 }

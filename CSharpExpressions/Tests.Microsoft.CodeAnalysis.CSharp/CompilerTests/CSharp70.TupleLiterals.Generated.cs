@@ -122,6 +122,130 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_694F_FB96() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_2E96_C81B()
+        {
+            // (Expression<Func<(int, string), int>>)(t => t.Item1)
+            var actual = GetDebugView(@"(Expression<Func<(int, string), int>>)(t => t.Item1)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.String],System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <MemberAccess Type=""System.Int32"" Member=""Int32 Item1"">
+      <Expression>
+        <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+      </Expression>
+    </MemberAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2E96_C81B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2E96_C81B() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_B949_DD0E()
+        {
+            // (Expression<Func<(int, string), string>>)(t => t.Item2)
+            var actual = GetDebugView(@"(Expression<Func<(int, string), string>>)(t => t.Item2)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.String],System.String]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <MemberAccess Type=""System.String"" Member=""System.String Item2"">
+      <Expression>
+        <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+      </Expression>
+    </MemberAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_B949_DD0E();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B949_DD0E() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_BC9B_C81B()
+        {
+            // (Expression<Func<(int x, string s), int>>)(t => t.x)
+            var actual = GetDebugView(@"(Expression<Func<(int x, string s), int>>)(t => t.x)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.String],System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <MemberAccess Type=""System.Int32"" Member=""Int32 Item1"">
+      <Expression>
+        <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+      </Expression>
+    </MemberAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_BC9B_C81B();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BC9B_C81B() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_8000_DD0E()
+        {
+            // (Expression<Func<(int x, string s), string>>)(t => t.s)
+            var actual = GetDebugView(@"(Expression<Func<(int x, string s), string>>)(t => t.s)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.String],System.String]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <MemberAccess Type=""System.String"" Member=""System.String Item2"">
+      <Expression>
+        <Parameter Type=""System.ValueTuple`2[System.Int32,System.String]"" Id=""0"" Name=""t"" />
+      </Expression>
+    </MemberAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_8000_DD0E();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8000_DD0E() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_2A80_EB79()
+        {
+            // (Expression<Func<(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j), int>>)(t => t.j)
+            var actual = GetDebugView(@"(Expression<Func<(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j), int>>)(t => t.j)");
+            var expected = @"
+<Lambda Type=""System.Func`2[System.ValueTuple`8[System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.ValueTuple`3[System.Int32,System.Int32,System.Int32]],System.Int32]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`8[System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.ValueTuple`3[System.Int32,System.Int32,System.Int32]]"" Id=""0"" Name=""t"" />
+  </Parameters>
+  <Body>
+    <MemberAccess Type=""System.Int32"" Member=""Int32 Item3"">
+      <Expression>
+        <MemberAccess Type=""System.ValueTuple`3[System.Int32,System.Int32,System.Int32]"" Member=""System.ValueTuple`3[System.Int32,System.Int32,System.Int32] Rest"">
+          <Expression>
+            <Parameter Type=""System.ValueTuple`8[System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.ValueTuple`3[System.Int32,System.Int32,System.Int32]]"" Id=""0"" Name=""t"" />
+          </Expression>
+        </MemberAccess>
+      </Expression>
+    </MemberAccess>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_2A80_EB79();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2A80_EB79() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -151,6 +275,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_4091_A89E() => OK();
             public override void CompilerTest_ACFD_39F6() => OK();
             public override void CompilerTest_694F_FB96() => OK();
+            public override void CompilerTest_2E96_C81B() => OK();
+            public override void CompilerTest_B949_DD0E() => OK();
+            public override void CompilerTest_BC9B_C81B() => OK();
+            public override void CompilerTest_8000_DD0E() => OK();
+            public override void CompilerTest_2A80_EB79() => OK();
         }
     }
 }

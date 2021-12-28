@@ -19,6 +19,8 @@ var exprs = new[]
 {
     "(Expression<Func<(int, DateTime), (int, DateTime)?>>)(t => t)",
     "(Expression<Func<(int, DateTime), (long, DateTimeOffset)>>)(t => t)",
+    "(Expression<Func<(int, DateTime), (int?, DateTime?)>>)(t => t)",
+    "(Expression<Func<(int, int), (object, IFormattable)>>)(t => t)",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

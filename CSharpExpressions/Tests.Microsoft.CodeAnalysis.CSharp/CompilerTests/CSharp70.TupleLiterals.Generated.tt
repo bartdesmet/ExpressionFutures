@@ -17,9 +17,17 @@ var name = "CSharp70_TupleLiterals";
 
 var exprs = new[]
 {
+    // Literal
     "(Expression<Func<(int, string)>>)(() => (42, \"bar\"))",
     "(Expression<Func<int, string, (int, string)>>)((i, s) => (i, s))",
     "(Expression<Func<int, string, (int, string)>>)((i, s) => (x: i, name: s))",
+
+    // Access
+    "(Expression<Func<(int, string), int>>)(t => t.Item1)",
+    "(Expression<Func<(int, string), string>>)(t => t.Item2)",
+    "(Expression<Func<(int x, string s), int>>)(t => t.x)",
+    "(Expression<Func<(int x, string s), string>>)(t => t.s)",
+    "(Expression<Func<(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j), int>>)(t => t.j)",
 };
 #>
 <#@ include file="CompilerTests.t4" #>
