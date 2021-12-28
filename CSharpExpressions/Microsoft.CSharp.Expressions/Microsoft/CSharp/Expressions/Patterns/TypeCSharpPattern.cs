@@ -52,8 +52,6 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            // NB: This can fail if there's a variable and the input type is not compatible. See Var factory.
-
             return CSharpPattern.Type(PatternInfo(inputType, Type), Type);
         }
 

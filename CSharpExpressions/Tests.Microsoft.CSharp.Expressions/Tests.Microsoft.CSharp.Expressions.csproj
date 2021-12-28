@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="DynamicTests.cs" />
     <Compile Include="MemberInitializerTests.cs" />
+    <Compile Include="Patterns\TypePatternTests.cs" />
     <Compile Include="Patterns\DiscardPatternTests.cs" />
     <Compile Include="Patterns\VarPatternTests.cs" />
     <Compile Include="WithTests.cs" />
