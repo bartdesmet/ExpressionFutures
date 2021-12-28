@@ -11,6 +11,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.TypeUtils;
+
+using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -282,11 +285,18 @@ namespace Microsoft.CSharp.Expressions
             for (int i = 0; i < n; i++)
             {
                 //
-                // REVIEW: With deconstructing assignment, a tuple literal can occur as an lhs. The checks below will
-                //         incorrectly prevent the use of e.g. a write-only property.
+                // NB: With deconstructing assignment, a tuple literal can occur as an lhs. The checks below will
+                //     only check assignability but will not enforce RequiresCanRead(args[i]) to avoid rejecting
+                //     set-only properties. These will fail during a call to Reduce if the tuple literal is used
+                //     as an rvalue.
                 //
 
-                ValidateOneArgument(parameters[i], args[i]);
+                var parameterType = parameters[i].ParameterType;
+                var argumentType = args[i].Type;
+
+                ValidateType(type);
+                if (!AreReferenceAssignable(parameterType, argumentType))
+                    throw LinqError.ExpressionTypeDoesNotMatchParameter(argumentType, parameterType);
             }
 
             var argNames = argumentNames?.ToReadOnly();

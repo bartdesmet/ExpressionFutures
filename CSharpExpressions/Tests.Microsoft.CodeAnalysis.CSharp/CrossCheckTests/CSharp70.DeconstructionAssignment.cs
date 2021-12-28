@@ -279,6 +279,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
+        public void CrossCheck_DeconstructionAssignment_WriteOnlyProperty()
+        {
+            var f = Compile<Action>(@"() => {
+                var w1 = new WriteOnlyInt32();
+                var w2 = new WriteOnlyInt32();
+                (w1.Value, w2.Value) = (1, 2);
+                Log(w1._value);
+                Log(w2._value);
+            }", typeof(WriteOnlyInt32).Assembly);
+
+            f();
+        }
+
+        [TestMethod]
         public void CrossCheck_DeconstructionAssignment_Conversion_Simple()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -344,4 +358,11 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO: Add more tests for foreach.
         // TODO: Add more tests involving conversions.
     }
+}
+
+public class WriteOnlyInt32
+{
+    public int _value;
+
+    public int Value { set => _value = value; }
 }
