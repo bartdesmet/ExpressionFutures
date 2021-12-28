@@ -159,6 +159,9 @@ var exprs = new string[]
 
     "CSharpExpression.Discard(typeof(int))",
 
+    "CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), Expression.Constant(1), Expression.Constant(2))",
+    "CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), new Expression[] { Expression.Constant(1), Expression.Constant(2) }, new[] { \"x\", \"y\" })",
+
     "CSharpExpression.FromEndIndex(Expression.Constant(1))",
 
     "CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2))",

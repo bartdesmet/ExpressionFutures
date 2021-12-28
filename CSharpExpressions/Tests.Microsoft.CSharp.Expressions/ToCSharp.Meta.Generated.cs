@@ -1291,8 +1291,8 @@ while (true);";
             Assert.AreEqual(dbg128, expr128.ToCSharp());
         }
 
-        private Expression expr129 = CSharpExpression.FromEndIndex(Expression.Constant(1));
-        private string dbg129 = @"^1";
+        private Expression expr129 = CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), Expression.Constant(1), Expression.Constant(2));
+        private string dbg129 = @"(1, 2)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test129()
@@ -1300,8 +1300,8 @@ while (true);";
             Assert.AreEqual(dbg129, expr129.ToCSharp());
         }
 
-        private Expression expr130 = CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2));
-        private string dbg130 = @"(Index)1..(Index)2";
+        private Expression expr130 = CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), new Expression[] { Expression.Constant(1), Expression.Constant(2) }, new[] { "x", "y" });
+        private string dbg130 = @"(x: 1, y: 2)";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test130()
@@ -1309,8 +1309,8 @@ while (true);";
             Assert.AreEqual(dbg130, expr130.ToCSharp());
         }
 
-        private Expression expr131 = CSharpExpression.Range(Expression.Constant(1), null);
-        private string dbg131 = @"(Index)1..";
+        private Expression expr131 = CSharpExpression.FromEndIndex(Expression.Constant(1));
+        private string dbg131 = @"^1";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test131()
@@ -1318,8 +1318,8 @@ while (true);";
             Assert.AreEqual(dbg131, expr131.ToCSharp());
         }
 
-        private Expression expr132 = CSharpExpression.Range(null, Expression.Constant(2));
-        private string dbg132 = @"..(Index)2";
+        private Expression expr132 = CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2));
+        private string dbg132 = @"(Index)1..(Index)2";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test132()
@@ -1327,8 +1327,8 @@ while (true);";
             Assert.AreEqual(dbg132, expr132.ToCSharp());
         }
 
-        private Expression expr133 = CSharpExpression.Range(null, null);
-        private string dbg133 = @"..";
+        private Expression expr133 = CSharpExpression.Range(Expression.Constant(1), null);
+        private string dbg133 = @"(Index)1..";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test133()
@@ -1336,8 +1336,8 @@ while (true);";
             Assert.AreEqual(dbg133, expr133.ToCSharp());
         }
 
-        private Expression expr134 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Null());
-        private string dbg134 = @"o is (object)null";
+        private Expression expr134 = CSharpExpression.Range(null, Expression.Constant(2));
+        private string dbg134 = @"..(Index)2";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test134()
@@ -1345,8 +1345,8 @@ while (true);";
             Assert.AreEqual(dbg134, expr134.ToCSharp());
         }
 
-        private Expression expr135 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Constant(Expression.Constant(42)));
-        private string dbg135 = @"o is 42";
+        private Expression expr135 = CSharpExpression.Range(null, null);
+        private string dbg135 = @"..";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test135()
@@ -1354,8 +1354,8 @@ while (true);";
             Assert.AreEqual(dbg135, expr135.ToCSharp());
         }
 
-        private Expression expr136 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Var(Expression.Parameter(typeof(int), "x")));
-        private string dbg136 = @"o is var x";
+        private Expression expr136 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Null());
+        private string dbg136 = @"o is (object)null";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test136()
@@ -1363,8 +1363,8 @@ while (true);";
             Assert.AreEqual(dbg136, expr136.ToCSharp());
         }
 
-        private Expression expr137 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Declaration(Expression.Parameter(typeof(int), "x")));
-        private string dbg137 = @"o is int x";
+        private Expression expr137 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Constant(Expression.Constant(42)));
+        private string dbg137 = @"o is 42";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test137()
@@ -1372,8 +1372,8 @@ while (true);";
             Assert.AreEqual(dbg137, expr137.ToCSharp());
         }
 
-        private Expression expr138 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Type(typeof(int)));
-        private string dbg138 = @"o is int";
+        private Expression expr138 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Var(Expression.Parameter(typeof(int), "x")));
+        private string dbg138 = @"o is var x";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test138()
@@ -1381,8 +1381,8 @@ while (true);";
             Assert.AreEqual(dbg138, expr138.ToCSharp());
         }
 
-        private Expression expr139 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Discard());
-        private string dbg139 = @"o is _";
+        private Expression expr139 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Declaration(Expression.Parameter(typeof(int), "x")));
+        private string dbg139 = @"o is int x";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test139()
@@ -1390,8 +1390,8 @@ while (true);";
             Assert.AreEqual(dbg139, expr139.ToCSharp());
         }
 
-        private Expression expr140 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThan(Expression.Constant(42)));
-        private string dbg140 = @"o is < 42";
+        private Expression expr140 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Type(typeof(int)));
+        private string dbg140 = @"o is int";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test140()
@@ -1399,8 +1399,8 @@ while (true);";
             Assert.AreEqual(dbg140, expr140.ToCSharp());
         }
 
-        private Expression expr141 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThanOrEqual(Expression.Constant(42)));
-        private string dbg141 = @"o is <= 42";
+        private Expression expr141 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Discard());
+        private string dbg141 = @"o is _";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test141()
@@ -1408,8 +1408,8 @@ while (true);";
             Assert.AreEqual(dbg141, expr141.ToCSharp());
         }
 
-        private Expression expr142 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThan(Expression.Constant(42)));
-        private string dbg142 = @"o is > 42";
+        private Expression expr142 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThan(Expression.Constant(42)));
+        private string dbg142 = @"o is < 42";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test142()
@@ -1417,8 +1417,8 @@ while (true);";
             Assert.AreEqual(dbg142, expr142.ToCSharp());
         }
 
-        private Expression expr143 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThanOrEqual(Expression.Constant(42)));
-        private string dbg143 = @"o is >= 42";
+        private Expression expr143 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.LessThanOrEqual(Expression.Constant(42)));
+        private string dbg143 = @"o is <= 42";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test143()
@@ -1426,8 +1426,8 @@ while (true);";
             Assert.AreEqual(dbg143, expr143.ToCSharp());
         }
 
-        private Expression expr144 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Not(CSharpPattern.Null()));
-        private string dbg144 = @"o is not (object)null";
+        private Expression expr144 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThan(Expression.Constant(42)));
+        private string dbg144 = @"o is > 42";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test144()
@@ -1435,13 +1435,31 @@ while (true);";
             Assert.AreEqual(dbg144, expr144.ToCSharp());
         }
 
-        private Expression expr145 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))));
-        private string dbg145 = @"o is 42 or 43";
+        private Expression expr145 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.GreaterThanOrEqual(Expression.Constant(42)));
+        private string dbg145 = @"o is >= 42";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test145()
         {
             Assert.AreEqual(dbg145, expr145.ToCSharp());
+        }
+
+        private Expression expr146 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Not(CSharpPattern.Null()));
+        private string dbg146 = @"o is not (object)null";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test146()
+        {
+            Assert.AreEqual(dbg146, expr146.ToCSharp());
+        }
+
+        private Expression expr147 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))));
+        private string dbg147 = @"o is 42 or 43";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test147()
+        {
+            Assert.AreEqual(dbg147, expr147.ToCSharp());
         }
 
     }

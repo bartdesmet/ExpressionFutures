@@ -160,7 +160,71 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
-        // CONSIDER: params overload with just arguments, no names.
+        /// <summary>
+        /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
+        /// </summary>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
+        /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
+        public static TupleLiteralCSharpExpression TupleLiteral(params Expression[] arguments) => TupleLiteral(arguments, argumentNames: null);
+
+        /// <summary>
+        /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
+        /// </summary>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
+        /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
+        public static TupleLiteralCSharpExpression TupleLiteral(IEnumerable<Expression> arguments) => TupleLiteral(arguments, argumentNames: null);
+
+        /// <summary>
+        /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
+        /// </summary>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
+        /// <param name="argumentNames">An array of names corresponding to the tuple components, or <c>null</c> if no names were specified.</param>
+        /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
+        public static TupleLiteralCSharpExpression TupleLiteral(IEnumerable<Expression> arguments, IEnumerable<string> argumentNames)
+        {
+            var args = arguments.ToReadOnly();
+            RequiresNotEmpty(args, nameof(arguments));
+
+            var n = args.Count;
+            var types = new Type[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                var arg = args[i];
+
+                RequiresNotNull(arg, nameof(arguments));
+
+                if (arg.Type == typeof(void))
+                    throw Error.TupleComponentCannotBeVoid();
+
+                types[i] = arg.Type;
+            }
+
+            var type = MakeTupleType(types);
+
+            var argNames = argumentNames?.ToReadOnly();
+
+            if (argNames != null && argNames.Count != n)
+                throw Error.InvalidTupleArgumentNamesCount(type);
+
+            return new TupleLiteralCSharpExpression(type, args, argNames);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
+        /// </summary>
+        /// <param name="type">The <see cref="Type" /> that represents the tuple type.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
+        /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
+        public static TupleLiteralCSharpExpression TupleLiteral(Type type, params Expression[] arguments) => TupleLiteral(type, arguments, argumentNames: null);
+
+        /// <summary>
+        /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
+        /// </summary>
+        /// <param name="type">The <see cref="Type" /> that represents the tuple type.</param>
+        /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
+        /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
+        public static TupleLiteralCSharpExpression TupleLiteral(Type type, IEnumerable<Expression> arguments) => TupleLiteral(type, arguments, argumentNames: null);
 
         /// <summary>
         /// Creates a <see cref="TupleLiteralCSharpExpression" /> that represents a tuple literal.
@@ -174,9 +238,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(type, nameof(type));
 
             if (!IsTupleType(type))
-            {
                 throw Error.InvalidTupleType(type);
-            }
 
             static List<ParameterInfo> GetTupleConstructorParameters(Type type, int n)
             {
@@ -215,21 +277,22 @@ namespace Microsoft.CSharp.Expressions
             var parameters = GetTupleConstructorParameters(type, n);
 
             if (parameters.Count != n)
-            {
                 throw Error.InvalidTupleArgumentCount(type);
-            }
 
             for (int i = 0; i < n; i++)
             {
+                //
+                // REVIEW: With deconstructing assignment, a tuple literal can occur as an lhs. The checks below will
+                //         incorrectly prevent the use of e.g. a write-only property.
+                //
+
                 ValidateOneArgument(parameters[i], args[i]);
             }
 
             var argNames = argumentNames?.ToReadOnly();
 
             if (argNames != null && argNames.Count != n)
-            {
                 throw Error.InvalidTupleArgumentNamesCount(type);
-            }
 
             return new TupleLiteralCSharpExpression(type, args, argNames);
         }

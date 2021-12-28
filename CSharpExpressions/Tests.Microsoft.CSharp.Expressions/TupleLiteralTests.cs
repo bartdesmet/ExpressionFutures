@@ -72,6 +72,22 @@ namespace Tests
         }
 
         [TestMethod]
+        public void TupleLiteral_Factory_ArgumentChecking_InferType()
+        {
+            // empty
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral());
+
+            // null component
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(new Expression[] { null }));
+
+            // void
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(Expression.Empty()));
+
+            // name count mismatch
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(new Expression[] { Expression.Constant(1) }, new string[] { "x", "y" }));
+        }
+
+        [TestMethod]
         public void TupleLiteral_Factory_Properties()
         {
             var type = typeof(ValueTuple<int, bool>);
@@ -91,6 +107,36 @@ namespace Tests
             Assert.IsNull(res1.ArgumentNames);
 
             var res2 = CSharpExpression.TupleLiteral(type, new[] { arg1, arg2 }, new[] { name1, name2 });
+
+            Assert.AreSame(type, res2.Type);
+            Assert.AreEqual(2, res2.Arguments.Count);
+            Assert.AreSame(arg1, res2.Arguments[0]);
+            Assert.AreSame(arg2, res2.Arguments[1]);
+            Assert.AreEqual(2, res2.ArgumentNames.Count);
+            Assert.AreSame(name1, res2.ArgumentNames[0]);
+            Assert.AreSame(name2, res2.ArgumentNames[1]);
+        }
+
+        [TestMethod]
+        public void TupleLiteral_Factory_Properties_InferType()
+        {
+            var type = typeof(ValueTuple<int, bool>);
+
+            var arg1 = Expression.Constant(42);
+            var arg2 = Expression.Constant(true);
+
+            var name1 = "x";
+            var name2 = "b";
+
+            var res1 = CSharpExpression.TupleLiteral(new[] { arg1, arg2 }, null);
+
+            Assert.AreSame(type, res1.Type);
+            Assert.AreEqual(2, res1.Arguments.Count);
+            Assert.AreSame(arg1, res1.Arguments[0]);
+            Assert.AreSame(arg2, res1.Arguments[1]);
+            Assert.IsNull(res1.ArgumentNames);
+
+            var res2 = CSharpExpression.TupleLiteral(new[] { arg1, arg2 }, new[] { name1, name2 });
 
             Assert.AreSame(type, res2.Type);
             Assert.AreEqual(2, res2.Arguments.Count);
