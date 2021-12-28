@@ -18,15 +18,18 @@ namespace Tests
         public void TupleConvert_Factory_ArgumentChecking()
         {
             // null checks
+            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(null, typeof(int)));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(null, typeof(int), new LambdaExpression[0]));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int, int>), new LambdaExpression[2] { null, null }));
 
             // not a tuple type
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant(1), typeof(ValueTuple<int>)));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant(1), typeof(ValueTuple<int>), new LambdaExpression[0]));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(int), new LambdaExpression[0]));
 
             // mismatched tuple arities
+            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int>)));
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int>), new LambdaExpression[0]));
 
             // invalid conversion count
@@ -40,6 +43,11 @@ namespace Tests
             // NB: exception type derived from LINQ helpers
             AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<bool, long>>)(b => 1), (Expression<Func<int, long>>)(x => x) }));
             AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<int, bool>>)(_ => false), (Expression<Func<int, long>>)(x => x) }));
+
+            // no conversion found
+            // NB: exception type derived from LINQ helpers
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<string, bool>)));
+            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, (2, 3))), typeof(ValueTuple<int, ValueTuple<string, bool>>)));
 
             // TODO: Contravariance allowed for conversion?
         }
@@ -66,23 +74,93 @@ namespace Tests
             var nullableDest = typeof(Nullable<>).MakeGenericType(type);
             var nullableSrc = typeof(Nullable<>).MakeGenericType(operand.Type);
 
-            var lifted1 = CSharpExpression.TupleConvert(operand, nullableDest, new LambdaExpression[] { convert1, convert2 }); ;
+            var lifted1 = CSharpExpression.TupleConvert(operand, nullableDest, new LambdaExpression[] { convert1, convert2 });
 
             Assert.AreEqual(nullableDest, lifted1.Type);
+            Assert.AreSame(operand, lifted1.Operand);
+            Assert.AreEqual(2, lifted1.ElementConversions.Count);
+            Assert.AreSame(convert1, lifted1.ElementConversions[0]);
+            Assert.AreSame(convert2, lifted1.ElementConversions[1]);
             Assert.IsTrue(lifted1.IsLifted);
             Assert.IsTrue(lifted1.IsLiftedToNull);
 
-            var lifted2 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), type, new LambdaExpression[] { convert1, convert2 }); ;
+            var lifted2 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), type, new LambdaExpression[] { convert1, convert2 });
 
             Assert.AreEqual(type, lifted2.Type);
+            Assert.AreEqual(2, lifted2.ElementConversions.Count);
+            Assert.AreSame(convert1, lifted2.ElementConversions[0]);
+            Assert.AreSame(convert2, lifted2.ElementConversions[1]);
             Assert.IsTrue(lifted2.IsLifted);
             Assert.IsFalse(lifted2.IsLiftedToNull);
 
-            var lifted3 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), nullableDest, new LambdaExpression[] { convert1, convert2 }); ;
+            var lifted3 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), nullableDest, new LambdaExpression[] { convert1, convert2 });
 
             Assert.AreEqual(nullableDest, lifted3.Type);
+            Assert.AreEqual(2, lifted3.ElementConversions.Count);
+            Assert.AreSame(convert1, lifted3.ElementConversions[0]);
+            Assert.AreSame(convert2, lifted3.ElementConversions[1]);
             Assert.IsTrue(lifted3.IsLifted);
             Assert.IsTrue(lifted3.IsLiftedToNull);
+        }
+
+        [TestMethod]
+        public void TupleConvert_Factory_Properties_InferConversions()
+        {
+            var operand = Expression.Constant((1, 2));
+            var type = typeof(ValueTuple<long, long>);
+
+            var it = CSharpExpression.TupleConvert(operand, type);
+
+            Assert.AreEqual(CSharpExpressionType.TupleConvert, it.CSharpNodeType);
+            Assert.AreEqual(type, it.Type);
+            Assert.AreSame(operand, it.Operand);
+            Assert.AreEqual(2, it.ElementConversions.Count);
+            AssertConversion(it.ElementConversions[0], typeof(int), typeof(long));
+            AssertConversion(it.ElementConversions[1], typeof(int), typeof(long));
+            Assert.IsFalse(it.IsLifted);
+            Assert.IsFalse(it.IsLiftedToNull);
+
+            var nullableDest = typeof(Nullable<>).MakeGenericType(type);
+            var nullableSrc = typeof(Nullable<>).MakeGenericType(operand.Type);
+
+            var lifted1 = CSharpExpression.TupleConvert(operand, nullableDest);
+
+            Assert.AreEqual(nullableDest, lifted1.Type);
+            Assert.AreSame(operand, lifted1.Operand);
+            Assert.AreEqual(2, lifted1.ElementConversions.Count);
+            AssertConversion(lifted1.ElementConversions[0], typeof(int), typeof(long));
+            AssertConversion(lifted1.ElementConversions[1], typeof(int), typeof(long));
+            Assert.IsTrue(lifted1.IsLifted);
+            Assert.IsTrue(lifted1.IsLiftedToNull);
+
+            var lifted2 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), type);
+
+            Assert.AreEqual(type, lifted2.Type);
+            Assert.AreEqual(2, lifted2.ElementConversions.Count);
+            AssertConversion(lifted2.ElementConversions[0], typeof(int), typeof(long));
+            AssertConversion(lifted2.ElementConversions[1], typeof(int), typeof(long));
+            Assert.IsTrue(lifted2.IsLifted);
+            Assert.IsFalse(lifted2.IsLiftedToNull);
+
+            var lifted3 = CSharpExpression.TupleConvert(Expression.Convert(operand, nullableSrc), nullableDest);
+
+            Assert.AreEqual(nullableDest, lifted3.Type);
+            Assert.AreEqual(2, lifted3.ElementConversions.Count);
+            AssertConversion(lifted3.ElementConversions[0], typeof(int), typeof(long));
+            AssertConversion(lifted3.ElementConversions[1], typeof(int), typeof(long));
+            Assert.IsTrue(lifted3.IsLifted);
+            Assert.IsTrue(lifted3.IsLiftedToNull);
+
+            void AssertConversion(LambdaExpression conversion, Type typeFrom, Type typeTo)
+            {
+                Assert.AreEqual(1, conversion.Parameters.Count);
+                Assert.AreEqual(typeFrom, conversion.Parameters[0].Type);
+                var u = conversion.Body as UnaryExpression;
+                Assert.IsNotNull(u);
+                Assert.AreEqual(ExpressionType.Convert, u.NodeType);
+                Assert.AreEqual(typeTo, u.Type);
+                Assert.AreSame(conversion.Parameters[0], u.Operand);
+            }
         }
 
         [TestMethod]

@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
-
+using System.Runtime.CompilerServices;
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
 
@@ -252,6 +252,14 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">The <see cref="Expression" /> representing the tuple to convert.</param>
         /// <param name="type">The <see cref="Type" /> that represents the tuple type to convert to.</param>
+        /// <returns>A <see cref="TupleConvertCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleConvert" /> and the <see cref="TupleConvertCSharpExpression.Operand" /> and <see cref="TupleConvertCSharpExpression.ElementConversions" /> properties set to the specified values.</returns>
+        public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type) => TupleConvert(operand, type, elementConversions: null);
+
+        /// <summary>
+        /// Creates a <see cref="TupleConvertCSharpExpression" /> that represents a tuple conversion.
+        /// </summary>
+        /// <param name="operand">The <see cref="Expression" /> representing the tuple to convert.</param>
+        /// <param name="type">The <see cref="Type" /> that represents the tuple type to convert to.</param>
         /// <param name="elementConversions">An array of one or more of <see cref="LambdaExpression" /> objects that represent the conversions of the tuple elements.</param>
         /// <returns>A <see cref="TupleConvertCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleConvert" /> and the <see cref="TupleConvertCSharpExpression.Operand" /> and <see cref="TupleConvertCSharpExpression.ElementConversions" /> properties set to the specified values.</returns>
         public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, params LambdaExpression[] elementConversions) =>
@@ -296,21 +304,45 @@ namespace Microsoft.CSharp.Expressions
             if (arityFrom != arityTo)
                 throw Error.TupleComponentCountMismatch(sourceType, destinationType);
 
-            // CONSIDER: If no conversions are specified, generate default ones (using Convert or TupleConvert for elements)?
-
-            var conversions = elementConversions.ToReadOnly();
-
-            if (conversions.Count != arityFrom)
-                throw Error.InvalidElementConversionCount(arityFrom);
-
-            RequiresNotNullItems(conversions, nameof(elementConversions));
-
             var fromTypes = GetTupleComponentTypes(sourceType).ToArray();
             var toTypes = GetTupleComponentTypes(destinationType).ToArray();
 
-            for (int i = 0; i < arityFrom; i++)
+            ReadOnlyCollection<LambdaExpression> conversions;
+
+            if (elementConversions == null)
             {
-                CheckConversion(conversions[i], fromTypes[i], toTypes[i]);
+                var inferredConversions = new LambdaExpression[arityFrom];
+
+                for (int i = 0; i < arityFrom; i++)
+                {
+                    var fromComponentType = fromTypes[i];
+                    var toComponentType = toTypes[i];
+
+                    var fromComponentParameter = Expression.Parameter(fromComponentType);
+
+                    var conversionBody =
+                        IsTupleType(fromComponentType.GetNonNullableType()) && IsTupleType(toComponentType.GetNonNullableType())
+                            ? (Expression)TupleConvert(fromComponentParameter, toComponentType, elementConversions: null)
+                            : Expression.Convert(fromComponentParameter, toComponentType);
+
+                    inferredConversions[i] = Expression.Lambda(conversionBody, fromComponentParameter);
+                }
+
+                conversions = new TrueReadOnlyCollection<LambdaExpression>(inferredConversions);
+            }
+            else
+            {
+                conversions = elementConversions.ToReadOnly();
+
+                if (conversions.Count != arityFrom)
+                    throw Error.InvalidElementConversionCount(arityFrom);
+
+                RequiresNotNullItems(conversions, nameof(elementConversions));
+
+                for (int i = 0; i < arityFrom; i++)
+                {
+                    CheckConversion(conversions[i], fromTypes[i], toTypes[i]);
+                }
             }
 
             return new TupleConvertCSharpExpression(operand, type, conversions);

@@ -383,8 +383,6 @@ namespace Microsoft.CSharp.Expressions
             var leftTypes = GetTupleComponentTypes(leftType).ToArray();
             var rightTypes = GetTupleComponentTypes(rightType).ToArray();
 
-            // CONSIDER: If no equality checks are specified, generate default ones (using Equal/NotEqual or TupleEqual/TupleNotEqual for elements)?
-
             ReadOnlyCollection<LambdaExpression> checks;
 
             if (equalityChecks == null)
@@ -400,7 +398,7 @@ namespace Microsoft.CSharp.Expressions
                     var rightComponentParameter = Expression.Parameter(rightComponentType);
 
                     var equalityCheckBody =
-                        IsTupleType(leftComponentType) && IsTupleType(rightComponentType)
+                        IsTupleType(leftComponentType.GetNonNullableType()) && IsTupleType(rightComponentType.GetNonNullableType())
                             ? (Expression)Make(kind, leftComponentParameter, rightComponentParameter, equalityChecks: null)
                             : kind == CSharpExpressionType.TupleEqual
                                 ? Expression.Equal(leftComponentParameter, rightComponentParameter)
