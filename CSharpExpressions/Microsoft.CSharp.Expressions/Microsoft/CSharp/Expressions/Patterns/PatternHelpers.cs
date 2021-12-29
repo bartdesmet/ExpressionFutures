@@ -13,37 +13,34 @@ namespace Microsoft.CSharp.Expressions
 
     internal static class PatternHelpers
     {
-        public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce)
-        {
-            if (@object.NodeType == ExpressionType.Parameter)
-            {
-                return reduce(@object);
-            }
-            else
-            {
-                var p = Expression.Parameter(@object.Type, "__obj");
-
-                return
-                    Expression.Block(
-                        new[] { p },
-                        Expression.Assign(p, @object),
-                        reduce(p)
-                    );
-            }
-        }
+        public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce) => Reduce(@object, reduce, vars: null, stmts: null);
 
         public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce, List<ParameterExpression> vars, List<Expression> stmts)
         {
-            if (@object.NodeType == ExpressionType.Parameter)
+            if (@object.IsPure(readOnly: true))
             {
                 return reduce(@object);
             }
             else
             {
                 var p = Expression.Parameter(@object.Type, "__obj");
-                vars.Add(p);
-                stmts.Add(Expression.Assign(p, @object));
-                return reduce(p);
+                var r = new ReadOnlyTemporaryVariableExpression(p);
+
+                if (vars != null)
+                {
+                    vars.Add(p);
+                    stmts.Add(Expression.Assign(p, @object));
+                    return reduce(r);
+                }
+                else
+                {
+                    return
+                        Expression.Block(
+                            new[] { p },
+                            Expression.Assign(p, @object),
+                            reduce(r)
+                        );
+                }
             }
         }
 

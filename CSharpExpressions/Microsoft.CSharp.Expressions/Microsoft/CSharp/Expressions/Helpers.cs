@@ -599,6 +599,11 @@ namespace Microsoft.CSharp.Expressions
                     return readOnly;
             }
 
+            if (expression is ReadOnlyTemporaryVariableExpression)
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -1867,5 +1872,20 @@ namespace Microsoft.CSharp.Expressions
         public MethodInfo AwaitOnCompleted;
         public PropertyInfo Task;
         public Type ResultType;
+    }
+
+    internal sealed class ReadOnlyTemporaryVariableExpression : Expression
+    {
+        private readonly ParameterExpression _variable;
+
+        public ReadOnlyTemporaryVariableExpression(ParameterExpression variable) => _variable = variable;
+
+        public override Type Type => _variable.Type;
+
+        public override ExpressionType NodeType => ExpressionType.Extension;
+
+        public override bool CanReduce => true;
+
+        public override Expression Reduce() => _variable;
     }
 }
