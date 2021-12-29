@@ -8,12 +8,16 @@ using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Linq.Expressions.ExpressionStubs;
+
 using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static PatternHelpers;
+
     /// <summary>
     /// Represents a property or field access for use in a property subpattern.
     /// </summary>
@@ -46,11 +50,11 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         public abstract bool IsLengthOrCount { get; }
 
-        internal Expression Reduce(Expression @object, List<ParameterExpression> vars, List<Expression> stmts, Action<Expression> addFailIfNot)
+        internal Expression Reduce(Expression @object, List<ParameterExpression> vars, List<Expression> stmts, LabelTarget exit)
         {
             if (Receiver != null)
             {
-                @object = Receiver.Reduce(@object, vars, stmts, addFailIfNot);
+                @object = Receiver.Reduce(@object, vars, stmts, exit);
             }
 
             return PatternHelpers.Reduce(@object, obj =>
@@ -65,12 +69,12 @@ namespace Microsoft.CSharp.Expressions
                     {
                         var nonNullType = obj.Type.GetNonNullableType();
 
-                        addFailIfNot(Expression.TypeIs(obj, nonNullType));
+                        AddFailIfNot(Expression.TypeIs(obj, nonNullType), exit, stmts);
                         obj = Expression.Convert(obj, nonNullType);
                     }
                     else if (!obj.Type.IsValueType)
                     {
-                        addFailIfNot(Expression.ReferenceNotEqual(obj, Expression.Constant(null, obj.Type)));
+                        AddFailIfNot(Expression.ReferenceNotEqual(obj, Expression.Constant(null, obj.Type)), exit, stmts);
                     }
                 }
 

@@ -16,6 +16,7 @@ using static System.Linq.Expressions.ExpressionStubs;
 namespace Microsoft.CSharp.Expressions
 {
     using static Helpers;
+    using static PatternHelpers;
 
     // REVIEW: Consider reflecting the C# grammar instead of "recursive" (despite the C# 8.0 feature being titled "Recurive pattern matching").
 
@@ -92,35 +93,10 @@ namespace Microsoft.CSharp.Expressions
                 var vars = new List<ParameterExpression>();
                 var stmts = new List<Expression>();
 
-                // TODO: Remove duplication of the code below between Recursive and ITuple.
-                void addFailIfNot(Expression test)
-                {
-                    // NB: Peephole optimization for _ pattern.
-                    if (test is ConstantExpression { Value: true })
-                    {
-                        return;
-                    }
-
-                    // NB: Peephole optimization for var pattern.
-                    if (test is BlockExpression b && b.Variables.Count == 0 && b.Expressions.Count == 2 && b.Result is ConstantExpression { Value: true })
-                    {
-                        stmts.Add(b.Expressions[0]);
-                        return;
-                    }
-
-                    var expr =
-                        Expression.IfThen(
-                            Expression.Not(test),
-                            Expression.Goto(exit, ConstantFalse)
-                        );
-
-                    stmts.Add(expr);
-                }
-
                 void emitTypeCheck(Type type)
                 {
                     // NB: Implies null check.
-                    addFailIfNot(Expression.TypeIs(obj, type));
+                    AddFailIfNot(Expression.TypeIs(obj, type), exit, stmts);
 
                     var temp = Expression.Parameter(type, "__objT");
 
@@ -136,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else if (!obj.Type.IsValueType)
                 {
-                    addFailIfNot(Expression.ReferenceNotEqual(obj, Expression.Constant(null, obj.Type)));
+                    AddFailIfNot(Expression.ReferenceNotEqual(obj, Expression.Constant(null, obj.Type)), exit, stmts);
                 }
                 else if (obj.Type.IsNullableType())
                 {
@@ -192,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
                             var var = deconstruction.Parameter != null ? parameterToVariable[deconstruction.Parameter] : parameterIndexToVariable[i];
                             var test = deconstruction.Pattern.Reduce(var);
 
-                            addFailIfNot(test);
+                            AddFailIfNot(test, exit, stmts);
                         }
                     }
                     else
@@ -207,7 +183,7 @@ namespace Microsoft.CSharp.Expressions
                             var item = GetTupleItemAccess(obj, index);
                             var test = deconstruction.Pattern.Reduce(item);
 
-                            addFailIfNot(test);
+                            AddFailIfNot(test, exit, stmts);
                         }
                     }
                 }
@@ -216,7 +192,8 @@ namespace Microsoft.CSharp.Expressions
                 {
                     foreach (var prop in Properties)
                     {
-                        addFailIfNot(prop.Reduce(obj, vars, stmts, addFailIfNot));
+                        var test = prop.Reduce(obj, vars, stmts, exit);
+                        AddFailIfNot(test, exit, stmts);
                     }
                 }
 

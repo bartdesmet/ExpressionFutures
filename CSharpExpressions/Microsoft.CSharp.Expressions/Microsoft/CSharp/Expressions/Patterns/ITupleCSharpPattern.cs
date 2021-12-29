@@ -16,6 +16,7 @@ using static System.Linq.Expressions.ExpressionStubs;
 namespace Microsoft.CSharp.Expressions
 {
     using static Helpers;
+    using static PatternHelpers;
 
     // REVIEW: Consider merging this with RecursiveCSharpPattern.
 
@@ -85,32 +86,7 @@ namespace Microsoft.CSharp.Expressions
 
                 var stmts = new List<Expression>();
 
-                // TODO: Remove duplication of the code below between Recursive and ITuple.
-                void addFailIfNot(Expression test)
-                {
-                    // NB: Peephole optimization for _ pattern.
-                    if (test is ConstantExpression { Value: true })
-                    {
-                        return;
-                    }
-
-                    // NB: Peephole optimization for var pattern.
-                    if (test is BlockExpression b && b.Variables.Count == 0 && b.Expressions.Count == 2 && b.Result is ConstantExpression { Value: true })
-                    {
-                        stmts.Add(b.Expressions[0]);
-                        return;
-                    }
-
-                    var expr =
-                        Expression.IfThen(
-                            Expression.Not(test),
-                            Expression.Goto(exit, ConstantFalse)
-                        );
-
-                    stmts.Add(expr);
-                }
-
-                addFailIfNot(Expression.TypeIs(obj, typeof(ITuple)));
+                AddFailIfNot(Expression.TypeIs(obj, typeof(ITuple)), exit, stmts);
 
                 var temp = Expression.Parameter(typeof(ITuple), "__objT");
                 stmts.Add(Expression.Assign(temp, Expression.Convert(obj, typeof(ITuple))));
@@ -118,7 +94,7 @@ namespace Microsoft.CSharp.Expressions
 
                 var deconstructionCount = Deconstruction.Count;
 
-                addFailIfNot(Expression.Equal(Expression.Call(obj, GetLengthMethod), CreateConstantInt32(deconstructionCount)));
+                AddFailIfNot(Expression.Equal(Expression.Call(obj, GetLengthMethod), CreateConstantInt32(deconstructionCount)), exit, stmts);
 
                 for (var i = 0; i < deconstructionCount; i++)
                 {
@@ -127,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
                     var item = Expression.Call(obj, GetItemMethod, CreateConstantInt32(i));
                     var test = deconstruction.Pattern.Reduce(item);
 
-                    addFailIfNot(test);
+                    AddFailIfNot(test, exit, stmts);
                 }
 
                 stmts.Add(Expression.Label(exit, ConstantTrue));

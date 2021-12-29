@@ -60,13 +60,13 @@ namespace Microsoft.CSharp.Expressions
             return CSharpPattern.PropertySubpattern(pattern, Member, IsLengthOrCount);
         }
 
-        internal Expression Reduce(Expression @object, List<ParameterExpression> vars, List<Expression> stmts, Action<Expression> addFailIfNot)
+        internal Expression Reduce(Expression @object, List<ParameterExpression> vars, List<Expression> stmts, LabelTarget exit)
         {
             // NB: LengthOrCount is only used to refine the range of Int32 to >= 0. We don't yet use it for reduction.
 
             Expression createTest(Expression obj)
             {
-                return Pattern.Reduce(Member.Reduce(obj, vars, stmts, addFailIfNot));
+                return Pattern.Reduce(Member.Reduce(obj, vars, stmts, exit));
             }
 
             return PatternHelpers.Reduce(@object, createTest, vars, stmts);

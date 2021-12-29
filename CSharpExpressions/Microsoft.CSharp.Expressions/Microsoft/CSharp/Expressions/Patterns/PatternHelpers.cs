@@ -9,6 +9,8 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     internal static class PatternHelpers
     {
         public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce)
@@ -90,6 +92,30 @@ namespace Microsoft.CSharp.Expressions
                 default:
                     throw Error.InvalidPatternConstantType(value.Type);
             }
+        }
+
+        public static void AddFailIfNot(Expression test, LabelTarget exit, List<Expression> stmts)
+        {
+            // NB: Peephole optimization for _ pattern.
+            if (test is ConstantExpression { Value: true })
+            {
+                return;
+            }
+
+            // NB: Peephole optimization for var pattern.
+            if (test is BlockExpression b && b.Variables.Count == 0 && b.Expressions.Count == 2 && b.Result is ConstantExpression { Value: true })
+            {
+                stmts.Add(b.Expressions[0]);
+                return;
+            }
+
+            var expr =
+                Expression.IfThen(
+                    Expression.Not(test),
+                    Expression.Goto(exit, ConstantFalse)
+                );
+
+            stmts.Add(expr);
         }
     }
 }
