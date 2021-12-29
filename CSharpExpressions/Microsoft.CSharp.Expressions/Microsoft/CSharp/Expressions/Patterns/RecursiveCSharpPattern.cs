@@ -93,31 +93,7 @@ namespace Microsoft.CSharp.Expressions
                 var vars = new List<ParameterExpression>();
                 var stmts = new List<Expression>();
 
-                void emitTypeCheck(Type type)
-                {
-                    // NB: Implies null check.
-                    AddFailIfNot(Expression.TypeIs(obj, type), exit, stmts);
-
-                    var temp = Expression.Parameter(type, "__objT");
-
-                    vars.Add(temp);
-                    stmts.Add(Expression.Assign(temp, Expression.Convert(obj, type)));
-
-                    obj = temp;
-                }
-
-                if (Type != null)
-                {
-                    emitTypeCheck(Type);
-                }
-                else if (!obj.Type.IsValueType)
-                {
-                    AddFailIfNot(Expression.ReferenceNotEqual(obj, Expression.Constant(null, obj.Type)), exit, stmts);
-                }
-                else if (obj.Type.IsNullableType())
-                {
-                    emitTypeCheck(obj.Type.GetNonNullableType());
-                }
+                obj = AddNullCheck(obj, Type, exit, vars, stmts);
 
                 if (Deconstruction.Count > 0)
                 {

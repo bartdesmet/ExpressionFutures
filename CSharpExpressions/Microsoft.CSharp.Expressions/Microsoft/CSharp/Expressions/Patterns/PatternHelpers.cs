@@ -117,5 +117,47 @@ namespace Microsoft.CSharp.Expressions
 
             stmts.Add(expr);
         }
+
+        public static void AddFailIf(Expression test, LabelTarget exit, List<Expression> stmts)
+        {
+            var expr =
+                Expression.IfThen(
+                    test,
+                    Expression.Goto(exit, ConstantFalse)
+                );
+
+            stmts.Add(expr);
+        }
+
+        public static Expression AddNullCheck(Expression obj, Type typeCheck, LabelTarget exit, List<ParameterExpression>  vars, List<Expression> stmts)
+        {
+            void emitTypeCheck(Type type)
+            {
+                // NB: Implies null check.
+                AddFailIfNot(Expression.TypeIs(obj, type), exit, stmts);
+
+                var temp = Expression.Parameter(type, "__objT");
+
+                vars.Add(temp);
+                stmts.Add(Expression.Assign(temp, Expression.Convert(obj, type)));
+
+                obj = temp;
+            }
+
+            if (typeCheck != null)
+            {
+                emitTypeCheck(typeCheck);
+            }
+            else if (!obj.Type.IsValueType)
+            {
+                AddFailIf(Expression.ReferenceEqual(obj, Expression.Constant(null, obj.Type)), exit, stmts);
+            }
+            else if (obj.Type.IsNullableType())
+            {
+                emitTypeCheck(obj.Type.GetNonNullableType());
+            }
+
+            return obj;
+        }
     }
 }
