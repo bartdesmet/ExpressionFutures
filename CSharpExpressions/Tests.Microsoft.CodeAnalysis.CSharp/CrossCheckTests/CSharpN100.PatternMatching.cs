@@ -50,6 +50,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<DateTimeOffset?>(new DateTimeOffset(new DateTime(2021, 12, 17))));
         }
 
-        // TODO: Nested tuple fields.
+        [TestMethod]
+        public void CrossCheck_IsExpression_Property_Nested_Tuple()
+        {
+            var f = Compile<Func<int, bool>>("y => { var t = (x: 0, yz: (y: y, z: false)); return t is { yz.y: 3 }; }");
+            f(1);
+            f(2);
+            f(3);
+        }
     }
 }
