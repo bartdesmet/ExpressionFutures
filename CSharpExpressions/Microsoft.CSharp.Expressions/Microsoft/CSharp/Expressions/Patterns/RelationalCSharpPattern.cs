@@ -89,23 +89,25 @@ namespace Microsoft.CSharp.Expressions
 
         internal static Expression MakeTest(CSharpPattern pattern, Expression @object, ExpressionType op, ConstantExpression value)
         {
-            Expression createTest(Expression obj)
+            if (pattern.InputType == pattern.NarrowedType)
             {
-                if (pattern.InputType == pattern.NarrowedType)
-                {
-                    if (obj.Type != pattern.InputType)
-                    {
-                        obj = Expression.Convert(obj, pattern.InputType);
-                    }
+                var obj = @object;
 
-                    return
-                        Expression.MakeBinary(
-                            op,
-                            obj,
-                            value
-                        );
+                if (obj.Type != pattern.InputType)
+                {
+                    obj = Expression.Convert(obj, pattern.InputType);
                 }
-                else
+
+                return
+                    Expression.MakeBinary(
+                        op,
+                        obj,
+                        value
+                    );
+            }
+            else
+            {
+                return PatternHelpers.Reduce(@object, obj =>
                 {
                     return
                         Expression.AndAlso(
@@ -116,10 +118,8 @@ namespace Microsoft.CSharp.Expressions
                                 value
                             )
                         );
-                }
+                });
             }
-
-            return PatternHelpers.Reduce(@object, createTest);
         }
 
         internal static RelationalCSharpPattern Make(CSharpPatternInfo info, CSharpPatternType type, ConstantExpression value)

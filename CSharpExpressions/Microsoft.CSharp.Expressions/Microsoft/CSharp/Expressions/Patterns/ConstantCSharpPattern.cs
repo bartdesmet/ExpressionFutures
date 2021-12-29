@@ -100,7 +100,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (checkNaN != null)
                 {
-                    return PatternHelpers.Reduce(@object, obj => Expression.Call(checkNaN, obj));
+                    return Expression.Call(checkNaN, @object);
                 }
 
                 return RelationalCSharpPattern.MakeTest(this, @object, ExpressionType.Equal, Value);
