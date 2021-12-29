@@ -188,7 +188,7 @@ public static class {typeName}
                 src = src.Replace("\r\n", "\n");
             }
 
-            var tree = CSharpSyntaxTree.ParseText(src);
+            var tree = CSharpSyntaxTree.ParseText(src, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
 
             tree = Format(tree, trimCR);
 
@@ -219,7 +219,7 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
 
                 // Helper types
-                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode))
+                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview)))
 
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
@@ -280,7 +280,7 @@ public static class {typeName}
                 {
                     var src = newTree.ToString();
                     src = src.Replace("\r\n", "\n");
-                    newTree = CSharpSyntaxTree.ParseText(src);
+                    newTree = CSharpSyntaxTree.ParseText(src, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
                 }
 
                 return newTree;
@@ -442,7 +442,7 @@ public static class {typeName}
 }}
 ";
 
-            var tree = CSharpSyntaxTree.ParseText(src);
+            var tree = CSharpSyntaxTree.ParseText(src, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
 
             var csc = CSharpCompilation
                 // A class library `Expressions` which will be emitted in memory
@@ -469,7 +469,7 @@ public static class {typeName}
                 .AddReferences(references.Select(r => MetadataReference.CreateFromFile(r.Location)))
 
                 // Helper types
-                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode))
+                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview)))
 
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
