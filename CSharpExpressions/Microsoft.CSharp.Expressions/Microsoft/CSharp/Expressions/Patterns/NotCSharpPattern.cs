@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class NotCSharpPattern : CSharpPattern
     {
-        public NotCSharpPattern(CSharpPatternInfo info, CSharpPattern negated)
+        internal NotCSharpPattern(CSharpPatternInfo info, CSharpPattern negated)
             : base(info)
         {
             Negated = negated;
