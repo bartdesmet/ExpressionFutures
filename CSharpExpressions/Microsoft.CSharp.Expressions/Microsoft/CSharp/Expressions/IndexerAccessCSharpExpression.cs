@@ -94,8 +94,18 @@ namespace Microsoft.CSharp.Expressions
         /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
-        public override Expression Reduce()
+        public override Expression Reduce() => Reduce(length: null);
+
+        internal Expression Reduce(Expression length)
         {
+            var lengthTemp = default(ParameterExpression);
+
+            if (length == null)
+            {
+                lengthTemp = Expression.Parameter(typeof(int), "__len");
+                length = lengthTemp;
+            }
+
             return Argument.Type == typeof(Index) ? ReduceIndex() : ReduceRange();
 
             Expression ReduceIndex()
@@ -126,23 +136,21 @@ namespace Microsoft.CSharp.Expressions
 
                 // NB: We always need to evaluate Length first to have a consistent evaluation order regardless of optimizations.
 
-                var length = Expression.Parameter(typeof(int), "__len");
-
                 var expr = GetIndexOffset(arg, length, out var useLength);
 
                 var index = Expression.MakeIndex(obj, (PropertyInfo)IndexOrSlice, new[] { expr });
 
-                if (useLength)
+                if (useLength && lengthTemp != null)
                 {
                     var count = Expression.Property(obj, LengthOrCount);
 
-                    temps.Add(length);
-                    stmts.Add(Expression.Assign(length, count));
+                    temps.Add(lengthTemp);
+                    stmts.Add(Expression.Assign(lengthTemp, count));
                 }
 
                 stmts.Add(index);
 
-                var res = Helpers.Comma(temps, stmts);
+                var res = Comma(temps, stmts);
 
                 if (isByRef)
                 {
@@ -180,7 +188,6 @@ namespace Microsoft.CSharp.Expressions
                     // Deconstruct a start..end range expression to try to optimize common cases.
                     //
 
-                    var length = Expression.Parameter(typeof(int), "__len");
                     var useLength = false;
 
                     Expression startExpr;
@@ -226,10 +233,10 @@ namespace Microsoft.CSharp.Expressions
                     //     inlined into the Slice argument expression. We follow suit for now.
                     //
 
-                    if (useLength)
+                    if (useLength && lengthTemp != null)
                     {
-                        temps.Add(length);
-                        stmts.Add(Expression.Assign(length, Expression.Property(obj, LengthOrCount)));
+                        temps.Add(lengthTemp);
+                        stmts.Add(Expression.Assign(lengthTemp, Expression.Property(obj, LengthOrCount)));
                     }
 
                     //
@@ -310,10 +317,11 @@ namespace Microsoft.CSharp.Expressions
                 {
                     // int length = obj.Length;
 
-                    var length = Expression.Parameter(typeof(int), "__len");
-
-                    temps.Add(length);
-                    stmts.Add(Expression.Assign(length, Expression.Property(obj, LengthOrCount)));
+                    if (lengthTemp != null)
+                    {
+                        temps.Add(lengthTemp);
+                        stmts.Add(Expression.Assign(lengthTemp, Expression.Property(obj, LengthOrCount)));
+                    }
 
                     // Range range = argumentExpr;
 
@@ -342,7 +350,7 @@ namespace Microsoft.CSharp.Expressions
 
                 stmts.Add(GetSliceCall(obj, sliceStartArg, sliceSizeArg));
 
-                return Helpers.Comma(temps, stmts);
+                return Comma(temps, stmts);
             }
         }
 
@@ -355,7 +363,7 @@ namespace Microsoft.CSharp.Expressions
 
             stmts.Add(assign(index));
 
-            return Helpers.Comma(temps, stmts);
+            return Comma(temps, stmts);
         }
 
         internal IndexExpression ReduceAssign(List<ParameterExpression> temps, List<Expression> stmts)

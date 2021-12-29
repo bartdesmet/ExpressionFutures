@@ -80,7 +80,9 @@ namespace Microsoft.CSharp.Expressions
         /// Reduces the expression node to a simpler expression.
         /// </summary>
         /// <returns>The reduced expression.</returns>
-        public override Expression Reduce()
+        public override Expression Reduce() => Reduce(length: null);
+
+        internal Expression Reduce(Expression length)
         {
             if (IsSimpleArrayAccess())
             {
@@ -112,7 +114,7 @@ namespace Microsoft.CSharp.Expressions
 
                 var array = GetArrayExpression(temps, stmts);
 
-                var index = GetIntIndexExpression(array, Indexes[0]);
+                var index = GetIntIndexExpression(array, length, Indexes[0]);
 
                 stmts.Add(Expression.ArrayAccess(array, index));
 
@@ -158,7 +160,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var array = GetArrayExpression(makeVariable, statements);
 
-                var index = GetIntIndexExpression(array, Indexes[0]);
+                var index = GetIntIndexExpression(array, length: null, Indexes[0]);
 
                 var indexVariable = makeVariable(index.Type, "__idx");
 
@@ -217,7 +219,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var array = GetArrayExpression(temps, stmts);
 
-                var index = GetIntIndexExpression(array, firstIndex);
+                var index = GetIntIndexExpression(array, length: null, firstIndex);
 
                 if (!Helpers.IsPure(index))
                 {
@@ -272,7 +274,7 @@ namespace Microsoft.CSharp.Expressions
             return array;
         }
 
-        private static Expression GetIntIndexExpression(Expression array, Expression index)
+        private static Expression GetIntIndexExpression(Expression array, Expression length, Expression index)
         {
             //
             // NB: The Roslyn compiler also allows the array.Length expression to be evaluated after evaluating the index expression,
@@ -281,7 +283,9 @@ namespace Microsoft.CSharp.Expressions
             //     when the array is null.
             //
 
-            return IndexerAccessCSharpExpression.GetIndexOffset(index, Expression.ArrayLength(array), out _);
+            length ??= Expression.ArrayLength(array);
+
+            return IndexerAccessCSharpExpression.GetIndexOffset(index, length, out _);
         }
 
         private static MethodInfo s_getSubArray;
