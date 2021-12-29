@@ -19,6 +19,14 @@ namespace Microsoft.CSharp.Expressions
         {
             if (@object.IsPure(readOnly: true))
             {
+                if (@object is ParameterExpression p)
+                {
+                    // NB: Trick some purity checks down the line to not introduce more temps. Patterns do not cause assignments
+                    //     to variables, so a variable input can be considered to be pure.
+
+                    @object = new ReadOnlyTemporaryVariableExpression(p);
+                }
+
                 return reduce(@object);
             }
             else
@@ -104,6 +112,33 @@ namespace Microsoft.CSharp.Expressions
             {
                 stmts.Add(b.Expressions[0]);
                 return;
+            }
+
+            // NB: Peephole optimization for constant and relational patterns.
+            if (test is BinaryExpression binary)
+            {
+                ExpressionType? GetInverted() =>
+                    binary.NodeType switch
+                    {
+                        ExpressionType.Equal => ExpressionType.NotEqual,
+                        ExpressionType.NotEqual => ExpressionType.Equal,
+                        ExpressionType.LessThan => ExpressionType.GreaterThanOrEqual,
+                        ExpressionType.LessThanOrEqual => ExpressionType.GreaterThan,
+                        ExpressionType.GreaterThan => ExpressionType.LessThanOrEqual,
+                        ExpressionType.GreaterThanOrEqual => ExpressionType.LessThan,
+                        _ => null,
+                    };
+
+                var inverted = GetInverted();
+
+                if (inverted != null)
+                {
+                    var invertedExpr = Expression.MakeBinary(inverted.Value, binary.Left, binary.Right);
+
+                    AddFailIf(invertedExpr, exit, stmts);
+
+                    return;
+                }
             }
 
             var expr =
