@@ -239,7 +239,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var narrowedType = info.Info.NarrowedType;
 
-                if (!Helpers.IsTupleType(narrowedType))
+                if (!IsTupleType(narrowedType))
                 {
                     return ITuple(deconstruction);
                 }
@@ -247,6 +247,46 @@ namespace Microsoft.CSharp.Expressions
 
             return Recursive(info, type, deconstructMethod, deconstruction, properties: null);
         }
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(Type type, params PropertyCSharpSubpattern[] properties) =>
+            Property(type, variable: null, properties);
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(Type type, IEnumerable<PropertyCSharpSubpattern> properties) =>
+            Property(type, variable: null, properties);
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(ParameterExpression variable, params PropertyCSharpSubpattern[] properties) =>
+            Property(type: null, variable, properties);
+
+        /// <summary>
+        /// Creates a property pattern that matches on properties.
+        /// </summary>
+        /// <param name="type">The type to check for.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="properties">The property subpatterns to apply.</param>
+        /// <returns>A <see cref="RecursiveCSharpPattern" /> representing a property pattern.</returns>
+        public static RecursiveCSharpPattern Property(ParameterExpression variable, IEnumerable<PropertyCSharpSubpattern> properties) =>
+            Property(type: null, variable, properties);
 
         /// <summary>
         /// Creates a property pattern that matches on properties.
@@ -387,7 +427,7 @@ namespace Microsoft.CSharp.Expressions
                     {
                         validateWithDeconstructMethod();
                     }
-                    else if (Helpers.IsTupleType(narrowedType))
+                    else if (IsTupleType(narrowedType))
                     {
                         validateWithTupleType();
                     }
@@ -470,7 +510,7 @@ namespace Microsoft.CSharp.Expressions
 
                     void validateWithTupleType()
                     {
-                        var arity = Helpers.GetTupleArity(narrowedType);
+                        var arity = GetTupleArity(narrowedType);
 
                         checkArity(arity);
 
@@ -506,7 +546,7 @@ namespace Microsoft.CSharp.Expressions
                             ? indexToPattern[index]
                             : deconstructionCollection[index];
 
-                        var elementTypes = Helpers.GetTupleComponentTypes(narrowedType).ToReadOnly();
+                        var elementTypes = GetTupleComponentTypes(narrowedType).ToReadOnly();
 
                         for (var i = 0; i < arity; i++)
                         {
