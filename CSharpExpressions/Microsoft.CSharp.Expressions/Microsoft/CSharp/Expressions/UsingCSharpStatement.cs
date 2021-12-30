@@ -490,7 +490,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(Expression resource, Expression body) => Using(variables: null, resource, body);
+        public static UsingCSharpStatement Using(Expression resource, Expression body) =>
+            Using(variables: null, resource, body, patternDispose: null);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents a using statement.
@@ -507,35 +508,36 @@ namespace Microsoft.CSharp.Expressions
             var variables = new[] { variable };
             var declaration = LocalDeclaration(variable, resource);
 
-            return Using(variables, new[] { declaration }, body);
+            return Using(variables, new[] { declaration }, body, patternDispose: null);
         }
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
-        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(Expression resource, Expression body, AwaitInfo awaitInfo) => AwaitUsing(variables: null, resource, body, awaitInfo);
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, Expression resource, Expression body) =>
+            AwaitUsing(awaitInfo, variables: null, resource, body, patternDispose: null);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="variable">The variable containing the resource.</param>
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
-        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static UsingCSharpStatement AwaitUsing(ParameterExpression variable, Expression resource, Expression body, AwaitInfo awaitInfo)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, ParameterExpression variable, Expression resource, Expression body)
         {
             RequiresNotNull(variable, nameof(variable));
 
             var variables = new[] { variable };
             var declaration = LocalDeclaration(variable, resource);
 
-            return AwaitUsing(variables, new[] { declaration }, body, awaitInfo);
+            return AwaitUsing(awaitInfo, variables, new[] { declaration }, body, patternDispose: null);
         }
 
         /// <summary>
@@ -545,7 +547,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, Expression resource, Expression body) => Using(variables, resource, body, patternDispose: null);
+        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, Expression resource, Expression body)
+            => Using(variables, resource, body, patternDispose: null);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents a using statement.
@@ -556,11 +559,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
         public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, Expression resource, Expression body, LambdaExpression patternDispose)
-        {
-            RequiresNotNull(resource, nameof(resource));
-
-            return UsingCSharpStatement.Make(variables, resource, resources: null, body, awaitInfo: null, patternDispose);
-        }
+            => Using(awaitInfo: null, variables, resource, body, patternDispose);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents a using statement.
@@ -569,7 +568,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="declarations">The resources managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body) => Using(variables, declarations, body, patternDispose: null);
+        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body)
+            => Using(variables, declarations, body, patternDispose: null);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents a using statement.
@@ -580,64 +580,96 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
         public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression patternDispose)
-        {
-            RequiresNotNull(declarations, nameof(declarations));
-
-            return UsingCSharpStatement.Make(variables, resource: null, declarations, body, awaitInfo: null, patternDispose);
-        }
+            => Using(awaitInfo: null, variables, declarations, body, patternDispose);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="variables">The variables introduced by the statement.</param>
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
-        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(IEnumerable<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo awaitInfo) => AwaitUsing(variables, resource, body, awaitInfo, patternDispose: null);
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression resource, Expression body)
+            => AwaitUsing(awaitInfo, variables, resource, body, patternDispose: null);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="variables">The variables introduced by the statement.</param>
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
-        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(IEnumerable<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression resource, Expression body, LambdaExpression patternDispose)
         {
             RequiresNotNull(resource, nameof(resource));
 
             AssertUsingAwaitInfo(ref awaitInfo, patternDispose);
 
-            return UsingCSharpStatement.Make(variables, resource, resources: null, body, awaitInfo, patternDispose);
+            return Using(awaitInfo, variables, resource, body, patternDispose);
         }
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="variables">The variables introduced by the statement.</param>
         /// <param name="declarations">The resources managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
-        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, AwaitInfo awaitInfo) => AwaitUsing(variables, declarations, body, awaitInfo, patternDispose: null);
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body)
+            => AwaitUsing(awaitInfo, variables, declarations, body, patternDispose: null);
 
         /// <summary>
         /// Creates a <see cref="UsingCSharpStatement"/> that represents an await using statement.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="variables">The variables introduced by the statement.</param>
         /// <param name="declarations">The resources managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
-        /// <param name="awaitInfo">The information required to await the DisposeAsync operation.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression patternDispose)
         {
             RequiresNotNull(declarations, nameof(declarations));
 
             AssertUsingAwaitInfo(ref awaitInfo, patternDispose);
+
+            return Using(awaitInfo, variables, declarations, body, patternDispose);
+        }
+
+        // NB: The Roslyn compiler binds to the overloads below.
+
+        /// <summary>
+        /// Creates a <see cref="UsingCSharpStatement"/> that represents a using or an await using statement.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation, or null if not asynchronous.</param>
+        /// <param name="variables">The variables introduced by the statement.</param>
+        /// <param name="resource">The resource managed by the statement.</param>
+        /// <param name="body">The body of the statement.</param>
+        /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
+        /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
+        public static UsingCSharpStatement Using(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression resource, Expression body, LambdaExpression patternDispose)
+        {
+            RequiresNotNull(resource, nameof(resource));
+
+            return UsingCSharpStatement.Make(variables, resource, resources: null, body, awaitInfo, patternDispose);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="UsingCSharpStatement"/> that represents a using or an await using statement.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the DisposeAsync operation, or null if not asynchronous.</param>
+        /// <param name="variables">The variables introduced by the statement.</param>
+        /// <param name="declarations">The resources managed by the statement.</param>
+        /// <param name="body">The body of the statement.</param>
+        /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
+        /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
+        public static UsingCSharpStatement Using(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression patternDispose)
+        {
+            RequiresNotNull(declarations, nameof(declarations));
 
             return UsingCSharpStatement.Make(variables, resource: null, declarations, body, awaitInfo, patternDispose);
         }

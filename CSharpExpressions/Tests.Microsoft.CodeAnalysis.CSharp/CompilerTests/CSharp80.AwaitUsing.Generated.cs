@@ -111,7 +111,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CA8_D276() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_F768_2A76()
+        public void CompilerTest_F768_BBF7()
         {
             // (Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d.ConfigureAwait(false)) ; })
             var actual = GetDebugView(@"(Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d.ConfigureAwait(false)) ; })");
@@ -161,12 +161,12 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   <PatternDispose>
                     <Lambda Type=""System.Func`2[System.Runtime.CompilerServices.ConfiguredAsyncDisposable,System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable]"">
                       <Parameters>
-                        <Parameter Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Id=""2"" Name=""d"" />
+                        <Parameter Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Id=""2"" Name=""t"" />
                       </Parameters>
                       <Body>
                         <Call Type=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable"" Method=""System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable DisposeAsync()"">
                           <Object>
-                            <Parameter Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Id=""2"" Name=""d"" />
+                            <Parameter Type=""System.Runtime.CompilerServices.ConfiguredAsyncDisposable"" Id=""2"" Name=""t"" />
                           </Object>
                           <Arguments />
                         </Call>
@@ -196,10 +196,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_F768_2A76();
+            Verify.CompilerTest_F768_BBF7();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F768_2A76() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F768_BBF7() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -228,7 +228,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Reviewed
         {
             public override void CompilerTest_5CA8_D276() => OK();
-            public override void CompilerTest_F768_2A76() => OK();
+            public override void CompilerTest_F768_BBF7() => OK();
         }
     }
 }
