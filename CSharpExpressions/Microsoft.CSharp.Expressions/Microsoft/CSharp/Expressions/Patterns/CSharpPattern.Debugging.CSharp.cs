@@ -2,6 +2,7 @@
 //
 // bartde - December 2021
 
+using System;
 using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
@@ -47,6 +48,12 @@ namespace Microsoft.CSharp.Expressions
                     break;
                 case CSharpPatternType.ITuple:
                     visitor.Visit((ITupleCSharpPattern)pattern);
+                    break;
+                case CSharpPatternType.List:
+                    visitor.Visit((ListCSharpPattern)pattern);
+                    break;
+                case CSharpPatternType.Slice:
+                    visitor.Visit((SliceCSharpPattern)pattern);
                     break;
                 default:
                     break;
@@ -175,6 +182,24 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        private static void Visit(this ICSharpPrintingVisitor visitor, ListCSharpPattern pattern)
+        {
+            visitor.Out("[");
+            visitor.ArgsVisit(pattern.Patterns);
+            visitor.Out("]");
+        }
+
+        private static void Visit(this ICSharpPrintingVisitor visitor, SliceCSharpPattern pattern)
+        {
+            visitor.Out("..");
+
+            if (pattern.Pattern != null)
+            {
+                visitor.Out(" ");
+                visitor.Visit(pattern.Pattern);
+            }
+        }
+
         private static void VisitDesignation(this ICSharpPrintingVisitor visitor, CSharpObjectPattern pattern, bool noDiscard = false)
         {
             if (pattern.Variable != null)
@@ -228,6 +253,21 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Out(": ");
 
                 visitor.Visit(arg.Pattern);
+
+                if (i != n - 1)
+                {
+                    visitor.Out(", ");
+                }
+            }
+        }
+
+        private static void ArgsVisit(this ICSharpPrintingVisitor visitor, IList<CSharpPattern> args)
+        {
+            var n = args.Count;
+
+            for (var i = 0; i < n; i++)
+            {
+                visitor.Visit(args[i]);
 
                 if (i != n - 1)
                 {

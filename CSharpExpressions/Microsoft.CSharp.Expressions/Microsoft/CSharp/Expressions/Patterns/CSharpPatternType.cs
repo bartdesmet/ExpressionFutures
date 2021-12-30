@@ -81,5 +81,15 @@ namespace Microsoft.CSharp.Expressions
         /// A positional and/or property pattern, e.g. '(p, q)', or '(x: p, y: q)', or '{ X: p, Y: q }'.
         /// </summary>
         Recursive,
+
+        /// <summary>
+        /// A list pattern, e.g. '[p0, p1, p2]'.
+        /// </summary>
+        List,
+
+        /// <summary>
+        /// A slice pattern, e.g. '..' used within a list pattern '[p0, ..]'.
+        /// </summary>
+        Slice,
     }
 }

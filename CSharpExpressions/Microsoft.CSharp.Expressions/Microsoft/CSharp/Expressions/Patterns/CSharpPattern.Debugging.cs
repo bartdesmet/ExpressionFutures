@@ -234,5 +234,34 @@ namespace Microsoft.CSharp.Expressions
 
             return new XElement(nameof(PropertyCSharpSubpatternMember), nodes);
         }
+
+        protected internal override CSharpPattern VisitListPattern(ListCSharpPattern node)
+        {
+            var nodes = new List<object>
+            {
+                new XElement(nameof(node.LengthAccess), Visit(node.LengthAccess)),
+                new XElement(nameof(node.IndexerAccess), Visit(node.IndexerAccess)),
+                Visit(nameof(node.Patterns), node.Patterns, Visit),
+            };
+
+            return Push(node, nodes);
+        }
+
+        protected internal override CSharpPattern VisitSlicePattern(SliceCSharpPattern node)
+        {
+            var nodes = new List<object>();
+
+            if (node.IndexerAccess != null)
+            {
+                nodes.Add(new XElement(nameof(node.IndexerAccess), Visit(node.IndexerAccess)));
+            }
+
+            if (node.Pattern != null)
+            {
+                nodes.Add(new XElement(nameof(node.Pattern), Visit(node.Pattern)));
+            }
+
+            return Push(node, nodes);
+        }
     }
 }
