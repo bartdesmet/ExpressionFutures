@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     using static Helpers;
     using static PatternHelpers;
 
-    // REVIEW: Consider reflecting the C# grammar instead of "recursive" (despite the C# 8.0 feature being titled "Recurive pattern matching").
+    // REVIEW: Consider reflecting the C# grammar instead of "recursive" (despite the C# 8.0 feature being titled "Recursive pattern matching").
 
     /// <summary>
     /// Represents a pattern that applies positional and/or property subpatterns.

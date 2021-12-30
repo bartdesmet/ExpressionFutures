@@ -115,8 +115,6 @@ namespace Microsoft.CSharp.Expressions
             {
                 var indexExpr = Expression.Constant(index);
 
-                // CONSIDER: Feed the already calculated length to the reduction of [Array|Indexer]Access.
-
                 if (IndexerAccess.Body is ArrayAccessCSharpExpression a &&
                     a.Array == IndexerAccess.Parameters[0] &&
                     a.Indexes.Count == 1 &&
