@@ -490,6 +490,15 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="object">The object to access.</param>
         /// <param name="argument">The argument that will be used to index or slice the object.</param>
+        /// <returns>A new <see cref="IndexerAccessCSharpExpression"/> instance representing the array access operation.</returns>
+        public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument) =>
+            IndexerAccess(@object, argument, lengthOrCount: default(PropertyInfo), indexOrSlice: null);
+
+        /// <summary>
+        /// Creates an expression representing an indexer access operation.
+        /// </summary>
+        /// <param name="object">The object to access.</param>
+        /// <param name="argument">The argument that will be used to index or slice the object.</param>
         /// <param name="lengthOrCount">The property used to retrieve the element count of the object getting accessed.</param>
         /// <param name="indexOrSlice">The member used to index or slice the object.</param>
         /// <returns>A new <see cref="IndexerAccessCSharpExpression"/> instance representing the array access operation.</returns>
@@ -610,7 +619,7 @@ namespace Microsoft.CSharp.Expressions
 
                 indexOrSlice ??= FindSliceMethod();
 
-                MethodInfo FindSliceMethod() => @object.Type.GetMethod(@object.Type == typeof(string) ? "Substring" : "Slice", BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null);
+                MethodInfo FindSliceMethod() => @object.Type.GetMethod(@object.Type == typeof(string) ? nameof(string.Substring) : "Slice", BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null);
 
                 RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
