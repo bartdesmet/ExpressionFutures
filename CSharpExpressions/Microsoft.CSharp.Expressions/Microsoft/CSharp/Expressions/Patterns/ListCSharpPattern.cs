@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
@@ -222,7 +224,93 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpPattern
     {
-        // TODO: Add convenience overloads.
+        /// <summary>
+        /// Creates a list pattern.
+        /// </summary>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
+        /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
+        public static ListCSharpPattern List(ParameterExpression variable, params CSharpPattern[] patterns) =>
+            List(collectionType: null, variable, patterns);
+
+        /// <summary>
+        /// Creates a list pattern.
+        /// </summary>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
+        /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
+        public static ListCSharpPattern List(ParameterExpression variable, IEnumerable<CSharpPattern> patterns) =>
+            List(collectionType: null, variable, patterns);
+
+        /// <summary>
+        /// Creates a list pattern.
+        /// </summary>
+        /// <param name="collectionType">The type of the collection.</param>
+        /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
+        /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
+        public static ListCSharpPattern List(Type collectionType, params CSharpPattern[] patterns) =>
+            List(collectionType, variable: null, patterns);
+
+        /// <summary>
+        /// Creates a list pattern.
+        /// </summary>
+        /// <param name="collectionType">The type of the collection.</param>
+        /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
+        /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
+        public static ListCSharpPattern List(Type collectionType, IEnumerable<CSharpPattern> patterns) =>
+            List(collectionType, variable: null, patterns);
+
+        /// <summary>
+        /// Creates a list pattern.
+        /// </summary>
+        /// <param name="collectionType">The type of the collection.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
+        /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
+        public static ListCSharpPattern List(Type collectionType, ParameterExpression variable, params CSharpPattern[] patterns) => List(collectionType, variable, (IEnumerable<CSharpPattern>)patterns);
+
+        /// <summary>
+        /// Creates a list pattern.
+        /// </summary>
+        /// <param name="collectionType">The type of the collection.</param>
+        /// <param name="variable">The variable to assign to.</param>
+        /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
+        /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
+        public static ListCSharpPattern List(Type collectionType, ParameterExpression variable, IEnumerable<CSharpPattern> patterns)
+        {
+            collectionType ??= variable?.Type;
+            var inputType = collectionType;
+
+            if (inputType != null && inputType.IsValueType && !inputType.IsNullableType())
+            {
+                // NB: The pattern implies a null check so we "widen" the target type to nullable.
+                inputType = typeof(Nullable<>).MakeGenericType(inputType);
+            }
+
+            var info = ObjectPatternInfo(PatternInfo(inputType, collectionType), variable);
+
+            ValidateType(collectionType);
+
+            Expression lengthAccess, indexerAccess;
+
+            var input = Expression.Parameter(collectionType, "o");
+            var index = Expression.Parameter(typeof(Index), "i");
+
+            if (Helpers.IsVector(collectionType))
+            {
+                indexerAccess = CSharpExpression.ArrayAccess(input, index);
+                lengthAccess = Expression.ArrayLength(input);
+            }
+            else
+            {
+                var expr = CSharpExpression.IndexerAccess(input, index);
+
+                indexerAccess = expr;
+                lengthAccess = Expression.MakeMemberAccess(input, expr.LengthOrCount);
+            }
+
+            return List(info, Expression.Lambda(lengthAccess, input), Expression.Lambda(indexerAccess, input, index), patterns);
+        }
 
         /// <summary>
         /// Creates a list pattern.
@@ -280,14 +368,16 @@ namespace Microsoft.CSharp.Expressions
             if (elementType == typeof(void))
                 throw Error.ElementTypeCannotBeVoid();
 
-            var patternsList = patterns.ToReadOnly();
+            var patternsList = patterns.ToArray();
 
             RequiresNotNullItems(patternsList, nameof(patterns));
 
             var hasSlice = false;
 
-            foreach (var pattern in patternsList)
+            for (int i = 0, n = patternsList.Length; i < n; i++)
             {
+                var pattern = patternsList[i];
+
                 if (pattern.PatternType == CSharpPatternType.Slice)
                 {
                     if (hasSlice)
@@ -295,15 +385,15 @@ namespace Microsoft.CSharp.Expressions
 
                     hasSlice = true;
 
-                    RequiresCompatiblePatternTypes(collectionType, pattern.InputType);
+                    RequiresCompatiblePatternTypes(collectionType, ref patternsList[i]);
                 }
                 else
                 {
-                    RequiresCompatiblePatternTypes(elementType, pattern.InputType);
+                    RequiresCompatiblePatternTypes(elementType, ref patternsList[i]);
                 }
             }
 
-            return new ListCSharpPattern(info, lengthAccess, indexerAccess, patternsList);
+            return new ListCSharpPattern(info, lengthAccess, indexerAccess, new TrueReadOnlyCollection<CSharpPattern>(patternsList));
         }
     }
 

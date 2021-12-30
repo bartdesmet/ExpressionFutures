@@ -173,7 +173,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 RequiresNotNull(indexerAccess, nameof(indexerAccess));
 
-                RequiresCompatiblePatternTypes(indexerAccess.ReturnType, pattern.InputType);
+                RequiresCompatiblePatternTypes(indexerAccess.ReturnType, ref pattern);
                 RequiresCompatiblePatternTypes(pattern.NarrowedType, info.NarrowedType);
             }
 
