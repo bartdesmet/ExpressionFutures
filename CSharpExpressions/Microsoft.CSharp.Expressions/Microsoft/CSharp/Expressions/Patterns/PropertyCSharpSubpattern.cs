@@ -89,7 +89,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(pattern, nameof(pattern));
             RequiresNotNull(member, nameof(member));
 
-            RequiresCompatiblePatternTypes(member.Type, pattern.InputType);
+            RequiresCompatiblePatternTypes(member.Type, ref pattern);
 
             return new PropertyCSharpSubpattern(pattern, member, isLengthOrCount);
         }

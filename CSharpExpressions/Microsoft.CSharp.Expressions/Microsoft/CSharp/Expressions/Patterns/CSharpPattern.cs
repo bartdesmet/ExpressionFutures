@@ -35,11 +35,32 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         public abstract CSharpPatternType PatternType { get; }
 
+        //
+        // DESIGN: ChangeType is an interesting quirk that arises from introducing factories that omit the need
+        //         for an explicit input type, which then defaults to 'object' or gets inferred from parameters
+        //         of the factory. When the pattern is then composed into bigger patterns, or ultimately gets
+        //         used for an 'is' or 'switch' construct, the input type is finally known. For example, when
+        //         constructing a constant pattern for value '42', the input type defaults to 'object' and the
+        //         narrowed type is 'int'. When this pattern is used for e.g. a property subpattern for some
+        //         'Length' property, the input type of the constant pattern gets "changed" to 'int'.
+        //
+        //         An alternative approach could be to leave the input type unspecified, or to have some form
+        //         of a builder pattern where the pattern gets built top-down such that input types are known
+        //         upfront. E.g.
+        //
+        //           CSharpExpression.IsPattern(o)  // where o is the input expression which has a 'Type'
+        //                           .WithRecursivePattern(p =>
+        //                               p.AddPropertyPattern(m, p =>  // where m is the member on non-null o
+        //                                   p.WithConstantPattern(c)
+        //                               )
+        //                           )
+        //
+
         /// <summary>
         /// Changes the input type to the specified type.
         /// </summary>
         /// <remarks>
-        /// This functionality can be used when a pattern is pass to an expression or statement that applies the pattern.
+        /// This functionality can be used when a pattern is passed to an expression or statement that applies the pattern.
         /// </remarks>
         /// <param name="inputType">The new input type.</param>
         /// <returns>The original pattern rewritten to use the specified input type.</returns>
@@ -58,6 +79,16 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The object to match the pattern against.</param>
         /// <returns>The expression representing the pattern applied to the specified object.</returns>
         internal abstract Expression Reduce(Expression @object);
+
+        internal static void RequiresCompatiblePatternTypes(Type destType, ref CSharpPattern input)
+        {
+            if (destType != input.InputType)
+            {
+                input = input.ChangeType(destType);
+            }
+
+            RequiresCompatiblePatternTypes(destType, input.InputType);
+        }
 
         internal static void RequiresCompatiblePatternTypes(Type firstType, Type secondType)
         {

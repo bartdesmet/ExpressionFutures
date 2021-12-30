@@ -121,8 +121,8 @@ namespace Microsoft.CSharp.Expressions
 
             info ??= PatternInfo(left.InputType, right.NarrowedType);
 
-            RequiresCompatiblePatternTypes(info.InputType, left.InputType);
-            RequiresCompatiblePatternTypes(left.NarrowedType, right.InputType);
+            RequiresCompatiblePatternTypes(info.InputType, ref left);
+            RequiresCompatiblePatternTypes(left.NarrowedType, ref right);
             RequiresCompatiblePatternTypes(right.NarrowedType, info.NarrowedType);
 
             return new BinaryCSharpPattern(info, CSharpPatternType.And, left, right);
@@ -148,7 +148,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(left, nameof(left));
             RequiresNotNull(right, nameof(right));
 
-            RequiresCompatiblePatternTypes(left.InputType, right.InputType);
+            RequiresCompatiblePatternTypes(left.InputType, ref right);
 
             if (info == null)
             {
@@ -162,8 +162,8 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCompatiblePatternTypes(leastSpecificType, info.NarrowedType);
             }
 
-            RequiresCompatiblePatternTypes(info.InputType, left.InputType);
-            RequiresCompatiblePatternTypes(info.InputType, right.InputType);
+            RequiresCompatiblePatternTypes(info.InputType, ref left);
+            RequiresCompatiblePatternTypes(info.InputType, ref right);
 
             return new BinaryCSharpPattern(info, CSharpPatternType.Or, left, right);
         }
