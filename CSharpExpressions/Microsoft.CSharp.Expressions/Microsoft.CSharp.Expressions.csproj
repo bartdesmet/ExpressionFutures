@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Friends.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\EnumeratorInfo.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\DeconstructionConversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\Conversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\SimpleConversion.cs" />

@@ -100,7 +100,7 @@ namespace Microsoft.CSharp.Expressions
                 return this;
             }
 
-            return CSharpExpression.ForEach(variables, collection, body, breakLabel, continueLabel, conversion, deconstruction, awaitInfo);
+            return CSharpExpression.ForEach(awaitInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
         }
 
         internal static ForEachCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction, AwaitInfo awaitInfo)
@@ -179,7 +179,7 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.EnumeratorShouldHaveMoveNextMethod(enumeratorType);
                 }
 
-                var enumeratorInfo = new EnumeratorInfo
+                var enumeratorInfo = new BasicEnumeratorInfo
                 {
                     GetEnumerator = getEnumeratorMethod,
                     MoveNext = moveNextMethod,
@@ -234,7 +234,7 @@ namespace Microsoft.CSharp.Expressions
                 var moveNext = typeof(IEnumerator).GetMethod(nameof(IEnumerator.MoveNext));
                 var current = getEnumerator.ReturnType.GetProperty(nameof(IEnumerator.Current));
 
-                var enumeratorInfo = new EnumeratorInfo
+                var enumeratorInfo = new BasicEnumeratorInfo
                 {
                     GetEnumerator = getEnumerator,
                     MoveNext = moveNext,
@@ -543,7 +543,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private struct EnumeratorInfo
+        private struct BasicEnumeratorInfo
         {
             public PropertyInfo Current;
             public MethodInfo GetEnumerator;
@@ -552,9 +552,9 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class BoundForEachCSharpStatement : ForEachCSharpStatement
         {
-            private readonly EnumeratorInfo _enumeratorInfo;
+            private readonly BasicEnumeratorInfo _enumeratorInfo;
 
-            internal BoundForEachCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, EnumeratorInfo enumeratorInfo, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+            internal BoundForEachCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, BasicEnumeratorInfo enumeratorInfo, LambdaExpression deconstruction, AwaitInfo awaitInfo)
                 : base(variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
@@ -697,7 +697,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
         public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion) =>
-            ForEach(new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null, awaitInfo: null);
+            ForEach(awaitInfo: null, new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null);
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
@@ -711,13 +711,14 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
         public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
-            ForEach(variables, collection, body, @break, @continue, conversion, deconstruction, awaitInfo: null);
+            ForEach(awaitInfo: null, variables, collection, body, @break, @continue, conversion, deconstruction);
 
         // TODO: AwaitForEach
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
         /// </summary>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
         /// <param name="variables">The iteration variable.</param>
         /// <param name="collection">The collection to iterate over.</param>
         /// <param name="body">The body of the loop.</param>
@@ -725,9 +726,24 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
-        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+        public static ForEachCSharpStatement ForEach(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
+            ForEach(enumeratorInfo: null, awaitInfo, variables, collection, body, @break, @continue, conversion, deconstruction);
+
+        /// <summary>
+        /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
+        /// </summary>
+        /// <param name="enumeratorInfo">The information required to perform the enumeration.</param>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
+        /// <param name="variables">The iteration variable.</param>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
+        /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
+        /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
+        public static ForEachCSharpStatement ForEach(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction)
         {
             // NB: This is the overload the C# compiler can bind to. Note, however, that a bound foreach node in Roslyn has
             //     information about GetEnumerator, MoveNext, Current, etc. as well. We can infer the same information at
