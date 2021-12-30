@@ -1477,6 +1477,32 @@ namespace Microsoft.CSharp.Expressions
         public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
     }
 
+    [DebuggerTypeProxy(typeof(ListCSharpPatternProxy))]
+    partial class ListCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class ListCSharpPatternProxy
+    {
+        private readonly ListCSharpPattern _node;
+
+        public ListCSharpPatternProxy(ListCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LambdaExpression IndexerAccess => _node.IndexerAccess;
+        public System.Type InputType => _node.InputType;
+        public System.Linq.Expressions.LambdaExpression LengthAccess => _node.LengthAccess;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.CSharp.Expressions.CSharpPattern> Patterns => _node.Patterns;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+        public System.Linq.Expressions.ParameterExpression Variable => _node.Variable;
+    }
+
     [DebuggerTypeProxy(typeof(LocalDeclarationProxy))]
     partial class LocalDeclaration
     {
@@ -1839,6 +1865,30 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
         public System.Type InputType => _node.InputType;
         public System.Type ResultType => _node.ResultType;
+    }
+
+    [DebuggerTypeProxy(typeof(SliceCSharpPatternProxy))]
+    partial class SliceCSharpPattern
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class SliceCSharpPatternProxy
+    {
+        private readonly SliceCSharpPattern _node;
+
+        public SliceCSharpPatternProxy(SliceCSharpPattern node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LambdaExpression IndexerAccess => _node.IndexerAccess;
+        public System.Type InputType => _node.InputType;
+        public System.Type NarrowedType => _node.NarrowedType;
+        public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
+        public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
     }
 
     [DebuggerTypeProxy(typeof(SwitchCSharpExpressionProxy))]
