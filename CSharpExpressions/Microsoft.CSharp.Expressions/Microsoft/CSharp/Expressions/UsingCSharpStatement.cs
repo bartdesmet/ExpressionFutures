@@ -344,7 +344,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 RequiresCanRead(resource, nameof(resource));
 
-                CheckResourceType(resource.Type, awaitInfo, patternDispose);
+                CheckUsingResourceType(resource.Type, awaitInfo, patternDispose);
 
                 RequiresCanRead(body, nameof(body));
 
@@ -404,7 +404,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                CheckResourceType(resourceType, awaitInfo, patternDispose);
+                CheckUsingResourceType(resourceType, awaitInfo, patternDispose);
 
                 RequiresCanRead(body, nameof(body));
 
@@ -423,57 +423,6 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 return expr;
-            }
-        }
-
-        private static void CheckResourceType(Type resourceType, AwaitInfo awaitInfo, LambdaExpression patternDispose)
-        {
-            ValidateType(resourceType);
-
-            var resourceTypeNonNull = resourceType.GetNonNullableType();
-
-            Type disposeReturnType;
-
-            if (patternDispose != null)
-            {
-                var patternDisposeInputType = patternDispose.Parameters[0].Type;
-
-                if (!AreReferenceAssignable(patternDisposeInputType, resourceTypeNonNull))
-                    throw Error.UsingPatternDisposeInputNotCompatibleWithResource(patternDisposeInputType, resourceTypeNonNull);
-
-                disposeReturnType = patternDispose.ReturnType;
-            }
-            else
-            {
-                Type disposableInterface;
-
-                if (awaitInfo != null)
-                {
-                    disposableInterface = typeof(IAsyncDisposable);
-                    disposeReturnType = typeof(ValueTask);
-                }
-                else
-                {
-                    disposableInterface = typeof(IDisposable);
-                    disposeReturnType = typeof(void);
-                }
-
-                // NB: We don't handle implicit conversions here; the C# compiler can emit a Convert node,
-                //     just like it does for those type of conversions in various other places.
-                if (!disposableInterface.IsAssignableFrom(resourceTypeNonNull))
-                {
-                    throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, disposableInterface);
-                }
-            }
-
-            if (awaitInfo != null)
-            {
-                awaitInfo.RequiresCanBind(Expression.Parameter(disposeReturnType));
-            }
-            else
-            {
-                if (disposeReturnType != typeof(void))
-                    throw Error.UsingDisposeShouldReturnVoid();
             }
         }
 
@@ -677,6 +626,67 @@ namespace Microsoft.CSharp.Expressions
         private static void AssertUsingAwaitInfo(ref AwaitInfo awaitInfo, LambdaExpression patternDispose)
         {
             awaitInfo ??= AwaitInfo(patternDispose?.ReturnType ?? typeof(ValueTask));
+        }
+
+        internal static void CheckUsingResourceType(Type resourceType, AwaitInfo awaitInfo, LambdaExpression patternDispose, bool allowConvertToDisposable = false)
+        {
+            ValidateType(resourceType);
+
+            var resourceTypeNonNull = resourceType.GetNonNullableType();
+
+            Type disposeReturnType;
+
+            if (patternDispose != null)
+            {
+                var patternDisposeInputType = patternDispose.Parameters[0].Type;
+
+                if (!AreReferenceAssignable(patternDisposeInputType, resourceTypeNonNull))
+                    throw Error.UsingPatternDisposeInputNotCompatibleWithResource(patternDisposeInputType, resourceTypeNonNull);
+
+                disposeReturnType = patternDispose.ReturnType;
+            }
+            else
+            {
+                Type disposableInterface;
+
+                if (awaitInfo != null)
+                {
+                    disposableInterface = typeof(IAsyncDisposable);
+                    disposeReturnType = typeof(ValueTask);
+                }
+                else
+                {
+                    disposableInterface = typeof(IDisposable);
+                    disposeReturnType = typeof(void);
+                }
+
+                if (allowConvertToDisposable)
+                {
+                    // NB: In the case of foreach, we allow for a conversion to a disposable interface to be emitted.
+                    //     While this conversion or type check can sometimes be elided at runtime, we call the factory
+                    //     here for its side-effect of doing the neccessary checks.
+                    _ = Expression.Convert(Expression.Variable(resourceType), disposableInterface);
+                }
+                else
+                {
+                    // NB: We don't handle implicit conversions here; the C# compiler can emit a Convert node,
+                    //     just like it does for those type of conversions in various other places.
+                    if (!disposableInterface.IsAssignableFrom(resourceTypeNonNull))
+                    {
+                        throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, disposableInterface);
+                    }
+                }
+            }
+
+            if (awaitInfo != null)
+            {
+                awaitInfo.RequiresCanBind(Expression.Parameter(disposeReturnType));
+            }
+            else
+            {
+                if (disposeReturnType != typeof(void))
+                    throw Error.UsingDisposeShouldReturnVoid();
+            }
         }
     }
 
