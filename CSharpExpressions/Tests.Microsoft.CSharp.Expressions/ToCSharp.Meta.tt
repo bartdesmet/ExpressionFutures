@@ -180,8 +180,12 @@ var exprs = new string[]
     "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.GreaterThan(Expression.Constant(42)))",
     "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.GreaterThanOrEqual(Expression.Constant(42)))",
     "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Not(CSharpPattern.Null()))",
-    // !!! REVIEW - Type inference !!! "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.And(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.And(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))))",
     "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Property(typeof(string), CSharpPattern.PropertySubpattern(CSharpPattern.Constant(Expression.Constant(1)), typeof(string).GetProperty(\"Length\"))))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(object), \"o\"), CSharpPattern.Property(typeof(KeyValuePair<int, int>), CSharpPattern.PropertySubpattern(CSharpPattern.Constant(Expression.Constant(1)), typeof(KeyValuePair<int, int>).GetProperty(\"Key\")), CSharpPattern.PropertySubpattern(CSharpPattern.Constant(Expression.Constant(2)), typeof(KeyValuePair<int, int>).GetProperty(\"Value\"))))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(int[]), \"xs\"), CSharpPattern.List(typeof(int[]), CSharpPattern.Constant(Expression.Constant(1)), CSharpPattern.Constant(Expression.Constant(2))))",
+    "CSharpExpression.IsPattern(Expression.Parameter(typeof(int[]), \"xs\"), CSharpPattern.List(Expression.Parameter(typeof(int[]), \"ys\"), CSharpPattern.Constant(Expression.Constant(1)), CSharpPattern.Constant(Expression.Constant(2))))",
 };
 #>
 \<#@ template debug="false" hostspecific="false" language="C#" \#>

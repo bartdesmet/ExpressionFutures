@@ -53,6 +53,19 @@ namespace Tests
         }
 
         [TestMethod]
+        public void DiscardPattern_ChangeType_Triggered()
+        {
+            var discard = CSharpPattern.Discard();
+
+            var length = typeof(string).GetProperty(nameof(string.Length));
+            var property = CSharpPattern.PropertySubpattern(discard, length);
+
+            Assert.AreNotSame(discard, property.Pattern);
+            Assert.AreEqual(typeof(int), property.Pattern.InputType);
+            Assert.AreEqual(typeof(int), property.Pattern.NarrowedType);
+        }
+
+        [TestMethod]
         public void DiscardPattern_Visitor()
         {
             var p = CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(int), typeof(int)));

@@ -1453,13 +1453,58 @@ while (true);";
             Assert.AreEqual(dbg146, expr146.ToCSharp());
         }
 
-        private Expression expr147 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))));
-        private string dbg147 = @"o is 42 or 43";
+        private Expression expr147 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.And(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))));
+        private string dbg147 = @"o is 42 and 43";
 
         [TestMethod]
         public void CSharp_ToCSharp_Test147()
         {
             Assert.AreEqual(dbg147, expr147.ToCSharp());
+        }
+
+        private Expression expr148 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Or(CSharpPattern.Constant(Expression.Constant(42)), CSharpPattern.Constant(Expression.Constant(43))));
+        private string dbg148 = @"o is 42 or 43";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test148()
+        {
+            Assert.AreEqual(dbg148, expr148.ToCSharp());
+        }
+
+        private Expression expr149 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Property(typeof(string), CSharpPattern.PropertySubpattern(CSharpPattern.Constant(Expression.Constant(1)), typeof(string).GetProperty("Length"))));
+        private string dbg149 = @"o is string { Length: 1 }";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test149()
+        {
+            Assert.AreEqual(dbg149, expr149.ToCSharp());
+        }
+
+        private Expression expr150 = CSharpExpression.IsPattern(Expression.Parameter(typeof(object), "o"), CSharpPattern.Property(typeof(KeyValuePair<int, int>), CSharpPattern.PropertySubpattern(CSharpPattern.Constant(Expression.Constant(1)), typeof(KeyValuePair<int, int>).GetProperty("Key")), CSharpPattern.PropertySubpattern(CSharpPattern.Constant(Expression.Constant(2)), typeof(KeyValuePair<int, int>).GetProperty("Value"))));
+        private string dbg150 = @"o is KeyValuePair<int, int> { Key: 1, Value: 2 }";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test150()
+        {
+            Assert.AreEqual(dbg150, expr150.ToCSharp());
+        }
+
+        private Expression expr151 = CSharpExpression.IsPattern(Expression.Parameter(typeof(int[]), "xs"), CSharpPattern.List(typeof(int[]), CSharpPattern.Constant(Expression.Constant(1)), CSharpPattern.Constant(Expression.Constant(2))));
+        private string dbg151 = @"xs is [1, 2]";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test151()
+        {
+            Assert.AreEqual(dbg151, expr151.ToCSharp());
+        }
+
+        private Expression expr152 = CSharpExpression.IsPattern(Expression.Parameter(typeof(int[]), "xs"), CSharpPattern.List(Expression.Parameter(typeof(int[]), "ys"), CSharpPattern.Constant(Expression.Constant(1)), CSharpPattern.Constant(Expression.Constant(2))));
+        private string dbg152 = @"xs is [1, 2] ys";
+
+        [TestMethod]
+        public void CSharp_ToCSharp_Test152()
+        {
+            Assert.AreEqual(dbg152, expr152.ToCSharp());
         }
 
     }

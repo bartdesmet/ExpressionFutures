@@ -6,6 +6,7 @@ using Microsoft.CSharp.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using static Tests.TestHelpers;
 
 namespace Tests
@@ -59,6 +60,22 @@ namespace Tests
             Assert.AreNotSame(p, q);
             Assert.AreEqual(typeof(ValueType), q.InputType);
             Assert.AreEqual(typeof(int), q.NarrowedType);
+        }
+
+        [TestMethod]
+        public void TypePattern_ChangeType_Triggered()
+        {
+            var p = CSharpPattern.Type(typeof(int));
+
+            Assert.AreEqual(typeof(object), p.InputType);
+            Assert.AreEqual(typeof(int), p.NarrowedType);
+
+            var value = typeof(StrongBox<IFormattable>).GetField(nameof(StrongBox<IFormattable>.Value));
+            var property = CSharpPattern.PropertySubpattern(p, value);
+
+            Assert.AreNotSame(p, property.Pattern);
+            Assert.AreEqual(typeof(IFormattable), property.Pattern.InputType);
+            Assert.AreEqual(typeof(int), property.Pattern.NarrowedType);
         }
 
         [TestMethod]
