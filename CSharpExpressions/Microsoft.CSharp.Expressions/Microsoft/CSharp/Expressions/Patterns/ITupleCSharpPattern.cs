@@ -207,6 +207,12 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.ITuplePositionalPatternCannotHaveField(i);
                 if (positionalPattern.Parameter != null)
                     throw Error.ITuplePositionalPatternCannotHaveParameter(i);
+
+                //
+                // CONSIDER: If the input type does not match, we could trigger ChangeType (which would do the opposite of narrowing,
+                //           i.e. generalize to 'object').
+                //
+
                 if (positionalPattern.Pattern.InputType != typeof(object))
                     throw Error.ITuplePositionalPatternInvalidInputType(i, positionalPattern.Pattern.InputType);
             }
