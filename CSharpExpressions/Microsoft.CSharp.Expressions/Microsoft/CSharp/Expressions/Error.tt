@@ -170,6 +170,15 @@ var errors = new[]
     new { Name = "InconsistentPatternInputType", ExceptionType = "ArgumentException", Args = 2, Message = "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section." },
     new { Name = "FoundMoreThanOneDefaultLabel", ExceptionType = "ArgumentException", Args = 0, Message = "A switch statement should contain at most one default case." },
     new { Name = "EmptyFormatSpecifier", ExceptionType = "ArgumentException", Args = 0, Message = "A string interpolation format string cannot be empty." },
+    new { Name = "MoreThanOneSlicePattern", ExceptionType = "ArgumentException", Args = 0, Message = "A list pattern can have at most one slice subpattern." },
+    new { Name = "ElementTypeCannotBeVoid", ExceptionType = "ArgumentException", Args = 0, Message = "The type returned by the index access expression cannot be void." },
+    new { Name = "LengthAccessShouldHaveOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "The length access lambda expression should have a single parameter." },
+    new { Name = "LengthAccessShouldReturnInt32", ExceptionType = "ArgumentException", Args = 0, Message = "The length access lambda expression should have an 'Int32' return type." },
+    new { Name = "IndexerAccessShouldHaveTwoParameters", ExceptionType = "ArgumentException", Args = 0, Message = "The indexer access lambda expression should have two parameters." },
+    new { Name = "LengthAccessParameterShouldHaveCollectionType", ExceptionType = "ArgumentException", Args = 1, Message = "The parameter of the length access lambda expression should match the collection type '{0}'." },
+    new { Name = "IndexerAccessFirstParameterShouldHaveCollectionType", ExceptionType = "ArgumentException", Args = 1, Message = "The first parameter of the indexer access lambda expression should match the collection type '{0}'." },
+    new { Name = "IndexerAccessSecondParameterInvalidType", ExceptionType = "ArgumentException", Args = 1, Message = "The second parameter of the indexer access lambda expression should be of type '{0}'." },
+    new { Name = "ListPatternInputTypeInvalid", ExceptionType = "ArgumentException", Args = 2, Message = "The non-nullable list pattern input type '{0}' should match collection type '{1}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

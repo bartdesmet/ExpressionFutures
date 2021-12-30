@@ -253,34 +253,34 @@ namespace Microsoft.CSharp.Expressions
             var collectionType = info.Info.NarrowedType;
 
             if (!AreEquivalent(nonNullInputType, collectionType))
-                throw new Exception(); // TODO
+                throw Error.ListPatternInputTypeInvalid(nonNullInputType, collectionType);
 
             RequiresCanRead(lengthAccess, nameof(lengthAccess));
 
             if (lengthAccess.Parameters.Count != 1)
-                throw new Exception(); // TODO
+                throw Error.LengthAccessShouldHaveOneParameter();
 
             if (!AreEquivalent(lengthAccess.Parameters[0].Type, collectionType))
-                throw new Exception(); // TODO
-            
+                throw Error.LengthAccessParameterShouldHaveCollectionType(collectionType);
+
             if (lengthAccess.ReturnType != typeof(int))
-                throw new Exception(); // TODO
+                throw Error.LengthAccessShouldReturnInt32();
 
             RequiresCanRead(indexerAccess, nameof(indexerAccess));
 
             if (indexerAccess.Parameters.Count != 2)
-                throw new Exception(); // TODO
+                throw Error.IndexerAccessShouldHaveTwoParameters();
 
             if (!AreEquivalent(indexerAccess.Parameters[0].Type, collectionType))
-                throw new Exception(); // TODO
+                throw Error.IndexerAccessFirstParameterShouldHaveCollectionType(collectionType);
 
             if (indexerAccess.Parameters[1].Type != typeof(Index))
-                throw new Exception(); // TODO
+                throw Error.IndexerAccessSecondParameterInvalidType(typeof(Index));
 
             var elementType = indexerAccess.ReturnType;
 
             if (elementType == typeof(void))
-                throw new Exception(); // TODO
+                throw Error.ElementTypeCannotBeVoid();
 
             var patternsList = patterns.ToReadOnly();
 
@@ -293,7 +293,7 @@ namespace Microsoft.CSharp.Expressions
                 if (pattern.PatternType == CSharpPatternType.Slice)
                 {
                     if (hasSlice)
-                        throw new Exception(); // TODO
+                        throw Error.MoreThanOneSlicePattern();
 
                     hasSlice = true;
 

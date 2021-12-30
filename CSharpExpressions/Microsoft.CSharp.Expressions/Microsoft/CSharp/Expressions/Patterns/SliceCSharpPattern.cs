@@ -157,16 +157,16 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCanRead(indexerAccess, nameof(indexerAccess));
 
                 if (indexerAccess.Parameters.Count != 2)
-                    throw new Exception(); // TODO
+                    throw Error.IndexerAccessShouldHaveTwoParameters();
 
                 if (!AreEquivalent(indexerAccess.Parameters[0].Type, collectionType))
-                    throw new Exception(); // TODO
+                    throw Error.IndexerAccessFirstParameterShouldHaveCollectionType(collectionType);
 
                 if (indexerAccess.Parameters[1].Type != typeof(Range))
-                    throw new Exception(); // TODO
+                    throw Error.IndexerAccessSecondParameterInvalidType(typeof(Range));
 
                 if (indexerAccess.ReturnType == typeof(void))
-                    throw new Exception(); // TODO
+                    throw Error.ElementTypeCannotBeVoid();
             }
 
             if (pattern != null)

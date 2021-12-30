@@ -806,6 +806,51 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception EmptyFormatSpecifier() => new ArgumentException(Strings.EmptyFormatSpecifier);
 
+        /// <summary>
+        /// ArgumentException with message like "A list pattern can have at most one slice subpattern."
+        /// </summary>
+        internal static Exception MoreThanOneSlicePattern() => new ArgumentException(Strings.MoreThanOneSlicePattern);
+
+        /// <summary>
+        /// ArgumentException with message like "The type returned by the index access expression cannot be void."
+        /// </summary>
+        internal static Exception ElementTypeCannotBeVoid() => new ArgumentException(Strings.ElementTypeCannotBeVoid);
+
+        /// <summary>
+        /// ArgumentException with message like "The length access lambda expression should have a single parameter."
+        /// </summary>
+        internal static Exception LengthAccessShouldHaveOneParameter() => new ArgumentException(Strings.LengthAccessShouldHaveOneParameter);
+
+        /// <summary>
+        /// ArgumentException with message like "The length access lambda expression should have an 'Int32' return type."
+        /// </summary>
+        internal static Exception LengthAccessShouldReturnInt32() => new ArgumentException(Strings.LengthAccessShouldReturnInt32);
+
+        /// <summary>
+        /// ArgumentException with message like "The indexer access lambda expression should have two parameters."
+        /// </summary>
+        internal static Exception IndexerAccessShouldHaveTwoParameters() => new ArgumentException(Strings.IndexerAccessShouldHaveTwoParameters);
+
+        /// <summary>
+        /// ArgumentException with message like "The parameter of the length access lambda expression should match the collection type '{0}'."
+        /// </summary>
+        internal static Exception LengthAccessParameterShouldHaveCollectionType(object p0) => new ArgumentException(Strings.LengthAccessParameterShouldHaveCollectionType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The first parameter of the indexer access lambda expression should match the collection type '{0}'."
+        /// </summary>
+        internal static Exception IndexerAccessFirstParameterShouldHaveCollectionType(object p0) => new ArgumentException(Strings.IndexerAccessFirstParameterShouldHaveCollectionType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The second parameter of the indexer access lambda expression should be of type '{0}'."
+        /// </summary>
+        internal static Exception IndexerAccessSecondParameterInvalidType(object p0) => new ArgumentException(Strings.IndexerAccessSecondParameterInvalidType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The non-nullable list pattern input type '{0}' should match collection type '{1}'."
+        /// </summary>
+        internal static Exception ListPatternInputTypeInvalid(object p0, object p1) => new ArgumentException(Strings.ListPatternInputTypeInvalid(p0, p1));
+
     }
 
     /// <summary>
@@ -1608,6 +1653,51 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string EmptyFormatSpecifier => SR.EmptyFormatSpecifier;
 
+        /// <summary>
+        /// A string like "A list pattern can have at most one slice subpattern."
+        /// </summary>
+        internal static string MoreThanOneSlicePattern => SR.MoreThanOneSlicePattern;
+
+        /// <summary>
+        /// A string like "The type returned by the index access expression cannot be void."
+        /// </summary>
+        internal static string ElementTypeCannotBeVoid => SR.ElementTypeCannotBeVoid;
+
+        /// <summary>
+        /// A string like "The length access lambda expression should have a single parameter."
+        /// </summary>
+        internal static string LengthAccessShouldHaveOneParameter => SR.LengthAccessShouldHaveOneParameter;
+
+        /// <summary>
+        /// A string like "The length access lambda expression should have an 'Int32' return type."
+        /// </summary>
+        internal static string LengthAccessShouldReturnInt32 => SR.LengthAccessShouldReturnInt32;
+
+        /// <summary>
+        /// A string like "The indexer access lambda expression should have two parameters."
+        /// </summary>
+        internal static string IndexerAccessShouldHaveTwoParameters => SR.IndexerAccessShouldHaveTwoParameters;
+
+        /// <summary>
+        /// A string like "The parameter of the length access lambda expression should match the collection type '{0}'."
+        /// </summary>
+        internal static string LengthAccessParameterShouldHaveCollectionType(object p0) => SR.Format(SR.LengthAccessParameterShouldHaveCollectionType, p0);
+
+        /// <summary>
+        /// A string like "The first parameter of the indexer access lambda expression should match the collection type '{0}'."
+        /// </summary>
+        internal static string IndexerAccessFirstParameterShouldHaveCollectionType(object p0) => SR.Format(SR.IndexerAccessFirstParameterShouldHaveCollectionType, p0);
+
+        /// <summary>
+        /// A string like "The second parameter of the indexer access lambda expression should be of type '{0}'."
+        /// </summary>
+        internal static string IndexerAccessSecondParameterInvalidType(object p0) => SR.Format(SR.IndexerAccessSecondParameterInvalidType, p0);
+
+        /// <summary>
+        /// A string like "The non-nullable list pattern input type '{0}' should match collection type '{1}'."
+        /// </summary>
+        internal static string ListPatternInputTypeInvalid(object p0, object p1) => SR.Format(SR.ListPatternInputTypeInvalid, p0, p1);
+
     }
 }
 
@@ -1774,5 +1864,14 @@ namespace System
         public const string InconsistentPatternInputType = "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section.";
         public const string FoundMoreThanOneDefaultLabel = "A switch statement should contain at most one default case.";
         public const string EmptyFormatSpecifier = "A string interpolation format string cannot be empty.";
+        public const string MoreThanOneSlicePattern = "A list pattern can have at most one slice subpattern.";
+        public const string ElementTypeCannotBeVoid = "The type returned by the index access expression cannot be void.";
+        public const string LengthAccessShouldHaveOneParameter = "The length access lambda expression should have a single parameter.";
+        public const string LengthAccessShouldReturnInt32 = "The length access lambda expression should have an 'Int32' return type.";
+        public const string IndexerAccessShouldHaveTwoParameters = "The indexer access lambda expression should have two parameters.";
+        public const string LengthAccessParameterShouldHaveCollectionType = "The parameter of the length access lambda expression should match the collection type '{0}'.";
+        public const string IndexerAccessFirstParameterShouldHaveCollectionType = "The first parameter of the indexer access lambda expression should match the collection type '{0}'.";
+        public const string IndexerAccessSecondParameterInvalidType = "The second parameter of the indexer access lambda expression should be of type '{0}'.";
+        public const string ListPatternInputTypeInvalid = "The non-nullable list pattern input type '{0}' should match collection type '{1}'.";
     }
 }
