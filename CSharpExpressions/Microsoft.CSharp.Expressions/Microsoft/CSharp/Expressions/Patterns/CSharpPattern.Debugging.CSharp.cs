@@ -187,6 +187,8 @@ namespace Microsoft.CSharp.Expressions
             visitor.Out("[");
             visitor.ArgsVisit(pattern.Patterns);
             visitor.Out("]");
+
+            visitor.VisitDesignation(pattern, noDiscard: true);
         }
 
         private static void Visit(this ICSharpPrintingVisitor visitor, SliceCSharpPattern pattern)
