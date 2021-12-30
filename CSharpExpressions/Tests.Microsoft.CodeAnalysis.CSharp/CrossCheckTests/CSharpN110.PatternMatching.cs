@@ -438,7 +438,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        public void CrossCheck_IsExpression_Slice_CustomType()
+        public void CrossCheck_IsExpression_Slice_CustomType_RangeIndexer()
         {
             var f = Compile<Func<StructList<int>, bool>>("xs => xs is [0, .. [1, .., 8], 9]", typeof(StructList<>).Assembly);
             f(new StructList<int>(new List<int>()));
@@ -453,6 +453,24 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StructList<int>(new List<int> { 0, 1, -1, 7, 8, 9 }));
             f(new StructList<int>(new List<int> { 0, 1, 2, 7, -1, 9 }));
             f(new StructList<int>(new List<int> { 0, 1, 2, 7, 8, -9 }));
+        }
+
+        [TestMethod]
+        public void CrossCheck_IsExpression_Slice_CustomType_SliceMethod()
+        {
+            var f = Compile<Func<StructListWithSlice<int>, bool>>("xs => xs is [0, .. [1, .., 8], 9]", typeof(StructListWithSlice<>).Assembly);
+            f(new StructListWithSlice<int>(new List<int>()));
+            f(new StructListWithSlice<int>(new List<int> { 0 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, 2 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, 2, 7 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, 2, 7, 8 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, 2, 7, 8, 9 }));
+            f(new StructListWithSlice<int>(new List<int> { -1, 1, 2, 7, 8, 9 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, -1, 2, 7, 8, 9 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, -1, 7, 8, 9 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, 2, 7, -1, 9 }));
+            f(new StructListWithSlice<int>(new List<int> { 0, 1, 2, 7, 8, -9 }));
         }
 
         [TestMethod]
@@ -541,3 +559,20 @@ public struct StructList<T>
         return new StructList<T>(_list.Skip(offset).Take(length).ToList());
     }
 }
+
+public struct StructListWithSlice<T>
+{
+    private readonly List<T> _list;
+
+    public StructListWithSlice(List<T> list) => _list = list;
+
+    public int Count => _list.Count;
+
+    public T this[int i] => _list[i];
+
+    public StructListWithSlice<T> Slice(int offset, int length)
+    {
+        return new StructListWithSlice<T>(_list.Skip(offset).Take(length).ToList());
+    }
+}
+

@@ -2,10 +2,12 @@
 //
 // bartde - May 2020
 
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tests.Microsoft.CodeAnalysis.CSharp;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
@@ -245,5 +247,47 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f2(null));
             AssertEx.Throws<ArgumentOutOfRangeException>(() => f2(""));
         }
+
+        [TestMethod]
+        public void CrossCheck_IndexerAccess_CustomString_Slice()
+        {
+            var f1 = Compile<Func<MySliceableString, Range, MySliceableString>>("(s, i) => s[i]", typeof(MySliceableString).Assembly);
+            f1("foobarqux", Range.All);
+            f1("foobarqux", Range.StartAt(2));
+            f1("foobarqux", Range.StartAt(Index.FromEnd(2)));
+            f1("foobarqux", Range.EndAt(5));
+            f1("foobarqux", Range.EndAt(Index.FromEnd(5)));
+            f1("foobarqux", new Range(2, 5));
+            AssertEx.Throws<NullReferenceException>(() => f1(null, Range.All));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.StartAt(10)));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.StartAt(Index.FromEnd(10))));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.EndAt(10)));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", Range.EndAt(Index.FromEnd(10))));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f1("foobarqux", new Range(10, 21)));
+
+            var f2 = Compile<Func<MySliceableString, MySliceableString>>("s => Return(s)[Return(2)..Return(3)]", typeof(MySliceableString).Assembly);
+            f2("foobarqux");
+            AssertEx.Throws<NullReferenceException>(() => f2(null));
+            AssertEx.Throws<ArgumentOutOfRangeException>(() => f2(""));
+        }
     }
+}
+
+public sealed class MySliceableString : IEquatable<MySliceableString>
+{
+    private readonly string _str;
+
+    public MySliceableString(string str) => _str = str;
+
+    public static implicit operator MySliceableString(string s) => new MySliceableString(s);
+
+    public int Length => _str.Length;
+
+    public string Slice(int offset, int length) => _str.Substring(offset, length);
+
+    public bool Equals(MySliceableString other) => other != null && other._str == _str;
+
+    public override bool Equals(object obj) => Equals(obj as MySliceableString);
+
+    public override int GetHashCode() => _str?.GetHashCode() ?? 0;
 }
