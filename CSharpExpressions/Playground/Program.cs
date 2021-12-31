@@ -4,6 +4,7 @@
 
 using Microsoft.CSharp.Expressions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -1319,6 +1320,8 @@ namespace Playground
             ForEach3();
             ForEach4();
             ForEach5();
+            ForEach6();
+            ForEach7();
         }
 
         static void ForEach1()
@@ -1388,6 +1391,36 @@ namespace Playground
             var x = Expression.Parameter(typeof(string));
             var xs = Expression.Constant(new List<string> { "bar", "foo", "qux" });
             var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void ForEach6()
+        {
+            Title();
+
+            var x = Expression.Parameter(typeof(string));
+            var xs = Expression.Constant(new ArrayList { "bar", "foo", "qux" });
+            var cout = MethodInfoOf(() => Console.WriteLine(default(string)));
+            var loop = Expression.Lambda<Action>(
+                CSharpExpression.ForEach(x, xs,
+                    Expression.Call(cout, x)
+                )
+            );
+            loop.Compile()();
+        }
+
+        static void ForEach7()
+        {
+            Title();
+
+            var x = Expression.Parameter(typeof(char));
+            var xs = Expression.Constant("foobar");
+            var cout = MethodInfoOf(() => Console.WriteLine(default(char)));
             var loop = Expression.Lambda<Action>(
                 CSharpExpression.ForEach(x, xs,
                     Expression.Call(cout, x)

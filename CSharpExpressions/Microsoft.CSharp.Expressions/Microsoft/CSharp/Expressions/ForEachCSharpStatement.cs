@@ -111,7 +111,6 @@ namespace Microsoft.CSharp.Expressions
                 throw new Exception(); // TODO
             
             RequiresNotNullItems(variables, nameof(variables));
-            RequiresCanRead(collection, nameof(collection));
             RequiresCanRead(body, nameof(body));
 
             ValidateLoop(body, breakLabel, continueLabel);
@@ -713,7 +712,74 @@ namespace Microsoft.CSharp.Expressions
         public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
             ForEach(awaitInfo: null, variables, collection, body, @break, @continue, conversion, deconstruction);
 
-        // TODO: AwaitForEach
+        /// <summary>
+        /// Creates a <see cref="ForEachCSharpStatement"/> that represents an await foreach loop.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
+        /// <param name="variable">The iteration variable.</param>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body) =>
+            AwaitForEach(awaitInfo, variable, collection, body, @break: null, @continue: null, conversion: null);
+
+        /// <summary>
+        /// Creates a <see cref="ForEachCSharpStatement"/> that represents an await foreach loop.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
+        /// <param name="variable">The iteration variable.</param>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget @break) =>
+            AwaitForEach(awaitInfo, variable, collection, body, @break, @continue: null, conversion: null);
+
+        /// <summary>
+        /// Creates a <see cref="ForEachCSharpStatement"/> that represents an await foreach loop.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
+        /// <param name="variable">The iteration variable.</param>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue) =>
+            AwaitForEach(awaitInfo, variable, collection, body, @break, @continue, conversion: null);
+
+        /// <summary>
+        /// Creates a <see cref="ForEachCSharpStatement"/> that represents an await foreach loop.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
+        /// <param name="variable">The iteration variable.</param>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
+        /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion) =>
+            AwaitForEach(awaitInfo, new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null);
+
+        /// <summary>
+        /// Creates a <see cref="ForEachCSharpStatement"/> that represents an await foreach loop.
+        /// </summary>
+        /// <param name="awaitInfo">The information required to await the MoveNextAsync operation.</param>
+        /// <param name="variables">The iteration variable.</param>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="body">The body of the loop.</param>
+        /// <param name="break">The break target used by the loop body.</param>
+        /// <param name="continue">The continue target used by the loop body.</param>
+        /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
+        /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
+        /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction)
+        {
+            AssertForEachAwaitInfo(ref awaitInfo, collection);
+
+            return ForEach(awaitInfo, variables, collection, body, @break, @continue, conversion, deconstruction);
+        }
 
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
@@ -730,6 +796,8 @@ namespace Microsoft.CSharp.Expressions
         public static ForEachCSharpStatement ForEach(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
             ForEach(enumeratorInfo: null, awaitInfo, variables, collection, body, @break, @continue, conversion, deconstruction);
 
+        // NB: The Roslyn compiler binds to the overload below.
+
         /// <summary>
         /// Creates a <see cref="ForEachCSharpStatement"/> that represents a foreach loop.
         /// </summary>
@@ -745,16 +813,56 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
         public static ForEachCSharpStatement ForEach(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction)
         {
-            // NB: This is the overload the C# compiler can bind to. Note, however, that a bound foreach node in Roslyn has
-            //     information about GetEnumerator, MoveNext, Current, etc. as well. We can infer the same information at
-            //     runtime, but could also add an overload that has all of these.
             // NB: Conversion of the collection should be inserted as a Convert node by the compiler.
-            //
-            // TODO: Do we need to add a means to perform an enumerator conversion? Cf. ForEachEnumeratorInfo in Roslyn.
+
+            RequiresCanRead(collection, nameof(collection));
+
+            enumeratorInfo ??= CSharpExpression.EnumeratorInfo(isAsync: awaitInfo != null, collection.Type);
+
+            if (awaitInfo is InferredAwaitInfo inferAwait)
+            {
+                inferAwait.Bind(enumeratorInfo);
+            }
+            else
+            {
+                awaitInfo?.RequiresCanBind(enumeratorInfo.MoveNext.Body);
+            }
 
             var variablesCollection = variables.ToReadOnly();
 
+            // TODO: Validate elements from the enumeration can be bound to iteration variables (with optional deconstruction)
+            //       and feed the EnumeratorInfo object down to the factory.
+
             return ForEachCSharpStatement.Make(variablesCollection, collection, body, @break, @continue, conversion, deconstruction, awaitInfo);
+        }
+
+        private static void AssertForEachAwaitInfo(ref AwaitInfo awaitInfo, Expression collection)
+        {
+            awaitInfo ??= new InferredAwaitInfo();
+        }
+
+        private sealed class InferredAwaitInfo : AwaitInfo
+        {
+            private AwaitInfo _info;
+
+            public void Bind(EnumeratorInfo info)
+            {
+                _info = CSharpExpression.AwaitInfo(info.MoveNext.ReturnType);
+            }
+
+            public override bool IsDynamic => _info.IsDynamic;
+
+            public override Type Type => _info.Type;
+
+            protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor) => _info.Accept(visitor);
+
+            internal override Expression ReduceGetAwaiter(Expression operand) => _info.ReduceGetAwaiter(operand);
+
+            internal override Expression ReduceGetResult(Expression awaiter) => _info.ReduceGetResult(awaiter);
+
+            internal override Expression ReduceIsCompleted(Expression awaiter) => _info.ReduceIsCompleted(awaiter);
+
+            internal override void RequiresCanBind(Expression operand) => _info.RequiresCanBind(operand);
         }
     }
 

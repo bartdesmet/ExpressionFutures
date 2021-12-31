@@ -353,6 +353,16 @@ namespace Microsoft.CSharp.Expressions
 
         public static ConstantExpression ConstantNull => s_nullConstant ??= Expression.Constant(null, typeof(object));
 
+        public static Expression CreateConvert(Expression expr, Type type)
+        {
+            if (AreEquivalent(expr.Type, type))
+            {
+                return expr;
+            }
+
+            return Expression.Convert(expr, type);
+        }
+
         public static MethodInfo GetNonGenericMethod(this Type type, string name, BindingFlags flags, Type[] types)
         {
             var candidates = GetTypeAndBase(type).SelectMany(t => t.GetMethods(flags)).Where(m => !m.IsGenericMethod && m.Name == name && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(types)).ToArray();
