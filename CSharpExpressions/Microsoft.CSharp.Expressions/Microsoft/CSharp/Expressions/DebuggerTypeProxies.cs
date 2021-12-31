@@ -980,6 +980,35 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(EnumeratorInfoProxy))]
+    partial class EnumeratorInfo
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class EnumeratorInfoProxy
+    {
+        private readonly EnumeratorInfo _node;
+
+        public EnumeratorInfoProxy(EnumeratorInfo node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type CollectionType => _node.CollectionType;
+        public System.Reflection.PropertyInfo Current => _node.Current;
+        public System.Linq.Expressions.LambdaExpression CurrentConversion => _node.CurrentConversion;
+        public Microsoft.CSharp.Expressions.AwaitInfo DisposeAwaitInfo => _node.DisposeAwaitInfo;
+        public System.Type ElementType => _node.ElementType;
+        public System.Linq.Expressions.LambdaExpression GetEnumerator => _node.GetEnumerator;
+        public System.Boolean IsAsync => _node.IsAsync;
+        public System.Linq.Expressions.LambdaExpression MoveNext => _node.MoveNext;
+        public System.Boolean NeedsDisposal => _node.NeedsDisposal;
+        public System.Linq.Expressions.LambdaExpression PatternDispose => _node.PatternDispose;
+    }
+
     [DebuggerTypeProxy(typeof(ForCSharpStatementProxy))]
     partial class ForCSharpStatement
     {

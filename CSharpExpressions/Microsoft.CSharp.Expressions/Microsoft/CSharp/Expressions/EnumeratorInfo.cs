@@ -23,7 +23,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Provides binding information for foreach operations.
     /// </summary>
-    public sealed class EnumeratorInfo
+    public sealed partial class EnumeratorInfo
     {
         internal EnumeratorInfo(
             bool isAsync,

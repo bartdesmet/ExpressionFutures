@@ -88,6 +88,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class EnumeratorInfo
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -130,6 +135,8 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(SwitchLabel switchLabel) => Visit(switchLabel);
 
         public XNode GetDebugView(AwaitInfo awaitInfo) => Visit(awaitInfo);
+
+        public XNode GetDebugView(EnumeratorInfo enumeratorInfo) => Visit(enumeratorInfo);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -589,6 +596,39 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Push(node, args);
+        }
+
+        protected internal override EnumeratorInfo VisitEnumeratorInfo(EnumeratorInfo node)
+        {
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.IsAsync), node.IsAsync),
+                new XAttribute(nameof(node.CollectionType), node.CollectionType),
+                new XAttribute(nameof(node.ElementType), node.ElementType),
+                new XAttribute(nameof(node.NeedsDisposal), node.NeedsDisposal),
+                new XElement(nameof(node.GetEnumerator), Visit(node.GetEnumerator)),
+                new XElement(nameof(node.MoveNext), Visit(node.MoveNext)),
+                new XAttribute(nameof(node.Current), node.Current),
+            };
+
+            if (node.CurrentConversion != null)
+            {
+                args.Add(new XElement(nameof(node.CurrentConversion), Visit(node.CurrentConversion)));
+            }
+
+            if (node.DisposeAwaitInfo != null)
+            {
+                args.Add(new XElement(nameof(node.DisposeAwaitInfo), Visit(node.DisposeAwaitInfo)));
+            }
+
+            if (node.PatternDispose != null)
+            {
+                args.Add(new XElement(nameof(node.PatternDispose), Visit(node.PatternDispose)));
+            }
+
+            _nodes.Push(new XElement(nameof(EnumeratorInfo), args));
+
+            return node;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
@@ -1253,6 +1293,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(AwaitInfo node)
         {
             VisitAwaitInfo(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(EnumeratorInfo node)
+        {
+            VisitEnumeratorInfo(node);
             return _nodes.Pop();
         }
 
