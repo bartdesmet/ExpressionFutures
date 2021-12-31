@@ -10,7 +10,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Base class for binding information for await operations.
     /// </summary>
-    public abstract class AwaitInfo
+    public abstract partial class AwaitInfo
     {
         /// <summary>
         /// Indicates whether the await operation is dynamically bound.

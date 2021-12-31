@@ -193,6 +193,27 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(AwaitInfoProxy))]
+    partial class AwaitInfo
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class AwaitInfoProxy
+    {
+        private readonly AwaitInfo _node;
+
+        public AwaitInfoProxy(AwaitInfo node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean IsDynamic => _node.IsDynamic;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(BinaryCSharpExpressionProxy))]
     partial class BinaryCSharpExpression
     {
@@ -889,6 +910,29 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(DynamicAwaitInfoProxy))]
+    partial class DynamicAwaitInfo
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class DynamicAwaitInfoProxy
+    {
+        private readonly DynamicAwaitInfo _node;
+
+        public DynamicAwaitInfoProxy(DynamicAwaitInfo node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Type Context => _node.Context;
+        public System.Boolean IsDynamic => _node.IsDynamic;
+        public System.Boolean ResultDiscarded => _node.ResultDiscarded;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(DynamicCSharpArgumentProxy))]
     partial class DynamicCSharpArgument
     {
@@ -993,6 +1037,7 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.LambdaExpression Conversion => _node.Conversion;
         public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
         public System.Linq.Expressions.LambdaExpression Deconstruction => _node.Deconstruction;
+        public Microsoft.CSharp.Expressions.EnumeratorInfo EnumeratorInfo => _node.EnumeratorInfo;
         public System.Boolean IsAsync => _node.IsAsync;
         public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
         public System.Type Type => _node.Type;
@@ -1889,6 +1934,30 @@ namespace Microsoft.CSharp.Expressions
         public System.Type NarrowedType => _node.NarrowedType;
         public Microsoft.CSharp.Expressions.CSharpPattern Pattern => _node.Pattern;
         public Microsoft.CSharp.Expressions.CSharpPatternType PatternType => _node.PatternType;
+    }
+
+    [DebuggerTypeProxy(typeof(StaticAwaitInfoProxy))]
+    partial class StaticAwaitInfo
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class StaticAwaitInfoProxy
+    {
+        private readonly StaticAwaitInfo _node;
+
+        public StaticAwaitInfoProxy(StaticAwaitInfo node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Linq.Expressions.LambdaExpression GetAwaiter => _node.GetAwaiter;
+        public System.Reflection.MethodInfo GetResult => _node.GetResult;
+        public System.Reflection.PropertyInfo IsCompleted => _node.IsCompleted;
+        public System.Boolean IsDynamic => _node.IsDynamic;
+        public System.Type Type => _node.Type;
     }
 
     [DebuggerTypeProxy(typeof(SwitchCSharpExpressionProxy))]

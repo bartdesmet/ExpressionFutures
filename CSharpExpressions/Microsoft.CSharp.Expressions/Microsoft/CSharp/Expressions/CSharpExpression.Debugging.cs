@@ -83,6 +83,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class AwaitInfo
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -123,6 +128,8 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(SwitchSection switchSection) => Visit(switchSection);
 
         public XNode GetDebugView(SwitchLabel switchLabel) => Visit(switchLabel);
+
+        public XNode GetDebugView(AwaitInfo awaitInfo) => Visit(awaitInfo);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
