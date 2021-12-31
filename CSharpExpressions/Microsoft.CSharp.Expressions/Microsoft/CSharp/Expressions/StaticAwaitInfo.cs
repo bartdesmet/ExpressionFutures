@@ -15,6 +15,8 @@ using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static Helpers;
+
     /// <summary>
     /// Represents binding information for statically bound await operations.
     /// </summary>
@@ -82,31 +84,7 @@ namespace Microsoft.CSharp.Expressions
             _ = Expression.Invoke(GetAwaiter, operand);
         }
 
-        internal override Expression ReduceGetAwaiter(Expression operand)
-        {
-            if (GetAwaiter.Body is MethodCallExpression call)
-            {
-                var parameter = GetAwaiter.Parameters[0];
-                var method = call.Method;
-
-                if (method.IsStatic)
-                {
-                    if (call.Arguments.Count == 1 && call.Arguments[0] == parameter)
-                    {
-                        return call.Update(call.Object, new[] { operand });
-                    }
-                }
-                else
-                {
-                    if (call.Arguments.Count == 0 && call.Object == parameter)
-                    {
-                        return call.Update(operand, call.Arguments);
-                    }
-                }
-            }
-
-            return Expression.Invoke(GetAwaiter, operand);
-        }
+        internal override Expression ReduceGetAwaiter(Expression operand) => InvokeLambdaWithSingleParameter(GetAwaiter, operand);
 
         internal override Expression ReduceGetResult(Expression awaiter) => Expression.Call(awaiter, GetResult);
 

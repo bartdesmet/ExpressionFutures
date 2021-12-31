@@ -363,6 +363,34 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Convert(expr, type);
         }
 
+        public static Expression InvokeLambdaWithSingleParameter(LambdaExpression lambda, Expression argument)
+        {
+            var body = lambda.Body.ReduceExtensions();
+
+            if (body is MethodCallExpression call)
+            {
+                var parameter = lambda.Parameters[0];
+                var method = call.Method;
+
+                if (method.IsStatic)
+                {
+                    if (call.Arguments.Count == 1 && call.Arguments[0] == parameter)
+                    {
+                        return call.Update(call.Object, new[] { argument });
+                    }
+                }
+                else
+                {
+                    if (call.Arguments.Count == 0 && call.Object == parameter)
+                    {
+                        return call.Update(argument, call.Arguments);
+                    }
+                }
+            }
+
+            return Expression.Invoke(lambda, argument);
+        }
+
         public static MethodInfo GetNonGenericMethod(this Type type, string name, BindingFlags flags, Type[] types)
         {
             var candidates = GetTypeAndBase(type).SelectMany(t => t.GetMethods(flags)).Where(m => !m.IsGenericMethod && m.Name == name && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(types)).ToArray();
