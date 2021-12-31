@@ -13,7 +13,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents binding information for dynamically bound await operations.
     /// </summary>
-    public sealed class DynamicAwaitInfo : AwaitInfo
+    public sealed partial class DynamicAwaitInfo : AwaitInfo
     {
         internal DynamicAwaitInfo(Type context, bool resultDiscarded)
         {

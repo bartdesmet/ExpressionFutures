@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     /// <summary>
     /// Represents binding information for statically bound await operations.
     /// </summary>
-    public sealed class StaticAwaitInfo : AwaitInfo
+    public sealed partial class StaticAwaitInfo : AwaitInfo
     {
         internal StaticAwaitInfo(LambdaExpression getAwaiter, PropertyInfo isCompleted, MethodInfo getResult)
         {
