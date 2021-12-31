@@ -897,8 +897,56 @@ namespace Tests
 
         private Expression expr44 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty());
         private string dbg44 = @"<CSharpForEach Type=""System.Void"">
+  <EnumeratorInfo>
+    <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Int32[]"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""System.Object Current"">
+      <GetEnumerator>
+        <Lambda Type=""System.Func`2[System.Int32[],System.Collections.IEnumerator]"">
+          <Parameters>
+            <Parameter Type=""System.Int32[]"" Id=""0"" Name=""arr"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+              <Object>
+                <Parameter Type=""System.Int32[]"" Id=""0"" Name=""arr"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </GetEnumerator>
+      <MoveNext>
+        <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Collections.IEnumerator"" Id=""1"" Name=""e"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+              <Object>
+                <Parameter Type=""System.Collections.IEnumerator"" Id=""1"" Name=""e"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </MoveNext>
+      <CurrentConversion>
+        <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+          <Parameters>
+            <Parameter Type=""System.Object"" Id=""2"" Name=""c"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.Object"" Id=""2"" Name=""c"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </CurrentConversion>
+    </EnumeratorInfo>
+  </EnumeratorInfo>
   <Variables>
-    <Parameter Type=""System.Int32"" Id=""0"" />
+    <Parameter Type=""System.Int32"" Id=""3"" />
   </Variables>
   <Collection>
     <Default Type=""System.Int32[]"" />
@@ -916,8 +964,56 @@ namespace Tests
 
         private Expression expr45 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"));
         private string dbg45 = @"<CSharpForEach Type=""System.Void"">
+  <EnumeratorInfo>
+    <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Int32[]"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""System.Object Current"">
+      <GetEnumerator>
+        <Lambda Type=""System.Func`2[System.Int32[],System.Collections.IEnumerator]"">
+          <Parameters>
+            <Parameter Type=""System.Int32[]"" Id=""0"" Name=""arr"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+              <Object>
+                <Parameter Type=""System.Int32[]"" Id=""0"" Name=""arr"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </GetEnumerator>
+      <MoveNext>
+        <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Collections.IEnumerator"" Id=""1"" Name=""e"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+              <Object>
+                <Parameter Type=""System.Collections.IEnumerator"" Id=""1"" Name=""e"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </MoveNext>
+      <CurrentConversion>
+        <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+          <Parameters>
+            <Parameter Type=""System.Object"" Id=""2"" Name=""c"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.Object"" Id=""2"" Name=""c"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </CurrentConversion>
+    </EnumeratorInfo>
+  </EnumeratorInfo>
   <Variables>
-    <Parameter Type=""System.Int32"" Id=""0"" />
+    <Parameter Type=""System.Int32"" Id=""3"" />
   </Variables>
   <Collection>
     <Default Type=""System.Int32[]"" />
@@ -926,10 +1022,10 @@ namespace Tests
     <Default Type=""System.Void"" />
   </Body>
   <BreakLabel>
-    <LabelTarget Type=""System.Void"" Id=""1"" Name=""break"" />
+    <LabelTarget Type=""System.Void"" Id=""4"" Name=""break"" />
   </BreakLabel>
   <ContinueLabel>
-    <LabelTarget Type=""System.Void"" Id=""2"" Name=""continue"" />
+    <LabelTarget Type=""System.Void"" Id=""5"" Name=""continue"" />
   </ContinueLabel>
 </CSharpForEach>";
 
@@ -941,13 +1037,61 @@ namespace Tests
 
         private Expression expr46 = CSharpStatement.ForEach(Expression.Parameter(typeof(int)), Expression.Default(typeof(int[])), Expression.Empty(), Expression.Label("break"), Expression.Label("continue"), Expression.Lambda(Expression.Default(typeof(int)), Expression.Parameter(typeof(int))));
         private string dbg46 = @"<CSharpForEach Type=""System.Void"">
+  <EnumeratorInfo>
+    <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Int32[]"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""System.Object Current"">
+      <GetEnumerator>
+        <Lambda Type=""System.Func`2[System.Int32[],System.Collections.IEnumerator]"">
+          <Parameters>
+            <Parameter Type=""System.Int32[]"" Id=""0"" Name=""arr"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+              <Object>
+                <Parameter Type=""System.Int32[]"" Id=""0"" Name=""arr"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </GetEnumerator>
+      <MoveNext>
+        <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+          <Parameters>
+            <Parameter Type=""System.Collections.IEnumerator"" Id=""1"" Name=""e"" />
+          </Parameters>
+          <Body>
+            <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+              <Object>
+                <Parameter Type=""System.Collections.IEnumerator"" Id=""1"" Name=""e"" />
+              </Object>
+              <Arguments />
+            </Call>
+          </Body>
+        </Lambda>
+      </MoveNext>
+      <CurrentConversion>
+        <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+          <Parameters>
+            <Parameter Type=""System.Object"" Id=""2"" Name=""c"" />
+          </Parameters>
+          <Body>
+            <Convert Type=""System.Int32"">
+              <Operand>
+                <Parameter Type=""System.Object"" Id=""2"" Name=""c"" />
+              </Operand>
+            </Convert>
+          </Body>
+        </Lambda>
+      </CurrentConversion>
+    </EnumeratorInfo>
+  </EnumeratorInfo>
   <Variables>
-    <Parameter Type=""System.Int32"" Id=""0"" />
+    <Parameter Type=""System.Int32"" Id=""3"" />
   </Variables>
   <Conversion>
     <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
       <Parameters>
-        <Parameter Type=""System.Int32"" Id=""1"" />
+        <Parameter Type=""System.Int32"" Id=""4"" />
       </Parameters>
       <Body>
         <Default Type=""System.Int32"" />
@@ -961,10 +1105,10 @@ namespace Tests
     <Default Type=""System.Void"" />
   </Body>
   <BreakLabel>
-    <LabelTarget Type=""System.Void"" Id=""2"" Name=""break"" />
+    <LabelTarget Type=""System.Void"" Id=""5"" Name=""break"" />
   </BreakLabel>
   <ContinueLabel>
-    <LabelTarget Type=""System.Void"" Id=""3"" Name=""continue"" />
+    <LabelTarget Type=""System.Void"" Id=""6"" Name=""continue"" />
   </ContinueLabel>
 </CSharpForEach>";
 

@@ -24,10 +24,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_AF2A_5B45() => OK();
 
             // ForEach
-            public override void CompilerTest_6624_5FDD() => OK();
-            public override void CompilerTest_CB13_5FDD() => OK();
-            public override void CompilerTest_80A1_8959() => OK();
-            public override void CompilerTest_C73C_F587() => OK();
+            public override void CompilerTest_6624_ABDB() => OK();
+            public override void CompilerTest_CB13_ABDB() => OK();
+            public override void CompilerTest_80A1_7FC7() => OK();
+            public override void CompilerTest_C73C_5413() => OK();
         }
     }
 }

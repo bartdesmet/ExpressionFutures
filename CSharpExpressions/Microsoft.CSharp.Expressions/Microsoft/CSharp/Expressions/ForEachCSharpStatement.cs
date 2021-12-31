@@ -25,12 +25,18 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class ForEachCSharpStatement : LoopCSharpStatement
     {
-        internal ForEachCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        internal ForEachCSharpStatement(EnumeratorInfo enumeratorInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
             : base(body, breakLabel, continueLabel)
         {
+            EnumeratorInfo = enumeratorInfo;
             Variables = variables;
             Collection = collection;
         }
+
+        /// <summary>
+        /// Gets the <see cref="EnumeratorInfo"/> that provides binding information for the enumeration of the <see cref="Collection"/>.
+        /// </summary>
+        public new EnumeratorInfo EnumeratorInfo { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="ParameterExpression" /> objects representing the iteration variables.
@@ -79,16 +85,20 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
+        /// <param name="enumeratorInfo">The <see cref="EnumeratorInfo" /> property of the result.</param>
         /// <param name="breakLabel">The <see cref="LoopCSharpStatement.BreakLabel" /> property of the result.</param>
         /// <param name="continueLabel">The <see cref="LoopCSharpStatement.ContinueLabel" /> property of the result.</param>
-        /// <param name="variable">The <see cref="Variable" /> property of the result.</param>
+        /// <param name="variables">The <see cref="Variables" /> property of the result.</param>
         /// <param name="collection">The <see cref="Collection" /> property of the result.</param>
         /// <param name="conversion">The <see cref="Conversion"/> property of the result.</param>
         /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
+        /// <param name="deconstruction">The <see cref="Deconstruction"/> property of the result.</param>
+        /// <param name="awaitInfo">The <see cref="AwaitInfo"/> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ForEachCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, Expression collection, LambdaExpression conversion, Expression body, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+        public ForEachCSharpStatement Update(EnumeratorInfo enumeratorInfo, LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, Expression collection, LambdaExpression conversion, Expression body, LambdaExpression deconstruction, AwaitInfo awaitInfo)
         {
-            if (breakLabel == BreakLabel &&
+            if (enumeratorInfo == EnumeratorInfo &&
+                breakLabel == BreakLabel &&
                 continueLabel == ContinueLabel &&
                 SameElements(ref variables, Variables) &&
                 collection == Collection &&
@@ -103,7 +113,7 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ForEach(awaitInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
         }
 
-        internal static ForEachCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+        internal static ForEachCSharpStatement Make(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
         {
             // TODO: Support pattern-based approach.
 
@@ -124,7 +134,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (collectionType == typeof(string) && variables.Count == 1 && firstVariableType == typeof(char) && conversion == null && deconstruction == null)
                 {
-                    return new StringForEachStatement(variables, collection, body, breakLabel, continueLabel);
+                    return new StringForEachStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
                 }
                 else if (collectionType.IsVector())
                 {
@@ -149,11 +159,11 @@ namespace Microsoft.CSharp.Expressions
 
                     if (conversion == null && deconstruction == null)
                     {
-                        return new SimpleArrayForEachCSharpStatement(variables, collection, body, breakLabel, continueLabel);
+                        return new SimpleArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
                     }
                     else
                     {
-                        return new ArrayForEachCSharpStatement(variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
+                        return new ArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
                     }
                 }
             }
@@ -178,7 +188,7 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.EnumeratorShouldHaveMoveNextMethod(enumeratorType);
                 }
 
-                var enumeratorInfo = new BasicEnumeratorInfo
+                var oldEnumeratorInfo = new BasicEnumeratorInfo
                 {
                     GetEnumerator = getEnumeratorMethod,
                     MoveNext = moveNextMethod,
@@ -199,7 +209,7 @@ namespace Microsoft.CSharp.Expressions
 
                 // TODO: More validation for the deconstruction case.
 
-                return new BoundForEachCSharpStatement(variables, collection, body, breakLabel, continueLabel, conversion, enumeratorInfo, deconstruction, awaitInfo);
+                return new BoundForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, oldEnumeratorInfo, deconstruction, awaitInfo);
             }
 
             // NB: We don't check for implicit conversions to IE<T> or IE; the caller is responsible to insert a convert if needed.
@@ -233,7 +243,7 @@ namespace Microsoft.CSharp.Expressions
                 var moveNext = typeof(IEnumerator).GetMethod(nameof(IEnumerator.MoveNext));
                 var current = getEnumerator.ReturnType.GetProperty(nameof(IEnumerator.Current));
 
-                var enumeratorInfo = new BasicEnumeratorInfo
+                var oldEnumeratorInfo = new BasicEnumeratorInfo
                 {
                     GetEnumerator = getEnumerator,
                     MoveNext = moveNext,
@@ -248,7 +258,7 @@ namespace Microsoft.CSharp.Expressions
 
                 // TODO: More validation for the deconstruction case.
 
-                return new BoundForEachCSharpStatement(variables, collection, body, breakLabel, continueLabel, conversion, enumeratorInfo, deconstruction, awaitInfo);
+                return new BoundForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, oldEnumeratorInfo, deconstruction, awaitInfo);
             }
 
             throw Error.NoEnumerablePattern(collectionType);
@@ -341,8 +351,8 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class StringForEachStatement : ForEachCSharpStatement
         {
-            internal StringForEachStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
-                : base(variables, collection, body, breakLabel, continueLabel)
+            internal StringForEachStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+                : base(info, variables, collection, body, breakLabel, continueLabel)
             {
             }
 
@@ -422,8 +432,8 @@ namespace Microsoft.CSharp.Expressions
 
         private abstract class ArrayForEachCSharpStatementBase : ForEachCSharpStatement
         {
-            protected ArrayForEachCSharpStatementBase(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
-                : base(variables, collection, body, breakLabel, continueLabel)
+            protected ArrayForEachCSharpStatementBase(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+                : base(info, variables, collection, body, breakLabel, continueLabel)
             {
             }
 
@@ -507,8 +517,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance", Justification = "Only part of the hierarchy is visible publicly.")]
         private sealed class ArrayForEachCSharpStatement : ArrayForEachCSharpStatementBase
         {
-            public ArrayForEachCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
-                : base(variables, collection, body, breakLabel, continueLabel)
+            public ArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
+                : base(info, variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
                 Deconstruction = deconstruction;
@@ -531,8 +541,8 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance", Justification = "Only part of the hierarchy is visible publicly.")]
         private sealed class SimpleArrayForEachCSharpStatement : ArrayForEachCSharpStatementBase
         {
-            public SimpleArrayForEachCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
-                : base(variables, collection, body, breakLabel, continueLabel)
+            public SimpleArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+                : base(info, variables, collection, body, breakLabel, continueLabel)
             {
             }
 
@@ -553,8 +563,8 @@ namespace Microsoft.CSharp.Expressions
         {
             private readonly BasicEnumeratorInfo _enumeratorInfo;
 
-            internal BoundForEachCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, BasicEnumeratorInfo enumeratorInfo, LambdaExpression deconstruction, AwaitInfo awaitInfo)
-                : base(variables, collection, body, breakLabel, continueLabel)
+            internal BoundForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, BasicEnumeratorInfo enumeratorInfo, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+                : base(info, variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
                 _enumeratorInfo = enumeratorInfo;
@@ -833,7 +843,7 @@ namespace Microsoft.CSharp.Expressions
             // TODO: Validate elements from the enumeration can be bound to iteration variables (with optional deconstruction)
             //       and feed the EnumeratorInfo object down to the factory.
 
-            return ForEachCSharpStatement.Make(variablesCollection, collection, body, @break, @continue, conversion, deconstruction, awaitInfo);
+            return ForEachCSharpStatement.Make(enumeratorInfo, awaitInfo, variablesCollection, collection, body, @break, @continue, conversion, deconstruction);
         }
 
         private static void AssertForEachAwaitInfo(ref AwaitInfo awaitInfo, Expression collection)
@@ -876,6 +886,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitForEach(ForEachCSharpStatement node) =>
             node.Update(
+                VisitEnumeratorInfo(node.EnumeratorInfo),
                 VisitLabelTarget(node.BreakLabel),
                 VisitLabelTarget(node.ContinueLabel),
                 VisitAndConvert(node.Variables, nameof(VisitForEach)),

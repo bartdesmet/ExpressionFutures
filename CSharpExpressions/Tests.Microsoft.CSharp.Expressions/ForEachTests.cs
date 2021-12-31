@@ -201,7 +201,7 @@ namespace Tests
             var conversion = Expression.Lambda(x, x);
             var res = CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conversion);
 
-            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo));
+            Assert.AreSame(res, res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo));
 
             var newVariable = Expression.Parameter(typeof(int));
             var newCollection = Expression.Constant(new int[] { 2, 3, 5 });
@@ -210,12 +210,12 @@ namespace Tests
             var newContinueLabel = Expression.Label();
             var newConversion = Expression.Lambda(x, x);
 
-            var upd1 = res.Update(newBreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
-            var upd2 = res.Update(res.BreakLabel, newContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
-            var upd3 = res.Update(res.BreakLabel, res.ContinueLabel, new[] { newVariable }, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
-            var upd4 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, newCollection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
-            var upd5 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, newConversion, res.Body, res.Deconstruction, res.AwaitInfo);
-            var upd6 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, newBody, res.Deconstruction, res.AwaitInfo);
+            var upd1 = res.Update(res.EnumeratorInfo, newBreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd2 = res.Update(res.EnumeratorInfo, res.BreakLabel, newContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd3 = res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, new[] { newVariable }, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd4 = res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, newCollection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd5 = res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, newConversion, res.Body, res.Deconstruction, res.AwaitInfo);
+            var upd6 = res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, newBody, res.Deconstruction, res.AwaitInfo);
 
             Assert.AreSame(newBreakLabel, upd1.BreakLabel);
             Assert.AreSame(res.ContinueLabel, upd1.ContinueLabel);

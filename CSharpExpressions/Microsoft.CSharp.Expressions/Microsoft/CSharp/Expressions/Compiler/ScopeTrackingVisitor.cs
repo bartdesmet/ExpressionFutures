@@ -234,6 +234,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var res = 
                 node.Update(
+                    VisitEnumeratorInfo(node.EnumeratorInfo),
                     VisitLabelTarget(node.BreakLabel),
                     VisitLabelTarget(node.ContinueLabel),
                     VisitAndConvert(node.Variables, nameof(VisitForEach)),

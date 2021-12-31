@@ -40,7 +40,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     public partial class CompilerTests_CSharp30_Statements_ForEach
     {
         [TestMethod]
-        public void CompilerTest_245A_0917()
+        public void CompilerTest_245A_D038()
         {
             // (Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })
             var actual = GetDebugView(@"(Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })");
@@ -53,8 +53,52 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.String"" ElementType=""System.Char"" NeedsDisposal=""true"" Current=""Char Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.String,System.CharEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.String"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.CharEnumerator"" Method=""System.CharEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.String"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.CharEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.CharEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.CharEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Char,System.Char]"">
+                  <Parameters>
+                    <Parameter Type=""System.Char"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Char"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Char"" Id=""1"" Name=""c"" />
+            <Parameter Type=""System.Char"" Id=""4"" Name=""c"" />
           </Variables>
           <Collection>
             <Parameter Type=""System.String"" Id=""0"" Name=""s"" />
@@ -62,32 +106,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Char)"">
               <Arguments>
-                <Parameter Type=""System.Char"" Id=""1"" Name=""c"" />
+                <Parameter Type=""System.Char"" Id=""4"" Name=""c"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""2"" />
+            <LabelTarget Type=""System.Void"" Id=""5"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""4"" />
+        <LabelTarget Type=""System.Void"" Id=""7"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_245A_0917();
+            Verify.CompilerTest_245A_D038();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_245A_0917() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_245A_D038() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_DA7B_AAFD()
+        public void CompilerTest_DA7B_94B8()
         {
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -100,8 +144,56 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Convert Type=""System.Int32"">
+                      <Operand>
+                        <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                      </Operand>
+                    </Convert>
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Collection>
             <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
@@ -109,32 +201,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""2"" />
+            <LabelTarget Type=""System.Void"" Id=""5"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""4"" />
+        <LabelTarget Type=""System.Void"" Id=""7"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_DA7B_AAFD();
+            Verify.CompilerTest_DA7B_94B8();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_AAFD() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_94B8() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_34B8_D561()
+        public void CompilerTest_34B8_1000()
         {
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -147,18 +239,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.Object"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.Object]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
+                <Parameter Type=""System.Object"" Id=""5"" Name=""__element"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
+                    <Parameter Type=""System.Object"" Id=""5"" Name=""__element"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -170,32 +306,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""4"" />
+            <LabelTarget Type=""System.Void"" Id=""7"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""5"" />
+        <LabelTarget Type=""System.Void"" Id=""8"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_34B8_D561();
+            Verify.CompilerTest_34B8_1000();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_D561() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_1000() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_3958_FB90()
+        public void CompilerTest_3958_BEB6()
         {
             // (Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -208,8 +344,52 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.Generic.IEnumerable`1[System.Int32]"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""Int32 Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.Generic.IEnumerable`1[System.Int32],System.Collections.Generic.IEnumerator`1[System.Int32]]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.Generic.IEnumerable`1[System.Int32]"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.Generic.IEnumerator`1[System.Int32]"" Method=""System.Collections.Generic.IEnumerator`1[System.Int32] GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.Generic.IEnumerable`1[System.Int32]"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.Generic.IEnumerator`1[System.Int32],System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.Generic.IEnumerator`1[System.Int32]"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.Generic.IEnumerator`1[System.Int32]"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                  <Parameters>
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Collection>
             <Parameter Type=""System.Collections.Generic.IEnumerable`1[System.Int32]"" Id=""0"" Name=""xs"" />
@@ -217,32 +397,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""2"" />
+            <LabelTarget Type=""System.Void"" Id=""5"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""4"" />
+        <LabelTarget Type=""System.Void"" Id=""7"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_3958_FB90();
+            Verify.CompilerTest_3958_BEB6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_FB90() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_BEB6() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_1525_8CFA()
+        public void CompilerTest_1525_A28E()
         {
             // (Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -255,8 +435,52 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.Generic.List`1[System.Int32]"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""Int32 Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.Generic.List`1[System.Int32],System.Collections.Generic.List`1+Enumerator[System.Int32]]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.Generic.List`1+Enumerator[System.Int32]"" Method=""Enumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.Generic.List`1+Enumerator[System.Int32],System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.Generic.List`1+Enumerator[System.Int32]"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.Generic.List`1+Enumerator[System.Int32]"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                  <Parameters>
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Collection>
             <Parameter Type=""System.Collections.Generic.List`1[System.Int32]"" Id=""0"" Name=""xs"" />
@@ -264,32 +488,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""2"" />
+            <LabelTarget Type=""System.Void"" Id=""5"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""4"" />
+        <LabelTarget Type=""System.Void"" Id=""7"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_1525_8CFA();
+            Verify.CompilerTest_1525_A28E();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1525_8CFA() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1525_A28E() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_720D_2F5A()
+        public void CompilerTest_720D_F421()
         {
             // (Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })");
@@ -302,8 +526,52 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.Generic.IList`1[System.Int32]"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""Int32 Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.Generic.IList`1[System.Int32],System.Collections.Generic.IEnumerator`1[System.Int32]]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.Generic.IList`1[System.Int32]"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.Generic.IEnumerator`1[System.Int32]"" Method=""System.Collections.Generic.IEnumerator`1[System.Int32] GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.Generic.IList`1[System.Int32]"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.Generic.IEnumerator`1[System.Int32],System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.Generic.IEnumerator`1[System.Int32]"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.Generic.IEnumerator`1[System.Int32]"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                  <Parameters>
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Int32"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Collection>
             <Parameter Type=""System.Collections.Generic.IList`1[System.Int32]"" Id=""0"" Name=""xs"" />
@@ -311,32 +579,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""2"" />
+            <LabelTarget Type=""System.Void"" Id=""5"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""4"" />
+        <LabelTarget Type=""System.Void"" Id=""7"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_720D_2F5A();
+            Verify.CompilerTest_720D_F421();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_2F5A() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_F421() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_0041_2906()
+        public void CompilerTest_0041_CDCE()
         {
             // (Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -349,18 +617,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.ArrayList"" ElementType=""System.Object"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.ArrayList,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.ArrayList"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.ArrayList"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.Object]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
+                <Parameter Type=""System.Object"" Id=""5"" Name=""__element"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
+                    <Parameter Type=""System.Object"" Id=""5"" Name=""__element"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -372,32 +684,32 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""4"" />
+            <LabelTarget Type=""System.Void"" Id=""7"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""5"" />
+        <LabelTarget Type=""System.Void"" Id=""8"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_0041_2906();
+            Verify.CompilerTest_0041_CDCE();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_2906() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_CDCE() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_AE67_825B()
+        public void CompilerTest_AE67_70A6()
         {
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })
             var actual = GetDebugView(@"(Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })");
@@ -410,8 +722,56 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.Int32"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Convert Type=""System.Int32"">
+                      <Operand>
+                        <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                      </Operand>
+                    </Convert>
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Collection>
             <Parameter Type=""System.Int32[]"" Id=""0"" Name=""xs"" />
@@ -423,7 +783,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   <Test>
                     <Equal Type=""System.Boolean"">
                       <Left>
-                        <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                        <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
                       </Left>
                       <Right>
                         <Constant Type=""System.Int32"" Value=""5"" />
@@ -433,7 +793,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   <IfTrue>
                     <Goto Type=""System.Void"" Kind=""Continue"">
                       <Target>
-                        <LabelTarget Type=""System.Void"" Id=""2"" />
+                        <LabelTarget Type=""System.Void"" Id=""5"" />
                       </Target>
                     </Goto>
                   </IfTrue>
@@ -445,7 +805,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   <Test>
                     <Equal Type=""System.Boolean"">
                       <Left>
-                        <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                        <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
                       </Left>
                       <Right>
                         <Constant Type=""System.Int32"" Value=""8"" />
@@ -455,7 +815,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                   <IfTrue>
                     <Goto Type=""System.Void"" Kind=""Break"">
                       <Target>
-                        <LabelTarget Type=""System.Void"" Id=""3"" />
+                        <LabelTarget Type=""System.Void"" Id=""6"" />
                       </Target>
                     </Goto>
                   </IfTrue>
@@ -467,27 +827,27 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             </Block>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""2"" />
+            <LabelTarget Type=""System.Void"" Id=""5"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""4"" />
+        <LabelTarget Type=""System.Void"" Id=""7"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_AE67_825B();
+            Verify.CompilerTest_AE67_70A6();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AE67_825B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AE67_70A6() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_8AE9_7D52()
+        public void CompilerTest_8AE9_1642()
         {
             // (Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })
             var actual = GetDebugView(@"(Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })");
@@ -500,18 +860,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.Object"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.Object]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
           </Variables>
           <Conversion>
             <Lambda Type=""System.Func`2[System.Object,System.Int32]"">
               <Parameters>
-                <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
+                <Parameter Type=""System.Object"" Id=""5"" Name=""__element"" />
               </Parameters>
               <Body>
                 <Convert Type=""System.Int32"">
                   <Operand>
-                    <Parameter Type=""System.Object"" Id=""2"" Name=""__element"" />
+                    <Parameter Type=""System.Object"" Id=""5"" Name=""__element"" />
                   </Operand>
                 </Convert>
               </Body>
@@ -527,29 +931,29 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
           <Body>
             <Call Type=""System.Void"" Method=""Void Write(Int32)"">
               <Arguments>
-                <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
               </Arguments>
             </Call>
           </Body>
           <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""3"" />
+            <LabelTarget Type=""System.Void"" Id=""6"" />
           </BreakLabel>
           <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""4"" />
+            <LabelTarget Type=""System.Void"" Id=""7"" />
           </ContinueLabel>
         </CSharpForEach>
       </Statements>
       <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""5"" />
+        <LabelTarget Type=""System.Void"" Id=""8"" />
       </ReturnLabel>
     </CSharpBlock>
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_8AE9_7D52();
+            Verify.CompilerTest_8AE9_1642();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8AE9_7D52() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_8AE9_1642() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -577,15 +981,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         partial class Reviewed
         {
-            public override void CompilerTest_245A_0917() => OK();
-            public override void CompilerTest_DA7B_AAFD() => OK();
-            public override void CompilerTest_34B8_D561() => OK();
-            public override void CompilerTest_3958_FB90() => OK();
-            public override void CompilerTest_1525_8CFA() => OK();
-            public override void CompilerTest_720D_2F5A() => OK();
-            public override void CompilerTest_0041_2906() => OK();
-            public override void CompilerTest_AE67_825B() => OK();
-            public override void CompilerTest_8AE9_7D52() => OK();
+            public override void CompilerTest_245A_D038() => OK();
+            public override void CompilerTest_DA7B_94B8() => OK();
+            public override void CompilerTest_34B8_1000() => OK();
+            public override void CompilerTest_3958_BEB6() => OK();
+            public override void CompilerTest_1525_A28E() => OK();
+            public override void CompilerTest_720D_F421() => OK();
+            public override void CompilerTest_0041_CDCE() => OK();
+            public override void CompilerTest_AE67_70A6() => OK();
+            public override void CompilerTest_8AE9_1642() => OK();
         }
     }
 }

@@ -8,15 +8,15 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         partial class Reviewed
         {
-            public override void CompilerTest_245A_0917() => OK();
-            public override void CompilerTest_DA7B_AAFD() => OK();
-            public override void CompilerTest_34B8_D561() => OK();
-            public override void CompilerTest_3958_FB90() => OK();
-            public override void CompilerTest_1525_8CFA() => OK(); // REVIEW: Rely on runtime library to infer the right GetEnumerator method, or pass it to the factory method? (NB: No extension methods are considered, so should be able to guarantee that we can find it at runtime.)
-            public override void CompilerTest_720D_2F5A() => OK();
-            public override void CompilerTest_0041_2906() => OK();
-            public override void CompilerTest_AE67_825B() => OK();
-            public override void CompilerTest_8AE9_7D52() => OK();
+            public override void CompilerTest_245A_D038() => OK();
+            public override void CompilerTest_DA7B_94B8() => OK();
+            public override void CompilerTest_34B8_1000() => OK();
+            public override void CompilerTest_3958_BEB6() => OK();
+            public override void CompilerTest_1525_A28E() => OK();
+            public override void CompilerTest_720D_F421() => OK();
+            public override void CompilerTest_0041_CDCE() => OK();
+            public override void CompilerTest_AE67_70A6() => OK();
+            public override void CompilerTest_8AE9_1642() => OK();
         }
     }
 }

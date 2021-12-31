@@ -770,7 +770,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AF2A_5B45() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_6624_5FDD()
+        public void CompilerTest_6624_ABDB()
         {
             // (Expression<Action<(int, int)[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($"{x}, {y}"); })
             var actual = GetDebugView(@"(Expression<Action<(int, int)[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($""{x}, {y}""); })");
@@ -783,14 +783,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     <CSharpBlock Type=""System.Void"">
       <Statements>
         <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.ValueTuple`2[System.Int32,System.Int32]"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.ValueTuple`2[System.Int32,System.Int32]]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Convert Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                      <Operand>
+                        <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                      </Operand>
+                    </Convert>
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
           <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-            <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
           </Variables>
           <Deconstruction>
             <Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.Int32],System.ValueTuple`2[System.Int32,System.Int32]]"">
               <Parameters>
-                <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""3"" Name=""t"" />
+                <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""6"" Name=""t"" />
               </Parameters>
               <Body>
                 <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
@@ -798,398 +846,20 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                     <TupleLiteral Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
                       <Arguments>
                         <Argument Name=""x"">
-                          <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                          <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
                         </Argument>
                         <Argument Name=""y"">
-                          <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
+                          <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
                         </Argument>
                       </Arguments>
                     </TupleLiteral>
                   </Left>
                   <Right>
-                    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""3"" Name=""t"" />
+                    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""6"" Name=""t"" />
                   </Right>
                   <Conversion>
                     <DeconstructionConversion>
                       <Deconstruct />
-                      <Conversions>
-                        <SimpleConversion>
-                          <Conversion>
-                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
-                              <Parameters>
-                                <Parameter Type=""System.Int32"" Id=""4"" Name=""p"" />
-                              </Parameters>
-                              <Body>
-                                <Parameter Type=""System.Int32"" Id=""4"" Name=""p"" />
-                              </Body>
-                            </Lambda>
-                          </Conversion>
-                        </SimpleConversion>
-                        <SimpleConversion>
-                          <Conversion>
-                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
-                              <Parameters>
-                                <Parameter Type=""System.Int32"" Id=""5"" Name=""p"" />
-                              </Parameters>
-                              <Body>
-                                <Parameter Type=""System.Int32"" Id=""5"" Name=""p"" />
-                              </Body>
-                            </Lambda>
-                          </Conversion>
-                        </SimpleConversion>
-                      </Conversions>
-                    </DeconstructionConversion>
-                  </Conversion>
-                </CSharpDeconstructionAssignment>
-              </Body>
-            </Lambda>
-          </Deconstruction>
-          <Collection>
-            <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
-          </Collection>
-          <Body>
-            <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
-              <Arguments>
-                <CSharpInterpolatedString Type=""System.String"">
-                  <Interpolations>
-                    <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-                    </InterpolationStringLiteral>
-                    <InterpolationStringLiteral>
-                      <Value>, </Value>
-                    </InterpolationStringLiteral>
-                    <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
-                    </InterpolationStringLiteral>
-                  </Interpolations>
-                </CSharpInterpolatedString>
-              </Arguments>
-            </Call>
-          </Body>
-          <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""6"" />
-          </BreakLabel>
-          <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""7"" />
-          </ContinueLabel>
-        </CSharpForEach>
-      </Statements>
-      <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""8"" />
-      </ReturnLabel>
-    </CSharpBlock>
-  </Body>
-</Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_6624_5FDD();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6624_5FDD() => INCONCLUSIVE(); }
-
-        [TestMethod]
-        public void CompilerTest_CB13_5FDD()
-        {
-            // (Expression<Action<(int, int)[]>>)(xs => { foreach ((int x, int y) in xs) Console.WriteLine($"{x}, {y}"); })
-            var actual = GetDebugView(@"(Expression<Action<(int, int)[]>>)(xs => { foreach ((int x, int y) in xs) Console.WriteLine($""{x}, {y}""); })");
-            var expected = @"
-<Lambda Type=""System.Action`1[System.ValueTuple`2[System.Int32,System.Int32][]]"">
-  <Parameters>
-    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
-  </Parameters>
-  <Body>
-    <CSharpBlock Type=""System.Void"">
-      <Statements>
-        <CSharpForEach Type=""System.Void"">
-          <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-            <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
-          </Variables>
-          <Deconstruction>
-            <Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.Int32],System.ValueTuple`2[System.Int32,System.Int32]]"">
-              <Parameters>
-                <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""3"" Name=""t"" />
-              </Parameters>
-              <Body>
-                <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
-                  <Left>
-                    <TupleLiteral Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
-                      <Arguments>
-                        <Argument Name=""x"">
-                          <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-                        </Argument>
-                        <Argument Name=""y"">
-                          <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
-                        </Argument>
-                      </Arguments>
-                    </TupleLiteral>
-                  </Left>
-                  <Right>
-                    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""3"" Name=""t"" />
-                  </Right>
-                  <Conversion>
-                    <DeconstructionConversion>
-                      <Deconstruct />
-                      <Conversions>
-                        <SimpleConversion>
-                          <Conversion>
-                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
-                              <Parameters>
-                                <Parameter Type=""System.Int32"" Id=""4"" Name=""p"" />
-                              </Parameters>
-                              <Body>
-                                <Parameter Type=""System.Int32"" Id=""4"" Name=""p"" />
-                              </Body>
-                            </Lambda>
-                          </Conversion>
-                        </SimpleConversion>
-                        <SimpleConversion>
-                          <Conversion>
-                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
-                              <Parameters>
-                                <Parameter Type=""System.Int32"" Id=""5"" Name=""p"" />
-                              </Parameters>
-                              <Body>
-                                <Parameter Type=""System.Int32"" Id=""5"" Name=""p"" />
-                              </Body>
-                            </Lambda>
-                          </Conversion>
-                        </SimpleConversion>
-                      </Conversions>
-                    </DeconstructionConversion>
-                  </Conversion>
-                </CSharpDeconstructionAssignment>
-              </Body>
-            </Lambda>
-          </Deconstruction>
-          <Collection>
-            <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
-          </Collection>
-          <Body>
-            <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
-              <Arguments>
-                <CSharpInterpolatedString Type=""System.String"">
-                  <Interpolations>
-                    <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-                    </InterpolationStringLiteral>
-                    <InterpolationStringLiteral>
-                      <Value>, </Value>
-                    </InterpolationStringLiteral>
-                    <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
-                    </InterpolationStringLiteral>
-                  </Interpolations>
-                </CSharpInterpolatedString>
-              </Arguments>
-            </Call>
-          </Body>
-          <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""6"" />
-          </BreakLabel>
-          <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""7"" />
-          </ContinueLabel>
-        </CSharpForEach>
-      </Statements>
-      <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""8"" />
-      </ReturnLabel>
-    </CSharpBlock>
-  </Body>
-</Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_CB13_5FDD();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CB13_5FDD() => INCONCLUSIVE(); }
-
-        [TestMethod]
-        public void CompilerTest_80A1_8959()
-        {
-            // (Expression<Action<(int, int)[]>>)(xs => { foreach ((int? x, long y) in xs) Console.WriteLine($"{x}, {y}"); })
-            var actual = GetDebugView(@"(Expression<Action<(int, int)[]>>)(xs => { foreach ((int? x, long y) in xs) Console.WriteLine($""{x}, {y}""); })");
-            var expected = @"
-<Lambda Type=""System.Action`1[System.ValueTuple`2[System.Int32,System.Int32][]]"">
-  <Parameters>
-    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
-  </Parameters>
-  <Body>
-    <CSharpBlock Type=""System.Void"">
-      <Statements>
-        <CSharpForEach Type=""System.Void"">
-          <Variables>
-            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""1"" Name=""x"" />
-            <Parameter Type=""System.Int64"" Id=""2"" Name=""y"" />
-          </Variables>
-          <Deconstruction>
-            <Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.Int32],System.ValueTuple`2[System.Nullable`1[System.Int32],System.Int64]]"">
-              <Parameters>
-                <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""3"" Name=""t"" />
-              </Parameters>
-              <Body>
-                <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.Int64]"">
-                  <Left>
-                    <TupleLiteral Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.Int64]"">
-                      <Arguments>
-                        <Argument Name=""x"">
-                          <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""1"" Name=""x"" />
-                        </Argument>
-                        <Argument Name=""y"">
-                          <Parameter Type=""System.Int64"" Id=""2"" Name=""y"" />
-                        </Argument>
-                      </Arguments>
-                    </TupleLiteral>
-                  </Left>
-                  <Right>
-                    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""3"" Name=""t"" />
-                  </Right>
-                  <Conversion>
-                    <DeconstructionConversion>
-                      <Deconstruct />
-                      <Conversions>
-                        <SimpleConversion>
-                          <Conversion>
-                            <Lambda Type=""System.Func`2[System.Int32,System.Nullable`1[System.Int32]]"">
-                              <Parameters>
-                                <Parameter Type=""System.Int32"" Id=""4"" Name=""p"" />
-                              </Parameters>
-                              <Body>
-                                <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
-                                  <Operand>
-                                    <Parameter Type=""System.Int32"" Id=""4"" Name=""p"" />
-                                  </Operand>
-                                </Convert>
-                              </Body>
-                            </Lambda>
-                          </Conversion>
-                        </SimpleConversion>
-                        <SimpleConversion>
-                          <Conversion>
-                            <Lambda Type=""System.Func`2[System.Int32,System.Int64]"">
-                              <Parameters>
-                                <Parameter Type=""System.Int32"" Id=""5"" Name=""p"" />
-                              </Parameters>
-                              <Body>
-                                <Convert Type=""System.Int64"">
-                                  <Operand>
-                                    <Parameter Type=""System.Int32"" Id=""5"" Name=""p"" />
-                                  </Operand>
-                                </Convert>
-                              </Body>
-                            </Lambda>
-                          </Conversion>
-                        </SimpleConversion>
-                      </Conversions>
-                    </DeconstructionConversion>
-                  </Conversion>
-                </CSharpDeconstructionAssignment>
-              </Body>
-            </Lambda>
-          </Deconstruction>
-          <Collection>
-            <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
-          </Collection>
-          <Body>
-            <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
-              <Arguments>
-                <CSharpInterpolatedString Type=""System.String"">
-                  <Interpolations>
-                    <InterpolationStringLiteral>
-                      <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""1"" Name=""x"" />
-                    </InterpolationStringLiteral>
-                    <InterpolationStringLiteral>
-                      <Value>, </Value>
-                    </InterpolationStringLiteral>
-                    <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int64"" Id=""2"" Name=""y"" />
-                    </InterpolationStringLiteral>
-                  </Interpolations>
-                </CSharpInterpolatedString>
-              </Arguments>
-            </Call>
-          </Body>
-          <BreakLabel>
-            <LabelTarget Type=""System.Void"" Id=""6"" />
-          </BreakLabel>
-          <ContinueLabel>
-            <LabelTarget Type=""System.Void"" Id=""7"" />
-          </ContinueLabel>
-        </CSharpForEach>
-      </Statements>
-      <ReturnLabel>
-        <LabelTarget Type=""System.Void"" Id=""8"" />
-      </ReturnLabel>
-    </CSharpBlock>
-  </Body>
-</Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_80A1_8959();
-        }
-
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_80A1_8959() => INCONCLUSIVE(); }
-
-        [TestMethod]
-        public void CompilerTest_C73C_F587()
-        {
-            // (Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($"{x}, {y}"); })
-            var actual = GetDebugView(@"(Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($""{x}, {y}""); })");
-            var expected = @"
-<Lambda Type=""System.Action`1[Point[]]"">
-  <Parameters>
-    <Parameter Type=""Point[]"" Id=""0"" Name=""xs"" />
-  </Parameters>
-  <Body>
-    <CSharpBlock Type=""System.Void"">
-      <Statements>
-        <CSharpForEach Type=""System.Void"">
-          <Variables>
-            <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-            <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
-          </Variables>
-          <Deconstruction>
-            <Lambda Type=""System.Func`2[Point,System.ValueTuple`2[System.Int32,System.Int32]]"">
-              <Parameters>
-                <Parameter Type=""Point"" Id=""3"" Name=""t"" />
-              </Parameters>
-              <Body>
-                <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
-                  <Left>
-                    <TupleLiteral Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
-                      <Arguments>
-                        <Argument Name=""x"">
-                          <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
-                        </Argument>
-                        <Argument Name=""y"">
-                          <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
-                        </Argument>
-                      </Arguments>
-                    </TupleLiteral>
-                  </Left>
-                  <Right>
-                    <Parameter Type=""Point"" Id=""3"" Name=""t"" />
-                  </Right>
-                  <Conversion>
-                    <DeconstructionConversion>
-                      <Deconstruct>
-                        <Lambda Type=""System.Runtime.CompilerServices.DeconstructAction`3[Point,System.Int32,System.Int32]"">
-                          <Parameters>
-                            <Parameter Type=""Point"" Id=""4"" Name=""i"" />
-                            <Parameter Type=""System.Int32"" Id=""5"" Name=""o0"" />
-                            <Parameter Type=""System.Int32"" Id=""6"" Name=""o1"" />
-                          </Parameters>
-                          <Body>
-                            <Call Type=""System.Void"" Method=""Void Deconstruct(Int32 ByRef, Int32 ByRef)"">
-                              <Object>
-                                <Parameter Type=""Point"" Id=""4"" Name=""i"" />
-                              </Object>
-                              <Arguments>
-                                <Parameter Type=""System.Int32"" Id=""5"" Name=""o0"" />
-                                <Parameter Type=""System.Int32"" Id=""6"" Name=""o1"" />
-                              </Arguments>
-                            </Call>
-                          </Body>
-                        </Lambda>
-                      </Deconstruct>
                       <Conversions>
                         <SimpleConversion>
                           <Conversion>
@@ -1223,7 +893,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             </Lambda>
           </Deconstruction>
           <Collection>
-            <Parameter Type=""Point[]"" Id=""0"" Name=""xs"" />
+            <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
           </Collection>
           <Body>
             <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
@@ -1231,13 +901,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 <CSharpInterpolatedString Type=""System.String"">
                   <Interpolations>
                     <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int32"" Id=""1"" Name=""x"" />
+                      <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
                     </InterpolationStringLiteral>
                     <InterpolationStringLiteral>
                       <Value>, </Value>
                     </InterpolationStringLiteral>
                     <InterpolationStringLiteral>
-                      <Parameter Type=""System.Int32"" Id=""2"" Name=""y"" />
+                      <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
                     </InterpolationStringLiteral>
                   </Interpolations>
                 </CSharpInterpolatedString>
@@ -1259,10 +929,532 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_C73C_F587();
+            Verify.CompilerTest_6624_ABDB();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C73C_F587() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6624_ABDB() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_CB13_ABDB()
+        {
+            // (Expression<Action<(int, int)[]>>)(xs => { foreach ((int x, int y) in xs) Console.WriteLine($"{x}, {y}"); })
+            var actual = GetDebugView(@"(Expression<Action<(int, int)[]>>)(xs => { foreach ((int x, int y) in xs) Console.WriteLine($""{x}, {y}""); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.ValueTuple`2[System.Int32,System.Int32][]]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.ValueTuple`2[System.Int32,System.Int32]"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.ValueTuple`2[System.Int32,System.Int32]]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Convert Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                      <Operand>
+                        <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                      </Operand>
+                    </Convert>
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
+          <Variables>
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
+          </Variables>
+          <Deconstruction>
+            <Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.Int32],System.ValueTuple`2[System.Int32,System.Int32]]"">
+              <Parameters>
+                <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""6"" Name=""t"" />
+              </Parameters>
+              <Body>
+                <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                  <Left>
+                    <TupleLiteral Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                      <Arguments>
+                        <Argument Name=""x"">
+                          <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+                        </Argument>
+                        <Argument Name=""y"">
+                          <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
+                        </Argument>
+                      </Arguments>
+                    </TupleLiteral>
+                  </Left>
+                  <Right>
+                    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""6"" Name=""t"" />
+                  </Right>
+                  <Conversion>
+                    <DeconstructionConversion>
+                      <Deconstruct />
+                      <Conversions>
+                        <SimpleConversion>
+                          <Conversion>
+                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                              <Parameters>
+                                <Parameter Type=""System.Int32"" Id=""7"" Name=""p"" />
+                              </Parameters>
+                              <Body>
+                                <Parameter Type=""System.Int32"" Id=""7"" Name=""p"" />
+                              </Body>
+                            </Lambda>
+                          </Conversion>
+                        </SimpleConversion>
+                        <SimpleConversion>
+                          <Conversion>
+                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                              <Parameters>
+                                <Parameter Type=""System.Int32"" Id=""8"" Name=""p"" />
+                              </Parameters>
+                              <Body>
+                                <Parameter Type=""System.Int32"" Id=""8"" Name=""p"" />
+                              </Body>
+                            </Lambda>
+                          </Conversion>
+                        </SimpleConversion>
+                      </Conversions>
+                    </DeconstructionConversion>
+                  </Conversion>
+                </CSharpDeconstructionAssignment>
+              </Body>
+            </Lambda>
+          </Deconstruction>
+          <Collection>
+            <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
+              <Arguments>
+                <CSharpInterpolatedString Type=""System.String"">
+                  <Interpolations>
+                    <InterpolationStringLiteral>
+                      <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+                    </InterpolationStringLiteral>
+                    <InterpolationStringLiteral>
+                      <Value>, </Value>
+                    </InterpolationStringLiteral>
+                    <InterpolationStringLiteral>
+                      <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
+                    </InterpolationStringLiteral>
+                  </Interpolations>
+                </CSharpInterpolatedString>
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""9"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""10"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""11"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_CB13_ABDB();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CB13_ABDB() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_80A1_7FC7()
+        {
+            // (Expression<Action<(int, int)[]>>)(xs => { foreach ((int? x, long y) in xs) Console.WriteLine($"{x}, {y}"); })
+            var actual = GetDebugView(@"(Expression<Action<(int, int)[]>>)(xs => { foreach ((int? x, long y) in xs) Console.WriteLine($""{x}, {y}""); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[System.ValueTuple`2[System.Int32,System.Int32][]]"">
+  <Parameters>
+    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""System.ValueTuple`2[System.Int32,System.Int32]"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,System.ValueTuple`2[System.Int32,System.Int32]]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Convert Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                      <Operand>
+                        <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                      </Operand>
+                    </Convert>
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
+          <Variables>
+            <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""4"" Name=""x"" />
+            <Parameter Type=""System.Int64"" Id=""5"" Name=""y"" />
+          </Variables>
+          <Deconstruction>
+            <Lambda Type=""System.Func`2[System.ValueTuple`2[System.Int32,System.Int32],System.ValueTuple`2[System.Nullable`1[System.Int32],System.Int64]]"">
+              <Parameters>
+                <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""6"" Name=""t"" />
+              </Parameters>
+              <Body>
+                <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.Int64]"">
+                  <Left>
+                    <TupleLiteral Type=""System.ValueTuple`2[System.Nullable`1[System.Int32],System.Int64]"">
+                      <Arguments>
+                        <Argument Name=""x"">
+                          <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""4"" Name=""x"" />
+                        </Argument>
+                        <Argument Name=""y"">
+                          <Parameter Type=""System.Int64"" Id=""5"" Name=""y"" />
+                        </Argument>
+                      </Arguments>
+                    </TupleLiteral>
+                  </Left>
+                  <Right>
+                    <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32]"" Id=""6"" Name=""t"" />
+                  </Right>
+                  <Conversion>
+                    <DeconstructionConversion>
+                      <Deconstruct />
+                      <Conversions>
+                        <SimpleConversion>
+                          <Conversion>
+                            <Lambda Type=""System.Func`2[System.Int32,System.Nullable`1[System.Int32]]"">
+                              <Parameters>
+                                <Parameter Type=""System.Int32"" Id=""7"" Name=""p"" />
+                              </Parameters>
+                              <Body>
+                                <Convert Type=""System.Nullable`1[System.Int32]"" IsLifted=""true"" IsLiftedToNull=""true"">
+                                  <Operand>
+                                    <Parameter Type=""System.Int32"" Id=""7"" Name=""p"" />
+                                  </Operand>
+                                </Convert>
+                              </Body>
+                            </Lambda>
+                          </Conversion>
+                        </SimpleConversion>
+                        <SimpleConversion>
+                          <Conversion>
+                            <Lambda Type=""System.Func`2[System.Int32,System.Int64]"">
+                              <Parameters>
+                                <Parameter Type=""System.Int32"" Id=""8"" Name=""p"" />
+                              </Parameters>
+                              <Body>
+                                <Convert Type=""System.Int64"">
+                                  <Operand>
+                                    <Parameter Type=""System.Int32"" Id=""8"" Name=""p"" />
+                                  </Operand>
+                                </Convert>
+                              </Body>
+                            </Lambda>
+                          </Conversion>
+                        </SimpleConversion>
+                      </Conversions>
+                    </DeconstructionConversion>
+                  </Conversion>
+                </CSharpDeconstructionAssignment>
+              </Body>
+            </Lambda>
+          </Deconstruction>
+          <Collection>
+            <Parameter Type=""System.ValueTuple`2[System.Int32,System.Int32][]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
+              <Arguments>
+                <CSharpInterpolatedString Type=""System.String"">
+                  <Interpolations>
+                    <InterpolationStringLiteral>
+                      <Parameter Type=""System.Nullable`1[System.Int32]"" Id=""4"" Name=""x"" />
+                    </InterpolationStringLiteral>
+                    <InterpolationStringLiteral>
+                      <Value>, </Value>
+                    </InterpolationStringLiteral>
+                    <InterpolationStringLiteral>
+                      <Parameter Type=""System.Int64"" Id=""5"" Name=""y"" />
+                    </InterpolationStringLiteral>
+                  </Interpolations>
+                </CSharpInterpolatedString>
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""9"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""10"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""11"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_80A1_7FC7();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_80A1_7FC7() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_C73C_5413()
+        {
+            // (Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($"{x}, {y}"); })
+            var actual = GetDebugView(@"(Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($""{x}, {y}""); })");
+            var expected = @"
+<Lambda Type=""System.Action`1[Point[]]"">
+  <Parameters>
+    <Parameter Type=""Point[]"" Id=""0"" Name=""xs"" />
+  </Parameters>
+  <Body>
+    <CSharpBlock Type=""System.Void"">
+      <Statements>
+        <CSharpForEach Type=""System.Void"">
+          <EnumeratorInfo>
+            <EnumeratorInfo IsAsync=""false"" CollectionType=""System.Collections.IEnumerable"" ElementType=""Point"" NeedsDisposal=""true"" Current=""System.Object Current"">
+              <GetEnumerator>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerable,System.Collections.IEnumerator]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Collections.IEnumerator"" Method=""System.Collections.IEnumerator GetEnumerator()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerable"" Id=""1"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </GetEnumerator>
+              <MoveNext>
+                <Lambda Type=""System.Func`2[System.Collections.IEnumerator,System.Boolean]"">
+                  <Parameters>
+                    <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                  </Parameters>
+                  <Body>
+                    <Call Type=""System.Boolean"" Method=""Boolean MoveNext()"">
+                      <Object>
+                        <Parameter Type=""System.Collections.IEnumerator"" Id=""2"" Name=""t"" />
+                      </Object>
+                      <Arguments />
+                    </Call>
+                  </Body>
+                </Lambda>
+              </MoveNext>
+              <CurrentConversion>
+                <Lambda Type=""System.Func`2[System.Object,Point]"">
+                  <Parameters>
+                    <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                  </Parameters>
+                  <Body>
+                    <Convert Type=""Point"">
+                      <Operand>
+                        <Parameter Type=""System.Object"" Id=""3"" Name=""p"" />
+                      </Operand>
+                    </Convert>
+                  </Body>
+                </Lambda>
+              </CurrentConversion>
+            </EnumeratorInfo>
+          </EnumeratorInfo>
+          <Variables>
+            <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+            <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
+          </Variables>
+          <Deconstruction>
+            <Lambda Type=""System.Func`2[Point,System.ValueTuple`2[System.Int32,System.Int32]]"">
+              <Parameters>
+                <Parameter Type=""Point"" Id=""6"" Name=""t"" />
+              </Parameters>
+              <Body>
+                <CSharpDeconstructionAssignment Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                  <Left>
+                    <TupleLiteral Type=""System.ValueTuple`2[System.Int32,System.Int32]"">
+                      <Arguments>
+                        <Argument Name=""x"">
+                          <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+                        </Argument>
+                        <Argument Name=""y"">
+                          <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
+                        </Argument>
+                      </Arguments>
+                    </TupleLiteral>
+                  </Left>
+                  <Right>
+                    <Parameter Type=""Point"" Id=""6"" Name=""t"" />
+                  </Right>
+                  <Conversion>
+                    <DeconstructionConversion>
+                      <Deconstruct>
+                        <Lambda Type=""System.Runtime.CompilerServices.DeconstructAction`3[Point,System.Int32,System.Int32]"">
+                          <Parameters>
+                            <Parameter Type=""Point"" Id=""7"" Name=""i"" />
+                            <Parameter Type=""System.Int32"" Id=""8"" Name=""o0"" />
+                            <Parameter Type=""System.Int32"" Id=""9"" Name=""o1"" />
+                          </Parameters>
+                          <Body>
+                            <Call Type=""System.Void"" Method=""Void Deconstruct(Int32 ByRef, Int32 ByRef)"">
+                              <Object>
+                                <Parameter Type=""Point"" Id=""7"" Name=""i"" />
+                              </Object>
+                              <Arguments>
+                                <Parameter Type=""System.Int32"" Id=""8"" Name=""o0"" />
+                                <Parameter Type=""System.Int32"" Id=""9"" Name=""o1"" />
+                              </Arguments>
+                            </Call>
+                          </Body>
+                        </Lambda>
+                      </Deconstruct>
+                      <Conversions>
+                        <SimpleConversion>
+                          <Conversion>
+                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                              <Parameters>
+                                <Parameter Type=""System.Int32"" Id=""10"" Name=""p"" />
+                              </Parameters>
+                              <Body>
+                                <Parameter Type=""System.Int32"" Id=""10"" Name=""p"" />
+                              </Body>
+                            </Lambda>
+                          </Conversion>
+                        </SimpleConversion>
+                        <SimpleConversion>
+                          <Conversion>
+                            <Lambda Type=""System.Func`2[System.Int32,System.Int32]"">
+                              <Parameters>
+                                <Parameter Type=""System.Int32"" Id=""11"" Name=""p"" />
+                              </Parameters>
+                              <Body>
+                                <Parameter Type=""System.Int32"" Id=""11"" Name=""p"" />
+                              </Body>
+                            </Lambda>
+                          </Conversion>
+                        </SimpleConversion>
+                      </Conversions>
+                    </DeconstructionConversion>
+                  </Conversion>
+                </CSharpDeconstructionAssignment>
+              </Body>
+            </Lambda>
+          </Deconstruction>
+          <Collection>
+            <Parameter Type=""Point[]"" Id=""0"" Name=""xs"" />
+          </Collection>
+          <Body>
+            <Call Type=""System.Void"" Method=""Void WriteLine(System.String)"">
+              <Arguments>
+                <CSharpInterpolatedString Type=""System.String"">
+                  <Interpolations>
+                    <InterpolationStringLiteral>
+                      <Parameter Type=""System.Int32"" Id=""4"" Name=""x"" />
+                    </InterpolationStringLiteral>
+                    <InterpolationStringLiteral>
+                      <Value>, </Value>
+                    </InterpolationStringLiteral>
+                    <InterpolationStringLiteral>
+                      <Parameter Type=""System.Int32"" Id=""5"" Name=""y"" />
+                    </InterpolationStringLiteral>
+                  </Interpolations>
+                </CSharpInterpolatedString>
+              </Arguments>
+            </Call>
+          </Body>
+          <BreakLabel>
+            <LabelTarget Type=""System.Void"" Id=""12"" />
+          </BreakLabel>
+          <ContinueLabel>
+            <LabelTarget Type=""System.Void"" Id=""13"" />
+          </ContinueLabel>
+        </CSharpForEach>
+      </Statements>
+      <ReturnLabel>
+        <LabelTarget Type=""System.Void"" Id=""14"" />
+      </ReturnLabel>
+    </CSharpBlock>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_C73C_5413();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C73C_5413() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -1297,10 +1489,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_702A_64C8() => OK();
             public override void CompilerTest_D0CE_7364() => OK();
             public override void CompilerTest_AF2A_5B45() => OK();
-            public override void CompilerTest_6624_5FDD() => OK();
-            public override void CompilerTest_CB13_5FDD() => OK();
-            public override void CompilerTest_80A1_8959() => OK();
-            public override void CompilerTest_C73C_F587() => OK();
+            public override void CompilerTest_6624_ABDB() => OK();
+            public override void CompilerTest_CB13_ABDB() => OK();
+            public override void CompilerTest_80A1_7FC7() => OK();
+            public override void CompilerTest_C73C_5413() => OK();
         }
     }
 }

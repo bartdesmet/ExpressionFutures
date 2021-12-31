@@ -563,6 +563,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var args = new List<object>
             {
+                new XElement(nameof(node.EnumeratorInfo), Visit(node.EnumeratorInfo)),
                 Visit(nameof(node.Variables), node.Variables)
             };
 
