@@ -365,6 +365,11 @@ namespace Microsoft.CSharp.Expressions
 
         public static Expression InvokeLambdaWithSingleParameter(LambdaExpression lambda, Expression argument)
         {
+            // NB: The reduction of extensions enables e.g. the use of MethodCallCSharpExpression with
+            //     named and optional parameters to get reduced to a simpler construct. In the common case
+            //     of an optional parameter for GetAsyncEnumerator(CancellationToken token = default), we
+            //     end with up a MethodCallExpression that fills in the missing argument.
+
             var body = lambda.Body.ReduceExtensions();
 
             if (body is MethodCallExpression call)
@@ -372,18 +377,45 @@ namespace Microsoft.CSharp.Expressions
                 var parameter = lambda.Parameters[0];
                 var method = call.Method;
 
+                var args = call.Arguments;
+
+                bool RemainderArgsArePure(int firstIndex)
+                {
+                    for (int i = firstIndex; i < args.Count; i++)
+                    {
+                        var arg = args[i];
+
+                        if (!IsPure(arg))
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                // NB: This covers the common cases of e.g. Get[Async]Enumerator instance and extension
+                //     methods that are wrapped in lambda expressions in EnumeratorInfo. The purity check
+                //     for remaining parameters deals with defaults for optional parameters that end up
+                //     as Constant nodes in these expressions (e.g. CancellationToken token = default).
+
                 if (method.IsStatic)
                 {
-                    if (call.Arguments.Count == 1 && call.Arguments[0] == parameter)
+                    if (args.Count >= 1 && args[0] == parameter && RemainderArgsArePure(firstIndex: 1))
                     {
-                        return call.Update(call.Object, new[] { argument });
+                        var newArgs = new List<Expression>(args)
+                        {
+                            [0] = argument
+                        };
+
+                        return call.Update(call.Object, newArgs);
                     }
                 }
                 else
                 {
-                    if (call.Arguments.Count == 0 && call.Object == parameter)
+                    if (call.Object == parameter && RemainderArgsArePure(firstIndex: 0))
                     {
-                        return call.Update(argument, call.Arguments);
+                        return call.Update(argument, args);
                     }
                 }
             }

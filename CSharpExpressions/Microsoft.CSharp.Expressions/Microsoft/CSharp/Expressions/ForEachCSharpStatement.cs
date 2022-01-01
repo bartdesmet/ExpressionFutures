@@ -115,12 +115,14 @@ namespace Microsoft.CSharp.Expressions
 
         internal static ForEachCSharpStatement Make(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
         {
-            // TODO: Support pattern-based approach.
-
             if (variables.Count == 0)
-                throw new Exception(); // TODO
+                throw new Exception(); // TODO - Need at least one.
             
             RequiresNotNullItems(variables, nameof(variables));
+
+            if (!AreReferenceAssignable(enumeratorInfo.CollectionType, collection.Type))
+                throw new Exception(); // TODO - EnumeratorInfo doesn't match given collection expression type.
+
             RequiresCanRead(body, nameof(body));
 
             ValidateLoop(body, breakLabel, continueLabel);
@@ -128,35 +130,31 @@ namespace Microsoft.CSharp.Expressions
             var firstVariable = variables[0];
             var firstVariableType = firstVariable.Type;
 
-            var collectionType = collection.Type;
+            if (variables.Count == 1)
+            {
+                if (deconstruction != null)
+                    throw new Exception(); // TODO - Can not have deconstruction with only one variable.
+
+                ValidateConversion(firstVariableType, enumeratorInfo.ElementType, ref conversion);
+            }
+            else
+            {
+                if (conversion != null)
+                    throw new Exception(); // TODO - Review if these are mutually exclusive.
+                if (deconstruction == null)
+                    throw new Exception(); // TODO - Need deconstruction if more than one variable.
+
+                // TODO: validate deconstruction
+            }
 
             if (awaitInfo == null)
             {
-                if (collectionType == typeof(string) && variables.Count == 1 && firstVariableType == typeof(char) && conversion == null && deconstruction == null)
+                if (enumeratorInfo.CollectionType == typeof(string) && variables.Count == 1 && firstVariableType == typeof(char) && conversion == null && deconstruction == null)
                 {
                     return new StringForEachStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
                 }
-                else if (collectionType.IsVector())
+                else if (enumeratorInfo.CollectionType.IsVector())
                 {
-                    var elementType = collectionType.GetElementType();
-
-                    if (variables.Count == 1)
-                    {
-                        if (deconstruction != null)
-                            throw new Exception(); // TODO
-
-                        ValidateConversion(firstVariableType, elementType, ref conversion);
-                    }
-                    else
-                    {
-                        if (conversion != null)
-                            throw new Exception(); // TODO
-                        if (deconstruction == null)
-                            throw new Exception(); // TODO
-
-                        // TODO: validate deconstruction
-                    }
-
                     if (conversion == null && deconstruction == null)
                     {
                         return new SimpleArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
@@ -166,102 +164,15 @@ namespace Microsoft.CSharp.Expressions
                         return new ArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
                     }
                 }
+
+                // CONSIDER: Could add optimization for multi-dimensional arrays.
             }
-
-            if (awaitInfo != null)
-                throw new NotImplementedException(); // TODO
-
-            var getEnumeratorMethod = collectionType.GetNonGenericMethod(nameof(IEnumerable.GetEnumerator), BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
-            if (getEnumeratorMethod != null)
+            else
             {
-                var enumeratorType = getEnumeratorMethod.ReturnType;
-
-                var currentProperty = enumeratorType.GetProperty(nameof(IEnumerator.Current), BindingFlags.Public | BindingFlags.Instance);
-                if (currentProperty == null || currentProperty.GetGetMethod(true) == null)
-                {
-                    throw Error.EnumeratorShouldHaveCurrentProperty(enumeratorType);
-                }
-
-                var moveNextMethod = enumeratorType.GetNonGenericMethod(nameof(IEnumerator.MoveNext), BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
-                if (moveNextMethod == null || moveNextMethod.ReturnType != typeof(bool))
-                {
-                    throw Error.EnumeratorShouldHaveMoveNextMethod(enumeratorType);
-                }
-
-                var oldEnumeratorInfo = new BasicEnumeratorInfo
-                {
-                    GetEnumerator = getEnumeratorMethod,
-                    MoveNext = moveNextMethod,
-                    Current = currentProperty,
-                };
-
-                var elementType = currentProperty.PropertyType;
-
-                if (variables.Count == 1)
-                {
-                    if (deconstruction != null)
-                        throw new Exception(); // TODO
-
-                    var variable = variables[0];
-
-                    ValidateConversion(variable.Type, elementType, ref conversion);
-                }
-
-                // TODO: More validation for the deconstruction case.
-
-                return new BoundForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, oldEnumeratorInfo, deconstruction, awaitInfo);
+                awaitInfo.RequiresCanBind(enumeratorInfo.MoveNext.Body);
             }
 
-            // NB: We don't check for implicit conversions to IE<T> or IE; the caller is responsible to insert a convert if needed.
-            //     As such, we limit the checks to checks for implemented interfaces on the collection type.
-            var collectionInterfaceTypes = collectionType.GetInterfaces();
-
-            var enumerableOfT = default(Type);
-            var enumerable = default(Type);
-            foreach (var ifType in collectionInterfaceTypes)
-            {
-                if (ifType.IsGenericType && ifType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
-                    if (enumerableOfT != null && ifType != enumerableOfT)
-                    {
-                        throw Error.MoreThanOneIEnumerableFound(collectionType);
-                    }
-
-                    enumerableOfT = ifType;
-                }
-                else if (ifType == typeof(IEnumerable))
-                {
-                    enumerable = ifType;
-                }
-            }
-
-            var enumerableType = enumerableOfT ?? enumerable;
-
-            if (enumerableType != null)
-            {
-                var getEnumerator = enumerableType.GetMethod(nameof(IEnumerable.GetEnumerator));
-                var moveNext = typeof(IEnumerator).GetMethod(nameof(IEnumerator.MoveNext));
-                var current = getEnumerator.ReturnType.GetProperty(nameof(IEnumerator.Current));
-
-                var oldEnumeratorInfo = new BasicEnumeratorInfo
-                {
-                    GetEnumerator = getEnumerator,
-                    MoveNext = moveNext,
-                    Current = current,
-                };
-
-                if (variables.Count == 1)
-                {
-                    if (deconstruction != null)
-                        throw new Exception(); // TODO
-                }
-
-                // TODO: More validation for the deconstruction case.
-
-                return new BoundForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, oldEnumeratorInfo, deconstruction, awaitInfo);
-            }
-
-            throw Error.NoEnumerablePattern(collectionType);
+            return new BoundForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction, awaitInfo);
         }
 
         private static void ValidateConversion(Type variableType, Type elementType, ref LambdaExpression conversion)
@@ -298,11 +209,29 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
+        private static void ApplyConversion(LambdaExpression conversion, ref Expression operand)
+        {
+            if (conversion != null)
+            {
+                operand = InvokeConversion(conversion, operand);
+            }
+        }
+
         private static Expression InvokeConversion(LambdaExpression conversion, Expression operand)
         {
-            if (conversion.Body is UnaryExpression u && u.Operand == conversion.Parameters[0] && u.Type == conversion.ReturnType)
+            var parameter = conversion.Parameters[0];
+            var body = conversion.Body;
+
+            if (body.Type == conversion.ReturnType)
             {
-                return u.Update(operand);
+                if (body == parameter)
+                {
+                    return operand;
+                }
+                else if (body is UnaryExpression u && u.Operand == parameter)
+                {
+                    return u.Update(operand);
+                }
             }
 
             return Expression.Invoke(conversion, operand);
@@ -552,22 +481,12 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private struct BasicEnumeratorInfo
-        {
-            public PropertyInfo Current;
-            public MethodInfo GetEnumerator;
-            public MethodInfo MoveNext;
-        }
-
         private sealed class BoundForEachCSharpStatement : ForEachCSharpStatement
         {
-            private readonly BasicEnumeratorInfo _enumeratorInfo;
-
-            internal BoundForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, BasicEnumeratorInfo enumeratorInfo, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+            internal BoundForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction, AwaitInfo awaitInfo)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
-                _enumeratorInfo = enumeratorInfo;
                 Deconstruction = deconstruction;
                 AwaitInfo = awaitInfo;
             }
@@ -580,57 +499,106 @@ namespace Microsoft.CSharp.Expressions
 
             protected override Expression ReduceCore()
             {
-                if (AwaitInfo != null)
-                    throw new NotImplementedException(); // TODO
+                Expression MakeGetEnumerator(Expression collection) =>
+                    InvokeLambdaWithSingleParameter(EnumeratorInfo.GetEnumerator, collection);
 
-                var getEnumerator = Expression.Call(Collection, _enumeratorInfo.GetEnumerator);
+                Expression MakeMoveNext(Expression enumeratorVariable)
+                {
+                    var moveNext = InvokeLambdaWithSingleParameter(EnumeratorInfo.MoveNext, enumeratorVariable);
+
+                    if (AwaitInfo is { } awaitInfo)
+                    {
+                        return CSharpExpression.Await(moveNext, awaitInfo);
+                    }
+
+                    return moveNext;
+                }
+
+                Expression MakeCurrent(Expression enumeratorVariable) =>
+                    Expression.Property(enumeratorVariable, EnumeratorInfo.Current);
+
+                var getEnumerator = MakeGetEnumerator(Collection);
                 var enumeratorType = getEnumerator.Type;
                 var enumeratorVariable = Expression.Parameter(enumeratorType, "__enumerator");
 
-                var moveNext = Expression.Call(enumeratorVariable, _enumeratorInfo.MoveNext);
-                var current = (Expression)Expression.Property(enumeratorVariable, _enumeratorInfo.Current);
+                var moveNext = MakeMoveNext(enumeratorVariable);
+                var current = MakeCurrent(enumeratorVariable);
 
-                if (Conversion != null)
-                {
-                    current = InvokeConversion(Conversion, current);
-                }
+                ApplyConversion(EnumeratorInfo.CurrentConversion, ref current); // REVIEW: Two conversions possible?
+                ApplyConversion(Conversion, ref current);
 
                 var cleanup = (Expression)Expression.Empty();
-                if (typeof(IDisposable).IsAssignableFrom(enumeratorType))
-                {
-                    if (enumeratorType.IsValueType)
-                    {
-                        // NB: C# spec section 8.8.4 specifies a case for E being a nullable value type;
-                        //     however, it seems this case can't occur because the check for the foreach
-                        //     pattern would fail if E is a nullable value type (no Current property).
-                        //     Double-check this.
-                        Debug.Assert(!enumeratorType.IsNullableType());
 
-                        var dispose = enumeratorType.FindDisposeMethod(isAsync: false);
-                        cleanup = Expression.Call(enumeratorVariable, dispose);
+                if (EnumeratorInfo.NeedsDisposal)
+                {
+                    Expression AwaitDisposeIfNeeded(Expression dispose)
+                    {
+                        if (EnumeratorInfo.DisposeAwaitInfo is { } awaitInfo)
+                        {
+                            return CSharpExpression.Await(dispose, awaitInfo);
+                        }
+
+                        return dispose;
+                    }
+
+                    Expression InvokeDispose(Expression obj, MethodInfo method)
+                    {
+                        var dispose = Expression.Call(obj, method);
+                        return AwaitDisposeIfNeeded(dispose);
+                    }
+
+                    if (EnumeratorInfo.PatternDispose is { } patternDispose)
+                    {
+                        var dispose = InvokeLambdaWithSingleParameter(patternDispose, enumeratorVariable);
+                        cleanup = AwaitDisposeIfNeeded(dispose);
                     }
                     else
                     {
-                        var dispose = enumeratorType.FindDisposeMethod(isAsync: false);
-                        cleanup =
-                            Expression.IfThen(
-                                Expression.ReferenceNotEqual(enumeratorVariable, Expression.Constant(null, typeof(IDisposable))),
-                                Expression.Call(enumeratorVariable, dispose)
-                            );
+                        var disposableInterface = EnumeratorInfo.IsAsync
+                            ? typeof(IAsyncDisposable)
+                            : typeof(IDisposable);
+
+                        if (disposableInterface.IsAssignableFrom(enumeratorType))
+                        {
+                            if (enumeratorType.IsValueType)
+                            {
+                                // NB: C# spec section 8.8.4 specifies a case for E being a nullable value type;
+                                //     however, it seems this case can't occur because the check for the foreach
+                                //     pattern would fail if E is a nullable value type (no Current property).
+                                //     Double-check this.
+                                Debug.Assert(!enumeratorType.IsNullableType());
+
+                                var dispose = enumeratorType.FindDisposeMethod(EnumeratorInfo.IsAsync);
+                                cleanup = InvokeDispose(enumeratorVariable, dispose);
+                            }
+                            else
+                            {
+                                var dispose = enumeratorType.FindDisposeMethod(EnumeratorInfo.IsAsync);
+                                cleanup =
+                                    Expression.IfThen(
+                                        Expression.ReferenceNotEqual(enumeratorVariable, Expression.Constant(null, disposableInterface)),
+                                        InvokeDispose(enumeratorVariable, dispose)
+                                    );
+                            }
+                        }
+                        else if (!enumeratorType.IsSealed)
+                        {
+                            var disposeMethod = EnumeratorInfo.IsAsync
+                                ? UsingCSharpStatement.DisposeAsyncMethod
+                                : UsingCSharpStatement.DisposeMethod;
+
+                            var d = Expression.Parameter(disposableInterface, "__disposable");
+                            cleanup =
+                                Expression.Block(
+                                    new[] { d },
+                                    Expression.Assign(d, Expression.TypeAs(enumeratorVariable, disposableInterface)),
+                                    Expression.IfThen(
+                                        Expression.ReferenceNotEqual(d, Expression.Constant(null, disposableInterface)),
+                                        InvokeDispose(d, disposeMethod)
+                                    )
+                                );
+                        }
                     }
-                }
-                else if (!enumeratorType.IsSealed)
-                {
-                    var d = Expression.Parameter(typeof(IDisposable), "__disposable");
-                    cleanup =
-                        Expression.Block(
-                            new[] { d },
-                            Expression.Assign(d, Expression.TypeAs(enumeratorVariable, typeof(IDisposable))),
-                            Expression.IfThen(
-                                Expression.ReferenceNotEqual(d, Expression.Constant(null, typeof(IDisposable))),
-                                Expression.Call(d, typeof(IDisposable).GetMethod("Dispose"))
-                            )
-                        );
                 }
 
                 var res =

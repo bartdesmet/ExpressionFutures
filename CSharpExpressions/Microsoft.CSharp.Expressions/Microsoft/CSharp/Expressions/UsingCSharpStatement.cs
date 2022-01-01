@@ -427,8 +427,8 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private static MethodInfo s_disposeMethod, s_disposeAsyncMethod;
-        private static MethodInfo DisposeMethod => s_disposeMethod ??= typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
-        private static MethodInfo DisposeAsyncMethod => s_disposeAsyncMethod ??= typeof(IAsyncDisposable).GetMethod(nameof(IAsyncDisposable.DisposeAsync));
+        internal static MethodInfo DisposeMethod => s_disposeMethod ??= typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
+        internal static MethodInfo DisposeAsyncMethod => s_disposeAsyncMethod ??= typeof(IAsyncDisposable).GetMethod(nameof(IAsyncDisposable.DisposeAsync));
     }
 
     partial class CSharpExpression

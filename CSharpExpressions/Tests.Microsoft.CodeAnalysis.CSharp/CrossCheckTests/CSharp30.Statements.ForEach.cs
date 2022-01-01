@@ -259,5 +259,9 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new[] { 0, 1, 2, 3, 4, 5 });
             f(new List<int> { 0, 1, 2, 3, 4, 5 });
         }
+
+        // TODO: Add tests for dispose behavior using helper types from manual tests
+        //       in order to ensure that the generated EnumeratorInfo from Roslyn does
+        //       match our expectations.
     }
 }
