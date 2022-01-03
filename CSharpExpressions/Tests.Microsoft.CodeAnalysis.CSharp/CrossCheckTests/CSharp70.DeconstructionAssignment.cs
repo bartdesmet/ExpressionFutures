@@ -251,8 +251,21 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        [Ignore] // NB: Known limitation on mutable structs; need support for ref locals.
-         public void CrossCheck_DeconstructionAssignment_LhsTuple()
+        public void CrossCheck_DeconstructionAssignment_Lhs_ArrayFromEnd()
+        {
+            var f = Compile<Action<int, int>>(@"(px, py) => {
+                var xs = new int[2];
+                (xs[^Return(1)], xs[^Return(2)]) = (Return(px), Return(py));
+                Log(xs[0]);
+                Log(xs[1]);
+            }");
+
+            f(3, 4);
+        }
+
+        [TestMethod]
+        [Ignore]
+        public void CrossCheck_DeconstructionAssignment_LhsTuple()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
                 var t = (x: 1, y: 2);
