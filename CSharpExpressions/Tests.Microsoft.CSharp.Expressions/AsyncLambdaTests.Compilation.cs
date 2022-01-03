@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using static Tests.ReflectionUtils;
 
@@ -786,6 +787,81 @@ namespace Tests
             var t = f();
             var r = t.Result;
             Assert.AreEqual(2, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_CallByRef_Local()
+        {
+            var v = Expression.Constant(Task.FromResult(42));
+            var x = Expression.Parameter(typeof(int));
+            var method = typeof(Interlocked).GetMethod(nameof(Interlocked.Exchange), new[] { typeof(int).MakeByRefType(), typeof(int) });
+            var call = Expression.Call(method, x, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { x }, call, x));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_CallByRef_Array()
+        {
+            var v = Expression.Constant(Task.FromResult(42));
+            var xs = Expression.Parameter(typeof(int[]));
+            var newArray = Expression.Assign(xs, Expression.NewArrayBounds(typeof(int), Expression.Constant(1)));
+            var elem = Expression.ArrayAccess(xs, Expression.Constant(0));
+            var method = typeof(Interlocked).GetMethod(nameof(Interlocked.Exchange), new[] { typeof(int).MakeByRefType(), typeof(int) });
+            var call = Expression.Call(method, elem, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { xs }, newArray, call, elem));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_CallByRef_Array_HasBoundsCheckBeforeAwait()
+        {
+            var v = Expression.Constant(Task.FromException<int>(new Exception("Shouldn't observe me!")));
+            var xs = Expression.Parameter(typeof(int[]));
+            var newArray = Expression.Assign(xs, Expression.NewArrayBounds(typeof(int), Expression.Constant(0)));
+            var elem = Expression.ArrayAccess(xs, Expression.Constant(0));
+            var method = typeof(Interlocked).GetMethod(nameof(Interlocked.Exchange), new[] { typeof(int).MakeByRefType(), typeof(int) });
+            var call = Expression.Call(method, elem, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(Expression.Block(new[] { xs }, newArray, call));
+            var f = e.Compile();
+            AssertEx.Throws<IndexOutOfRangeException>(() => f().GetAwaiter().GetResult());
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_CallByRef_Field()
+        {
+            var v = Expression.Constant(Task.FromResult(42));
+            var b = Expression.Parameter(typeof(StrongBox<int>));
+            var newBox = Expression.Assign(b, Expression.New(b.Type.GetConstructor(new[] { typeof(int) }), Expression.Constant(1)));
+            var elem = Expression.Field(b, b.Type.GetField(nameof(StrongBox<int>.Value)));
+            var method = typeof(Interlocked).GetMethod(nameof(Interlocked.Exchange), new[] { typeof(int).MakeByRefType(), typeof(int) });
+            var call = Expression.Call(method, elem, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Block(new[] { b }, newBox, call, elem));
+            var f = e.Compile();
+            var t = f();
+            var r = t.Result;
+            Assert.AreEqual(42, r);
+        }
+
+        [TestMethod]
+        public void AsyncLambda_Compilation_Spilling_CallByRef_HasNullCheckBeforeAwait()
+        {
+            var v = Expression.Constant(Task.FromException<int>(new Exception("Shouldn't observe me!")));
+            var b = Expression.Parameter(typeof(StrongBox<int>));
+            var newBox = Expression.Assign(b, Expression.Default(b.Type));
+            var elem = Expression.Field(b, typeof(StrongBox<int>).GetField(nameof(StrongBox<int>.Value)));
+            var method = typeof(Interlocked).GetMethod(nameof(Interlocked.Exchange), new[] { typeof(int).MakeByRefType(), typeof(int) });
+            var call = Expression.Call(method, elem, CSharpExpression.Await(v));
+            var e = CSharpExpression.AsyncLambda<Func<Task>>(Expression.Block(new[] { b }, newBox, call));
+            var f = e.Compile();
+            var t = f();
+            AssertEx.Throws<NullReferenceException>(() => f().GetAwaiter().GetResult());
         }
 
         [TestMethod]
