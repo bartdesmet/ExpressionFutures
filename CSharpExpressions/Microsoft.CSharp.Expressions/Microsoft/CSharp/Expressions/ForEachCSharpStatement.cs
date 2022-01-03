@@ -808,9 +808,6 @@ namespace Microsoft.CSharp.Expressions
 
             var variablesCollection = variables.ToReadOnly();
 
-            // TODO: Validate elements from the enumeration can be bound to iteration variables (with optional deconstruction)
-            //       and feed the EnumeratorInfo object down to the factory.
-
             return ForEachCSharpStatement.Make(enumeratorInfo, awaitInfo, variablesCollection, collection, body, @break, @continue, conversion, deconstruction);
         }
 
