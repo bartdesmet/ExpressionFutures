@@ -12,82 +12,82 @@ namespace Microsoft.CSharp.Expressions
     internal static partial class Error
     {
         /// <summary>
-        /// ArgumentException with message like "Parameter '{0}' is not defined for method '{1}'"
+        /// ArgumentException with message like "Parameter '{0}' is not defined for method '{1}'."
         /// </summary>
         internal static Exception ParameterNotDefinedForMethod(object p0, object p1) => new ArgumentException(Strings.ParameterNotDefinedForMethod(p0, p1));
 
         /// <summary>
-        /// ArgumentException with message like "Parameter index '{0}' is out of bounds for method '{1}'"
+        /// ArgumentException with message like "Parameter index '{0}' is out of bounds for method '{1}'."
         /// </summary>
         internal static Exception ParameterIndexOutOfBounds(object p0, object p1) => new ArgumentException(Strings.ParameterIndexOutOfBounds(p0, p1));
 
         /// <summary>
-        /// ArgumentException with message like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
+        /// ArgumentException with message like "Expression of type '{0}' cannot be used for parameter of type '{1}'."
         /// </summary>
         internal static Exception ExpressionTypeDoesNotMatchParameter(object p0, object p1) => new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1));
 
         /// <summary>
-        /// ArgumentException with message like "Parameter '{0}' has multiple bindings"
+        /// ArgumentException with message like "Parameter '{0}' has multiple bindings."
         /// </summary>
         internal static Exception DuplicateParameterBinding(object p0) => new ArgumentException(Strings.DuplicateParameterBinding(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Non-optional parameter '{0}' has no binding"
+        /// ArgumentException with message like "Non-optional parameter '{0}' has no binding."
         /// </summary>
         internal static Exception UnboundParameter(object p0) => new ArgumentException(Strings.UnboundParameter(p0));
 
         /// <summary>
-        /// ArgumentException with message like "A non-static constructor is required"
+        /// ArgumentException with message like "A non-static constructor is required."
         /// </summary>
         internal static Exception NonStaticConstructorRequired() => new ArgumentException(Strings.NonStaticConstructorRequired);
 
         /// <summary>
-        /// ArgumentException with message like "The property '{0}' has no 'get' accessor"
+        /// ArgumentException with message like "The property '{0}' has no 'get' accessor."
         /// </summary>
         internal static Exception PropertyDoesNotHaveGetAccessor(object p0) => new ArgumentException(Strings.PropertyDoesNotHaveGetAccessor(p0));
 
         /// <summary>
-        /// ArgumentException with message like "The property '{0}' has no 'set' accessor"
+        /// ArgumentException with message like "The property '{0}' has no 'set' accessor."
         /// </summary>
         internal static Exception PropertyDoesNotHaveSetAccessor(object p0) => new ArgumentException(Strings.PropertyDoesNotHaveSetAccessor(p0));
 
         /// <summary>
-        /// ArgumentException with message like "A non-static 'get' accessor is required for property '{0}'"
+        /// ArgumentException with message like "A non-static 'get' accessor is required for property '{0}'."
         /// </summary>
         internal static Exception AccessorCannotBeStatic(object p0) => new ArgumentException(Strings.AccessorCannotBeStatic(p0));
 
         /// <summary>
-        /// ArgumentException with message like "The number of indexes specified does not match the array rank"
+        /// ArgumentException with message like "The number of indexes specified does not match the array rank."
         /// </summary>
         internal static Exception RankMismatch() => new ArgumentException(Strings.RankMismatch);
 
         /// <summary>
-        /// ArgumentOutOfRangeException with message like "The specified index is out of range"
+        /// ArgumentOutOfRangeException with message like "The specified index is out of range."
         /// </summary>
         internal static Exception IndexOutOfRange() => new ArgumentOutOfRangeException(Strings.IndexOutOfRange);
 
         /// <summary>
-        /// ArgumentException with message like "An array dimension cannot be less than 0"
+        /// ArgumentException with message like "An array dimension cannot be less than 0."
         /// </summary>
         internal static Exception BoundCannotBeLessThanZero() => new ArgumentException(Strings.BoundCannotBeLessThanZero);
 
         /// <summary>
-        /// ArgumentException with message like "The number of elements does not match the length of the array"
+        /// ArgumentException with message like "The number of elements does not match the length of the array."
         /// </summary>
         internal static Exception ArrayBoundsElementCountMismatch() => new ArgumentException(Strings.ArrayBoundsElementCountMismatch);
 
         /// <summary>
-        /// ArgumentException with message like "The 'GetAwaiter' method should take zero parameters"
+        /// ArgumentException with message like "The 'GetAwaiter' method should take zero parameters."
         /// </summary>
         internal static Exception GetAwaiterShouldTakeZeroParameters() => new ArgumentException(Strings.GetAwaiterShouldTakeZeroParameters);
 
         /// <summary>
-        /// ArgumentException with message like "The 'GetAwaiter' method should not be generic"
+        /// ArgumentException with message like "The 'GetAwaiter' method should not be generic."
         /// </summary>
         internal static Exception GetAwaiterShouldNotBeGeneric() => new ArgumentException(Strings.GetAwaiterShouldNotBeGeneric);
 
         /// <summary>
-        /// ArgumentException with message like "The 'GetAwaiter' method has an unsupported return type"
+        /// ArgumentException with message like "The 'GetAwaiter' method has an unsupported return type."
         /// </summary>
         internal static Exception GetAwaiterShouldReturnAwaiterType() => new ArgumentException(Strings.GetAwaiterShouldReturnAwaiterType);
 
@@ -97,32 +97,32 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception AwaitableTypeShouldHaveGetAwaiterMethod(object p0) => new ArgumentException(Strings.AwaitableTypeShouldHaveGetAwaiterMethod(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Awaiter type '{0}' should implement 'INotifyCompletion'"
+        /// ArgumentException with message like "Awaiter type '{0}' should implement 'INotifyCompletion'."
         /// </summary>
         internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object p0) => new ArgumentException(Strings.AwaiterTypeShouldImplementINotifyCompletion(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor"
+        /// ArgumentException with message like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor."
         /// </summary>
         internal static Exception AwaiterTypeShouldHaveIsCompletedProperty(object p0) => new ArgumentException(Strings.AwaiterTypeShouldHaveIsCompletedProperty(p0));
 
         /// <summary>
-        /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'"
+        /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'."
         /// </summary>
         internal static Exception AwaiterIsCompletedShouldReturnBool(object p0) => new ArgumentException(Strings.AwaiterIsCompletedShouldReturnBool(p0));
 
         /// <summary>
-        /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters"
+        /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters."
         /// </summary>
         internal static Exception AwaiterIsCompletedShouldNotBeIndexer(object p0) => new ArgumentException(Strings.AwaiterIsCompletedShouldNotBeIndexer(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Awaiter type '{0}' should have a 'GetResult' method"
+        /// ArgumentException with message like "Awaiter type '{0}' should have a 'GetResult' method."
         /// </summary>
         internal static Exception AwaiterTypeShouldHaveGetResultMethod(object p0) => new ArgumentException(Strings.AwaiterTypeShouldHaveGetResultMethod(p0));
 
         /// <summary>
-        /// ArgumentException with message like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type"
+        /// ArgumentException with message like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type."
         /// </summary>
         internal static Exception AwaiterGetResultTypeInvalid(object p0) => new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
 
@@ -147,67 +147,67 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception GetAwaiterExpressionOneParameter() => new ArgumentException(Strings.GetAwaiterExpressionOneParameter);
 
         /// <summary>
-        /// ArgumentException with message like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions"
+        /// ArgumentException with message like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions."
         /// </summary>
         internal static Exception AsyncLambdaCantHaveByRefParameter(object p0) => new ArgumentException(Strings.AsyncLambdaCantHaveByRefParameter(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Return type '{0}' is not valid for an asynchronous lambda expression"
+        /// ArgumentException with message like "Return type '{0}' is not valid for an asynchronous lambda expression."
         /// </summary>
         internal static Exception AsyncLambdaInvalidReturnType(object p0) => new ArgumentException(Strings.AsyncLambdaInvalidReturnType(p0));
 
         /// <summary>
-        /// InvalidOperationException with message like "Await expression cannot occur in '{0}'"
+        /// InvalidOperationException with message like "Await expression cannot occur in '{0}'."
         /// </summary>
         internal static Exception AwaitForbiddenHere(object p0) => new InvalidOperationException(Strings.AwaitForbiddenHere(p0));
 
         /// <summary>
-        /// ArgumentException with message like "An expression of type '{0}' can't be used as a lock"
+        /// ArgumentException with message like "An expression of type '{0}' can't be used as a lock."
         /// </summary>
         internal static Exception LockNeedsReferenceType(object p0) => new ArgumentException(Strings.LockNeedsReferenceType(p0));
 
         /// <summary>
-        /// ArgumentException with message like "The conversion lambda should have one parameter"
+        /// ArgumentException with message like "The conversion lambda should have one parameter."
         /// </summary>
         internal static Exception ConversionNeedsOneParameter() => new ArgumentException(Strings.ConversionNeedsOneParameter);
 
         /// <summary>
-        /// ArgumentException with message like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'"
+        /// ArgumentException with message like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'."
         /// </summary>
         internal static Exception ConversionInvalidArgument(object p0, object p1) => new ArgumentException(Strings.ConversionInvalidArgument(p0, p1));
 
         /// <summary>
-        /// ArgumentException with message like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'"
+        /// ArgumentException with message like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'."
         /// </summary>
         internal static Exception ConversionInvalidResult(object p0, object p1) => new ArgumentException(Strings.ConversionInvalidResult(p0, p1));
 
         /// <summary>
-        /// ArgumentException with message like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor"
+        /// ArgumentException with message like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor."
         /// </summary>
         internal static Exception EnumeratorShouldHaveCurrentProperty(object p0) => new ArgumentException(Strings.EnumeratorShouldHaveCurrentProperty(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type"
+        /// ArgumentException with message like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type."
         /// </summary>
         internal static Exception EnumeratorShouldHaveMoveNextMethod(object p0) => new ArgumentException(Strings.EnumeratorShouldHaveMoveNextMethod(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'"
+        /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'."
         /// </summary>
         internal static Exception MoreThanOneIEnumerableFound(object p0) => new ArgumentException(Strings.MoreThanOneIEnumerableFound(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Collection type '{0}' has no valid enumerable pattern"
+        /// ArgumentException with message like "Collection type '{0}' has no valid enumerable pattern."
         /// </summary>
         internal static Exception NoEnumerablePattern(object p0) => new ArgumentException(Strings.NoEnumerablePattern(p0));
 
         /// <summary>
-        /// ArgumentException with message like "Initializers should be assignments to variables"
+        /// ArgumentException with message like "Initializers should be assignments to variables."
         /// </summary>
         internal static Exception InvalidInitializer() => new ArgumentException(Strings.InvalidInitializer);
 
         /// <summary>
-        /// ArgumentException with message like "Break and continue lables should be different"
+        /// ArgumentException with message like "Break and continue lables should be different."
         /// </summary>
         internal static Exception DuplicateLabels() => new ArgumentException(Strings.DuplicateLabels);
 
@@ -312,12 +312,12 @@ namespace Microsoft.CSharp.Expressions
         internal static Exception InvalidUnaryAssignmentWithOperands(object p0, object p1) => new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1));
 
         /// <summary>
-        /// ArgumentException with message like "Type must not be ByRef"
+        /// ArgumentException with message like "Type must not be ByRef."
         /// </summary>
         internal static Exception TypeMustNotBeByRef() => new ArgumentException(Strings.TypeMustNotBeByRef);
 
         /// <summary>
-        /// ArgumentException with message like "Type must not be a pointer type"
+        /// ArgumentException with message like "Type must not be a pointer type."
         /// </summary>
         internal static Exception TypeMustNotBePointer() => new ArgumentException(Strings.TypeMustNotBePointer);
 
@@ -859,82 +859,82 @@ namespace Microsoft.CSharp.Expressions
     internal static partial class Strings
     {
         /// <summary>
-        /// A string like "Parameter '{0}' is not defined for method '{1}'"
+        /// A string like "Parameter '{0}' is not defined for method '{1}'."
         /// </summary>
         internal static string ParameterNotDefinedForMethod(object p0, object p1) => SR.Format(SR.ParameterNotDefinedForMethod, p0, p1);
 
         /// <summary>
-        /// A string like "Parameter index '{0}' is out of bounds for method '{1}'"
+        /// A string like "Parameter index '{0}' is out of bounds for method '{1}'."
         /// </summary>
         internal static string ParameterIndexOutOfBounds(object p0, object p1) => SR.Format(SR.ParameterIndexOutOfBounds, p0, p1);
 
         /// <summary>
-        /// A string like "Expression of type '{0}' cannot be used for parameter of type '{1}'"
+        /// A string like "Expression of type '{0}' cannot be used for parameter of type '{1}'."
         /// </summary>
         internal static string ExpressionTypeDoesNotMatchParameter(object p0, object p1) => SR.Format(SR.ExpressionTypeDoesNotMatchParameter, p0, p1);
 
         /// <summary>
-        /// A string like "Parameter '{0}' has multiple bindings"
+        /// A string like "Parameter '{0}' has multiple bindings."
         /// </summary>
         internal static string DuplicateParameterBinding(object p0) => SR.Format(SR.DuplicateParameterBinding, p0);
 
         /// <summary>
-        /// A string like "Non-optional parameter '{0}' has no binding"
+        /// A string like "Non-optional parameter '{0}' has no binding."
         /// </summary>
         internal static string UnboundParameter(object p0) => SR.Format(SR.UnboundParameter, p0);
 
         /// <summary>
-        /// A string like "A non-static constructor is required"
+        /// A string like "A non-static constructor is required."
         /// </summary>
         internal static string NonStaticConstructorRequired => SR.NonStaticConstructorRequired;
 
         /// <summary>
-        /// A string like "The property '{0}' has no 'get' accessor"
+        /// A string like "The property '{0}' has no 'get' accessor."
         /// </summary>
         internal static string PropertyDoesNotHaveGetAccessor(object p0) => SR.Format(SR.PropertyDoesNotHaveGetAccessor, p0);
 
         /// <summary>
-        /// A string like "The property '{0}' has no 'set' accessor"
+        /// A string like "The property '{0}' has no 'set' accessor."
         /// </summary>
         internal static string PropertyDoesNotHaveSetAccessor(object p0) => SR.Format(SR.PropertyDoesNotHaveSetAccessor, p0);
 
         /// <summary>
-        /// A string like "A non-static 'get' accessor is required for property '{0}'"
+        /// A string like "A non-static 'get' accessor is required for property '{0}'."
         /// </summary>
         internal static string AccessorCannotBeStatic(object p0) => SR.Format(SR.AccessorCannotBeStatic, p0);
 
         /// <summary>
-        /// A string like "The number of indexes specified does not match the array rank"
+        /// A string like "The number of indexes specified does not match the array rank."
         /// </summary>
         internal static string RankMismatch => SR.RankMismatch;
 
         /// <summary>
-        /// A string like "The specified index is out of range"
+        /// A string like "The specified index is out of range."
         /// </summary>
         internal static string IndexOutOfRange => SR.IndexOutOfRange;
 
         /// <summary>
-        /// A string like "An array dimension cannot be less than 0"
+        /// A string like "An array dimension cannot be less than 0."
         /// </summary>
         internal static string BoundCannotBeLessThanZero => SR.BoundCannotBeLessThanZero;
 
         /// <summary>
-        /// A string like "The number of elements does not match the length of the array"
+        /// A string like "The number of elements does not match the length of the array."
         /// </summary>
         internal static string ArrayBoundsElementCountMismatch => SR.ArrayBoundsElementCountMismatch;
 
         /// <summary>
-        /// A string like "The 'GetAwaiter' method should take zero parameters"
+        /// A string like "The 'GetAwaiter' method should take zero parameters."
         /// </summary>
         internal static string GetAwaiterShouldTakeZeroParameters => SR.GetAwaiterShouldTakeZeroParameters;
 
         /// <summary>
-        /// A string like "The 'GetAwaiter' method should not be generic"
+        /// A string like "The 'GetAwaiter' method should not be generic."
         /// </summary>
         internal static string GetAwaiterShouldNotBeGeneric => SR.GetAwaiterShouldNotBeGeneric;
 
         /// <summary>
-        /// A string like "The 'GetAwaiter' method has an unsupported return type"
+        /// A string like "The 'GetAwaiter' method has an unsupported return type."
         /// </summary>
         internal static string GetAwaiterShouldReturnAwaiterType => SR.GetAwaiterShouldReturnAwaiterType;
 
@@ -944,32 +944,32 @@ namespace Microsoft.CSharp.Expressions
         internal static string AwaitableTypeShouldHaveGetAwaiterMethod(object p0) => SR.Format(SR.AwaitableTypeShouldHaveGetAwaiterMethod, p0);
 
         /// <summary>
-        /// A string like "Awaiter type '{0}' should implement 'INotifyCompletion'"
+        /// A string like "Awaiter type '{0}' should implement 'INotifyCompletion'."
         /// </summary>
         internal static string AwaiterTypeShouldImplementINotifyCompletion(object p0) => SR.Format(SR.AwaiterTypeShouldImplementINotifyCompletion, p0);
 
         /// <summary>
-        /// A string like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor"
+        /// A string like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor."
         /// </summary>
         internal static string AwaiterTypeShouldHaveIsCompletedProperty(object p0) => SR.Format(SR.AwaiterTypeShouldHaveIsCompletedProperty, p0);
 
         /// <summary>
-        /// A string like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'"
+        /// A string like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'."
         /// </summary>
         internal static string AwaiterIsCompletedShouldReturnBool(object p0) => SR.Format(SR.AwaiterIsCompletedShouldReturnBool, p0);
 
         /// <summary>
-        /// A string like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters"
+        /// A string like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters."
         /// </summary>
         internal static string AwaiterIsCompletedShouldNotBeIndexer(object p0) => SR.Format(SR.AwaiterIsCompletedShouldNotBeIndexer, p0);
 
         /// <summary>
-        /// A string like "Awaiter type '{0}' should have a 'GetResult' method"
+        /// A string like "Awaiter type '{0}' should have a 'GetResult' method."
         /// </summary>
         internal static string AwaiterTypeShouldHaveGetResultMethod(object p0) => SR.Format(SR.AwaiterTypeShouldHaveGetResultMethod, p0);
 
         /// <summary>
-        /// A string like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type"
+        /// A string like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type."
         /// </summary>
         internal static string AwaiterGetResultTypeInvalid(object p0) => SR.Format(SR.AwaiterGetResultTypeInvalid, p0);
 
@@ -994,67 +994,67 @@ namespace Microsoft.CSharp.Expressions
         internal static string GetAwaiterExpressionOneParameter => SR.GetAwaiterExpressionOneParameter;
 
         /// <summary>
-        /// A string like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions"
+        /// A string like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions."
         /// </summary>
         internal static string AsyncLambdaCantHaveByRefParameter(object p0) => SR.Format(SR.AsyncLambdaCantHaveByRefParameter, p0);
 
         /// <summary>
-        /// A string like "Return type '{0}' is not valid for an asynchronous lambda expression"
+        /// A string like "Return type '{0}' is not valid for an asynchronous lambda expression."
         /// </summary>
         internal static string AsyncLambdaInvalidReturnType(object p0) => SR.Format(SR.AsyncLambdaInvalidReturnType, p0);
 
         /// <summary>
-        /// A string like "Await expression cannot occur in '{0}'"
+        /// A string like "Await expression cannot occur in '{0}'."
         /// </summary>
         internal static string AwaitForbiddenHere(object p0) => SR.Format(SR.AwaitForbiddenHere, p0);
 
         /// <summary>
-        /// A string like "An expression of type '{0}' can't be used as a lock"
+        /// A string like "An expression of type '{0}' can't be used as a lock."
         /// </summary>
         internal static string LockNeedsReferenceType(object p0) => SR.Format(SR.LockNeedsReferenceType, p0);
 
         /// <summary>
-        /// A string like "The conversion lambda should have one parameter"
+        /// A string like "The conversion lambda should have one parameter."
         /// </summary>
         internal static string ConversionNeedsOneParameter => SR.ConversionNeedsOneParameter;
 
         /// <summary>
-        /// A string like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'"
+        /// A string like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'."
         /// </summary>
         internal static string ConversionInvalidArgument(object p0, object p1) => SR.Format(SR.ConversionInvalidArgument, p0, p1);
 
         /// <summary>
-        /// A string like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'"
+        /// A string like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'."
         /// </summary>
         internal static string ConversionInvalidResult(object p0, object p1) => SR.Format(SR.ConversionInvalidResult, p0, p1);
 
         /// <summary>
-        /// A string like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor"
+        /// A string like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor."
         /// </summary>
         internal static string EnumeratorShouldHaveCurrentProperty(object p0) => SR.Format(SR.EnumeratorShouldHaveCurrentProperty, p0);
 
         /// <summary>
-        /// A string like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type"
+        /// A string like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type."
         /// </summary>
         internal static string EnumeratorShouldHaveMoveNextMethod(object p0) => SR.Format(SR.EnumeratorShouldHaveMoveNextMethod, p0);
 
         /// <summary>
-        /// A string like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'"
+        /// A string like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'."
         /// </summary>
         internal static string MoreThanOneIEnumerableFound(object p0) => SR.Format(SR.MoreThanOneIEnumerableFound, p0);
 
         /// <summary>
-        /// A string like "Collection type '{0}' has no valid enumerable pattern"
+        /// A string like "Collection type '{0}' has no valid enumerable pattern."
         /// </summary>
         internal static string NoEnumerablePattern(object p0) => SR.Format(SR.NoEnumerablePattern, p0);
 
         /// <summary>
-        /// A string like "Initializers should be assignments to variables"
+        /// A string like "Initializers should be assignments to variables."
         /// </summary>
         internal static string InvalidInitializer => SR.InvalidInitializer;
 
         /// <summary>
-        /// A string like "Break and continue lables should be different"
+        /// A string like "Break and continue lables should be different."
         /// </summary>
         internal static string DuplicateLabels => SR.DuplicateLabels;
 
@@ -1159,12 +1159,12 @@ namespace Microsoft.CSharp.Expressions
         internal static string InvalidUnaryAssignmentWithOperands(object p0, object p1) => SR.Format(SR.InvalidUnaryAssignmentWithOperands, p0, p1);
 
         /// <summary>
-        /// A string like "Type must not be ByRef"
+        /// A string like "Type must not be ByRef."
         /// </summary>
         internal static string TypeMustNotBeByRef => SR.TypeMustNotBeByRef;
 
         /// <summary>
-        /// A string like "Type must not be a pointer type"
+        /// A string like "Type must not be a pointer type."
         /// </summary>
         internal static string TypeMustNotBePointer => SR.TypeMustNotBePointer;
 
@@ -1705,46 +1705,46 @@ namespace System
 {
     internal static partial class SR
     {
-        public const string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'";
-        public const string ParameterIndexOutOfBounds = "Parameter index '{0}' is out of bounds for method '{1}'";
-        public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'";
-        public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings";
-        public const string UnboundParameter = "Non-optional parameter '{0}' has no binding";
-        public const string NonStaticConstructorRequired = "A non-static constructor is required";
-        public const string PropertyDoesNotHaveGetAccessor = "The property '{0}' has no 'get' accessor";
-        public const string PropertyDoesNotHaveSetAccessor = "The property '{0}' has no 'set' accessor";
-        public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'";
-        public const string RankMismatch = "The number of indexes specified does not match the array rank";
-        public const string IndexOutOfRange = "The specified index is out of range";
-        public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0";
-        public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array";
-        public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters";
-        public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic";
-        public const string GetAwaiterShouldReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type";
+        public const string ParameterNotDefinedForMethod = "Parameter '{0}' is not defined for method '{1}'.";
+        public const string ParameterIndexOutOfBounds = "Parameter index '{0}' is out of bounds for method '{1}'.";
+        public const string ExpressionTypeDoesNotMatchParameter = "Expression of type '{0}' cannot be used for parameter of type '{1}'.";
+        public const string DuplicateParameterBinding = "Parameter '{0}' has multiple bindings.";
+        public const string UnboundParameter = "Non-optional parameter '{0}' has no binding.";
+        public const string NonStaticConstructorRequired = "A non-static constructor is required.";
+        public const string PropertyDoesNotHaveGetAccessor = "The property '{0}' has no 'get' accessor.";
+        public const string PropertyDoesNotHaveSetAccessor = "The property '{0}' has no 'set' accessor.";
+        public const string AccessorCannotBeStatic = "A non-static 'get' accessor is required for property '{0}'.";
+        public const string RankMismatch = "The number of indexes specified does not match the array rank.";
+        public const string IndexOutOfRange = "The specified index is out of range.";
+        public const string BoundCannotBeLessThanZero = "An array dimension cannot be less than 0.";
+        public const string ArrayBoundsElementCountMismatch = "The number of elements does not match the length of the array.";
+        public const string GetAwaiterShouldTakeZeroParameters = "The 'GetAwaiter' method should take zero parameters.";
+        public const string GetAwaiterShouldNotBeGeneric = "The 'GetAwaiter' method should not be generic.";
+        public const string GetAwaiterShouldReturnAwaiterType = "The 'GetAwaiter' method has an unsupported return type.";
         public const string AwaitableTypeShouldHaveGetAwaiterMethod = "Awaitable type '{0}' should have a 'GetAwaiter' method.";
-        public const string AwaiterTypeShouldImplementINotifyCompletion = "Awaiter type '{0}' should implement 'INotifyCompletion'";
-        public const string AwaiterTypeShouldHaveIsCompletedProperty = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor";
-        public const string AwaiterIsCompletedShouldReturnBool = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'";
-        public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters";
-        public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method";
-        public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type";
+        public const string AwaiterTypeShouldImplementINotifyCompletion = "Awaiter type '{0}' should implement 'INotifyCompletion'.";
+        public const string AwaiterTypeShouldHaveIsCompletedProperty = "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor.";
+        public const string AwaiterIsCompletedShouldReturnBool = "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'.";
+        public const string AwaiterIsCompletedShouldNotBeIndexer = "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters.";
+        public const string AwaiterTypeShouldHaveGetResultMethod = "Awaiter type '{0}' should have a 'GetResult' method.";
+        public const string AwaiterGetResultTypeInvalid = "The 'GetResult' method on awaiter type '{0}' has an unsupported return type.";
         public const string DynamicAwaitNoGetAwaiter = "Dynamically bound await operations cannot have a 'GetAwaiter' expression.";
         public const string DynamicAwaitNoIsCompleted = "Dynamically bound await operations cannot have an 'IsCompleted' property.";
         public const string DynamicAwaitNoGetResult = "Dynamically bound await operations cannot have a 'GetResult' method.";
         public const string GetAwaiterExpressionOneParameter = "The 'GetAwaiter' expression should have one parameter.";
-        public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions";
-        public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression";
-        public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'";
-        public const string LockNeedsReferenceType = "An expression of type '{0}' can't be used as a lock";
-        public const string ConversionNeedsOneParameter = "The conversion lambda should have one parameter";
-        public const string ConversionInvalidArgument = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'";
-        public const string ConversionInvalidResult = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'";
-        public const string EnumeratorShouldHaveCurrentProperty = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor";
-        public const string EnumeratorShouldHaveMoveNextMethod = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type";
-        public const string MoreThanOneIEnumerableFound = "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'";
-        public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern";
-        public const string InvalidInitializer = "Initializers should be assignments to variables";
-        public const string DuplicateLabels = "Break and continue lables should be different";
+        public const string AsyncLambdaCantHaveByRefParameter = "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions.";
+        public const string AsyncLambdaInvalidReturnType = "Return type '{0}' is not valid for an asynchronous lambda expression.";
+        public const string AwaitForbiddenHere = "Await expression cannot occur in '{0}'.";
+        public const string LockNeedsReferenceType = "An expression of type '{0}' can't be used as a lock.";
+        public const string ConversionNeedsOneParameter = "The conversion lambda should have one parameter.";
+        public const string ConversionInvalidArgument = "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'.";
+        public const string ConversionInvalidResult = "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'.";
+        public const string EnumeratorShouldHaveCurrentProperty = "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor.";
+        public const string EnumeratorShouldHaveMoveNextMethod = "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type.";
+        public const string MoreThanOneIEnumerableFound = "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'.";
+        public const string NoEnumerablePattern = "Collection type '{0}' has no valid enumerable pattern.";
+        public const string InvalidInitializer = "Initializers should be assignments to variables.";
+        public const string DuplicateLabels = "Break and continue lables should be different.";
         public const string ConditionalAccessRequiresNonStaticMember = "Conditional access expressions require non-static members or extension methods.";
         public const string ConditionalAccessRequiresReadableProperty = "Conditional access expressions require readable properties.";
         public const string TooManyArguments = "Too many arguments have been specified.";
@@ -1765,8 +1765,8 @@ namespace System
         public const string InvalidCompoundAssignment = "Compound assignment operation '{0}' is not supported for type '{1}'.";
         public const string InvalidCompoundAssignmentWithOperands = "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'.";
         public const string InvalidUnaryAssignmentWithOperands = "Unary assignment operation '{0}' is not supported for an operand of type '{1}'.";
-        public const string TypeMustNotBeByRef = "Type must not be ByRef";
-        public const string TypeMustNotBePointer = "Type must not be a pointer type";
+        public const string TypeMustNotBeByRef = "Type must not be ByRef.";
+        public const string TypeMustNotBePointer = "Type must not be a pointer type.";
         public const string InvalidNullCoalescingAssignmentArguments = "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations.";
         public const string InvalidInterpolatedStringType = "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable.";
         public const string InvalidFromEndIndexOperandType = "Type '{0}' is not a valid type for an index operand. Supported types are int or int?.";
