@@ -264,7 +264,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        [Ignore]
         public void CrossCheck_DeconstructionAssignment_LhsTuple()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -278,7 +277,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
-        [Ignore] // NB: Known limitation on mutable structs; need support for ref locals.
         public void CrossCheck_DeconstructionAssignment_OrderOfEffects()
         {
             var f = Compile<Action>(@"() => {

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Friends.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\Compiler\RefLocalRewriter.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\EnumeratorInfo.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\DeconstructionConversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\Conversion.cs" />
@@ -237,6 +238,8 @@
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Generated.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
+    <Compile Include="System\Runtime\CompilerServices\ActionByRef.cs" />
+    <Compile Include="System\Runtime\CompilerServices\FuncByRef.cs" />
     <Compile Include="System\Runtime\CompilerServices\RefHolder.cs" />
     <Compile Include="System\Runtime\CompilerServices\DeconstructDelegates.cs">
       <AutoGen>True</AutoGen>

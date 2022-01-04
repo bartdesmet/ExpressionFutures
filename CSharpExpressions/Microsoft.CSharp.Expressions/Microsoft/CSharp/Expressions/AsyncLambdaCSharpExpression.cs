@@ -329,6 +329,13 @@ namespace Microsoft.CSharp.Expressions
             var reduced = Reducer.Reduce(Body);
 
             //
+            // Next, make sure we don't end up hoisting RefHolder<T> instances that represent ref locals
+            // using a Span<T> inside. Note that this step would still exist if we had proper support for
+            // ref locals in BlockExpression; we need to hunt down these cases and rewrite them.
+            //
+            var noRefLocals = RefLocalRewriter.Rewrite(reduced);
+
+            //
             // Next, rewrite exception handlers to synthetic equivalents where needed. This supports the
             // C# 6.0 features to await in catch and finally handlers (in addition to fault handlers in
             // order to support all LINQ nodes, which can be restricted if we want).
@@ -336,7 +343,7 @@ namespace Microsoft.CSharp.Expressions
             // This step also deals with pending branches out of exception handlers in order to properly
             // 'leave' protected regions and execute the branch after the exception handling construct.
             //
-            var lowered = new CatchRewriter().Visit(reduced);
+            var lowered = new CatchRewriter().Visit(noRefLocals);
             lowered = new FinallyAndFaultRewriter().Visit(lowered);
 
             //

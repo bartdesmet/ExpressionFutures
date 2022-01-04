@@ -1128,7 +1128,7 @@ namespace Microsoft.CSharp.Expressions
             return Comma(temps, stmts);
         }
 
-        public static Expression ReduceAssign(Expression lhs, List<ParameterExpression> temps, List<Expression> stmts)
+        public static Expression ReduceAssign(Expression lhs, List<ParameterExpression> temps, List<Expression> stmts, bool supportByRef = false)
         {
             return lhs.NodeType switch
             {
@@ -1156,6 +1156,21 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (NeedByRefAssign(member.Expression))
                     {
+                        if (supportByRef)
+                        {
+                            if (SupportsRefLocals)
+                            {
+                                return member.Member.MemberType == MemberTypes.Field
+                                    ? CreateRefLocalAccess(member, objByRef => objByRef, temps, stmts)
+                                    : CreateRefLocalAccess(member.Expression, objByRef => member.Update(objByRef), temps, stmts);
+                            }
+                            else
+                            {
+                                // NB: This makes cases like '(t.x, t.y) = expr' work, where t is a tuple type.
+                                return member;
+                            }
+                        }
+
                         throw ContractUtils.Unreachable;
                     }
 
@@ -1386,6 +1401,40 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return false;
+        }
+
+        //
+        // NB: The facilities below are a possible "emulation" of ref locals using a ref struct Span<T> wrapper that
+        //     refers to a single object. The async lambda rewriter knows about this wrapper in order to avoid hoisting
+        //     the wrapper to the heap. The better solution would be proper support for ref locals in BlockExpression.
+        //
+
+        private static bool SupportsRefLocals =>
+#if NETCORE
+            true;
+#else
+            false;
+#endif
+
+        private static RefLocalAccessExpression CreateRefLocalAccess(Expression expression, Func<Expression, Expression> access, List<ParameterExpression> temps, List<Expression> stmts)
+        {
+            var type = expression.Type;
+            var typeByRef = type.MakeByRefType();
+
+            var refHolderType = typeof(RefHolder<>).MakeGenericType(type);
+            var refHolderCtor = refHolderType.GetConstructor(new[] { typeByRef });
+            var refHolder = Expression.New(refHolderCtor, expression);
+
+            // NB: This shape of variable and assignment is detected by RefLocalRewriter. If making changes here,
+            //     make sure to update the detection logic accordingly.
+
+            var refHolderTemp = Expression.Parameter(refHolder.Type, "__ref");
+            var refHolderAssign = Expression.Assign(refHolderTemp, refHolder);
+
+            temps.Add(refHolderTemp);
+            stmts.Add(refHolderAssign);
+
+            return new RefLocalAccessExpression(refHolderTemp, access);
         }
 
         private static Expression ReduceVariable(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
@@ -1957,5 +2006,40 @@ namespace Microsoft.CSharp.Expressions
         public override bool CanReduce => true;
 
         public override Expression Reduce() => _variable;
+    }
+
+    internal sealed class RefLocalAccessExpression : Expression
+    {
+        private readonly ParameterExpression _refHolder;
+        private readonly ParameterExpression _objByRef;
+        private readonly Expression _access;
+
+        public RefLocalAccessExpression(ParameterExpression refHolder, Func<Expression, Expression> createAccess)
+        {
+            _refHolder = refHolder;
+
+            var memberExprTypeByRef = refHolder.Type.GetGenericArguments()[0].MakeByRefType();
+
+            _objByRef = Expression.Parameter(memberExprTypeByRef, "__obj");
+            _access = createAccess(_objByRef);
+        }
+
+        public override Type Type => _access.Type;
+
+        public override ExpressionType NodeType => ExpressionType.Extension;
+
+        public override bool CanReduce => false;
+
+        public Expression Assign(Expression valueExpr)
+        {
+            var value = Expression.Parameter(_access.Type, "__value");
+            var assign = Expression.Assign(_access, value);
+
+            var actionByRefType = typeof(ActionByRef<,>).MakeGenericType(_objByRef.Type, _access.Type);
+            var assignAction = Expression.Lambda(actionByRefType, assign, _objByRef, value);
+            var invoke = _refHolder.Type.GetMethod(nameof(RefHolder<int>.Invoke)).MakeGenericMethod(_access.Type);
+
+            return Expression.Call(_refHolder, invoke, assignAction, valueExpr);
+        }
     }
 }

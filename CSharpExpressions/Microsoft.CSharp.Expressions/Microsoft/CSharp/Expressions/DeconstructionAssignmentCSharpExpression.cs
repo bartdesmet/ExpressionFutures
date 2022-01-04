@@ -155,7 +155,7 @@ namespace Microsoft.CSharp.Expressions
                     default:
                         // NB: Known limitation on ref locals when needed for e.g. obj.Bar.Foo = x where Bar is a mutable struct.
                         var expr = MakeWriteable(variable);
-                        var v = ReduceAssign(expr, temps, effects); // CONSIDER: Wire createTemp throughout.
+                        var v = ReduceAssign(expr, temps, effects, supportByRef: true); // CONSIDER: Wire createTemp throughout.
                         assignmentTargets.Add(new DeconstructionVariable(v));
                         break;
                 }
@@ -200,7 +200,11 @@ namespace Microsoft.CSharp.Expressions
 
                     resultPart = EvaluateConversionToTemp(rightPart, nestedConversion, temps, effects.conversions, createTemp);
 
-                    if (!(leftTarget is DiscardCSharpExpression))
+                    if (leftTarget is RefLocalAccessExpression refLocal)
+                    {
+                        effects.assignments.Add(refLocal.Assign(resultPart));
+                    }
+                    else if (!(leftTarget is DiscardCSharpExpression))
                     {
                         effects.assignments.Add(Expression.Assign(leftTarget, resultPart));
                     }
