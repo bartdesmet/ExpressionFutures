@@ -145,6 +145,35 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
         [TestMethod]
+        public void CrossCheck_ForEach_Array_MultiDimensional()
+        {
+            var f = Compile<Action>(@"() =>
+{
+    Log(""Before"");
+
+    foreach (var x in new int[2, 3, 5] { { {9, 8, 7, 6, 5}, {11, 12, 13, 14, 15}, {25, 24, 26, 23, 27} }, { {99, 98, 97, 96, 95}, {81, 82, 83, 84, 85}, {75, 74, 76, 73, 77} } })
+    {
+        if (x % 2 == 0)
+        {
+            Log(""continue"");
+            continue;
+        }
+
+        if (x == 83)
+        {
+            Log(""break"");
+            break;
+        }
+
+        Log($""body({x})"");
+    }
+
+    Log(""After"");
+}");
+            f();
+        }
+
+        [TestMethod]
         public void CrossCheck_ForEach_Convert()
         {
             var f = Compile<Action>(@"() =>

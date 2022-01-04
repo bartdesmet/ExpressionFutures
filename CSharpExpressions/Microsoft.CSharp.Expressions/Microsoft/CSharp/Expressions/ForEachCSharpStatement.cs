@@ -151,19 +151,24 @@ namespace Microsoft.CSharp.Expressions
                 {
                     return new StringForEachStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
                 }
-                else if (collection.Type.IsVector())
+                else if (collection.Type.IsArray)
                 {
-                    if (conversion == null && deconstruction == null)
+                    if (collection.Type.IsVector())
                     {
-                        return new SimpleArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
+                        if (conversion == null && deconstruction == null)
+                        {
+                            return new SimpleArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
+                        }
+                        else
+                        {
+                            return new ArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
+                        }
                     }
                     else
                     {
-                        return new ArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
+                        return new MultiDimensionalArrayForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
                     }
                 }
-
-                // CONSIDER: Could add optimization for multi-dimensional arrays.
             }
             else
             {
@@ -494,6 +499,119 @@ namespace Microsoft.CSharp.Expressions
             protected override Expression CreateConvert(Expression element)
             {
                 return Expression.Convert(element, Variables[0].Type);
+            }
+        }
+
+        private sealed class MultiDimensionalArrayForEachCSharpStatement : ForEachCSharpStatement
+        {
+            public MultiDimensionalArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
+                : base(info, variables, collection, body, breakLabel, continueLabel)
+            {
+                Conversion = conversion;
+                Deconstruction = deconstruction;
+            }
+
+            public override LambdaExpression Conversion { get; }
+            public override LambdaExpression Deconstruction { get; }
+
+            protected override Expression ReduceCore()
+            {
+                var temps = new List<ParameterExpression>();
+                var stmts = new List<Expression>();
+
+                var array = Expression.Parameter(Collection.Type, "__array");
+
+                temps.Add(array);
+                stmts.Add(Expression.Assign(array, Collection));
+
+                var rank = Collection.Type.GetArrayRank();
+
+                var rangeVariables = new List<ParameterExpression>(rank);
+                var loops = new List<LoopInfo>(rank);
+
+                for (var i = 0; i < rank; i++)
+                {
+                    var upperBound = Expression.Parameter(typeof(int), "__u" + i);
+                    temps.Add(upperBound);
+                    stmts.Add(Expression.Assign(upperBound, Expression.Call(array, GetUpperBound, CreateConstantInt32(i))));
+
+                    var rangeVariable = Expression.Parameter(typeof(int), "__i" + i);
+                    rangeVariables.Add(rangeVariable);
+
+                    var loopInfo = new LoopInfo
+                    {
+                        Variable = rangeVariable,
+                        Initializer = Expression.Assign(rangeVariable, Expression.Call(array, GetLowerBound, CreateConstantInt32(i))),
+                        Condition = Expression.LessThanOrEqual(rangeVariable, upperBound),
+                        Increment = Expression.Assign(rangeVariable, Expression.Add(rangeVariable, CreateConstantInt32(1)))
+                    };
+
+                    loops.Add(loopInfo);
+                }
+
+                var element = (Expression)Expression.ArrayAccess(array, rangeVariables);
+
+                if (Conversion != null)
+                {
+                    element = InvokeConversion(Conversion, element);
+                }
+
+                var bodyStmts = new List<Expression>(2);
+
+                if (Variables.Count == 1)
+                {
+                    bodyStmts.Add(Expression.Assign(Variables[0], element));
+                }
+                else
+                {
+                    bodyStmts.Add(InvokeDeconstruction(Deconstruction, element));
+                }
+
+                bodyStmts.Add(Body);
+
+                var body = Expression.Block(typeof(void), Variables, bodyStmts);
+
+                var loop = default(Expression);
+
+                for (var i = rank - 1; i >= 0; i--)
+                {
+                    var info = loops[i];
+
+                    var breakLabel = i == 0 ? BreakLabel : Expression.Label("__break" + i);
+
+                    Expression loopBody;
+                    LabelTarget continueLabel;
+
+                    if (loop == null)
+                    {
+                        loopBody = body;
+                        continueLabel = ContinueLabel;
+                    }
+                    else
+                    {
+                        loopBody = loop;
+                        continueLabel = Expression.Label("__continue" + i);
+                    }
+
+                    loop = CSharpExpression.For(new[] { info.Variable }, new[] { info.Initializer }, info.Condition, new[] { info.Increment }, loopBody, breakLabel, continueLabel);
+                }
+
+                stmts.Add(loop);
+
+                return Expression.Block(typeof(void), temps, stmts);
+            }
+
+            private static MethodInfo s_getUpperBound, s_getLowerBound;
+
+            private static MethodInfo GetUpperBound => s_getUpperBound ??= typeof(Array).GetMethod(nameof(Array.GetUpperBound));
+            private static MethodInfo GetLowerBound => s_getLowerBound ??= typeof(Array).GetMethod(nameof(Array.GetLowerBound));
+
+            private sealed class LoopInfo
+            {
+                public ParameterExpression Variable;
+                public Expression Initializer;
+                public Expression Condition;
+                public Expression Increment;
             }
         }
 
