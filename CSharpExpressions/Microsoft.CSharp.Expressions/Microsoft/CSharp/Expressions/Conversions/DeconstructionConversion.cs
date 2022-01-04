@@ -226,9 +226,9 @@ namespace Microsoft.CSharp.Expressions
             if (parameters.Count < 3)
                 throw Error.DeconstructionShouldHaveThreeOrMoreParameters();
 
-            for (int i = 0, n = parameters.Count; i < n; i++)
+            for (int i = 1, n = parameters.Count; i < n; i++)
             {
-                if (i >= 1 && !parameters[i].IsByRef)
+                if (!parameters[i].IsByRef)
                     throw Error.DeconstructionParameterShouldBeByRef(i);
             }
         }

@@ -179,6 +179,14 @@ var errors = new[]
     new { Name = "IndexerAccessFirstParameterShouldHaveCollectionType", ExceptionType = "ArgumentException", Args = 1, Message = "The first parameter of the indexer access lambda expression should match the collection type '{0}'." },
     new { Name = "IndexerAccessSecondParameterInvalidType", ExceptionType = "ArgumentException", Args = 1, Message = "The second parameter of the indexer access lambda expression should be of type '{0}'." },
     new { Name = "ListPatternInputTypeInvalid", ExceptionType = "ArgumentException", Args = 2, Message = "The non-nullable list pattern input type '{0}' should match collection type '{1}'." },
+    new { Name = "ForEachNeedsOneOrMoreVariables", ExceptionType = "ArgumentException", Args = 0, Message = "A foreach statement requires at least one iteration variable." },
+    new { Name = "ForEachCollectionTypeNotCompatibleWithCollectionExpression", ExceptionType = "ArgumentException", Args = 2, Message = "The collection type '{0}' is not compatible with the type '{1}' of the collection expression." },
+    new { Name = "ForEachDeconstructionNotSupportedWithOneVariable", ExceptionType = "ArgumentException", Args = 0, Message = "A foreach statement with a deconstruction step requires more than one iteration variable." },
+    new { Name = "ForEachDeconstructionRequiredForMultipleVariables", ExceptionType = "ArgumentException", Args = 0, Message = "A foreach statement with more than one iteration variables requires a deconstruction step." },
+    new { Name = "ForEachDeconstructionShouldHaveOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "The deconstruction lambda expression for a foreach statement should have one parameter." },
+    new { Name = "ForEachDeconstructionShouldReturnTuple", ExceptionType = "ArgumentException", Args = 1, Message = "The type '{0}' returned by the deconstruction lambda expression is not a tuple type." },
+    new { Name = "ForEachDeconstructionComponentMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables." },
+    new { Name = "ForEachDeconstructionComponentNotAssignableToVariable", ExceptionType = "ArgumentException", Args = 4, Message = "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

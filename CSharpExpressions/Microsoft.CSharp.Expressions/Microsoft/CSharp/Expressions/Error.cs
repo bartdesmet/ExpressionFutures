@@ -851,6 +851,46 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception ListPatternInputTypeInvalid(object p0, object p1) => new ArgumentException(Strings.ListPatternInputTypeInvalid(p0, p1));
 
+        /// <summary>
+        /// ArgumentException with message like "A foreach statement requires at least one iteration variable."
+        /// </summary>
+        internal static Exception ForEachNeedsOneOrMoreVariables() => new ArgumentException(Strings.ForEachNeedsOneOrMoreVariables);
+
+        /// <summary>
+        /// ArgumentException with message like "The collection type '{0}' is not compatible with the type '{1}' of the collection expression."
+        /// </summary>
+        internal static Exception ForEachCollectionTypeNotCompatibleWithCollectionExpression(object p0, object p1) => new ArgumentException(Strings.ForEachCollectionTypeNotCompatibleWithCollectionExpression(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "A foreach statement with a deconstruction step requires more than one iteration variable."
+        /// </summary>
+        internal static Exception ForEachDeconstructionNotSupportedWithOneVariable() => new ArgumentException(Strings.ForEachDeconstructionNotSupportedWithOneVariable);
+
+        /// <summary>
+        /// ArgumentException with message like "A foreach statement with more than one iteration variables requires a deconstruction step."
+        /// </summary>
+        internal static Exception ForEachDeconstructionRequiredForMultipleVariables() => new ArgumentException(Strings.ForEachDeconstructionRequiredForMultipleVariables);
+
+        /// <summary>
+        /// ArgumentException with message like "The deconstruction lambda expression for a foreach statement should have one parameter."
+        /// </summary>
+        internal static Exception ForEachDeconstructionShouldHaveOneParameter() => new ArgumentException(Strings.ForEachDeconstructionShouldHaveOneParameter);
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' returned by the deconstruction lambda expression is not a tuple type."
+        /// </summary>
+        internal static Exception ForEachDeconstructionShouldReturnTuple(object p0) => new ArgumentException(Strings.ForEachDeconstructionShouldReturnTuple(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables."
+        /// </summary>
+        internal static Exception ForEachDeconstructionComponentMismatch(object p0, object p1) => new ArgumentException(Strings.ForEachDeconstructionComponentMismatch(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'."
+        /// </summary>
+        internal static Exception ForEachDeconstructionComponentNotAssignableToVariable(object p0, object p1, object p2, object p3) => new ArgumentException(Strings.ForEachDeconstructionComponentNotAssignableToVariable(p0, p1, p2, p3));
+
     }
 
     /// <summary>
@@ -1698,6 +1738,46 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ListPatternInputTypeInvalid(object p0, object p1) => SR.Format(SR.ListPatternInputTypeInvalid, p0, p1);
 
+        /// <summary>
+        /// A string like "A foreach statement requires at least one iteration variable."
+        /// </summary>
+        internal static string ForEachNeedsOneOrMoreVariables => SR.ForEachNeedsOneOrMoreVariables;
+
+        /// <summary>
+        /// A string like "The collection type '{0}' is not compatible with the type '{1}' of the collection expression."
+        /// </summary>
+        internal static string ForEachCollectionTypeNotCompatibleWithCollectionExpression(object p0, object p1) => SR.Format(SR.ForEachCollectionTypeNotCompatibleWithCollectionExpression, p0, p1);
+
+        /// <summary>
+        /// A string like "A foreach statement with a deconstruction step requires more than one iteration variable."
+        /// </summary>
+        internal static string ForEachDeconstructionNotSupportedWithOneVariable => SR.ForEachDeconstructionNotSupportedWithOneVariable;
+
+        /// <summary>
+        /// A string like "A foreach statement with more than one iteration variables requires a deconstruction step."
+        /// </summary>
+        internal static string ForEachDeconstructionRequiredForMultipleVariables => SR.ForEachDeconstructionRequiredForMultipleVariables;
+
+        /// <summary>
+        /// A string like "The deconstruction lambda expression for a foreach statement should have one parameter."
+        /// </summary>
+        internal static string ForEachDeconstructionShouldHaveOneParameter => SR.ForEachDeconstructionShouldHaveOneParameter;
+
+        /// <summary>
+        /// A string like "The type '{0}' returned by the deconstruction lambda expression is not a tuple type."
+        /// </summary>
+        internal static string ForEachDeconstructionShouldReturnTuple(object p0) => SR.Format(SR.ForEachDeconstructionShouldReturnTuple, p0);
+
+        /// <summary>
+        /// A string like "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables."
+        /// </summary>
+        internal static string ForEachDeconstructionComponentMismatch(object p0, object p1) => SR.Format(SR.ForEachDeconstructionComponentMismatch, p0, p1);
+
+        /// <summary>
+        /// A string like "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'."
+        /// </summary>
+        internal static string ForEachDeconstructionComponentNotAssignableToVariable(object p0, object p1, object p2, object p3) => SR.Format(SR.ForEachDeconstructionComponentNotAssignableToVariable, p0, p1, p2, p3);
+
     }
 }
 
@@ -1873,5 +1953,13 @@ namespace System
         public const string IndexerAccessFirstParameterShouldHaveCollectionType = "The first parameter of the indexer access lambda expression should match the collection type '{0}'.";
         public const string IndexerAccessSecondParameterInvalidType = "The second parameter of the indexer access lambda expression should be of type '{0}'.";
         public const string ListPatternInputTypeInvalid = "The non-nullable list pattern input type '{0}' should match collection type '{1}'.";
+        public const string ForEachNeedsOneOrMoreVariables = "A foreach statement requires at least one iteration variable.";
+        public const string ForEachCollectionTypeNotCompatibleWithCollectionExpression = "The collection type '{0}' is not compatible with the type '{1}' of the collection expression.";
+        public const string ForEachDeconstructionNotSupportedWithOneVariable = "A foreach statement with a deconstruction step requires more than one iteration variable.";
+        public const string ForEachDeconstructionRequiredForMultipleVariables = "A foreach statement with more than one iteration variables requires a deconstruction step.";
+        public const string ForEachDeconstructionShouldHaveOneParameter = "The deconstruction lambda expression for a foreach statement should have one parameter.";
+        public const string ForEachDeconstructionShouldReturnTuple = "The type '{0}' returned by the deconstruction lambda expression is not a tuple type.";
+        public const string ForEachDeconstructionComponentMismatch = "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables.";
+        public const string ForEachDeconstructionComponentNotAssignableToVariable = "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'.";
     }
 }

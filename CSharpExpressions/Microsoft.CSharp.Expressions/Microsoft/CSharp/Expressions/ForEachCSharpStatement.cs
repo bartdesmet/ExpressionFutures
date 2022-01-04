@@ -116,12 +116,12 @@ namespace Microsoft.CSharp.Expressions
         internal static ForEachCSharpStatement Make(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
         {
             if (variables.Count == 0)
-                throw new Exception(); // TODO - Need at least one.
-            
+                throw Error.ForEachNeedsOneOrMoreVariables();
+
             RequiresNotNullItems(variables, nameof(variables));
 
             if (!AreReferenceAssignable(enumeratorInfo.CollectionType, collection.Type))
-                throw new Exception(); // TODO - EnumeratorInfo doesn't match given collection expression type.
+                throw Error.ForEachCollectionTypeNotCompatibleWithCollectionExpression(enumeratorInfo.CollectionType, collection.Type);
 
             RequiresCanRead(body, nameof(body));
 
@@ -133,27 +133,25 @@ namespace Microsoft.CSharp.Expressions
             if (variables.Count == 1)
             {
                 if (deconstruction != null)
-                    throw new Exception(); // TODO - Can not have deconstruction with only one variable.
+                    throw Error.ForEachDeconstructionNotSupportedWithOneVariable();
 
                 ValidateConversion(firstVariableType, enumeratorInfo.ElementType, ref conversion);
             }
             else
             {
-                if (conversion != null)
-                    throw new Exception(); // TODO - Review if these are mutually exclusive.
                 if (deconstruction == null)
-                    throw new Exception(); // TODO - Need deconstruction if more than one variable.
+                    throw Error.ForEachDeconstructionRequiredForMultipleVariables();
 
-                // TODO: validate deconstruction
+                ValidateDeconstruction(enumeratorInfo.ElementType, ref conversion, deconstruction, variables);
             }
 
             if (awaitInfo == null)
             {
-                if (enumeratorInfo.CollectionType == typeof(string) && variables.Count == 1 && firstVariableType == typeof(char) && conversion == null && deconstruction == null)
+                if (collection.Type == typeof(string) && variables.Count == 1 && firstVariableType == typeof(char) && conversion == null && deconstruction == null)
                 {
                     return new StringForEachStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel);
                 }
-                else if (enumeratorInfo.CollectionType.IsVector())
+                else if (collection.Type.IsVector())
                 {
                     if (conversion == null && deconstruction == null)
                     {
@@ -180,22 +178,16 @@ namespace Microsoft.CSharp.Expressions
             if (conversion != null)
             {
                 if (conversion.Parameters.Count != 1)
-                {
                     throw Error.ConversionNeedsOneParameter();
-                }
 
                 var convertParameterType = conversion.Parameters[0].Type;
                 var convertResultType = conversion.Body.Type;
 
                 if (!AreReferenceAssignable(convertParameterType, elementType))
-                {
                     throw Error.ConversionInvalidArgument(elementType, convertParameterType);
-                }
 
                 if (!AreReferenceAssignable(variableType, convertResultType))
-                {
                     throw Error.ConversionInvalidResult(convertResultType, variableType);
-                }
             }
             else if (!AreReferenceAssignable(variableType, elementType))
             {
@@ -206,6 +198,30 @@ namespace Microsoft.CSharp.Expressions
                 var convert = Expression.Convert(element, variableType);
 
                 conversion = Expression.Lambda(convert, element);
+            }
+        }
+
+        private static void ValidateDeconstruction(Type elementType, ref LambdaExpression conversion, LambdaExpression deconstruction, ReadOnlyCollection<ParameterExpression> variables)
+        {
+            if (deconstruction.Parameters.Count != 1)
+                throw Error.ForEachDeconstructionShouldHaveOneParameter();
+
+            var variableType = deconstruction.Parameters[0].Type;
+
+            ValidateConversion(variableType, elementType, ref conversion);
+
+            if (!IsTupleType(deconstruction.ReturnType))
+                throw Error.ForEachDeconstructionShouldReturnTuple(deconstruction.ReturnType);
+
+            var componentTypes = GetTupleComponentTypes(deconstruction.ReturnType).ToArray();
+
+            if (componentTypes.Length != variables.Count)
+                throw Error.ForEachDeconstructionComponentMismatch(deconstruction.ReturnType, componentTypes.Length);
+
+            for (var i = 0; i < componentTypes.Length; i++)
+            {
+                if (!AreReferenceAssignable(variables[i].Type, componentTypes[i]))
+                    throw Error.ForEachDeconstructionComponentNotAssignableToVariable(componentTypes[i], i, variables[i], variables[i].Type);
             }
         }
 
