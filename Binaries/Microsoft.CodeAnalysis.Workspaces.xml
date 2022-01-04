@@ -757,11 +757,6 @@
             Document corresponding to the <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span"/> to fix.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Project">
-            <summary>
-            Project corresponding to the diagnostics to fix.
-            </summary>
-        </member>
         <member name="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Span">
             <summary>
             Text span within the <see cref="P:Microsoft.CodeAnalysis.CodeFixes.CodeFixContext.Document"/> to fix.

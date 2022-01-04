@@ -4494,7 +4494,7 @@
             Called even if there are no attributes.
             </summary>
             <remarks>
-            This method is called by the binder from <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbol.LoadAndValidateAttributes(Roslyn.Utilities.OneOrMany{Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax}},Microsoft.CodeAnalysis.CustomAttributesBag{Microsoft.CodeAnalysis.CSharp.Symbols.CSharpAttributeData}@,Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation,System.Boolean,Microsoft.CodeAnalysis.CSharp.Binder,System.Func{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax,System.Boolean})"/> after it has finished binding attributes on the symbol,
+            This method is called by the binder from <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbol.LoadAndValidateAttributes(Roslyn.Utilities.OneOrMany{Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax}},Microsoft.CodeAnalysis.CustomAttributesBag{Microsoft.CodeAnalysis.CSharp.Symbols.CSharpAttributeData}@,Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation,System.Boolean,Microsoft.CodeAnalysis.CSharp.Binder,System.Func{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax,System.Boolean},System.Action{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax},System.Action{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax})"/> after it has finished binding attributes on the symbol,
             has executed <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbol.DecodeWellKnownAttribute(Microsoft.CodeAnalysis.DecodeWellKnownAttributeArguments{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax,Microsoft.CodeAnalysis.CSharp.Symbols.CSharpAttributeData,Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation}@)"/> for attributes applied on the symbol and has stored the decoded data in the
             lazyCustomAttributesBag on the symbol. Bound attributes haven't been stored on the bag yet.
             
@@ -4508,7 +4508,7 @@
             <param name="symbolPart">Specific part of the symbol to which the attributes apply, or <see cref="F:Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation.None"/> if the attributes apply to the symbol itself.</param>
             <param name="decodedData">Decoded well-known attribute data, could be null.</param>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbol.LoadAndValidateAttributes(Roslyn.Utilities.OneOrMany{Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax}},Microsoft.CodeAnalysis.CustomAttributesBag{Microsoft.CodeAnalysis.CSharp.Symbols.CSharpAttributeData}@,Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation,System.Boolean,Microsoft.CodeAnalysis.CSharp.Binder,System.Func{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax,System.Boolean})">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbol.LoadAndValidateAttributes(Roslyn.Utilities.OneOrMany{Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax}},Microsoft.CodeAnalysis.CustomAttributesBag{Microsoft.CodeAnalysis.CSharp.Symbols.CSharpAttributeData}@,Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation,System.Boolean,Microsoft.CodeAnalysis.CSharp.Binder,System.Func{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax,System.Boolean},System.Action{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax},System.Action{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax})">
             <summary>
             This method does the following set of operations in the specified order:
             (1) GetAttributesToBind: Merge attributes from the given attributesSyntaxLists and filter out attributes by attribute target.
@@ -4540,6 +4540,8 @@
             <param name="earlyDecodingOnly">Indicates that only early decoding should be performed.  WARNING: the resulting bag will not be sealed.</param>
             <param name="binderOpt">Binder to use. If null, <see cref="P:Microsoft.CodeAnalysis.CSharp.Symbol.DeclaringCompilation"/> GetBinderFactory will be used.</param>
             <param name="attributeMatchesOpt">If specified, only load attributes that match this predicate, and any diagnostics produced will be dropped.</param>
+            <param name="beforeAttributePartBound">If specified, invoked before any part of the attribute syntax is bound.</param>
+            <param name="afterAttributePartBound">If specified, invoked after any part of the attribute syntax is bound.</param>
             <returns>Flag indicating whether lazyCustomAttributes were stored on this thread. Caller should check for this flag and perform NotePartComplete if true.</returns>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Symbol.GetAttributesToBind(Roslyn.Utilities.OneOrMany{Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax}},Microsoft.CodeAnalysis.CSharp.Symbols.AttributeLocation,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,Microsoft.CodeAnalysis.CSharp.CSharpCompilation,System.Func{Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax,System.Boolean},Microsoft.CodeAnalysis.CSharp.Binder,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.Binder}@)">
@@ -17462,7 +17464,7 @@
             or null if the default value is not a constant.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbolExtensions.VisitType``1(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.Func{Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,``0,System.Boolean,System.Boolean},``0,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbolExtensions.VisitType``1(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.Func{Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,``0,System.Boolean,System.Boolean},``0,System.Boolean,System.Boolean)">
             <summary>
             Visit the given type and, in the case of compound types, visit all "sub type"
             (such as A in A[], or { A&lt;T&gt;, T, U } in A&lt;T&gt;.B&lt;U&gt;) invoking 'predicate'
@@ -17471,7 +17473,7 @@
             completes without the predicate returning true for any type, this method returns null.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbolExtensions.VisitType``1(Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.Func{Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,``0,System.Boolean,System.Boolean},System.Func{Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,``0,System.Boolean,System.Boolean},``0,System.Boolean,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbolExtensions.VisitType``1(Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.Func{Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,``0,System.Boolean,System.Boolean},System.Func{Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,``0,System.Boolean,System.Boolean},``0,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Visit the given type and, in the case of compound types, visit all "sub type".
             One of the predicates will be invoked at each type. If the type is a
@@ -43203,7 +43205,7 @@
             <summary>A lambda expression with attributes cannot be converted to an expression tree</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RecordStructConstructorCallsDefaultConstructor">
-            <summary>A 'this' initializer for a 'record struct' constructor must call the primary constructor or an explicitly declared constructor.</summary>
+            <summary>A constructor declared in a 'record struct' with parameter list must have a 'this' initializer that calls the primary constructor or an explicitly declared constructor.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_CompileTimeCheckedOverflow">
             <summary>The operation may overflow '{0}' at runtime (use 'unchecked' syntax to override)</summary>
