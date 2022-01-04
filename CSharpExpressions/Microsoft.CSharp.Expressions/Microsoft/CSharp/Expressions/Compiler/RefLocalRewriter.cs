@@ -153,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
                 //
                 //     and rewrites it to use the replacement expression that represents obj.
 
-                if (node.Left is MemberExpression m && m.Expression is ParameterExpression  && nearestScope.TryGetValue(p, out var replacement))
+                if (node.Left is MemberExpression m && m.Expression is ParameterExpression p && nearestScope.TryGetValue(p, out var replacement))
                 {
                     Debug.Assert(m.Member is PropertyInfo prop && prop.Name == nameof(RefHolder<int>.Value));
 
