@@ -10268,12 +10268,6 @@
             Otherwise, returns null.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol.HasFieldInitializers">
-            <summary>
-            Returns true if the type is defined in source and contains field initializers.
-            This method is only valid on a definition.
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol.CreateTuple(Microsoft.CodeAnalysis.Location,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Location},System.Collections.Immutable.ImmutableArray{System.String},Microsoft.CodeAnalysis.CSharp.CSharpCompilation,System.Boolean,System.Boolean,System.Collections.Immutable.ImmutableArray{System.Boolean},Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)">
             <summary>
             Helps create a tuple type from source.
@@ -13766,15 +13760,13 @@
             NOTE: every struct has a public parameterless constructor either user-defined or default one
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.SymbolExtensions.IsDefaultValueTypeConstructor(Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.SymbolExtensions.IsDefaultValueTypeConstructor(Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol)">
             <summary>
-            Returns true if the method is the default constructor synthesized for struct types, and
-            if <paramref name="requireZeroInit"/> is true, the constructor simply zero-inits the instance.
+            Returns true if the method is the default constructor synthesized for struct types.
             If the containing struct type is from metadata, the default constructor is synthesized when there
             is no accessible parameterless constructor. (That synthesized constructor from metadata zero-inits
             the instance.) If the containing struct type is from source, the parameterless constructor is synthesized
-            if there is no explicit parameterless constructor. And if the source type has no field initializers, or
-            the type has field initializers and at least one explicit constructor with parameters, the synthesized
+            if there is no explicit parameterless constructor, and the synthesized
             parameterless constructor simply zero-inits the instance (and is not emitted).
             </summary>
         </member>
@@ -20475,11 +20467,11 @@
             Variables instances for each lambda or local function defined within the analyzed region.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.NullableWalker.ConditionalInfoForConversion">
+        <member name="P:Microsoft.CodeAnalysis.CSharp.NullableWalker.TargetTypedAnalysisCompletion">
             <summary>
-            Map from a target-typed conditional expression (such as a target-typed conditional or switch) to the nullable state on each branch. This
-            is then used by VisitConversion to properly set the state before each branch when visiting a conversion applied to such a construct. These
-            states will be the state after visiting the underlying arm value, but before visiting the conversion on top of the arm value.
+            Map from a target-typed expression (such as a target-typed conditional, switch or new) to the delegate
+            that completes analysis once the target type is known.
+            The delegate is invoked by <see cref="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitConversion(Microsoft.CodeAnalysis.CSharp.BoundConversion,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Conversion,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.CSharp.NullableWalker.AssignmentKind,Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol,System.Boolean,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.Optional{Microsoft.CodeAnalysis.CSharp.NullableWalker.LocalState},System.Boolean,Microsoft.CodeAnalysis.Location,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitResult})"/>.
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.NullableWalker._isSpeculative">
@@ -20622,6 +20614,18 @@
             state setting and to ensure the mutation is visible outside the finally block when the mutation occurs in a
             finally block.
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitObjectCreationInitializer(System.Int32,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.BoundObjectInitializerExpressionBase,System.Boolean)">
+            <summary>
+            If <paramref name="delayCompletionForType"/>, <paramref name="containingSlot"/> is known only within returned delegate.
+            </summary>
+            <returns>A delegate to complete the initializer analysis.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.VisitObjectElementInitializer(System.Int32,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.BoundAssignmentOperator,System.Boolean)">
+            <summary>
+            If <paramref name="delayCompletionForType"/>, <paramref name="containingSlot"/> is known only within returned delegate.
+            </summary>
+            <returns>A delegate to complete the element initializer analysis.</returns>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.IsEmptyStructType(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol)">
             <summary>
@@ -43206,6 +43210,9 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RecordStructConstructorCallsDefaultConstructor">
             <summary>A constructor declared in a 'record struct' with parameter list must have a 'this' initializer that calls the primary constructor or an explicitly declared constructor.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_StructHasInitializersAndNoDeclaredConstructor">
+            <summary>A 'struct' with field initializers must include an explicitly declared constructor.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_CompileTimeCheckedOverflow">
             <summary>The operation may overflow '{0}' at runtime (use 'unchecked' syntax to override)</summary>

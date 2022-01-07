@@ -70,7 +70,7 @@
             strings containing regex and/or escape characters.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Classification.ClassifierHelper.GetClassifiedSpansAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,System.Threading.CancellationToken,System.Boolean,System.Boolean)">
+        <member name="M:Microsoft.CodeAnalysis.Classification.ClassifierHelper.GetClassifiedSpansAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,Microsoft.CodeAnalysis.Classification.ClassificationOptions,System.Threading.CancellationToken,System.Boolean,System.Boolean)">
             <summary>
             Classifies the provided <paramref name="span"/> in the given <paramref name="document"/>.
             This will do this using an appropriate <see cref="T:Microsoft.CodeAnalysis.Classification.IClassificationService"/>
@@ -13435,16 +13435,6 @@
             Create a <see cref="T:Microsoft.CodeAnalysis.ProjectInfo"/> structure initialized with data from a compiler command line.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.FileTextLoaderOptions.FileLengthThreshold">
-            <summary>
-            Hidden registry key to control maximum size of a text file we will read into memory. 
-            we have this option to reduce a chance of OOM when user adds massive size files to the solution.
-            Default threshold is 100MB which came from some internal data on big files and some discussion.
-            
-            User can override default value by setting DWORD value on FileLengthThreshold in 
-            "[VS HIVE]\Roslyn\Internal\Performance\Text"
-            </summary>
-        </member>
         <member name="P:Microsoft.CodeAnalysis.FileTextLoader.Path">
             <summary>
             Absolute path of the file.
@@ -13470,6 +13460,12 @@
             </param>
             <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="path"/> is not an absolute path.</exception>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.FileTextLoader.MaxFileLength">
+            <summary>
+            We have this limit on file size to reduce a chance of OOM when user adds massive files to the solution (often by accident).
+            The threshold is 100MB which came from some internal data on big files and some discussion.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.FileTextLoader.LoadTextAndVersionAsync(Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.DocumentId,System.Threading.CancellationToken)">
             <summary>
@@ -19582,6 +19578,11 @@
             paths which are searched when resolving assembly names.</param>
             <param name="baseDirectory">Directory used when resolving relative paths.</param>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.FailFast.Handler">
+            <summary>
+            A pre-created delegate to assign to <see cref="T:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ErrorReporterHandler" /> if needed.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.FailFast.DumpStackTrace(System.Exception,System.String)">
             <summary>
             Dumps the stack trace of the exception and the handler to the console. This is useful
@@ -19600,26 +19601,42 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler">
             <summary>
-            Set by the host to a fail fast trigger, 
-            if the host desires to crash the process on a fatal exception.
+            Set by the host to handle an error report; this may crash the process or report telemetry.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.NonFatalHandler">
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.OverwriteHandler(Microsoft.CodeAnalysis.ErrorReporting.FatalError.ErrorReporterHandler)">
             <summary>
-            Set by the host to a fail fast trigger, 
-            if the host desires to NOT crash the process on a non fatal exception.
+            Same as setting the Handler property except that it avoids the assert.  This is useful in
+            test code which needs to verify the handler is called in specific cases and will continually
+            overwrite this value.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndPropagateUnlessCanceled(System.Exception)">
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.CopyHandlerTo(System.Reflection.Assembly)">
             <summary>
-            Use in an exception filter to report a fatal error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>), unless the
+            Copies the handler in this instance to the linked copy of this type in this other assembly.
+            </summary>
+            <remarks>
+            This file is in linked into multiple layers, but we want to ensure that all layers have the same copy.
+            This lets us copy the handler in this instance into the same in another instance.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndPropagate(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
+            <summary>
+            Use in an exception filter to report an error without catching the exception.
+            The error is reported by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>.
+            </summary>
+            <returns><see langword="false"/> to avoid catching the exception.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndPropagateUnlessCanceled(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
+            <summary>
+            Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>), unless the
             operation has been cancelled. The exception is never caught.
             </summary>
             <returns><see langword="false"/> to avoid catching the exception.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndPropagateUnlessCanceled(System.Exception,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndPropagateUnlessCanceled(System.Exception,System.Threading.CancellationToken,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
              <summary>
-             <para>Use in an exception filter to report a fatal error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>), unless the
+             <para>Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>), unless the
              operation has been cancelled at the request of <paramref name="contextCancellationToken"/>. The exception is
              never caught.</para>
             
@@ -19637,17 +19654,37 @@
              <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/> set if cancellation is expected.</param>
              <returns><see langword="false"/> to avoid catching the exception.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatchUnlessCanceled(System.Exception)">
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatch(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
             <summary>
-            Use in an exception filter to report a non-fatal error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.NonFatalHandler"/>) and catch
+            Report an error.
+            Calls <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/> and doesn't pass the exception through (the method returns true).
+            This is generally expected to be used within an exception filter as that allows us to
+            capture data at the point the exception is thrown rather than when it is handled.
+            However, it can also be used outside of an exception filter. If the exception has not
+            already been thrown the method will throw and catch it itself to ensure we get a useful
+            stack trace.
+            </summary>
+            <returns>True to catch the exception.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatchUnlessCanceled(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
+            <summary>
+            Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and catch
             the exception, unless the operation was cancelled.
             </summary>
-            <returns><see langword="true"/> to catch the exception if the non-fatal error was reported; otherwise,
+            <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
             <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatchUnlessCanceled(System.Exception,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportIfNonFatalAndCatchUnlessCanceled(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
+            <summary>
+            Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and catch
+            the exception, unless the operation was cancelled.
+            </summary>
+            <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
+            <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatchUnlessCanceled(System.Exception,System.Threading.CancellationToken,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
              <summary>
-             <para>Use in an exception filter to report a non-fatal error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.NonFatalHandler"/>) and
+             <para>Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and
              catch the exception, unless the operation was cancelled at the request of
              <paramref name="contextCancellationToken"/>.</para>
             
@@ -19663,27 +19700,61 @@
              </summary>
              <param name="contextCancellationToken">A <see cref="T:System.Threading.CancellationToken"/> which will have
              <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/> set if cancellation is expected.</param>
-             <returns><see langword="true"/> to catch the exception if the non-fatal error was reported; otherwise,
+             <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
              <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndPropagate(System.Exception)">
-            <summary>
-            Use in an exception filter to report a fatal error without catching the exception.
-            The error is reported by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>.
-            </summary>
-            <returns><see langword="false"/> to avoid catching the exception.</returns>
+        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportIfNonFatalAndCatchUnlessCanceled(System.Exception,System.Threading.CancellationToken,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
+             <summary>
+             <para>Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and
+             catch the exception, unless the operation was cancelled at the request of
+             <paramref name="contextCancellationToken"/>.</para>
+            
+             <para>Cancellable operations are only expected to throw <see cref="T:System.OperationCanceledException"/> if the
+             applicable <paramref name="contextCancellationToken"/> indicates cancellation is requested by setting
+             <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/>. Unexpected cancellation, i.e. an
+             <see cref="T:System.OperationCanceledException"/> which occurs without <paramref name="contextCancellationToken"/>
+             requesting cancellation, is treated as an error by this method.</para>
+            
+             <para>This method does not require <see cref="P:System.OperationCanceledException.CancellationToken"/> to match
+             <paramref name="contextCancellationToken"/>, provided cancellation is expected per the previous
+             paragraph.</para>
+             </summary>
+             <param name="contextCancellationToken">A <see cref="T:System.Threading.CancellationToken"/> which will have
+             <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/> set if cancellation is expected.</param>
+             <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
+             <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatch(System.Exception)">
+        <member name="T:Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity">
             <summary>
-            Report a non-fatal error.
-            Calls <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.NonFatalHandler"/> and doesn't pass the exception through (the method returns true).
-            This is generally expected to be used within an exception filter as that allows us to
-            capture data at the point the exception is thrown rather than when it is handled.
-            However, it can also be used outside of an exception filter. If the exception has not
-            already been thrown the method will throw and catch it itself to ensure we get a useful
-            stack trace.
+            The severity of the error, see the enum members for a description of when to use each. This is metadata that's included
+            in a non-fatal fault report, which we can take advantage of on the backend to automatically triage bugs. For example,
+            a critical severity issue we can open with a lower bug count compared to a low priority one.
             </summary>
-            <returns>True to catch the exception.</returns>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity.Uncategorized">
+            <summary>
+            The severity hasn't been categorized. Don't use this in new code.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity.Diagnostic">
+            <summary>
+            Something failed, but the user is unlikely to notice. Especially useful for background things that we can silently recover
+            from, like bugs in caching systems.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity.General">
+            <summary>
+            Something failed, and the user might notice, but they're still likely able to carry on. For example, if the user
+            asked for some information from the IDE (find references, completion, etc.) and we were able to give partial results.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity.Critical">
+            <summary>
+            Something failed, and the user likely noticed. For example, the user pressed a button to do an action, and
+            we threw an exception so we completely failed to do that in an unrecoverable way. This may also be used
+            for back-end systems where a failure is going to result in a highly broken experience, for example if parsing a file
+            catastrophically failed.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.StackGuard.EnsureSufficientExecutionStack(System.Int32)">
             <summary>
