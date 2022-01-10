@@ -94,7 +94,7 @@ This restriction exists for method calls, delegate invocations, object creation,
 
 In order to lift this restriction, we introduce C#-specific variants of `Call`, `Invoke`, `New`, and `Index`. Those APIs are completely analogous to the LINQ equivalents, except for the `Arguments` property's type. Rather than storing a collection of `Expression`s to denote the arguments, we store a collection of `ParameterAssignment` objects.
 
-A `ParameterAssignment` object is created through the `Bind` factory method, analogous to the concept of a `MemberAssignment` created via a `Bind` method in LINQ for use in object initializer expressions. It represents the assignment of an `Expression` to an argument represented by a `ParameterInfo`.
+A `ParameterAssignment` object is created through the `Bind` factory method, analogous to the concept of a `MemberAssignment` created via a `Bind` method in LINQ for use in object initializer expressions. It represents the assignment of an `Expression` argument to a parameter represented by a `ParameterInfo`.
 
 Factory methods for `Call`, `Invoke`, `New`, and `Index` have overloads that accept a `ParameterAssignment[]` or `IEnumerable<ParameterAssignment>` in places where LINQ APIs have `Expression`-based equivalents. In addition, the `Expression`-based overloads exist as well (and hide the LINQ APIs methods) which enables the use of optional parameters without having to create parameter assignments.
 
@@ -122,9 +122,11 @@ An overload of `Bind` taking a `MethodBase` and `int` is provided for the compil
 
 Reduction of those nodes first analyzes whether all arguments are supplied in the right order, ignoring those that don't have side-effects upon their evaluation (e.g. `Constant`, `Default`, or `Parameter`). In case the order matches, the corresponding LINQ expression node is returned. If the order doesn't match, a `Block` expression is emitted, containing `Assign` binary expressions that evaluate the argument expressions in the specified order and assign them to `Variable` parameter expressions prior to emitting the underlying LINQ expression node.
 
-Each of those expression types supports by-ref parameters and write-backs to `Parameter`, `Index`, `MemberAccess`, `ArrayIndex`, and `Call` (for `ArrayAccess` via the `Array.Get` method) nodes. Strictly speaking this isn't required for C# but those nodes could be promoted to the LINQ APIs in order to be used by VB as well.
+Each of those expression types supports by-ref parameters and write-backs to `Parameter`, `Index`, `MemberAccess`, `ArrayIndex`, and `Call` (for `ArrayAccess` via the `Array.Get` method) nodes. Strictly speaking the use of write-backs to e.g. a settable property isn't required for C# but those nodes could be promoted to the LINQ APIs in order to be used by VB as well.
 
-Note that none of those expression types are recognized by the LINQ expression API and compiler as assignable targets. If we want to support assignment expressions, we either have to enlighten the LINQ APIs about the assignability of those new node types (by providing an extensibility story for `set` operations against those) or use a C#-specific version of `Assign`. The use of those nodes in by-ref positions is not supported either, but that's less of an issue for C#-specific expressions given that the C# language does not support passing e.g. indexing expressions by reference.
+Note that none of those expression types are recognized by the LINQ expression API and compiler as assignable targets. If we want to support assignment expressions, we either have to enlighten the LINQ APIs about the assignability of those new node types (by providing an extensibility story for `set` operations against those) or use a C#-specific version of `Assign`. This library takes the latter route by introducing an `AssignBinaryCSharpExpression` node, which enables assignment to `Index` expressions with named and optional parameters, as discussed later in this document.
+
+Finally, the use of those nodes in by-ref positions is not supported either, but that's less of an issue for C#-specific expressions given that the C# language does not support passing e.g. (non-array) indexing expressions by reference.
 
 #### Dynamic
 
@@ -147,6 +149,8 @@ In order to support C# `dynamic` in expression trees, we have a few options. We 
 Instead of going down the route of emitting calls to the `Expression.Dynamic` factory, we decided to model the dynamic operations as first-class node types in the C# expression API. This improves the experience for expression analysis and translation by retaining the user intent in the shape of the resulting tree. Reduction of those nodes ultimately falls back to emitting `Dynamic` nodes, thus leveraging the C# runtime binder and the DLR.
 
 All of the `dynamic` support is provided through `DynamicCSharpExpression` which derives from `CSharpExpression` and provides factory methods analogous to the LINQ factories but prefixed with `Dynamic`. For example, `Add` becomes `DynamicAdd`. We could flatten the class hierarchy for the factory methods, though the current design could allow for separating out the `dynamic` support in a separate library. When not referenced, the C# compiler would fail resolving the required factory methods, thus making the `dynamic` feature unavailable in expression trees. This opt-in mechanism could come in handy.
+
+> Note: The thinking around the opt-in mechanism has changed a bit with the introduction of the [*expression tree like types* prototype](https://github.com/bartdesmet/roslyn/tree/ExpressionTreeLikeTypes) where custom expression builder types can be provided. If we decide to go that route in the C# language and compiler, then opting in or out of dynamic becomes a matter of providing custom expression builder types that have or lack the `Dynamic*` factory methods (or overloads of factory methods without the `Dynamic*` prefix but with an additional "info" object that captures late binding information).
 
 Dynamic node types are mirrored after the `Microsoft.CSharp.RuntimeBinder.Binder` factory methods, so we have dynamically bound nodes for `BinaryOperation`, `Convert`, `GetIndex`, `GetMember`, `Invoke`, `InvokeConstructor`, `InvokeMember`, and `UnaryOperation`. Some of these could be revisited in the C# expression API to get nomenclature that aligns better with the existing LINQ expression API's, e.g. using `Call` in lieu of `InvokeMember`.
 
@@ -221,17 +225,17 @@ error CS1989: Async lambda expressions cannot be converted to expression trees
 
 Support for asynchronous lambdas is added by the introduction of an `AsyncLambdaCSharpExpression` type and a `AsyncCSharpExpression<TDelegate>` type derived from it. These are analogous to the `LambdaExpression` and `Expression<TDelegate>` types in the LINQ expression API. Their behavior differs both in terms of typing and in terms of compilation.
 
-From a typing point of view, an asynchronous lambda requires its return type to be `void`, `Task`, or `Task<T>` with the `Body` being assignable to `T` in the latter case. In terms of compilation, the `Compile` methods perform a rewrite similar to the one carried out by the C# compiler, as described further on.
+From a typing point of view, an asynchronous lambda requires its return type to be `void`, `Task`, `Task<T>`, or a *task-like type* (using `AsyncMethodBuilderAttribute`, added in C# 7.0, see further down in this document) with the `Body` being assignable to the task result type (i.e. `T` for `Task<T>`, or the parameter type of `SetResult` on the builder type for a *task-like* type). In terms of compilation, the `Compile` methods perform a rewrite similar to the one carried out by the C# compiler, as described further on.
 
 Note that the introduction of custom node types for asynchronous lambdas was required in order to provide proper compilation support and to allow for the specialized type checking due to the return type being lifted over `Task<T>`. Alternatively, we could provide for an extensibility store in the LINQ expression API's `Lambda` nodes or push down the asynchronous lambda support the LINQ expression APIs so that VB can also benefit from it.
 
 ##### Await expressions
 
-Await expressions are of type `AwaitCSharpExpression` and support the awaiter pattern as described in the C# language specification. As such, a custom `GetAwaiter` method can be specified on the `Await` factory, including support for extension methods. If left unspecified, the factory will try to find a suitable method. The `GetResult` and `IsCompleted` members on the awaiter type are discovered by the factory as well.
+Await expressions are of type `AwaitCSharpExpression` and support the awaiter pattern as described in the C# language specification. As such, the required binding information for the awaiter pattern is represented through an `AwaitInfo` object constructed by a corresponding factory method. This factory provides various overloads that enable specifying an awaiter type, a custom `GetAwaiter` method (including support for extension methods), or all of the members used for the await pattern, including the `GetResult` and `IsCompleted` members on the awaiter type. The resulting `AwaitInfo` object is passed to the `Await` factory, which also accepts the `Expression` representing the operand of the `await` expression.
 
 The typing of await expressions follows the awaiter pattern and obtains the return type of the `GetResult` method on the awaiter. This allows those nodes to be composed with any existing LINQ expression nodes.
 
-A derived class `DynamicAwaitCSharpExpression` with a corresponding `DynamicAwait` factory method on `DynamicCSharpExpression` is provided to await a dynamically typed operand. This node reduces the required calls to `GetAwaiter`, `IsCompleted`, and `GetResult` using more primitive `DynamicCSharpExpression` nodes. This node has the same kind as the statically typed variant but its `GetAwaiterMethod` property always returns `null`.
+A derived class `DynamicAwaitInfo` with a corresponding `DynamicAwaitInfo` factory method on `DynamicCSharpExpression` is provided to await a dynamically typed operand. An `AwaitCSharpExpression` using `DynamicAwaitInfo` node reduces the required calls to `GetAwaiter`, `IsCompleted`, and `GetResult` using more primitive `DynamicCSharpExpression` nodes. Convenience overloads named `DynamicAwait` are provided for symmetry with other dynamically bound operations (e.g. `DynamicAdd`).
 
 Await expression nodes are not reducible; the reduction of the closest enclosing async lambda is responsible for its reduction into the await pattern within the generated state machine (see further).
 
@@ -256,7 +260,9 @@ In addition to the various `AsyncLambda` factory overloads, a single `Lambda` ov
 public static Expression<TDelegate> Lambda<TDelegate>(bool isAsync, Expression body, params ParameterExpression[] parameters);
 ```
 
-This overload is put in place for use by the C# compiler as a stop-gap measure for assignment compatibility of async lambda expressions to `Expression<TDelegate>`. The returned expression is simply an `Expression<TDelegate>` whose body is an `InvocationExpression` wrapping the underlying C#-specific `AsyncCSharpExpression<TDelegate>`. Unless we have an extensibility store for LINQ's `Expression<TDelegate>` we have to use this unnatural pattern (which does not look good at all in the resulting tree of course) to achieve assignment compatilbity. Alternatively, we have to introduce assignment compatibility with `AsyncCSharpExpression<TDelegate>` which would expand the language specification for lambda expressions and still require changes to the LINQ APIs to support implicit quoting of expression arguments assigned to expression-typed parameters.
+This overload is put in place for use by the C# compiler as a stop-gap measure for assignment compatibility of async lambda expressions to `Expression<TDelegate>`. The returned expression is simply an `Expression<TDelegate>` whose body is an `InvocationExpression` wrapping the underlying C#-specific `AsyncCSharpExpression<TDelegate>`. Unless we have an extensibility store for LINQ's `Expression<TDelegate>` we have to use this unnatural pattern (which does not look good at all in the resulting tree of course) to achieve assignment compatibility. Alternatively, we have to introduce assignment compatibility with `AsyncCSharpExpression<TDelegate>` which would expand the language specification for lambda expressions and still require changes to the LINQ APIs to support implicit quoting of expression arguments assigned to expression-typed parameters.
+
+> Note: Enabling the compiler to bind to other factory methods has become a possibility due to the introduction of the [*expression tree like types* prototype](https://github.com/bartdesmet/roslyn/tree/ExpressionTreeLikeTypes). Using this mechanism, a C# expression builder type could be provided, where the `Lambda<TDelegate>` factory returns a `CSharpExpression<TDelegate>` which can either represent a synchronous or an asynchronous lambda expression.
 
 ##### Compilation
 
@@ -304,7 +310,7 @@ Func<DateTimeOffset?, int> f = dto => (dto?.Offset).Hours;   // `TimeSpan?` does
 
 Therefore we need to support 'chains' of operations (i.e. `.Offset.Hours` in the example above) that are conditionally accessed based on whether the receiver is null (i.e. `dto?` in the example above).
 
-In order to support null-propagating operators, we introduce a `ConditionalAccessCSharpExpression` which has three properties. The first property, `Receiver`, contains a reference to an `Expression` describing the conditionally accessed receiver which should have a reference type or a nullable value type. The `NonNullReceiver` property is of type `ConditionalReceiver` and provides an object that can be referred to within `WhenNotNull` which is an `Expression` denoting the conditionally performed operation(s).
+In order to support null-propagating operators, we introduce a `ConditionalAccessCSharpExpression` which has three properties. The first property, `Receiver`, contains an `Expression` describing the conditionally accessed receiver which should have a reference type or a nullable value type. The `NonNullReceiver` property is of type `ConditionalReceiver` and provides an object that can be referred to within `WhenNotNull` which is an `Expression` denoting the conditionally performed operation(s).
 
 The `ConditionalAccessCSharpExpression` is derived from `ConditionalAccessCSharpExpression<TExpression>` which allows for strong typing of the `WhenNotNull` to a more derived expression type. This is merely a convenience enabling factory methods to create commonly used conditional access nodes which involve only a single operation. Nesting these effectively results in a left-associative chain of conditional access operations. The general-purpose `ConditionalAccessCSharpExpression` node closes `TExpression` over `Expression`.
 
@@ -367,6 +373,9 @@ Expression.ListInit(
 ```
 
 In order to make this work for real, we need extension support for the `MemberBinding` hierarchy of types. This would likely involve a `Reduce` capability that's usable by the expression compiler to emit write operations against the initialized object. This type of reduction is a bit different from the one on `Expression` given that it wouldn't reduce into a node of its own kind, i.e. another `MemberBinding`.
+
+> Note: Enabling the compiler to bind to other factory methods has become a possibility due to the introduction of the [*expression tree like types* prototype](https://github.com/bartdesmet/roslyn/tree/ExpressionTreeLikeTypes). Using this mechanism, we could provide a C# expression builder type with an alternative `MemberInit` factory method that uses a C#-specific `MemberBinding` class hierarchy including support for indexer initializers.
+
 
 ##### Await in Catch and Finally
 
@@ -524,9 +533,9 @@ Support for tuple literal expressions is added by a new `CSharpExpression.TupleL
 CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int>), new[] { Expression.Constant(1), Expression.Constant(2) }, new[] { "x", "y" })
 ```
 
-When names are specified for the tuple fields, those are made available in `ArgumentNames`.
+When names are specified for the tuple fields, those are made available in `ArgumentNames`. The factory method accepts these optional tuple field names as the last parameter, mirroring the `New` factory in `System.Linq.Expressions` when used to represent the instantiation of an anonymous type (where the assigned members as specified in the last parameter of type `IEnumerable<MemberInfo>`).
 
-Nodes of this type reduce to a `NewExpression`, or a nesting of `NewExpression` nodes for tuples with more than 7 arguments.
+Nodes of this type reduce to a `NewExpression`, or a nesting of `NewExpression` nodes for tuples with more than 7 components.
 
 Tuple conversions are not supported in expression trees as shown below:
 
