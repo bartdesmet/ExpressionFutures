@@ -8453,7 +8453,7 @@
             types in emit phase.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager._lazySynthesizedDelegates">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager._lazyAnonymousDelegates">
             <summary>
             Maps delegate signature shape (number of parameters and their ref-ness) to a synthesized generic delegate symbol.
             Currently used for dynamic call-sites and inferred delegate types whose signature doesn't match any of the well-known Func or Action types.
@@ -8484,7 +8484,7 @@
             this AnonymousTypeManager, in fixed order.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.GetCreatedSynthesizedDelegates(Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedDelegateSymbol})">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.GetCreatedAnonymousDelegates(Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousDelegateTemplateSymbol})">
             <summary>
             The set of synthesized delegates created by
             this AnonymousTypeManager.
@@ -8516,9 +8516,9 @@
             Translates anonymous type method symbol into an implementation method symbol to be used in emit.
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeComparer">
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegateComparer">
             <summary> 
-            Comparator being used for stable ordering in anonymous type indices.
+            Comparator being used for stable ordering in anonymous type or delegate indices.
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegatePublicSymbol.Manager">
@@ -8539,6 +8539,24 @@
         <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypePublicSymbol._nameToSymbols">
             <summary> Maps member names to symbol(s) </summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousDelegateTemplateSymbol.HasFixedTypes">
+            <summary>
+            True if any of the delegate parameter types or return type are
+            fixed types rather than type parameters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousDelegateTemplateSymbol.#ctor(Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager,System.String,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.Int32,Microsoft.CodeAnalysis.CSharp.Symbols.RefKindVector)">
+            <summary>
+            A delegate type where the parameter types and return type
+            of the delegate signature are type parameters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousDelegateTemplateSymbol.#ctor(Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager,Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeDescriptor,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.Symbols.TypeParameterSymbol})">
+            <summary>
+            A delegate type where at least one of the parameter types or return type
+            of the delegate signature is a fixed type not a type parameter.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeFieldSymbol">
             <summary>
             Represents a baking field for an anonymous type template property symbol.
@@ -8557,11 +8575,8 @@
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol">
             <summary>
             Represents an anonymous type 'template' which is a generic type to be used for all 
-            anonymous type having the same structure, i.e. the same number of fields and field names.
+            anonymous types having the same structure, i.e. the same number of fields and field names.
             </summary>
-        </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol._nameAndIndex">
-            <summary> Name to be used as metadata name during emit </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.SpecialMembers">
             <summary> This list consists of synthesized method symbols for ToString, 
@@ -8573,17 +8588,23 @@
         <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol._nameToSymbols">
             <summary> Maps member names to symbol(s) </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.Manager">
-            <summary> Anonymous type manager owning this template </summary>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.TrySynthesizeDebuggerDisplayAttribute">
+            <summary>
+            Returns a synthesized debugger display attribute or null if one
+            could not be synthesized.
+            </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol._smallestLocation">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol._nameAndIndex">
+            <summary> Name to be used as metadata name during emit </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol._smallestLocation">
             <summary> Smallest location of the template, actually contains the smallest location 
             of all the anonymous type instances created using this template during EMIT </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.TypeDescriptorKey">
-            <summary> Key pf the anonymous type descriptor </summary>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol.Manager">
+            <summary> Anonymous type manager owning this template </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.SmallestLocation">
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol.SmallestLocation">
             <summary>
             Smallest location of the template, actually contains the smallest location 
             of all the anonymous type instances created using this template during EMIT;
@@ -8591,16 +8612,10 @@
             NOTE: if this property is queried, smallest location must not be null.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.AdjustLocation(Microsoft.CodeAnalysis.Location)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol.AdjustLocation(Microsoft.CodeAnalysis.Location)">
             <summary>
             In emit phase every time a created anonymous type is referenced we try to store the lowest 
             location of the template. It will be used for ordering templates and assigning emitted type names.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeTemplateSymbol.TrySynthesizeDebuggerDisplayAttribute">
-            <summary>
-            Returns a synthesized debugger display attribute or null if one
-            could not be synthesized.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypeParameterSymbol">
@@ -16690,18 +16705,7 @@
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedContainer">
             <summary>
-            A container synthesized for a lambda, iterator method, async method, or dynamic-sites.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedContainer.ConstructedFromTypeParameters">
-            <summary>
-            Note: Can be default if this SynthesizedContainer was constructed with <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedContainer.#ctor(System.String,System.Int32,System.Boolean)"/>
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedDelegateSymbol">
-            <summary>
-            Dynamic call-site delegate, for call-sites that do not
-            match System.Action or System.Func signatures.
+            A container synthesized for a lambda, iterator method, or async method.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedEmbeddedAttributeSymbolBase">
@@ -24153,6 +24157,21 @@
             WARNING: it is possible that "list" is really the underlying builder of a SeparateSyntaxListBuilder,
             so it is important that we not add anything to the list.
             </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseParameterNullCheck(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken@,Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken@)">
+            <summary>
+            Parses the <c>!!</c> following a parameter type and identifier.  If the token
+            is followed by <c>!!=</c> or <c>! !=</c>, then the final equals will be returned through <paramref
+            name="equalsToken"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.MergeAdjacent(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken,Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken,Microsoft.CodeAnalysis.CSharp.SyntaxKind)">
+            <summary>
+            Merges two successive tokens into a single token with the given <paramref name="kind"/>.  If the two tokens
+            have no trivia between them, then the final token will be trivially generated, properly passing on the right
+            leading/trailing trivia.  However, if there is trivia between the tokens, then appropriate errors will be
+            reported that the tokens cannot merge successfully.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.IsTrueIdentifier">
             <summary>
@@ -43213,6 +43232,9 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_StructHasInitializersAndNoDeclaredConstructor">
             <summary>A 'struct' with field initializers must include an explicitly declared constructor.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_EncUpdateFailedDelegateTypeChanged">
+            <summary>Cannot update because an inferred delegate type has changed.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_CompileTimeCheckedOverflow">
             <summary>The operation may overflow '{0}' at runtime (use 'unchecked' syntax to override)</summary>
