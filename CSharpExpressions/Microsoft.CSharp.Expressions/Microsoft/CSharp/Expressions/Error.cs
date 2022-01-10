@@ -891,6 +891,41 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception ForEachDeconstructionComponentNotAssignableToVariable(object p0, object p1, object p2, object p3) => new ArgumentException(Strings.ForEachDeconstructionComponentNotAssignableToVariable(p0, p1, p2, p3));
 
+        /// <summary>
+        /// ArgumentException with message like "The method '{1}' on type '{0}' is not an event accessor."
+        /// </summary>
+        internal static Exception MethodNotEventAccessor(object p0, object p1) => new ArgumentException(Strings.MethodNotEventAccessor(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The event '{0}' does not have an accessor."
+        /// </summary>
+        internal static Exception EventDoesNotHaveAccessor(object p0) => new ArgumentException(Strings.EventDoesNotHaveAccessor(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "Only static events have an object expression."
+        /// </summary>
+        internal static Exception OnlyStaticEventsHaveNullInstance() => new ArgumentException(Strings.OnlyStaticEventsHaveNullInstance);
+
+        /// <summary>
+        /// ArgumentException with message like "The event '{0}' is not declared on type '{1}'."
+        /// </summary>
+        internal static Exception EventNotDefinedForType(object p0, object p1) => new ArgumentException(Strings.EventNotDefinedForType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "An event accessor method should return void."
+        /// </summary>
+        internal static Exception EventAccessorShouldReturnVoid() => new ArgumentException(Strings.EventAccessorShouldReturnVoid);
+
+        /// <summary>
+        /// ArgumentException with message like "An event accessor method should have one parameter."
+        /// </summary>
+        internal static Exception EventAccessorShouldHaveOneParameter() => new ArgumentException(Strings.EventAccessorShouldHaveOneParameter);
+
+        /// <summary>
+        /// ArgumentException with message like "The handler expression type '{0}' is not assignable to the event accessor parameter of type '{1}'."
+        /// </summary>
+        internal static Exception EventAccessorParameterTypeMismatch(object p0, object p1) => new ArgumentException(Strings.EventAccessorParameterTypeMismatch(p0, p1));
+
     }
 
     /// <summary>
@@ -1778,6 +1813,41 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string ForEachDeconstructionComponentNotAssignableToVariable(object p0, object p1, object p2, object p3) => SR.Format(SR.ForEachDeconstructionComponentNotAssignableToVariable, p0, p1, p2, p3);
 
+        /// <summary>
+        /// A string like "The method '{1}' on type '{0}' is not an event accessor."
+        /// </summary>
+        internal static string MethodNotEventAccessor(object p0, object p1) => SR.Format(SR.MethodNotEventAccessor, p0, p1);
+
+        /// <summary>
+        /// A string like "The event '{0}' does not have an accessor."
+        /// </summary>
+        internal static string EventDoesNotHaveAccessor(object p0) => SR.Format(SR.EventDoesNotHaveAccessor, p0);
+
+        /// <summary>
+        /// A string like "Only static events have an object expression."
+        /// </summary>
+        internal static string OnlyStaticEventsHaveNullInstance => SR.OnlyStaticEventsHaveNullInstance;
+
+        /// <summary>
+        /// A string like "The event '{0}' is not declared on type '{1}'."
+        /// </summary>
+        internal static string EventNotDefinedForType(object p0, object p1) => SR.Format(SR.EventNotDefinedForType, p0, p1);
+
+        /// <summary>
+        /// A string like "An event accessor method should return void."
+        /// </summary>
+        internal static string EventAccessorShouldReturnVoid => SR.EventAccessorShouldReturnVoid;
+
+        /// <summary>
+        /// A string like "An event accessor method should have one parameter."
+        /// </summary>
+        internal static string EventAccessorShouldHaveOneParameter => SR.EventAccessorShouldHaveOneParameter;
+
+        /// <summary>
+        /// A string like "The handler expression type '{0}' is not assignable to the event accessor parameter of type '{1}'."
+        /// </summary>
+        internal static string EventAccessorParameterTypeMismatch(object p0, object p1) => SR.Format(SR.EventAccessorParameterTypeMismatch, p0, p1);
+
     }
 }
 
@@ -1961,5 +2031,12 @@ namespace System
         public const string ForEachDeconstructionShouldReturnTuple = "The type '{0}' returned by the deconstruction lambda expression is not a tuple type.";
         public const string ForEachDeconstructionComponentMismatch = "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables.";
         public const string ForEachDeconstructionComponentNotAssignableToVariable = "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'.";
+        public const string MethodNotEventAccessor = "The method '{1}' on type '{0}' is not an event accessor.";
+        public const string EventDoesNotHaveAccessor = "The event '{0}' does not have an accessor.";
+        public const string OnlyStaticEventsHaveNullInstance = "Only static events have an object expression.";
+        public const string EventNotDefinedForType = "The event '{0}' is not declared on type '{1}'.";
+        public const string EventAccessorShouldReturnVoid = "An event accessor method should return void.";
+        public const string EventAccessorShouldHaveOneParameter = "An event accessor method should have one parameter.";
+        public const string EventAccessorParameterTypeMismatch = "The handler expression type '{0}' is not assignable to the event accessor parameter of type '{1}'.";
     }
 }

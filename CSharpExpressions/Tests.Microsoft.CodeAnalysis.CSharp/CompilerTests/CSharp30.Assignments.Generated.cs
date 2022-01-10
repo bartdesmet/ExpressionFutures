@@ -2408,6 +2408,62 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_361E_5216() => INCONCLUSIVE(); }
 
+        [TestMethod]
+        public void CompilerTest_7421_665F()
+        {
+            // (Expression<Action<Event, Action>>)((e, a) => { e.MyEvent += a; })
+            var actual = GetDebugView(@"(Expression<Action<Event, Action>>)((e, a) => { e.MyEvent += a; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[Event,System.Action]"">
+  <Parameters>
+    <Parameter Type=""Event"" Id=""0"" Name=""e"" />
+    <Parameter Type=""System.Action"" Id=""1"" Name=""a"" />
+  </Parameters>
+  <Body>
+    <CSharpEventAddAssign Type=""System.Void"" Event=""System.Action MyEvent"">
+      <Object>
+        <Parameter Type=""Event"" Id=""0"" Name=""e"" />
+      </Object>
+      <Handler>
+        <Parameter Type=""System.Action"" Id=""1"" Name=""a"" />
+      </Handler>
+    </CSharpEventAddAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_7421_665F();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7421_665F() => INCONCLUSIVE(); }
+
+        [TestMethod]
+        public void CompilerTest_19AF_884D()
+        {
+            // (Expression<Action<Event, Action>>)((e, a) => { e.MyEvent -= a; })
+            var actual = GetDebugView(@"(Expression<Action<Event, Action>>)((e, a) => { e.MyEvent -= a; })");
+            var expected = @"
+<Lambda Type=""System.Action`2[Event,System.Action]"">
+  <Parameters>
+    <Parameter Type=""Event"" Id=""0"" Name=""e"" />
+    <Parameter Type=""System.Action"" Id=""1"" Name=""a"" />
+  </Parameters>
+  <Body>
+    <CSharpEventSubtractAssign Type=""System.Void"" Event=""System.Action MyEvent"">
+      <Object>
+        <Parameter Type=""Event"" Id=""0"" Name=""e"" />
+      </Object>
+      <Handler>
+        <Parameter Type=""System.Action"" Id=""1"" Name=""a"" />
+      </Handler>
+    </CSharpEventSubtractAssign>
+  </Body>
+</Lambda>";
+            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Verify.CompilerTest_19AF_884D();
+        }
+
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_19AF_884D() => INCONCLUSIVE(); }
+
         partial class Review
         {
             protected void INCONCLUSIVE() { Assert.Inconclusive(); }
@@ -2506,6 +2562,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_5B70_B34F() => OK();
             public override void CompilerTest_09B1_7323() => OK();
             public override void CompilerTest_361E_5216() => OK();
+            public override void CompilerTest_7421_665F() => OK();
+            public override void CompilerTest_19AF_884D() => OK();
         }
     }
 }

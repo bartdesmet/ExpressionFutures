@@ -83,6 +83,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_5B70_B34F() => OK();
             public override void CompilerTest_09B1_7323() => OK();
             public override void CompilerTest_361E_5216() => OK();
+
+            // Events
+            public override void CompilerTest_7421_665F() => OK();
+            public override void CompilerTest_19AF_884D() => OK();
         }
     }
 }

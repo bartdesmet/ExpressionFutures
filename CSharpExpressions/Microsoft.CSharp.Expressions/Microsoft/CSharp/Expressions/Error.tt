@@ -187,6 +187,13 @@ var errors = new[]
     new { Name = "ForEachDeconstructionShouldReturnTuple", ExceptionType = "ArgumentException", Args = 1, Message = "The type '{0}' returned by the deconstruction lambda expression is not a tuple type." },
     new { Name = "ForEachDeconstructionComponentMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables." },
     new { Name = "ForEachDeconstructionComponentNotAssignableToVariable", ExceptionType = "ArgumentException", Args = 4, Message = "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'." },
+    new { Name = "MethodNotEventAccessor", ExceptionType = "ArgumentException", Args = 2, Message = "The method '{1}' on type '{0}' is not an event accessor." },
+    new { Name = "EventDoesNotHaveAccessor", ExceptionType = "ArgumentException", Args = 1, Message = "The event '{0}' does not have an accessor." },
+    new { Name = "OnlyStaticEventsHaveNullInstance", ExceptionType = "ArgumentException", Args = 0, Message = "Only static events have an object expression." },
+    new { Name = "EventNotDefinedForType", ExceptionType = "ArgumentException", Args = 2, Message = "The event '{0}' is not declared on type '{1}'." },
+    new { Name = "EventAccessorShouldReturnVoid", ExceptionType = "ArgumentException", Args = 0, Message = "An event accessor method should return void." },
+    new { Name = "EventAccessorShouldHaveOneParameter", ExceptionType = "ArgumentException", Args = 0, Message = "An event accessor method should have one parameter." },
+    new { Name = "EventAccessorParameterTypeMismatch", ExceptionType = "ArgumentException", Args = 2, Message = "The handler expression type '{0}' is not assignable to the event accessor parameter of type '{1}'." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

@@ -1535,6 +1535,43 @@ namespace Microsoft.CSharp.Expressions
         }
     }
 
+    partial class EventAssignCSharpExpression
+    {
+        /// <summary>
+        /// Gets the precedence level of the expression.
+        /// </summary>
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.Assign);
+
+        /// <summary>
+        /// Dispatches the current node to the specified visitor.
+        /// </summary>
+        /// <param name="visitor">Visitor to dispatch to.</param>
+        /// <returns>The result of visiting the node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
+        protected override void Accept(ICSharpPrintingVisitor visitor)
+        {
+            var op = CSharpNodeType == CSharpExpressionType.EventAddAssign ? "+=" : "-=";
+
+            if (Object != null)
+            {
+                visitor.ParenthesizedVisit(this, Object);
+            }
+            else
+            {
+                visitor.Out(Event.DeclaringType.ToCSharp());
+            }
+
+            visitor.Out(".");
+            visitor.Out(Event.Name);
+
+            visitor.Out(" ");
+            visitor.Out(op);
+            visitor.Out(" ");
+
+            visitor.ParenthesizedVisit(this, Handler);
+        }
+    }
+
     partial class BinaryDynamicCSharpExpression
     {
         /// <summary>

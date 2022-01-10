@@ -297,5 +297,15 @@ namespace Microsoft.CSharp.Expressions
         /// A try statement, such as try { ... } catch { ... } finally { ... }.
         /// </summary>
         Try,
+
+        /// <summary>
+        /// An addition of an event handler, such as o.Event += handler.
+        /// </summary>
+        EventAddAssign,
+
+        /// <summary>
+        /// A removal of an event handler, such as o.Event -= handler.
+        /// </summary>
+        EventSubtractAssign,
     }
 }

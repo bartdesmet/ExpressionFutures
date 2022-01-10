@@ -1009,6 +1009,32 @@ namespace Microsoft.CSharp.Expressions
         public System.Linq.Expressions.LambdaExpression PatternDispose => _node.PatternDispose;
     }
 
+    [DebuggerTypeProxy(typeof(EventAssignCSharpExpressionProxy))]
+    partial class EventAssignCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class EventAssignCSharpExpressionProxy
+    {
+        private readonly EventAssignCSharpExpression _node;
+
+        public EventAssignCSharpExpressionProxy(EventAssignCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public System.Reflection.EventInfo Event => _node.Event;
+        public System.Linq.Expressions.Expression Handler => _node.Handler;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Object => _node.Object;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(ForCSharpStatementProxy))]
     partial class ForCSharpStatement
     {

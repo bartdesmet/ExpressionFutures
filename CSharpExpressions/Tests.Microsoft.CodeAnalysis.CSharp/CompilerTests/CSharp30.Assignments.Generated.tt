@@ -92,6 +92,10 @@ var exprs = new[]
     "(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => c++)",
     "(Expression<Func<ConsoleColor, ConsoleColor>>)(c => --c)",
     "(Expression<Func<ConsoleColor?, ConsoleColor?>>)(c => --c)",
+
+    // Events
+    "(Expression<Action<Event, Action>>)((e, a) => { e.MyEvent += a; })",
+    "(Expression<Action<Event, Action>>)((e, a) => { e.MyEvent -= a; })",
 };
 #>
 <#@ include file="CompilerTests.t4" #>

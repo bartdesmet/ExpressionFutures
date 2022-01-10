@@ -564,3 +564,10 @@ public class MyTuple<T1, T2>
         (item1, item2) = (_item1, _item2);
     }
 }
+
+public class Event
+{
+    public event Action MyEvent;
+
+    public void OnMyEvent() => MyEvent?.Invoke();
+}
