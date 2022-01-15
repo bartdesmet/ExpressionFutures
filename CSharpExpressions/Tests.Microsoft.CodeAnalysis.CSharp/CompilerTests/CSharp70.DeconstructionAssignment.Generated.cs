@@ -387,7 +387,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_130F_B859() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_702A_64C8()
+        public void CompilerTest_702A_B3FD()
         {
             // (Expression<Action<Point>>)(p => { (int x, int y) = p; })
             var actual = GetDebugView(@"(Expression<Action<Point>>)(p => { (int x, int y) = p; })");
@@ -425,8 +425,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                 <Lambda Type=""System.Runtime.CompilerServices.DeconstructAction`3[Point,System.Int32,System.Int32]"">
                   <Parameters>
                     <Parameter Type=""Point"" Id=""3"" Name=""i"" />
-                    <Parameter Type=""System.Int32"" Id=""4"" Name=""o0"" />
-                    <Parameter Type=""System.Int32"" Id=""5"" Name=""o1"" />
+                    <Parameter Type=""System.Int32"" Id=""4"" Name=""o0"" IsByRef=""true"" />
+                    <Parameter Type=""System.Int32"" Id=""5"" Name=""o1"" IsByRef=""true"" />
                   </Parameters>
                   <Body>
                     <Call Type=""System.Void"" Method=""Void Deconstruct(Int32 ByRef, Int32 ByRef)"">
@@ -434,8 +434,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                         <Parameter Type=""Point"" Id=""3"" Name=""i"" />
                       </Object>
                       <Arguments>
-                        <Parameter Type=""System.Int32"" Id=""4"" Name=""o0"" />
-                        <Parameter Type=""System.Int32"" Id=""5"" Name=""o1"" />
+                        <Parameter Type=""System.Int32"" Id=""4"" Name=""o0"" IsByRef=""true"" />
+                        <Parameter Type=""System.Int32"" Id=""5"" Name=""o1"" IsByRef=""true"" />
                       </Arguments>
                     </Call>
                   </Body>
@@ -478,13 +478,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_702A_64C8();
+            Verify.CompilerTest_702A_B3FD();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_702A_64C8() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_702A_B3FD() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_D0CE_7364()
+        public void CompilerTest_D0CE_3087()
         {
             // (Expression<Action<(int, Point, string)>>)(t => { (long a, (double x, double y), string s) = t; })
             var actual = GetDebugView(@"(Expression<Action<(int, Point, string)>>)(t => { (long a, (double x, double y), string s) = t; })");
@@ -555,8 +555,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                     <Lambda Type=""System.Runtime.CompilerServices.DeconstructAction`3[Point,System.Int32,System.Int32]"">
                       <Parameters>
                         <Parameter Type=""Point"" Id=""6"" Name=""i"" />
-                        <Parameter Type=""System.Int32"" Id=""7"" Name=""o0"" />
-                        <Parameter Type=""System.Int32"" Id=""8"" Name=""o1"" />
+                        <Parameter Type=""System.Int32"" Id=""7"" Name=""o0"" IsByRef=""true"" />
+                        <Parameter Type=""System.Int32"" Id=""8"" Name=""o1"" IsByRef=""true"" />
                       </Parameters>
                       <Body>
                         <Call Type=""System.Void"" Method=""Void Deconstruct(Int32 ByRef, Int32 ByRef)"">
@@ -564,8 +564,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                             <Parameter Type=""Point"" Id=""6"" Name=""i"" />
                           </Object>
                           <Arguments>
-                            <Parameter Type=""System.Int32"" Id=""7"" Name=""o0"" />
-                            <Parameter Type=""System.Int32"" Id=""8"" Name=""o1"" />
+                            <Parameter Type=""System.Int32"" Id=""7"" Name=""o0"" IsByRef=""true"" />
+                            <Parameter Type=""System.Int32"" Id=""8"" Name=""o1"" IsByRef=""true"" />
                           </Arguments>
                         </Call>
                       </Body>
@@ -630,10 +630,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_D0CE_7364();
+            Verify.CompilerTest_D0CE_3087();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D0CE_7364() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D0CE_3087() => INCONCLUSIVE(); }
 
         [TestMethod]
         public void CompilerTest_AF2A_5B45()
@@ -1273,7 +1273,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_80A1_7FC7() => INCONCLUSIVE(); }
 
         [TestMethod]
-        public void CompilerTest_C73C_5413()
+        public void CompilerTest_C73C_8657()
         {
             // (Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($"{x}, {y}"); })
             var actual = GetDebugView(@"(Expression<Action<Point[]>>)(xs => { foreach (var (x, y) in xs) Console.WriteLine($""{x}, {y}""); })");
@@ -1366,8 +1366,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                         <Lambda Type=""System.Runtime.CompilerServices.DeconstructAction`3[Point,System.Int32,System.Int32]"">
                           <Parameters>
                             <Parameter Type=""Point"" Id=""7"" Name=""i"" />
-                            <Parameter Type=""System.Int32"" Id=""8"" Name=""o0"" />
-                            <Parameter Type=""System.Int32"" Id=""9"" Name=""o1"" />
+                            <Parameter Type=""System.Int32"" Id=""8"" Name=""o0"" IsByRef=""true"" />
+                            <Parameter Type=""System.Int32"" Id=""9"" Name=""o1"" IsByRef=""true"" />
                           </Parameters>
                           <Body>
                             <Call Type=""System.Void"" Method=""Void Deconstruct(Int32 ByRef, Int32 ByRef)"">
@@ -1375,8 +1375,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                                 <Parameter Type=""Point"" Id=""7"" Name=""i"" />
                               </Object>
                               <Arguments>
-                                <Parameter Type=""System.Int32"" Id=""8"" Name=""o0"" />
-                                <Parameter Type=""System.Int32"" Id=""9"" Name=""o1"" />
+                                <Parameter Type=""System.Int32"" Id=""8"" Name=""o0"" IsByRef=""true"" />
+                                <Parameter Type=""System.Int32"" Id=""9"" Name=""o1"" IsByRef=""true"" />
                               </Arguments>
                             </Call>
                           </Body>
@@ -1451,10 +1451,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
   </Body>
 </Lambda>";
             Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_C73C_5413();
+            Verify.CompilerTest_C73C_8657();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C73C_5413() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C73C_8657() => INCONCLUSIVE(); }
 
         partial class Review
         {
@@ -1486,13 +1486,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_1D1C_97F0() => OK();
             public override void CompilerTest_6DA3_CACF() => OK();
             public override void CompilerTest_130F_B859() => OK();
-            public override void CompilerTest_702A_64C8() => OK();
-            public override void CompilerTest_D0CE_7364() => OK();
+            public override void CompilerTest_702A_B3FD() => OK();
+            public override void CompilerTest_D0CE_3087() => OK();
             public override void CompilerTest_AF2A_5B45() => OK();
             public override void CompilerTest_6624_ABDB() => OK();
             public override void CompilerTest_CB13_ABDB() => OK();
             public override void CompilerTest_80A1_7FC7() => OK();
-            public override void CompilerTest_C73C_5413() => OK();
+            public override void CompilerTest_C73C_8657() => OK();
         }
     }
 }

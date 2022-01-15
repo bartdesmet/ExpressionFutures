@@ -99,6 +99,11 @@ namespace System.Linq.Expressions
                 args.Add(new XAttribute(nameof(node.Name), node.Name));
             }
 
+            if (node.IsByRef)
+            {
+                args.Add(new XAttribute(nameof(node.IsByRef), node.IsByRef));
+            }
+
             return Push(node, args);
         }
 

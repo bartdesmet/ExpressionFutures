@@ -17,8 +17,8 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_130F_B859() => OK();
 
             // Assign - deconstruct method
-            public override void CompilerTest_702A_64C8() => OK();
-            public override void CompilerTest_D0CE_7364() => OK();
+            public override void CompilerTest_702A_B3FD() => OK();
+            public override void CompilerTest_D0CE_3087() => OK();
 
             // Assign - variable targets
             public override void CompilerTest_AF2A_5B45() => OK();
@@ -27,7 +27,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_6624_ABDB() => OK();
             public override void CompilerTest_CB13_ABDB() => OK();
             public override void CompilerTest_80A1_7FC7() => OK();
-            public override void CompilerTest_C73C_5413() => OK();
+            public override void CompilerTest_C73C_8657() => OK();
         }
     }
 }
