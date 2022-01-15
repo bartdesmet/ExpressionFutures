@@ -530,7 +530,14 @@ namespace System.Linq.Expressions
 
                         if (node.Method.Name != mtd) // TODO: check declaring type
                         {
-                            asMethod = true;
+                            if (node.Method.Name == nameof(string.Concat) && node.Method.DeclaringType == typeof(string) && node.Left.Type == typeof(string) && node.Right.Type == typeof(string))
+                            {
+                                asMethod = false;
+                            }
+                            else
+                            {
+                                asMethod = true;
+                            }
                         }
                     }
 
