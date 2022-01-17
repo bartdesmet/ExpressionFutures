@@ -719,6 +719,14 @@ namespace RoslynPad
             {
                 txtNode.Text = expr.DebugView().ToString();
             }
+            else if (tag != null)
+            {
+                var debugView = tag.GetType().GetProperty("DebugView", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (debugView != null && debugView.PropertyType == typeof(string))
+                {
+                    txtNode.Text = (string)debugView.GetValue(tag, null);
+                }
+            }
 
             if (tag is ParameterExpression || tag is LabelTarget || tag is ConditionalReceiver)
             {
