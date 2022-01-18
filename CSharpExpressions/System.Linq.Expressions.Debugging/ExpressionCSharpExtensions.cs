@@ -3,6 +3,7 @@
 // bartde - December 2015
 
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Dynamic.Utils;
 using System.Globalization;
 using System.IO;
@@ -1517,29 +1518,145 @@ namespace System.Linq.Expressions
 
             protected override Expression VisitDynamic(DynamicExpression node)
             {
-                // NB: Not valid C#.
-                // TODO: Could decompile known binders.
+                // TODO: Could decompile known C# binders by private reflection.
 
-                Out("Dynamic(");
-
-                Out("/* ");
-                Out(node.Binder.GetType().FullName);
-                Out(" */ ");
-
-                var n = node.Arguments.Count;
-                for (var i = 0; i < n; i++)
+                if (node.Binder is BinaryOperationBinder binary)
                 {
-                    Visit(node.Arguments[i]);
+                    var op = CSharpLanguageHelpers.GetOperatorSyntax(binary.Operation);
 
-                    if (i != n - 1)
+                    ParenthesizedVisit(node, node.Arguments[0]);
+
+                    Out($" /*dynamic*/ {op} "); // TODO: Missing out on CSharpBinaryOperationBinder.IsChecked.
+
+                    ParenthesizedVisit(node, node.Arguments[1]);
+                }
+                else if (node.Binder is UnaryOperationBinder unary)
+                {
+                    var op = CSharpLanguageHelpers.GetOperatorSyntax(unary.Operation);
+
+                    Out($"/*dynamic*/ {op}"); // TODO: May be suffix.
+
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                }
+                else if (node.Binder is ConvertBinder convert)
+                {
+                    Out("/*dynamic*/(");
+                    Out(ToCSharp(convert.Type));
+                    Out(")");
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                }
+                else if (node.Binder is InvokeBinder invoke)
+                {
+                    var n = node.Arguments.Count;
+                    
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                    Out("/*dynamic*/(");
+                    VisitCallInfo(firstIndex: 1, lastIndex: n - 1, invoke.CallInfo);
+                    Out(")");
+                }
+                else if (node.Binder is InvokeMemberBinder invokeMember)
+                {
+                    var n = node.Arguments.Count;
+
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                    Out("/*dynamic*/.");
+                    Out(invokeMember.Name);
+                    Out("(");
+                    VisitCallInfo(firstIndex: 1, lastIndex: n - 1, invokeMember.CallInfo);
+                    Out(")");
+                }
+                else if (node.Binder is GetMemberBinder getMember)
+                {
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                    Out("/*dynamic*/.");
+                    Out(getMember.Name);
+                }
+                else if (node.Binder is SetMemberBinder setMember)
+                {
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                    Out("/*dynamic*/.");
+                    Out(setMember.Name);
+                    Out(" = ");
+                    ParenthesizedVisit(node, node.Arguments[1]);
+                }
+                else if (node.Binder is GetIndexBinder getIndex)
+                {
+                    var n = node.Arguments.Count;
+
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                    Out("/*dynamic*/[");
+                    VisitCallInfo(firstIndex: 1, lastIndex: n - 1, getIndex.CallInfo);
+                    Out("]");
+                }
+                else if (node.Binder is SetIndexBinder setIndex)
+                {
+                    var n = node.Arguments.Count;
+
+                    ParenthesizedVisit(node, node.Arguments[0]);
+                    Out("/*dynamic*/[");
+                    VisitCallInfo(firstIndex: 1, lastIndex: n - 2, setIndex.CallInfo);
+                    Out("] = ");
+                    ParenthesizedVisit(node, node.Arguments[n - 1]);
+                }
+                else
+                {
+                    // NB: Not valid C#.
+
+                    Out("Dynamic(");
+
+                    Out("/* ");
+                    Out(node.Binder.GetType().FullName);
+                    Out(" */ ");
+
+                    var n = node.Arguments.Count;
+                    for (var i = 0; i < n; i++)
                     {
-                        Out(", ");
+                        Visit(node.Arguments[i]);
+
+                        if (i != n - 1)
+                        {
+                            Out(", ");
+                        }
                     }
+
+                    Out(")");
                 }
 
-                Out(")");
-
                 return node;
+
+                void VisitCallInfo(int firstIndex, int lastIndex, CallInfo info)
+                {
+                    string GetArgName(int index)
+                    {
+                        if (info.ArgumentNames != null)
+                        {
+                            if (index < info.ArgumentNames.Count)
+                            {
+                                return info.ArgumentNames[index];
+                            }
+                        }
+
+                        return null;
+                    }
+
+                    for (var i = firstIndex; i <= lastIndex; i++)
+                    {
+                        var argName = GetArgName(i);
+
+                        if (!string.IsNullOrEmpty(argName))
+                        {
+                            Out(argName);
+                            Out(": ");
+                        }
+
+                        Visit(node.Arguments[i]);
+
+                        if (i != lastIndex)
+                        {
+                            Out(", ");
+                        }
+                    }
+                }
             }
 
             protected override Expression VisitDebugInfo(DebugInfoExpression node)
@@ -2084,6 +2201,33 @@ namespace System.Linq.Expressions
             if (node.NodeType == ExpressionType.Extension && node is ICSharpPrintableExpression csharp)
             {
                 return csharp.Precedence;
+            }
+
+            if (node is DynamicExpression dynamic)
+            {
+                switch (dynamic.Binder)
+                {
+                    case BinaryOperationBinder binary:
+                        return GetOperatorPrecedence(binary.Operation);
+                    case UnaryOperationBinder unary:
+                        return GetOperatorPrecedence(unary.Operation);
+                    case ConvertBinder convert:
+                        return GetOperatorPrecedence(ExpressionType.Convert);
+                    case CreateInstanceBinder _:
+                        return GetOperatorPrecedence(ExpressionType.New);
+                    case GetMemberBinder _:
+                        return GetOperatorPrecedence(ExpressionType.MemberAccess);
+                    case SetMemberBinder _:
+                        return GetOperatorPrecedence(ExpressionType.Assign);
+                    case GetIndexBinder _:
+                        return GetOperatorPrecedence(ExpressionType.Index);
+                    case SetIndexBinder _:
+                        return GetOperatorPrecedence(ExpressionType.Assign);
+                    case InvokeBinder _:
+                        return GetOperatorPrecedence(ExpressionType.Invoke);
+                    case InvokeMemberBinder _:
+                        return GetOperatorPrecedence(ExpressionType.Call);
+                }
             }
 
             return GetOperatorPrecedence(node.NodeType);

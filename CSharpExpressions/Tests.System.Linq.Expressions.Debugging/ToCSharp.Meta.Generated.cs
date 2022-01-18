@@ -1923,7 +1923,7 @@ L1 /*(null)*/:";
         }
 
         private Expression expr197 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, "foo", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1));
-        private string dbg197 = @"Dynamic(/* Microsoft.CSharp.RuntimeBinder.CSharpGetMemberBinder */ 1)";
+        private string dbg197 = @"1/*dynamic*/.foo";
 
         [TestMethod]
         public void ToCSharp_Test197()
@@ -1932,7 +1932,7 @@ L1 /*(null)*/:";
         }
 
         private Expression expr198 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2));
-        private string dbg198 = @"Dynamic(/* Microsoft.CSharp.RuntimeBinder.CSharpBinaryOperationBinder */ 1, 2)";
+        private string dbg198 = @"1 /*dynamic*/ + 2";
 
         [TestMethod]
         public void ToCSharp_Test198()
