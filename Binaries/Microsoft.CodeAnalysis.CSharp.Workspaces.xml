@@ -19,7 +19,7 @@
             and constructed via provided factory.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpCodeGenerationHelpers.GetReuseableSyntaxNodeForSymbol``1(Microsoft.CodeAnalysis.ISymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpCodeGenerationHelpers.GetReuseableSyntaxNodeForSymbol``1(Microsoft.CodeAnalysis.ISymbol,Microsoft.CodeAnalysis.CSharp.CodeGeneration.CSharpCodeGenerationOptions)">
             <summary>
             Try use the existing syntax node and generate a new syntax node for the given <param name="symbol"/>.
             Note: the returned syntax node might be modified, which means its parent information might be missing.

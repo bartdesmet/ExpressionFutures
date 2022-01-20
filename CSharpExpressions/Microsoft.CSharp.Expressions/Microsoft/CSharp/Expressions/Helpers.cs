@@ -139,11 +139,16 @@ namespace Microsoft.CSharp.Expressions
             return inOrder;
         }
 
-        public static bool CheckHasSpecialNodesPassedByRef(ReadOnlyCollection<ParameterAssignment> arguments)
+        public static bool CheckHasSpecialNodesPassedByRefOrInterpolatedStringHandlerConversion(ReadOnlyCollection<ParameterAssignment> arguments)
         {
             foreach (var argument in arguments)
             {
                 if (argument.Parameter.ParameterType.IsByRef && argument.Expression is ArrayAccessCSharpExpression)
+                {
+                    return true;
+                }
+
+                if (argument.Expression is InterpolatedStringHandlerConversionCSharpExpression convert && convert.Info.ArgumentIndices.Count > 0)
                 {
                     return true;
                 }
@@ -493,7 +498,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var res = default(Expression);
 
-            if (!needTemps && CheckArgumentsInOrder(bindings) && !CheckHasSpecialNodesPassedByRef(bindings))
+            if (!needTemps && CheckArgumentsInOrder(bindings) && !CheckHasSpecialNodesPassedByRefOrInterpolatedStringHandlerConversion(bindings))
             {
                 var arguments = new Expression[parameters.Length];
 
@@ -591,6 +596,8 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
+            var interpolatedStringConversions = new List<ParameterAssignment>();
+
             foreach (var argument in bindings)
             {
                 var parameter = argument.Parameter;
@@ -599,6 +606,10 @@ namespace Microsoft.CSharp.Expressions
                 if (expression.IsPure()) // NB: no side-effect to read or write
                 {
                     arguments[parameter.Position] = expression;
+                }
+                else if (expression is InterpolatedStringHandlerConversionCSharpExpression convert && convert.Info.ArgumentIndices.Count > 0)
+                {
+                    interpolatedStringConversions.Add(argument);
                 }
                 else
                 {
@@ -622,6 +633,36 @@ namespace Microsoft.CSharp.Expressions
                         arguments[parameter.Position] = var;
                     }
                 }
+            }
+
+            // REVIEW: By-ref treatment of various parameters when passed to interpolated string handlers.
+
+            foreach (var argument in interpolatedStringConversions)
+            {
+                var parameter = argument.Parameter;
+                var convert = (InterpolatedStringHandlerConversionCSharpExpression)argument.Expression;
+                var indices = convert.Info.ArgumentIndices;
+
+                var args = new List<Expression>(indices.Count);
+
+                foreach (var index in indices)
+                {
+                    if (index == -1)
+                    {
+                        args.Add(obj);
+                    }
+                    else
+                    {
+                        var arg = arguments[index];
+
+                        if (arg == null)
+                            throw ContractUtils.Unreachable; // NB: Can happen when having self-referential handlers (or cross-refs across multiple).
+
+                        args.Add(arg);
+                    }
+                }
+
+                arguments[parameter.Position] = convert.Reduce(args);
             }
 
             writebacks = writebackList?.ToArray() ?? Array.Empty<Expression>();

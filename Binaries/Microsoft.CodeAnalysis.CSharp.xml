@@ -11210,6 +11210,17 @@
             This API returns false when <see cref="P:Microsoft.CodeAnalysis.CSharp.Symbols.TypeParameterSymbol.HasReferenceTypeConstraint"/> is false.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.DelegateCacheContainer">
+            <summary>
+            This type is synthesized to hold the cached delegates that target static method groups.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.DelegateCacheContainer.#ctor(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.Int32)">
+            <summary>Creates a type-scope concrete delegate cache container.</summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.DelegateCacheContainer.#ctor(Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol,System.Int32,System.Int32,System.Int32)">
+            <summary>Creates a method-scope generic delegate cache container.</summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedStateMachineProperty">
             <summary>
             State machine interface property implementation.
@@ -12701,6 +12712,17 @@
             <summary>
             Retargeted custom attributes
             </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.Retargeting.RetargetingParameterSymbol.DeclaringCompilation">
+            <summary>
+            <inheritdoc/>
+            </summary>
+            <remarks>
+            This override is done for performance reasons. Lacking the override this would redirect to 
+            <see cref="P:Microsoft.CodeAnalysis.CSharp.Symbols.Retargeting.RetargetingModuleSymbol.DeclaringCompilation"/> which returns null. The override 
+            short circuits the overhead in <see cref="P:Microsoft.CodeAnalysis.CSharp.Symbol.DeclaringCompilation"/> and the extra virtual
+            dispatch and just returns null.
+            </remarks>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.Retargeting.RetargetingMethodParameterSymbol._retargetingMethod">
             <summary>
@@ -16548,6 +16570,17 @@
             Produces name of the synthesized delegate symbol that encodes the parameter byref-ness and return type of the delegate.
             The arity is appended via `N suffix in MetadataName calculation since the delegate is generic.
             </summary>
+            <remarks>
+            Logic here should match <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbols.GeneratedNames.TryParseSynthesizedDelegateName(System.String,Microsoft.CodeAnalysis.CSharp.Symbols.RefKindVector@,System.Boolean@,System.Int32@,System.Int32@)" />.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.GeneratedNames.TryParseSynthesizedDelegateName(System.String,Microsoft.CodeAnalysis.CSharp.Symbols.RefKindVector@,System.Boolean@,System.Int32@,System.Int32@)">
+            <summary>
+            Parses the name of a synthesized delegate out into the things it represents.
+            </summary>
+            <remarks>
+            Logic here should match <see cref="M:Microsoft.CodeAnalysis.CSharp.Symbols.GeneratedNames.MakeSynthesizedDelegateName(Microsoft.CodeAnalysis.CSharp.Symbols.RefKindVector,System.Boolean,System.Int32)" />.
+            </remarks>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedLocalWithValEscape">
             <summary>
@@ -22477,6 +22510,11 @@
         <member name="T:Microsoft.CodeAnalysis.CSharp.IteratorStateMachine">
             <summary>
             The class that represents a translated iterator method.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CSharp.DelegateCacheRewriter">
+            <summary>
+            This type helps rewrite the delegate creations that target static method groups to use a cached instance of delegate.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.LocalRewriter.Rewrite(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol,System.Int32,Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol,Microsoft.CodeAnalysis.CSharp.BoundStatement,Microsoft.CodeAnalysis.CSharp.TypeCompilationState,Microsoft.CodeAnalysis.CSharp.SynthesizedSubmissionFields,System.Boolean,System.Boolean,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeGen.SourceSpan}@,Microsoft.CodeAnalysis.CodeGen.DebugDocumentProvider,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,System.Boolean@,System.Boolean@,System.Boolean@)">
@@ -42520,8 +42558,8 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullCheckedHasDefaultNull_Title">
             <summary>Parameter is null-checked but is null by default.</summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NullCheckingOnByRefParameter">
-            <summary>By-reference parameter '{0}' cannot be null-checked.</summary>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NullCheckingOnOutParameter">
+            <summary>'out' parameter '{0}' cannot be null-checked.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_NullCheckingOnNullableType">
             <summary>Nullable type '{0}' is null-checked and will throw if null.</summary>
@@ -43076,9 +43114,6 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_FeatureListPattern">
             <summary>list pattern</summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_FeatureLengthPattern">
-            <summary>length pattern</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_UnsupportedTypeForListPattern">
             <summary>List patterns may not be used for a value of type '{0}'.</summary>

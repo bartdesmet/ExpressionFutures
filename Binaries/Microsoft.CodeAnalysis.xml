@@ -4442,6 +4442,10 @@
             a match is found in one module in an assembly, no further modules within that assembly are searched.
             </para>
             <para>Type forwarders are ignored, and not considered part of the assembly where the TypeForwardAttribute is written.</para>
+            <para>
+            Ambiguities are detected on each nested level. For example, if <c>A+B</c> is requested, and there are multiple <c>A</c>s but only one of them has a <c>B</c> nested
+            type, the lookup will be considered ambiguous and null will be returned.
+            </para>
             </remarks>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Compilation.GetTypesByMetadataName(System.String)">
@@ -15833,7 +15837,7 @@
             <param name="severity">The diagnostic's effective severity.</param>
             <param name="defaultSeverity">The diagnostic's default severity.</param>
             <param name="isEnabledByDefault">True if the diagnostic is enabled by default</param>
-            <param name="warningLevel">The warning level, between 1 and 4 if severity is <see cref="F:Microsoft.CodeAnalysis.DiagnosticSeverity.Warning"/>; otherwise 0.</param>
+            <param name="warningLevel">The warning level, greater than 0 if severity is <see cref="F:Microsoft.CodeAnalysis.DiagnosticSeverity.Warning"/>; otherwise 0.</param>
             <param name="title">An optional short localizable title describing the diagnostic.</param>
             <param name="description">An optional longer localizable description for the diagnostic.</param>
             <param name="helpLink">An optional hyperlink that provides more detailed information regarding the diagnostic.</param>
@@ -15864,7 +15868,7 @@
             <param name="severity">The diagnostic's effective severity.</param>
             <param name="defaultSeverity">The diagnostic's default severity.</param>
             <param name="isEnabledByDefault">True if the diagnostic is enabled by default</param>
-            <param name="warningLevel">The warning level, between 1 and 4 if severity is <see cref="F:Microsoft.CodeAnalysis.DiagnosticSeverity.Warning"/>; otherwise 0.</param>
+            <param name="warningLevel">The warning level, greater than 0 if severity is <see cref="F:Microsoft.CodeAnalysis.DiagnosticSeverity.Warning"/>; otherwise 0.</param>
             <param name="isSuppressed">Flag indicating whether the diagnostic is suppressed by a source suppression.</param>
             <param name="title">An optional short localizable title describing the diagnostic.</param>
             <param name="description">An optional longer localizable description for the diagnostic.</param>
@@ -21825,7 +21829,12 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.IOperation.Children">
             <summary>
-            An array of child operations for this operation.
+            An array of child operations for this operation. Deprecated: please use <see cref="P:Microsoft.CodeAnalysis.IOperation.ChildOperations"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.IOperation.ChildOperations">
+            <summary>
+            An enumerable of child operations for this operation.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.IOperation.Language">
@@ -21844,6 +21853,44 @@
             Non-null for operations generated from source with <see cref="M:Microsoft.CodeAnalysis.SemanticModel.GetOperation(Microsoft.CodeAnalysis.SyntaxNode,System.Threading.CancellationToken)"/> API
             and operation callbacks made to analyzers.
             Null for operations inside a <see cref="T:Microsoft.CodeAnalysis.FlowAnalysis.ControlFlowGraph"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.IOperation.OperationList">
+            <summary>
+            Implements a struct-based collection of <see cref="T:Microsoft.CodeAnalysis.Operation"/> nodes. This collection is ordered, but
+            random access into the collection is not provided.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator">
+            <summary>
+            Implements a struct-based enumerator for <see cref="T:Microsoft.CodeAnalysis.Operation"/> nodes. This type is not hardened
+            to <code>default(Enumerator)</code>, and will null reference in these cases. Calling <see cref="P:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator.Current"/> after
+            <see cref="M:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator.MoveNext"/> has returned false will throw an <see cref="T:System.InvalidOperationException"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator._operation">
+            <summary>
+            Implementation of the <see cref="M:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator.MoveNext"/> and <see cref="P:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator.Current"/>
+            members are delegated to the virtual <see cref="M:Microsoft.CodeAnalysis.Operation.MoveNext(System.Int32,System.Int32)"/> and
+            <see cref="M:Microsoft.CodeAnalysis.Operation.GetCurrent(System.Int32,System.Int32)"/> methods, respectively.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.IOperation.OperationList.Enumerator._currentSlot">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.IOperation.OperationList.Reversed">
+            <summary>
+            Implements a reverse-order struct-based collection of <see cref="T:Microsoft.CodeAnalysis.Operation"/> nodes.
+            This collection is ordered, but random access into the collection is not provided.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.IOperation.OperationList.Reversed.Enumerator">
+            <summary>
+            Implements a reverse-order struct-based enumerator for <see cref="T:Microsoft.CodeAnalysis.Operation"/> nodes. This type is not hardened
+            to <code>default(Enumerator)</code>, and will null reference in these cases. Calling <see cref="P:Microsoft.CodeAnalysis.IOperation.OperationList.Reversed.Enumerator.Current"/> after
+            <see cref="M:Microsoft.CodeAnalysis.IOperation.OperationList.Reversed.Enumerator.MoveNext"/> has returned false will throw an <see cref="T:System.InvalidOperationException"/>.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Operation">
@@ -21886,15 +21933,18 @@
             If the operation is an expression that evaluates to a constant value, <see cref="P:Microsoft.CodeAnalysis.Optional`1.HasValue"/> is true and <see cref="P:Microsoft.CodeAnalysis.Optional`1.Value"/> is the value of the expression. Otherwise, <see cref="P:Microsoft.CodeAnalysis.Optional`1.HasValue"/> is false.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Operation.Microsoft#CodeAnalysis#IOperation#Children">
+        <member name="P:Microsoft.CodeAnalysis.Operation.ChildOperations">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Operation.MoveNext(System.Int32,System.Int32)">
             <summary>
-            In the compiler layer, always prefer <see cref="P:Microsoft.CodeAnalysis.Operation.ChildOperations"/>.
+            A slot of -1 means start at the beginning.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.Operation.ChildOperations">
-            <remarks>
-            Always prefer this over <see cref="P:Microsoft.CodeAnalysis.IOperation.Children"/> in the compiler layer, as this does not introduce allocations.
-            </remarks>
+        <member name="M:Microsoft.CodeAnalysis.Operation.MoveNextReversed(System.Int32,System.Int32)">
+            <summary>
+            A slot of int.MaxValue means start from the end.
+            </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.Operation.OwningSemanticModel">
             <summary>
@@ -21902,23 +21952,6 @@
             Note that this may be different than <see cref="P:Microsoft.CodeAnalysis.IOperation.SemanticModel"/>, which
             is the semantic model on which <see cref="M:Microsoft.CodeAnalysis.SemanticModel.GetOperation(Microsoft.CodeAnalysis.SyntaxNode,System.Threading.CancellationToken)"/> was invoked
             to create this node.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Operation.Enumerable">
-            <summary>
-            Implements a struct-based enumerable for <see cref="T:Microsoft.CodeAnalysis.Operation"/> nodes, using a slot-based system that tracks
-            the current slot, and the current index in the slot if the current slot is an immutable array. This type is not hardened
-            to <code>default(Enumerable)</code>, and will null reference in these cases.
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Operation.Enumerator">
-            <summary>
-            Implements a struct-based enumerator for <see cref="T:Microsoft.CodeAnalysis.Operation"/> nodes, using a slot-based system that tracks
-            the current slot, and the current index in the slot if the current slot is an immutable array. This type is not hardened
-            to <code>default(Enumerator)</code>, and will null reference in these cases. Implementation of the <see cref="M:Microsoft.CodeAnalysis.Operation.Enumerator.MoveNext"/>
-            and <see cref="P:Microsoft.CodeAnalysis.Operation.Enumerator.Current"/> members are delegated to the virtual <see cref="M:Microsoft.CodeAnalysis.Operation.MoveNext(System.Int32,System.Int32)"/> and
-            <see cref="M:Microsoft.CodeAnalysis.Operation.GetCurrent(System.Int32,System.Int32)"/> methods, respectively. Calling <see cref="P:Microsoft.CodeAnalysis.Operation.Enumerator.Current"/> after
-            <see cref="M:Microsoft.CodeAnalysis.Operation.Enumerator.MoveNext"/> has returned false will throw an <see cref="T:System.InvalidOperationException"/>.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.OperationMapBuilder.AddToMap(Microsoft.CodeAnalysis.IOperation,System.Collections.Generic.Dictionary{Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.IOperation})">
@@ -30574,6 +30607,7 @@
             <param name="root">The root node from which to remove a descendant node from.</param>
             <param name="node">The node to remove.</param>
             <param name="options">Options that determine how the node's trivia is treated.</param>
+            <returns>New root or null if the root node itself is removed.</returns>
         </member>
         <member name="M:Microsoft.CodeAnalysis.SyntaxNodeExtensions.RemoveNodes``1(``0,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.SyntaxNode},Microsoft.CodeAnalysis.SyntaxRemoveOptions)">
             <summary>

@@ -1358,6 +1358,54 @@ namespace Microsoft.CSharp.Expressions
         public System.Type Type => _node.Type;
     }
 
+    [DebuggerTypeProxy(typeof(InterpolatedStringHandlerConversionCSharpExpressionProxy))]
+    partial class InterpolatedStringHandlerConversionCSharpExpression
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class InterpolatedStringHandlerConversionCSharpExpressionProxy
+    {
+        private readonly InterpolatedStringHandlerConversionCSharpExpression _node;
+
+        public InterpolatedStringHandlerConversionCSharpExpressionProxy(InterpolatedStringHandlerConversionCSharpExpression node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Boolean CanReduce => _node.CanReduce;
+        public Microsoft.CSharp.Expressions.CSharpExpressionType CSharpNodeType => _node.CSharpNodeType;
+        public Microsoft.CSharp.Expressions.InterpolatedStringHandlerInfo Info => _node.Info;
+        public System.Linq.Expressions.ExpressionType NodeType => _node.NodeType;
+        public System.Linq.Expressions.Expression Operand => _node.Operand;
+        public System.Type Type => _node.Type;
+    }
+
+    [DebuggerTypeProxy(typeof(InterpolatedStringHandlerInfoProxy))]
+    partial class InterpolatedStringHandlerInfo
+    {
+    }
+    
+    [ExcludeFromCodeCoverage]
+    internal class InterpolatedStringHandlerInfoProxy
+    {
+        private readonly InterpolatedStringHandlerInfo _node;
+
+        public InterpolatedStringHandlerInfoProxy(InterpolatedStringHandlerInfo node)
+        {
+            _node = node;
+        }
+
+        public string DebugView => _node.DebugView;
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Linq.Expressions.LambdaExpression> Append => _node.Append;
+        public System.Collections.ObjectModel.ReadOnlyCollection<System.Int32> ArgumentIndices => _node.ArgumentIndices;
+        public System.Linq.Expressions.LambdaExpression Construction => _node.Construction;
+        public System.Type Type => _node.Type;
+    }
+
     [DebuggerTypeProxy(typeof(InterpolationProxy))]
     partial class Interpolation
     {

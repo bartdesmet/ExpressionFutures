@@ -30,7 +30,7 @@
             Case corrects all names found in the provided spans.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CaseCorrection.CaseCorrector.CaseCorrect(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Workspace,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CaseCorrection.CaseCorrector.CaseCorrect(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.Threading.CancellationToken)">
             <summary>
             Case correct only things that don't require semantic information
             </summary>
@@ -40,7 +40,7 @@
             Case corrects all names found in the spans in the provided document.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CaseCorrection.ICaseCorrectionService.CaseCorrect(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Workspace,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CaseCorrection.ICaseCorrectionService.CaseCorrect(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},System.Threading.CancellationToken)">
             <summary>
             Case corrects only things that don't require semantic information
             </summary>
@@ -397,6 +397,16 @@
             <param name="isInlinable"><see langword="true"/> to allow inlining the members of the group into the parent;
             otherwise, <see langword="false"/> to require that this group appear as a group with nested actions.</param>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CodeActions.CodeActionOptions">
+            <summary>
+            Options available to code fixes that are supplied by the IDE (i.e. not stored in editorconfig).
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CodeActions.CodeActionOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Options available to code fixes that are supplied by the IDE (i.e. not stored in editorconfig).
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CodeActions.CodeActionPriority">
             <summary>
             Internal priority used to bluntly place items in a light bulb in strict orderings.  Priorities take
@@ -654,13 +664,13 @@
             Optionally you can provide your own options and code cleaners. Otherwise, the default will be used.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.CodeCleaner.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Text.TextSpan,Microsoft.CodeAnalysis.Workspace,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.CodeCleaner.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Text.TextSpan,Microsoft.CodeAnalysis.Options.OptionSet,Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
             <summary>
             Clean up the provided span in the node.
             This will only cleanup stuff that doesn't require semantic information.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.CodeCleaner.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Workspace,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.CodeCleaner.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Options.OptionSet,Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
             <summary>
             Clean up the provided spans in the node.
             This will only cleanup stuff that doesn't require semantic information.
@@ -678,12 +688,12 @@
             Returns the default code cleaners.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.ICodeCleanerService.CleanupAsync(Microsoft.CodeAnalysis.Document,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.ICodeCleanerService.CleanupAsync(Microsoft.CodeAnalysis.Document,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
             <summary>
             This will run all provided code cleaners in an order that is given to the method.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.ICodeCleanerService.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Workspace,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.ICodeCleanerService.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions,Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider},System.Threading.CancellationToken)">
             <summary>
             This will run all provided code cleaners in an order that is given to the method.
             
@@ -705,21 +715,16 @@
             Returns the name of this provider.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider.CleanupAsync(Microsoft.CodeAnalysis.Document,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider.CleanupAsync(Microsoft.CodeAnalysis.Document,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions,System.Threading.CancellationToken)">
             <summary>
             This should apply its code clean up logic to the spans of the document.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Workspace,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider.CleanupAsync(Microsoft.CodeAnalysis.SyntaxNode,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions,Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.Threading.CancellationToken)">
             <summary>
             This will run all provided code cleaners in an order that is given to the method.
             
             This will do cleanups that don't require any semantic information
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CodeCleanup.Providers.SimpleCodeCleanupProvider">
-            <summary>
-            Helper class that implements <see cref="T:Microsoft.CodeAnalysis.CodeCleanup.Providers.ICodeCleanupProvider"/> using delegates passed to its constructor.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CodeFixes.CodeFix">
@@ -1299,7 +1304,7 @@
              behavior.
              </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.AbstractCodeGenerationService.FindMostRelevantNameSpaceOrTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.AbstractCodeGenerationService`1.FindMostRelevantNameSpaceOrTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Return the most relevant declaration to namespaceOrType,
             it will first search the context node contained within,
@@ -1307,12 +1312,12 @@
             then all the potential location. Return null if no declaration.
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions">
+        <member name="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext">
             <summary>
-            Options for controlling the code produced by the <see cref="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator"/>.
+            General options for controlling the code produced by the <see cref="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator"/> that apply to all documents.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.ContextLocation">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.ContextLocation">
             <summary>
             A location used to determine the best place to generate a member.  This is only used for
             determining which part of a partial type to generate in.  If a type only has one part, or
@@ -1321,31 +1326,31 @@
             preferred if it comes from the same SyntaxTree as this location.  If there is no
             such part, then any part may be used for generation.
             
-            This option is not necessary if <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AfterThisLocation"/> or <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.BeforeThisLocation"/> are
+            This option is not necessary if <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AfterThisLocation"/> or <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.BeforeThisLocation"/> are
             provided.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AfterThisLocation">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AfterThisLocation">
             <summary>
             A hint to the code generation service to specify where the generated code should be
             placed.  Code will be generated after this location if the location is valid in the type
             or symbol being generated into, and it is possible to generate the code after it.
             
-            If this option is provided, neither <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.ContextLocation"/> nor <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.BeforeThisLocation"/> are
+            If this option is provided, neither <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.ContextLocation"/> nor <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.BeforeThisLocation"/> are
             needed.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.BeforeThisLocation">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.BeforeThisLocation">
             <summary>
             A hint to the code generation service to specify where the generated code should be
             placed.  Code will be generated before this location if the location is valid in the type
             or symbol being generated into, and it is possible to generate the code after it. 
             
-            If this option is provided, neither <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.ContextLocation"/> nor <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AfterThisLocation"/> are
+            If this option is provided, neither <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.ContextLocation"/> nor <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AfterThisLocation"/> are
             needed.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AddImports">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AddImports">
             <summary>
             True if the code generation service should add <see cref="P:Microsoft.CodeAnalysis.Simplification.Simplifier.AddImportsAnnotation"/>,
             and when not generating directly into a declaration, should try to automatically add imports to the file
@@ -1353,19 +1358,19 @@
             Defaults to true.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AdditionalImports">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AdditionalImports">
             <summary>
             Contains additional imports to be automatically added.  This is useful for adding
             imports that are part of a list of statements.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.GenerateMembers">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.GenerateMembers">
             <summary>
             True if members of a symbol should also be generated along with the declaration.  If
             false, only the symbol's declaration will be generated.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.MergeNestedNamespaces">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.MergeNestedNamespaces">
             <summary>
             True if the code generator should merge namespaces which only contain other namespaces
             into a single declaration with a dotted name.  False if the nesting should be preserved
@@ -1376,7 +1381,7 @@
             namespace.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.MergeAttributes">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.MergeAttributes">
             <summary>
             True if the code generation should put multiple attributes in a single attribute
             declaration, or if should have a separate attribute declaration for each attribute.  For
@@ -1384,7 +1389,7 @@
             False would produce "[Goo][Bar]"
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.GenerateDefaultAccessibility">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.GenerateDefaultAccessibility">
             <summary>
             True if the code generator should always generate accessibility modifiers, even if they
             are the same as the defaults for that symbol.  For example, a private field in C# does
@@ -1392,35 +1397,40 @@
             option is set to true 'private' will still be generated.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.GenerateMethodBodies">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.GenerateMethodBodies">
             <summary>
             True if the code generator should generate empty bodies for methods along with the
             method declaration.  If false, only method declarations will be generated.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.GenerateDocumentationComments">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.GenerateDocumentationComments">
             <summary>
             True if the code generator should generate documentation comments where available
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AutoInsertionLocation">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AutoInsertionLocation">
             <summary>
             True if the code generator should automatically attempt to choose the appropriate location
             to insert members.  If false and a generation location is not specified by AfterThisLocation,
             or BeforeThisLocation, members will be inserted at the end of the destination definition.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.SortMembers">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.SortMembers">
             <summary>
-            If <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.AutoInsertionLocation"/> is <see langword="false"/>, determines if members will be
+            If <see cref="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.AutoInsertionLocation"/> is <see langword="false"/>, determines if members will be
             sorted before being added to the end of the list of members.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions.ReuseSyntax">
+        <member name="P:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext.ReuseSyntax">
             <summary>
             True if the code generator should attempt to reuse the syntax of the constituent entities, such as members, access modifier tokens, etc. while attempting to generate code.
             If any of the member symbols have zero declaring syntax references (non-source symbols) OR two or more declaring syntax references (partial definitions), then syntax is not reused.
             If false, then the code generator will always synthesize a new syntax node and ignore the declaring syntax references.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions">
+            <summary>
+            Context and preferences.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationSymbolFactory">
@@ -1553,140 +1563,55 @@
             Annotation placed on generated syntax.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.CreateEventDeclaration(Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Returns a newly created event declaration node from the provided event.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.CreateFieldDeclaration(Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Returns a newly created field declaration node from the provided field.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.CreateMethodDeclaration(Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Returns a newly created method declaration node from the provided method.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.CreatePropertyDeclaration(Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Returns a newly created property declaration node from the provided property.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.CreateNamedTypeDeclaration(Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Returns a newly created named type declaration node from the provided named type.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.CreateNamespaceDeclaration(Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Returns a newly created namespace declaration node from the provided namespace.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddEventDeclaration``1(``0,Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with an event declaration of the same signature as the specified symbol added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddFieldDeclaration``1(``0,Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with a field declaration of the same signature as the specified symbol added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddMethodDeclaration``1(``0,Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with a method declaration of the same signature as the specified symbol added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddPropertyDeclaration``1(``0,Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with a property declaration of the same signature as the specified symbol added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamedTypeDeclaration``1(``0,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with a named type declaration of the same signature as the specified symbol added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddMemberDeclarations``1(``0,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.ISymbol},Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with multiple member declarations of the same signatures as the specified symbols added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddParameterDeclarations``1(``0,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.IParameterSymbol},Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with one or more parameter declarations of the same signature as the specified symbols added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddAttributes``1(``0,Microsoft.CodeAnalysis.Workspace,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.AttributeData},System.Nullable{Microsoft.CodeAnalysis.SyntaxToken},Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
-            <summary>
-            Create a new declaration node with the specified attributes added to it.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.RemoveAttribute``1(``0,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.AttributeData,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
-            <summary>
-            Removes the specified attribute node from the given declaration node.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.RemoveAttribute``1(``0,Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
-            <summary>
-            Removes the specified attribute node from the given declaration node.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddStatements``1(``0,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.SyntaxNode},Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
-            <summary>
-            Create a new declaration node with one or more statements added to its body.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddEventDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddEventDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional event of the same signature as the specified event symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddFieldDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddFieldDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional field of the same signature as the specified field symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddMethodDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddMethodDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional method of the same signature as the specified method symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddPropertyDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddPropertyDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional property of the same signature as the specified property symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamedTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamedTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional named type of the same signature as the specified named type symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamedTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamedTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional named type of the same signature as the specified named type symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamespaceDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamespaceDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional namespace of the same signature as the specified namespace symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamespaceOrTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddNamespaceOrTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has an additional namespace or type of the same signature as the specified namespace or type symbol.
             Returns the document in the new solution where the destination symbol is declared.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddMemberDeclarationsAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.ISymbol},Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerator.AddMemberDeclarationsAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.ISymbol},Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Create a new solution where the declaration of the destination symbol has additional members of the same signature as the specified member symbols.
             Returns the document in the new solution where the destination symbol is declared.
@@ -1697,22 +1622,23 @@
             Returns <c>true</c> if additional declarations can be added to the destination symbol's declaration.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreateEventDeclaration(Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreateEventDeclaration(Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
             <summary>
             Returns a newly created event declaration node from the provided event.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreateFieldDeclaration(Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreateFieldDeclaration(Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
             <summary>
             Returns a newly created field declaration node from the provided field.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreateMethodDeclaration(Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreateMethodDeclaration(Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
             <summary>
             Returns a newly created method declaration node from the provided method.
+            TODO: do not return null (https://github.com/dotnet/roslyn/issues/58243)
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreatePropertyDeclaration(Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.CreatePropertyDeclaration(Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationDestination,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
             <summary>
             Returns a newly created property declaration node from the provided property.
             </summary>
@@ -1807,47 +1733,47 @@
             Adds the statements to destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddEventAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddEventAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IEventSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a field with the provided signature into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddFieldAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddFieldAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IFieldSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a field with the provided signature into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddMethodAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddMethodAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a method with the provided signature into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddPropertyAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddPropertyAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.IPropertySymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a property with the provided signature into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamedTypeAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamedTypeAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a named type into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamedTypeAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamedTypeAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamedTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a named type into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamespaceAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamespaceAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a namespace into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamespaceOrTypeAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddNamespaceOrTypeAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceSymbol,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds a namespace or type into destination.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddMembersAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.ISymbol},Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.AddMembersAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamedTypeSymbol,System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.ISymbol},Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Adds all the provided members into destination.
             </summary>
@@ -1862,7 +1788,7 @@
             <c>true</c> if destination is a location where other symbols can be added to.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.FindMostRelevantNameSpaceOrTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationOptions,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeGeneration.ICodeGenerationService.FindMostRelevantNameSpaceOrTypeDeclarationAsync(Microsoft.CodeAnalysis.Solution,Microsoft.CodeAnalysis.INamespaceOrTypeSymbol,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationContext,System.Threading.CancellationToken)">
             <summary>
             Return the most relevant declaration to namespaceOrType,
             it will first search the context node contained within,
@@ -1893,6 +1819,11 @@
             For <c>string!</c> or <c>string?</c> types.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationPreferences">
+            <summary>
+            Document-specific options for controlling the code produced by code generation.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext">
             <summary>
             Context for code refactorings provided by a <see cref="T:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringProvider"/>.
@@ -1918,7 +1849,7 @@
             Creates a code refactoring context to be passed into <see cref="M:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringProvider.ComputeRefactoringsAsync(Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext)"/> method.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext.#ctor(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,System.Action{Microsoft.CodeAnalysis.CodeActions.CodeAction,System.Nullable{Microsoft.CodeAnalysis.Text.TextSpan}},System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext.#ctor(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.Text.TextSpan,System.Action{Microsoft.CodeAnalysis.CodeActions.CodeAction,System.Nullable{Microsoft.CodeAnalysis.Text.TextSpan}},Microsoft.CodeAnalysis.CodeActions.CodeActionOptions,System.Threading.CancellationToken)">
             <summary>
             Creates a code refactoring context to be passed into <see cref="M:Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringProvider.ComputeRefactoringsAsync(Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext)"/> method.
             </summary>
@@ -2487,17 +2418,6 @@
             Retrieves a <see cref="T:Microsoft.CodeAnalysis.Text.SourceText"/> with the contents of this file.
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.Diagnostics.IPragmaSuppressionsAnalyzer">
-            <summary>
-            Special IDE analyzer to flag unnecessary inline source suppressions,
-            i.e. pragma and local SuppressMessageAttribute suppressions.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Diagnostics.IPragmaSuppressionsAnalyzer.AnalyzeAsync(Microsoft.CodeAnalysis.SemanticModel,System.Nullable{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Diagnostics.CompilationWithAnalyzers,System.Func{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.DiagnosticDescriptor}},System.Action{Microsoft.CodeAnalysis.Diagnostic},System.Threading.CancellationToken)">
-            <summary>
-            Analyzes the tree, with an optional span scope, and report unnecessary inline suppressions.
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.Diagnostics.DiagnosticSeverityExtensions.ToReportDiagnostic(Microsoft.CodeAnalysis.DiagnosticSeverity)">
             <summary>
             Returns the equivalent <see cref="T:Microsoft.CodeAnalysis.ReportDiagnostic"/> for a <see cref="T:Microsoft.CodeAnalysis.DiagnosticSeverity"/> value.
@@ -2650,6 +2570,17 @@
         <member name="P:Microsoft.CodeAnalysis.Diagnostics.IBuiltInAnalyzer.RequestPriority">
             <summary>
             What priority this provider should run at.  This value is not allowed to be <see cref="F:Microsoft.CodeAnalysis.CodeActions.CodeActionRequestPriority.None"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Diagnostics.IPragmaSuppressionsAnalyzer">
+            <summary>
+            Special IDE analyzer to flag unnecessary inline source suppressions,
+            i.e. pragma and local SuppressMessageAttribute suppressions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Diagnostics.IPragmaSuppressionsAnalyzer.AnalyzeAsync(Microsoft.CodeAnalysis.SemanticModel,System.Nullable{Microsoft.CodeAnalysis.Text.TextSpan},Microsoft.CodeAnalysis.Diagnostics.CompilationWithAnalyzers,System.Func{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.DiagnosticDescriptor}},System.Action{Microsoft.CodeAnalysis.Diagnostic},System.Threading.CancellationToken)">
+            <summary>
+            Analyzes the tree, with an optional span scope, and report unnecessary inline suppressions.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Host.TemporaryStorageServiceFactory.TemporaryStorageService">
@@ -2846,6 +2777,11 @@
             Recoverable SyntaxTrees implement <see cref="T:Microsoft.CodeAnalysis.Host.ICachedObjectOwner"/> since they are numerous
             and putting them into a conditional weak table greatly increases GC costs in
             clr.dll!PromoteDependentHandle.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.Host.IProjectCacheHostService.MinimumLengthForRecoverableTree">
+            <summary>
+            The length of the source file above which a recoverable tree is created.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Host.IProjectCacheHostService.CacheObjectIfCachingEnabledForKey``1(Microsoft.CodeAnalysis.ProjectId,System.Object,``0)">
@@ -4603,6 +4539,11 @@
             Creates a new <see cref="T:Microsoft.CodeAnalysis.Editing.SyntaxEditor"/> instance.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Editing.SyntaxEditor.#ctor(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Host.HostWorkspaceServices)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.CodeAnalysis.Editing.SyntaxEditor"/> instance.
+            </summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.Editing.SyntaxEditor.OriginalRoot">
             <summary>
             The <see cref="T:Microsoft.CodeAnalysis.SyntaxNode"/> that was specified when the <see cref="T:Microsoft.CodeAnalysis.Editing.SyntaxEditor"/> was constructed.
@@ -4694,6 +4635,11 @@
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Editing.SyntaxGenerator.GetGenerator(Microsoft.CodeAnalysis.Workspace,System.String)">
+            <summary>
+            Gets the <see cref="T:Microsoft.CodeAnalysis.Editing.SyntaxGenerator"/> for the specified language.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Editing.SyntaxGenerator.GetGenerator(Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.String)">
             <summary>
             Gets the <see cref="T:Microsoft.CodeAnalysis.Editing.SyntaxGenerator"/> for the specified language.
             </summary>
@@ -7579,6 +7525,16 @@
             Base implementation of C# and VB formatting services.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.Formatting.AutoFormattingOptions">
+            <summary>
+            Solution-wide formatting options.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Formatting.AutoFormattingOptions.#ctor(Microsoft.CodeAnalysis.Formatting.FormattingOptions.IndentStyle,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Solution-wide formatting options.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.Formatting.Formatter">
             <summary>
             Formats whitespace in documents or syntax trees.
@@ -7590,11 +7546,6 @@
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Formatting.Formatter.GetDefaultFormattingRules(Microsoft.CodeAnalysis.Document)">
-            <summary>
-            Gets the formatting rules that would be applied if left unspecified.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Formatter.GetDefaultFormattingRules(Microsoft.CodeAnalysis.Workspace,System.String)">
             <summary>
             Gets the formatting rules that would be applied if left unspecified.
             </summary>
@@ -7721,28 +7672,6 @@
             <param name="cancellationToken">The cancellation token that the operation will observe.</param>
             <returns>The document with organized imports. If the language does not support organizing imports, or if no changes were made, this method returns <paramref name="document"/>.</returns>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.Formatting.FormattingBehaviorOptions">
-            <summary>
-            Solution-wide formatting options.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Formatting.FormattingBehaviorOptions.PreferredWrappingColumn">
-            <summary>
-            Default value of 120 was picked based on the amount of code in a github.com diff at 1080p.
-            That resolution is the most common value as per the last DevDiv survey as well as the latest
-            Steam hardware survey.  This also seems to a reasonable length default in that shorter
-            lengths can often feel too cramped for .NET languages, which are often starting with a
-            default indentation of at least 16 (for namespace, class, member, plus the final construct
-            indentation).
-            
-            TODO: Currently the option has no storage and always has its default value. See https://github.com/dotnet/roslyn/pull/30422#issuecomment-436118696.
-            </summary>
-        </member>
-        <member name="P:Microsoft.CodeAnalysis.Formatting.FormattingBehaviorOptions.AllowDisjointSpanMerging">
-            <summary>
-            TODO: Currently the option has no storage and always has its default value. 
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.Formatting.FormattingOptions">
             <inheritdoc cref="T:Microsoft.CodeAnalysis.Formatting.FormattingOptions2"/>
         </member>
@@ -7756,7 +7685,7 @@
             <inheritdoc cref="F:Microsoft.CodeAnalysis.Formatting.FormattingOptions2.IndentationSize"/>
         </member>
         <member name="P:Microsoft.CodeAnalysis.Formatting.FormattingOptions.SmartIndent">
-            <inheritdoc cref="P:Microsoft.CodeAnalysis.Formatting.FormattingBehaviorOptions.SmartIndent"/>
+            <inheritdoc cref="P:Microsoft.CodeAnalysis.Formatting.AutoFormattingOptions.IndentStyle"/>
         </member>
         <member name="P:Microsoft.CodeAnalysis.Formatting.FormattingOptions.NewLine">
             <inheritdoc cref="F:Microsoft.CodeAnalysis.Formatting.FormattingOptions2.NewLine"/>
@@ -7767,8 +7696,8 @@
             </summary>
             <param name="document">The document to format.</param>
             <param name="spans">The spans of the document's text to format. If null, the entire document should be formatted.</param>
-            <param name="options">An optional set of formatting options. If these options are not supplied the current set of options from the document's workspace will be used.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
+            <param name="options">Set of formatting options.</param>
+            <param name="cancellationToken">Cancellation token.</param>
             <returns>The formatted document.</returns>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule">
@@ -7970,32 +7899,32 @@
             instruct the engine to try to put the given spaces between two tokens
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetSuppressOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions)">
+        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetSuppressOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions)">
             <summary>
             return SuppressOperation for the node provided by the given formatting rules
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAnchorIndentationOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions)">
+        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAnchorIndentationOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions)">
             <summary>
             return AnchorIndentationOperation for the node provided by the given formatting rules
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetIndentBlockOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions)">
+        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetIndentBlockOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions)">
             <summary>
             return IndentBlockOperation for the node provided by the given formatting rules
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAlignTokensOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions)">
+        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAlignTokensOperations(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions)">
             <summary>
             return AlignTokensOperation for the node provided by the given formatting rules
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAdjustNewLinesOperation(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions)">
+        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAdjustNewLinesOperation(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions)">
             <summary>
             return AdjustNewLinesOperation for the node provided by the given formatting rules
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAdjustSpacesOperation(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions)">
+        <member name="M:Microsoft.CodeAnalysis.Formatting.Rules.FormattingOperations.GetAdjustSpacesOperation(System.Collections.Generic.IEnumerable{Microsoft.CodeAnalysis.Formatting.Rules.AbstractFormattingRule},Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.Formatting.SyntaxFormattingOptions)">
             <summary>
             return AdjustSpacesOperation for the node provided by the given formatting rules
             </summary>
@@ -8215,6 +8144,18 @@
             Formatting options stored in editorconfig.
             </summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.Formatting.FormattingOptions2.PreferredWrappingColumn">
+            <summary>
+            Default value of 120 was picked based on the amount of code in a github.com diff at 1080p.
+            That resolution is the most common value as per the last DevDiv survey as well as the latest
+            Steam hardware survey.  This also seems to a reasonable length default in that shorter
+            lengths can often feel too cramped for .NET languages, which are often starting with a
+            default indentation of at least 16 (for namespace, class, member, plus the final construct
+            indentation).
+            
+            TODO: Currently the option has no storage and always has its default value. See https://github.com/dotnet/roslyn/pull/30422#issuecomment-436118696.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.Formatting.IFormattingResult">
             <summary>
             Contains changes that can be either applied to different targets such as a buffer or a tree
@@ -8377,7 +8318,7 @@
             <summary>
             Returns <see langword="true"/> if the language specific <see
             cref="T:Microsoft.CodeAnalysis.Indentation.ISmartTokenFormatter"/> should be deferred to figure out indentation.  If so, it
-            will be asked to <see cref="M:Microsoft.CodeAnalysis.Indentation.ISmartTokenFormatter.FormatTokenAsync(Microsoft.CodeAnalysis.Workspace,Microsoft.CodeAnalysis.SyntaxToken,System.Threading.CancellationToken)"/> the resultant
+            will be asked to <see cref="M:Microsoft.CodeAnalysis.Indentation.ISmartTokenFormatter.FormatTokenAsync(Microsoft.CodeAnalysis.Host.HostWorkspaceServices,Microsoft.CodeAnalysis.SyntaxToken,System.Threading.CancellationToken)"/> the resultant
             <paramref name="token"/> provided by this method.
             </summary>
         </member>
@@ -8481,6 +8422,11 @@
         <member name="M:Microsoft.CodeAnalysis.LanguageServices.ISemanticFacts.GetAliasNameSet(Microsoft.CodeAnalysis.SemanticModel,System.Threading.CancellationToken)">
             <summary>
             get all alias names defined in the semantic model
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.LanguageServices.ISemanticFacts.GetLocalFunctionSymbols(Microsoft.CodeAnalysis.Compilation,Microsoft.CodeAnalysis.ISymbol,System.Threading.CancellationToken)">
+            <summary>
+            Finds all local function definitions within the syntax references for a given <paramref name="symbol"/>
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.LanguageServices.IHeaderFactsExtensions.IsOnTypeHeader(Microsoft.CodeAnalysis.LanguageServices.IHeaderFacts,Microsoft.CodeAnalysis.SyntaxNode,System.Int32,Microsoft.CodeAnalysis.SyntaxNode@)">
@@ -10282,6 +10228,12 @@
         <member name="M:Microsoft.CodeAnalysis.Remote.IRemoteProcessTelemetryService.InitializeTelemetrySessionAsync(System.Int32,System.String,System.Threading.CancellationToken)">
             <summary>
             Initializes telemetry session.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Remote.IRemoteProcessTelemetryService.SetSyntaxTreeConfigurationOptionsAsync(System.Boolean,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Configures recoverable syntax tree creation in the process.
+            Called as soon as the remote process is created but can't guarantee that syntax trees have not been created beforehand.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Serialization.IOptionsSerializationService">
@@ -14774,9 +14726,9 @@
             <see cref="M:Microsoft.CodeAnalysis.ProjectState.GetChecksumAsync(System.Threading.CancellationToken)"/>.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.ProjectState._lazyAnalyzerConfigSet">
+        <member name="F:Microsoft.CodeAnalysis.ProjectState._lazyAnalyzerConfigOptions">
             <summary>
-            The <see cref="T:Microsoft.CodeAnalysis.AnalyzerConfigSet"/> to be used for analyzer options for specific trees.
+            Analyzer config options to be used for specific trees.
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.ProjectState._lazySourceGenerators">
@@ -17824,11 +17776,6 @@
             An analyzer config document in the current solution was changed.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.WorkspaceConfigurationOptions.DisableRecoverableTrees">
-            <summary>
-            Disables if the workspace creates recoverable trees when from its <see cref="T:Microsoft.CodeAnalysis.Host.ISyntaxTreeFactoryService"/>s.
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.WorkspaceKind">
             <summary>
              Known workspace kinds
@@ -19789,7 +19736,7 @@
             global imports for VB.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.AddImports.IAddImportsService.GetImportContainer(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Options.OptionSet)">
+        <member name="M:Microsoft.CodeAnalysis.AddImports.IAddImportsService.GetImportContainer(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CodeGeneration.CodeGenerationPreferences)">
             <summary>
             Given a context location in a provided syntax tree, returns the appropriate container
             that <paramref name="import"/> should be added to.
@@ -20771,7 +20718,7 @@
             <code>true</code>.  If not, then the original document will be returned unchanged.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ReplaceDiscardDeclarationsWithAssignments.IReplaceDiscardDeclarationsWithAssignmentsService.ReplaceAsync(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.Workspace,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.ReplaceDiscardDeclarationsWithAssignments.IReplaceDiscardDeclarationsWithAssignmentsService.ReplaceAsync(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.SemanticModel,Microsoft.CodeAnalysis.Host.HostWorkspaceServices,System.Threading.CancellationToken)">
             <summary>
             Returns an updated <paramref name="memberDeclaration"/> with all the
             local declarations named '_' replaced with simple assignments to discard.

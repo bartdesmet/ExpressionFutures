@@ -59,6 +59,8 @@
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\Conversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\Conversions\SimpleConversion.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\CSharpCatchBlock.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringHandlerConversionCSharpExpression.cs" />
+    <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringHandlerInfo.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\IsPatternCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\DeconstructionAssignmentCSharpExpression.cs" />
     <Compile Include="Microsoft\CSharp\Expressions\ArrayAccessCSharpExpression.cs" />
@@ -240,7 +242,13 @@
     <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
     <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
     <Compile Include="System\Runtime\CompilerServices\ActionByRef.cs" />
+    <Compile Include="System\Runtime\CompilerServices\InterpolatedStringHandlerConstructionDelegate.cs">
+      <DependentUpon>InterpolatedStringHandlerConstructionDelegate.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="System\Runtime\CompilerServices\FuncByRef.cs" />
+    <Compile Include="System\Runtime\CompilerServices\InterpolatedStringHandlerAppendDelegate.cs" />
     <Compile Include="System\Runtime\CompilerServices\RefHolder.cs" />
     <Compile Include="System\Runtime\CompilerServices\DeconstructDelegates.cs">
       <AutoGen>True</AutoGen>
@@ -282,6 +290,10 @@
     <Content Include="Stubs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Stubs.cs</LastGenOutput>
+    </Content>
+    <Content Include="System\Runtime\CompilerServices\InterpolatedStringHandlerConstructionDelegate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>InterpolatedStringHandlerConstructionDelegate.cs</LastGenOutput>
     </Content>
     <Content Include="System\Runtime\CompilerServices\DeconstructDelegates.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 public struct WeakBox<T>
@@ -570,4 +572,252 @@ public class Event
     public event Action MyEvent;
 
     public void OnMyEvent() => MyEvent?.Invoke();
+}
+
+public enum LogLevel
+{
+    Off,
+    Critical,
+    Error,
+    Warning,
+    Information,
+    Trace
+}
+
+public class Logger
+{
+    public LogLevel EnabledLevel { get; set; } = LogLevel.Error;
+
+    public void LogMessage(LogLevel level, [InterpolatedStringHandlerArgument("", "level")] LogInterpolatedStringHandler builder)
+    {
+        if (EnabledLevel < level) return;
+        Console.WriteLine(builder.GetFormattedText());
+    }
+
+    public void LogMessage_NoHandlerArgs(LogLevel level, SimpleInterpolatedStringHandler builder)
+    {
+        if (EnabledLevel < level) return;
+        Console.WriteLine(builder.GetFormattedText());
+    }
+
+    public void LogMessage_CtorOutBool(LogLevel level, [InterpolatedStringHandlerArgument("", "level")] LogInterpolatedStringHandlerCtorOutBool builder)
+    {
+        if (EnabledLevel < level) return;
+        Console.WriteLine(builder.GetFormattedText());
+    }
+
+    public void LogMessage_AppendReturnBool(LogLevel level, LogInterpolatedStringHandlerAppendReturnBool builder)
+    {
+        if (EnabledLevel < level) return;
+        Console.WriteLine(builder.GetFormattedText());
+    }
+}
+
+[InterpolatedStringHandler]
+public struct LogInterpolatedStringHandler
+{
+    private readonly StringBuilder builder;
+
+    public LogInterpolatedStringHandler(int literalLength, int formattedCount, Logger logger, LogLevel level)
+    {
+        builder = new StringBuilder(literalLength);
+    }
+
+    public void AppendLiteral(string s)
+    {
+        builder.Append(s);
+    }
+
+    public void AppendFormatted<T>(T t)
+    {
+        builder.Append(t?.ToString());
+    }
+
+    internal string GetFormattedText() => builder.ToString();
+}
+
+[InterpolatedStringHandler]
+public struct LogInterpolatedStringHandlerCtorOutBool
+{
+    private readonly StringBuilder builder;
+
+    public LogInterpolatedStringHandlerCtorOutBool(int literalLength, int formattedCount, Logger logger, LogLevel level, out bool keepGoing)
+    {
+        builder = new StringBuilder(literalLength);
+        keepGoing = true;
+    }
+
+    public void AppendLiteral(string s)
+    {
+        builder.Append(s);
+    }
+
+    public void AppendFormatted<T>(T t)
+    {
+        builder.Append(t?.ToString());
+    }
+
+    internal string GetFormattedText() => builder.ToString();
+}
+
+[InterpolatedStringHandler]
+public struct LogInterpolatedStringHandlerAppendReturnBool
+{
+    private readonly StringBuilder builder;
+
+    public LogInterpolatedStringHandlerAppendReturnBool(int literalLength, int formattedCount, Logger logger, LogLevel level)
+    {
+        builder = new StringBuilder(literalLength);
+    }
+
+    public bool AppendLiteral(string s)
+    {
+        builder.Append(s);
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t)
+    {
+        builder.Append(t?.ToString());
+        return true;
+    }
+
+    internal string GetFormattedText() => builder.ToString();
+}
+
+[InterpolatedStringHandler]
+public struct SimpleInterpolatedStringHandler
+{
+    private readonly StringBuilder builder;
+
+    public SimpleInterpolatedStringHandler(int literalLength, int formattedCount)
+    {
+        builder = new StringBuilder(literalLength);
+    }
+
+    public void AppendLiteral(string s) => builder.Append(s);
+
+    public void AppendFormatted<T>(T t) => builder.Append(t?.ToString());
+
+    // NB: Poor man's implementations for testing. See https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/DefaultInterpolatedStringHandler.cs
+    //     for a robust implementation.
+    public void AppendFormatted<T>(T t, int alignment) => builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}}}", t);
+    public void AppendFormatted<T>(T t, string format) => builder.AppendFormat($"{{0:{format}}}", t);
+    public void AppendFormatted<T>(T t, int alignment, string format) => builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}:{format}}}", t);
+
+    internal string GetFormattedText() => builder.ToString();
+}
+
+[InterpolatedStringHandler]
+public struct SimpleInterpolatedStringHandlerCtorOutBool
+{
+    private readonly StringBuilder builder;
+
+    public SimpleInterpolatedStringHandlerCtorOutBool(int literalLength, int formattedCount, out bool keepGoing)
+    {
+        builder = new StringBuilder(literalLength);
+        keepGoing = true;
+    }
+
+    public void AppendLiteral(string s) => builder.Append(s);
+
+    // NB: Poor man's implementations for testing. See https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/DefaultInterpolatedStringHandler.cs
+    //     for a robust implementation.
+    public void AppendFormatted<T>(T t) => builder.Append(t?.ToString());
+    public void AppendFormatted<T>(T t, int alignment) => builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}}}", t);
+    public void AppendFormatted<T>(T t, string format) => builder.AppendFormat($"{{0:{format}}}", t);
+    public void AppendFormatted<T>(T t, int alignment, string format) => builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}:{format}}}", t);
+
+    internal string GetFormattedText() => builder.ToString();
+}
+
+
+[InterpolatedStringHandler]
+public struct SimpleInterpolatedStringHandlerAppendReturnBool
+{
+    private readonly StringBuilder builder;
+
+    public SimpleInterpolatedStringHandlerAppendReturnBool(int literalLength, int formattedCount)
+    {
+        builder = new StringBuilder(literalLength);
+    }
+
+    public bool AppendLiteral(string s)
+    {
+        builder.Append(s);
+        return true;
+    }
+
+    // NB: Poor man's implementations for testing. See https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/DefaultInterpolatedStringHandler.cs
+    //     for a robust implementation.
+
+    public bool AppendFormatted<T>(T t)
+    {
+        builder.Append(t?.ToString());
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t, int alignment)
+    {
+        builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}}}", t);
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t, string format)
+    {
+        builder.AppendFormat($"{{0:{format}}}", t);
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t, int alignment, string format)
+    {
+        builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}:{format}}}", t);
+        return true;
+    }
+
+    internal string GetFormattedText() => builder.ToString();
+}
+
+[InterpolatedStringHandler]
+public struct SimpleInterpolatedStringHandlerCtorOutBoolAppendReturnBool
+{
+    private readonly StringBuilder builder;
+
+    public SimpleInterpolatedStringHandlerCtorOutBoolAppendReturnBool(int literalLength, int formattedCount, out bool keepGoing)
+    {
+        builder = new StringBuilder(literalLength);
+        keepGoing = true;
+    }
+
+    public bool AppendLiteral(string s)
+    {
+        builder.Append(s);
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t)
+    {
+        builder.Append(t?.ToString());
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t, int alignment)
+    {
+        builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}}}", t);
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t, string format)
+    {
+        builder.AppendFormat($"{{0:{format}}}", t);
+        return true;
+    }
+
+    public bool AppendFormatted<T>(T t, int alignment, string format)
+    {
+        builder.AppendFormat($"{{0,{alignment.ToString(CultureInfo.InvariantCulture)}:{format}}}", t);
+        return true;
+    }
+
+    internal string GetFormattedText() => builder.ToString();
 }

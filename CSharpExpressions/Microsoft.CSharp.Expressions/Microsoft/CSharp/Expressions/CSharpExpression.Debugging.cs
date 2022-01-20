@@ -93,6 +93,11 @@ namespace Microsoft.CSharp.Expressions
         internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
     }
 
+    partial class InterpolatedStringHandlerInfo
+    {
+        internal string DebugView => new CSharpDebugViewExpressionVisitor().GetDebugView(this).ToString();
+    }
+
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
@@ -137,6 +142,8 @@ namespace Microsoft.CSharp.Expressions
         public XNode GetDebugView(AwaitInfo awaitInfo) => Visit(awaitInfo);
 
         public XNode GetDebugView(EnumeratorInfo enumeratorInfo) => Visit(enumeratorInfo);
+
+        public XNode GetDebugView(InterpolatedStringHandlerInfo handlerInfo) => Visit(handlerInfo);
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitArrayAccess(ArrayAccessCSharpExpression node)
@@ -719,6 +726,46 @@ namespace Microsoft.CSharp.Expressions
         protected internal override Interpolation VisitInterpolationStringLiteral(InterpolationStringLiteral node)
         {
             _nodes.Push(new XElement(nameof(InterpolationStringLiteral), new XElement("Value", node.Value)));
+            return node;
+        }
+
+        protected internal override Expression VisitInterpolatedStringHandlerConversion(InterpolatedStringHandlerConversionCSharpExpression node)
+        {
+            var args = new List<object>
+            {
+                new XElement(nameof(node.Info), Visit(node.Info)),
+                new XElement(nameof(node.Operand), Visit(node.Operand))
+            };
+
+            return Push(node, args);
+        }
+
+        protected internal override InterpolatedStringHandlerInfo VisitInterpolatedStringHandlerInfo(InterpolatedStringHandlerInfo node)
+        {
+            var args = new List<object>
+            {
+                new XAttribute(nameof(node.Type), node.Type),
+                new XElement(nameof(node.Construction), Visit(node.Construction))
+            };
+
+            if (node.ArgumentIndices.Count > 0)
+            {
+                var indices = new List<object>();
+
+                for (int i = 0, n = node.ArgumentIndices.Count; i < n; i++)
+                {
+                    var index = node.ArgumentIndices[i];
+
+                    indices.Add(new XElement("Index", new XAttribute("Value", index)));
+                }
+
+                args.Add(new XElement(nameof(node.ArgumentIndices), indices));
+            }
+
+            args.Add(Visit(nameof(node.Append), node.Append, Visit));
+
+            _nodes.Push(new XElement(nameof(InterpolatedStringHandlerInfo), args));
+
             return node;
         }
 
@@ -1313,6 +1360,12 @@ namespace Microsoft.CSharp.Expressions
         private XNode Visit(EnumeratorInfo node)
         {
             VisitEnumeratorInfo(node);
+            return _nodes.Pop();
+        }
+
+        private XNode Visit(InterpolatedStringHandlerInfo node)
+        {
+            VisitInterpolatedStringHandlerInfo(node);
             return _nodes.Pop();
         }
 

@@ -213,6 +213,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="CompilerTests\CSharpN100.InterpolatedStringHandlers.Generated.cs">
+      <DependentUpon>CSharpN100.InterpolatedStringHandlers.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CompilerTests\CSharpN100.InterpolatedStringHandlers.Verify.cs" />
     <Compile Include="CompilerTests\CSharpN110.PatternMatching.Verify.cs" />
     <Compile Include="CompilerTests\CSharpN110.PatternMatching.Generated.cs">
       <DependentUpon>CSharpN110.PatternMatching.Generated.tt</DependentUpon>
@@ -339,6 +345,7 @@
     <Compile Include="CrossCheckTests\CSharp80.AwaitUsing.cs" />
     <Compile Include="CrossCheckTests\CSharp80.SwitchExpression.cs" />
     <Compile Include="CrossCheckTests\CSharp90.PatternMatching.cs" />
+    <Compile Include="CrossCheckTests\CSharpN100.InterpolatedStringHandlers.cs" />
     <Compile Include="CrossCheckTests\CSharpN110.PatternMatching.cs" />
     <Compile Include="CrossCheckTests\CSharpN100.PatternMatching.cs" />
     <Compile Include="CrossCheckTests\CSharp80.PatternMatching.cs" />
@@ -534,6 +541,10 @@
     <Content Include="CompilerTests\CSharp80.AwaitUsing.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp80.AwaitUsing.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="CompilerTests\CSharpN100.InterpolatedStringHandlers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharpN100.InterpolatedStringHandlers.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="CompilerTests\CSharpN110.PatternMatching.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

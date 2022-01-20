@@ -307,5 +307,10 @@ namespace Microsoft.CSharp.Expressions
         /// A removal of an event handler, such as o.Event -= handler.
         /// </summary>
         EventSubtractAssign,
+
+        /// <summary>
+        /// An interpolated string handler conversion.
+        /// </summary>
+        InterpolatedStringHandlerConversion,
     }
 }

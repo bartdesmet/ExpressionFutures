@@ -926,6 +926,141 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception EventAccessorParameterTypeMismatch(object p0, object p1) => new ArgumentException(Strings.EventAccessorParameterTypeMismatch(p0, p1));
 
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' is not a valid interpolated string handler type."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerType(object p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The construction lambda return type '{0}' is not assignable to interpolated string handler type '{1}'."
+        /// </summary>
+        internal static Exception InterpolatedStringHandlerTypeNotAssignable(object p0, object p1) => new ArgumentException(Strings.InterpolatedStringHandlerTypeNotAssignable(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "An interpolated string handler construction should have at least two parameters for 'literalLength' and 'formattedCount'."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerConstructionArgCount() => new ArgumentException(Strings.InvalidInterpolatedStringHandlerConstructionArgCount);
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' parameter representing '{1}' should be of type Int32."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerInt32ParameterType(object p0, object p1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerInt32ParameterType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' is not a valid return type for an append call. Only 'void' and 'bool' are supported."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerAppendReturnType(object p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendReturnType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The return types of the append calls is inconsistent."
+        /// </summary>
+        internal static Exception InconsistentInterpolatedStringHandlerAppendReturnType() => new ArgumentException(Strings.InconsistentInterpolatedStringHandlerAppendReturnType);
+
+        /// <summary>
+        /// ArgumentException with message like "An interpolated string handler append call should have at least one parameter for the handler instance."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerAppendArgCount() => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendArgCount);
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' of the first parameter of the interpolated string handler append call is not compatible with the interpolated string handler type '{1}'."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerAppendFirstArgType(object p0, object p1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendFirstArgType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' is not valid for an interpolated string handler conversion."
+        /// </summary>
+        internal static Exception InvalidStringHandlerConversionOperandType(object p0) => new ArgumentException(Strings.InvalidStringHandlerConversionOperandType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The node of type '{0}' is not valid as the operand for an interpolated string handler conversion."
+        /// </summary>
+        internal static Exception InvalidStringHandlerConversionOperandNodeType(object p0) => new ArgumentException(Strings.InvalidStringHandlerConversionOperandNodeType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The argument index '{0}' is not valid."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerArgumentIndex(object p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerArgumentIndex(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The number of parameters '{0}' for the interpolated string handler construction is insufficient for an argument count of '{1}' (need at least 'literalLength' and 'formattedCount')."
+        /// </summary>
+        internal static Exception NotEnoughInterpolatedStringHandlerConstructionParameters(object p0, object p1) => new ArgumentException(Strings.NotEnoughInterpolatedStringHandlerConstructionParameters(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The number of parameters '{0}' for the interpolated string handler construction is too large for an argument count of '{1}' (can have at most one extra 'out bool' parameter)."
+        /// </summary>
+        internal static Exception TooManyInterpolatedStringHandlerConstructionParameters(object p0, object p1) => new ArgumentException(Strings.TooManyInterpolatedStringHandlerConstructionParameters(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The last parameter of type '{0}' for the interpolated string handler construction is not valid for an 'out bool shouldAppend' trailing parameter."
+        /// </summary>
+        internal static Exception InvalidInterpolatedStringHandlerConstructionOutBoolParameter(object p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerConstructionOutBoolParameter(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The append lambda expression's first parameter '{0}' denoting the interpolated string handler should be passed by reference."
+        /// </summary>
+        internal static Exception AppendLambdaShouldHaveFirstByRefParameter(object p0) => new ArgumentException(Strings.AppendLambdaShouldHaveFirstByRefParameter(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendLiteral' operation should take 2 parameters."
+        /// </summary>
+        internal static Exception AppendLiteralLambdaShouldHaveTwoParameters() => new ArgumentException(Strings.AppendLiteralLambdaShouldHaveTwoParameters);
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendLiteral' operation has a second parameter of type '{0}' which is invalid and should be 'string'."
+        /// </summary>
+        internal static Exception AppendLiteralLambdaShouldTakeStringParameter(object p0) => new ArgumentException(Strings.AppendLiteralLambdaShouldTakeStringParameter(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation should take 2, 3, or 4 parameters."
+        /// </summary>
+        internal static Exception AppendFormattedLambdaInvalidParameterCount() => new ArgumentException(Strings.AppendFormattedLambdaInvalidParameterCount);
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation should have a second parameter denoting a non-void value."
+        /// </summary>
+        internal static Exception AppendFormattedLambdaSecondParameterShouldBeNonVoid() => new ArgumentException(Strings.AppendFormattedLambdaSecondParameterShouldBeNonVoid);
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment or 'string' to denote a format."
+        /// </summary>
+        internal static Exception AppendFormattedLambdaThirdParameterShouldBeIntOrString(object p0) => new ArgumentException(Strings.AppendFormattedLambdaThirdParameterShouldBeIntOrString(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment."
+        /// </summary>
+        internal static Exception AppendFormattedLambdaThirdParameterShouldBeInt(object p0) => new ArgumentException(Strings.AppendFormattedLambdaThirdParameterShouldBeInt(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation has a fourth parameter of type '{0}' and should be 'string' to denote a format."
+        /// </summary>
+        internal static Exception AppendFormattedLambdaFourthParameterShouldBeString(object p0) => new ArgumentException(Strings.AppendFormattedLambdaFourthParameterShouldBeString(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The number of append operations '{0}' does not match the number of interpolations '{1}' in the interpolated string operand."
+        /// </summary>
+        internal static Exception IncorrectNumberOfAppendsForInterpolatedString(object p0, object p1) => new ArgumentException(Strings.IncorrectNumberOfAppendsForInterpolatedString(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The number of parameters '{0}' for the 'AppendFormatted' operation does not match the expected number '{1}' for the interpolated string's interpolation."
+        /// </summary>
+        internal static Exception InvalidAppendFormattedParameterCount(object p0, object p1) => new ArgumentException(Strings.InvalidAppendFormattedParameterCount(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' of the 'value' parameter for the 'AppendFormatted' operation is not compatible with the expected type '{1}' for the interpolated string's interpolation value."
+        /// </summary>
+        internal static Exception InvalidAppendFormattedValueType(object p0, object p1) => new ArgumentException(Strings.InvalidAppendFormattedValueType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' is invalid for the alignment parameter and should be 'int'."
+        /// </summary>
+        internal static Exception InvalidAlignmentParameterType(object p0) => new ArgumentException(Strings.InvalidAlignmentParameterType(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' is invalid for the format parameter and should be 'string'."
+        /// </summary>
+        internal static Exception InvalidFormatParameterType(object p0) => new ArgumentException(Strings.InvalidFormatParameterType(p0));
+
     }
 
     /// <summary>
@@ -1848,6 +1983,141 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string EventAccessorParameterTypeMismatch(object p0, object p1) => SR.Format(SR.EventAccessorParameterTypeMismatch, p0, p1);
 
+        /// <summary>
+        /// A string like "The '{0}' is not a valid interpolated string handler type."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerType(object p0) => SR.Format(SR.InvalidInterpolatedStringHandlerType, p0);
+
+        /// <summary>
+        /// A string like "The construction lambda return type '{0}' is not assignable to interpolated string handler type '{1}'."
+        /// </summary>
+        internal static string InterpolatedStringHandlerTypeNotAssignable(object p0, object p1) => SR.Format(SR.InterpolatedStringHandlerTypeNotAssignable, p0, p1);
+
+        /// <summary>
+        /// A string like "An interpolated string handler construction should have at least two parameters for 'literalLength' and 'formattedCount'."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerConstructionArgCount => SR.InvalidInterpolatedStringHandlerConstructionArgCount;
+
+        /// <summary>
+        /// A string like "The '{0}' parameter representing '{1}' should be of type Int32."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerInt32ParameterType(object p0, object p1) => SR.Format(SR.InvalidInterpolatedStringHandlerInt32ParameterType, p0, p1);
+
+        /// <summary>
+        /// A string like "The type '{0}' is not a valid return type for an append call. Only 'void' and 'bool' are supported."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerAppendReturnType(object p0) => SR.Format(SR.InvalidInterpolatedStringHandlerAppendReturnType, p0);
+
+        /// <summary>
+        /// A string like "The return types of the append calls is inconsistent."
+        /// </summary>
+        internal static string InconsistentInterpolatedStringHandlerAppendReturnType => SR.InconsistentInterpolatedStringHandlerAppendReturnType;
+
+        /// <summary>
+        /// A string like "An interpolated string handler append call should have at least one parameter for the handler instance."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerAppendArgCount => SR.InvalidInterpolatedStringHandlerAppendArgCount;
+
+        /// <summary>
+        /// A string like "The type '{0}' of the first parameter of the interpolated string handler append call is not compatible with the interpolated string handler type '{1}'."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerAppendFirstArgType(object p0, object p1) => SR.Format(SR.InvalidInterpolatedStringHandlerAppendFirstArgType, p0, p1);
+
+        /// <summary>
+        /// A string like "The type '{0}' is not valid for an interpolated string handler conversion."
+        /// </summary>
+        internal static string InvalidStringHandlerConversionOperandType(object p0) => SR.Format(SR.InvalidStringHandlerConversionOperandType, p0);
+
+        /// <summary>
+        /// A string like "The node of type '{0}' is not valid as the operand for an interpolated string handler conversion."
+        /// </summary>
+        internal static string InvalidStringHandlerConversionOperandNodeType(object p0) => SR.Format(SR.InvalidStringHandlerConversionOperandNodeType, p0);
+
+        /// <summary>
+        /// A string like "The argument index '{0}' is not valid."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerArgumentIndex(object p0) => SR.Format(SR.InvalidInterpolatedStringHandlerArgumentIndex, p0);
+
+        /// <summary>
+        /// A string like "The number of parameters '{0}' for the interpolated string handler construction is insufficient for an argument count of '{1}' (need at least 'literalLength' and 'formattedCount')."
+        /// </summary>
+        internal static string NotEnoughInterpolatedStringHandlerConstructionParameters(object p0, object p1) => SR.Format(SR.NotEnoughInterpolatedStringHandlerConstructionParameters, p0, p1);
+
+        /// <summary>
+        /// A string like "The number of parameters '{0}' for the interpolated string handler construction is too large for an argument count of '{1}' (can have at most one extra 'out bool' parameter)."
+        /// </summary>
+        internal static string TooManyInterpolatedStringHandlerConstructionParameters(object p0, object p1) => SR.Format(SR.TooManyInterpolatedStringHandlerConstructionParameters, p0, p1);
+
+        /// <summary>
+        /// A string like "The last parameter of type '{0}' for the interpolated string handler construction is not valid for an 'out bool shouldAppend' trailing parameter."
+        /// </summary>
+        internal static string InvalidInterpolatedStringHandlerConstructionOutBoolParameter(object p0) => SR.Format(SR.InvalidInterpolatedStringHandlerConstructionOutBoolParameter, p0);
+
+        /// <summary>
+        /// A string like "The append lambda expression's first parameter '{0}' denoting the interpolated string handler should be passed by reference."
+        /// </summary>
+        internal static string AppendLambdaShouldHaveFirstByRefParameter(object p0) => SR.Format(SR.AppendLambdaShouldHaveFirstByRefParameter, p0);
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendLiteral' operation should take 2 parameters."
+        /// </summary>
+        internal static string AppendLiteralLambdaShouldHaveTwoParameters => SR.AppendLiteralLambdaShouldHaveTwoParameters;
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendLiteral' operation has a second parameter of type '{0}' which is invalid and should be 'string'."
+        /// </summary>
+        internal static string AppendLiteralLambdaShouldTakeStringParameter(object p0) => SR.Format(SR.AppendLiteralLambdaShouldTakeStringParameter, p0);
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendFormatted' operation should take 2, 3, or 4 parameters."
+        /// </summary>
+        internal static string AppendFormattedLambdaInvalidParameterCount => SR.AppendFormattedLambdaInvalidParameterCount;
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendFormatted' operation should have a second parameter denoting a non-void value."
+        /// </summary>
+        internal static string AppendFormattedLambdaSecondParameterShouldBeNonVoid => SR.AppendFormattedLambdaSecondParameterShouldBeNonVoid;
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment or 'string' to denote a format."
+        /// </summary>
+        internal static string AppendFormattedLambdaThirdParameterShouldBeIntOrString(object p0) => SR.Format(SR.AppendFormattedLambdaThirdParameterShouldBeIntOrString, p0);
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment."
+        /// </summary>
+        internal static string AppendFormattedLambdaThirdParameterShouldBeInt(object p0) => SR.Format(SR.AppendFormattedLambdaThirdParameterShouldBeInt, p0);
+
+        /// <summary>
+        /// A string like "The lambda expression representing the 'AppendFormatted' operation has a fourth parameter of type '{0}' and should be 'string' to denote a format."
+        /// </summary>
+        internal static string AppendFormattedLambdaFourthParameterShouldBeString(object p0) => SR.Format(SR.AppendFormattedLambdaFourthParameterShouldBeString, p0);
+
+        /// <summary>
+        /// A string like "The number of append operations '{0}' does not match the number of interpolations '{1}' in the interpolated string operand."
+        /// </summary>
+        internal static string IncorrectNumberOfAppendsForInterpolatedString(object p0, object p1) => SR.Format(SR.IncorrectNumberOfAppendsForInterpolatedString, p0, p1);
+
+        /// <summary>
+        /// A string like "The number of parameters '{0}' for the 'AppendFormatted' operation does not match the expected number '{1}' for the interpolated string's interpolation."
+        /// </summary>
+        internal static string InvalidAppendFormattedParameterCount(object p0, object p1) => SR.Format(SR.InvalidAppendFormattedParameterCount, p0, p1);
+
+        /// <summary>
+        /// A string like "The type '{0}' of the 'value' parameter for the 'AppendFormatted' operation is not compatible with the expected type '{1}' for the interpolated string's interpolation value."
+        /// </summary>
+        internal static string InvalidAppendFormattedValueType(object p0, object p1) => SR.Format(SR.InvalidAppendFormattedValueType, p0, p1);
+
+        /// <summary>
+        /// A string like "The type '{0}' is invalid for the alignment parameter and should be 'int'."
+        /// </summary>
+        internal static string InvalidAlignmentParameterType(object p0) => SR.Format(SR.InvalidAlignmentParameterType, p0);
+
+        /// <summary>
+        /// A string like "The type '{0}' is invalid for the format parameter and should be 'string'."
+        /// </summary>
+        internal static string InvalidFormatParameterType(object p0) => SR.Format(SR.InvalidFormatParameterType, p0);
+
     }
 }
 
@@ -2038,5 +2308,32 @@ namespace System
         public const string EventAccessorShouldReturnVoid = "An event accessor method should return void.";
         public const string EventAccessorShouldHaveOneParameter = "An event accessor method should have one parameter.";
         public const string EventAccessorParameterTypeMismatch = "The handler expression type '{0}' is not assignable to the event accessor parameter of type '{1}'.";
+        public const string InvalidInterpolatedStringHandlerType = "The '{0}' is not a valid interpolated string handler type.";
+        public const string InterpolatedStringHandlerTypeNotAssignable = "The construction lambda return type '{0}' is not assignable to interpolated string handler type '{1}'.";
+        public const string InvalidInterpolatedStringHandlerConstructionArgCount = "An interpolated string handler construction should have at least two parameters for 'literalLength' and 'formattedCount'.";
+        public const string InvalidInterpolatedStringHandlerInt32ParameterType = "The '{0}' parameter representing '{1}' should be of type Int32.";
+        public const string InvalidInterpolatedStringHandlerAppendReturnType = "The type '{0}' is not a valid return type for an append call. Only 'void' and 'bool' are supported.";
+        public const string InconsistentInterpolatedStringHandlerAppendReturnType = "The return types of the append calls is inconsistent.";
+        public const string InvalidInterpolatedStringHandlerAppendArgCount = "An interpolated string handler append call should have at least one parameter for the handler instance.";
+        public const string InvalidInterpolatedStringHandlerAppendFirstArgType = "The type '{0}' of the first parameter of the interpolated string handler append call is not compatible with the interpolated string handler type '{1}'.";
+        public const string InvalidStringHandlerConversionOperandType = "The type '{0}' is not valid for an interpolated string handler conversion.";
+        public const string InvalidStringHandlerConversionOperandNodeType = "The node of type '{0}' is not valid as the operand for an interpolated string handler conversion.";
+        public const string InvalidInterpolatedStringHandlerArgumentIndex = "The argument index '{0}' is not valid.";
+        public const string NotEnoughInterpolatedStringHandlerConstructionParameters = "The number of parameters '{0}' for the interpolated string handler construction is insufficient for an argument count of '{1}' (need at least 'literalLength' and 'formattedCount').";
+        public const string TooManyInterpolatedStringHandlerConstructionParameters = "The number of parameters '{0}' for the interpolated string handler construction is too large for an argument count of '{1}' (can have at most one extra 'out bool' parameter).";
+        public const string InvalidInterpolatedStringHandlerConstructionOutBoolParameter = "The last parameter of type '{0}' for the interpolated string handler construction is not valid for an 'out bool shouldAppend' trailing parameter.";
+        public const string AppendLambdaShouldHaveFirstByRefParameter = "The append lambda expression's first parameter '{0}' denoting the interpolated string handler should be passed by reference.";
+        public const string AppendLiteralLambdaShouldHaveTwoParameters = "The lambda expression representing the 'AppendLiteral' operation should take 2 parameters.";
+        public const string AppendLiteralLambdaShouldTakeStringParameter = "The lambda expression representing the 'AppendLiteral' operation has a second parameter of type '{0}' which is invalid and should be 'string'.";
+        public const string AppendFormattedLambdaInvalidParameterCount = "The lambda expression representing the 'AppendFormatted' operation should take 2, 3, or 4 parameters.";
+        public const string AppendFormattedLambdaSecondParameterShouldBeNonVoid = "The lambda expression representing the 'AppendFormatted' operation should have a second parameter denoting a non-void value.";
+        public const string AppendFormattedLambdaThirdParameterShouldBeIntOrString = "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment or 'string' to denote a format.";
+        public const string AppendFormattedLambdaThirdParameterShouldBeInt = "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment.";
+        public const string AppendFormattedLambdaFourthParameterShouldBeString = "The lambda expression representing the 'AppendFormatted' operation has a fourth parameter of type '{0}' and should be 'string' to denote a format.";
+        public const string IncorrectNumberOfAppendsForInterpolatedString = "The number of append operations '{0}' does not match the number of interpolations '{1}' in the interpolated string operand.";
+        public const string InvalidAppendFormattedParameterCount = "The number of parameters '{0}' for the 'AppendFormatted' operation does not match the expected number '{1}' for the interpolated string's interpolation.";
+        public const string InvalidAppendFormattedValueType = "The type '{0}' of the 'value' parameter for the 'AppendFormatted' operation is not compatible with the expected type '{1}' for the interpolated string's interpolation value.";
+        public const string InvalidAlignmentParameterType = "The type '{0}' is invalid for the alignment parameter and should be 'int'.";
+        public const string InvalidFormatParameterType = "The type '{0}' is invalid for the format parameter and should be 'string'.";
     }
 }
