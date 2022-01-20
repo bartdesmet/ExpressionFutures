@@ -192,13 +192,7 @@ public static class {typeName}
 
             tree = Format(tree, trimCR);
 
-            var csc = GetCSharpCompilation()
-                // Our custom assembly
-                .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
-
-                // Helper types
-                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview)))
-
+            var csc = GetCSharpCompilation(includingExpressions)
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
 
@@ -344,19 +338,13 @@ public static class {typeName}
         {
             var res = MethodBodyInfo.Create(method);
 
-            sb.AppendLine($"{res.MethodToString} // 0X{res.Identity.ToString("X2")}");
+            sb.AppendLine($"{res.MethodToString} // 0X{res.Identity:X2}");
             sb.AppendLine("{");
             foreach (var instr in res.Instructions)
             {
                 sb.AppendLine("   " + instr);
             }
             sb.AppendLine("}");
-        }
-
-        private static void CheckNotNull(object o)
-        {
-            if (o == null)
-                throw new InvalidOperationException("Could not find IL code.");
         }
 
         public static FuncEval<TDelegate> FuncEval<TDelegate>(string expr, params Assembly[] references)
@@ -422,16 +410,7 @@ public static class {typeName}
 
             var tree = CSharpSyntaxTree.ParseText(src, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
 
-            var csc = GetCSharpCompilation()
-                // Our custom assembly
-                .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) })
-
-                // Extra references
-                .AddReferences(references.Select(r => MetadataReference.CreateFromFile(r.Location)))
-
-                // Helper types
-                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview)))
-
+            var csc = GetCSharpCompilation(includingExpressions: true, references)
                 // Generated test code based on `expr`
                 .AddSyntaxTrees(tree);
 
@@ -476,7 +455,7 @@ public static class {typeName}
             };
         }
 
-        private static CSharpCompilation GetCSharpCompilation()
+        private static CSharpCompilation GetCSharpCompilation(bool includingExpressions, params Assembly[] references)
         {
             return CSharpCompilation
                 // A class library `Expressions` which will be emitted in memory
@@ -499,7 +478,16 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
 
                 // Test utilities
-                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location));
+                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
+
+                // Our custom assembly
+                .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
+
+                // Extra references
+                .AddReferences(references.Select(r => MetadataReference.CreateFromFile(r.Location)))
+
+                // Helper types
+                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview)));
         }
 
         class Reducer : ExpressionVisitor
