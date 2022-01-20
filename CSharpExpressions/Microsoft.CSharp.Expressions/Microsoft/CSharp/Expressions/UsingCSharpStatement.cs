@@ -241,12 +241,12 @@ namespace Microsoft.CSharp.Expressions
                     cleanup = Expression.Call(variable, disposeMethod);
                 }
 
-                if (IsAsync)
-                {
-                    cleanup = Await(cleanup);
-                }
-
                 checkNull = true;
+            }
+
+            if (IsAsync)
+            {
+                cleanup = Await(cleanup);
             }
 
             if (checkNull)
