@@ -192,31 +192,9 @@ public static class {typeName}
 
             tree = Format(tree, trimCR);
 
-            var csc = CSharpCompilation
-                // A class library `Expressions` which will be emitted in memory
-                .Create("Expressions")
-                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, warningLevel: 0))
-
-                // BCL assemblies
-                .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
-
-                // BCL extensions for C# 7
-                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTuple).Assembly.Location))
-
-                // BCL extensions for C# 8
-                .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(IAsyncDisposable).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTask).Assembly.Location))
-
+            var csc = GetCSharpCompilation()
                 // Our custom assembly
                 .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())
-
-                // Support for dynamic
-                .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
-
-                // Test utilities
-                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
 
                 // Helper types
                 .AddSyntaxTrees(CSharpSyntaxTree.ParseText(testCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview)))
@@ -444,26 +422,9 @@ public static class {typeName}
 
             var tree = CSharpSyntaxTree.ParseText(src, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
 
-            var csc = CSharpCompilation
-                // A class library `Expressions` which will be emitted in memory
-                .Create("Expressions")
-                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, warningLevel: 0))
-
-                // BCL assemblies
-                .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(IAsyncDisposable).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTask).Assembly.Location))
-
+            var csc = GetCSharpCompilation()
                 // Our custom assembly
                 .AddReferences(new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) })
-
-                // Support for dynamic
-                .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
-
-                // Test utilities
-                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
 
                 // Extra references
                 .AddReferences(references.Select(r => MetadataReference.CreateFromFile(r.Location)))
@@ -513,6 +474,32 @@ public static class {typeName}
                 Expression = (Expression<TDelegate>)exp.GetValue(null),
                 Log = (List<string>)log.GetValue(null),
             };
+        }
+
+        private static CSharpCompilation GetCSharpCompilation()
+        {
+            return CSharpCompilation
+                // A class library `Expressions` which will be emitted in memory
+                .Create("Expressions")
+                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, warningLevel: 0))
+
+                // BCL assemblies
+                .AddReferences(MetadataReference.CreateFromFile(typeof(int).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(Expression).Assembly.Location))
+
+                // BCL extensions for C# 7
+                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTuple).Assembly.Location))
+
+                // BCL extensions for C# 8
+                .AddReferences(MetadataReference.CreateFromFile(typeof(Index).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(IAsyncDisposable).Assembly.Location))
+                .AddReferences(MetadataReference.CreateFromFile(typeof(ValueTask).Assembly.Location))
+
+                // Support for dynamic
+                .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
+
+                // Test utilities
+                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location));
         }
 
         class Reducer : ExpressionVisitor
