@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="AssertEx.cs" />
     <Compile Include="CompilerTests.cs" />
+    <Compile Include="CompilerTests.Misc.cs" />
     <Compile Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.cs">
       <DependentUpon>CSharp30.MultiDimensionalArrayInitializers.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>

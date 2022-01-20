@@ -183,20 +183,26 @@ public static class {typeName}
 }}
 ".Trim('\r', '\n');
 
+            var asm = Compile(src, out sem, includingExpressions, trimCR);
+
+            var typ = asm.GetType(typeName);
+            var prp = typ.GetProperty(propName);
+
+            return prp.GetValue(null);
+        }
+
+        public static Assembly Compile(string code, out SemanticModel sem, bool includingExpressions = true, bool trimCR = false, params Assembly[] references)
+        {
             if (trimCR)
             {
-                src = src.Replace("\r\n", "\n");
+                code = code.Replace("\r\n", "\n");
             }
 
-            var tree = CSharpSyntaxTree.ParseText(src, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
+            var tree = CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
 
             tree = Format(tree, trimCR);
 
-            var csc = GetCSharpCompilation(includingExpressions)
-                // Generated test code based on `expr`
-                .AddSyntaxTrees(tree);
-
-            var asm = default(Assembly);
+            var csc = GetCSharpCompilation(includingExpressions, references).AddSyntaxTrees(tree);
 
             using (var ms = new MemoryStream())
             {
@@ -228,13 +234,8 @@ public static class {typeName}
 
                 ms.Position = 0;
 
-                asm = Assembly.Load(ms.ToArray());
+                return Assembly.Load(ms.ToArray());
             }
-
-            var typ = asm.GetType(typeName);
-            var prp = typ.GetProperty(propName);
-
-            return prp.GetValue(null);
         }
 
         private static SyntaxTree Format(SyntaxTree tree, bool trimCR)
