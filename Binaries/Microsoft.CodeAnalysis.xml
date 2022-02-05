@@ -3618,18 +3618,6 @@
               CurrentUICulture property for diagnostic message resource lookups.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CommonCompiler.CreateDeterminismKey(Microsoft.CodeAnalysis.CommandLineArguments,System.String[],System.String,Microsoft.CodeAnalysis.CommandLineParser)">
-            <summary>
-            The string returned from this function represents the inputs to the compiler which impact determinism.  It is 
-            meant to be inline with the specification here:
-            
-                - https://github.com/dotnet/roslyn/blob/main/docs/compilers/Deterministic%20Inputs.md
-            
-            Issue #8193 tracks filling this out to the full specification. 
-            
-                https://github.com/dotnet/roslyn/issues/8193
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CommonCompiler.ExistingReferencesResolver">
             <summary>
             Looks for metadata references among the assembly file references given to the compilation when constructed.
@@ -3649,7 +3637,8 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.BuildPaths.WorkingDirectory">
             <summary>
-            The path in which the compilation takes place.
+            The path in which the compilation takes place. This is also referred to as "baseDirectory" in 
+            the code base.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.BuildPaths.SdkDirectory">
@@ -3964,6 +3953,68 @@
             <summary>
             Gets the source language ("C#" or "Visual Basic").
             </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Compilation.GetDeterministicKey(Microsoft.CodeAnalysis.CompilationOptions,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.SyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.MetadataReference},System.Collections.Immutable.ImmutableArray{System.Byte},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.AdditionalText},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISourceGenerator},System.Collections.Immutable.ImmutableArray{System.Collections.Generic.KeyValuePair{System.String,System.String}},Microsoft.CodeAnalysis.Emit.EmitOptions,Microsoft.CodeAnalysis.DeterministicKeyOptions)">
+             <summary>
+             This method generates a string that represents the input content to the compiler which impacts 
+             the output of the build. This string is effectively a content key for a <see cref="T:Microsoft.CodeAnalysis.Compilation"/>
+             with these values that can be used to identify the outputs.
+            
+             The returned string has the following properties:
+            
+             <list type="bullet">
+             <item>
+             <description>
+             The format is undefined. Consumers should assume the format and content can change between 
+             compiler versions.
+             </description>
+             </item>
+             <item>
+             <description>
+             It is designed to be human readable and diffable. This is to help developers
+             understand the difference between two compilations which is impacting the deterministic 
+             output
+             </description>
+             </item>
+             <item>
+             <description>
+             It is *not* in a minimal form. If used as a key in say a content addressable storage consumers
+             should first pass it through a strong hashing function.
+             </description>
+             </item>
+             </list>
+            
+             Compilations which do not use the /deterministic option can still use this API but
+             the results will change on every invocation.
+             </summary>
+             <remarks>
+             The set of inputs that impact deterministic output are described in the following document
+                 - https://github.com/dotnet/roslyn/blob/main/docs/compilers/Deterministic%20Inputs.md
+            
+             There are a few dark corners of determinism that are not captured with this key as they are 
+             considered outside the scope of this work:
+            
+             <list type="number">
+             <item>
+             <description>
+             Environment variables: clever developers can subvert determinism by manipulation of 
+             environment variables that impact program execution. For example changing normal library 
+             loading by manipulating the %LIBPATH% environment variable. Doing so can cause a change 
+             in deterministic output of compilation by changing compiler, runtime or generator 
+             dependencies.
+             </description>
+             </item>
+             <item>
+             <description>
+             Manipulation of strong name keys: strong name keys are read "on demand" by the compiler
+             and both normal compilation and this key can have non-determinstic output if they are 
+             manipulated at the correct point in program execution. That is an existing limitation
+             of compilation that is tracked by https://github.com/dotnet/roslyn/issues/57940
+             </description>
+             </item>
+             </list>
+             This API can throw exceptions in a few cases like invalid file paths.
+             </remarks>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Compilation.CheckSubmissionOptions(Microsoft.CodeAnalysis.CompilationOptions)">
             <summary>
@@ -4637,9 +4688,15 @@
             </summary>
             <returns>True if successful.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Compilation.GenerateResourcesAndDocumentationComments(Microsoft.CodeAnalysis.Emit.CommonPEModuleBuilder,System.IO.Stream,System.IO.Stream,System.Boolean,System.String,Microsoft.CodeAnalysis.DiagnosticBag,System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.Compilation.GenerateResources(Microsoft.CodeAnalysis.Emit.CommonPEModuleBuilder,System.IO.Stream,System.Boolean,Microsoft.CodeAnalysis.DiagnosticBag,System.Threading.CancellationToken)">
             <summary>
-            Update resources and generate XML documentation comments.
+            Update resources.
+            </summary>
+            <returns>True if successful.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Compilation.GenerateDocumentationComments(System.IO.Stream,System.String,Microsoft.CodeAnalysis.DiagnosticBag,System.Threading.CancellationToken)">
+            <summary>
+            Generate XML documentation comments.
             </summary>
             <returns>True if successful.</returns>
         </member>
@@ -5395,6 +5452,49 @@
             properly span a single expression, a single statement, or a contiguous series of
             statements within the enclosing block.
             </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.DeterministicKeyBuilder">
+             <summary>
+             The string returned from this function represents the inputs to the compiler which impact determinism.  It is 
+             meant to be inline with the specification here:
+             
+                 - https://github.com/dotnet/roslyn/blob/main/docs/compilers/Deterministic%20Inputs.md
+             
+             Options which can cause compilation failure, but doesn't impact the result of a successful
+             compilation should be included. That is because it is interesting to describe error states
+             not just success states. Think about caching build failures as well as build successes.
+            
+             When an option is omitted, say if there is no value for a public crypto key, we should emit
+             the property with a null value vs. omitting the property. Either approach would produce 
+             correct results the preference is to be declarative that an option is omitted.
+             </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.DeterministicKeyOptions.Default">
+            <summary>
+            The default is to include all inputs to the compilation which impact the output of the 
+            compilation: binaries or diagnostics.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.DeterministicKeyOptions.IgnorePaths">
+            <summary>
+            Ignore all file paths, but still include file names, in the deterministic key.
+            </summary>
+            <remarks>
+            This is useful for scenarios where the consumer is interested in the content of the 
+            <see cref="T:Microsoft.CodeAnalysis.Compilation"/> being the same but aren't concerned precisely with the file
+            path of the content. A typical example of this type of consumer is one that operates 
+            in CI where the path changes frequently.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.DeterministicKeyOptions.IgnoreToolVersions">
+            <summary>
+            Ignore the versions of the tools contributing to the build (compiler and runtime)
+            </summary>
+            <remarks>
+            Compiler output is not guaranteed to be deterministically equivalent between versions
+            but very often is for wide ranges of versions. This option is useful for consumers 
+            who are comfortable ignoring the versions when looking at compiler output. 
+            </remarks>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Emit.EmitResult">
             <summary>
@@ -11569,6 +11669,24 @@
         <member name="M:Microsoft.CodeAnalysis.SemanticModel.ComputeDeclarationsInNode(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.ISymbol,System.Boolean,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.DeclarationInfo},System.Threading.CancellationToken,System.Nullable{System.Int32})">
             <summary>
             Takes a node and returns a set of declarations that overlap the node's span.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.SemanticModel.GetSyntaxNodesToAnalyzeFilter(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.ISymbol)">
+            <summary>
+            Gets a filter that determines whether or not a given syntax node and its descendants should be analyzed for the given
+            declared node and declared symbol. We have scenarios where certain syntax nodes declare multiple symbols,
+            for example record declarations, and we want to avoid duplicate syntax node callbacks for such nodes.
+            Note that the predicate returned by this method filters out both the node and all its descendants from analysis.
+            If you wish to skip analysis just for a specific node, but not its descendants, then add the required logic in
+            <see cref="M:Microsoft.CodeAnalysis.SemanticModel.ShouldSkipSyntaxNodeAnalysis(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.ISymbol)"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.SemanticModel.ShouldSkipSyntaxNodeAnalysis(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.ISymbol)">
+            <summary>
+            Determines if the given syntax node with the given containing symbol should be analyzed or not.
+            Note that only the given syntax node will be filtered out from analysis, this API will be invoked separately
+            for each of its descendants. If you wish to skip analysis of the node and all its descendants, then add the required
+            logic to <see cref="M:Microsoft.CodeAnalysis.SemanticModel.GetSyntaxNodesToAnalyzeFilter(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.ISymbol)"/>.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.SemanticModel.GetTopmostNodeForDiagnosticAnalysis(Microsoft.CodeAnalysis.ISymbol,Microsoft.CodeAnalysis.SyntaxNode)">
@@ -19385,76 +19503,6 @@
              <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/> set if cancellation is expected.</param>
              <returns><see langword="false"/> to avoid catching the exception.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatch(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
-            <summary>
-            Report an error.
-            Calls <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/> and doesn't pass the exception through (the method returns true).
-            This is generally expected to be used within an exception filter as that allows us to
-            capture data at the point the exception is thrown rather than when it is handled.
-            However, it can also be used outside of an exception filter. If the exception has not
-            already been thrown the method will throw and catch it itself to ensure we get a useful
-            stack trace.
-            </summary>
-            <returns>True to catch the exception.</returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatchUnlessCanceled(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
-            <summary>
-            Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and catch
-            the exception, unless the operation was cancelled.
-            </summary>
-            <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
-            <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportIfNonFatalAndCatchUnlessCanceled(System.Exception,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
-            <summary>
-            Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and catch
-            the exception, unless the operation was cancelled.
-            </summary>
-            <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
-            <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportAndCatchUnlessCanceled(System.Exception,System.Threading.CancellationToken,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
-             <summary>
-             <para>Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and
-             catch the exception, unless the operation was cancelled at the request of
-             <paramref name="contextCancellationToken"/>.</para>
-            
-             <para>Cancellable operations are only expected to throw <see cref="T:System.OperationCanceledException"/> if the
-             applicable <paramref name="contextCancellationToken"/> indicates cancellation is requested by setting
-             <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/>. Unexpected cancellation, i.e. an
-             <see cref="T:System.OperationCanceledException"/> which occurs without <paramref name="contextCancellationToken"/>
-             requesting cancellation, is treated as an error by this method.</para>
-            
-             <para>This method does not require <see cref="P:System.OperationCanceledException.CancellationToken"/> to match
-             <paramref name="contextCancellationToken"/>, provided cancellation is expected per the previous
-             paragraph.</para>
-             </summary>
-             <param name="contextCancellationToken">A <see cref="T:System.Threading.CancellationToken"/> which will have
-             <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/> set if cancellation is expected.</param>
-             <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
-             <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.ErrorReporting.FatalError.ReportIfNonFatalAndCatchUnlessCanceled(System.Exception,System.Threading.CancellationToken,Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity)">
-             <summary>
-             <para>Use in an exception filter to report an error (by calling <see cref="P:Microsoft.CodeAnalysis.ErrorReporting.FatalError.Handler"/>) and
-             catch the exception, unless the operation was cancelled at the request of
-             <paramref name="contextCancellationToken"/>.</para>
-            
-             <para>Cancellable operations are only expected to throw <see cref="T:System.OperationCanceledException"/> if the
-             applicable <paramref name="contextCancellationToken"/> indicates cancellation is requested by setting
-             <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/>. Unexpected cancellation, i.e. an
-             <see cref="T:System.OperationCanceledException"/> which occurs without <paramref name="contextCancellationToken"/>
-             requesting cancellation, is treated as an error by this method.</para>
-            
-             <para>This method does not require <see cref="P:System.OperationCanceledException.CancellationToken"/> to match
-             <paramref name="contextCancellationToken"/>, provided cancellation is expected per the previous
-             paragraph.</para>
-             </summary>
-             <param name="contextCancellationToken">A <see cref="T:System.Threading.CancellationToken"/> which will have
-             <see cref="P:System.Threading.CancellationToken.IsCancellationRequested"/> set if cancellation is expected.</param>
-             <returns><see langword="true"/> to catch the exception if the error was reported; otherwise,
-             <see langword="false"/> to propagate the exception if the operation was cancelled.</returns>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.ErrorReporting.ErrorSeverity">
             <summary>
             The severity of the error, see the enum members for a description of when to use each. This is metadata that's included
@@ -23456,7 +23504,7 @@
             Creates a new generator state that contains information and constant trees
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.GeneratorState.#ctor(Microsoft.CodeAnalysis.GeneratorInfo,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISyntaxInputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IIncrementalGeneratorOutputNode})">
+        <member name="M:Microsoft.CodeAnalysis.GeneratorState.#ctor(Microsoft.CodeAnalysis.GeneratorInfo,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.SyntaxInputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IIncrementalGeneratorOutputNode})">
             <summary>
             Creates a new generator state that contains information, constant trees and an execution pipeline
             </summary>
@@ -23466,7 +23514,7 @@
             Creates a new generator state that contains an exception and the associated diagnostic
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.GeneratorState.#ctor(Microsoft.CodeAnalysis.GeneratorInfo,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.ISyntaxInputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IIncrementalGeneratorOutputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic},System.Collections.Immutable.ImmutableDictionary{System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IncrementalGeneratorRunStep}},System.Collections.Immutable.ImmutableDictionary{System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IncrementalGeneratorRunStep}},System.TimeSpan)">
+        <member name="M:Microsoft.CodeAnalysis.GeneratorState.#ctor(Microsoft.CodeAnalysis.GeneratorInfo,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.SyntaxInputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IIncrementalGeneratorOutputNode},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.GeneratedSyntaxTree},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic},System.Collections.Immutable.ImmutableDictionary{System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IncrementalGeneratorRunStep}},System.Collections.Immutable.ImmutableDictionary{System.String,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.IncrementalGeneratorRunStep}},System.TimeSpan)">
             <summary>
             Creates a generator state that contains results
             </summary>
@@ -27366,11 +27414,6 @@
             source or metadata.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.IParameterSymbol.IsNullChecked">
-            <summary>
-            True if the compiler will synthesize a null check for this parameter (the parameter is declared in source with a <c>!!</c> following the parameter name).
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.IPointerTypeSymbol">
             <summary>
             Represents a pointer type such as "int *". Pointer types
@@ -29160,6 +29203,12 @@
             This implementation uses a binary search to find the first slot that contains
             the given offset.
             </remarks>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxListBuilder`1.Add(`0)">
+            <summary>
+            Adds <paramref name="node"/> to the end of this builder.  No change happens if <see langword="null"/> is
+            passed in.
+            </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Syntax.InternalSyntax.GreenStats">
             <summary>
@@ -37454,6 +37503,14 @@
             </summary>
             <param name="o">The unexpected value.</param>
             <returns>The <see cref="T:System.InvalidOperationException"/>, which should be thrown by the caller.</returns>
+        </member>
+        <member name="M:Roslyn.Utilities.ExceptionUtilities.IsCurrentOperationBeingCancelled(System.Exception,System.Threading.CancellationToken)">
+            <summary>
+            Determine if an exception was an <see cref="T:System.OperationCanceledException"/>, and that the provided token caused the cancellation.
+            </summary>
+            <param name="exception">The exception to test.</param>
+            <param name="cancellationToken">Checked to see if the provided token was cancelled.</param>
+            <returns><see langword="true"/> if the exception was an <see cref="T:System.OperationCanceledException" /> and the token was canceled.</returns>
         </member>
         <member name="T:Roslyn.Utilities.FileNameUtilities">
             <summary>

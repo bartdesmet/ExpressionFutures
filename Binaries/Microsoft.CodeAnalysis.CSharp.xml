@@ -2244,17 +2244,24 @@
             </para>
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.CreateDecisionDagForSwitchStatement(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.BoundSwitchSection},Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder._forLowering">
+            <summary>
+            We might need to build a dedicated dag for lowering during which we
+            avoid synthesizing tests to relate alternative indexers. This won't 
+            affect code semantics but it results in a better code generation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.CreateDecisionDagForSwitchStatement(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.BoundSwitchSection},Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,System.Boolean)">
             <summary>
             Create a decision dag for a switch statement.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.CreateDecisionDagForSwitchExpression(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.BoundSwitchExpressionArm},Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.CreateDecisionDagForSwitchExpression(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.BoundSwitchExpressionArm},Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,System.Boolean)">
             <summary>
             Create a decision dag for a switch expression.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.CreateDecisionDagForIsPattern(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.BoundPattern,Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.CreateDecisionDagForIsPattern(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.BoundPattern,Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.LabelSymbol,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,System.Boolean)">
             <summary>
             Translate the pattern of an is-pattern expression.
             </summary>
@@ -18250,6 +18257,14 @@
             to produce diagnostics and to replace source crefs with documentation comment IDs.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.DocumentationCommentCompiler.DocumentationCommentWalker.GetSubstitutedText(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.CSharp.Symbols.SynthesizedRecordPropertySymbol,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax},Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode},System.Text.StringBuilder)">
+            <summary>
+            Writes the matching 'param' tags on a primary constructor as 'summary' tags for a synthesized record property.
+            </summary>
+            <remarks>
+            Still has all of the comment punctuation (///, /**, etc). associated with the 'param' tag.
+            </remarks>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.DocumentationCommentCompiler.DocumentationCommentWalker.GetSubstitutedText(Microsoft.CodeAnalysis.CSharp.CSharpCompilation,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,Microsoft.CodeAnalysis.CSharp.Symbol,Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax,Microsoft.CodeAnalysis.PooledObjects.ArrayBuilder{Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode},System.Collections.Generic.HashSet{Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol}@,System.Collections.Generic.HashSet{Microsoft.CodeAnalysis.CSharp.Symbols.TypeParameterSymbol}@)">
             <summary>
             Given a DocumentationCommentTriviaSyntax, return the full text, but with
@@ -19442,7 +19457,7 @@
             A lazily calculated diagnostic for use of nullable annotations outside of a '#nullable' annotations context.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.LazyMissingNonNullTypesContextDiagnosticInfo.ReportNullableReferenceTypesIfNeeded(System.Boolean,System.Boolean,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.Location,Microsoft.CodeAnalysis.DiagnosticBag)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.LazyMissingNonNullTypesContextDiagnosticInfo.AddAll(Microsoft.CodeAnalysis.CSharp.Binder,Microsoft.CodeAnalysis.SyntaxToken,System.Nullable{Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations},Microsoft.CodeAnalysis.DiagnosticBag)">
             <summary>
             A `?` annotation on a type that isn't a value type causes:
             - an error before C# 8.0
@@ -20733,6 +20748,11 @@
             tracks those assignments (or learns from post-condition attributes)
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.LearnFromPostConditions(Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.Symbols.FlowAnalysisAnnotations)">
+            <summary>
+            Learn from postconditions on a by-value or 'in' argument.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.MethodInferenceExtensions.GetNullableAnnotation(Microsoft.CodeAnalysis.CSharp.BoundExpression)">
             <summary>
             Return top-level nullability for the expression. This method should be called on a limited
@@ -20831,7 +20851,7 @@
             This adjustment doesn't apply to oblivious properties/indexers.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.GetDeconstructionRightParts(Microsoft.CodeAnalysis.CSharp.BoundExpression)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.NullableWalker.GetDeconstructionRightParts(Microsoft.CodeAnalysis.CSharp.BoundExpression,System.Nullable{Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithState})">
             <summary>
             Return the sub-expressions for the righthand side of a deconstruction
             assignment. cf. LocalRewriter.GetRightParts.
@@ -24373,12 +24393,12 @@
             return null in that case only.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.MakeInterpolatedStringTextToken(System.String,Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.MakeInterpolatedStringTextToken(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind,System.String)">
             <summary>
             Interpret the given raw text from source as an InterpolatedStringTextToken.
             </summary>
             <param name="text">The text for the full string literal, including the quotes and contents</param>
-            <param name="kind">The kind of the interpolation</param>
+            <param name="kind">The kind of the interpolated string we were processing</param>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.LanguageParser.ParseTypeOrPatternForIsOperator">
             <summary>
@@ -24555,6 +24575,14 @@
             Range of the close brace.  Empty if there was no close brace (an error condition).
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.ConsumeCharSequence(System.Char)">
+            <returns>The number of quotes that were consumed</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.StartsWith(System.Text.StringBuilder,System.Text.StringBuilder)">
+            <summary>
+            Returns true if <paramref name="sb"/> starts with <paramref name="value"/>.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.RescanInterpolatedString(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolatedStringExpressionSyntax)">
             <summary>
             Turn a (parsed) interpolated string nonterminal into an interpolated string token.
@@ -24563,12 +24591,22 @@
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind.Normal">
             <summary>
-            Normal interpolated string that just starts with $"
+            Normal interpolated string that just starts with <c>$"</c>
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind.Verbatim">
             <summary>
-            Verbatim interpolated string that starts with $@" or @$"
+            Verbatim interpolated string that starts with <c>$@"</c> or <c>@$"</c>
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind.SingleLineRaw">
+            <summary>
+            Single-line raw interpolated string that starts with at least one <c>$</c>, and at least three <c>"</c>s.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind.MultiLineRaw">
+            <summary>
+            Multi-line raw interpolated string that starts with at least one <c>$</c>, and at least three <c>"</c>s.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringScanner">
@@ -24583,7 +24621,25 @@
             next potential ending location to prevent compounding the issue.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringScanner.ScanInterpolatedStringLiteralHoleBalancedText(System.Char,System.Boolean,System.Range@)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringScanner.ScanOpenQuote(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind@,System.Int32@,System.Int32@)">
+            <param name="startingDollarSignCount">
+            Number of '$' characters this interpolated string started with.  We'll need to see that many '{' in a
+            row to start an interpolation.  Any less and we'll treat that as just text.  Note if this count is '1'
+            then this is a normal (non-raw) interpolation and `{{` is treated as an escape.
+            </param>
+            <param name="startingQuoteCount">Number of '"' characters this interpolated string started with.</param>
+            <returns><see langword="true"/> if we successfully processed the open quote range and can proceed to the
+            rest of the literal. <see langword="false"/> if we were not successful and should stop
+            processing.</returns>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringScanner.IsEndDelimiterOtherwiseConsume(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind,System.Int32)">
+            <summary>
+            Returns <see langword="true"/> if the quote was an end delimiter and lexing of the contents of the
+            interpolated string literal should stop.  If it was an end delimeter it will not be consumed.  If it is
+            content and should not terminate the string then it will be consumed by this method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringScanner.ScanInterpolatedStringLiteralHoleBalancedText(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.Lexer.InterpolatedStringKind,System.Char,System.Boolean,System.Range@)">
             <summary>
             Scan past the hole inside an interpolated string literal, leaving the current character on the '}' (if any)
             </summary>
@@ -24678,6 +24734,19 @@
             <summary>
             Advance the current position by n. No guarantee that this position
             is valid.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SlidingTextWindow.AdvancePastNewLine">
+            <summary>
+            Moves past the newline that the text window is currently pointing at.  The text window must be pointing at a
+            newline.  If the newline is <c>\r\n</c> then that entire sequence will be skipped.  Otherwise, the text
+            window will only advance past a single character.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SlidingTextWindow.GetNewLineWidth">
+            <summary>
+            Gets the length of the newline the text window must be pointing at here.  For <c>\r\n</c> this is <c>2</c>,
+            for everything else, this is <c>1</c>.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SlidingTextWindow.NextChar">
@@ -24833,6 +24902,11 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.NameColonSyntax.ColonToken">
             <summary>SyntaxToken representing colon.</summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.Token(Microsoft.CodeAnalysis.GreenNode,Microsoft.CodeAnalysis.CSharp.SyntaxKind,System.String,Microsoft.CodeAnalysis.GreenNode)">
+            <summary>
+            Creates a token whose <see cref="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken.Text"/> and <see cref="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken.ValueText"/> are the same.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken.ToString">
             <summary>
@@ -25613,7 +25687,7 @@
             <summary>SyntaxToken representing the omitted array size expression.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolatedStringExpressionSyntax.StringStartToken">
-            <summary>The first part of an interpolated string, $" or $@"</summary>
+            <summary>The first part of an interpolated string, <c>$"</c> or <c>$@"</c> or <c>$"""</c></summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolatedStringExpressionSyntax.Contents">
             <summary>List of parts of the interpolated string, each one is either a literal part or an interpolation.</summary>
@@ -25641,6 +25715,14 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolatedStringTextSyntax.TextToken">
             <summary>The text contents of a part of the interpolated string.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolationSyntax.OpenBraceToken">
+            <summary>This could be a single <c>{</c> or multiple in a row (in the case of an interpolation in a raw interpolated string).</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolationSyntax.CloseBraceToken">
+            <summary>
+            This could be a single <c>}</c> or multiple in a row (in the case of an interpolation in a raw interpolated string).
+            </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InterpolationFormatClauseSyntax.FormatStringToken">
             <summary>The text contents of the format specifier for an interpolation.</summary>
@@ -28650,7 +28732,7 @@
             </remarks>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringExpressionSyntax.StringStartToken">
-            <summary>The first part of an interpolated string, $" or $@"</summary>
+            <summary>The first part of an interpolated string, <c>$"</c> or <c>$@"</c> or <c>$"""</c></summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringExpressionSyntax.Contents">
             <summary>List of parts of the interpolated string, each one is either a literal part or an interpolation.</summary>
@@ -28829,6 +28911,14 @@
             <item><description><see cref="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.Interpolation"/></description></item>
             </list>
             </remarks>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InterpolationSyntax.OpenBraceToken">
+            <summary>This could be a single <c>{</c> or multiple in a row (in the case of an interpolation in a raw interpolated string).</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Syntax.InterpolationSyntax.CloseBraceToken">
+            <summary>
+            This could be a single <c>}</c> or multiple in a row (in the case of an interpolation in a raw interpolated string).
+            </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Syntax.InterpolationAlignmentClauseSyntax">
             <remarks>
@@ -30603,6 +30693,9 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.AnonymousMethodExpression">
             <summary>Creates a new AnonymousMethodExpressionSyntax instance.</summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.LiteralExpression(Microsoft.CodeAnalysis.CSharp.SyntaxKind)">
+            <summary>Creates a new LiteralExpressionSyntax instance.</summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.AccessorDeclaration(Microsoft.CodeAnalysis.CSharp.SyntaxKind,Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax)">
             <summary>Creates a new AccessorDeclarationSyntax instance.</summary>
         </member>
@@ -30807,8 +30900,8 @@
             Creates a verbatim token with kind IdentifierToken containing the specified text.
             </summary>
             <param name="leading">A list of trivia immediately preceding the token.</param>
-            <param name="text">The raw text of the identifier name, including any escapes or leading '@'
-            character as it is in source.</param>
+            <param name="text">The identifier, not including any escapes or leading '@'
+            character.</param>
             <param name="valueText">The canonical value of the token's text.</param>
             <param name="trailing">A list of trivia immediately following the token.</param>
         </member>
@@ -32083,9 +32176,6 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.LiteralExpression(Microsoft.CodeAnalysis.CSharp.SyntaxKind,Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>Creates a new LiteralExpressionSyntax instance.</summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.LiteralExpression(Microsoft.CodeAnalysis.CSharp.SyntaxKind)">
-            <summary>Creates a new LiteralExpressionSyntax instance.</summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.MakeRefExpression(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>Creates a new MakeRefExpressionSyntax instance.</summary>
         </member>
@@ -32374,10 +32464,7 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.InterpolatedStringExpression(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringContentSyntax},Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>Creates a new InterpolatedStringExpressionSyntax instance.</summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.InterpolatedStringExpression(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxList{Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringContentSyntax})">
-            <summary>Creates a new InterpolatedStringExpressionSyntax instance.</summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.InterpolatedStringExpression(Microsoft.CodeAnalysis.SyntaxToken)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.InterpolatedStringExpression(Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.SyntaxToken)">
             <summary>Creates a new InterpolatedStringExpressionSyntax instance.</summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxFactory.IsPatternExpression(Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax,Microsoft.CodeAnalysis.SyntaxToken,Microsoft.CodeAnalysis.CSharp.Syntax.PatternSyntax)">
@@ -36252,6 +36339,11 @@
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.EndOfFileToken">
             <summary>Represents the end of a file.</summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.CSharp.SyntaxKind.InterpolatedStringToken">
+            <summary>
+            Token for a whole interpolated string <c>$""" ... { expr } ..."""</c>. This only exists in transient form during parsing.
+            </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.SyntaxNodeExtensions.CanHaveAssociatedLocalBinder(Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
@@ -42543,8 +42635,8 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_DuplicateNullSuppression">
             <summary>Duplicate null suppression operator ('!')</summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_IncorrectNullCheckSyntax">
-            <summary>Incorrect parameter null checking syntax. Should be '!!'.</summary>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_DiscardCannotBeNullChecked">
+            <summary>Discard parameter cannot be null-checked.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_MustNullCheckInImplementation">
             <summary>Parameter '{0}' can only have exclamation-point null checking in implementation methods.</summary>
@@ -43247,6 +43339,48 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_SimpleProgramIsEmpty">
             <summary>At least one top-level statement must be non-empty.</summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_LineDoesNotStartWithSameWhitespace">
+            <summary>Line does not start with the same whitespace as the closing line of the raw string literal.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RawStringNotInDirectives">
+            <summary>Raw string literals are not allowed in preprocessor directives.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RawStringDelimiterOnOwnLine">
+            <summary>Raw string literal delimiter must be on its own line.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_TooManyQuotesForRawString">
+            <summary>The raw string literal does not start with enough quote characters to allow this many consecutive quote characters as content.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_TooManyOpenBracesForRawString">
+            <summary>The interpolated raw string literal does not start with enough '$' characters to allow this many consecutive opening braces as content.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_TooManyCloseBracesForRawString">
+            <summary>The interpolated raw string literal does not start with enough '$' characters to allow this many consecutive closing braces as content.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NotEnoughQuotesForRawString">
+            <summary>Not enough quotes for raw string literal.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NotEnoughCloseBracesForRawString">
+            <summary>The interpolation must end with the same number of closing braces as the number of '$' characters that the raw string literal started with.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_IllegalAtSequence">
+            <summary>Sequence of '@' characters is not allowed. A verbatim string or identifier can only have one '@' character and a raw string cannot have any.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_StringMustStartWithQuoteCharacter">
+            <summary>String must start with quote character: "</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_UnterminatedRawString">
+            <summary>Unterminated raw string literal.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_FeatureRawStringLiterals">
+            <summary>raw string literals</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RawStringInVerbatimInterpolatedStrings">
+            <summary>Multi-line raw string literals are only allowed in verbatim interpolated strings.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_RawStringMustContainContent">
+            <summary>Multi-line raw string literals must contain at least one line of content.</summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_NewlinesAreNotAllowedInsideANonVerbatimInterpolatedString">
             <summary>Newlines inside a non-verbatim interpolated string are not supported in C# {0}. Please use language version {1} or greater.</summary>
         </member>
@@ -43294,6 +43428,9 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_LowerCaseTypeName_Title">
             <summary>The type name only contains lower-cased ascii characters. Such names may become reserved for the language.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_LineContainsDifferentWhitespace">
+            <summary>Line contains different whitespace than the closing line of the raw string literal: '{0}' versus '{1}'</summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.CSharp.CSharpCompilerDiagnosticAnalyzer">
             <summary>
