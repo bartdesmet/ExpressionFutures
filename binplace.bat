@@ -15,9 +15,14 @@ copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Reflection.Metadata.dll" 
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Runtime.CompilerServices.Unsafe.dll" "Binaries\"
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\System.Threading.Tasks.Extensions.dll" "Binaries\"
 copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\Microsoft.Bcl.AsyncInterfaces.dll" "Binaries\"
+copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\Microsoft.CodeAnalysis.Elfie.dll" "Binaries\"
+copy "%1\Roslyn.VisualStudio.Setup\Debug\net472\Microsoft.DiaSymReader.dll" "Binaries\"
 
 copy "%1\Microsoft.CodeAnalysis\Debug\netstandard2.0\Microsoft.CodeAnalysis.dll" "Binaries\"
 copy "%1\Microsoft.CodeAnalysis\Debug\netstandard2.0\Microsoft.CodeAnalysis.xml" "Binaries\"
+
+copy "%1\Microsoft.CodeAnalysis.Features\Debug\netstandard2.0\Microsoft.CodeAnalysis.Features.dll" "Binaries\"
+copy "%1\Microsoft.CodeAnalysis.Features\Debug\netstandard2.0\Microsoft.CodeAnalysis.Features.xml" "Binaries\"
 
 copy "%1\Microsoft.CodeAnalysis.Scripting\Debug\netstandard2.0\Microsoft.CodeAnalysis.Scripting.dll" "Binaries\"
 copy "%1\Microsoft.CodeAnalysis.Scripting\Debug\netstandard2.0\Microsoft.CodeAnalysis.Scripting.xml" "Binaries\"
@@ -27,6 +32,9 @@ copy "%1\Microsoft.CodeAnalysis.Workspaces\Debug\netstandard2.0\Microsoft.CodeAn
 
 copy "%1\Microsoft.CodeAnalysis.CSharp\Debug\netstandard2.0\Microsoft.CodeAnalysis.CSharp.dll" "Binaries\"
 copy "%1\Microsoft.CodeAnalysis.CSharp\Debug\netstandard2.0\Microsoft.CodeAnalysis.CSharp.xml" "Binaries\"
+
+copy "%1\Microsoft.CodeAnalysis.CSharp.Features\Debug\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Features.dll" "Binaries\"
+copy "%1\Microsoft.CodeAnalysis.CSharp.Features\Debug\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Features.xml" "Binaries\"
 
 copy "%1\Microsoft.CodeAnalysis.CSharp.Scripting\Debug\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Scripting.dll" "Binaries\"
 copy "%1\Microsoft.CodeAnalysis.CSharp.Scripting\Debug\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Scripting.xml" "Binaries\"
