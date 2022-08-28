@@ -942,11 +942,11 @@ CSharpExpression.IndexerAccess(s, i, /* methodinfoof(System.String.get_Length) *
 
 ##### `await using`
 
-TODO - Add documentation; partial implementation without "pattern dispose" ready.
+TODO - Fully implemented; add documentation.
 
 ##### `await foreach`
 
-TODO - Implementation pending.
+TODO - Fully implemented; add documentation.
 
 #### C# 9.0
 
@@ -955,7 +955,7 @@ TODO - Implementation pending.
 Support for relational, `and`, `or`, and `not` patterns was added by extending the `CSharpPattern` class hierarchy to support:
 
 * `BinaryCSharpPattern` with kinds `CSharpPatternType.And` and `CSharpPatternType.Or` to support `and` and `or`,
-* `NotCSharpPattern` to support `not``, and,
+* `NotCSharpPattern` to support `not`, and,
 * `RelationalCSharpPattern` to support relational patterns using `<`, `<=`, `>`, or `>=`.
 
 #### C# 10.0
@@ -963,6 +963,12 @@ Support for relational, `and`, `or`, and `not` patterns was added by extending t
 ##### Extended property patterns
 
 Support for extended property patterns was added by supporting a chain of member lookups in `PropertyCSharpSubpatternMember`.
+
+#### C# 11.0
+
+##### List patterns
+
+TODO - Fully implemented; add documentation.
 
 #### Statement Trees
 
