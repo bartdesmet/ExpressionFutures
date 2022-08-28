@@ -340,6 +340,7 @@
     <Compile Include="CrossCheckTests\CSharp30.Statements.While.cs" />
     <Compile Include="CrossCheckTests\CSharp30.Statements.Switch.cs" />
     <Compile Include="CrossCheckTests\CSharp30.Statements.If.cs" />
+    <Compile Include="CrossCheckTests\CSharp60.InterpolatedString.cs" />
     <Compile Include="CrossCheckTests\CSharp70.DeconstructionAssignment.cs" />
     <Compile Include="CrossCheckTests\CSharp70.TupleConvert.cs" />
     <Compile Include="CrossCheckTests\CSharp80.AwaitForEach.cs" />
