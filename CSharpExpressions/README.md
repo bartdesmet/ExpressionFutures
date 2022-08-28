@@ -278,9 +278,9 @@ Although generating a custom state machine type would be more efficient (e.g. by
 
 The next step in the compilation of an async lambda is the rewrite of the `Body` expression. This proceeds in a few steps. First, we reduce all nodes in the `Body` except for the `Await` nodes. By doing so, we only have to worry about LINQ nodes in the steps that follow. Second, we lower various constructs to a more primitive form in order to support their use in asynchronous lambdas. Those include `Try` expressions with `Await` expressions in any of the `Handlers` or `Finally` or `Fault` expressions. Third, we perform stack spilling in order to be able to await while having intermediate expression evaluation results on the stack. Finally, we transform the resulting lowered `Body` by rewriting all `Await` expressions into the awaiter pattern using a state machine. Some other manipulations of the expression are deemed implementation details and are omitted from this description.
 
-#### C# 6.0
+### C# 6.0
 
-##### Conditional Access Expressions
+#### Conditional Access Expressions
 
 Conditional access expressions, also known as "null-propagating operators", are not supported in expression trees as shown below:
 
@@ -339,7 +339,7 @@ var expr = CSharpExpression.ConditionalAccess(
 
 The reduction of null-propagating operators emits a `Block` expression with an `Assign` binary expression to assign the result of evaluating the `Receiver` to a `Variable` parameter expression. Next, an `IfThen` conditional expression is used to check the variable against a null value. If the variable is not null, the underlying operation is invoked by substituting references to `NonNullReceiver` in `WhenNotNull` for the created variable. The result of the underlying operation is lifted to null using a `Convert` unary expression if necessary.
 
-##### Indexer Initializers
+#### Indexer Initializers
 
 Indexer (or dictionary) initializers were introduced as an addition to object initializer expressions that were introduced in C# 3.0. They are not supported in expression trees:
 
@@ -385,7 +385,7 @@ The compilation of such constructs is based on a lowering step where we translat
 
 All of this is very similar to the C# compiler approach of supporting `await` in `catch` and `finally` blocks. Two notable differences are our support for `Await` in a `Fault` handler and our support for non-void `Try` expressions which are permitted by the DLR.
 
-##### Interpolated Strings
+#### Interpolated Strings
 
 Right now, interpolated strings are being lowered to `string.Format` invocations in expression trees. This has the drawback that any library that wishes to translate a string interpolation needs to reverse engineer a format string literal. When referencing `Microsoft.CSharp.Expressions`, we capture interpolated strings in a non-lowered form as an `InterpolatedStringCSharpExpression`, whose `Reduce` method will produce a `MethodCallExpression` for the equivalent `string.Format` call.
 
@@ -456,9 +456,9 @@ CSharpExpression.InterpolatedString(
 
 where the first argument indicates the converted type. Reduction of the expression results in a `MethodCallExpression` for the `FormattableStringFactory.Create` method.
 
-#### C# 7.0
+### C# 7.0
 
-##### Throw Expressions
+#### Throw Expressions
 
 Throw expressions are not supported in expression trees as shown below:
 
@@ -481,7 +481,7 @@ Expression.Throw(
 )
 ```
 
-##### Discard Expressions
+#### Discard Expressions
 
 Discard expressions are not supported in expression trees as shown below:
 
@@ -503,7 +503,7 @@ CSharpExpression.Discard(typeof(int))
 
 Nodes of this type reduce to a valid assignment target using a `Discard<T>` helper type. Optimizers can prevent this reduction by removing assignments or by introducing temporary locals in blocks.
 
-##### Generalized Async Return Types
+#### Generalized Async Return Types
 
 Task-like return types on async lambdas are supported using the `AsyncMethodBuilderAttribute` type to select a builder type. For example, this enables the use of `ValueTask<T>` as the return type of an async lambda:
 
@@ -513,7 +513,7 @@ Expression<Func<Task<int>, ValueTask<int>>> f = t => 2 * await t;
 
 Upon reduction of the `AsyncLambdaCSharpExpression` node, the async state machine is built using the custom builder type's `Create`, `Start`, `AwaitOnCompleted`, `SetResult`, and `SetException` methods. The task-like object returned is obtained using the builder's `Task` property.
 
-##### Tuples
+#### Tuples
 
 Tuple literals are not supported in expression trees as shown below:
 
@@ -687,7 +687,7 @@ Upon reduction of the `DeconstructionAssignmentCSharpExpression` node, any decon
 
 Finally, note that deconstruction assignment is also supported in `foreach` loops using a `ForEachCSharpStatement.Deconstruction` property that represents the deconstruction step applied to an element of the collection enumeration in order to assign the loop variables in `ForEachCSharpStatement.Variables`.
 
-##### Pattern Matching
+#### Pattern Matching
 
 The `is` pattern matching operator is not supported in expression trees as shown below:
 
@@ -741,7 +741,7 @@ CSharpExpression.IsPattern(o, CSharpPattern.Var(Expression.Parameter(x, o.Type))
 
 More pattern types were introduced in subsequent versions of C# and are covered further down in this document.
 
-##### Local Functions
+#### Local Functions
 
 We do not add support to call local functions from an expression tree lambda, nor to declare a local function within an expression tree lambda. For example:
 
@@ -774,19 +774,19 @@ Adding support for local functions has several pitfalls:
   - Local functions become delegate-typed variables that need to be declared and assigned at the beginning of the block (because local functions can be defined anywhere; they're effectively statement nodes). We'd likely have to keep them on nodes such as `BlockCSharpExpression`, and use the reduction of such nodes to turn them into local variables and assignment statements.
   - Local functions can be generic. Expression trees can't be used to define open generic delegates and expression tree factory methods will guard against `System.Type` instances that represent open generics or generic type parameters. One way around this is to chase down all instantiations of the local function and specialize for all of them, resulting in duplication of the code. Or, we could reject generic local functions.
 
-#### C# 7.1
+### C# 7.1
 
 No new features were added that impact expression trees.
 
-#### C# 7.2
+### C# 7.2
 
-##### Non-trailing Named Arguments
+#### Non-trailing Named Arguments
 
 TODO - Pending verification.
 
-#### C# 7.3
+### C# 7.3
 
-##### Tuples equality and inequality
+#### Tuples equality and inequality
 
 Tuple equality and inequality expressions are not supported in expression trees as shown below:
 
@@ -816,9 +816,9 @@ The lambda expressions array passed to `TupleEqual` or `TupleNotEqual` represent
 
 Nodes of this type reduce to a logical conjunction or disjunction using `AndAlso` (in case of `TupleEqual`) or `OrElse` (in case of `TupleNotEqual`) expressions to combine equality checks applied to elements extracted from the tuple operands, while guaranteeing a left-to-right evaluation of side-effects.
 
-#### C# 8.0
+### C# 8.0
 
-##### Null coalescing Assignment
+#### Null coalescing Assignment
 
 Null coalescing assignment expressions are not supported in expression trees as shown below:
 
@@ -840,7 +840,7 @@ CSharpExpression.NullCoalescingAssignment(s, Expression.Constant("foo"))
 
 Support for `dynamic` is provided through `DynamicCSharpExpression.NullCoalescingAssignment` methods.
 
-##### Recursive pattern matching
+#### Recursive pattern matching
 
 Support for positional and property patterns was added by extending the `CSharpPattern` class hierarchy to support:
 
@@ -852,15 +852,15 @@ Recursive patterns use subpatterns of type `PositionalCSharpSubpattern` and `Pro
 
 More pattern types were introduced in subsequent versions of C# and are covered further down in this document.
 
-##### Switch Expressions
+#### Switch Expressions
 
 TODO - Implementation pending.
 
-##### Using Declarations
+#### Using Declarations
 
 TODO - Document implementation.
 
-##### Indices and Ranges
+#### Indices and Ranges
 
 Construction of indexes using the `^` expression is supported using a `FromEndIndexCSharpExpression` node type. For example:
 
@@ -940,15 +940,15 @@ is translated into:
 CSharpExpression.IndexerAccess(s, i, /* methodinfoof(System.String.get_Length) */, /* methodinfoof(System.String.Substring) */)
 ```
 
-##### `await using`
+#### `await using`
 
 TODO - Fully implemented; add documentation.
 
-##### `await foreach`
+#### `await foreach`
 
 TODO - Fully implemented; add documentation.
 
-#### C# 9.0
+### C# 9.0
 
 ##### Pattern matching enhancements
 
@@ -958,19 +958,19 @@ Support for relational, `and`, `or`, and `not` patterns was added by extending t
 * `NotCSharpPattern` to support `not`, and,
 * `RelationalCSharpPattern` to support relational patterns using `<`, `<=`, `>`, or `>=`.
 
-#### C# 10.0
+### C# 10.0
 
-##### Extended property patterns
+#### Extended property patterns
 
 Support for extended property patterns was added by supporting a chain of member lookups in `PropertyCSharpSubpatternMember`.
 
-#### C# 11.0
+### C# 11.0
 
-##### List patterns
+#### List patterns
 
 TODO - Fully implemented; add documentation.
 
-#### Statement Trees
+### Statement Trees
 
 Statements have existed in C# since day zero, but have never been supported in expression trees. With the DLR refresh of the LINQ expression API in .NET 4.0, various statement constructs have been modeled, including `Block`, `Try`, `Loop`, etc. The C# compiler has not been updated to support emitting expression trees containing those, as illustrated below:
 
