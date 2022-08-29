@@ -3,18 +3,17 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class ForTests
     {
-        [TestMethod]
+        [Fact]
         public void For_Factory_ArgumentChecking()
         {
             var i = Expression.Parameter(typeof(int));
@@ -59,7 +58,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel, breakLabel));
         }
 
-        [TestMethod]
+        [Fact]
         public void For_Properties()
         {
             var i = Expression.Parameter(typeof(int));
@@ -73,89 +72,89 @@ namespace Tests
             {
                 var res = CSharpExpression.For(initializers, test, iterators, body);
 
-                Assert.AreEqual(CSharpExpressionType.For, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { i }.SequenceEqual(res.Variables));
-                Assert.IsTrue(initializers.SequenceEqual(res.Initializers));
-                Assert.AreSame(test, res.Test);
-                Assert.IsTrue(iterators.SequenceEqual(res.Iterators));
-                Assert.AreSame(body, res.Body);
-                Assert.IsNull(res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.For, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { i }.SequenceEqual(res.Variables));
+                Assert.True(initializers.SequenceEqual(res.Initializers));
+                Assert.Same(test, res.Test);
+                Assert.True(iterators.SequenceEqual(res.Iterators));
+                Assert.Same(body, res.Body);
+                Assert.Null(res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.For(initializers, test, iterators, body, breakLabel);
 
-                Assert.AreEqual(CSharpExpressionType.For, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { i }.SequenceEqual(res.Variables));
-                Assert.IsTrue(initializers.SequenceEqual(res.Initializers));
-                Assert.AreSame(test, res.Test);
-                Assert.IsTrue(iterators.SequenceEqual(res.Iterators));
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.For, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { i }.SequenceEqual(res.Variables));
+                Assert.True(initializers.SequenceEqual(res.Initializers));
+                Assert.Same(test, res.Test);
+                Assert.True(iterators.SequenceEqual(res.Iterators));
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.For(initializers, test, iterators, body, breakLabel, continueLabel);
 
-                Assert.AreEqual(CSharpExpressionType.For, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { i }.SequenceEqual(res.Variables));
-                Assert.IsTrue(initializers.SequenceEqual(res.Initializers));
-                Assert.AreSame(test, res.Test);
-                Assert.IsTrue(iterators.SequenceEqual(res.Iterators));
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.AreSame(continueLabel, res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.For, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { i }.SequenceEqual(res.Variables));
+                Assert.True(initializers.SequenceEqual(res.Initializers));
+                Assert.Same(test, res.Test);
+                Assert.True(iterators.SequenceEqual(res.Iterators));
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Same(continueLabel, res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.For(new[] { i }, initializers, test, iterators, body);
 
-                Assert.AreEqual(CSharpExpressionType.For, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { i }.SequenceEqual(res.Variables));
-                Assert.IsTrue(initializers.SequenceEqual(res.Initializers));
-                Assert.AreSame(test, res.Test);
-                Assert.IsTrue(iterators.SequenceEqual(res.Iterators));
-                Assert.AreSame(body, res.Body);
-                Assert.IsNull(res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.For, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { i }.SequenceEqual(res.Variables));
+                Assert.True(initializers.SequenceEqual(res.Initializers));
+                Assert.Same(test, res.Test);
+                Assert.True(iterators.SequenceEqual(res.Iterators));
+                Assert.Same(body, res.Body);
+                Assert.Null(res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel);
 
-                Assert.AreEqual(CSharpExpressionType.For, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { i }.SequenceEqual(res.Variables));
-                Assert.IsTrue(initializers.SequenceEqual(res.Initializers));
-                Assert.AreSame(test, res.Test);
-                Assert.IsTrue(iterators.SequenceEqual(res.Iterators));
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.For, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { i }.SequenceEqual(res.Variables));
+                Assert.True(initializers.SequenceEqual(res.Initializers));
+                Assert.Same(test, res.Test);
+                Assert.True(iterators.SequenceEqual(res.Iterators));
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel, continueLabel);
 
-                Assert.AreEqual(CSharpExpressionType.For, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { i }.SequenceEqual(res.Variables));
-                Assert.IsTrue(initializers.SequenceEqual(res.Initializers));
-                Assert.AreSame(test, res.Test);
-                Assert.IsTrue(iterators.SequenceEqual(res.Iterators));
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.AreSame(continueLabel, res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.For, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { i }.SequenceEqual(res.Variables));
+                Assert.True(initializers.SequenceEqual(res.Initializers));
+                Assert.Same(test, res.Test);
+                Assert.True(iterators.SequenceEqual(res.Iterators));
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Same(continueLabel, res.ContinueLabel);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void For_Update()
         {
             var i = Expression.Parameter(typeof(int));
@@ -168,7 +167,7 @@ namespace Tests
             var continueLabel = Expression.Label();
             var res = CSharpExpression.For(variables, initializers, test, iterators, body, breakLabel, continueLabel);
 
-            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Initializers, res.Test, res.Iterators, res.Body, res.Locals));
+            Assert.Same(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Initializers, res.Test, res.Iterators, res.Body, res.Locals));
 
             var newVariables = new[] { i };
             var newInitializers = new[] { Expression.Assign(i, Expression.Constant(0)) };
@@ -186,71 +185,71 @@ namespace Tests
             var upd6 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Initializers, res.Test, newIterators, res.Body, res.Locals);
             var upd7 = res.Update(res.BreakLabel, res.ContinueLabel, res.Variables, res.Initializers, res.Test, res.Iterators, newBody, res.Locals);
 
-            Assert.AreSame(newBreakLabel, upd1.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd1.ContinueLabel);
-            Assert.AreSame(res.Variables, upd1.Variables);
-            Assert.AreSame(res.Initializers, upd1.Initializers);
-            Assert.AreSame(res.Test, upd1.Test);
-            Assert.AreSame(res.Iterators, upd1.Iterators);
-            Assert.AreSame(res.Body, upd1.Body);
-            Assert.AreSame(res.Locals, upd1.Locals);
+            Assert.Same(newBreakLabel, upd1.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd1.ContinueLabel);
+            Assert.Same(res.Variables, upd1.Variables);
+            Assert.Same(res.Initializers, upd1.Initializers);
+            Assert.Same(res.Test, upd1.Test);
+            Assert.Same(res.Iterators, upd1.Iterators);
+            Assert.Same(res.Body, upd1.Body);
+            Assert.Same(res.Locals, upd1.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd2.BreakLabel);
-            Assert.AreSame(newContinueLabel, upd2.ContinueLabel);
-            Assert.AreSame(res.Variables, upd2.Variables);
-            Assert.AreSame(res.Initializers, upd2.Initializers);
-            Assert.AreSame(res.Test, upd2.Test);
-            Assert.AreSame(res.Iterators, upd2.Iterators);
-            Assert.AreSame(res.Body, upd2.Body);
-            Assert.AreSame(res.Locals, upd2.Locals);
+            Assert.Same(res.BreakLabel, upd2.BreakLabel);
+            Assert.Same(newContinueLabel, upd2.ContinueLabel);
+            Assert.Same(res.Variables, upd2.Variables);
+            Assert.Same(res.Initializers, upd2.Initializers);
+            Assert.Same(res.Test, upd2.Test);
+            Assert.Same(res.Iterators, upd2.Iterators);
+            Assert.Same(res.Body, upd2.Body);
+            Assert.Same(res.Locals, upd2.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd3.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd3.ContinueLabel);
-            Assert.IsTrue(newVariables.SequenceEqual(upd3.Variables));
-            Assert.AreSame(res.Initializers, upd3.Initializers);
-            Assert.AreSame(res.Test, upd3.Test);
-            Assert.AreSame(res.Iterators, upd3.Iterators);
-            Assert.AreSame(res.Body, upd3.Body);
-            Assert.AreSame(res.Locals, upd3.Locals);
+            Assert.Same(res.BreakLabel, upd3.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd3.ContinueLabel);
+            Assert.True(newVariables.SequenceEqual(upd3.Variables));
+            Assert.Same(res.Initializers, upd3.Initializers);
+            Assert.Same(res.Test, upd3.Test);
+            Assert.Same(res.Iterators, upd3.Iterators);
+            Assert.Same(res.Body, upd3.Body);
+            Assert.Same(res.Locals, upd3.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd4.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd4.ContinueLabel);
-            Assert.AreSame(res.Variables, upd4.Variables);
-            Assert.IsTrue(newInitializers.SequenceEqual(upd4.Initializers));
-            Assert.AreSame(res.Test, upd4.Test);
-            Assert.AreSame(res.Iterators, upd4.Iterators);
-            Assert.AreSame(res.Body, upd4.Body);
-            Assert.AreSame(res.Locals, upd4.Locals);
+            Assert.Same(res.BreakLabel, upd4.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd4.ContinueLabel);
+            Assert.Same(res.Variables, upd4.Variables);
+            Assert.True(newInitializers.SequenceEqual(upd4.Initializers));
+            Assert.Same(res.Test, upd4.Test);
+            Assert.Same(res.Iterators, upd4.Iterators);
+            Assert.Same(res.Body, upd4.Body);
+            Assert.Same(res.Locals, upd4.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd5.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd5.ContinueLabel);
-            Assert.AreSame(res.Variables, upd5.Variables);
-            Assert.AreSame(res.Initializers, upd5.Initializers);
-            Assert.AreSame(newTest, upd5.Test);
-            Assert.AreSame(res.Iterators, upd5.Iterators);
-            Assert.AreSame(res.Body, upd5.Body);
-            Assert.AreSame(res.Locals, upd5.Locals);
+            Assert.Same(res.BreakLabel, upd5.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd5.ContinueLabel);
+            Assert.Same(res.Variables, upd5.Variables);
+            Assert.Same(res.Initializers, upd5.Initializers);
+            Assert.Same(newTest, upd5.Test);
+            Assert.Same(res.Iterators, upd5.Iterators);
+            Assert.Same(res.Body, upd5.Body);
+            Assert.Same(res.Locals, upd5.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd6.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd6.ContinueLabel);
-            Assert.AreSame(res.Variables, upd6.Variables);
-            Assert.AreSame(res.Initializers, upd6.Initializers);
-            Assert.AreSame(res.Test, upd6.Test);
-            Assert.IsTrue(newIterators.SequenceEqual(upd6.Iterators));
-            Assert.AreSame(res.Body, upd6.Body);
-            Assert.AreSame(res.Locals, upd6.Locals);
+            Assert.Same(res.BreakLabel, upd6.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd6.ContinueLabel);
+            Assert.Same(res.Variables, upd6.Variables);
+            Assert.Same(res.Initializers, upd6.Initializers);
+            Assert.Same(res.Test, upd6.Test);
+            Assert.True(newIterators.SequenceEqual(upd6.Iterators));
+            Assert.Same(res.Body, upd6.Body);
+            Assert.Same(res.Locals, upd6.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd7.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd7.ContinueLabel);
-            Assert.AreSame(res.Variables, upd7.Variables);
-            Assert.AreSame(res.Initializers, upd7.Initializers);
-            Assert.AreSame(res.Test, upd7.Test);
-            Assert.AreSame(res.Iterators, upd7.Iterators);
-            Assert.AreSame(newBody, upd7.Body);
-            Assert.AreSame(res.Locals, upd7.Locals);
+            Assert.Same(res.BreakLabel, upd7.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd7.ContinueLabel);
+            Assert.Same(res.Variables, upd7.Variables);
+            Assert.Same(res.Initializers, upd7.Initializers);
+            Assert.Same(res.Test, upd7.Test);
+            Assert.Same(res.Iterators, upd7.Iterators);
+            Assert.Same(newBody, upd7.Body);
+            Assert.Same(res.Locals, upd7.Locals);
         }
 
-        [TestMethod]
+        [Fact]
         public void For_Compile()
         {
             var i = Expression.Parameter(typeof(int));
@@ -276,7 +275,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void For_Compile_BreakContinue()
         {
             var i = Expression.Parameter(typeof(int));
@@ -306,7 +305,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void For_Compile_Infinite()
         {
             var i = Expression.Parameter(typeof(int));
@@ -335,16 +334,16 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void For_Visitor()
         {
             var test = Expression.Constant(true);
@@ -352,8 +351,8 @@ namespace Tests
             var res = CSharpExpression.For(null, test, null, body);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

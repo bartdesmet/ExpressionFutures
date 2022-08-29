@@ -3,16 +3,15 @@
 // bartde - December 2021
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class FromEndIndexTests
     {
-        [TestMethod]
+        [Fact]
         public void FromEndIndex_Factory_ArgumentChecking()
         {
             // null checks
@@ -39,30 +38,30 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TooManyArgs)), typeof(Index)));
         }
 
-        [TestMethod]
+        [Fact]
         public void FromEndIndex_Update()
         {
             var i = Expression.Constant(1);
             var e1 = CSharpExpression.FromEndIndex(i);
 
             var e2 = e1.Update(i);
-            Assert.AreSame(e1, e2);
+            Assert.Same(e1, e2);
 
             var j = Expression.Constant(2);
 
             var e3 = e1.Update(j);
-            Assert.AreNotSame(e1, e3);
-            Assert.AreSame(j, e3.Operand);
+            Assert.NotSame(e1, e3);
+            Assert.Same(j, e3.Operand);
         }
 
-        [TestMethod]
+        [Fact]
         public void FromEndIndex_Visitor()
         {
             var res = CSharpExpression.FromEndIndex(Expression.Constant(1));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -77,7 +76,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FromEndIndex_Compile()
         {
             foreach (var e in new Func<Expression, FromEndIndexCSharpExpression>[]
@@ -98,12 +97,12 @@ namespace Tests
                     var expr = e(i.op);
                     var f = Expression.Lambda<Func<Index>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FromEndIndex_Compile_Lifted()
         {
             foreach (var e in new Func<Expression, FromEndIndexCSharpExpression>[]
@@ -124,7 +123,7 @@ namespace Tests
                     var expr = e(i.op);
                     var f = Expression.Lambda<Func<Index?>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
         }

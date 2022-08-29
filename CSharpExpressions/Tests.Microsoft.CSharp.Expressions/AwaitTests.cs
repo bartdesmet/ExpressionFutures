@@ -3,20 +3,19 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class AwaitTests
     {
-        [TestMethod]
+        [Fact]
         public void Await_Factory_ArgumentChecking()
         {
             var expr = Expression.Default(typeof(Task<int>));
@@ -26,7 +25,7 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Await(default(Expression), getAwaiter));
         }
 
-        [TestMethod]
+        [Fact]
         public void Await_Factory_AwaitPatternCheck()
         {
             foreach (var t in new[] { typeof(A1), typeof(A2), typeof(A3) })
@@ -57,50 +56,50 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Await_Properties()
         {
             var e = Expression.Default(typeof(Task<int>));
             var expr = CSharpExpression.Await(e);
-            Assert.AreEqual(CSharpExpressionType.Await, expr.CSharpNodeType);
-            Assert.AreSame(e, expr.Operand);
-            Assert.IsNotNull(expr.Info);
+            Assert.Equal(CSharpExpressionType.Await, expr.CSharpNodeType);
+            Assert.Same(e, expr.Operand);
+            Assert.NotNull(expr.Info);
         }
 
-        [TestMethod]
+        [Fact]
         public void Await_Update()
         {
             var e = Expression.Default(typeof(Task<int>));
             var expr = CSharpExpression.Await(e);
-            Assert.AreSame(expr, expr.Update(e, expr.Info));
+            Assert.Same(expr, expr.Update(e, expr.Info));
 
             var f = Expression.Default(typeof(Task<int>));
             var upd = expr.Update(f, expr.Info);
-            Assert.AreNotSame(upd, expr);
-            Assert.AreSame(f, upd.Operand);
+            Assert.NotSame(upd, expr);
+            Assert.Same(f, upd.Operand);
         }
 
-        [TestMethod]
+        [Fact]
         public void Await_CantReduce()
         {
             var e = Expression.Default(typeof(Task<int>));
             var expr = CSharpExpression.Await(e);
 
-            Assert.IsFalse(expr.CanReduce);
-            Assert.AreSame(expr, expr.Reduce());
+            Assert.False(expr.CanReduce);
+            Assert.Same(expr, expr.Reduce());
 
             var f = Expression.Lambda<Func<int>>(expr);
             AssertEx.Throws<ArgumentException>(() => f.Compile());
         }
 
-        [TestMethod]
+        [Fact]
         public void Await_Visitor()
         {
             var res = CSharpExpression.Await(Expression.Default(typeof(Task<int>)));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

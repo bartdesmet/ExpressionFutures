@@ -3,21 +3,20 @@
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public partial class AssignBinaryTests
     {
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Factory_ArgumentChecking()
         {
             var l = Expression.Parameter(typeof(int));
@@ -26,7 +25,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.MakeBinaryAssign(CSharpExpressionType.Await, l, r, null, null, null));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Factory_String_ArgumentChecking()
         {
             var s = Expression.Parameter(typeof(string));
@@ -35,15 +34,15 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(s, Expression.Default(typeof(object))));
 
             // the following are valid
-            Assert.IsNotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(string))));
-            Assert.IsNotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(int))));
-            Assert.IsNotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(object))));
-            Assert.IsNotNull(CSharpExpression.AddAssignChecked(s, Expression.Default(typeof(string))));
-            Assert.IsNotNull(CSharpExpression.AddAssignChecked(s, Expression.Default(typeof(int))));
-            Assert.IsNotNull(CSharpExpression.AddAssignChecked(s, Expression.Default(typeof(object))));
+            Assert.NotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(string))));
+            Assert.NotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(int))));
+            Assert.NotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(object))));
+            Assert.NotNull(CSharpExpression.AddAssignChecked(s, Expression.Default(typeof(string))));
+            Assert.NotNull(CSharpExpression.AddAssignChecked(s, Expression.Default(typeof(int))));
+            Assert.NotNull(CSharpExpression.AddAssignChecked(s, Expression.Default(typeof(object))));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Factory_Delegate_ArgumentChecking()
         {
             // NB: LINQ checks this one
@@ -59,17 +58,17 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.DivideAssign(d, Expression.Default(typeof(Action<string>))));
 
             // the following are valid
-            Assert.IsNotNull(CSharpExpression.AddAssign(d, Expression.Default(typeof(Action<string>))));
-            Assert.IsNotNull(CSharpExpression.AddAssign(d, Expression.Default(typeof(Action<object>))));
-            Assert.IsNotNull(CSharpExpression.AddAssignChecked(d, Expression.Default(typeof(Action<string>))));
-            Assert.IsNotNull(CSharpExpression.AddAssignChecked(d, Expression.Default(typeof(Action<object>))));
-            Assert.IsNotNull(CSharpExpression.SubtractAssign(d, Expression.Default(typeof(Action<string>))));
-            Assert.IsNotNull(CSharpExpression.SubtractAssign(d, Expression.Default(typeof(Action<object>))));
-            Assert.IsNotNull(CSharpExpression.SubtractAssignChecked(d, Expression.Default(typeof(Action<string>))));
-            Assert.IsNotNull(CSharpExpression.SubtractAssignChecked(d, Expression.Default(typeof(Action<object>))));
+            Assert.NotNull(CSharpExpression.AddAssign(d, Expression.Default(typeof(Action<string>))));
+            Assert.NotNull(CSharpExpression.AddAssign(d, Expression.Default(typeof(Action<object>))));
+            Assert.NotNull(CSharpExpression.AddAssignChecked(d, Expression.Default(typeof(Action<string>))));
+            Assert.NotNull(CSharpExpression.AddAssignChecked(d, Expression.Default(typeof(Action<object>))));
+            Assert.NotNull(CSharpExpression.SubtractAssign(d, Expression.Default(typeof(Action<string>))));
+            Assert.NotNull(CSharpExpression.SubtractAssign(d, Expression.Default(typeof(Action<object>))));
+            Assert.NotNull(CSharpExpression.SubtractAssignChecked(d, Expression.Default(typeof(Action<string>))));
+            Assert.NotNull(CSharpExpression.SubtractAssignChecked(d, Expression.Default(typeof(Action<object>))));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Factory_MakeBinaryAssign()
         {
             foreach (var l in GetLhs())
@@ -99,60 +98,60 @@ namespace Tests
                 })
                 {
                     var a1 = CSharpExpression.MakeBinaryAssign(n, l, r, m, cf, cl);
-                    Assert.AreEqual(n, a1.CSharpNodeType);
-                    Assert.AreSame(l, a1.Left);
-                    Assert.AreSame(r, a1.Right);
-                    Assert.AreEqual(typeof(int), a1.Type);
-                    Assert.IsFalse(a1.IsLiftedToNull);
-                    Assert.IsFalse(a1.IsLifted);
+                    Assert.Equal(n, a1.CSharpNodeType);
+                    Assert.Same(l, a1.Left);
+                    Assert.Same(r, a1.Right);
+                    Assert.Equal(typeof(int), a1.Type);
+                    Assert.False(a1.IsLiftedToNull);
+                    Assert.False(a1.IsLifted);
 
                     if (n == CSharpExpressionType.Assign)
                     {
-                        Assert.IsNull(a1.Method);
-                        Assert.IsNull(a1.LeftConversion);
-                        Assert.IsNull(a1.FinalConversion);
+                        Assert.Null(a1.Method);
+                        Assert.Null(a1.LeftConversion);
+                        Assert.Null(a1.FinalConversion);
                     }
                     else
                     {
-                        Assert.AreSame(m, a1.Method);
-                        Assert.AreSame(cl, a1.LeftConversion);
-                        Assert.AreSame(cf, a1.FinalConversion);
+                        Assert.Same(m, a1.Method);
+                        Assert.Same(cl, a1.LeftConversion);
+                        Assert.Same(cf, a1.FinalConversion);
                     }
 
                     var a2 = CSharpExpression.MakeBinaryAssign(n, l, r, m, null, null);
-                    Assert.AreEqual(n, a2.CSharpNodeType);
-                    Assert.AreSame(l, a2.Left);
-                    Assert.AreSame(r, a2.Right);
-                    Assert.AreEqual(typeof(int), a2.Type);
-                    Assert.IsFalse(a2.IsLiftedToNull);
-                    Assert.IsFalse(a2.IsLifted);
-                    Assert.IsNull(a2.LeftConversion);
-                    Assert.IsNull(a2.FinalConversion);
+                    Assert.Equal(n, a2.CSharpNodeType);
+                    Assert.Same(l, a2.Left);
+                    Assert.Same(r, a2.Right);
+                    Assert.Equal(typeof(int), a2.Type);
+                    Assert.False(a2.IsLiftedToNull);
+                    Assert.False(a2.IsLifted);
+                    Assert.Null(a2.LeftConversion);
+                    Assert.Null(a2.FinalConversion);
 
                     if (n == CSharpExpressionType.Assign)
                     {
-                        Assert.IsNull(a2.Method);
+                        Assert.Null(a2.Method);
                     }
                     else
                     {
-                        Assert.AreSame(m, a2.Method);
+                        Assert.Same(m, a2.Method);
                     }
 
                     var a3 = CSharpExpression.MakeBinaryAssign(n, l, r, null, null, null);
-                    Assert.AreEqual(n, a3.CSharpNodeType);
-                    Assert.AreSame(l, a3.Left);
-                    Assert.AreSame(r, a3.Right);
-                    Assert.AreEqual(typeof(int), a3.Type);
-                    Assert.IsFalse(a3.IsLiftedToNull);
-                    Assert.IsFalse(a3.IsLifted);
-                    Assert.IsNull(a3.Method);
-                    Assert.IsNull(a3.LeftConversion);
-                    Assert.IsNull(a3.FinalConversion);
+                    Assert.Equal(n, a3.CSharpNodeType);
+                    Assert.Same(l, a3.Left);
+                    Assert.Same(r, a3.Right);
+                    Assert.Equal(typeof(int), a3.Type);
+                    Assert.False(a3.IsLiftedToNull);
+                    Assert.False(a3.IsLifted);
+                    Assert.Null(a3.Method);
+                    Assert.Null(a3.LeftConversion);
+                    Assert.Null(a3.FinalConversion);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Parameter_Compile()
         {
             foreach (var t in new[]
@@ -199,7 +198,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Index_Compile()
         {
             foreach (var t in new[]
@@ -265,27 +264,27 @@ namespace Tests
             // TODO: tests with multiple indexer parameters out of order
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Compile_Overflow()
         {
             var p = Expression.Parameter(typeof(byte));
             var f = Expression.Lambda<Func<byte, byte>>(CSharpExpression.AddAssignChecked(p, Expression.Constant((byte)1, typeof(byte))), p).Compile();
 
-            Assert.AreEqual((byte)42, f(41));
+            Assert.Equal((byte)42, f(41));
             AssertEx.Throws<OverflowException>(() => f(byte.MaxValue));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_CustomMethod()
         {
             var p = Expression.Parameter(typeof(byte));
             var m = typeof(AssignBinaryTests).GetMethod(nameof(ByteOp), BindingFlags.NonPublic | BindingFlags.Static);
             var f = Expression.Lambda<Func<byte, byte>>(CSharpExpression.AddAssign(p, Expression.Constant((byte)1, typeof(byte)), m), p).Compile();
 
-            Assert.AreEqual((byte)40, f(41));
+            Assert.Equal((byte)40, f(41));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_CustomConverts()
         {
             var p = Expression.Parameter(typeof(byte));
@@ -301,10 +300,10 @@ namespace Tests
             // (int lhs) => lhs + 1
             var f = Expression.Lambda<Func<byte, byte>>(CSharpExpression.AddAssign(p, Expression.Constant(1, typeof(int)), null, d, c), p).Compile();
 
-            Assert.AreEqual((byte)7, f(10));
+            Assert.Equal((byte)7, f(10));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_MutableStruct_Field()
         {
             var p = Expression.Parameter(typeof(MutableStruct<int>));
@@ -316,10 +315,10 @@ namespace Tests
 
             var m = new MutableStruct<int>();
             var r = c(m);
-            Assert.AreEqual("11", r);
+            Assert.Equal("11", r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_MutableStruct_Index()
         {
             var p = Expression.Parameter(typeof(MutableStruct<int>));
@@ -331,20 +330,20 @@ namespace Tests
 
             var m = new MutableStruct<int>();
             var r = c(m);
-            Assert.AreEqual("11", r);
+            Assert.Equal("11", r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_Visitor()
         {
             var res = CSharpExpression.MakeBinaryAssign(CSharpExpressionType.AddAssign, Expression.Parameter(typeof(int)), Expression.Constant(1), null, null, null);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_NullCoalescing_Factory_ArgumentChecking()
         {
             var p0 = Expression.Parameter(typeof(int));
@@ -367,7 +366,7 @@ namespace Tests
             CSharpExpression.NullCoalescingAssign(p4, p5);
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_NullCoalescing_ReferenceType()
         {
             var p = Expression.Parameter(typeof(string));
@@ -378,14 +377,14 @@ namespace Tests
             var d1 = f1.Compile();
             var d2 = f2.Compile();
 
-            Assert.AreEqual(d1("bar"), "bar");
-            Assert.AreEqual(d2("bar"), "bar");
+            Assert.Equal("bar", d1("bar"));
+            Assert.Equal("bar", d2("bar"));
 
-            Assert.AreEqual(d1(null), "foo");
-            Assert.AreEqual(d2(null), "foo");
+            Assert.Equal("foo", d1(null));
+            Assert.Equal("foo", d2(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_NullCoalescing_NullableValueType()
         {
             var p = Expression.Parameter(typeof(int?));
@@ -396,14 +395,14 @@ namespace Tests
             var d1 = f1.Compile();
             var d2 = f2.Compile();
 
-            Assert.AreEqual(d1(1), 1);
-            Assert.AreEqual(d2(1), 1);
+            Assert.Equal(1, d1(1));
+            Assert.Equal(d2(1), 1);
 
-            Assert.AreEqual(d1(null), 42);
-            Assert.AreEqual(d2(null), 42);
+            Assert.Equal(42, d1(null));
+            Assert.Equal(d2(null), 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_NullCoalescing_Index_SpillArgsToTemps()
         {
             var toString = typeof(int).GetMethod("ToString", Array.Empty<Type>());
@@ -435,7 +434,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignBinary_NullCoalescing_Index_DontReadMultipleTimes()
         {
             var toString = typeof(int).GetMethod("ToString", Array.Empty<Type>());
@@ -488,7 +487,7 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class V : CSharpExpressionVisitor
@@ -523,16 +522,14 @@ namespace Tests
         {
             get
             {
-                if (++_getCount > 1)
-                    Assert.Fail();
+                Assert.False(++_getCount > 1);
 
                 return Values[i];
             }
 
             set
             {
-                if (++_setCount > 1)
-                    Assert.Fail();
+                Assert.False(++_setCount > 1);
 
                 Values[i] = value;
             }

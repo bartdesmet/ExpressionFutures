@@ -3,20 +3,19 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class NewTests
     {
-        [TestMethod]
+        [Fact]
         public void New_Factory_ArgumentChecking()
         {
             // NB: A lot of checks are performed by LINQ helpers, so we omit tests for those cases.
@@ -63,7 +62,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.New(cctor));
         }
 
-        [TestMethod]
+        [Fact]
         public void New_Factory_Expression()
         {
             var constructor = ConstructorInfoOf(() => new C(default(int), default(int), default(int)));
@@ -76,15 +75,15 @@ namespace Tests
                 CSharpExpression.New(constructor, args.AsEnumerable()),
             })
             {
-                Assert.AreEqual(constructor, e.Constructor);
+                Assert.Equal(constructor, e.Constructor);
 
-                Assert.AreEqual(2, e.Arguments.Count);
+                Assert.Equal(2, e.Arguments.Count);
 
-                Assert.AreEqual(constructor.GetParameters()[0], e.Arguments[0].Parameter);
-                Assert.AreEqual(constructor.GetParameters()[1], e.Arguments[1].Parameter);
+                Assert.Equal(constructor.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(constructor.GetParameters()[1], e.Arguments[1].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
-                Assert.AreSame(args[1], e.Arguments[1].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[1], e.Arguments[1].Expression);
             }
 
             var tooLittle = args.Take(1);
@@ -110,7 +109,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void New_Properties()
         {
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
@@ -132,23 +131,23 @@ namespace Tests
             {
                 var res = CSharpExpression.New(ctor, arg0, arg1, arg2);
 
-                Assert.AreEqual(CSharpExpressionType.New, res.CSharpNodeType);
-                Assert.AreEqual(ctor, res.Constructor);
-                Assert.AreEqual(typeof(TimeSpan), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1, arg2 }));
+                Assert.Equal(CSharpExpressionType.New, res.CSharpNodeType);
+                Assert.Equal(ctor, res.Constructor);
+                Assert.Equal(typeof(TimeSpan), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1, arg2 }));
             }
 
             {
                 var res = CSharpExpression.New(ctor, new[] { arg0, arg1, arg2 }.AsEnumerable());
 
-                Assert.AreEqual(CSharpExpressionType.New, res.CSharpNodeType);
-                Assert.AreEqual(ctor, res.Constructor);
-                Assert.AreEqual(typeof(TimeSpan), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1, arg2 }));
+                Assert.Equal(CSharpExpressionType.New, res.CSharpNodeType);
+                Assert.Equal(ctor, res.Constructor);
+                Assert.Equal(typeof(TimeSpan), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1, arg2 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void New_Update()
         {
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
@@ -170,14 +169,14 @@ namespace Tests
             var res = CSharpExpression.New(ctor, arg0, arg1, arg2);
 
             var upd1 = res.Update(res.Arguments);
-            Assert.AreSame(upd1, res);
+            Assert.Same(upd1, res);
 
             var upd2 = res.Update(new[] { arg1, arg0, arg2 });
-            Assert.AreNotSame(upd2, res);
-            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { arg1, arg0, arg2 }));
+            Assert.NotSame(upd2, res);
+            Assert.True(upd2.Arguments.SequenceEqual(new[] { arg1, arg0, arg2 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void New_Compile1()
         {
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(int), default(int), default(int)));
@@ -211,7 +210,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void New_Compile2()
         {
             var ctor = ConstructorInfoOf(() => new C(default(int), default(int), default(int)));
@@ -253,10 +252,10 @@ namespace Tests
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLogValue<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void New_Visitor()
         {
             var ctor = ConstructorInfoOf(() => new TimeSpan(default(long)));
@@ -265,8 +264,8 @@ namespace Tests
             var res = CSharpExpression.New(ctor, CSharpExpression.Bind(valueParameter, value));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

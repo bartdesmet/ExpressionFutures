@@ -4,15 +4,14 @@
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class ShallowVisitorTests
     {
-        [TestMethod]
+        [Fact]
         public void ShallowVisitor_Basics()
         {
             var v = new V();
@@ -21,9 +20,9 @@ namespace Tests
             var f = Expression.Lambda(c);
             var a = CSharpExpression.AsyncLambda(c);
 
-            Assert.AreNotSame(c, v.Visit(c));
-            Assert.AreSame(f, v.Visit(f));
-            Assert.AreSame(a, v.Visit(a));
+            Assert.NotSame(c, v.Visit(c));
+            Assert.Same(f, v.Visit(f));
+            Assert.Same(a, v.Visit(a));
         }
 
         class V : ShallowVisitor

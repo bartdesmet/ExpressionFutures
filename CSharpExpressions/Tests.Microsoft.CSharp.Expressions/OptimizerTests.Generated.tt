@@ -267,10 +267,10 @@ var cases = new Dictionary<string, Dictionary<string, string>>
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
 using Microsoft.CSharp.Expressions;
+using Xunit;
 
 namespace Tests
 {
@@ -283,7 +283,7 @@ foreach (var @case in cases)
     foreach (var kv in @case.Value)
     {
 #>
-        [TestMethod]
+        [Fact]
         public void Optimizer_<#=@case.Key#>_<#=i#>()
         {
             var expression = <#=kv.Key#>;

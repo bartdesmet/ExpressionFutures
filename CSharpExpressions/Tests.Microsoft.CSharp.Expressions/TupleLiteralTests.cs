@@ -3,19 +3,18 @@
 // bartde - May 2020
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public partial class TupleLiteralTests
     {
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Factory_ArgumentChecking()
         {
             var type1 = typeof(ValueTuple<int>);
@@ -45,9 +44,9 @@ namespace Tests
             // valid
             for (int i = 0; i < tupleTypes.Length; i++)
             {
-                Assert.IsNotNull(CSharpExpression.TupleLiteral(tupleTypes[i], args.Take(i + 1), null));
-                Assert.IsNotNull(CSharpExpression.TupleLiteral(tupleTypes[i], args.Take(i + 1).ToArray(), null));
-                Assert.IsNotNull(CSharpExpression.TupleLiteral(tupleTypes[i], args.Take(i + 1), names.Take(i + 1)));
+                Assert.NotNull(CSharpExpression.TupleLiteral(tupleTypes[i], args.Take(i + 1), null));
+                Assert.NotNull(CSharpExpression.TupleLiteral(tupleTypes[i], args.Take(i + 1).ToArray(), null));
+                Assert.NotNull(CSharpExpression.TupleLiteral(tupleTypes[i], args.Take(i + 1), names.Take(i + 1)));
             }
 
             // argument count
@@ -71,7 +70,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, new[] { args[1], args[0] }, null));
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Factory_ArgumentChecking_InferType()
         {
             // empty
@@ -87,7 +86,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(new Expression[] { Expression.Constant(1) }, new string[] { "x", "y" }));
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Factory_Properties()
         {
             var type = typeof(ValueTuple<int, bool>);
@@ -100,24 +99,24 @@ namespace Tests
 
             var res1 = CSharpExpression.TupleLiteral(type, new[] { arg1, arg2 }, null);
 
-            Assert.AreSame(type, res1.Type);
-            Assert.AreEqual(2, res1.Arguments.Count);
-            Assert.AreSame(arg1, res1.Arguments[0]);
-            Assert.AreSame(arg2, res1.Arguments[1]);
-            Assert.IsNull(res1.ArgumentNames);
+            Assert.Same(type, res1.Type);
+            Assert.Equal(2, res1.Arguments.Count);
+            Assert.Same(arg1, res1.Arguments[0]);
+            Assert.Same(arg2, res1.Arguments[1]);
+            Assert.Null(res1.ArgumentNames);
 
             var res2 = CSharpExpression.TupleLiteral(type, new[] { arg1, arg2 }, new[] { name1, name2 });
 
-            Assert.AreSame(type, res2.Type);
-            Assert.AreEqual(2, res2.Arguments.Count);
-            Assert.AreSame(arg1, res2.Arguments[0]);
-            Assert.AreSame(arg2, res2.Arguments[1]);
-            Assert.AreEqual(2, res2.ArgumentNames.Count);
-            Assert.AreSame(name1, res2.ArgumentNames[0]);
-            Assert.AreSame(name2, res2.ArgumentNames[1]);
+            Assert.Same(type, res2.Type);
+            Assert.Equal(2, res2.Arguments.Count);
+            Assert.Same(arg1, res2.Arguments[0]);
+            Assert.Same(arg2, res2.Arguments[1]);
+            Assert.Equal(2, res2.ArgumentNames.Count);
+            Assert.Same(name1, res2.ArgumentNames[0]);
+            Assert.Same(name2, res2.ArgumentNames[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Factory_Properties_InferType()
         {
             var type = typeof(ValueTuple<int, bool>);
@@ -130,24 +129,24 @@ namespace Tests
 
             var res1 = CSharpExpression.TupleLiteral(new[] { arg1, arg2 }, null);
 
-            Assert.AreSame(type, res1.Type);
-            Assert.AreEqual(2, res1.Arguments.Count);
-            Assert.AreSame(arg1, res1.Arguments[0]);
-            Assert.AreSame(arg2, res1.Arguments[1]);
-            Assert.IsNull(res1.ArgumentNames);
+            Assert.Same(type, res1.Type);
+            Assert.Equal(2, res1.Arguments.Count);
+            Assert.Same(arg1, res1.Arguments[0]);
+            Assert.Same(arg2, res1.Arguments[1]);
+            Assert.Null(res1.ArgumentNames);
 
             var res2 = CSharpExpression.TupleLiteral(new[] { arg1, arg2 }, new[] { name1, name2 });
 
-            Assert.AreSame(type, res2.Type);
-            Assert.AreEqual(2, res2.Arguments.Count);
-            Assert.AreSame(arg1, res2.Arguments[0]);
-            Assert.AreSame(arg2, res2.Arguments[1]);
-            Assert.AreEqual(2, res2.ArgumentNames.Count);
-            Assert.AreSame(name1, res2.ArgumentNames[0]);
-            Assert.AreSame(name2, res2.ArgumentNames[1]);
+            Assert.Same(type, res2.Type);
+            Assert.Equal(2, res2.Arguments.Count);
+            Assert.Same(arg1, res2.Arguments[0]);
+            Assert.Same(arg2, res2.Arguments[1]);
+            Assert.Equal(2, res2.ArgumentNames.Count);
+            Assert.Same(name1, res2.ArgumentNames[0]);
+            Assert.Same(name2, res2.ArgumentNames[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Update()
         {
             var type = typeof(ValueTuple<int, bool>);
@@ -160,22 +159,22 @@ namespace Tests
             var t1 = CSharpExpression.TupleLiteral(type, new[] { arg1, arg2 }, null);
 
             var r1 = t1.Update(t1.Arguments);
-            Assert.AreSame(t1, r1);
+            Assert.Same(t1, r1);
 
             var r2 = t1.Update(new[] { arg1_, arg2 });
-            Assert.AreEqual(2, r2.Arguments.Count);
-            Assert.AreSame(arg1_, r2.Arguments[0]);
-            Assert.AreSame(arg2, r2.Arguments[1]);
+            Assert.Equal(2, r2.Arguments.Count);
+            Assert.Same(arg1_, r2.Arguments[0]);
+            Assert.Same(arg2, r2.Arguments[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Visitor()
         {
             var res = CSharpExpression.TupleLiteral(typeof(ValueTuple<int>), new[] { Expression.Constant(42) }, null);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -190,68 +189,68 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_Reduce()
         {
             var res1 = Expression.Lambda<Func<ValueTuple<int>>>(CSharpExpression.TupleLiteral(typeof(ValueTuple<int>), new[] { Expression.Constant(42) }, null));
             var val1 = res1.Compile()();
-            Assert.AreEqual(42, val1.Item1);
+            Assert.Equal(42, val1.Item1);
 
             var res2 = Expression.Lambda<Func<(int, bool)>>(CSharpExpression.TupleLiteral(typeof(ValueTuple<int, bool>), new[] { Expression.Constant(42), Expression.Constant(true) }, null));
             var val2 = res2.Compile()();
-            Assert.AreEqual(42, val2.Item1);
-            Assert.AreEqual(true, val2.Item2);
+            Assert.Equal(42, val2.Item1);
+            Assert.True(val2.Item2);
 
             var res7 = Expression.Lambda<Func<(int, int, int, int, int, int, int)>>(CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int, int, int, int, int, int>), Enumerable.Range(1, 7).Select(i => Expression.Constant(i)), null));
             var val7 = res7.Compile()();
-            Assert.AreEqual(1, val7.Item1);
-            Assert.AreEqual(2, val7.Item2);
-            Assert.AreEqual(3, val7.Item3);
-            Assert.AreEqual(4, val7.Item4);
-            Assert.AreEqual(5, val7.Item5);
-            Assert.AreEqual(6, val7.Item6);
-            Assert.AreEqual(7, val7.Item7);
+            Assert.Equal(1, val7.Item1);
+            Assert.Equal(2, val7.Item2);
+            Assert.Equal(3, val7.Item3);
+            Assert.Equal(4, val7.Item4);
+            Assert.Equal(5, val7.Item5);
+            Assert.Equal(6, val7.Item6);
+            Assert.Equal(7, val7.Item7);
 
             var res8 = Expression.Lambda<Func<(int, int, int, int, int, int, int, int)>>(CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int, int, int, int, int, int, ValueTuple<int>>), Enumerable.Range(1, 8).Select(i => Expression.Constant(i)), null));
             var val8 = res8.Compile()();
-            Assert.AreEqual(1, val8.Item1);
-            Assert.AreEqual(2, val8.Item2);
-            Assert.AreEqual(3, val8.Item3);
-            Assert.AreEqual(4, val8.Item4);
-            Assert.AreEqual(5, val8.Item5);
-            Assert.AreEqual(6, val8.Item6);
-            Assert.AreEqual(7, val8.Item7);
-            Assert.AreEqual(8, val8.Item8); // NB: smoke and mirrors
-            Assert.AreEqual(8, val8.Rest.Item1);
+            Assert.Equal(1, val8.Item1);
+            Assert.Equal(2, val8.Item2);
+            Assert.Equal(3, val8.Item3);
+            Assert.Equal(4, val8.Item4);
+            Assert.Equal(5, val8.Item5);
+            Assert.Equal(6, val8.Item6);
+            Assert.Equal(7, val8.Item7);
+            Assert.Equal(8, val8.Item8); // NB: smoke and mirrors
+            Assert.Equal(8, val8.Rest.Item1);
 
             var res15 = Expression.Lambda<Func<(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)>>(CSharpExpression.TupleLiteral(typeof(ValueTuple<int, int, int, int, int, int, int, ValueTuple<int, int, int, int, int, int, int, ValueTuple<int>>>), Enumerable.Range(1, 15).Select(i => Expression.Constant(i)), null));
             var val15 = res15.Compile()();
-            Assert.AreEqual(1, val15.Item1);
-            Assert.AreEqual(2, val15.Item2);
-            Assert.AreEqual(3, val15.Item3);
-            Assert.AreEqual(4, val15.Item4);
-            Assert.AreEqual(5, val15.Item5);
-            Assert.AreEqual(6, val15.Item6);
-            Assert.AreEqual(7, val15.Item7);
-            Assert.AreEqual(8, val15.Item8); // NB: smoke and mirrors
-            Assert.AreEqual(9, val15.Item9); // NB: smoke and mirrors
-            Assert.AreEqual(10, val15.Item10); // NB: smoke and mirrors
-            Assert.AreEqual(11, val15.Item11); // NB: smoke and mirrors
-            Assert.AreEqual(12, val15.Item12); // NB: smoke and mirrors
-            Assert.AreEqual(13, val15.Item13); // NB: smoke and mirrors
-            Assert.AreEqual(14, val15.Item14); // NB: smoke and mirrors
-            Assert.AreEqual(15, val15.Item15); // NB: smoke and mirrors
-            Assert.AreEqual(8, val15.Rest.Item1);
-            Assert.AreEqual(9, val15.Rest.Item2);
-            Assert.AreEqual(10, val15.Rest.Item3);
-            Assert.AreEqual(11, val15.Rest.Item4);
-            Assert.AreEqual(12, val15.Rest.Item5);
-            Assert.AreEqual(13, val15.Rest.Item6);
-            Assert.AreEqual(14, val15.Rest.Item7);
-            Assert.AreEqual(15, val15.Rest.Rest.Item1);
+            Assert.Equal(1, val15.Item1);
+            Assert.Equal(2, val15.Item2);
+            Assert.Equal(3, val15.Item3);
+            Assert.Equal(4, val15.Item4);
+            Assert.Equal(5, val15.Item5);
+            Assert.Equal(6, val15.Item6);
+            Assert.Equal(7, val15.Item7);
+            Assert.Equal(8, val15.Item8); // NB: smoke and mirrors
+            Assert.Equal(9, val15.Item9); // NB: smoke and mirrors
+            Assert.Equal(10, val15.Item10); // NB: smoke and mirrors
+            Assert.Equal(11, val15.Item11); // NB: smoke and mirrors
+            Assert.Equal(12, val15.Item12); // NB: smoke and mirrors
+            Assert.Equal(13, val15.Item13); // NB: smoke and mirrors
+            Assert.Equal(14, val15.Item14); // NB: smoke and mirrors
+            Assert.Equal(15, val15.Item15); // NB: smoke and mirrors
+            Assert.Equal(8, val15.Rest.Item1);
+            Assert.Equal(9, val15.Rest.Item2);
+            Assert.Equal(10, val15.Rest.Item3);
+            Assert.Equal(11, val15.Rest.Item4);
+            Assert.Equal(12, val15.Rest.Item5);
+            Assert.Equal(13, val15.Rest.Item6);
+            Assert.Equal(14, val15.Rest.Item7);
+            Assert.Equal(15, val15.Rest.Rest.Item1);
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleLiteral_SideEffects()
         {
             AssertCompile<(int, int)>((log, append) =>
@@ -272,7 +271,7 @@ namespace Tests
         private void AssertCompile<T>(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLog<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
     }
 }

@@ -4,17 +4,16 @@
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class AliasEliminatorTests
     {
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_NoAlias()
         {
             var v1 = Expression.Parameter(typeof(int));
@@ -43,11 +42,11 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreSame(e, AliasEliminator.Eliminate(e));
+                Assert.Same(e, AliasEliminator.Eliminate(e));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Alias_Block()
         {
             var x = Expression.Parameter(typeof(int));
@@ -60,11 +59,11 @@ namespace Tests
             var v2 = e1.Variables[0];
             var e2 = e1.Expressions[0];
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Alias_Lambda()
         {
             var x = Expression.Parameter(typeof(int));
@@ -77,11 +76,11 @@ namespace Tests
             var v2 = e1.Parameters[0];
             var e2 = e1.Body;
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Alias_Catch()
         {
             var x = Expression.Parameter(typeof(Exception));
@@ -96,11 +95,11 @@ namespace Tests
             var v2 = h2.Variable;
             var e2 = ((BlockExpression)h2.Body).Expressions[0];
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Alias_Using()
         {
             var x = Expression.Parameter(typeof(IDisposable));
@@ -114,11 +113,11 @@ namespace Tests
             var v2 = e1.Variables;
             var e2 = e1.Body;
 
-            Assert.AreSame(v2.Single(), e2);
-            Assert.AreNotSame(v1.Single(), v2.Single());
+            Assert.Same(v2.Single(), e2);
+            Assert.NotSame(v1.Single(), v2.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Alias_ForEach()
         {
             var x = Expression.Parameter(typeof(int));
@@ -132,11 +131,11 @@ namespace Tests
             var v2 = e1.Variables;
             var e2 = e1.Body;
 
-            Assert.AreSame(v2[0], e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2[0], e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Alias_For()
         {
             var x = Expression.Parameter(typeof(int));
@@ -151,13 +150,13 @@ namespace Tests
             var v2 = e1.Variables[0];
             var e2 = e1.Body;
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
         // TODO: add more tests that nest the different constructs
 
-        [TestMethod]
+        [Fact]
         public void AliasEliminator_Siblings()
         {
             var x = Expression.Parameter(typeof(int));
@@ -172,7 +171,7 @@ namespace Tests
             var r1 = (BlockExpression)r.Expressions[0];
             var r2 = (BlockExpression)r.Expressions[1];
 
-            Assert.AreNotSame(r1.Variables[0], r2.Variables[0]);
+            Assert.NotSame(r1.Variables[0], r2.Variables[0]);
         }
     }
 }

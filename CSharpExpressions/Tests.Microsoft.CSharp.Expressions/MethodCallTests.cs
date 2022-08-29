@@ -3,22 +3,21 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class MethodCallTests
     {
-        [TestMethod]
+        [Fact]
         public void MethodCall_Factory_ArgumentChecking()
         {
             // NB: A lot of checks are performed by LINQ helpers, so we omit tests for those cases.
@@ -61,7 +60,7 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Call(obj, default(MethodInfo), bindings.AsEnumerable()));
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Factory_Expression()
         {
             var method = MethodInfoOf(() => F(default(int), default(int), default(int)));
@@ -76,17 +75,17 @@ namespace Tests
                 CSharpExpression.Call(null, method, args.AsEnumerable()),
             })
             {
-                Assert.IsNull(e.Object);
+                Assert.Null(e.Object);
 
-                Assert.AreEqual(method, e.Method);
+                Assert.Equal(method, e.Method);
 
-                Assert.AreEqual(2, e.Arguments.Count);
+                Assert.Equal(2, e.Arguments.Count);
 
-                Assert.AreEqual(method.GetParameters()[0], e.Arguments[0].Parameter);
-                Assert.AreEqual(method.GetParameters()[1], e.Arguments[1].Parameter);
+                Assert.Equal(method.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(method.GetParameters()[1], e.Arguments[1].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
-                Assert.AreSame(args[1], e.Arguments[1].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[1], e.Arguments[1].Expression);
             }
 
             var tooLittle = args.Take(1);
@@ -116,7 +115,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Properties_Instance()
         {
             var substring = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
@@ -136,25 +135,25 @@ namespace Tests
             {
                 var res = CSharpExpression.Call(obj, substring, arg0, arg1);
 
-                Assert.AreEqual(CSharpExpressionType.Call, res.CSharpNodeType);
-                Assert.AreSame(obj, res.Object);
-                Assert.AreEqual(substring, res.Method);
-                Assert.AreEqual(typeof(string), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Call, res.CSharpNodeType);
+                Assert.Same(obj, res.Object);
+                Assert.Equal(substring, res.Method);
+                Assert.Equal(typeof(string), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
 
             {
                 var res = CSharpExpression.Call(obj, substring, new[] { arg0, arg1 }.AsEnumerable());
 
-                Assert.AreEqual(CSharpExpressionType.Call, res.CSharpNodeType);
-                Assert.AreSame(obj, res.Object);
-                Assert.AreEqual(substring, res.Method);
-                Assert.AreEqual(typeof(string), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Call, res.CSharpNodeType);
+                Assert.Same(obj, res.Object);
+                Assert.Equal(substring, res.Method);
+                Assert.Equal(typeof(string), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Properties_Static()
         {
             var min = MethodInfoOf(() => Math.Min(default(int), default(int)));
@@ -173,25 +172,25 @@ namespace Tests
             {
                 var res = CSharpExpression.Call(min, arg0, arg1);
 
-                Assert.AreEqual(CSharpExpressionType.Call, res.CSharpNodeType);
-                Assert.IsNull(res.Object);
-                Assert.AreEqual(min, res.Method);
-                Assert.AreEqual(typeof(int), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Call, res.CSharpNodeType);
+                Assert.Null(res.Object);
+                Assert.Equal(min, res.Method);
+                Assert.Equal(typeof(int), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
 
             {
                 var res = CSharpExpression.Call(min, new[] { arg0, arg1 }.AsEnumerable());
 
-                Assert.AreEqual(CSharpExpressionType.Call, res.CSharpNodeType);
-                Assert.IsNull(res.Object);
-                Assert.AreEqual(min, res.Method);
-                Assert.AreEqual(typeof(int), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Call, res.CSharpNodeType);
+                Assert.Null(res.Object);
+                Assert.Equal(min, res.Method);
+                Assert.Equal(typeof(int), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Update()
         {
             var substring = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
@@ -210,21 +209,21 @@ namespace Tests
 
             var res = CSharpExpression.Call(obj, substring, arg0, arg1);
 
-            Assert.AreSame(res, res.Update(res.Object, res.Arguments));
+            Assert.Same(res, res.Update(res.Object, res.Arguments));
 
             var obj1 = Expression.Constant("foo");
             var upd1 = res.Update(obj1, res.Arguments);
-            Assert.AreNotSame(upd1, res);
-            Assert.AreSame(res.Arguments, upd1.Arguments);
-            Assert.AreSame(obj1, upd1.Object);
+            Assert.NotSame(upd1, res);
+            Assert.Same(res.Arguments, upd1.Arguments);
+            Assert.Same(obj1, upd1.Object);
 
             var upd2 = res.Update(obj, new[] { arg1, arg0 });
-            Assert.AreNotSame(upd2, res);
-            Assert.AreSame(res.Object, upd2.Object);
-            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { arg1, arg0 }));
+            Assert.NotSame(upd2, res);
+            Assert.Same(res.Object, upd2.Object);
+            Assert.True(upd2.Arguments.SequenceEqual(new[] { arg1, arg0 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_Static()
         {
             var method = MethodInfoOf(() => F(default(int), default(int), default(int)));
@@ -274,7 +273,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_Instance()
         {
             var method = MethodInfoOf((string s) => s.Substring(default(int), default(int)));
@@ -305,7 +304,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_NoCopyOptimization()
         {
             var method = MethodInfoOf(() => F(default(int), default(int), default(int)));
@@ -373,7 +372,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Variable()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -431,7 +430,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Field()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -461,7 +460,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Property()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -491,7 +490,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Array1()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -521,7 +520,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Array2()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -551,7 +550,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Array3()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -581,7 +580,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_MutableStruct1()
         {
             var y = default(int);
@@ -626,7 +625,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_MutableStruct2()
         {
             var y = default(int);
@@ -672,7 +671,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_ByRef_Index()
         {
             var method = MethodInfoOf((int x) => int.TryParse("", out x));
@@ -702,7 +701,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Compile_EvalOrder()
         {
             var a = Expression.Parameter(typeof(int));
@@ -721,7 +720,7 @@ namespace Tests
                 );
 
             var res = Expression.Lambda<Func<string>>(e).Compile()();
-            Assert.AreEqual("1,1,2", res);
+            Assert.Equal("1,1,2", res);
         }
 
         // TODO: tests that assert no re-evaluation of writeback arguments
@@ -729,10 +728,10 @@ namespace Tests
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLogValue<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodCall_Visitor()
         {
             var cout = MethodInfoOf(() => Console.WriteLine(default(int)));
@@ -741,8 +740,8 @@ namespace Tests
             var res = CSharpExpression.Call(cout, CSharpExpression.Bind(valueParameter, value));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         static int F(int x, int y, int z = 42)

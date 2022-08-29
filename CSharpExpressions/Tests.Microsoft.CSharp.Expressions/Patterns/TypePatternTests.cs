@@ -3,18 +3,17 @@
 // bartde - December 2021
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class TypePatternTests
     {
-        [TestMethod]
+        [Fact]
         public void TypePattern_ArgumentChecking()
         {
             // null checks
@@ -30,55 +29,55 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(long)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TypePattern_Properties()
         {
             var p = CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(int));
 
-            Assert.AreEqual(typeof(object), p.InputType);
-            Assert.AreEqual(typeof(int), p.NarrowedType);
+            Assert.Equal(typeof(object), p.InputType);
+            Assert.Equal(typeof(int), p.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypePattern_Properties_Object()
         {
             var p = CSharpPattern.Type(typeof(int));
 
-            Assert.AreEqual(typeof(object), p.InputType);
-            Assert.AreEqual(typeof(int), p.NarrowedType);
+            Assert.Equal(typeof(object), p.InputType);
+            Assert.Equal(typeof(int), p.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypePattern_ChangeType()
         {
             var p = CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(int));
 
-            Assert.AreSame(p, p.ChangeType(typeof(object)));
+            Assert.Same(p, p.ChangeType(typeof(object)));
 
             var q = (TypeCSharpPattern)p.ChangeType(typeof(ValueType));
 
-            Assert.AreNotSame(p, q);
-            Assert.AreEqual(typeof(ValueType), q.InputType);
-            Assert.AreEqual(typeof(int), q.NarrowedType);
+            Assert.NotSame(p, q);
+            Assert.Equal(typeof(ValueType), q.InputType);
+            Assert.Equal(typeof(int), q.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypePattern_ChangeType_Triggered()
         {
             var p = CSharpPattern.Type(typeof(int));
 
-            Assert.AreEqual(typeof(object), p.InputType);
-            Assert.AreEqual(typeof(int), p.NarrowedType);
+            Assert.Equal(typeof(object), p.InputType);
+            Assert.Equal(typeof(int), p.NarrowedType);
 
             var value = typeof(StrongBox<IFormattable>).GetField(nameof(StrongBox<IFormattable>.Value));
             var property = CSharpPattern.PropertySubpattern(p, value);
 
-            Assert.AreNotSame(p, property.Pattern);
-            Assert.AreEqual(typeof(IFormattable), property.Pattern.InputType);
-            Assert.AreEqual(typeof(int), property.Pattern.NarrowedType);
+            Assert.NotSame(p, property.Pattern);
+            Assert.Equal(typeof(IFormattable), property.Pattern.InputType);
+            Assert.Equal(typeof(int), property.Pattern.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypePattern_Visitor()
         {
             var p = CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(int));
@@ -87,10 +86,10 @@ namespace Tests
 
             visitor.VisitPattern(p);
 
-            Assert.IsTrue(visitor.Visited);
+            Assert.True(visitor.Visited);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypePattern_Reduce()
         {
             var res = CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(int));
@@ -117,7 +116,7 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<bool> expected)
         {
             var res = WithLog<bool>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class V : CSharpExpressionVisitor

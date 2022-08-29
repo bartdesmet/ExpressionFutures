@@ -3,17 +3,16 @@
 // bartde - December 2021
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class VarPatternTests
     {
-        [TestMethod]
+        [Fact]
         public void VarPattern_ArgumentChecking()
         {
             // null
@@ -29,33 +28,33 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), Expression.Variable(typeof(long)))));
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_Properties()
         {
             var t = Expression.Variable(typeof(int));
             var p = CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), variable: t));
 
-            Assert.AreEqual(typeof(int), p.InputType);
-            Assert.AreEqual(typeof(int), p.NarrowedType);
-            Assert.AreSame(t, p.Variable);
+            Assert.Equal(typeof(int), p.InputType);
+            Assert.Equal(typeof(int), p.NarrowedType);
+            Assert.Same(t, p.Variable);
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_Update()
         {
             var t = Expression.Variable(typeof(int));
             var p = CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), variable: t));
 
-            Assert.AreSame(p, p.Update(t));
+            Assert.Same(p, p.Update(t));
 
             var u = Expression.Variable(typeof(int));
             var q = p.Update(u);
 
-            Assert.AreNotSame(p, q);
-            Assert.AreSame(u, q.Variable);
+            Assert.NotSame(p, q);
+            Assert.Same(u, q.Variable);
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_Update_Invalid()
         {
             var t = Expression.Variable(typeof(int));
@@ -65,22 +64,22 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => p.Update(u));
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_ChangeType_NoVariable()
         {
             var p = CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), variable: null));
 
-            Assert.AreSame(p, p.ChangeType(typeof(int)));
+            Assert.Same(p, p.ChangeType(typeof(int)));
 
             var q = (VarCSharpPattern)p.ChangeType(typeof(long));
 
-            Assert.AreNotSame(p, q);
-            Assert.AreEqual(typeof(long), q.InputType);
-            Assert.AreEqual(typeof(long), q.NarrowedType);
-            Assert.IsNull(q.Variable);
+            Assert.NotSame(p, q);
+            Assert.Equal(typeof(long), q.InputType);
+            Assert.Equal(typeof(long), q.NarrowedType);
+            Assert.Null(q.Variable);
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_ChangeType_Variable()
         {
             var t = Expression.Variable(typeof(int));
@@ -89,7 +88,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => p.ChangeType(typeof(long)));
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_Visitor()
         {
             var t = Expression.Variable(typeof(int));
@@ -99,10 +98,10 @@ namespace Tests
 
             visitor.VisitPattern(p);
 
-            Assert.IsTrue(visitor.Visited);
+            Assert.True(visitor.Visited);
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_Reduce_NoVariable()
         {
             var res = CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), variable: null));
@@ -114,7 +113,7 @@ namespace Tests
             }, new LogAndResult<bool> { Value = true, Log = { "O" } });
         }
 
-        [TestMethod]
+        [Fact]
         public void VarPattern_Reduce_Variable()
         {
             var t = Expression.Variable(typeof(int));
@@ -144,7 +143,7 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<bool> expected)
         {
             var res = WithLog<bool>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class V : CSharpExpressionVisitor

@@ -3,21 +3,20 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class ForEachTests
     {
-        [TestMethod]
+        [Fact]
         public void ForEach_Factory_ArgumentChecking()
         {
             var variable = Expression.Parameter(typeof(int));
@@ -117,7 +116,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Properties()
         {
             var variable = Expression.Parameter(typeof(int));
@@ -131,65 +130,65 @@ namespace Tests
             {
                 var res = CSharpExpression.ForEach(variable, collection, body);
 
-                Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
-                Assert.AreSame(collection, res.Collection);
-                Assert.AreSame(body, res.Body);
-                Assert.IsNull(res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
-                Assert.IsNull(res.Conversion);
-                Assert.IsNull(res.Deconstruction);
-                Assert.IsNull(res.AwaitInfo);
+                Assert.Equal(CSharpExpressionType.ForEach, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { variable }.SequenceEqual(res.Variables));
+                Assert.Same(collection, res.Collection);
+                Assert.Same(body, res.Body);
+                Assert.Null(res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
+                Assert.Null(res.Conversion);
+                Assert.Null(res.Deconstruction);
+                Assert.Null(res.AwaitInfo);
             }
 
             {
                 var res = CSharpExpression.ForEach(variable, collection, body, breakLabel);
 
-                Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
-                Assert.AreSame(collection, res.Collection);
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
-                Assert.IsNull(res.Conversion);
-                Assert.IsNull(res.Deconstruction);
-                Assert.IsNull(res.AwaitInfo);
+                Assert.Equal(CSharpExpressionType.ForEach, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { variable }.SequenceEqual(res.Variables));
+                Assert.Same(collection, res.Collection);
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
+                Assert.Null(res.Conversion);
+                Assert.Null(res.Deconstruction);
+                Assert.Null(res.AwaitInfo);
             }
 
             {
                 var res = CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel);
 
-                Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
-                Assert.AreSame(collection, res.Collection);
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.AreSame(continueLabel, res.ContinueLabel);
-                Assert.IsNull(res.Conversion);
-                Assert.IsNull(res.Deconstruction);
-                Assert.IsNull(res.AwaitInfo);
+                Assert.Equal(CSharpExpressionType.ForEach, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { variable }.SequenceEqual(res.Variables));
+                Assert.Same(collection, res.Collection);
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Same(continueLabel, res.ContinueLabel);
+                Assert.Null(res.Conversion);
+                Assert.Null(res.Deconstruction);
+                Assert.Null(res.AwaitInfo);
             }
 
             {
                 var res = CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conversion);
 
-                Assert.AreEqual(CSharpExpressionType.ForEach, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.IsTrue(new[] { variable }.SequenceEqual(res.Variables));
-                Assert.AreSame(collection, res.Collection);
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.AreSame(continueLabel, res.ContinueLabel);
-                Assert.AreSame(conversion, res.Conversion);
-                Assert.IsNull(res.Deconstruction);
-                Assert.IsNull(res.AwaitInfo);
+                Assert.Equal(CSharpExpressionType.ForEach, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.True(new[] { variable }.SequenceEqual(res.Variables));
+                Assert.Same(collection, res.Collection);
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Same(continueLabel, res.ContinueLabel);
+                Assert.Same(conversion, res.Conversion);
+                Assert.Null(res.Deconstruction);
+                Assert.Null(res.AwaitInfo);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Update()
         {
             var variable = Expression.Parameter(typeof(int));
@@ -201,7 +200,7 @@ namespace Tests
             var conversion = Expression.Lambda(x, x);
             var res = CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conversion);
 
-            Assert.AreSame(res, res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo));
+            Assert.Same(res, res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, res.Body, res.Deconstruction, res.AwaitInfo));
 
             var newVariable = Expression.Parameter(typeof(int));
             var newCollection = Expression.Constant(new int[] { 2, 3, 5 });
@@ -217,50 +216,50 @@ namespace Tests
             var upd5 = res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, newConversion, res.Body, res.Deconstruction, res.AwaitInfo);
             var upd6 = res.Update(res.EnumeratorInfo, res.BreakLabel, res.ContinueLabel, res.Variables, res.Collection, res.Conversion, newBody, res.Deconstruction, res.AwaitInfo);
 
-            Assert.AreSame(newBreakLabel, upd1.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd1.ContinueLabel);
-            Assert.IsTrue(res.Variables.SequenceEqual(upd1.Variables));
-            Assert.AreSame(res.Collection, upd1.Collection);
-            Assert.AreSame(res.Conversion, upd1.Conversion);
-            Assert.AreSame(res.Body, upd1.Body);
+            Assert.Same(newBreakLabel, upd1.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd1.ContinueLabel);
+            Assert.True(res.Variables.SequenceEqual(upd1.Variables));
+            Assert.Same(res.Collection, upd1.Collection);
+            Assert.Same(res.Conversion, upd1.Conversion);
+            Assert.Same(res.Body, upd1.Body);
 
-            Assert.AreSame(res.BreakLabel, upd2.BreakLabel);
-            Assert.AreSame(newContinueLabel, upd2.ContinueLabel);
-            Assert.IsTrue(res.Variables.SequenceEqual(upd1.Variables));
-            Assert.AreSame(res.Collection, upd2.Collection);
-            Assert.AreSame(res.Conversion, upd2.Conversion);
-            Assert.AreSame(res.Body, upd2.Body);
+            Assert.Same(res.BreakLabel, upd2.BreakLabel);
+            Assert.Same(newContinueLabel, upd2.ContinueLabel);
+            Assert.True(res.Variables.SequenceEqual(upd1.Variables));
+            Assert.Same(res.Collection, upd2.Collection);
+            Assert.Same(res.Conversion, upd2.Conversion);
+            Assert.Same(res.Body, upd2.Body);
 
-            Assert.AreSame(res.BreakLabel, upd3.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd3.ContinueLabel);
-            Assert.IsTrue(new[] { newVariable }.SequenceEqual(upd3.Variables));
-            Assert.AreSame(res.Collection, upd3.Collection);
-            Assert.AreSame(res.Conversion, upd3.Conversion);
-            Assert.AreSame(res.Body, upd3.Body);
+            Assert.Same(res.BreakLabel, upd3.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd3.ContinueLabel);
+            Assert.True(new[] { newVariable }.SequenceEqual(upd3.Variables));
+            Assert.Same(res.Collection, upd3.Collection);
+            Assert.Same(res.Conversion, upd3.Conversion);
+            Assert.Same(res.Body, upd3.Body);
 
-            Assert.AreSame(res.BreakLabel, upd4.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd4.ContinueLabel);
-            Assert.IsTrue(res.Variables.SequenceEqual(upd4.Variables));
-            Assert.AreSame(newCollection, upd4.Collection);
-            Assert.AreSame(res.Conversion, upd4.Conversion);
-            Assert.AreSame(res.Body, upd4.Body);
+            Assert.Same(res.BreakLabel, upd4.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd4.ContinueLabel);
+            Assert.True(res.Variables.SequenceEqual(upd4.Variables));
+            Assert.Same(newCollection, upd4.Collection);
+            Assert.Same(res.Conversion, upd4.Conversion);
+            Assert.Same(res.Body, upd4.Body);
 
-            Assert.AreSame(res.BreakLabel, upd5.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd5.ContinueLabel);
-            Assert.IsTrue(res.Variables.SequenceEqual(upd5.Variables));
-            Assert.AreSame(res.Collection, upd5.Collection);
-            Assert.AreSame(newConversion, upd5.Conversion);
-            Assert.AreSame(res.Body, upd5.Body);
+            Assert.Same(res.BreakLabel, upd5.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd5.ContinueLabel);
+            Assert.True(res.Variables.SequenceEqual(upd5.Variables));
+            Assert.Same(res.Collection, upd5.Collection);
+            Assert.Same(newConversion, upd5.Conversion);
+            Assert.Same(res.Body, upd5.Body);
 
-            Assert.AreSame(res.BreakLabel, upd6.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd6.ContinueLabel);
-            Assert.IsTrue(res.Variables.SequenceEqual(upd6.Variables));
-            Assert.AreSame(res.Collection, upd6.Collection);
-            Assert.AreSame(res.Conversion, upd6.Conversion);
-            Assert.AreSame(newBody, upd6.Body);
+            Assert.Same(res.BreakLabel, upd6.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd6.ContinueLabel);
+            Assert.True(res.Variables.SequenceEqual(upd6.Variables));
+            Assert.Same(res.Collection, upd6.Collection);
+            Assert.Same(res.Conversion, upd6.Conversion);
+            Assert.Same(newBody, upd6.Body);
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array1()
         {
             var i = Expression.Parameter(typeof(int));
@@ -276,7 +275,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array2()
         {
             var i = Expression.Parameter(typeof(int));
@@ -292,7 +291,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array3()
         {
             var i = Expression.Parameter(typeof(int));
@@ -308,7 +307,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array4()
         {
             var i = Expression.Parameter(typeof(int?));
@@ -324,7 +323,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array5()
         {
             var i = Expression.Parameter(typeof(int));
@@ -340,7 +339,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array6()
         {
             var i = Expression.Parameter(typeof(int));
@@ -356,7 +355,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array7()
         {
             var i = Expression.Parameter(typeof(int));
@@ -377,7 +376,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array8()
         {
             var i = Expression.Parameter(typeof(int));
@@ -398,7 +397,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Array9()
         {
             var i = Expression.Parameter(typeof(int));
@@ -428,7 +427,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_String1()
         {
             var c = Expression.Parameter(typeof(char));
@@ -444,7 +443,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_String2()
         {
             var c = Expression.Parameter(typeof(char));
@@ -474,7 +473,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List1()
         {
             var i = Expression.Parameter(typeof(int));
@@ -490,7 +489,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List2()
         {
             var i = Expression.Parameter(typeof(int));
@@ -506,7 +505,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List3()
         {
             var i = Expression.Parameter(typeof(int));
@@ -522,7 +521,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List4()
         {
             var i = Expression.Parameter(typeof(int?));
@@ -538,7 +537,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List5()
         {
             var i = Expression.Parameter(typeof(int));
@@ -554,7 +553,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List6()
         {
             var i = Expression.Parameter(typeof(int));
@@ -570,7 +569,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List7()
         {
             var i = Expression.Parameter(typeof(int));
@@ -591,7 +590,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List8()
         {
             var i = Expression.Parameter(typeof(int));
@@ -612,7 +611,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_List9()
         {
             var i = Expression.Parameter(typeof(int));
@@ -642,7 +641,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern1()
         {
             var i = Expression.Parameter(typeof(int));
@@ -657,7 +656,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern2()
         {
             var i = Expression.Parameter(typeof(int));
@@ -672,7 +671,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern3()
         {
             var i = Expression.Parameter(typeof(int));
@@ -687,7 +686,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern4()
         {
             var i = Expression.Parameter(typeof(int));
@@ -702,7 +701,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern5()
         {
             var i = Expression.Parameter(typeof(int));
@@ -717,7 +716,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern6()
         {
             var i = Expression.Parameter(typeof(int));
@@ -732,7 +731,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern7()
         {
             var i = Expression.Parameter(typeof(int));
@@ -747,7 +746,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern8()
         {
             var i = Expression.Parameter(typeof(int));
@@ -762,7 +761,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Compile_Pattern9()
         {
             var i = Expression.Parameter(typeof(int));
@@ -1249,10 +1248,10 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void ForEach_Visitor()
         {
             var variable = Expression.Parameter(typeof(int));
@@ -1261,8 +1260,8 @@ namespace Tests
             var res = CSharpExpression.ForEach(variable, collection, body);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

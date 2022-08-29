@@ -3,7 +3,6 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +10,14 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 using static Tests.ReflectionUtils;
 
 namespace Tests
 {
     partial class AsyncLambdaTests
     {
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NotInFilter()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -35,7 +35,7 @@ namespace Tests
             AssertEx.Throws<InvalidOperationException>(() => e.Compile());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NotInLock()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -49,7 +49,7 @@ namespace Tests
             AssertEx.Throws<InvalidOperationException>(() => e.Compile());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NotInLambda()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -62,7 +62,7 @@ namespace Tests
             AssertEx.Throws<InvalidOperationException>(() => e.Compile());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NotInSwitchCaseTestValue()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -86,7 +86,7 @@ namespace Tests
             AssertEx.Throws<InvalidOperationException>(() => e.Compile());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NestedLambda()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -94,10 +94,10 @@ namespace Tests
             var expr = Expression.Invoke(Expression.Lambda(Expression.Constant(42)));
 
             var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(expr);
-            Assert.AreEqual(42, e.Compile()().Result);
+            Assert.Equal(42, e.Compile()().Result);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NestedAsyncLambda()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -107,10 +107,10 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task<Func<Task<int>>>>>(expr);
-            Assert.AreEqual(42, e.Compile()().Result().Result);
+            Assert.Equal(42, e.Compile()().Result().Result);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NotInFilter_NoFalsePositive()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -130,7 +130,7 @@ namespace Tests
             AssertEx.Throws<NotSupportedException>(() => e.Compile());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_InLockResource()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -145,7 +145,7 @@ namespace Tests
             e.Compile()();
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple0()
         {
             var p = Expression.Parameter(typeof(int));
@@ -156,21 +156,21 @@ namespace Tests
 
             foreach (AsyncCSharpExpression<Func<int, Task<int>>> e in new[] { e1, e2, e3 })
             {
-                Assert.AreEqual(42, e.Compile()(42).Result);
+                Assert.Equal(42, e.Compile()(42).Result);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple1()
         {
             var e = CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Constant(42));
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple2()
         {
             var e = CSharpExpression.AsyncLambda<Func<Task>>(Expression.Constant(42));
@@ -179,7 +179,7 @@ namespace Tests
             t.Wait();
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple3()
         {
             var log = new List<string>();
@@ -190,12 +190,12 @@ namespace Tests
             var t = f();
 
             // Add happens on sync code path
-            Assert.IsTrue(new[] { "OK" }.SequenceEqual(log));
+            Assert.True(new[] { "OK" }.SequenceEqual(log));
 
             t.Wait();
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple4()
         {
             var log = new List<string>();
@@ -206,10 +206,10 @@ namespace Tests
             f();
 
             // Add happens on sync code path
-            Assert.IsTrue(new[] { "OK" }.SequenceEqual(log));
+            Assert.True(new[] { "OK" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple5()
         {
             var v = Expression.Constant(Task.FromResult(42));
@@ -217,10 +217,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Simple6()
         {
             var l = Expression.Label(typeof(int));
@@ -228,10 +228,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_CustomGetAwaiter()
         {
             var m = MethodInfoOf(() => GetAwaiter<int>(default(Task<int>)));
@@ -240,7 +240,7 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
         private static TaskAwaiter<T> GetAwaiter<T>(Task<T> task)
@@ -248,7 +248,7 @@ namespace Tests
             return task.GetAwaiter();
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Unary1()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -257,10 +257,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(-1, r);
+            Assert.Equal(-1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Convert1()
         {
             var v = Expression.Constant(Task.FromResult((object)1));
@@ -269,10 +269,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Convert2()
         {
             var v = Expression.Constant(Task.FromResult(1L));
@@ -281,10 +281,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Unbox()
         {
             var v = Expression.Constant(Task.FromResult((object)1));
@@ -293,10 +293,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Unary_More()
         {
             SpillUnary(Expression.UnaryPlus, 28, +28);
@@ -327,11 +327,11 @@ namespace Tests
                 var f = e.Compile();
                 var t = f();
                 var r = t.Result;
-                Assert.AreEqual(result, r);
+                Assert.Equal(result, r);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Binary1()
         {
             var v1 = Expression.Constant(Task.FromResult(1));
@@ -341,10 +341,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Binary2()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -353,10 +353,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Binary3()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -365,10 +365,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Binary_More()
         {
             SpillBinary(Expression.Add, 28, 41, 28 + 41);
@@ -414,11 +414,11 @@ namespace Tests
                 var f = e.Compile();
                 var t = f();
                 var r = t.Result;
-                Assert.AreEqual(result, r);
+                Assert.Equal(result, r);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Member1()
         {
             var v = Expression.Constant(Task.FromResult("bar"));
@@ -427,10 +427,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_LogicalBinary1()
         {
             var v = Expression.Constant(Task.FromResult(true));
@@ -439,10 +439,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(true, r);
+            Assert.True(r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_LogicalBinary2()
         {
             var v = Expression.Constant(Task.FromResult(true));
@@ -451,10 +451,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(true, r);
+            Assert.True(r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_LogicalBinary3()
         {
             var v = Expression.Constant(Task.FromResult(default(string)));
@@ -463,10 +463,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual("bar", r);
+            Assert.Equal("bar", r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Condition1()
         {
             var v = Expression.Constant(Task.FromResult(true));
@@ -475,10 +475,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Condition2()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -487,10 +487,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Condition3()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -499,10 +499,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_TypeBinary1()
         {
             var v = Expression.Constant(Task.FromResult((object)1));
@@ -511,10 +511,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(true, r);
+            Assert.True(r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_TypeBinary2()
         {
             var v = Expression.Constant(Task.FromResult((object)1));
@@ -523,10 +523,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(true, r);
+            Assert.True(r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_ListInit1()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -535,10 +535,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r[0]);
+            Assert.Equal(1, r[0]);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_MemberInit1()
         {
             var elem = typeof(int);
@@ -551,10 +551,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r.Value);
+            Assert.Equal(1, r.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_MemberInit2()
         {
             var elem = typeof(int);
@@ -567,10 +567,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(2, r.Value);
+            Assert.Equal(2, r.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_MemberInit3()
         {
             var elem = typeof(StrongBox<int>);
@@ -583,10 +583,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r.Value.Value);
+            Assert.Equal(1, r.Value.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_MemberInit4()
         {
             var elem = typeof(List<int>);
@@ -599,10 +599,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r.Value[0]);
+            Assert.Equal(1, r.Value[0]);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Assign1()
         {
             var p = Expression.Parameter(typeof(int));
@@ -612,10 +612,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Assign2()
         {
             var p = Expression.Parameter(typeof(int[]));
@@ -627,10 +627,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Assign3()
         {
             var p = Expression.Parameter(typeof(StrongBox<int>));
@@ -642,10 +642,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_New1()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -654,10 +654,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r.Value);
+            Assert.Equal(1, r.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_NewArray1()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -666,10 +666,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r[0]);
+            Assert.Equal(1, r[0]);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_NewArray2()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -678,10 +678,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r.Length);
+            Assert.Single(r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Invoke1()
         {
             var v = Expression.Constant(Task.FromResult(new Func<int, int>(x => x + 1)));
@@ -690,10 +690,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Invoke2()
         {
             var v = Expression.Constant(Task.FromResult(2));
@@ -702,10 +702,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Index1()
         {
             var v = Expression.Constant(Task.FromResult(new List<int> { 1 }));
@@ -714,10 +714,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Index2()
         {
             var v = Expression.Constant(Task.FromResult(0));
@@ -726,10 +726,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Dynamic1()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -738,10 +738,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Dynamic2()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -750,10 +750,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(3, r);
+            Assert.Equal(3, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Switch1()
         {
             var v = Expression.Constant(Task.FromResult(0));
@@ -762,10 +762,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Switch2()
         {
             var v = Expression.Constant(Task.FromResult(1));
@@ -774,10 +774,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(1, r);
+            Assert.Equal(1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_Switch3()
         {
             var v = Expression.Constant(Task.FromResult(2));
@@ -786,10 +786,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(2, r);
+            Assert.Equal(2, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_CallByRef_Local()
         {
             var v = Expression.Constant(Task.FromResult(42));
@@ -800,10 +800,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_CallByRef_Array()
         {
             var v = Expression.Constant(Task.FromResult(42));
@@ -816,10 +816,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_CallByRef_Array_HasBoundsCheckBeforeAwait()
         {
             var v = Expression.Constant(Task.FromException<int>(new Exception("Shouldn't observe me!")));
@@ -833,7 +833,7 @@ namespace Tests
             AssertEx.Throws<IndexOutOfRangeException>(() => f().GetAwaiter().GetResult());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_CallByRef_Field()
         {
             var v = Expression.Constant(Task.FromResult(42));
@@ -846,10 +846,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Spilling_CallByRef_HasNullCheckBeforeAwait()
         {
             var v = Expression.Constant(Task.FromException<int>(new Exception("Shouldn't observe me!")));
@@ -864,7 +864,7 @@ namespace Tests
             AssertEx.Throws<NullReferenceException>(() => f().GetAwaiter().GetResult());
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Hoisting()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
@@ -894,10 +894,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(Enumerable.Range(0, 10).Sum(), r);
+            Assert.Equal(Enumerable.Range(0, 10).Sum(), r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_HoistingParameters()
         {
             var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
@@ -912,10 +912,10 @@ namespace Tests
             var f = e.Compile();
             var t = f(42);
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_ResumeInTry1()
         {
             var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
@@ -935,10 +935,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_ResumeInTry2()
         {
             var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
@@ -958,10 +958,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(-1, r);
+            Assert.Equal(-1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_ResumeInTry3()
         {
             var p = Expression.Parameter(typeof(D));
@@ -982,11 +982,11 @@ namespace Tests
             var f = e.Compile();
             var t = f(d);
             var r = t.Result;
-            Assert.AreEqual(42, r);
-            Assert.IsTrue(d.IsDisposed);
+            Assert.Equal(42, r);
+            Assert.True(d.IsDisposed);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFinally1()
         {
             var p = Expression.Parameter(typeof(D));
@@ -1005,11 +1005,11 @@ namespace Tests
             var f = e.Compile();
             var t = f(d);
             var r = t.Result;
-            Assert.AreEqual(42, r);
-            Assert.IsTrue(d.IsDisposed);
+            Assert.Equal(42, r);
+            Assert.True(d.IsDisposed);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFinally2()
         {
             var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
@@ -1027,10 +1027,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(-1, r);
+            Assert.Equal(-1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFinally3()
         {
             var log = new List<string>();
@@ -1050,10 +1050,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "FB", "FE" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "FB", "FE" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFinally4()
         {
             var log = new List<string>();
@@ -1081,10 +1081,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "FB", "FE", "C" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "FB", "FE", "C" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFinally5()
         {
             var p = Expression.Parameter(typeof(int));
@@ -1109,11 +1109,11 @@ namespace Tests
             var f = e.Compile();
 
             var t1 = f(1);
-            Assert.AreEqual(42, t1.Result);
-            Assert.IsTrue(new[] { "T", "FB", "FE" }.SequenceEqual(log));
+            Assert.Equal(42, t1.Result);
+            Assert.True(new[] { "T", "FB", "FE" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFault1()
         {
             var p = Expression.Parameter(typeof(D));
@@ -1132,11 +1132,11 @@ namespace Tests
             var f = e.Compile();
             var t = f(d);
             var r = t.Result;
-            Assert.AreEqual(42, r);
-            Assert.IsFalse(d.IsDisposed);
+            Assert.Equal(42, r);
+            Assert.False(d.IsDisposed);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFault2()
         {
             var yield = ((Expression<Func<YieldAwaitable>>)(() => Task.Yield())).Body;
@@ -1154,10 +1154,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(-1, r);
+            Assert.Equal(-1, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFault3()
         {
             var log = new List<string>();
@@ -1177,10 +1177,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T" }.SequenceEqual(log));
+            Assert.True(new[] { "T" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFault4()
         {
             var log = new List<string>();
@@ -1208,10 +1208,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "FB", "FE", "C" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "FB", "FE", "C" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInFault5()
         {
             var p = Expression.Parameter(typeof(int));
@@ -1236,11 +1236,11 @@ namespace Tests
             var f = e.Compile();
 
             var t1 = f(1);
-            Assert.AreEqual(42, t1.Result);
-            Assert.IsTrue(new[] { "T" }.SequenceEqual(log));
+            Assert.Equal(42, t1.Result);
+            Assert.True(new[] { "T" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NestedFinally()
         {
             var log = new List<string>();
@@ -1271,10 +1271,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T1", "FB1", "T2", "FB2", "FE2", "FE1" }.SequenceEqual(log));
+            Assert.True(new[] { "T1", "FB1", "T2", "FB2", "FE2", "FE1" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_UnpendBranch1()
         {
             var log = new List<string>();
@@ -1309,10 +1309,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "FB", "FE", "O" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "FB", "FE", "O" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_UnpendBranch2()
         {
             var log = new List<string>();
@@ -1346,11 +1346,11 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
-            Assert.IsTrue(new[] { "T", "FB", "FE" }.SequenceEqual(log));
+            Assert.Equal(42, r);
+            Assert.True(new[] { "T", "FB", "FE" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_ReducibleNodes()
         {
             var fromResultMethod = MethodInfoOf(() => Task.FromResult(default(int)));
@@ -1376,10 +1376,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(Enumerable.Range(0, 10).Sum(), r);
+            Assert.Equal(Enumerable.Range(0, 10).Sum(), r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch1()
         {
             var log = new List<string>();
@@ -1402,10 +1402,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T" }.SequenceEqual(log));
+            Assert.True(new[] { "T" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch2()
         {
             var log = new List<string>();
@@ -1432,10 +1432,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "CB", "CE" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "CB", "CE" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch3()
         {
             var log = new List<string>();
@@ -1465,10 +1465,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "CB", "CE", "F" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "CB", "CE", "F" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch4()
         {
             var log = new List<string>();
@@ -1503,10 +1503,10 @@ namespace Tests
             var f = e.Compile();
             var t = f();
             t.Wait();
-            Assert.IsTrue(new[] { "T", "CB", "CE" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "CB", "CE" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch5()
         {
             var ex = Expression.Parameter(typeof(DivideByZeroException));
@@ -1537,10 +1537,10 @@ namespace Tests
             var t = f();
             t.Wait();
             var m = new DivideByZeroException().Message;
-            Assert.IsTrue(new[] { "T", "CB", m, m, "CE" }.SequenceEqual(log));
+            Assert.True(new[] { "T", "CB", m, m, "CE" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch6()
         {
             var ex = Expression.Parameter(typeof(DivideByZeroException));
@@ -1574,10 +1574,10 @@ namespace Tests
             var t = f();
             t.Wait();
             var m = new DivideByZeroException().Message;
-            Assert.IsTrue(new[] { "T", "CB", m }.SequenceEqual(log));
+            Assert.True(new[] { "T", "CB", m }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch7()
         {
             var p = Expression.Parameter(typeof(int));
@@ -1605,17 +1605,17 @@ namespace Tests
             var f = e.Compile();
 
             var t1 = f(1);
-            Assert.AreEqual(42, t1.Result);
-            Assert.IsTrue(new[] { "T" }.SequenceEqual(log));
+            Assert.Equal(42, t1.Result);
+            Assert.True(new[] { "T" }.SequenceEqual(log));
 
             log.Clear();
 
             var t2 = f(0);
-            Assert.AreEqual(-1, t2.Result);
-            Assert.IsTrue(new[] { "T", "C" }.SequenceEqual(log));
+            Assert.Equal(-1, t2.Result);
+            Assert.True(new[] { "T", "C" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AwaitInCatch8()
         {
             foreach (var b in new[] { false, true })
@@ -1647,21 +1647,21 @@ namespace Tests
                 var f = e.Compile();
                 var t = f();
                 t.Wait();
-                Assert.IsTrue(new[] { "T", "CB", "CE", "F" }.SequenceEqual(log));
+                Assert.True(new[] { "T", "CB", "CE", "F" }.SequenceEqual(log));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_NoStaticType()
         {
             var e = CSharpExpression.AsyncLambda(Expression.Constant(42));
             var f = (Func<Task<int>>)e.Compile();
             var t = f();
             var r = t.Result;
-            Assert.AreEqual(42, r);
+            Assert.Equal(42, r);
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AndAlso_ShortCircuit_Boolean()
         {
             var log = new List<string>();
@@ -1696,11 +1696,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.IsFalse(t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.False(t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AndAlso_ShortCircuit_NullableBoolean()
         {
             var log = new List<string>();
@@ -1735,11 +1735,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.AreEqual(false, t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.Equal(false, t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_AndAlso_ShortCircuit_Struct()
         {
             var log = new List<string>();
@@ -1774,11 +1774,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.IsFalse((bool)t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.False((bool)t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_OrElse_ShortCircuit_Boolean()
         {
             var log = new List<string>();
@@ -1813,11 +1813,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.IsTrue(t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.True(t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_OrElse_ShortCircuit_NullableBoolean()
         {
             var log = new List<string>();
@@ -1852,11 +1852,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.AreEqual(true, t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.Equal(true, t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_OrElse_ShortCircuit_Struct()
         {
             var log = new List<string>();
@@ -1891,11 +1891,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.IsTrue((bool)t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.True((bool)t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Coalesce_ShortCircuit_String()
         {
             var log = new List<string>();
@@ -1930,11 +1930,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.AreEqual("A", t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.Equal("A", t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Coalesce_ShortCircuit_NullableInt32_NullableInt32()
         {
             var log = new List<string>();
@@ -1969,11 +1969,11 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.AreEqual(42, t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.Equal(42, t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncLambda_Compilation_Coalesce_ShortCircuit_NullableInt32_Int32()
         {
             var log = new List<string>();
@@ -2009,8 +2009,8 @@ namespace Tests
             );
             var f = e.Compile();
             var t = f();
-            Assert.AreEqual(42, t.Result);
-            Assert.IsTrue(new[] { "L" }.SequenceEqual(log));
+            Assert.Equal(42, t.Result);
+            Assert.True(new[] { "L" }.SequenceEqual(log));
         }
 
         class D : IDisposable

@@ -3,18 +3,17 @@
 // bartde - May 2020
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public partial class IndexerAccessTests
     {
         private static readonly PropertyInfo StringLength = typeof(string).GetProperty(nameof(string.Length));
@@ -40,7 +39,7 @@ namespace Tests
         private static readonly PropertyInfo SliceAndIndexListStructValue = typeof(SliceAndIndexListStruct).GetProperty(nameof(SliceAndIndexListStruct.Value));
         private static readonly MethodInfo SliceAndIndexListStructSlice = typeof(SliceAndIndexListStruct).GetMethod(nameof(SliceAndIndexListStruct.Slice), new[] { typeof(int), typeof(int) });
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Factory_ArgumentChecking()
         {
             var s = Expression.Parameter(typeof(string));
@@ -69,46 +68,46 @@ namespace Tests
 
             // auto-resolve indexer
             var strIndx1 = CSharpExpression.IndexerAccess(s, i, default(MethodInfo), null);
-            Assert.AreEqual(StringLength, strIndx1.LengthOrCount);
-            Assert.AreEqual(StringChars, strIndx1.IndexOrSlice);
+            Assert.Equal(StringLength, strIndx1.LengthOrCount);
+            Assert.Equal(StringChars, strIndx1.IndexOrSlice);
 
             var strIndx2 = CSharpExpression.IndexerAccess(s, i, default(PropertyInfo), null);
-            Assert.AreEqual(StringLength, strIndx2.LengthOrCount);
-            Assert.AreEqual(StringChars, strIndx2.IndexOrSlice);
+            Assert.Equal(StringLength, strIndx2.LengthOrCount);
+            Assert.Equal(StringChars, strIndx2.IndexOrSlice);
 
             var lstIndx1 = CSharpExpression.IndexerAccess(t, i, default(MethodInfo), null);
-            Assert.AreEqual(SliceAndIndexListLength, lstIndx1.LengthOrCount);
-            Assert.AreEqual(SliceAndIndexListIndexer, lstIndx1.IndexOrSlice);
+            Assert.Equal(SliceAndIndexListLength, lstIndx1.LengthOrCount);
+            Assert.Equal(SliceAndIndexListIndexer, lstIndx1.IndexOrSlice);
 
             var lstIndx2 = CSharpExpression.IndexerAccess(t, i, default(PropertyInfo), null);
-            Assert.AreEqual(SliceAndIndexListLength, lstIndx2.LengthOrCount);
-            Assert.AreEqual(SliceAndIndexListIndexer, lstIndx2.IndexOrSlice);
+            Assert.Equal(SliceAndIndexListLength, lstIndx2.LengthOrCount);
+            Assert.Equal(SliceAndIndexListIndexer, lstIndx2.IndexOrSlice);
 
             // auto-resolve slice
             var strSlice1 = CSharpExpression.IndexerAccess(s, r, default(MethodInfo), null);
-            Assert.AreEqual(StringLength, strSlice1.LengthOrCount);
-            Assert.AreEqual(StringSubstring, strSlice1.IndexOrSlice);
+            Assert.Equal(StringLength, strSlice1.LengthOrCount);
+            Assert.Equal(StringSubstring, strSlice1.IndexOrSlice);
 
             var strSlice2 = CSharpExpression.IndexerAccess(s, r, default(PropertyInfo), null);
-            Assert.AreEqual(StringLength, strSlice2.LengthOrCount);
-            Assert.AreEqual(StringSubstring, strSlice2.IndexOrSlice);
+            Assert.Equal(StringLength, strSlice2.LengthOrCount);
+            Assert.Equal(StringSubstring, strSlice2.IndexOrSlice);
 
             var lstSlice1 = CSharpExpression.IndexerAccess(t, r, default(MethodInfo), null);
-            Assert.AreEqual(SliceAndIndexListLength, lstSlice1.LengthOrCount);
-            Assert.AreEqual(SliceAndIndexListSlice, lstSlice1.IndexOrSlice);
+            Assert.Equal(SliceAndIndexListLength, lstSlice1.LengthOrCount);
+            Assert.Equal(SliceAndIndexListSlice, lstSlice1.IndexOrSlice);
 
             var lstSlice2 = CSharpExpression.IndexerAccess(t, r, default(PropertyInfo), null);
-            Assert.AreEqual(SliceAndIndexListLength, lstSlice2.LengthOrCount);
-            Assert.AreEqual(SliceAndIndexListSlice, lstSlice2.IndexOrSlice);
+            Assert.Equal(SliceAndIndexListLength, lstSlice2.LengthOrCount);
+            Assert.Equal(SliceAndIndexListSlice, lstSlice2.IndexOrSlice);
 
             // the following are valid
-            Assert.IsNotNull(CSharpExpression.IndexerAccess(s, i, StringLength, StringChars));
-            Assert.IsNotNull(CSharpExpression.IndexerAccess(s, r, StringLength, StringSubstring));
+            Assert.NotNull(CSharpExpression.IndexerAccess(s, i, StringLength, StringChars));
+            Assert.NotNull(CSharpExpression.IndexerAccess(s, r, StringLength, StringSubstring));
 
-            Assert.IsNotNull(CSharpExpression.IndexerAccess(c, i, CLength, CIndexer));
-            Assert.IsNotNull(CSharpExpression.IndexerAccess(c, i, CLength.GetMethod, CIndexer));
-            Assert.IsNotNull(CSharpExpression.IndexerAccess(c, i, CLength, CIndexer.GetMethod));
-            Assert.IsNotNull(CSharpExpression.IndexerAccess(c, r, CLength, CSlice));
+            Assert.NotNull(CSharpExpression.IndexerAccess(c, i, CLength, CIndexer));
+            Assert.NotNull(CSharpExpression.IndexerAccess(c, i, CLength.GetMethod, CIndexer));
+            Assert.NotNull(CSharpExpression.IndexerAccess(c, i, CLength, CIndexer.GetMethod));
+            Assert.NotNull(CSharpExpression.IndexerAccess(c, r, CLength, CSlice));
 
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(s, o, StringLength, StringChars)); // invalid index type
 
@@ -135,7 +134,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice3)))); // not (int, int)
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Factory_Properties()
         {
             var s = Expression.Parameter(typeof(string));
@@ -144,36 +143,36 @@ namespace Tests
 
             var e1 = CSharpExpression.IndexerAccess(s, i, StringLength, StringChars);
 
-            Assert.AreSame(s, e1.Object);
-            Assert.AreSame(i, e1.Argument);
-            Assert.AreSame(StringLength, e1.LengthOrCount);
-            Assert.AreSame(StringChars, e1.IndexOrSlice);
+            Assert.Same(s, e1.Object);
+            Assert.Same(i, e1.Argument);
+            Assert.Same(StringLength, e1.LengthOrCount);
+            Assert.Same(StringChars, e1.IndexOrSlice);
 
-            Assert.AreEqual(CSharpExpressionType.IndexerAccess, e1.CSharpNodeType);
-            Assert.AreEqual(typeof(char), e1.Type);
+            Assert.Equal(CSharpExpressionType.IndexerAccess, e1.CSharpNodeType);
+            Assert.Equal(typeof(char), e1.Type);
 
             var e2 = CSharpExpression.IndexerAccess(s, i, StringLength.GetMethod, StringChars.GetMethod);
 
-            Assert.AreSame(s, e2.Object);
-            Assert.AreSame(i, e2.Argument);
-            Assert.AreSame(StringLength, e2.LengthOrCount);
-            Assert.AreSame(StringChars, e2.IndexOrSlice);
+            Assert.Same(s, e2.Object);
+            Assert.Same(i, e2.Argument);
+            Assert.Same(StringLength, e2.LengthOrCount);
+            Assert.Same(StringChars, e2.IndexOrSlice);
 
-            Assert.AreEqual(CSharpExpressionType.IndexerAccess, e2.CSharpNodeType);
-            Assert.AreEqual(typeof(char), e2.Type);
+            Assert.Equal(CSharpExpressionType.IndexerAccess, e2.CSharpNodeType);
+            Assert.Equal(typeof(char), e2.Type);
 
             var e3 = CSharpExpression.IndexerAccess(s, r, StringLength, StringSubstring);
 
-            Assert.AreSame(s, e3.Object);
-            Assert.AreSame(r, e3.Argument);
-            Assert.AreSame(StringLength, e3.LengthOrCount);
-            Assert.AreSame(StringSubstring, e3.IndexOrSlice);
+            Assert.Same(s, e3.Object);
+            Assert.Same(r, e3.Argument);
+            Assert.Same(StringLength, e3.LengthOrCount);
+            Assert.Same(StringSubstring, e3.IndexOrSlice);
 
-            Assert.AreEqual(CSharpExpressionType.IndexerAccess, e3.CSharpNodeType);
-            Assert.AreEqual(typeof(string), e3.Type);
+            Assert.Equal(CSharpExpressionType.IndexerAccess, e3.CSharpNodeType);
+            Assert.Equal(typeof(string), e3.Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Update()
         {
             var s1 = Expression.Parameter(typeof(string));
@@ -183,18 +182,18 @@ namespace Tests
             var i2 = Expression.Parameter(typeof(Index));
 
             var a1 = CSharpExpression.IndexerAccess(s1, i1, StringLength, StringChars);
-            Assert.AreSame(a1, a1.Update(a1.Object, a1.Argument));
+            Assert.Same(a1, a1.Update(a1.Object, a1.Argument));
 
             var a2 = a1.Update(s2, a1.Argument);
-            Assert.AreSame(s2, a2.Object);
-            Assert.AreSame(a1.Argument, a2.Argument);
+            Assert.Same(s2, a2.Object);
+            Assert.Same(a1.Argument, a2.Argument);
 
             var a3 = a1.Update(a1.Object, i2);
-            Assert.AreSame(a1.Object, a3.Object);
-            Assert.AreSame(i2, a3.Argument);
+            Assert.Same(a1.Object, a3.Object);
+            Assert.Same(i2, a3.Argument);
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Visitor()
         {
             var s = Expression.Parameter(typeof(string));
@@ -203,8 +202,8 @@ namespace Tests
             var res = CSharpExpression.IndexerAccess(s, i, StringLength, StringChars);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -219,7 +218,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Basics_String_Index()
         {
             var str = "foobar";
@@ -237,7 +236,7 @@ namespace Tests
 
                 var res = f.Compile()();
 
-                Assert.AreEqual(str[i], res);
+                Assert.Equal(str[i], res);
             }
 
             for (int i = 1; i <= str.Length; i++)
@@ -251,7 +250,7 @@ namespace Tests
 
                 var res = f.Compile()();
 
-                Assert.AreEqual(str[j.GetOffset(str.Length)], res);
+                Assert.Equal(str[j.GetOffset(str.Length)], res);
             }
 
             for (int i = 1; i <= str.Length; i++)
@@ -265,7 +264,7 @@ namespace Tests
 
                 var res = f.Compile()();
 
-                Assert.AreEqual(str[j.GetOffset(str.Length)], res);
+                Assert.Equal(str[j.GetOffset(str.Length)], res);
             }
 
             // Variables
@@ -279,7 +278,7 @@ namespace Tests
 
                 var res = f.Compile()(str, new Index(i));
 
-                Assert.AreEqual(str[i], res);
+                Assert.Equal(str[i], res);
             }
 
             for (int i = 1; i <= str.Length; i++)
@@ -293,7 +292,7 @@ namespace Tests
 
                 var res = f.Compile()(str, j);
 
-                Assert.AreEqual(str[j.GetOffset(str.Length)], res);
+                Assert.Equal(str[j.GetOffset(str.Length)], res);
             }
 
             for (int i = 1; i <= str.Length; i++)
@@ -309,7 +308,7 @@ namespace Tests
 
                 var res = f.Compile()(str, i);
 
-                Assert.AreEqual(str[j.GetOffset(str.Length)], res);
+                Assert.Equal(str[j.GetOffset(str.Length)], res);
             }
 
             // Other
@@ -325,8 +324,8 @@ namespace Tests
 
                 var res = f.Compile()();
 
-                Assert.AreEqual(str[i], res);
-                Assert.AreEqual("SI", log);
+                Assert.Equal(str[i], res);
+                Assert.Equal("SI", log);
             }
 
             for (int i = 1; i <= str.Length; i++)
@@ -342,8 +341,8 @@ namespace Tests
 
                 var res = f.Compile()();
 
-                Assert.AreEqual(str[j.GetOffset(str.Length)], res);
-                Assert.AreEqual("SI", log);
+                Assert.Equal(str[j.GetOffset(str.Length)], res);
+                Assert.Equal("SI", log);
             }
 
             for (int i = 1; i <= str.Length; i++)
@@ -361,12 +360,12 @@ namespace Tests
 
                 var res = f.Compile()();
 
-                Assert.AreEqual(str[j.GetOffset(str.Length)], res);
-                Assert.AreEqual("SI", log);
+                Assert.Equal(str[j.GetOffset(str.Length)], res);
+                Assert.Equal("SI", log);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Basics_String_Index_SideEffects()
         {
             var str = "foobar";
@@ -396,7 +395,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Index_SideEffects()
         {
             var ctor = typeof(SliceAndIndexString).GetConstructors().Single();
@@ -454,7 +453,7 @@ namespace Tests
             }, new LogAndResult<char> { Log = { "O", "E", "Length", "this[3] get()" }, Value = 'b' });
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Basics_String_Range()
         {
             var str = "foobar";
@@ -652,7 +651,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Basics_String_Range_SideEffects()
         {
             var str = "foobar";
@@ -717,7 +716,7 @@ namespace Tests
         }
 
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Range_SideEffects()
         {
             var ctor = typeof(SliceAndIndexString).GetConstructors().Single();
@@ -835,7 +834,7 @@ namespace Tests
             }, new LogAndResult<string> { Log = { "O", "Length", "Slice(1,3)" }, Value = str.Substring(1, 3) });
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Index_Assign()
         {
             var SliceAndIndexStringCtor = typeof(SliceAndIndexString).GetConstructors().Single();
@@ -979,7 +978,7 @@ namespace Tests
             }, new LogAndResult<string> { Log = { "O", "Length", "this[2] get()", "M", "this[2] set(10)" }, Value = "{2,3,10,7,11,13}" });
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexerAccess_Index_MutableStruct()
         {
             var SliceAndIndexListStructCtor = typeof(SliceAndIndexListStruct).GetConstructors().Single();
@@ -1052,19 +1051,19 @@ namespace Tests
 
             if (expectedException == null)
             {
-                Assert.IsNull(actualException);
-                Assert.AreEqual(expectedVal, actualVal);
+                Assert.Null(actualException);
+                Assert.Equal(expectedVal, actualVal);
             }
             else
             {
-                Assert.AreEqual(expectedException, actualException);
+                Assert.Equal(expectedException, actualException);
             }
         }
 
         private void AssertCompile<T>(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLog<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class C

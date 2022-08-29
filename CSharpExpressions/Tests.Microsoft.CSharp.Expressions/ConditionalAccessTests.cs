@@ -3,20 +3,19 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class ConditionalAccessTests
     {
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_ArgumentChecking()
         {
             var rec = Expression.Constant(1, typeof(int?));
@@ -38,7 +37,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(string)), nrc, wnn));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalReceiver_ArgumentChecking()
         {
             // null
@@ -50,7 +49,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int).MakeByRefType()));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Member1()
         {
             var p = Expression.Parameter(typeof(DateTimeOffset?));
@@ -61,11 +60,11 @@ namespace Tests
 
             foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
             {
-                Assert.AreEqual(d?.Offset, c(d));
+                Assert.Equal(d?.Offset, c(d));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Member2()
         {
             var p = Expression.Parameter(typeof(DateTimeOffset?));
@@ -76,11 +75,11 @@ namespace Tests
 
             foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
             {
-                Assert.AreEqual(d?.Offset.Hours, c(d));
+                Assert.Equal(d?.Offset.Hours, c(d));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Member3()
         {
             var p = Expression.Parameter(typeof(DateTimeOffset?));
@@ -92,11 +91,11 @@ namespace Tests
 
             foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
             {
-                Assert.AreEqual((d?.Offset)?.Hours, c(d));
+                Assert.Equal((d?.Offset)?.Hours, c(d));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Member4()
         {
             var p = Expression.Parameter(typeof(string));
@@ -107,11 +106,11 @@ namespace Tests
 
             foreach (var s in new string[] { null, "bar" })
             {
-                Assert.AreEqual(s?.Length, c(s));
+                Assert.Equal(s?.Length, c(s));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Potpourri1()
         {
             var p = Expression.Parameter(typeof(DateTimeOffset?));
@@ -123,11 +122,11 @@ namespace Tests
 
             foreach (var d in new DateTimeOffset?[] { null, DateTimeOffset.Now })
             {
-                Assert.AreEqual(d?.Offset.ToString()?.Length, c(d));
+                Assert.Equal(d?.Offset.ToString()?.Length, c(d));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Potpourri2()
         {
             var p = Expression.Parameter(typeof(string));
@@ -138,11 +137,11 @@ namespace Tests
 
             foreach (var s in new string[] { null, "bar" })
             {
-                Assert.AreEqual(s?.ToUpper().ToLower()?.Length, c(s));
+                Assert.Equal(s?.ToUpper().ToLower()?.Length, c(s));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Compile_Invoke1()
         {
             var p = Expression.Parameter(typeof(Action));
@@ -155,10 +154,10 @@ namespace Tests
 
             var called = false;
             c(() => { called = true; });
-            Assert.IsTrue(called);
+            Assert.True(called);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_Update()
         {
             var rec1 = Expression.Constant(1, typeof(int?));
@@ -172,25 +171,25 @@ namespace Tests
             var ca0 = CSharpExpression.ConditionalAccess(rec1, nrc1, wnn1);
 
             var ca1 = ca0.Update(rec1, nrc1, wnn1);
-            Assert.AreSame(ca0, ca1);
+            Assert.Same(ca0, ca1);
 
             var ca2 = ca0.Update(rec2, nrc1, wnn1);
-            Assert.AreSame(rec2, ca2.Receiver);
-            Assert.AreSame(nrc1, ca2.NonNullReceiver);
-            Assert.AreSame(wnn1, ca2.WhenNotNull);
+            Assert.Same(rec2, ca2.Receiver);
+            Assert.Same(nrc1, ca2.NonNullReceiver);
+            Assert.Same(wnn1, ca2.WhenNotNull);
 
             var ca3 = ca0.Update(rec1, nrc2, wnn1);
-            Assert.AreSame(rec1, ca3.Receiver);
-            Assert.AreSame(nrc2, ca3.NonNullReceiver);
-            Assert.AreSame(wnn1, ca3.WhenNotNull);
+            Assert.Same(rec1, ca3.Receiver);
+            Assert.Same(nrc2, ca3.NonNullReceiver);
+            Assert.Same(wnn1, ca3.WhenNotNull);
 
             var ca4 = ca0.Update(rec1, nrc1, wnn2);
-            Assert.AreSame(rec1, ca4.Receiver);
-            Assert.AreSame(nrc1, ca4.NonNullReceiver);
-            Assert.AreSame(wnn2, ca4.WhenNotNull);
+            Assert.Same(rec1, ca4.Receiver);
+            Assert.Same(nrc1, ca4.NonNullReceiver);
+            Assert.Same(wnn2, ca4.WhenNotNull);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_ManOrBoy1()
         {
             var p = Expression.Parameter(typeof(C));
@@ -233,18 +232,18 @@ namespace Tests
 
                 var f = Expression.Lambda<Func<C, C>>(e, p).Compile();
 
-                Assert.IsNull(f(null));
+                Assert.Null(f(null));
 
                 for (var i = 0; i < cs.Length; i++)
                 {
-                    Assert.IsNull(f(new C(i)));
+                    Assert.Null(f(new C(i)));
                 }
 
-                Assert.IsNotNull(f(new C(cs.Length)));
+                Assert.NotNull(f(new C(cs.Length)));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_ManOrBoy2()
         {
             var p = Expression.Parameter(typeof(S?));
@@ -278,18 +277,18 @@ namespace Tests
 
                 var f = Expression.Lambda<Func<S?, S?>>(e, p).Compile();
 
-                Assert.IsNull(f(null));
+                Assert.Null(f(null));
 
                 for (var i = 0; i < cs.Length; i++)
                 {
-                    Assert.IsNull(f(new S(i)));
+                    Assert.Null(f(new S(i)));
                 }
 
-                Assert.IsNotNull(f(new S(cs.Length)));
+                Assert.NotNull(f(new S(cs.Length)));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalAccess_ManOrBoy3()
         {
             var p1 = new Person { Name = "Bart" };
@@ -306,27 +305,27 @@ namespace Tests
             var e1 = CSharpExpression.ConditionalProperty(CSharpExpression.ConditionalProperty(p, name), length);
             var f1 = Expression.Lambda<Func<Person, int?>>(e1, p).Compile();
 
-            Assert.IsNull(f1(null));
-            Assert.AreEqual(4, f1(p1).Value);
+            Assert.Null(f1(null));
+            Assert.Equal(4, f1(p1).Value);
 
             var e2 = CSharpExpression.ConditionalCall(CSharpExpression.ConditionalProperty(p, name), toUpper);
             var f2 = Expression.Lambda<Func<Person, string>>(e2, p).Compile();
 
-            Assert.IsNull(f2(null));
-            Assert.AreEqual("BART", f2(p1));
+            Assert.Null(f2(null));
+            Assert.Equal("BART", f2(p1));
 
             var e3 = CSharpExpression.ConditionalProperty(CSharpExpression.ConditionalProperty(p, dob), year);
             var f3 = Expression.Lambda<Func<Person, int?>>(e3, p).Compile();
 
-            Assert.IsNull(f3(null));
-            Assert.IsNull(f3(p1));
-            Assert.AreEqual(1983, f3(p2));
+            Assert.Null(f3(null));
+            Assert.Null(f3(p1));
+            Assert.Equal(1983, f3(p2));
         }
 
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class C

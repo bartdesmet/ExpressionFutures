@@ -3,16 +3,15 @@
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class GotoTests
     {
-        [TestMethod]
+        [Fact]
         public void GotoLabel_Factory_ArgumentChecking()
         {
             // null
@@ -23,7 +22,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoLabel(l));
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoCase_Factory_ArgumentChecking()
         {
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0));
@@ -32,58 +31,58 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoCase(TimeSpan.Zero));
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoLabel_Properties()
         {
             var l = Expression.Label();
             var g = CSharpStatement.GotoLabel(l);
 
-            Assert.AreEqual(typeof(void), g.Type);
-            Assert.AreEqual(CSharpExpressionType.Goto, g.CSharpNodeType);
-            Assert.AreEqual(CSharpGotoKind.GotoLabel, g.Kind);
-            Assert.AreSame(l, g.Target);
+            Assert.Equal(typeof(void), g.Type);
+            Assert.Equal(CSharpExpressionType.Goto, g.CSharpNodeType);
+            Assert.Equal(CSharpGotoKind.GotoLabel, g.Kind);
+            Assert.Same(l, g.Target);
 
-            Assert.IsTrue(g.CanReduce);
+            Assert.True(g.CanReduce);
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoCase_Properties()
         {
             var o = (object)42;
             var g = CSharpStatement.GotoCase(o);
 
-            Assert.AreEqual(typeof(void), g.Type);
-            Assert.AreEqual(CSharpExpressionType.Goto, g.CSharpNodeType);
-            Assert.AreEqual(CSharpGotoKind.GotoCase, g.Kind);
-            Assert.AreSame(o, g.Value);
+            Assert.Equal(typeof(void), g.Type);
+            Assert.Equal(CSharpExpressionType.Goto, g.CSharpNodeType);
+            Assert.Equal(CSharpGotoKind.GotoCase, g.Kind);
+            Assert.Same(o, g.Value);
 
-            Assert.IsFalse(g.CanReduce);
+            Assert.False(g.CanReduce);
             AssertEx.Throws<InvalidOperationException>(() => g.Reduce());
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoDefault_Properties()
         {
             var g = CSharpStatement.GotoDefault();
 
-            Assert.AreEqual(typeof(void), g.Type);
-            Assert.AreEqual(CSharpExpressionType.Goto, g.CSharpNodeType);
-            Assert.AreEqual(CSharpGotoKind.GotoDefault, g.Kind);
+            Assert.Equal(typeof(void), g.Type);
+            Assert.Equal(CSharpExpressionType.Goto, g.CSharpNodeType);
+            Assert.Equal(CSharpGotoKind.GotoDefault, g.Kind);
 
-            Assert.IsFalse(g.CanReduce);
+            Assert.False(g.CanReduce);
             AssertEx.Throws<InvalidOperationException>(() => g.Reduce());
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoDefault_NoSingleton()
         {
             var g1 = CSharpStatement.GotoDefault();
             var g2 = CSharpStatement.GotoDefault();
 
-            Assert.AreNotSame(g1, g2);
+            Assert.NotSame(g1, g2);
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoLabel_Update()
         {
             var l = Expression.Label();
@@ -91,42 +90,42 @@ namespace Tests
             var g = CSharpStatement.GotoLabel(l);
 
             var u1 = g.Update(l);
-            Assert.AreSame(g, u1);
+            Assert.Same(g, u1);
 
             var u2 = g.Update(m);
-            Assert.AreNotSame(g, u2);
-            Assert.AreSame(m, u2.Target);
+            Assert.NotSame(g, u2);
+            Assert.Same(m, u2.Target);
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoLabel_Visitor()
         {
             var l = Expression.Label();
             var g = CSharpStatement.GotoLabel(l);
 
             var v = new V();
-            Assert.AreSame(g, v.Visit(g));
-            Assert.AreEqual(g.Kind, v.VisitedKind);
+            Assert.Same(g, v.Visit(g));
+            Assert.Equal(g.Kind, v.VisitedKind);
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoCase_Visitor()
         {
             var g = CSharpStatement.GotoCase(42);
 
             var v = new V();
-            Assert.AreSame(g, v.Visit(g));
-            Assert.AreEqual(g.Kind, v.VisitedKind);
+            Assert.Same(g, v.Visit(g));
+            Assert.Equal(g.Kind, v.VisitedKind);
         }
 
-        [TestMethod]
+        [Fact]
         public void GotoDefault_Visitor()
         {
             var g = CSharpStatement.GotoDefault();
 
             var v = new V();
-            Assert.AreSame(g, v.Visit(g));
-            Assert.AreEqual(g.Kind, v.VisitedKind);
+            Assert.Same(g, v.Visit(g));
+            Assert.Equal(g.Kind, v.VisitedKind);
         }
 
         class V : CSharpExpressionVisitor

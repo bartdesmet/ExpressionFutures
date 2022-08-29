@@ -3,16 +3,15 @@
 // bartde - December 2021
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class RangeTests
     {
-        [TestMethod]
+        [Fact]
         public void Range_Factory_ArgumentChecking()
         {
             var arg1 = Expression.Constant(new Index(0));
@@ -55,19 +54,19 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(null, Expression.Constant(1L)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Range_Factory_Int32()
         {
             var range = CSharpExpression.Range(Expression.Constant(1), Expression.Constant(2));
-            Assert.IsTrue(range.Left is UnaryExpression ul && ul.NodeType == ExpressionType.Convert);
-            Assert.IsTrue(range.Right is UnaryExpression ur && ur.NodeType == ExpressionType.Convert);
+            Assert.True(range.Left is UnaryExpression ul && ul.NodeType == ExpressionType.Convert);
+            Assert.True(range.Right is UnaryExpression ur && ur.NodeType == ExpressionType.Convert);
 
             var rangen = CSharpExpression.Range(Expression.Constant(1, typeof(int?)), Expression.Constant(2, typeof(int?)));
-            Assert.IsTrue(rangen.Left is UnaryExpression uln && uln.NodeType == ExpressionType.Convert);
-            Assert.IsTrue(rangen.Right is UnaryExpression urn && urn.NodeType == ExpressionType.Convert);
+            Assert.True(rangen.Left is UnaryExpression uln && uln.NodeType == ExpressionType.Convert);
+            Assert.True(rangen.Right is UnaryExpression urn && urn.NodeType == ExpressionType.Convert);
         }
 
-        [TestMethod]
+        [Fact]
         public void Range_Update()
         {
             var from1 = Expression.Constant(new Index(1));
@@ -78,25 +77,25 @@ namespace Tests
             var e1 = CSharpExpression.Range(from1, to1);
 
             var e2 = e1.Update(from1, to1);
-            Assert.AreSame(e1, e2);
+            Assert.Same(e1, e2);
 
             var e3 = e1.Update(from2, to1);
-            Assert.AreNotSame(e1, e3);
-            Assert.AreSame(from2, e3.Left);
-            Assert.AreSame(to1, e3.Right);
+            Assert.NotSame(e1, e3);
+            Assert.Same(from2, e3.Left);
+            Assert.Same(to1, e3.Right);
 
             var e4 = e1.Update(from1, to2);
-            Assert.AreNotSame(e1, e4);
-            Assert.AreSame(from1, e4.Left);
-            Assert.AreSame(to2, e4.Right);
+            Assert.NotSame(e1, e4);
+            Assert.Same(from1, e4.Left);
+            Assert.Same(to2, e4.Right);
 
             var e5 = e1.Update(from2, to2);
-            Assert.AreNotSame(e1, e5);
-            Assert.AreSame(from2, e5.Left);
-            Assert.AreSame(to2, e5.Right);
+            Assert.NotSame(e1, e5);
+            Assert.Same(from2, e5.Left);
+            Assert.Same(to2, e5.Right);
         }
 
-        [TestMethod]
+        [Fact]
         public void Range_Visitor()
         {
             var from = new Index(1);
@@ -104,8 +103,8 @@ namespace Tests
             var res = CSharpExpression.Range(Expression.Constant(from), Expression.Constant(to));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -120,7 +119,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Range_Compile()
         {
             var idx1 = new Index(1);
@@ -145,7 +144,7 @@ namespace Tests
                     var expr = e(i.start, i.end);
                     Func<Range> f = Expression.Lambda<Func<Range>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -164,7 +163,7 @@ namespace Tests
                     var expr = e(i.start, i.end);
                     Func<Range> f = Expression.Lambda<Func<Range>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -183,7 +182,7 @@ namespace Tests
                     var expr = e(i.start);
                     Func<Range> f = Expression.Lambda<Func<Range>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -202,7 +201,7 @@ namespace Tests
                     var expr = e(i.end);
                     Func<Range> f = Expression.Lambda<Func<Range>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -216,11 +215,11 @@ namespace Tests
                 var expr = e();
                 var f = Expression.Lambda<Func<Range>>(expr).Compile();
                 var res = f();
-                Assert.AreEqual(Range.All, res);
+                Assert.Equal(Range.All, res);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Range_Compile_Lifted()
         {
             var idx1 = new Index(1);
@@ -253,7 +252,7 @@ namespace Tests
                     var expr = e(i.start, i.end);
                     var f = Expression.Lambda<Func<Range?>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -278,7 +277,7 @@ namespace Tests
                     var expr = e(i.start, i.end);
                     var f = Expression.Lambda<Func<Range?>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -298,7 +297,7 @@ namespace Tests
                     var expr = e(i.start);
                     var f = Expression.Lambda<Func<Range?>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
 
@@ -318,7 +317,7 @@ namespace Tests
                     var expr = e(i.end);
                     var f = Expression.Lambda<Func<Range?>>(expr).Compile();
                     var res = f();
-                    Assert.AreEqual(i.value, res);
+                    Assert.Equal(i.value, res);
                 }
             }
         }

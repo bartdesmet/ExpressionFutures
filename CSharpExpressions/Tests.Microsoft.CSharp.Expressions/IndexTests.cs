@@ -3,21 +3,20 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class IndexTests
     {
-        [TestMethod]
+        [Fact]
         public void Index_Factory_ArgumentChecking()
         {
             // NB: A lot of checks are performed by LINQ helpers, so we omit tests for those cases.
@@ -63,7 +62,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(Expression.Default(typeof(X)), typeof(X).GetProperty("Item")));
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_Factory_Expression()
         {
             var obj = Expression.Constant(new S("foo"));
@@ -78,13 +77,13 @@ namespace Tests
                 CSharpExpression.Index(obj, substring, args.AsEnumerable()),
             })
             {
-                Assert.AreSame(obj, e.Object);
+                Assert.Same(obj, e.Object);
 
-                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.Single(e.Arguments);
 
-                Assert.AreEqual(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
             }
 
             foreach (var e in new[]
@@ -93,13 +92,13 @@ namespace Tests
                 CSharpExpression.Index(obj, substringGet, args.AsEnumerable()),
             })
             {
-                Assert.AreSame(obj, e.Object);
+                Assert.Same(obj, e.Object);
 
-                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.Single(e.Arguments);
 
-                Assert.AreEqual(substringGet.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(substringGet.GetParameters()[0], e.Arguments[0].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
             }
 
             var tooLittle = new Expression[0];
@@ -125,7 +124,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_Factory_CanUseMethod()
         {
             var substringMethod = MethodInfoOf((S s) => s[default(int), default(int)]);
@@ -144,15 +143,15 @@ namespace Tests
             var argLength = CSharpExpression.Bind(lengthParameter, length);
 
             var expr1 = CSharpExpression.Index(obj, substringMethod, argStartIndex, argLength);
-            Assert.AreEqual(substringProperty, expr1.Indexer);
+            Assert.Equal(substringProperty, expr1.Indexer);
             AssertCompile<string>(_ => expr1, new LogAndResult<string> { Value = "foobar".Substring(1, 2) });
 
             var expr2 = CSharpExpression.Index(obj, substringMethod, new[] { argStartIndex, argLength }.AsEnumerable());
-            Assert.AreEqual(substringProperty, expr2.Indexer);
+            Assert.Equal(substringProperty, expr2.Indexer);
             AssertCompile<string>(_ => expr2, new LogAndResult<string> { Value = "foobar".Substring(1, 2) });
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_Properties()
         {
             var substring = PropertyInfoOf((S s) => s[default(int), default(int)]);
@@ -172,25 +171,25 @@ namespace Tests
             {
                 var res = CSharpExpression.Index(obj, substring, arg0, arg1);
 
-                Assert.AreEqual(CSharpExpressionType.Index, res.CSharpNodeType);
-                Assert.AreSame(obj, res.Object);
-                Assert.AreEqual(substring, res.Indexer);
-                Assert.AreEqual(typeof(string), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Index, res.CSharpNodeType);
+                Assert.Same(obj, res.Object);
+                Assert.Equal(substring, res.Indexer);
+                Assert.Equal(typeof(string), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
 
             {
                 var res = CSharpExpression.Index(obj, substring, new[] { arg0, arg1 }.AsEnumerable());
 
-                Assert.AreEqual(CSharpExpressionType.Index, res.CSharpNodeType);
-                Assert.AreSame(obj, res.Object);
-                Assert.AreEqual(substring, res.Indexer);
-                Assert.AreEqual(typeof(string), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Index, res.CSharpNodeType);
+                Assert.Same(obj, res.Object);
+                Assert.Equal(substring, res.Indexer);
+                Assert.Equal(typeof(string), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_Update()
         {
             var substring = PropertyInfoOf((S s) => s[default(int), default(int)]);
@@ -209,21 +208,21 @@ namespace Tests
 
             var res = CSharpExpression.Index(obj, substring, arg0, arg1);
 
-            Assert.AreSame(res, res.Update(res.Object, res.Arguments));
+            Assert.Same(res, res.Update(res.Object, res.Arguments));
 
             var obj1 = Expression.Constant(new S("foo"));
             var upd1 = res.Update(obj1, res.Arguments);
-            Assert.AreNotSame(upd1, res);
-            Assert.AreSame(res.Arguments, upd1.Arguments);
-            Assert.AreSame(obj1, upd1.Object);
+            Assert.NotSame(upd1, res);
+            Assert.Same(res.Arguments, upd1.Arguments);
+            Assert.Same(obj1, upd1.Object);
 
             var upd2 = res.Update(obj, new[] { arg1, arg0 });
-            Assert.AreNotSame(upd2, res);
-            Assert.AreSame(res.Object, upd2.Object);
-            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { arg1, arg0 }));
+            Assert.NotSame(upd2, res);
+            Assert.Same(res.Object, upd2.Object);
+            Assert.True(upd2.Arguments.SequenceEqual(new[] { arg1, arg0 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_Compile()
         {
             var method = PropertyInfoOf((S s) => s[default(int), default(int)]);
@@ -264,10 +263,10 @@ namespace Tests
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLogValue<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_Visitor()
         {
             var listIndex = PropertyInfoOf((List<int> xs) => xs[default(int)]);
@@ -277,8 +276,8 @@ namespace Tests
             var res = CSharpExpression.Index(list, listIndex, CSharpExpression.Bind(valueParameter, value));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -293,7 +292,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Index_ReflectionFacts()
         {
             var indexer = PropertyInfoOf((S s) => s[default(int), default(int)]);
@@ -303,8 +302,8 @@ namespace Tests
             var getterParameterOpt = getter.GetParameters()[1];
 
             // NB: The Reduce method relies on both of these to have the default value available.
-            Assert.IsTrue(indexerParameterOpt.HasDefaultValue);
-            Assert.IsTrue(getterParameterOpt.HasDefaultValue);
+            Assert.True(indexerParameterOpt.HasDefaultValue);
+            Assert.True(getterParameterOpt.HasDefaultValue);
         }
 
         class S

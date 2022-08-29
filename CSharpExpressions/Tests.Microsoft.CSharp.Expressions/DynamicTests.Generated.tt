@@ -61,14 +61,14 @@ var uts = new[]
 #>
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
     partial class DynamicTests
     {
-        [TestMethod]
+        [Fact]
         public void Dynamic_Binary_GeneratedFactories()
         {
             var le = Expression.Constant(1);
@@ -97,29 +97,29 @@ foreach (var et in bts)
     }
 #>
             var be<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(le, re);
-            Assert.AreEqual(ExpressionType.<#=et#>, be<#=i#>.OperationNodeType);
-            Assert.AreSame(le, be<#=i#>.Left.Expression);
-            Assert.AreSame(re, be<#=i#>.Right.Expression);
-            Assert.AreEqual(<#=flags#>, be<#=i#>.Flags);
+            Assert.Equal(ExpressionType.<#=et#>, be<#=i#>.OperationNodeType);
+            Assert.Same(le, be<#=i#>.Left.Expression);
+            Assert.Same(re, be<#=i#>.Right.Expression);
+            Assert.Equal(<#=flags#>, be<#=i#>.Flags);
 
             var bd<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd);
-            Assert.AreEqual(ExpressionType.<#=et#>, bd<#=i#>.OperationNodeType);
-            Assert.AreSame(ld, bd<#=i#>.Left);
-            Assert.AreSame(rd, bd<#=i#>.Right);
-            Assert.AreEqual(<#=flags#>, bd<#=i#>.Flags);
+            Assert.Equal(ExpressionType.<#=et#>, bd<#=i#>.OperationNodeType);
+            Assert.Same(ld, bd<#=i#>.Left);
+            Assert.Same(rd, bd<#=i#>.Right);
+            Assert.Equal(<#=flags#>, bd<#=i#>.Flags);
 
             var bf<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd, <#=flags#>);
-            Assert.AreEqual(ExpressionType.<#=et#>, bf<#=i#>.OperationNodeType);
-            Assert.AreSame(ld, bf<#=i#>.Left);
-            Assert.AreSame(rd, bf<#=i#>.Right);
-            Assert.AreEqual(<#=flags#>, bf<#=i#>.Flags);
+            Assert.Equal(ExpressionType.<#=et#>, bf<#=i#>.OperationNodeType);
+            Assert.Same(ld, bf<#=i#>.Left);
+            Assert.Same(rd, bf<#=i#>.Right);
+            Assert.Equal(<#=flags#>, bf<#=i#>.Flags);
 
             var bc<#=i#> = DynamicCSharpExpression.Dynamic<#=et#>(ld, rd, <#=flags#>, typeof(int));
-            Assert.AreEqual(ExpressionType.<#=et#>, bc<#=i#>.OperationNodeType);
-            Assert.AreSame(ld, bc<#=i#>.Left);
-            Assert.AreSame(rd, bc<#=i#>.Right);
-            Assert.AreEqual(<#=flags#>, bc<#=i#>.Flags);
-            Assert.AreEqual(typeof(int), bc<#=i#>.Context);
+            Assert.Equal(ExpressionType.<#=et#>, bc<#=i#>.OperationNodeType);
+            Assert.Same(ld, bc<#=i#>.Left);
+            Assert.Same(rd, bc<#=i#>.Right);
+            Assert.Equal(<#=flags#>, bc<#=i#>.Flags);
+            Assert.Equal(typeof(int), bc<#=i#>.Context);
 
 <#
     i++;
@@ -127,7 +127,7 @@ foreach (var et in bts)
 #>
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Unary_GeneratedFactories()
         {
             var oe = Expression.Constant(1);
@@ -148,25 +148,25 @@ foreach (var et in uts)
     }
 #>
             var ue<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(oe);
-            Assert.AreEqual(ExpressionType.<#=et#>, ue<#=j#>.OperationNodeType);
-            Assert.AreSame(oe, ue<#=j#>.Operand.Expression);
-            Assert.AreEqual(<#=flags#>, ue<#=j#>.Flags);
+            Assert.Equal(ExpressionType.<#=et#>, ue<#=j#>.OperationNodeType);
+            Assert.Same(oe, ue<#=j#>.Operand.Expression);
+            Assert.Equal(<#=flags#>, ue<#=j#>.Flags);
 
             var ud<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od);
-            Assert.AreEqual(ExpressionType.<#=et#>, ud<#=j#>.OperationNodeType);
-            Assert.AreSame(od, ud<#=j#>.Operand);
-            Assert.AreEqual(<#=flags#>, ud<#=j#>.Flags);
+            Assert.Equal(ExpressionType.<#=et#>, ud<#=j#>.OperationNodeType);
+            Assert.Same(od, ud<#=j#>.Operand);
+            Assert.Equal(<#=flags#>, ud<#=j#>.Flags);
 
             var uf<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od, <#=flags#>);
-            Assert.AreEqual(ExpressionType.<#=et#>, uf<#=j#>.OperationNodeType);
-            Assert.AreSame(od, uf<#=j#>.Operand);
-            Assert.AreEqual(<#=flags#>, uf<#=j#>.Flags);
+            Assert.Equal(ExpressionType.<#=et#>, uf<#=j#>.OperationNodeType);
+            Assert.Same(od, uf<#=j#>.Operand);
+            Assert.Equal(<#=flags#>, uf<#=j#>.Flags);
 
             var uc<#=j#> = DynamicCSharpExpression.Dynamic<#=et#>(od, <#=flags#>, typeof(int));
-            Assert.AreEqual(ExpressionType.<#=et#>, uc<#=j#>.OperationNodeType);
-            Assert.AreSame(od, uc<#=j#>.Operand);
-            Assert.AreEqual(<#=flags#>, uc<#=j#>.Flags);
-            Assert.AreEqual(typeof(int), uc<#=j#>.Context);
+            Assert.Equal(ExpressionType.<#=et#>, uc<#=j#>.OperationNodeType);
+            Assert.Same(od, uc<#=j#>.Operand);
+            Assert.Equal(<#=flags#>, uc<#=j#>.Flags);
+            Assert.Equal(typeof(int), uc<#=j#>.Context);
 
 <#
     j++;

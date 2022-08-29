@@ -4,17 +4,16 @@
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class CSharpExpressionVisitorTests
     {
-        [TestMethod]
+        [Fact]
         public void CSharpExpressionVisitor_NoChange()
         {
             var visitor = new V();
@@ -25,18 +24,18 @@ namespace Tests
                 CSharpExpression.Await(Expression.Default(typeof(Task)))
             })
             {
-                Assert.AreSame(e, visitor.Visit(e));
+                Assert.Same(e, visitor.Visit(e));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CSharpExpressionVisitor_Reduce()
         {
             var visitor = new V();
 
             var r = visitor.Visit(new E());
 
-            Assert.AreEqual(ExpressionType.Constant, r.NodeType);
+            Assert.Equal(ExpressionType.Constant, r.NodeType);
         }
 
         class V : CSharpExpressionVisitor

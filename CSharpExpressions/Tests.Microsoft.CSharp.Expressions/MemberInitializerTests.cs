@@ -3,17 +3,16 @@
 // bartde - December 2021
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class MemberInitializerTests
     {
-        [TestMethod]
+        [Fact]
         public void MemberInitializer_Factory_ArgumentChecking()
         {
             // null checks
@@ -35,31 +34,31 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Qux)), Expression.Constant("bar")));
         }
 
-        [TestMethod]
+        [Fact]
         public void MemberInitializer_Update()
         {
             var i = Expression.Constant(1);
             var e1 = CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Qux)), i);
 
             var e2 = e1.Update(i);
-            Assert.AreSame(e1, e2);
+            Assert.Same(e1, e2);
 
             var j = Expression.Constant(2);
 
             var e3 = e1.Update(j);
-            Assert.AreNotSame(e1, e3);
-            Assert.AreSame(j, e3.Expression);
+            Assert.NotSame(e1, e3);
+            Assert.Same(j, e3.Expression);
         }
 
-        [TestMethod]
+        [Fact]
         public void MemberInitializer_Visitor()
         {
             var i = Expression.Constant(1);
             var res = CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Qux)), i);
 
             var v = new V();
-            Assert.AreSame(res, v.VisitMemberInitializer(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.VisitMemberInitializer(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

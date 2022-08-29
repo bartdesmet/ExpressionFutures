@@ -107,15 +107,14 @@ var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class DebugViewTests
     {
 <#
@@ -126,10 +125,10 @@ foreach (var expr in exprs)
         private Expression expr<#=i#> = <#=expr#>;
         private string dbg<#=i#> = \<#=toEscapedString(<#=expr#>.DebugView())\#>;
 
-        [TestMethod]
+        [Fact]
         public void CSharp_DebugView_Test<#=i#>()
         {
-            Assert.AreEqual(dbg<#=i#>, expr<#=i#>.DebugView().ToString());
+            Assert.Equal(dbg<#=i#>, expr<#=i#>.DebugView().ToString());
         }
 
 <#

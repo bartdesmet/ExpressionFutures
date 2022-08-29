@@ -3,21 +3,20 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class IndexInitTests
     {
-        [TestMethod]
+        [Fact]
         public void IndexInit_Factory_ArgumentChecking()
         {
             var index = PropertyInfoOf((Dictionary<string, int> d) => d[default(string)]);
@@ -51,7 +50,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexInit(setter, args, args[0]));
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexInit_ListInit_Compile_Property()
         {
             // NB: This is the only test we can write right now in order to set indexer assignment. We should
@@ -67,10 +66,10 @@ namespace Tests
 
             var res = Expression.Lambda<Func<Dictionary<string, int>>>(expr).Compile()();
 
-            Assert.AreEqual(43, res["foo"]);
+            Assert.Equal(43, res["foo"]);
         }
 
-        [TestMethod]
+        [Fact]
         public void IndexInit_ListInit_Compile_Method()
         {
             // NB: This is the only test we can write right now in order to set indexer assignment. We should
@@ -86,7 +85,7 @@ namespace Tests
 
             var res = Expression.Lambda<Func<Dictionary<string, int>>>(expr).Compile()();
 
-            Assert.AreEqual(43, res["foo"]);
+            Assert.Equal(43, res["foo"]);
         }
 
         class X

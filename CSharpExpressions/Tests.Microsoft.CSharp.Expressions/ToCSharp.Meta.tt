@@ -221,17 +221,16 @@ var _par3 = Expression.Parameter(typeof(long));
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class ToCSharpTests
     {
         private static LabelTarget _lbl1 = Expression.Label();
@@ -249,10 +248,10 @@ foreach (var expr in exprs)
         private Expression expr<#=i#> = <#=expr#>;
         private string dbg<#=i#> = \<#=toEscapedString(<#=expr#>.ToCSharp())\#>;
 
-        [TestMethod]
+        [Fact]
         public void CSharp_ToCSharp_Test<#=i#>()
         {
-            Assert.AreEqual(dbg<#=i#>, expr<#=i#>.ToCSharp());
+            Assert.Equal(dbg<#=i#>, expr<#=i#>.ToCSharp());
         }
 
 <#

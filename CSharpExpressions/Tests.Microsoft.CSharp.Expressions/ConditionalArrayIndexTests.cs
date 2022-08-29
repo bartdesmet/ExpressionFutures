@@ -3,21 +3,20 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class ConditionalArrayIndexTests
     {
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Factory_ArgumentChecking()
         {
             var array = Expression.Default(typeof(string[]));
@@ -41,7 +40,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,])), Expression.Constant(1), Expression.Constant("bar")));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Properties()
         {
             var array = Expression.Default(typeof(string[]));
@@ -53,14 +52,14 @@ namespace Tests
                 CSharpExpression.ConditionalArrayIndex(array, indexes.AsEnumerable()),
             })
             {
-                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
-                Assert.AreSame(array, e.Array);
-                Assert.AreEqual(typeof(string), e.Type);
-                Assert.IsTrue(e.Indexes.SequenceEqual(indexes));
+                Assert.Equal(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
+                Assert.Same(array, e.Array);
+                Assert.Equal(typeof(string), e.Type);
+                Assert.True(e.Indexes.SequenceEqual(indexes));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Update()
         {
             var array = Expression.Default(typeof(string[]));
@@ -68,23 +67,23 @@ namespace Tests
 
             var res = CSharpExpression.ConditionalArrayIndex(array, indexes);
 
-            Assert.AreSame(res, res.Update(res.Array, res.Indexes));
+            Assert.Same(res, res.Update(res.Array, res.Indexes));
 
             var obj1 = Expression.Default(typeof(string[]));
             var upd1 = res.Update(obj1, res.Indexes);
-            Assert.AreNotSame(upd1, res);
-            Assert.AreSame(res.Indexes, upd1.Indexes);
-            Assert.AreSame(obj1, upd1.Array);
+            Assert.NotSame(upd1, res);
+            Assert.Same(res.Indexes, upd1.Indexes);
+            Assert.Same(obj1, upd1.Array);
 
             var newIndexes = new[] { Expression.Constant(1) };
 
             var upd2 = res.Update(array, newIndexes);
-            Assert.AreNotSame(upd2, res);
-            Assert.AreSame(res.Array, upd2.Array);
-            Assert.IsTrue(upd2.Indexes.SequenceEqual(newIndexes));
+            Assert.NotSame(upd2, res);
+            Assert.Same(res.Array, upd2.Array);
+            Assert.True(upd2.Indexes.SequenceEqual(newIndexes));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Compile_Ref()
         {
             var px = Expression.Parameter(typeof(string[]));
@@ -92,11 +91,11 @@ namespace Tests
             var mx = CSharpExpression.ConditionalArrayIndex(px, ax);
             var fx = Expression.Lambda<Func<string[], string>>(mx, px);
             var dx = fx.Compile();
-            Assert.AreEqual("bar", dx(new[] { "bar" }));
-            Assert.IsNull(dx(null));
+            Assert.Equal("bar", dx(new[] { "bar" }));
+            Assert.Null(dx(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Compile_Ref_Multidimensional()
         {
             var px = Expression.Parameter(typeof(string[,]));
@@ -104,11 +103,11 @@ namespace Tests
             var mx = CSharpExpression.ConditionalArrayIndex(px, ax);
             var fx = Expression.Lambda<Func<string[,], string>>(mx, px);
             var dx = fx.Compile();
-            Assert.AreEqual("bar", dx(new string[1, 1] { { "bar" } }));
-            Assert.IsNull(dx(null));
+            Assert.Equal("bar", dx(new string[1, 1] { { "bar" } }));
+            Assert.Null(dx(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Compile_Val()
         {
             var px = Expression.Parameter(typeof(int[]));
@@ -116,11 +115,11 @@ namespace Tests
             var mx = CSharpExpression.ConditionalArrayIndex(px, ax);
             var fx = Expression.Lambda<Func<int[], int?>>(mx, px);
             var dx = fx.Compile();
-            Assert.AreEqual(42, dx(new[] { 42 }));
-            Assert.IsNull(dx(null));
+            Assert.Equal(42, dx(new[] { 42 }));
+            Assert.Null(dx(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalArrayIndex_Compile_Val_Multidimensional()
         {
             var px = Expression.Parameter(typeof(int[,]));
@@ -128,8 +127,8 @@ namespace Tests
             var mx = CSharpExpression.ConditionalArrayIndex(px, ax);
             var fx = Expression.Lambda<Func<int[,], int?>>(mx, px);
             var dx = fx.Compile();
-            Assert.AreEqual(42, dx(new int[1, 1] { { 42 } }));
-            Assert.IsNull(dx(null));
+            Assert.Equal(42, dx(new int[1, 1] { { 42 } }));
+            Assert.Null(dx(null));
         }
 
         // TODO: tests to assert args are not evaluated if receiver is null

@@ -3,17 +3,16 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class WhileTests
     {
-        [TestMethod]
+        [Fact]
         public void While_Factory_ArgumentChecking()
         {
             var test = Expression.Constant(true);
@@ -39,7 +38,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.While(test, body, breakLabel, Expression.Label(typeof(int))));
         }
 
-        [TestMethod]
+        [Fact]
         public void While_Properties()
         {
             var test = Expression.Constant(true);
@@ -50,38 +49,38 @@ namespace Tests
             {
                 var res = CSharpExpression.While(test, body);
 
-                Assert.AreEqual(CSharpExpressionType.While, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(test, res.Test);
-                Assert.AreSame(body, res.Body);
-                Assert.IsNull(res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.While, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.Same(test, res.Test);
+                Assert.Same(body, res.Body);
+                Assert.Null(res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.While(test, body, breakLabel);
 
-                Assert.AreEqual(CSharpExpressionType.While, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(test, res.Test);
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.IsNull(res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.While, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.Same(test, res.Test);
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Null(res.ContinueLabel);
             }
 
             {
                 var res = CSharpExpression.While(test, body, breakLabel, continueLabel);
 
-                Assert.AreEqual(CSharpExpressionType.While, res.CSharpNodeType);
-                Assert.AreEqual(typeof(void), res.Type);
-                Assert.AreSame(test, res.Test);
-                Assert.AreSame(body, res.Body);
-                Assert.AreSame(breakLabel, res.BreakLabel);
-                Assert.AreSame(continueLabel, res.ContinueLabel);
+                Assert.Equal(CSharpExpressionType.While, res.CSharpNodeType);
+                Assert.Equal(typeof(void), res.Type);
+                Assert.Same(test, res.Test);
+                Assert.Same(body, res.Body);
+                Assert.Same(breakLabel, res.BreakLabel);
+                Assert.Same(continueLabel, res.ContinueLabel);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void While_Update()
         {
             var test = Expression.Constant(true);
@@ -90,7 +89,7 @@ namespace Tests
             var continueLabel = Expression.Label();
             var res = CSharpExpression.While(test, body, breakLabel, continueLabel);
 
-            Assert.AreSame(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Test, res.Body, res.Locals));
+            Assert.Same(res, res.Update(res.BreakLabel, res.ContinueLabel, res.Test, res.Body, res.Locals));
 
             var newTest = Expression.Constant(true);
             var newBody = Expression.Empty();
@@ -102,32 +101,32 @@ namespace Tests
             var upd3 = res.Update(res.BreakLabel, res.ContinueLabel, newTest, res.Body, res.Locals);
             var upd4 = res.Update(res.BreakLabel, res.ContinueLabel, res.Test, newBody, res.Locals);
 
-            Assert.AreSame(newBreakLabel, upd1.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd1.ContinueLabel);
-            Assert.AreSame(res.Test, upd1.Test);
-            Assert.AreSame(res.Body, upd1.Body);
-            Assert.AreSame(res.Locals, upd1.Locals);
+            Assert.Same(newBreakLabel, upd1.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd1.ContinueLabel);
+            Assert.Same(res.Test, upd1.Test);
+            Assert.Same(res.Body, upd1.Body);
+            Assert.Same(res.Locals, upd1.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd2.BreakLabel);
-            Assert.AreSame(newContinueLabel, upd2.ContinueLabel);
-            Assert.AreSame(res.Test, upd2.Test);
-            Assert.AreSame(res.Body, upd2.Body);
-            Assert.AreSame(res.Locals, upd2.Locals);
+            Assert.Same(res.BreakLabel, upd2.BreakLabel);
+            Assert.Same(newContinueLabel, upd2.ContinueLabel);
+            Assert.Same(res.Test, upd2.Test);
+            Assert.Same(res.Body, upd2.Body);
+            Assert.Same(res.Locals, upd2.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd3.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd3.ContinueLabel);
-            Assert.AreSame(newTest, upd3.Test);
-            Assert.AreSame(res.Body, upd3.Body);
-            Assert.AreSame(res.Locals, upd3.Locals);
+            Assert.Same(res.BreakLabel, upd3.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd3.ContinueLabel);
+            Assert.Same(newTest, upd3.Test);
+            Assert.Same(res.Body, upd3.Body);
+            Assert.Same(res.Locals, upd3.Locals);
 
-            Assert.AreSame(res.BreakLabel, upd4.BreakLabel);
-            Assert.AreSame(res.ContinueLabel, upd4.ContinueLabel);
-            Assert.AreSame(res.Test, upd4.Test);
-            Assert.AreSame(newBody, upd4.Body);
-            Assert.AreSame(res.Locals, upd4.Locals);
+            Assert.Same(res.BreakLabel, upd4.BreakLabel);
+            Assert.Same(res.ContinueLabel, upd4.ContinueLabel);
+            Assert.Same(res.Test, upd4.Test);
+            Assert.Same(newBody, upd4.Body);
+            Assert.Same(res.Locals, upd4.Locals);
         }
 
-        [TestMethod]
+        [Fact]
         public void While_Compile()
         {
             var i = Expression.Parameter(typeof(int));
@@ -158,7 +157,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void While_Compile_BreakContinue()
         {
             var i = Expression.Parameter(typeof(int));
@@ -193,16 +192,16 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void While_Visitor()
         {
             var test = Expression.Constant(true);
@@ -210,8 +209,8 @@ namespace Tests
             var res = CSharpExpression.While(test, body);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

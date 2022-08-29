@@ -4,51 +4,50 @@
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public partial class DynamicTests
     {
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicInvokeMember(p, "Substring", Expression.Constant(1));
-            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual("ar", f("bar"));
+            Assert.Equal("ar", f("bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Generic()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicInvokeMember(p, "Bar", new[] { typeof(int) });
-            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
 
             AssertNoChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual("Int32", f(new Foo()));
+            Assert.Equal("Int32", f(new Foo()));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -73,52 +72,52 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Object);
-                Assert.IsNull(e.Target);
+                Assert.Same(p, e.Object);
+                Assert.Null(e.Target);
 
-                Assert.AreEqual(m, e.Name);
-                Assert.AreEqual(0, e.TypeArguments.Count);
+                Assert.Equal(m, e.Name);
+                Assert.Empty(e.TypeArguments);
 
-                Assert.AreEqual(1, e.Arguments.Count);
-                Assert.AreSame(a, e.Arguments[0].Expression);
+                Assert.Single(e.Arguments);
+                Assert.Same(a, e.Arguments[0].Expression);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Static()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicInvokeMember(typeof(string), "Concat", p, Expression.Constant("!"));
-            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual("bar!", f("bar"));
+            Assert.Equal("bar!", f("bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Static_Generic()
         {
             var d = DynamicCSharpExpression.DynamicInvokeMember(typeof(Foo), "Qux", new[] { typeof(int) });
-            Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicInvokeMember, d.CSharpNodeType);
 
             AssertNoChange(d);
 
             var e = Expression.Lambda<Func<object>>(d);
             var f = e.Compile();
-            Assert.AreEqual("Int32", f());
+            Assert.Equal("Int32", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Static_Factories()
         {
             var m = "bar";
@@ -142,23 +141,23 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicInvokeMember, e.CSharpNodeType);
 
-                Assert.AreSame(typeof(string), e.Target);
-                Assert.IsNull(e.Object);
+                Assert.Same(typeof(string), e.Target);
+                Assert.Null(e.Object);
 
-                Assert.AreEqual(m, e.Name);
-                Assert.AreEqual(0, e.TypeArguments.Count);
+                Assert.Equal(m, e.Name);
+                Assert.Empty(e.TypeArguments);
 
-                Assert.AreEqual(1, e.Arguments.Count);
-                Assert.AreSame(a, e.Arguments[0].Expression);
+                Assert.Single(e.Arguments);
+                Assert.Same(a, e.Arguments[0].Expression);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Struct1()
         {
             var p = Expression.Parameter(typeof(object));
@@ -168,7 +167,7 @@ namespace Tests
             var e = Expression.Lambda<Func<object, int>>(Expression.Block(typeof(int), d, Expression.Field(Expression.Convert(p, typeof(Bar)), "Value")), p);
             var f = e.Compile();
             var b = new Bar();
-            Assert.AreEqual(Dynamic_InvokeMember_Struct1_Compiled(b), f(b));
+            Assert.Equal(Dynamic_InvokeMember_Struct1_Compiled(b), f(b));
         }
 
         private static int Dynamic_InvokeMember_Struct1_Compiled(dynamic p)
@@ -177,7 +176,7 @@ namespace Tests
             return p.Value;
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Struct2()
         {
             var p = Expression.Parameter(typeof(Bar));
@@ -187,7 +186,7 @@ namespace Tests
             var e = Expression.Lambda<Func<Bar, int>>(Expression.Block(typeof(int), d, Expression.Field(p, "Value")), p);
             var f = e.Compile();
             var b = new Bar();
-            Assert.AreEqual(Dynamic_InvokeMember_Struct2_Compiled(b, 0), f(b));
+            Assert.Equal(Dynamic_InvokeMember_Struct2_Compiled(b, 0), f(b));
         }
 
         private static int Dynamic_InvokeMember_Struct2_Compiled(Bar p, dynamic d)
@@ -196,7 +195,7 @@ namespace Tests
             return p.Value;
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_ByRef()
         {
             var p = Expression.Parameter(typeof(int));
@@ -205,10 +204,10 @@ namespace Tests
 
             var e = Expression.Lambda<Func<int, int>>(Expression.Block(typeof(int), d, p), p);
             var f = e.Compile();
-            Assert.AreEqual(42, f(0));
+            Assert.Equal(42, f(0));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeMember_Out()
         {
             var p = Expression.Parameter(typeof(string));
@@ -218,26 +217,26 @@ namespace Tests
 
             var e = Expression.Lambda<Func<string, int>>(Expression.Block(typeof(int), new[] { q }, d, q), p);
             var f = e.Compile();
-            Assert.AreEqual(42, f("42"));
+            Assert.Equal(42, f("42"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Invoke()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicInvoke(p, Expression.Constant(1));
-            Assert.AreEqual(CSharpExpressionType.DynamicInvoke, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicInvoke, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual(42, f(new Func<int, int>(x => x + 41)));
+            Assert.Equal(42, f(new Func<int, int>(x => x + 41)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Invoke_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -256,36 +255,36 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicInvoke, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicInvoke, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Expression);
+                Assert.Same(p, e.Expression);
 
-                Assert.AreEqual(1, e.Arguments.Count);
-                Assert.AreSame(a, e.Arguments[0].Expression);
+                Assert.Single(e.Arguments);
+                Assert.Same(a, e.Arguments[0].Expression);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Unary()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Negate, p);
-            Assert.AreEqual(CSharpExpressionType.DynamicUnary, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicUnary, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual(42, f(-42));
-            Assert.AreEqual(TimeSpan.FromSeconds(42), f(TimeSpan.FromSeconds(-42)));
+            Assert.Equal(42, f(-42));
+            Assert.Equal(TimeSpan.FromSeconds(42), f(TimeSpan.FromSeconds(-42)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Unary_Compile()
         {
             var vals = new[] { 1, 2, 3, 4, 5 }; // TODO: include exceptional cases
@@ -323,16 +322,16 @@ namespace Tests
 
             var e = Expression.Lambda<Func<object, R>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual(expected, f(o));
+            Assert.Equal(expected, f(o));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Unary_Factory_ArgumentChecking()
         {
             AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Add, Expression.Constant(0)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Unary_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -348,37 +347,37 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicUnary, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicUnary, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Operand.Expression);
+                Assert.Same(p, e.Operand.Expression);
 
-                Assert.AreEqual(ExpressionType.Negate, e.OperationNodeType);
+                Assert.Equal(ExpressionType.Negate, e.OperationNodeType);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Binary()
         {
             var p = Expression.Parameter(typeof(object));
             var q = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Add, p, q);
-            Assert.AreEqual(CSharpExpressionType.DynamicBinary, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicBinary, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
-            Assert.AreEqual(3, f(1, 2));
-            Assert.AreEqual("ab", f("a", "b"));
-            Assert.AreEqual(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 10), TimeSpan.FromDays(1)));
+            Assert.Equal(3, f(1, 2));
+            Assert.Equal("ab", f("a", "b"));
+            Assert.Equal(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 10), TimeSpan.FromDays(1)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Binary_Compile()
         {
             var vals = new[] { 1, 2, 3, 4, 5 }; // TODO: include exceptional cases
@@ -432,16 +431,16 @@ namespace Tests
 
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
-            Assert.AreEqual(expected, f(l, r));
+            Assert.Equal(expected, f(l, r));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Binary_Factory_ArgumentChecking()
         {
             AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Negate, Expression.Constant(0), Expression.Constant(0)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Binary_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -459,35 +458,35 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicBinary, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicBinary, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Left.Expression);
-                Assert.AreSame(q, e.Right.Expression);
+                Assert.Same(p, e.Left.Expression);
+                Assert.Same(q, e.Right.Expression);
 
-                Assert.AreEqual(ExpressionType.Add, e.OperationNodeType);
+                Assert.Equal(ExpressionType.Add, e.OperationNodeType);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeConstructor()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicInvokeConstructor(typeof(TimeSpan), p);
-            Assert.AreEqual(CSharpExpressionType.DynamicInvokeConstructor, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicInvokeConstructor, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, TimeSpan>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual(TimeSpan.FromSeconds(42), f(TimeSpan.FromSeconds(42).Ticks));
+            Assert.Equal(TimeSpan.FromSeconds(42), f(TimeSpan.FromSeconds(42).Ticks));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_InvokeConstructor_Factories()
         {
             var a = Expression.Constant(1);
@@ -506,35 +505,35 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicInvokeConstructor, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicInvokeConstructor, e.CSharpNodeType);
 
-                Assert.AreSame(t, e.Type);
+                Assert.Same(t, e.Type);
 
-                Assert.AreEqual(1, e.Arguments.Count);
-                Assert.AreSame(a, e.Arguments[0].Expression);
+                Assert.Single(e.Arguments);
+                Assert.Same(a, e.Arguments[0].Expression);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_GetMember()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicGetMember(p, "TotalSeconds");
-            Assert.AreEqual(CSharpExpressionType.DynamicGetMember, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicGetMember, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual(42.0, f(TimeSpan.FromSeconds(42)));
+            Assert.Equal(42.0, f(TimeSpan.FromSeconds(42)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_GetMember_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -554,39 +553,39 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicGetMember, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicGetMember, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Object);
+                Assert.Same(p, e.Object);
 
-                Assert.AreSame(m, e.Name);
+                Assert.Same(m, e.Name);
 
-                Assert.AreEqual(1, e.Arguments.Count);
-                Assert.AreSame(a, e.Arguments[0].Expression);
+                Assert.Single(e.Arguments);
+                Assert.Same(a, e.Arguments[0].Expression);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_GetIndex()
         {
             var p = Expression.Parameter(typeof(object));
             var q = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicGetIndex(p, q);
-            Assert.AreEqual(CSharpExpressionType.DynamicGetIndex, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicGetIndex, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, object, object>>(d, p, q);
             var f = e.Compile();
-            Assert.AreEqual(5, f(new[] { 2, 3, 5 }, 2));
-            Assert.AreEqual(21, f(new Dictionary<string, int> { { "Bart", 21 } }, "Bart"));
+            Assert.Equal(5, f(new[] { 2, 3, 5 }, 2));
+            Assert.Equal(21, f(new Dictionary<string, int> { { "Bart", 21 } }, "Bart"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_GetIndex_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -605,36 +604,36 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicGetIndex, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicGetIndex, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Object);
+                Assert.Same(p, e.Object);
 
-                Assert.AreEqual(1, e.Arguments.Count);
-                Assert.AreSame(a, e.Arguments[0].Expression);
+                Assert.Single(e.Arguments);
+                Assert.Same(a, e.Arguments[0].Expression);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Convert()
         {
             var p = Expression.Parameter(typeof(object));
 
             var d = DynamicCSharpExpression.DynamicConvert(p, typeof(DateTimeOffset));
-            Assert.AreEqual(CSharpExpressionType.DynamicConvert, d.CSharpNodeType);
+            Assert.Equal(CSharpExpressionType.DynamicConvert, d.CSharpNodeType);
 
             AssertNoChange(d);
             AssertChange(d);
 
             var e = Expression.Lambda<Func<object, DateTimeOffset>>(d, p);
             var f = e.Compile();
-            Assert.AreEqual(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 11)));
-            Assert.AreEqual(new DateTime(1983, 2, 11), f((DateTimeOffset)new DateTime(1983, 2, 11)));
+            Assert.Equal(new DateTime(1983, 2, 11), f(new DateTime(1983, 2, 11)));
+            Assert.Equal(new DateTime(1983, 2, 11), f((DateTimeOffset)new DateTime(1983, 2, 11)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Convert_Factories()
         {
             var p = Expression.Parameter(typeof(object));
@@ -649,18 +648,18 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicConvert, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicConvert, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Expression);
+                Assert.Same(p, e.Expression);
 
-                Assert.AreSame(t, e.Type);
+                Assert.Same(t, e.Type);
 
-                Assert.IsNull(e.Context);
-                Assert.AreEqual(CSharpBinderFlags.None, e.Flags);
+                Assert.Null(e.Context);
+                Assert.Equal(CSharpBinderFlags.None, e.Flags);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_Argument_Factories()
         {
             var c = Expression.Constant(1);
@@ -679,9 +678,9 @@ namespace Tests
 
                 foreach (var e in es)
                 {
-                    Assert.AreSame(c, e.Expression);
-                    Assert.IsNull(e.Name);
-                    Assert.AreEqual(expectedFlags, e.Flags);
+                    Assert.Same(c, e.Expression);
+                    Assert.Null(e.Name);
+                    Assert.Equal(expectedFlags, e.Flags);
                 }
             }
 
@@ -693,9 +692,9 @@ namespace Tests
 
                 foreach (var e in es)
                 {
-                    Assert.AreSame(c, e.Expression);
-                    Assert.AreSame(n, e.Name);
-                    Assert.AreEqual(expectedFlags, e.Flags);
+                    Assert.Same(c, e.Expression);
+                    Assert.Same(n, e.Name);
+                    Assert.Equal(expectedFlags, e.Flags);
                 }
             }
 
@@ -707,14 +706,14 @@ namespace Tests
 
                 foreach (var e in es)
                 {
-                    Assert.AreSame(c, e.Expression);
-                    Assert.AreSame(n, e.Name);
-                    Assert.AreEqual(f, e.Flags);
+                    Assert.Same(c, e.Expression);
+                    Assert.Same(n, e.Name);
+                    Assert.Equal(f, e.Flags);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Visitors()
         {
             var p = Expression.Parameter(typeof(object));
@@ -733,16 +732,16 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicUnaryAssign, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicUnaryAssign, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Operand.Expression);
+                Assert.Same(p, e.Operand.Expression);
 
                 AssertNoChange(e);
                 AssertChange(e);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Compile_PostIncrement_Variable()
         {
             var p = Expression.Parameter(typeof(object));
@@ -760,10 +759,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("41,42", f());
+            Assert.Equal("41,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Compile_PreDecrementChecked_Variable()
         {
             // TODO: test for overflow behavior
@@ -783,10 +782,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Compile_PostDecrement_DynamicMember()
         {
             var p = Expression.Parameter(typeof(object));
@@ -807,10 +806,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("43,42", f());
+            Assert.Equal("43,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Compile_PreIncrement_DynamicMember()
         {
             var p = Expression.Parameter(typeof(object));
@@ -831,10 +830,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Compile_PostDecrement_DynamicIndex()
         {
             var p = Expression.Parameter(typeof(object));
@@ -855,10 +854,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("43,42", f());
+            Assert.Equal("43,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_UnaryAssign_Compile_PreIncrement_DynamicIndex()
         {
             var p = Expression.Parameter(typeof(object));
@@ -879,10 +878,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Visitors()
         {
             var p = Expression.Parameter(typeof(object));
@@ -908,107 +907,107 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreEqual(CSharpExpressionType.DynamicBinaryAssign, e.CSharpNodeType);
+                Assert.Equal(CSharpExpressionType.DynamicBinaryAssign, e.CSharpNodeType);
 
-                Assert.AreSame(p, e.Left.Expression);
-                Assert.AreSame(x, e.Right.Expression);
+                Assert.Same(p, e.Left.Expression);
+                Assert.Same(x, e.Right.Expression);
 
                 AssertNoChange(e);
                 AssertChange(e);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Compile_Variable()
         {
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
-            Dynamic_BinaryAssign_Compile_Variable(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
+            Dynamic_BinaryAssign_Compile_Variable_Core(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Compile_DynamicMember()
         {
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicMember(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicMember_Core(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Compile_Member()
         {
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
-            Dynamic_BinaryAssign_Compile_Member(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
+            Dynamic_BinaryAssign_Compile_Member_Core(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Compile_DynamicIndex()
         {
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
-            Dynamic_BinaryAssign_Compile_DynamicIndex(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
+            Dynamic_BinaryAssign_Compile_DynamicIndex_Core(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Compile_Index()
         {
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
-            Dynamic_BinaryAssign_Compile_Index(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicAddAssign, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicAddAssignChecked, 41, 1, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicSubtractAssign, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicSubtractAssignChecked, 43, 1, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicMultiplyAssign, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicMultiplyAssignChecked, 21, 2, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicDivideAssign, 84, 2, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicModuloAssign, 85, 43, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicAndAssign, 255, 42, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicOrAssign, 40, 2, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicExclusiveOrAssign, 41, 3, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicLeftShiftAssign, 21, 1, 42);
+            Dynamic_BinaryAssign_Compile_Index_Core(DynamicCSharpExpression.DynamicRightShiftAssign, 84, 1, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Event()
         {
             var o = new WithEvent();
@@ -1026,7 +1025,7 @@ namespace Tests
 
                 f(o, a);
                 o.Do();
-                Assert.AreEqual(1, i);
+                Assert.Equal(1, i);
             }
 
             {
@@ -1036,11 +1035,11 @@ namespace Tests
 
                 f(o, a);
                 o.Do();
-                Assert.AreEqual(1, i);
+                Assert.Equal(1, i);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Assign_DynamicMember()
         {
             var p = Expression.Parameter(typeof(object));
@@ -1061,10 +1060,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Assign_Member()
         {
             var p = Expression.Parameter(typeof(StrongBox<int>));
@@ -1085,10 +1084,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Assign_DynamicIndex()
         {
             var p = Expression.Parameter(typeof(object));
@@ -1110,10 +1109,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_Assign_Index()
         {
             var p = Expression.Parameter(typeof(List<int>));
@@ -1134,10 +1133,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f());
+            Assert.Equal("42,42", f());
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicMember_Nullable()
         {
             var p = Expression.Parameter(typeof(object));
@@ -1159,11 +1158,11 @@ namespace Tests
             var e = Expression.Lambda<Func<int?, string>>(b, x);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f(null));
-            Assert.AreEqual("99,99", f(99));
+            Assert.Equal("42,42", f(null));
+            Assert.Equal("99,99", f(99));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_Member_Nullable()
         {
             var p = Expression.Parameter(typeof(StrongBox<int?>));
@@ -1185,11 +1184,11 @@ namespace Tests
             var e = Expression.Lambda<Func<int?, string>>(b, y);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f(null));
-            Assert.AreEqual("99,99", f(99));
+            Assert.Equal("42,42", f(null));
+            Assert.Equal("99,99", f(99));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicMember_Reference()
         {
             var p = Expression.Parameter(typeof(object));
@@ -1211,11 +1210,11 @@ namespace Tests
             var e = Expression.Lambda<Func<string, string>>(b, x);
             var f = e.Compile();
 
-            Assert.AreEqual("foo,foo", f(null));
-            Assert.AreEqual("bar,bar", f("bar"));
+            Assert.Equal("foo,foo", f(null));
+            Assert.Equal("bar,bar", f("bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_Member_Reference()
         {
             var p = Expression.Parameter(typeof(StrongBox<string>));
@@ -1237,11 +1236,11 @@ namespace Tests
             var e = Expression.Lambda<Func<string, string>>(b, y);
             var f = e.Compile();
 
-            Assert.AreEqual("foo,foo", f(null));
-            Assert.AreEqual("bar,bar", f("bar"));
+            Assert.Equal("foo,foo", f(null));
+            Assert.Equal("bar,bar", f("bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicIndex_Nullable()
         {
             var p = Expression.Parameter(typeof(object));
@@ -1264,11 +1263,11 @@ namespace Tests
             var e = Expression.Lambda<Func<int?, string>>(b, y);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f(null));
-            Assert.AreEqual("99,99", f(99));
+            Assert.Equal("42,42", f(null));
+            Assert.Equal("99,99", f(99));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_Index_Nullable()
         {
             var p = Expression.Parameter(typeof(List<int?>));
@@ -1290,11 +1289,11 @@ namespace Tests
             var e = Expression.Lambda<Func<int?, string>>(b, y);
             var f = e.Compile();
 
-            Assert.AreEqual("42,42", f(null));
-            Assert.AreEqual("99,99", f(99));
+            Assert.Equal("42,42", f(null));
+            Assert.Equal("99,99", f(99));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_DynamicIndex_Reference()
         {
             var p = Expression.Parameter(typeof(object));
@@ -1317,11 +1316,11 @@ namespace Tests
             var e = Expression.Lambda<Func<string, string>>(b, y);
             var f = e.Compile();
 
-            Assert.AreEqual("foo,foo", f(null));
-            Assert.AreEqual("bar,bar", f("bar"));
+            Assert.Equal("foo,foo", f(null));
+            Assert.Equal("bar,bar", f("bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Dynamic_BinaryAssign_NullCoalescingAssign_Index_Reference()
         {
             var p = Expression.Parameter(typeof(List<string>));
@@ -1343,11 +1342,11 @@ namespace Tests
             var e = Expression.Lambda<Func<string, string>>(b, y);
             var f = e.Compile();
 
-            Assert.AreEqual("foo,foo", f(null));
-            Assert.AreEqual("bar,bar", f("bar"));
+            Assert.Equal("foo,foo", f(null));
+            Assert.Equal("bar,bar", f("bar"));
         }
 
-        private void Dynamic_BinaryAssign_Compile_Variable<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
+        private void Dynamic_BinaryAssign_Compile_Variable_Core<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
         {
             var p = Expression.Parameter(typeof(object));
 
@@ -1364,10 +1363,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual($"{res},{res}", f());
+            Assert.Equal($"{res},{res}", f());
         }
 
-        private void Dynamic_BinaryAssign_Compile_DynamicMember<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
+        private void Dynamic_BinaryAssign_Compile_DynamicMember_Core<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
         {
             var p = Expression.Parameter(typeof(object));
 
@@ -1387,10 +1386,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual($"{res},{res}", f());
+            Assert.Equal($"{res},{res}", f());
         }
 
-        private void Dynamic_BinaryAssign_Compile_Member<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
+        private void Dynamic_BinaryAssign_Compile_Member_Core<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
         {
             var p = Expression.Parameter(typeof(StrongBox<TLeft>));
 
@@ -1410,10 +1409,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual($"{res},{res}", f());
+            Assert.Equal($"{res},{res}", f());
         }
 
-        private void Dynamic_BinaryAssign_Compile_DynamicIndex<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
+        private void Dynamic_BinaryAssign_Compile_DynamicIndex_Core<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
         {
             var p = Expression.Parameter(typeof(object));
 
@@ -1433,10 +1432,10 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual($"{res},{res}", f());
+            Assert.Equal($"{res},{res}", f());
         }
 
-        private void Dynamic_BinaryAssign_Compile_Index<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
+        private void Dynamic_BinaryAssign_Compile_Index_Core<TLeft, TRight>(Func<Expression, Expression, AssignBinaryDynamicCSharpExpression> factory, TLeft left, TRight right, TLeft res)
         {
             var p = Expression.Parameter(typeof(List<TLeft>));
 
@@ -1456,20 +1455,20 @@ namespace Tests
             var e = Expression.Lambda<Func<string>>(b);
             var f = e.Compile();
 
-            Assert.AreEqual($"{res},{res}", f());
+            Assert.Equal($"{res},{res}", f());
         }
 
         static void AssertNoChange(CSharpExpression e)
         {
             var r = new Nop().Visit(e);
-            Assert.AreSame(e, r);
+            Assert.Same(e, r);
         }
 
         static void AssertChange(CSharpExpression e)
         {
             var r = new Change().Visit(e);
-            Assert.AreNotSame(e, r);
-            Assert.AreEqual(r.ToString(), e.ToString()); // TODO: use a DebugView when we add it
+            Assert.NotSame(e, r);
+            Assert.Equal(r.ToString(), e.ToString()); // TODO: use a DebugView when we add it
         }
 
         class Nop : CSharpExpressionVisitor

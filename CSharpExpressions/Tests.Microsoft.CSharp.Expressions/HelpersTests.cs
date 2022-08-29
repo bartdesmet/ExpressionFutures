@@ -3,31 +3,30 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class HelpersTests
     {
-        [TestMethod]
+        [Fact]
         public void Helpers_CreateConstantInt32()
         {
             for (var i = -1023; i <= 1024; i++)
             {
-                Assert.AreEqual(i, Helpers.CreateConstantInt32(i).Value);
+                Assert.Equal(i, Helpers.CreateConstantInt32(i).Value);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Helpers_IsVector()
         {
-            Assert.IsTrue(typeof(int[]).IsVector());
-            Assert.IsTrue(typeof(int).MakeArrayType().IsVector());
+            Assert.True(typeof(int[]).IsVector());
+            Assert.True(typeof(int).MakeArrayType().IsVector());
 
-            Assert.IsFalse(typeof(int[,]).IsVector());
-            Assert.IsFalse(typeof(int).MakeArrayType(1).IsVector());
-            Assert.IsFalse(typeof(int).MakeArrayType(2).IsVector());
+            Assert.False(typeof(int[,]).IsVector());
+            Assert.False(typeof(int).MakeArrayType(1).IsVector());
+            Assert.False(typeof(int).MakeArrayType(2).IsVector());
         }
     }
 }

@@ -3,18 +3,17 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class ConditionalMemberTests
     {
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Factory_ArgumentChecking()
         {
             var expr = Expression.Default(typeof(Bar));
@@ -67,7 +66,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.MakeConditionalMemberAccess(expr, expr.Type.GetConstructors()[0]));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Properties()
         {
             var expr = Expression.Default(typeof(Bar));
@@ -84,10 +83,10 @@ namespace Tests
                 CSharpExpression.MakeConditionalMemberAccess(expr, fieldInfo),
             })
             {
-                Assert.AreSame(expr, e.Expression);
-                Assert.AreEqual(fieldInfo, e.Member);
-                Assert.AreEqual(typeof(int?), e.Type);
-                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
+                Assert.Same(expr, e.Expression);
+                Assert.Equal(fieldInfo, e.Member);
+                Assert.Equal(typeof(int?), e.Type);
+                Assert.Equal(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
             }
 
             foreach (var e in new[]
@@ -98,14 +97,14 @@ namespace Tests
                 CSharpExpression.MakeConditionalMemberAccess(expr, propInfo),
             })
             {
-                Assert.AreSame(expr, e.Expression);
-                Assert.AreEqual(propInfo, e.Member);
-                Assert.AreEqual(typeof(int?), e.Type);
-                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
+                Assert.Same(expr, e.Expression);
+                Assert.Equal(propInfo, e.Member);
+                Assert.Equal(typeof(int?), e.Type);
+                Assert.Equal(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Update()
         {
             var expr1 = Expression.Default(typeof(Bar));
@@ -118,17 +117,17 @@ namespace Tests
             var res1 = CSharpExpression.ConditionalProperty(expr1, propInfo);
             var res2 = CSharpExpression.ConditionalField(expr1, fieldInfo);
 
-            Assert.AreSame(res1, res1.Update(res1.Expression));
-            Assert.AreSame(res2, res2.Update(res2.Expression));
+            Assert.Same(res1, res1.Update(res1.Expression));
+            Assert.Same(res2, res2.Update(res2.Expression));
 
             var upd1 = res1.Update(expr2);
             var upd2 = res2.Update(expr2);
 
-            Assert.AreSame(expr2, upd1.Expression);
-            Assert.AreSame(expr2, upd2.Expression);
+            Assert.Same(expr2, upd1.Expression);
+            Assert.Same(expr2, upd2.Expression);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Compile_Property_Ref()
         {
             var p = Expression.Parameter(typeof(Qux));
@@ -138,25 +137,25 @@ namespace Tests
             var f1 = Expression.Lambda<Func<Qux, int?>>(m1, p);
             var d1 = f1.Compile();
 
-            Assert.AreEqual(42, d1(q));
-            Assert.IsNull(d1(null));
+            Assert.Equal(42, d1(q));
+            Assert.Null(d1(null));
 
             var m2 = CSharpExpression.ConditionalProperty(p, "N");
             var f2 = Expression.Lambda<Func<Qux, int?>>(m2, p);
             var d2 = f2.Compile();
 
-            Assert.AreEqual(42, d2(q));
-            Assert.IsNull(d2(null));
+            Assert.Equal(42, d2(q));
+            Assert.Null(d2(null));
 
             var m3 = CSharpExpression.ConditionalProperty(p, "S");
             var f3 = Expression.Lambda<Func<Qux, string>>(m3, p);
             var d3 = f3.Compile();
 
-            Assert.AreEqual("bar", d3(q));
-            Assert.IsNull(d3(null));
+            Assert.Equal("bar", d3(q));
+            Assert.Null(d3(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Compile_Field_Ref()
         {
             var p = Expression.Parameter(typeof(Qux));
@@ -166,25 +165,25 @@ namespace Tests
             var f1 = Expression.Lambda<Func<Qux, int?>>(m1, p);
             var d1 = f1.Compile();
 
-            Assert.AreEqual(42, d1(q));
-            Assert.IsNull(d1(null));
+            Assert.Equal(42, d1(q));
+            Assert.Null(d1(null));
 
             var m2 = CSharpExpression.ConditionalField(p, "O");
             var f2 = Expression.Lambda<Func<Qux, int?>>(m2, p);
             var d2 = f2.Compile();
 
-            Assert.AreEqual(42, d2(q));
-            Assert.IsNull(d2(null));
+            Assert.Equal(42, d2(q));
+            Assert.Null(d2(null));
 
             var m3 = CSharpExpression.ConditionalField(p, "T");
             var f3 = Expression.Lambda<Func<Qux, string>>(m3, p);
             var d3 = f3.Compile();
 
-            Assert.AreEqual("bar", d3(q));
-            Assert.IsNull(d3(null));
+            Assert.Equal("bar", d3(q));
+            Assert.Null(d3(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Compile_Property_Val()
         {
             var p = Expression.Parameter(typeof(Quz?));
@@ -194,25 +193,25 @@ namespace Tests
             var f1 = Expression.Lambda<Func<Quz?, int?>>(m1, p);
             var d1 = f1.Compile();
 
-            Assert.AreEqual(42, d1(q));
-            Assert.IsNull(d1(null));
+            Assert.Equal(42, d1(q));
+            Assert.Null(d1(null));
 
             var m2 = CSharpExpression.ConditionalProperty(p, "N");
             var f2 = Expression.Lambda<Func<Quz?, int?>>(m2, p);
             var d2 = f2.Compile();
 
-            Assert.AreEqual(42, d2(q));
-            Assert.IsNull(d2(null));
+            Assert.Equal(42, d2(q));
+            Assert.Null(d2(null));
 
             var m3 = CSharpExpression.ConditionalProperty(p, "S");
             var f3 = Expression.Lambda<Func<Quz?, string>>(m3, p);
             var d3 = f3.Compile();
 
-            Assert.AreEqual("bar", d3(q));
-            Assert.IsNull(d3(null));
+            Assert.Equal("bar", d3(q));
+            Assert.Null(d3(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalMember_Compile_Field_Val()
         {
             var p = Expression.Parameter(typeof(Quz?));
@@ -222,22 +221,22 @@ namespace Tests
             var f1 = Expression.Lambda<Func<Quz?, int?>>(m1, p);
             var d1 = f1.Compile();
 
-            Assert.AreEqual(42, d1(q));
-            Assert.IsNull(d1(null));
+            Assert.Equal(42, d1(q));
+            Assert.Null(d1(null));
 
             var m2 = CSharpExpression.ConditionalField(p, "O");
             var f2 = Expression.Lambda<Func<Quz?, int?>>(m2, p);
             var d2 = f2.Compile();
 
-            Assert.AreEqual(42, d2(q));
-            Assert.IsNull(d2(null));
+            Assert.Equal(42, d2(q));
+            Assert.Null(d2(null));
 
             var m3 = CSharpExpression.ConditionalField(p, "T");
             var f3 = Expression.Lambda<Func<Quz?, string>>(m3, p);
             var d3 = f3.Compile();
 
-            Assert.AreEqual("bar", d3(q));
-            Assert.IsNull(d3(null));
+            Assert.Equal("bar", d3(q));
+            Assert.Null(d3(null));
         }
 
 #pragma warning disable CS0649

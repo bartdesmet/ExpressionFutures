@@ -3,56 +3,55 @@
 // bartde - December 2021
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class DiscardPatternTests
     {
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_ArgumentChecking()
         {
             // invalid typing
             AssertEx.Throws<ArgumentException>(() => CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(object), typeof(int))));
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_Properties()
         {
             var p = CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(int), typeof(int)));
 
-            Assert.AreEqual(typeof(int), p.InputType);
-            Assert.AreEqual(typeof(int), p.NarrowedType);
+            Assert.Equal(typeof(int), p.InputType);
+            Assert.Equal(typeof(int), p.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_Properties_Object()
         {
             var p = CSharpPattern.Discard();
 
-            Assert.AreEqual(typeof(object), p.InputType);
-            Assert.AreEqual(typeof(object), p.NarrowedType);
+            Assert.Equal(typeof(object), p.InputType);
+            Assert.Equal(typeof(object), p.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_ChangeType()
         {
             var p = CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(int), typeof(int)));
 
-            Assert.AreSame(p, p.ChangeType(typeof(int)));
+            Assert.Same(p, p.ChangeType(typeof(int)));
 
             var q = (DiscardCSharpPattern)p.ChangeType(typeof(long));
 
-            Assert.AreNotSame(p, q);
-            Assert.AreEqual(typeof(long), q.InputType);
-            Assert.AreEqual(typeof(long), q.NarrowedType);
+            Assert.NotSame(p, q);
+            Assert.Equal(typeof(long), q.InputType);
+            Assert.Equal(typeof(long), q.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_ChangeType_Triggered()
         {
             var discard = CSharpPattern.Discard();
@@ -60,12 +59,12 @@ namespace Tests
             var length = typeof(string).GetProperty(nameof(string.Length));
             var property = CSharpPattern.PropertySubpattern(discard, length);
 
-            Assert.AreNotSame(discard, property.Pattern);
-            Assert.AreEqual(typeof(int), property.Pattern.InputType);
-            Assert.AreEqual(typeof(int), property.Pattern.NarrowedType);
+            Assert.NotSame(discard, property.Pattern);
+            Assert.Equal(typeof(int), property.Pattern.InputType);
+            Assert.Equal(typeof(int), property.Pattern.NarrowedType);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_Visitor()
         {
             var p = CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(int), typeof(int)));
@@ -74,10 +73,10 @@ namespace Tests
 
             visitor.VisitPattern(p);
 
-            Assert.IsTrue(visitor.Visited);
+            Assert.True(visitor.Visited);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_Reduce()
         {
             var res = CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(int), typeof(int)));
@@ -89,7 +88,7 @@ namespace Tests
             }, new LogAndResult<bool> { Value = true, Log = { "O" } });
         }
 
-        [TestMethod]
+        [Fact]
         public void DiscardPattern_Reduce_IncompatibleType()
         {
             var res = CSharpPattern.Discard(typeof(int));
@@ -100,7 +99,7 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<bool> expected)
         {
             var res = WithLog<bool>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class V : CSharpExpressionVisitor

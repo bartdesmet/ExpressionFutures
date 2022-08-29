@@ -2,13 +2,12 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public partial class OptimizerTests
     {
         private static readonly Expression CW = Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[0]));
@@ -23,7 +22,7 @@ namespace Tests
         private static readonly Func<int, Expression> CI = i => Expression.Constant(i);
         private static readonly Expression E = Expression.Empty();
 
-        [TestMethod]
+        [Fact]
         public void Optimizer_Null()
         {
             AssertOptimize(null, null);
@@ -39,7 +38,7 @@ namespace Tests
             var actualStr = actualView?.ToString();
             var expectedStr = expectedView?.ToString();
 
-            Assert.AreEqual(expectedStr, actualStr);
+            Assert.Equal(expectedStr, actualStr);
         }
     }
 }

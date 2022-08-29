@@ -3,20 +3,19 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
+using Xunit;
 using static Tests.ReflectionUtils;
 
 namespace Tests
 {
-    [TestClass]
     public class ParameterAssignmentTests
     {
-        [TestMethod]
+        [Fact]
         public void ParameterAssignment_Factory_ArgumentChecking()
         {
             var method = typeof(C).GetMethod("F");
@@ -43,7 +42,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(parameter, Expression.Constant("bar")));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParameterAssignment_Factory_CanQuote()
         {
             var where = MethodInfoOf(() => Queryable.Where(default(IQueryable<int>), default(Expression<Func<int, bool>>)));
@@ -53,11 +52,11 @@ namespace Tests
 
             var res = CSharpExpression.Bind(filterParameter, filter);
 
-            Assert.AreEqual(ExpressionType.Quote, res.Expression.NodeType);
-            Assert.AreSame(filter, ((UnaryExpression)res.Expression).Operand);
+            Assert.Equal(ExpressionType.Quote, res.Expression.NodeType);
+            Assert.Same(filter, ((UnaryExpression)res.Expression).Operand);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParameterAssignment_Factory_SupportByRef()
         {
             var exchange = MethodInfoOf((int x) => Interlocked.Exchange(ref x, x));
@@ -67,11 +66,11 @@ namespace Tests
 
             var res = CSharpExpression.Bind(refParameter, expr);
 
-            Assert.AreSame(refParameter, res.Parameter);
-            Assert.AreSame(expr, res.Expression);
+            Assert.Same(refParameter, res.Parameter);
+            Assert.Same(expr, res.Expression);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParameterAssignment_Properties()
         {
             var method = typeof(C).GetMethod("F");
@@ -81,26 +80,26 @@ namespace Tests
             {
                 var res = CSharpExpression.Bind(parameter, expr);
 
-                Assert.AreSame(parameter, res.Parameter);
-                Assert.AreSame(expr, res.Expression);
+                Assert.Same(parameter, res.Parameter);
+                Assert.Same(expr, res.Expression);
             }
 
             {
                 var res = CSharpExpression.Bind(method, parameter.Name, expr);
 
-                Assert.AreSame(parameter, res.Parameter);
-                Assert.AreSame(expr, res.Expression);
+                Assert.Same(parameter, res.Parameter);
+                Assert.Same(expr, res.Expression);
             }
 
             {
                 var res = CSharpExpression.Bind(method, 0, expr);
 
-                Assert.AreSame(parameter, res.Parameter);
-                Assert.AreSame(expr, res.Expression);
+                Assert.Same(parameter, res.Parameter);
+                Assert.Same(expr, res.Expression);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ParameterAssignment_Update()
         {
             var method = typeof(C).GetMethod("F");
@@ -109,16 +108,16 @@ namespace Tests
 
             var res = CSharpExpression.Bind(parameter, expr);
 
-            Assert.AreSame(res, res.Update(res.Expression));
+            Assert.Same(res, res.Update(res.Expression));
 
             var rev = Expression.Constant(43);
             var upd = res.Update(rev);
 
-            Assert.AreNotSame(res, upd);
-            Assert.AreSame(rev, upd.Expression);
+            Assert.NotSame(res, upd);
+            Assert.Same(rev, upd.Expression);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParameterAssignment_Visitor()
         {
             var method = typeof(C).GetMethod("F");
@@ -130,8 +129,8 @@ namespace Tests
             var res = CSharpExpression.Call(method, bind);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class C

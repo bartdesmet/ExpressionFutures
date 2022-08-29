@@ -3,18 +3,17 @@
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class SwitchCaseTests
     {
-        [TestMethod]
+        [Fact]
         public void SwitchCase_Factory_ArgumentChecking()
         {
             var body = new[] { Expression.Empty() };
@@ -84,7 +83,7 @@ namespace Tests
             CSharpStatement.SwitchCase(new object[] { null }.AsEnumerable(), body);
         }
 
-        [TestMethod]
+        [Fact]
         public void SwitchCase_Properties()
         {
             var b = new[] { Expression.Empty() };
@@ -101,12 +100,12 @@ namespace Tests
 
             foreach (var s in new[] { s1, s2, s3, s4, s5, s6, s7, s8 })
             {
-                Assert.IsTrue(b.SequenceEqual(s.Statements));
-                Assert.IsTrue(t.SequenceEqual(s.TestValues.Cast<int>()));
+                Assert.True(b.SequenceEqual(s.Statements));
+                Assert.True(t.SequenceEqual(s.TestValues.Cast<int>()));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SwitchCaseDefault_Properties()
         {
             var b = new[] { Expression.Empty() };
@@ -116,13 +115,13 @@ namespace Tests
 
             foreach (var s in new[] { s1, s2 })
             {
-                Assert.IsTrue(b.SequenceEqual(s.Statements));
-                Assert.AreSame(CSharpStatement.SwitchCaseDefaultValue, s.TestValues.Single());
-                Assert.AreEqual("default", s.TestValues.Single().ToString());
+                Assert.True(b.SequenceEqual(s.Statements));
+                Assert.Same(CSharpStatement.SwitchCaseDefaultValue, s.TestValues.Single());
+                Assert.Equal("default", s.TestValues.Single().ToString());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SwitchCase_Update()
         {
             var b = new[] { Expression.Empty() };
@@ -140,22 +139,22 @@ namespace Tests
 
             foreach (var s in new[] { s1, s2, s3, s4, s5, s6, s7, s8 })
             {
-                Assert.AreSame(s, s.Update(s.Statements));
+                Assert.Same(s, s.Update(s.Statements));
 
                 var u = s.Update(c);
-                Assert.IsTrue(c.SequenceEqual(u.Statements));
+                Assert.True(c.SequenceEqual(u.Statements));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SwitchCase_Visitor()
         {
             var body = Expression.Empty();
             var res = CSharpStatement.SwitchCase(new[] { 1, 2, 3 }, body);
 
             var v = new V();
-            Assert.AreSame(res, v.VisitSwitchCase(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.VisitSwitchCase(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

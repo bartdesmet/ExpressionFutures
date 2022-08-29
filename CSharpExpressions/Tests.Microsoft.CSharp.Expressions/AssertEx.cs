@@ -2,8 +2,8 @@
 //
 // bartde - October 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Xunit;
 
 namespace Tests
 {
@@ -26,12 +26,12 @@ namespace Tests
             }
             catch (T ex)
             {
-                Assert.IsTrue(assert(ex));
+                Assert.True(assert(ex));
 
                 failed = true;
             }
 
-            Assert.IsTrue(failed);
+            Assert.True(failed);
         }
     }
 }

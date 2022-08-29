@@ -3,20 +3,19 @@
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class SwitchTests
     {
-        [TestMethod]
+        [Fact]
         public void Switch_Factory_ArgumentChecking()
         {
             var value = Expression.Constant(1);
@@ -75,7 +74,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Switch(value, breakLabel, defaultBody, nonIntCases.AsEnumerable()));
         }
         
-        [TestMethod]
+        [Fact]
         public void Switch_Properties()
         {
             var value = Expression.Constant(1);
@@ -84,13 +83,13 @@ namespace Tests
 
             var res = CSharpStatement.Switch(value, label, cases);
 
-            Assert.AreEqual(CSharpExpressionType.Switch, res.CSharpNodeType);
-            Assert.AreSame(value, res.SwitchValue);
-            Assert.AreSame(label, res.BreakLabel);
-            Assert.IsTrue(cases.SequenceEqual(res.Cases));
+            Assert.Equal(CSharpExpressionType.Switch, res.CSharpNodeType);
+            Assert.Same(value, res.SwitchValue);
+            Assert.Same(label, res.BreakLabel);
+            Assert.True(cases.SequenceEqual(res.Cases));
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Update()
         {
             var value1 = Expression.Constant(1);
@@ -111,30 +110,30 @@ namespace Tests
             var u3 = res.Update(res.SwitchValue, res.BreakLabel, vars2, res.Cases);
             var u4 = res.Update(res.SwitchValue, res.BreakLabel, res.Variables, cases2);
 
-            Assert.AreSame(res, u0);
+            Assert.Same(res, u0);
 
-            Assert.AreSame(value2, u1.SwitchValue);
-            Assert.AreSame(label1, u1.BreakLabel);
-            Assert.IsTrue(vars1.SequenceEqual(u1.Variables));
-            Assert.IsTrue(cases1.SequenceEqual(u1.Cases));
+            Assert.Same(value2, u1.SwitchValue);
+            Assert.Same(label1, u1.BreakLabel);
+            Assert.True(vars1.SequenceEqual(u1.Variables));
+            Assert.True(cases1.SequenceEqual(u1.Cases));
 
-            Assert.AreSame(value1, u2.SwitchValue);
-            Assert.AreSame(label2, u2.BreakLabel);
-            Assert.IsTrue(vars1.SequenceEqual(u2.Variables));
-            Assert.IsTrue(cases1.SequenceEqual(u2.Cases));
+            Assert.Same(value1, u2.SwitchValue);
+            Assert.Same(label2, u2.BreakLabel);
+            Assert.True(vars1.SequenceEqual(u2.Variables));
+            Assert.True(cases1.SequenceEqual(u2.Cases));
 
-            Assert.AreSame(value1, u3.SwitchValue);
-            Assert.AreSame(label1, u3.BreakLabel);
-            Assert.IsTrue(vars2.SequenceEqual(u3.Variables));
-            Assert.IsTrue(cases1.SequenceEqual(u3.Cases));
+            Assert.Same(value1, u3.SwitchValue);
+            Assert.Same(label1, u3.BreakLabel);
+            Assert.True(vars2.SequenceEqual(u3.Variables));
+            Assert.True(cases1.SequenceEqual(u3.Cases));
 
-            Assert.AreSame(value1, u4.SwitchValue);
-            Assert.AreSame(label1, u4.BreakLabel);
-            Assert.IsTrue(vars1.SequenceEqual(u4.Variables));
-            Assert.IsTrue(cases2.SequenceEqual(u4.Cases));
+            Assert.Same(value1, u4.SwitchValue);
+            Assert.Same(label1, u4.BreakLabel);
+            Assert.True(vars1.SequenceEqual(u4.Variables));
+            Assert.True(cases2.SequenceEqual(u4.Cases));
         }
         
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_Int32()
         {
             AssertCompile<int>((log, v) =>
@@ -151,7 +150,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_Int32_Default()
         {
             AssertCompile<int>((log, v) =>
@@ -169,7 +168,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_Int32_Many()
         {
             AssertCompile<int>((log, v) =>
@@ -191,7 +190,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NullableInt32()
         {
             AssertCompile<int?>((log, v) =>
@@ -209,7 +208,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NullableInt32_Default()
         {
             AssertCompile<int?>((log, v) =>
@@ -228,7 +227,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NullableInt32_Many()
         {
             AssertCompile<int?>((log, v) =>
@@ -249,7 +248,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NullableInt32_NullCase()
         {
             AssertCompile<int?>((log, v) =>
@@ -270,7 +269,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NullableInt32_Default_NullCase()
         {
             AssertCompile<int?>((log, v) =>
@@ -292,7 +291,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NullableInt32_NullCaseWithCompanionship()
         {
             AssertCompile<int?>((log, v) =>
@@ -315,7 +314,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String()
         {
             AssertCompile<string>((log, v) =>
@@ -333,7 +332,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_Default1()
         {
             AssertCompile<string>((log, v) =>
@@ -352,7 +351,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_Default2()
         {
             AssertCompile<string>((log, v) =>
@@ -371,7 +370,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_NullCase()
         {
             AssertCompile<string>((log, v) =>
@@ -390,7 +389,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_Default_NullCase()
         {
             AssertCompile<string>((log, v) =>
@@ -410,7 +409,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_NullCaseWithCompanionship()
         {
             AssertCompile<string>((log, v) =>
@@ -433,7 +432,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_DefaultWithCompanionship1()
         {
             AssertCompile<string>((log, v) =>
@@ -455,7 +454,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_DefaultWithCompanionship2()
         {
             AssertCompile<string>((log, v) =>
@@ -477,7 +476,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_String_DefaultWithCompanionship3()
         {
             AssertCompile<string>((log, v) =>
@@ -499,7 +498,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase1()
         {
             AssertCompile<int>((log, v) =>
@@ -518,7 +517,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase2()
         {
             AssertCompile<int>((log, v) =>
@@ -537,7 +536,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase3()
         {
             AssertCompile<int>((log, v) =>
@@ -557,7 +556,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase_Null1()
         {
             AssertCompile<int?>((log, v) =>
@@ -579,7 +578,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase_Null2()
         {
             AssertCompile<int?>((log, v) =>
@@ -600,7 +599,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase_Null3()
         {
             AssertCompile<int?>((log, v) =>
@@ -621,14 +620,14 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoCase_Error()
         {
             var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(new[] { 1 }, CSharpStatement.GotoCase(2)));
             AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto case"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoDefault1()
         {
             AssertCompile<int>((log, v) =>
@@ -648,7 +647,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoDefault2()
         {
             AssertCompile<int>((log, v) =>
@@ -668,7 +667,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoDefault_Null()
         {
             AssertCompile<int?>((log, v) =>
@@ -690,14 +689,14 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_GotoDefault_Error()
         {
             var res = CSharpStatement.Switch(Expression.Constant(1), Expression.Label(), CSharpStatement.SwitchCase(new[] { 1 }, CSharpStatement.GotoDefault()));
             AssertEx.Throws<InvalidOperationException>(() => res.Reduce(), ex => ex.Message.Contains("goto default"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_VoidAllCases1()
         {
             var p = Expression.Parameter(typeof(int));
@@ -715,7 +714,7 @@ namespace Tests
             f(3);
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_VoidAllCases2()
         {
             var p = Expression.Parameter(typeof(int?));
@@ -734,7 +733,7 @@ namespace Tests
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_VoidAllCases3()
         {
             var p = Expression.Parameter(typeof(int?));
@@ -754,7 +753,7 @@ namespace Tests
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NestedSwitch1()
         {
             AssertCompile<int>((log, v) =>
@@ -783,7 +782,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NestedSwitch2()
         {
             AssertCompile<int>((log, v) =>
@@ -811,7 +810,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch_Compile_NestedSwitch3()
         {
             // NB: See design remark in code.
@@ -830,7 +829,7 @@ namespace Tests
                 );
 
             var red = res.Reduce(); // This doesn't throw because we don't recurse into the nested Switch.
-            Assert.AreNotSame(red, res);
+            Assert.NotSame(red, res);
 
             var f = Expression.Lambda<Action>(res);
 
@@ -839,7 +838,7 @@ namespace Tests
 
         // TODO: tests for break behavior
 
-        [TestMethod]
+        [Fact]
         public void Switch_Visitor()
         {
             var value = Expression.Constant(1);
@@ -850,8 +849,8 @@ namespace Tests
             var res = CSharpStatement.Switch(value, label, defaultBody, cases);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -886,12 +885,12 @@ namespace Tests
 
             foreach (var c in expected.Cases)
             {
-                Assert.AreEqual(new LogAndResult<object>(c.Value, null, null), res(c.Key));
+                Assert.Equal(new LogAndResult<object>(c.Value, null, null), res(c.Key));
             }
 
             if (expected.Null != null)
             {
-                Assert.AreEqual(new LogAndResult<object>(expected.Null, null, null), res(default(TSwitchValue)));
+                Assert.Equal(new LogAndResult<object>(expected.Null, null, null), res(default(TSwitchValue)));
             }
         }
 
@@ -901,12 +900,12 @@ namespace Tests
 
             foreach (var c in expected.Cases)
             {
-                Assert.AreEqual(new LogAndResult<object>(c.Value, null, null), res(c.Key));
+                Assert.Equal(new LogAndResult<object>(c.Value, null, null), res(c.Key));
             }
 
             if (expected.Null != null)
             {
-                Assert.AreEqual(new LogAndResult<object>(expected.Null, null, null), res(default(TSwitchValue)));
+                Assert.Equal(new LogAndResult<object>(expected.Null, null, null), res(default(TSwitchValue)));
             }
         }
 

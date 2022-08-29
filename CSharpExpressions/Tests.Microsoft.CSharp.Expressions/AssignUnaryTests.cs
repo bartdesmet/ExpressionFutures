@@ -3,20 +3,19 @@
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public partial class AssignUnaryTests
     {
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Factory_ArgumentChecking()
         {
             var o = Expression.Parameter(typeof(int));
@@ -24,7 +23,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.MakeUnaryAssign(CSharpExpressionType.Await, o, null));
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Factory_MakeUnaryAssign()
         {
             foreach (var o in GetLhs())
@@ -44,21 +43,21 @@ namespace Tests
                 })
                 {
                     var a1 = CSharpExpression.MakeUnaryAssign(n, o, m);
-                    Assert.AreEqual(n, a1.CSharpNodeType);
-                    Assert.AreSame(o, a1.Operand);
-                    Assert.AreSame(m, a1.Method);
-                    Assert.AreEqual(typeof(int), a1.Type);
+                    Assert.Equal(n, a1.CSharpNodeType);
+                    Assert.Same(o, a1.Operand);
+                    Assert.Same(m, a1.Method);
+                    Assert.Equal(typeof(int), a1.Type);
 
                     var a2 = CSharpExpression.MakeUnaryAssign(n, o, null);
-                    Assert.AreEqual(n, a2.CSharpNodeType);
-                    Assert.AreSame(o, a2.Operand);
-                    Assert.IsNull(a2.Method);
-                    Assert.AreEqual(typeof(int), a2.Type);
+                    Assert.Equal(n, a2.CSharpNodeType);
+                    Assert.Same(o, a2.Operand);
+                    Assert.Null(a2.Method);
+                    Assert.Equal(typeof(int), a2.Type);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Parameter_Compile()
         {
             var toString = MethodInfoOf((int a) => a.ToString());
@@ -100,7 +99,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Member_Static_Compile()
         {
             var toString = MethodInfoOf((int a) => a.ToString());
@@ -143,7 +142,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Member_Instance_Compile()
         {
             var toString = MethodInfoOf((int a) => a.ToString());
@@ -188,7 +187,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Index_Compile()
         {
             var toString = MethodInfoOf((int a) => a.ToString());
@@ -243,7 +242,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_CSharpIndex_Compile()
         {
             var toString = MethodInfoOf((int a) => a.ToString());
@@ -301,7 +300,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Overflow()
         {
             var x = Expression.Parameter(typeof(int));
@@ -327,7 +326,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_VariousTypes()
         {
             AssertPreIncrementChecked<byte>(41, 42);
@@ -342,14 +341,14 @@ namespace Tests
             AssertPreIncrementChecked<double>(41, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Visitor()
         {
             var res = CSharpExpression.MakeUnaryAssign(CSharpExpressionType.PostIncrementAssign, Expression.Parameter(typeof(int)), null);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         private static void AssertPreIncrementChecked<T>(T value, T plusOne)
@@ -363,7 +362,7 @@ namespace Tests
                         CSharpExpression.PreIncrementAssignChecked(v)
                     )
                 ).Compile();
-            Assert.AreEqual(plusOne, f());
+            Assert.Equal(plusOne, f());
         }
 
         private static int Op(int x)
@@ -383,7 +382,7 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         class StaticHolder
@@ -408,8 +407,8 @@ namespace Tests
             {
                 get
                 {
-                    Assert.AreEqual(1, x);
-                    Assert.AreEqual(2, y);
+                    Assert.Equal(1, x);
+                    Assert.Equal(2, y);
 
                     _append("GI");
                     return _value;
@@ -417,8 +416,8 @@ namespace Tests
 
                 set
                 {
-                    Assert.AreEqual(1, x);
-                    Assert.AreEqual(2, y);
+                    Assert.Equal(1, x);
+                    Assert.Equal(2, y);
 
                     _append("SI");
                     _value = value;

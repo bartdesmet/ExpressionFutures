@@ -3,18 +3,17 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class LockTests
     {
-        [TestMethod]
+        [Fact]
         public void Lock_Factory_ArgumentChecking()
         {
             var @lock = Expression.Constant(new object());
@@ -29,27 +28,27 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.Lock(Expression.Default(typeof(int?)), body));
         }
 
-        [TestMethod]
+        [Fact]
         public void Lock_Properties()
         {
             var @lock = Expression.Constant(new object());
             var body = Expression.Empty();
             var res = CSharpExpression.Lock(@lock, body);
 
-            Assert.AreEqual(CSharpExpressionType.Lock, res.CSharpNodeType);
-            Assert.AreEqual(typeof(void), res.Type);
-            Assert.AreSame(@lock, res.Expression);
-            Assert.AreSame(body, res.Body);
+            Assert.Equal(CSharpExpressionType.Lock, res.CSharpNodeType);
+            Assert.Equal(typeof(void), res.Type);
+            Assert.Same(@lock, res.Expression);
+            Assert.Same(body, res.Body);
         }
 
-        [TestMethod]
+        [Fact]
         public void Lock_Update()
         {
             var @lock = Expression.Constant(new object());
             var body = Expression.Empty();
             var res = CSharpExpression.Lock(@lock, body);
 
-            Assert.AreSame(res, res.Update(res.Expression, res.Body));
+            Assert.Same(res, res.Update(res.Expression, res.Body));
 
             var newLock = Expression.Constant(new object());
             var newBody = Expression.Empty();
@@ -57,14 +56,14 @@ namespace Tests
             var upd1 = res.Update(newLock, res.Body);
             var upd2 = res.Update(res.Expression, newBody);
 
-            Assert.AreSame(newLock, upd1.Expression);
-            Assert.AreSame(res.Body, upd1.Body);
+            Assert.Same(newLock, upd1.Expression);
+            Assert.Same(res.Body, upd1.Body);
 
-            Assert.AreSame(res.Expression, upd2.Expression);
-            Assert.AreSame(newBody, upd2.Body);
+            Assert.Same(res.Expression, upd2.Expression);
+            Assert.Same(newBody, upd2.Body);
         }
 
-        [TestMethod]
+        [Fact]
         public void Lock_Compile()
         {
             var o = new object();
@@ -86,16 +85,16 @@ namespace Tests
 
             var t = Task.Run(f);
             locked.WaitOne();
-            Assert.IsFalse(Monitor.TryEnter(o));
+            Assert.False(Monitor.TryEnter(o));
 
             unlock.Set();
             t.Wait();
-            Assert.IsTrue(Monitor.TryEnter(o));
+            Assert.True(Monitor.TryEnter(o));
 
             Monitor.Exit(o);
         }
 
-        [TestMethod]
+        [Fact]
         public void Lock_Visitor()
         {
             var @lock = Expression.Constant(new object());
@@ -103,8 +102,8 @@ namespace Tests
             var res = CSharpExpression.Lock(@lock, body);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

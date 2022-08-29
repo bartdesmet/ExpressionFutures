@@ -3,18 +3,17 @@
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class BlockTests
     {
-        [TestMethod]
+        [Fact]
         public void Block_Factory_ArgumentChecking()
         {
             var vars = Array.Empty<ParameterExpression>();
@@ -33,7 +32,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpStatement.Block(dups, hasNull, ret));
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Properties()
         {
             // no vars, no expr, no label
@@ -46,11 +45,11 @@ namespace Tests
 
                 foreach (var b in new[] { b1, b2 })
                 {
-                    Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                    Assert.AreEqual(typeof(void), b.Type);
-                    Assert.IsNull(b.ReturnLabel);
-                    Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                    Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                    Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                    Assert.Equal(typeof(void), b.Type);
+                    Assert.Null(b.ReturnLabel);
+                    Assert.True(vars.SequenceEqual(b.Variables));
+                    Assert.True(exprs.SequenceEqual(b.Statements));
                 }
             }
 
@@ -65,11 +64,11 @@ namespace Tests
 
                 foreach (var b in new[] { b1, b2 })
                 {
-                    Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                    Assert.AreEqual(typeof(void), b.Type);
-                    Assert.AreSame(ret, b.ReturnLabel);
-                    Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                    Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                    Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                    Assert.Equal(typeof(void), b.Type);
+                    Assert.Same(ret, b.ReturnLabel);
+                    Assert.True(vars.SequenceEqual(b.Variables));
+                    Assert.True(exprs.SequenceEqual(b.Statements));
                 }
             }
 
@@ -84,11 +83,11 @@ namespace Tests
 
                 foreach (var b in new[] { b1, b2 })
                 {
-                    Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                    Assert.AreEqual(typeof(int), b.Type);
-                    Assert.AreSame(ret, b.ReturnLabel);
-                    Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                    Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                    Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                    Assert.Equal(typeof(int), b.Type);
+                    Assert.Same(ret, b.ReturnLabel);
+                    Assert.True(vars.SequenceEqual(b.Variables));
+                    Assert.True(exprs.SequenceEqual(b.Statements));
                 }
             }
 
@@ -102,11 +101,11 @@ namespace Tests
 
                 foreach (var b in new[] { b1, b2 })
                 {
-                    Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                    Assert.AreEqual(typeof(string), b.Type);
-                    Assert.IsNull(b.ReturnLabel);
-                    Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                    Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                    Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                    Assert.Equal(typeof(string), b.Type);
+                    Assert.Null(b.ReturnLabel);
+                    Assert.True(vars.SequenceEqual(b.Variables));
+                    Assert.True(exprs.SequenceEqual(b.Statements));
                 }
             }
 
@@ -121,11 +120,11 @@ namespace Tests
 
                 foreach (var b in new[] { b1, b2 })
                 {
-                    Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                    Assert.AreEqual(typeof(void), b.Type);
-                    Assert.AreSame(ret, b.ReturnLabel);
-                    Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                    Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                    Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                    Assert.Equal(typeof(void), b.Type);
+                    Assert.Same(ret, b.ReturnLabel);
+                    Assert.True(vars.SequenceEqual(b.Variables));
+                    Assert.True(exprs.SequenceEqual(b.Statements));
                 }
             }
 
@@ -140,11 +139,11 @@ namespace Tests
 
                 foreach (var b in new[] { b1, b2 })
                 {
-                    Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                    Assert.AreEqual(typeof(int), b.Type);
-                    Assert.AreSame(ret, b.ReturnLabel);
-                    Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                    Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                    Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                    Assert.Equal(typeof(int), b.Type);
+                    Assert.Same(ret, b.ReturnLabel);
+                    Assert.True(vars.SequenceEqual(b.Variables));
+                    Assert.True(exprs.SequenceEqual(b.Statements));
                 }
             }
 
@@ -155,11 +154,11 @@ namespace Tests
 
                 var b = CSharpStatement.Block(vars, exprs, null);
 
-                Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                Assert.AreEqual(typeof(string), b.Type);
-                Assert.IsNull(b.ReturnLabel);
-                Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                Assert.Equal(typeof(string), b.Type);
+                Assert.Null(b.ReturnLabel);
+                Assert.True(vars.SequenceEqual(b.Variables));
+                Assert.True(exprs.SequenceEqual(b.Statements));
             }
 
             // one var, one expr, void label
@@ -170,11 +169,11 @@ namespace Tests
 
                 var b = CSharpStatement.Block(vars, exprs, ret);
 
-                Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                Assert.AreEqual(typeof(void), b.Type);
-                Assert.AreSame(ret, b.ReturnLabel);
-                Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                Assert.Equal(typeof(void), b.Type);
+                Assert.Same(ret, b.ReturnLabel);
+                Assert.True(vars.SequenceEqual(b.Variables));
+                Assert.True(exprs.SequenceEqual(b.Statements));
             }
 
             // one var, one expr, int label
@@ -185,15 +184,15 @@ namespace Tests
 
                 var b = CSharpStatement.Block(vars, exprs, ret);
 
-                Assert.AreEqual(CSharpExpressionType.Block, b.CSharpNodeType);
-                Assert.AreEqual(typeof(int), b.Type);
-                Assert.AreSame(ret, b.ReturnLabel);
-                Assert.IsTrue(vars.SequenceEqual(b.Variables));
-                Assert.IsTrue(exprs.SequenceEqual(b.Statements));
+                Assert.Equal(CSharpExpressionType.Block, b.CSharpNodeType);
+                Assert.Equal(typeof(int), b.Type);
+                Assert.Same(ret, b.ReturnLabel);
+                Assert.True(vars.SequenceEqual(b.Variables));
+                Assert.True(exprs.SequenceEqual(b.Statements));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Update()
         {
             var vars = new[] { Expression.Parameter(typeof(int)) };
@@ -201,7 +200,7 @@ namespace Tests
             var ret = Expression.Label(typeof(int));
             var res = CSharpStatement.Block(vars, exprs, ret);
 
-            Assert.AreSame(res, res.Update(res.Variables, res.Statements, res.ReturnLabel));
+            Assert.Same(res, res.Update(res.Variables, res.Statements, res.ReturnLabel));
 
             var newVars = new[] { Expression.Parameter(typeof(int)) };
             var newExprs = new[] { Expression.Constant("bar") };
@@ -211,20 +210,20 @@ namespace Tests
             var upd2 = res.Update(res.Variables, newExprs, res.ReturnLabel);
             var upd3 = res.Update(res.Variables, res.Statements, newRet);
 
-            Assert.IsTrue(newVars.SequenceEqual(upd1.Variables));
-            Assert.IsTrue(res.Statements.SequenceEqual(upd1.Statements));
-            Assert.AreSame(res.ReturnLabel, upd1.ReturnLabel);
+            Assert.True(newVars.SequenceEqual(upd1.Variables));
+            Assert.True(res.Statements.SequenceEqual(upd1.Statements));
+            Assert.Same(res.ReturnLabel, upd1.ReturnLabel);
 
-            Assert.IsTrue(res.Variables.SequenceEqual(upd2.Variables));
-            Assert.IsTrue(newExprs.SequenceEqual(upd2.Statements));
-            Assert.AreSame(res.ReturnLabel, upd2.ReturnLabel);
+            Assert.True(res.Variables.SequenceEqual(upd2.Variables));
+            Assert.True(newExprs.SequenceEqual(upd2.Statements));
+            Assert.Same(res.ReturnLabel, upd2.ReturnLabel);
 
-            Assert.IsTrue(res.Variables.SequenceEqual(upd3.Variables));
-            Assert.IsTrue(res.Statements.SequenceEqual(upd3.Statements));
-            Assert.AreSame(newRet, upd3.ReturnLabel);
+            Assert.True(res.Variables.SequenceEqual(upd3.Variables));
+            Assert.True(res.Statements.SequenceEqual(upd3.Statements));
+            Assert.Same(newRet, upd3.ReturnLabel);
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile1()
         {
             var p = Expression.Parameter(typeof(int));
@@ -233,10 +232,10 @@ namespace Tests
 
             var f = Expression.Lambda<Func<int, int>>(b, p).Compile();
 
-            Assert.AreEqual(42, f(42));
+            Assert.Equal(42, f(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile2()
         {
             var p = Expression.Parameter(typeof(int));
@@ -246,10 +245,10 @@ namespace Tests
 
             var f = Expression.Lambda<Func<int, int>>(b, p).Compile();
 
-            Assert.AreEqual(42, f(42));
+            Assert.Equal(42, f(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile3()
         {
             var l = Expression.Label();
@@ -269,7 +268,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile4()
         {
             var l = Expression.Label(typeof(int));
@@ -289,7 +288,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile5()
         {
             var l = Expression.Label();
@@ -304,7 +303,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile6()
         {
             var l = Expression.Label(typeof(int));
@@ -319,7 +318,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile7()
         {
             AssertCompileVoid(log =>
@@ -332,7 +331,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile8()
         {
             AssertCompile<int>(log =>
@@ -349,7 +348,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Compile9()
         {
             var x = Expression.Parameter(typeof(int));
@@ -372,16 +371,16 @@ namespace Tests
         private void AssertCompileVoid(Func<Func<string, Expression>, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         private void AssertCompile<T>(Func<Func<string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLog<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void Block_Visitor()
         {
             var vars = new[] { Expression.Parameter(typeof(int)) };
@@ -390,8 +389,8 @@ namespace Tests
             var res = CSharpStatement.Block(vars, exprs, ret);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

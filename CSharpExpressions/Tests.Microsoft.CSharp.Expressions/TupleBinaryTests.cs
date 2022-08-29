@@ -3,18 +3,17 @@
 // bartde - May 2020
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public partial class TupleBinaryTests
     {
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Factory_ArgumentChecking()
         {
             // null checks
@@ -79,7 +78,7 @@ namespace Tests
             // TODO: Contravariance allowed for checks?
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Factory_Properties()
         {
             var left = Expression.Constant((1, "bar"));
@@ -89,25 +88,25 @@ namespace Tests
 
             var eq = CSharpExpression.TupleEqual(left, right, new LambdaExpression[] { check1, check2 });
 
-            Assert.AreEqual(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), eq.Type);
-            Assert.AreSame(left, eq.Left);
-            Assert.AreSame(right, eq.Right);
-            Assert.AreEqual(2, eq.EqualityChecks.Count);
-            Assert.AreSame(check1, eq.EqualityChecks[0]);
-            Assert.AreSame(check2, eq.EqualityChecks[1]);
-            Assert.IsFalse(eq.IsLifted);
+            Assert.Equal(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
+            Assert.Equal(typeof(bool), eq.Type);
+            Assert.Same(left, eq.Left);
+            Assert.Same(right, eq.Right);
+            Assert.Equal(2, eq.EqualityChecks.Count);
+            Assert.Same(check1, eq.EqualityChecks[0]);
+            Assert.Same(check2, eq.EqualityChecks[1]);
+            Assert.False(eq.IsLifted);
 
             var ne = CSharpExpression.TupleNotEqual(left, right, new LambdaExpression[] { check1, check2 });
 
-            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), ne.Type);
-            Assert.AreSame(left, ne.Left);
-            Assert.AreSame(right, ne.Right);
-            Assert.AreEqual(2, ne.EqualityChecks.Count);
-            Assert.AreSame(check1, ne.EqualityChecks[0]);
-            Assert.AreSame(check2, ne.EqualityChecks[1]);
-            Assert.IsFalse(ne.IsLifted);
+            Assert.Equal(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
+            Assert.Equal(typeof(bool), ne.Type);
+            Assert.Same(left, ne.Left);
+            Assert.Same(right, ne.Right);
+            Assert.Equal(2, ne.EqualityChecks.Count);
+            Assert.Same(check1, ne.EqualityChecks[0]);
+            Assert.Same(check2, ne.EqualityChecks[1]);
+            Assert.False(ne.IsLifted);
 
             var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
             var nullableLeft = Expression.Convert(left, nullableType);
@@ -115,28 +114,28 @@ namespace Tests
 
             var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight, new LambdaExpression[] { check1, check2 });
 
-            Assert.AreEqual(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), liftedEq.Type);
-            Assert.AreSame(nullableLeft, liftedEq.Left);
-            Assert.AreSame(nullableRight, liftedEq.Right);
-            Assert.AreEqual(2, liftedEq.EqualityChecks.Count);
-            Assert.AreSame(check1, liftedEq.EqualityChecks[0]);
-            Assert.AreSame(check2, liftedEq.EqualityChecks[1]);
-            Assert.IsTrue(liftedEq.IsLifted);
+            Assert.Equal(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
+            Assert.Equal(typeof(bool), liftedEq.Type);
+            Assert.Same(nullableLeft, liftedEq.Left);
+            Assert.Same(nullableRight, liftedEq.Right);
+            Assert.Equal(2, liftedEq.EqualityChecks.Count);
+            Assert.Same(check1, liftedEq.EqualityChecks[0]);
+            Assert.Same(check2, liftedEq.EqualityChecks[1]);
+            Assert.True(liftedEq.IsLifted);
 
             var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight, new LambdaExpression[] { check1, check2 });
 
-            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), liftedNe.Type);
-            Assert.AreSame(nullableLeft, liftedNe.Left);
-            Assert.AreSame(nullableRight, liftedNe.Right);
-            Assert.AreEqual(2, liftedNe.EqualityChecks.Count);
-            Assert.AreSame(check1, liftedNe.EqualityChecks[0]);
-            Assert.AreSame(check2, liftedNe.EqualityChecks[1]);
-            Assert.IsTrue(liftedNe.IsLifted);
+            Assert.Equal(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
+            Assert.Equal(typeof(bool), liftedNe.Type);
+            Assert.Same(nullableLeft, liftedNe.Left);
+            Assert.Same(nullableRight, liftedNe.Right);
+            Assert.Equal(2, liftedNe.EqualityChecks.Count);
+            Assert.Same(check1, liftedNe.EqualityChecks[0]);
+            Assert.Same(check2, liftedNe.EqualityChecks[1]);
+            Assert.True(liftedNe.IsLifted);
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Factory_Properties_InferChecks()
         {
             var left = Expression.Constant((1, "bar"));
@@ -144,25 +143,25 @@ namespace Tests
 
             var eq = CSharpExpression.TupleEqual(left, right);
 
-            Assert.AreEqual(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), eq.Type);
-            Assert.AreSame(left, eq.Left);
-            Assert.AreSame(right, eq.Right);
-            Assert.AreEqual(2, eq.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
+            Assert.Equal(typeof(bool), eq.Type);
+            Assert.Same(left, eq.Left);
+            Assert.Same(right, eq.Right);
+            Assert.Equal(2, eq.EqualityChecks.Count);
             AssertCheck(eq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
             AssertCheck(eq.EqualityChecks[1], typeof(string), ExpressionType.Equal);
-            Assert.IsFalse(eq.IsLifted);
+            Assert.False(eq.IsLifted);
 
             var ne = CSharpExpression.TupleNotEqual(left, right);
 
-            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), ne.Type);
-            Assert.AreSame(left, ne.Left);
-            Assert.AreSame(right, ne.Right);
-            Assert.AreEqual(2, ne.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
+            Assert.Equal(typeof(bool), ne.Type);
+            Assert.Same(left, ne.Left);
+            Assert.Same(right, ne.Right);
+            Assert.Equal(2, ne.EqualityChecks.Count);
             AssertCheck(ne.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
             AssertCheck(ne.EqualityChecks[1], typeof(string), ExpressionType.NotEqual);
-            Assert.IsFalse(ne.IsLifted);
+            Assert.False(ne.IsLifted);
 
             var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
             var nullableLeft = Expression.Convert(left, nullableType);
@@ -170,40 +169,40 @@ namespace Tests
 
             var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight);
 
-            Assert.AreEqual(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), liftedEq.Type);
-            Assert.AreSame(nullableLeft, liftedEq.Left);
-            Assert.AreSame(nullableRight, liftedEq.Right);
-            Assert.AreEqual(2, liftedEq.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
+            Assert.Equal(typeof(bool), liftedEq.Type);
+            Assert.Same(nullableLeft, liftedEq.Left);
+            Assert.Same(nullableRight, liftedEq.Right);
+            Assert.Equal(2, liftedEq.EqualityChecks.Count);
             AssertCheck(liftedEq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
             AssertCheck(liftedEq.EqualityChecks[1], typeof(string), ExpressionType.Equal);
-            Assert.IsTrue(liftedEq.IsLifted);
+            Assert.True(liftedEq.IsLifted);
 
             var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight);
 
-            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), liftedNe.Type);
-            Assert.AreSame(nullableLeft, liftedNe.Left);
-            Assert.AreSame(nullableRight, liftedNe.Right);
-            Assert.AreEqual(2, liftedNe.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
+            Assert.Equal(typeof(bool), liftedNe.Type);
+            Assert.Same(nullableLeft, liftedNe.Left);
+            Assert.Same(nullableRight, liftedNe.Right);
+            Assert.Equal(2, liftedNe.EqualityChecks.Count);
             AssertCheck(liftedNe.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
             AssertCheck(liftedNe.EqualityChecks[1], typeof(string), ExpressionType.NotEqual);
-            Assert.IsTrue(liftedNe.IsLifted);
+            Assert.True(liftedNe.IsLifted);
 
             void AssertCheck(LambdaExpression check, Type type, ExpressionType kind)
             {
-                Assert.AreEqual(2, check.Parameters.Count);
-                Assert.AreEqual(type, check.Parameters[0].Type);
-                Assert.AreEqual(type, check.Parameters[1].Type);
+                Assert.Equal(2, check.Parameters.Count);
+                Assert.Equal(type, check.Parameters[0].Type);
+                Assert.Equal(type, check.Parameters[1].Type);
                 var b = check.Body as BinaryExpression;
-                Assert.IsNotNull(b);
-                Assert.IsTrue(b.NodeType == kind);
-                Assert.IsTrue(b.Left == check.Parameters[0]);
-                Assert.IsTrue(b.Right == check.Parameters[1]);
+                Assert.NotNull(b);
+                Assert.True(b.NodeType == kind);
+                Assert.True(b.Left == check.Parameters[0]);
+                Assert.True(b.Right == check.Parameters[1]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Factory_Properties_InferChecks_Nested()
         {
             var left = Expression.Constant((1, ("bar", TimeSpan.FromSeconds(1))));
@@ -211,25 +210,25 @@ namespace Tests
 
             var eq = CSharpExpression.TupleEqual(left, right);
 
-            Assert.AreEqual(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), eq.Type);
-            Assert.AreSame(left, eq.Left);
-            Assert.AreSame(right, eq.Right);
-            Assert.AreEqual(2, eq.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleEqual, eq.CSharpNodeType);
+            Assert.Equal(typeof(bool), eq.Type);
+            Assert.Same(left, eq.Left);
+            Assert.Same(right, eq.Right);
+            Assert.Equal(2, eq.EqualityChecks.Count);
             AssertCheck(eq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
             AssertNestedCheck(eq.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleEqual);
-            Assert.IsFalse(eq.IsLifted);
+            Assert.False(eq.IsLifted);
 
             var ne = CSharpExpression.TupleNotEqual(left, right);
 
-            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), ne.Type);
-            Assert.AreSame(left, ne.Left);
-            Assert.AreSame(right, ne.Right);
-            Assert.AreEqual(2, ne.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleNotEqual, ne.CSharpNodeType);
+            Assert.Equal(typeof(bool), ne.Type);
+            Assert.Same(left, ne.Left);
+            Assert.Same(right, ne.Right);
+            Assert.Equal(2, ne.EqualityChecks.Count);
             AssertCheck(ne.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
             AssertNestedCheck(ne.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleNotEqual);
-            Assert.IsFalse(ne.IsLifted);
+            Assert.False(ne.IsLifted);
 
             var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
             var nullableLeft = Expression.Convert(left, nullableType);
@@ -237,48 +236,48 @@ namespace Tests
 
             var liftedEq = CSharpExpression.TupleEqual(nullableLeft, nullableRight);
 
-            Assert.AreEqual(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), liftedEq.Type);
-            Assert.AreSame(nullableLeft, liftedEq.Left);
-            Assert.AreSame(nullableRight, liftedEq.Right);
-            Assert.AreEqual(2, liftedEq.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleEqual, liftedEq.CSharpNodeType);
+            Assert.Equal(typeof(bool), liftedEq.Type);
+            Assert.Same(nullableLeft, liftedEq.Left);
+            Assert.Same(nullableRight, liftedEq.Right);
+            Assert.Equal(2, liftedEq.EqualityChecks.Count);
             AssertCheck(liftedEq.EqualityChecks[0], typeof(int), ExpressionType.Equal);
             AssertNestedCheck(liftedEq.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleEqual);
-            Assert.IsTrue(liftedEq.IsLifted);
+            Assert.True(liftedEq.IsLifted);
 
             var liftedNe = CSharpExpression.TupleNotEqual(nullableLeft, nullableRight);
 
-            Assert.AreEqual(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
-            Assert.AreEqual(typeof(bool), liftedNe.Type);
-            Assert.AreSame(nullableLeft, liftedNe.Left);
-            Assert.AreSame(nullableRight, liftedNe.Right);
-            Assert.AreEqual(2, liftedNe.EqualityChecks.Count);
+            Assert.Equal(CSharpExpressionType.TupleNotEqual, liftedNe.CSharpNodeType);
+            Assert.Equal(typeof(bool), liftedNe.Type);
+            Assert.Same(nullableLeft, liftedNe.Left);
+            Assert.Same(nullableRight, liftedNe.Right);
+            Assert.Equal(2, liftedNe.EqualityChecks.Count);
             AssertCheck(liftedNe.EqualityChecks[0], typeof(int), ExpressionType.NotEqual);
             AssertNestedCheck(liftedNe.EqualityChecks[1], typeof(ValueTuple<string, TimeSpan>), CSharpExpressionType.TupleNotEqual);
-            Assert.IsTrue(liftedNe.IsLifted);
+            Assert.True(liftedNe.IsLifted);
 
             void AssertCheck(LambdaExpression check, Type type, ExpressionType kind)
             {
-                Assert.AreEqual(2, check.Parameters.Count);
-                Assert.AreEqual(type, check.Parameters[0].Type);
-                Assert.AreEqual(type, check.Parameters[1].Type);
+                Assert.Equal(2, check.Parameters.Count);
+                Assert.Equal(type, check.Parameters[0].Type);
+                Assert.Equal(type, check.Parameters[1].Type);
                 var b = check.Body as BinaryExpression;
-                Assert.IsNotNull(b);
-                Assert.IsTrue(b.NodeType == kind);
-                Assert.IsTrue(b.Left == check.Parameters[0]);
-                Assert.IsTrue(b.Right == check.Parameters[1]);
+                Assert.NotNull(b);
+                Assert.True(b.NodeType == kind);
+                Assert.True(b.Left == check.Parameters[0]);
+                Assert.True(b.Right == check.Parameters[1]);
             }
 
             void AssertNestedCheck(LambdaExpression check, Type type, CSharpExpressionType kind)
             {
-                Assert.AreEqual(2, check.Parameters.Count);
-                Assert.AreEqual(type, check.Parameters[0].Type);
-                Assert.AreEqual(type, check.Parameters[1].Type);
+                Assert.Equal(2, check.Parameters.Count);
+                Assert.Equal(type, check.Parameters[0].Type);
+                Assert.Equal(type, check.Parameters[1].Type);
                 var b = check.Body as TupleBinaryCSharpExpression;
-                Assert.IsNotNull(b);
-                Assert.IsTrue(b.CSharpNodeType == kind);
-                Assert.IsTrue(b.Left == check.Parameters[0]);
-                Assert.IsTrue(b.Right == check.Parameters[1]);
+                Assert.NotNull(b);
+                Assert.True(b.CSharpNodeType == kind);
+                Assert.True(b.Left == check.Parameters[0]);
+                Assert.True(b.Right == check.Parameters[1]);
 
                 var types = Helpers.GetTupleComponentTypes(type).ToArray();
 
@@ -289,7 +288,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Update()
         {
             var left = Expression.Constant((1, "bar"));
@@ -299,31 +298,31 @@ namespace Tests
 
             var it = CSharpExpression.TupleEqual(left, right, new LambdaExpression[] { check1, check2 });
 
-            Assert.AreSame(it, it.Update(it.Left, it.Right, it.EqualityChecks));
+            Assert.Same(it, it.Update(it.Left, it.Right, it.EqualityChecks));
 
             var newOperand = Expression.Constant((3, "qux"));
 
             var new1 = it.Update(newOperand, it.Right, it.EqualityChecks);
-            Assert.AreSame(newOperand, new1.Left);
-            Assert.AreSame(it.Right, new1.Right);
-            Assert.AreSame(it.EqualityChecks, new1.EqualityChecks);
+            Assert.Same(newOperand, new1.Left);
+            Assert.Same(it.Right, new1.Right);
+            Assert.Same(it.EqualityChecks, new1.EqualityChecks);
 
             var new2 = it.Update(it.Left, newOperand, it.EqualityChecks);
-            Assert.AreSame(it.Left, new2.Left);
-            Assert.AreSame(newOperand, new2.Right);
-            Assert.AreSame(it.EqualityChecks, new2.EqualityChecks);
+            Assert.Same(it.Left, new2.Left);
+            Assert.Same(newOperand, new2.Right);
+            Assert.Same(it.EqualityChecks, new2.EqualityChecks);
 
             var check3 = (Expression<Func<string, string, bool>>)((l, r) => l == r);
             var newEqualityChecks = new LambdaExpression[] { check1, check3 };
             var new3 = it.Update(it.Left, it.Right, newEqualityChecks);
-            Assert.AreSame(it.Left, new3.Left);
-            Assert.AreSame(it.Right, new3.Right);
-            Assert.AreEqual(2, it.EqualityChecks.Count);
-            Assert.AreSame(check1, new3.EqualityChecks[0]);
-            Assert.AreSame(check3, new3.EqualityChecks[1]);
+            Assert.Same(it.Left, new3.Left);
+            Assert.Same(it.Right, new3.Right);
+            Assert.Equal(2, it.EqualityChecks.Count);
+            Assert.Same(check1, new3.EqualityChecks[0]);
+            Assert.Same(check3, new3.EqualityChecks[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Visitor()
         {
             var left = Expression.Constant((1, "bar"));
@@ -334,8 +333,8 @@ namespace Tests
             var res = CSharpExpression.TupleEqual(left, right, new LambdaExpression[] { check1, check2 });
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -350,7 +349,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_NonNull_Arity2()
         {
             var tuples = new[]
@@ -378,13 +377,13 @@ namespace Tests
             {
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(l == r, eq(l, r));
-                    Assert.AreEqual(l != r, ne(l, r));
+                    Assert.Equal(l == r, eq(l, r));
+                    Assert.Equal(l != r, ne(l, r));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_NonNull_Arity3()
         {
             var date1 = new DateTime(1983, 2, 11);
@@ -421,13 +420,13 @@ namespace Tests
             {
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(l == r, eq(l, r));
-                    Assert.AreEqual(l != r, ne(l, r));
+                    Assert.Equal(l == r, eq(l, r));
+                    Assert.Equal(l != r, ne(l, r));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_NonNull_Arity10()
         {
             var tuples = new[]
@@ -456,13 +455,13 @@ namespace Tests
             {
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(l == r, eq(l, r));
-                    Assert.AreEqual(l != r, ne(l, r));
+                    Assert.Equal(l == r, eq(l, r));
+                    Assert.Equal(l != r, ne(l, r));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_Null_Arity2()
         {
             var tuples = new (int, string)?[]
@@ -496,15 +495,15 @@ namespace Tests
                 {
                     foreach (var r in tuples)
                     {
-                        Assert.AreEqual(l == r, eq(l, r.Value));
-                        Assert.AreEqual(l != r, ne(l, r.Value));
+                        Assert.Equal(l == r, eq(l, r.Value));
+                        Assert.Equal(l != r, ne(l, r.Value));
                     }
                 }
 
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(null == r, eq(null, r.Value));
-                    Assert.AreEqual(null != r, ne(null, r.Value));
+                    Assert.Equal(null == r, eq(null, r.Value));
+                    Assert.Equal(null != r, ne(null, r.Value));
                 }
             }
 
@@ -523,15 +522,15 @@ namespace Tests
                 {
                     foreach (var r in tuples)
                     {
-                        Assert.AreEqual(l == r, eq(l.Value, r));
-                        Assert.AreEqual(l != r, ne(l.Value, r));
+                        Assert.Equal(l == r, eq(l.Value, r));
+                        Assert.Equal(l != r, ne(l.Value, r));
                     }
                 }
 
                 foreach (var l in tuples)
                 {
-                    Assert.AreEqual(l == null, eq(l.Value, null));
-                    Assert.AreEqual(l != null, ne(l.Value, null));
+                    Assert.Equal(l == null, eq(l.Value, null));
+                    Assert.Equal(l != null, ne(l.Value, null));
                 }
             }
 
@@ -550,14 +549,14 @@ namespace Tests
                 {
                     foreach (var r in tuples.Prepend(null))
                     {
-                        Assert.AreEqual(l == r, eq(l, r));
-                        Assert.AreEqual(l != r, ne(l, r));
+                        Assert.Equal(l == r, eq(l, r));
+                        Assert.Equal(l != r, ne(l, r));
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_Null_Optimize_RemoveLiftToNullConversion()
         {
             var tuples = new (int, string)?[]
@@ -593,15 +592,15 @@ namespace Tests
                 {
                     foreach (var r in tuples)
                     {
-                        Assert.AreEqual(l == r, eq(l, r.Value));
-                        Assert.AreEqual(l != r, ne(l, r.Value));
+                        Assert.Equal(l == r, eq(l, r.Value));
+                        Assert.Equal(l != r, ne(l, r.Value));
                     }
                 }
 
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(null == r, eq(null, r.Value));
-                    Assert.AreEqual(null != r, ne(null, r.Value));
+                    Assert.Equal(null == r, eq(null, r.Value));
+                    Assert.Equal(null != r, ne(null, r.Value));
                 }
             }
 
@@ -622,20 +621,20 @@ namespace Tests
                 {
                     foreach (var r in tuples)
                     {
-                        Assert.AreEqual(l == r, eq(l.Value, r));
-                        Assert.AreEqual(l != r, ne(l.Value, r));
+                        Assert.Equal(l == r, eq(l.Value, r));
+                        Assert.Equal(l != r, ne(l.Value, r));
                     }
                 }
 
                 foreach (var l in tuples)
                 {
-                    Assert.AreEqual(l == null, eq(l.Value, null));
-                    Assert.AreEqual(l != null, ne(l.Value, null));
+                    Assert.Equal(l == null, eq(l.Value, null));
+                    Assert.Equal(l != null, ne(l.Value, null));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_Nested()
         {
             var tuples = new[]
@@ -679,13 +678,13 @@ namespace Tests
             {
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(l == r, eq(l, r));
-                    Assert.AreEqual(l != r, ne(l, r));
+                    Assert.Equal(l == r, eq(l, r));
+                    Assert.Equal(l != r, ne(l, r));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_Reduce_Nested_Nullable()
         {
             var tuples = new (int, (string, long)?)[]
@@ -731,13 +730,13 @@ namespace Tests
             {
                 foreach (var r in tuples)
                 {
-                    Assert.AreEqual(l == r, eq(l, r));
-                    Assert.AreEqual(l != r, ne(l, r));
+                    Assert.Equal(l == r, eq(l, r));
+                    Assert.Equal(l != r, ne(l, r));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_SideEffects_ShortCircuit()
         {
             var l = Expression.Parameter(typeof(int));
@@ -808,7 +807,7 @@ namespace Tests
             }, new LogAndResult<bool> { Log = { "L", "R", "1", "2" }, Value = true });
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_SideEffects_TupleLiteral()
         {
             var l = Expression.Parameter(typeof(int));
@@ -845,7 +844,7 @@ namespace Tests
             }, new LogAndResult<bool> { Log = { "L.I1", "L.I2", "R.I1", "R.I2", "1", "2" }, Value = true });
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_SideEffects_TupleLiteral_Pure()
         {
             var l = Expression.Parameter(typeof(int));
@@ -892,7 +891,7 @@ namespace Tests
             }, new LogAndResult<bool> { Log = { "1", "2" }, Value = true });
         }
 
-        [TestMethod]
+        [Fact]
         public void TupleBinary_SideEffects_TupleLiteral_Nested()
         {
             // ((int, int), (int, int))
@@ -961,7 +960,7 @@ namespace Tests
         private void AssertCompile<T>(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLog<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
         // TODO: tests for various optimizations

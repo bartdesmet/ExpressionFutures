@@ -3,20 +3,19 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class ConditionalIndexTests
     {
-        [TestMethod]
+        [Fact]
         public void ConditionalIndex_Factory_ArgumentChecking()
         {
             var expr = Expression.Default(typeof(Bar));
@@ -38,7 +37,7 @@ namespace Tests
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalIndex(other, propInfo));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalIndex_Factory_Expression()
         {
             var obj = Expression.Constant(new S("foo"));
@@ -53,13 +52,13 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, substring, args.AsEnumerable()),
             })
             {
-                Assert.AreSame(obj, e.Object);
+                Assert.Same(obj, e.Object);
 
-                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.Single(e.Arguments);
 
-                Assert.AreEqual(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(substring.GetIndexParameters()[0], e.Arguments[0].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
             }
 
             foreach (var e in new[]
@@ -68,13 +67,13 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, substringGet, args.AsEnumerable()),
             })
             {
-                Assert.AreSame(obj, e.Object);
+                Assert.Same(obj, e.Object);
 
-                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.Single(e.Arguments);
 
-                Assert.AreEqual(substringGet.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(substringGet.GetParameters()[0], e.Arguments[0].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
             }
 
             var tooLittle = new Expression[0];
@@ -100,7 +99,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalIndex_Properties()
         {
             var item = PropertyInfoOf((Bar b) => b[default(int)]);
@@ -121,11 +120,11 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, item, new[] { argp }.AsEnumerable()),
             })
             {
-                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
-                Assert.AreSame(obj, e.Object);
-                Assert.AreEqual(item, e.Indexer);
-                Assert.AreEqual(typeof(bool?), e.Type);
-                Assert.IsTrue(e.Arguments.SequenceEqual(new[] { argp }));
+                Assert.Equal(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
+                Assert.Same(obj, e.Object);
+                Assert.Equal(item, e.Indexer);
+                Assert.Equal(typeof(bool?), e.Type);
+                Assert.True(e.Arguments.SequenceEqual(new[] { argp }));
             }
 
             foreach (var e in new[]
@@ -134,15 +133,15 @@ namespace Tests
                 CSharpExpression.ConditionalIndex(obj, getter, new[] { argm }.AsEnumerable())
             })
             {
-                Assert.AreEqual(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
-                Assert.AreSame(obj, e.Object);
-                Assert.AreEqual(item, e.Indexer);
-                Assert.AreEqual(typeof(bool?), e.Type);
-                Assert.IsTrue(e.Arguments.SequenceEqual(new[] { argm }));
+                Assert.Equal(CSharpExpressionType.ConditionalAccess, e.CSharpNodeType);
+                Assert.Same(obj, e.Object);
+                Assert.Equal(item, e.Indexer);
+                Assert.Equal(typeof(bool?), e.Type);
+                Assert.True(e.Arguments.SequenceEqual(new[] { argm }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalIndex_Update()
         {
             var item = PropertyInfoOf((Bar b) => b[default(int)]);
@@ -158,24 +157,24 @@ namespace Tests
 
             var res = CSharpExpression.ConditionalIndex(obj, item, arg);
 
-            Assert.AreSame(res, res.Update(res.Object, res.Arguments));
+            Assert.Same(res, res.Update(res.Object, res.Arguments));
 
             var obj1 = Expression.Default(typeof(Bar));
             var upd1 = res.Update(obj1, res.Arguments);
-            Assert.AreNotSame(upd1, res);
-            Assert.AreSame(res.Arguments, upd1.Arguments);
-            Assert.AreSame(obj1, upd1.Object);
+            Assert.NotSame(upd1, res);
+            Assert.Same(res.Arguments, upd1.Arguments);
+            Assert.Same(obj1, upd1.Object);
 
             var newValue = Expression.Constant(1);
             var newArg = CSharpExpression.Bind(parameter, newValue);
 
             var upd2 = res.Update(obj, new[] { newArg });
-            Assert.AreNotSame(upd2, res);
-            Assert.AreSame(res.Object, upd2.Object);
-            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { newArg }));
+            Assert.NotSame(upd2, res);
+            Assert.Same(res.Object, upd2.Object);
+            Assert.True(upd2.Arguments.SequenceEqual(new[] { newArg }));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalIndex_Compile_Ref()
         {
             var px = Expression.Parameter(typeof(QuxX));
@@ -185,8 +184,8 @@ namespace Tests
             var mx = CSharpExpression.ConditionalIndex(px, ix, ax);
             var fx = Expression.Lambda<Func<QuxX, int?>>(mx, px);
             var dx = fx.Compile();
-            Assert.AreEqual(42, dx(qx));
-            Assert.IsNull(dx(null));
+            Assert.Equal(42, dx(qx));
+            Assert.Null(dx(null));
 
             var pn = Expression.Parameter(typeof(QuxN));
             var qn = new QuxN();
@@ -195,8 +194,8 @@ namespace Tests
             var mn = CSharpExpression.ConditionalIndex(pn, jn, an);
             var fn = Expression.Lambda<Func<QuxN, int?>>(mn, pn);
             var dn = fn.Compile();
-            Assert.AreEqual(42, dn(qn));
-            Assert.IsNull(dn(null));
+            Assert.Equal(42, dn(qn));
+            Assert.Null(dn(null));
 
             var ps = Expression.Parameter(typeof(QuxS));
             var qs = new QuxS();
@@ -205,11 +204,11 @@ namespace Tests
             var ms = CSharpExpression.ConditionalIndex(ps, js, bs);
             var fs = Expression.Lambda<Func<QuxS, string>>(ms, ps);
             var ds = fs.Compile();
-            Assert.AreEqual("bar", ds(qs));
-            Assert.IsNull(ds(null));
+            Assert.Equal("bar", ds(qs));
+            Assert.Null(ds(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalIndex_Compile_Val()
         {
             var px = Expression.Parameter(typeof(QuzX?));
@@ -219,8 +218,8 @@ namespace Tests
             var mx = CSharpExpression.ConditionalIndex(px, ix, ax);
             var fx = Expression.Lambda<Func<QuzX?, int?>>(mx, px);
             var dx = fx.Compile();
-            Assert.AreEqual(42, dx(qx));
-            Assert.IsNull(dx(null));
+            Assert.Equal(42, dx(qx));
+            Assert.Null(dx(null));
 
             var pn = Expression.Parameter(typeof(QuzN?));
             var qn = new QuzN();
@@ -229,8 +228,8 @@ namespace Tests
             var mn = CSharpExpression.ConditionalIndex(pn, jn, an);
             var fn = Expression.Lambda<Func<QuzN?, int?>>(mn, pn);
             var dn = fn.Compile();
-            Assert.AreEqual(42, dn(qn));
-            Assert.IsNull(dn(null));
+            Assert.Equal(42, dn(qn));
+            Assert.Null(dn(null));
 
             var ps = Expression.Parameter(typeof(QuzS?));
             var qs = new QuzS();
@@ -239,8 +238,8 @@ namespace Tests
             var ms = CSharpExpression.ConditionalIndex(ps, js, bs);
             var fs = Expression.Lambda<Func<QuzS?, string>>(ms, ps);
             var ds = fs.Compile();
-            Assert.AreEqual("bar", ds(qs));
-            Assert.IsNull(ds(null));
+            Assert.Equal("bar", ds(qs));
+            Assert.Null(ds(null));
         }
 
         // TODO: tests to assert args are not evaluated if receiver is null

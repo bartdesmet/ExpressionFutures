@@ -4,17 +4,16 @@
 
 using Microsoft.CSharp.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class ShadowEliminatorTests
     {
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_NoShadow()
         {
             var v1 = Expression.Parameter(typeof(int));
@@ -49,11 +48,11 @@ namespace Tests
 
             foreach (var e in es)
             {
-                Assert.AreSame(e, ShadowEliminator.Eliminate(e));
+                Assert.Same(e, ShadowEliminator.Eliminate(e));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_Block1()
         {
             var x = Expression.Parameter(typeof(int));
@@ -66,11 +65,11 @@ namespace Tests
             var v2 = e1.Variables[0];
             var e2 = e1.Expressions[0];
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_Block2()
         {
             var x = Expression.Parameter(typeof(int));
@@ -86,11 +85,11 @@ namespace Tests
             var v2 = e1.Variables[0];
             var e2 = e1.Statements[0];
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_Lambda()
         {
             var x = Expression.Parameter(typeof(int));
@@ -103,11 +102,11 @@ namespace Tests
             var v2 = e1.Parameters[0];
             var e2 = e1.Body;
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_Catch()
         {
             var x = Expression.Parameter(typeof(Exception));
@@ -122,11 +121,11 @@ namespace Tests
             var v2 = h2.Variable;
             var e2 = ((BlockExpression)h2.Body).Expressions[0];
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_Using()
         {
             var x = Expression.Parameter(typeof(IDisposable));
@@ -140,11 +139,11 @@ namespace Tests
             var v2 = e1.Variables;
             var e2 = e1.Body;
 
-            Assert.AreSame(v2.Single(), e2);
-            Assert.AreNotSame(v1.Single(), v2.Single());
+            Assert.Same(v2.Single(), e2);
+            Assert.NotSame(v1.Single(), v2.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_ForEach()
         {
             var x = Expression.Parameter(typeof(int));
@@ -158,11 +157,11 @@ namespace Tests
             var v2 = e1.Variables;
             var e2 = e1.Body;
 
-            Assert.AreSame(v2[0], e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2[0], e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_For()
         {
             var x = Expression.Parameter(typeof(int));
@@ -177,11 +176,11 @@ namespace Tests
             var v2 = e1.Variables[0];
             var e2 = e1.Body;
 
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShadowEliminator_Shadow_Switch()
         {
             var v = Expression.Constant(1);
@@ -197,9 +196,9 @@ namespace Tests
             var v2 = e1.Variables[0];
             var e2 = e1.Cases[0].Statements[0];
 
-            Assert.AreSame(v1, vi); // not in inner scope
-            Assert.AreSame(v2, e2);
-            Assert.AreNotSame(v1, v2);
+            Assert.Same(v1, vi); // not in inner scope
+            Assert.Same(v2, e2);
+            Assert.NotSame(v1, v2);
         }
 
         // TODO: add more tests that nest the different constructs

@@ -3,20 +3,19 @@
 // bartde - May 2020
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using Xunit;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public partial class ArrayAccessTests
     {
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Factory_ArgumentChecking()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -34,10 +33,10 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new List<Expression> { null }));
 
             // the following are valid
-            Assert.IsNotNull(CSharpExpression.ArrayAccess(xs, i));
-            Assert.IsNotNull(CSharpExpression.ArrayAccess(xs, j));
-            Assert.IsNotNull(CSharpExpression.ArrayAccess(xs, r));
-            Assert.IsNotNull(CSharpExpression.ArrayAccess(xss, i, i));
+            Assert.NotNull(CSharpExpression.ArrayAccess(xs, i));
+            Assert.NotNull(CSharpExpression.ArrayAccess(xs, j));
+            Assert.NotNull(CSharpExpression.ArrayAccess(xs, r));
+            Assert.NotNull(CSharpExpression.ArrayAccess(xss, i, i));
 
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xs, s)); // invalid index type
             AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, i)); // wrong rank
@@ -48,7 +47,7 @@ namespace Tests
 
         // TODO: Tests when used in assignment positions, e.g. xs[1..2] = i is invalid.
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Factory_Properties()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -60,36 +59,36 @@ namespace Tests
             var r = Expression.Constant(new Range());
 
             var a1 = CSharpExpression.ArrayAccess(xs, i);
-            Assert.AreEqual(CSharpExpressionType.ArrayAccess, a1.CSharpNodeType);
-            Assert.AreEqual(typeof(string), a1.Type);
-            Assert.AreSame(xs, a1.Array);
-            Assert.AreEqual(1, a1.Indexes.Count);
-            Assert.AreSame(i, a1.Indexes[0]);
+            Assert.Equal(CSharpExpressionType.ArrayAccess, a1.CSharpNodeType);
+            Assert.Equal(typeof(string), a1.Type);
+            Assert.Same(xs, a1.Array);
+            Assert.Single(a1.Indexes);
+            Assert.Same(i, a1.Indexes[0]);
 
             var a2 = CSharpExpression.ArrayAccess(xs, j);
-            Assert.AreEqual(CSharpExpressionType.ArrayAccess, a2.CSharpNodeType);
-            Assert.AreEqual(typeof(string), a2.Type);
-            Assert.AreSame(xs, a2.Array);
-            Assert.AreEqual(1, a2.Indexes.Count);
-            Assert.AreSame(j, a2.Indexes[0]);
+            Assert.Equal(CSharpExpressionType.ArrayAccess, a2.CSharpNodeType);
+            Assert.Equal(typeof(string), a2.Type);
+            Assert.Same(xs, a2.Array);
+            Assert.Single(a2.Indexes);
+            Assert.Same(j, a2.Indexes[0]);
 
             var a3 = CSharpExpression.ArrayAccess(xs, r);
-            Assert.AreEqual(CSharpExpressionType.ArrayAccess, a3.CSharpNodeType);
-            Assert.AreEqual(typeof(string[]), a3.Type);
-            Assert.AreSame(xs, a3.Array);
-            Assert.AreEqual(1, a3.Indexes.Count);
-            Assert.AreSame(r, a3.Indexes[0]);
+            Assert.Equal(CSharpExpressionType.ArrayAccess, a3.CSharpNodeType);
+            Assert.Equal(typeof(string[]), a3.Type);
+            Assert.Same(xs, a3.Array);
+            Assert.Single(a3.Indexes);
+            Assert.Same(r, a3.Indexes[0]);
 
             var a4 = CSharpExpression.ArrayAccess(xss, i, k);
-            Assert.AreEqual(CSharpExpressionType.ArrayAccess, a4.CSharpNodeType);
-            Assert.AreEqual(typeof(string), a4.Type);
-            Assert.AreSame(xss, a4.Array);
-            Assert.AreEqual(2, a4.Indexes.Count);
-            Assert.AreSame(i, a4.Indexes[0]);
-            Assert.AreSame(k, a4.Indexes[1]);
+            Assert.Equal(CSharpExpressionType.ArrayAccess, a4.CSharpNodeType);
+            Assert.Equal(typeof(string), a4.Type);
+            Assert.Same(xss, a4.Array);
+            Assert.Equal(2, a4.Indexes.Count);
+            Assert.Same(i, a4.Indexes[0]);
+            Assert.Same(k, a4.Indexes[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Update()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -105,31 +104,31 @@ namespace Tests
             var j2 = Expression.Constant(2);
 
             var a1 = CSharpExpression.ArrayAccess(xs, i1);
-            Assert.AreSame(a1, a1.Update(a1.Array, a1.Indexes));
+            Assert.Same(a1, a1.Update(a1.Array, a1.Indexes));
 
             var a2 = CSharpExpression.ArrayAccess(xss, i1, j1);
-            Assert.AreSame(a2, a2.Update(a2.Array, a2.Indexes));
+            Assert.Same(a2, a2.Update(a2.Array, a2.Indexes));
 
             var a3 = a1.Update(ys, a1.Indexes);
-            Assert.AreSame(ys, a3.Array);
-            Assert.AreSame(a1.Indexes[0], a3.Indexes[0]);
+            Assert.Same(ys, a3.Array);
+            Assert.Same(a1.Indexes[0], a3.Indexes[0]);
 
             var a4 = a1.Update(a1.Array, new[] { i2 });
-            Assert.AreSame(a1.Array, a4.Array);
-            Assert.AreSame(i2, a4.Indexes[0]);
+            Assert.Same(a1.Array, a4.Array);
+            Assert.Same(i2, a4.Indexes[0]);
 
             var a5 = a2.Update(yss, a2.Indexes);
-            Assert.AreSame(yss, a5.Array);
-            Assert.AreSame(a2.Indexes[0], a5.Indexes[0]);
-            Assert.AreSame(a2.Indexes[1], a5.Indexes[1]);
+            Assert.Same(yss, a5.Array);
+            Assert.Same(a2.Indexes[0], a5.Indexes[0]);
+            Assert.Same(a2.Indexes[1], a5.Indexes[1]);
 
             var a6 = a2.Update(a2.Array, new[] { i2, j2 });
-            Assert.AreSame(a2.Array, a6.Array);
-            Assert.AreSame(i2, a6.Indexes[0]);
-            Assert.AreSame(j2, a6.Indexes[1]);
+            Assert.Same(a2.Array, a6.Array);
+            Assert.Same(i2, a6.Indexes[0]);
+            Assert.Same(j2, a6.Indexes[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Visitor()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -138,8 +137,8 @@ namespace Tests
             var res = CSharpExpression.ArrayAccess(xs, i);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor
@@ -154,7 +153,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Reduce_Single_Int32()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -164,16 +163,16 @@ namespace Tests
 
             var red = res.Reduce();
 
-            Assert.IsTrue(red is IndexExpression);
+            Assert.True(red is IndexExpression);
 
             var idx = (IndexExpression)red;
-            Assert.AreSame(xs, idx.Object);
-            Assert.IsNull(idx.Indexer);
-            Assert.AreEqual(1, idx.Arguments.Count);
-            Assert.AreSame(i, idx.Arguments[0]);
+            Assert.Same(xs, idx.Object);
+            Assert.Null(idx.Indexer);
+            Assert.Single(idx.Arguments);
+            Assert.Same(i, idx.Arguments[0]);
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Reduce_Multi_Int32()
         {
             var xss = Expression.Parameter(typeof(string[,]));
@@ -184,17 +183,17 @@ namespace Tests
 
             var red = res.Reduce();
 
-            Assert.IsTrue(red is IndexExpression);
+            Assert.True(red is IndexExpression);
 
             var idx = (IndexExpression)red;
-            Assert.AreSame(xss, idx.Object);
-            Assert.IsNull(idx.Indexer);
-            Assert.AreEqual(2, idx.Arguments.Count);
-            Assert.AreSame(i, idx.Arguments[0]);
-            Assert.AreSame(j, idx.Arguments[1]);
+            Assert.Same(xss, idx.Object);
+            Assert.Null(idx.Indexer);
+            Assert.Equal(2, idx.Arguments.Count);
+            Assert.Same(i, idx.Arguments[0]);
+            Assert.Same(j, idx.Arguments[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Read_Int32()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -206,12 +205,12 @@ namespace Tests
 
             var vals = new string[] { "bar", "foo", "qux" };
 
-            Assert.AreEqual(vals[0], f(vals, 0));
-            Assert.AreEqual(vals[1], f(vals, 1));
-            Assert.AreEqual(vals[2], f(vals, 2));
+            Assert.Equal(vals[0], f(vals, 0));
+            Assert.Equal(vals[1], f(vals, 1));
+            Assert.Equal(vals[2], f(vals, 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Assign_Int32()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -230,12 +229,12 @@ namespace Tests
 
                 var assignRes = f(vals, j, newVal);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_CompoundAssign_Int32()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -253,12 +252,12 @@ namespace Tests
 
                 var assignRes = f(vals, j);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_UnaryAssign_Post_Int32()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -277,12 +276,12 @@ namespace Tests
 
                 var assignRes = f(vals, j);
 
-                Assert.AreEqual(oldVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(oldVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_UnaryAssign_Pre_Int32()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -300,12 +299,12 @@ namespace Tests
 
                 var assignRes = f(vals, j);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Read_SystemIndex()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -317,18 +316,18 @@ namespace Tests
 
             var vals = new string[] { "bar", "foo", "qux" };
 
-            Assert.AreEqual(vals[0], f(vals, new Index()));
+            Assert.Equal(vals[0], f(vals, new Index()));
 
-            Assert.AreEqual(vals[0], f(vals, new Index(0)));
-            Assert.AreEqual(vals[1], f(vals, new Index(1)));
-            Assert.AreEqual(vals[2], f(vals, new Index(2)));
+            Assert.Equal(vals[0], f(vals, new Index(0)));
+            Assert.Equal(vals[1], f(vals, new Index(1)));
+            Assert.Equal(vals[2], f(vals, new Index(2)));
 
-            Assert.AreEqual(vals[0], f(vals, new Index(3, fromEnd: true)));
-            Assert.AreEqual(vals[1], f(vals, new Index(2, fromEnd: true)));
-            Assert.AreEqual(vals[2], f(vals, new Index(1, fromEnd: true)));
+            Assert.Equal(vals[0], f(vals, new Index(3, fromEnd: true)));
+            Assert.Equal(vals[1], f(vals, new Index(2, fromEnd: true)));
+            Assert.Equal(vals[2], f(vals, new Index(1, fromEnd: true)));
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Assign_SystemIndex()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -347,8 +346,8 @@ namespace Tests
 
                 var assignRes = f(vals, new Index(j), newVal);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
 
             for (int j = 1; j <= vals.Length; j++)
@@ -359,12 +358,12 @@ namespace Tests
 
                 var assignRes = f(vals, k, newVal);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[k]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[k]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_CompoundAssign_SystemIndex()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -382,8 +381,8 @@ namespace Tests
 
                 var assignRes = f(vals, new Index(j));
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
 
             for (int j = 1; j <= vals.Length; j++)
@@ -394,12 +393,12 @@ namespace Tests
 
                 var assignRes = f(vals, k);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[k]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[k]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_UnaryAssign_Post_SystemIndex()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -418,8 +417,8 @@ namespace Tests
 
                 var assignRes = f(vals, new Index(j));
 
-                Assert.AreEqual(oldVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(oldVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
 
             for (int j = 1; j <= vals.Length; j++)
@@ -431,12 +430,12 @@ namespace Tests
 
                 var assignRes = f(vals, k);
 
-                Assert.AreEqual(oldVal, assignRes);
-                Assert.AreEqual(newVal, vals[k]);
+                Assert.Equal(oldVal, assignRes);
+                Assert.Equal(newVal, vals[k]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_UnaryAssign_Pre_SystemIndex()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -454,8 +453,8 @@ namespace Tests
 
                 var assignRes = f(vals, new Index(j));
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[j]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[j]);
             }
 
             for (int j = 1; j <= vals.Length; j++)
@@ -466,12 +465,12 @@ namespace Tests
 
                 var assignRes = f(vals, k);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[k]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[k]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Read_FromEnd()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -483,12 +482,12 @@ namespace Tests
 
             var vals = new string[] { "bar", "foo", "qux" };
 
-            Assert.AreEqual(vals[0], f(vals, 3));
-            Assert.AreEqual(vals[1], f(vals, 2));
-            Assert.AreEqual(vals[2], f(vals, 1));
+            Assert.Equal(vals[0], f(vals, 3));
+            Assert.Equal(vals[1], f(vals, 2));
+            Assert.Equal(vals[2], f(vals, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Assign_FromEnd()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -509,12 +508,12 @@ namespace Tests
 
                 var assignRes = f(vals, j, newVal);
 
-                Assert.AreEqual(newVal, assignRes);
-                Assert.AreEqual(newVal, vals[k]);
+                Assert.Equal(newVal, assignRes);
+                Assert.Equal(newVal, vals[k]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Read_SystemRange()
         {
             var xs = Expression.Parameter(typeof(string[]));
@@ -526,19 +525,18 @@ namespace Tests
 
             var vals = new string[] { "bar", "foo", "qux" };
 
-            Assert.IsTrue(vals.SequenceEqual(f(vals, Range.All)));
+            Assert.True(vals.SequenceEqual(f(vals, Range.All)));
 
-            Assert.IsTrue(vals.Skip(0).SequenceEqual(f(vals, Range.StartAt(0))));
-            Assert.IsTrue(vals.Skip(1).SequenceEqual(f(vals, Range.StartAt(1))));
-            Assert.IsTrue(vals.Skip(2).SequenceEqual(f(vals, Range.StartAt(2))));
+            Assert.True(vals.Skip(0).SequenceEqual(f(vals, Range.StartAt(0))));
+            Assert.True(vals.Skip(1).SequenceEqual(f(vals, Range.StartAt(1))));
+            Assert.True(vals.Skip(2).SequenceEqual(f(vals, Range.StartAt(2))));
 
-            Assert.IsTrue(vals.Take(0).SequenceEqual(f(vals, Range.EndAt(0))));
-            Assert.IsTrue(vals.Take(1).SequenceEqual(f(vals, Range.EndAt(1))));
-            Assert.IsTrue(vals.Take(2).SequenceEqual(f(vals, Range.EndAt(2))));
+            Assert.True(vals.Take(0).SequenceEqual(f(vals, Range.EndAt(0))));
+            Assert.True(vals.Take(1).SequenceEqual(f(vals, Range.EndAt(1))));
+            Assert.True(vals.Take(2).SequenceEqual(f(vals, Range.EndAt(2))));
         }
 
-        [TestMethod]
-        [Ignore] // BUG: Lowered form of ArrayAccess produces a Block which doesn't get passed by ref correctly.
+        [Fact(Skip = "BUG: Lowered form of ArrayAccess produces a Block which doesn't get passed by ref correctly.")]
         public void ArrayAccess_ByRef()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -554,8 +552,8 @@ namespace Tests
 
             int val = f(vals, 0);
 
-            Assert.AreEqual(42, val);
-            Assert.AreEqual(42, vals[0]);
+            Assert.Equal(42, val);
+            Assert.Equal(42, vals[0]);
 
             //
             // BUG: Lowering of ArrayAccess results in a BlockExpression (a "comma"), but Expression.Call does not account for taking
@@ -593,7 +591,7 @@ namespace Tests
             //
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_ByRef_CSharpNodes_SystemIndex()
         {
             //
@@ -639,11 +637,11 @@ namespace Tests
 
             int val = f(vals, 0);
 
-            Assert.AreEqual(42, val);
-            Assert.AreEqual(42, vals[0]);
+            Assert.Equal(42, val);
+            Assert.Equal(42, vals[0]);
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_ByRef_CSharpNodes_Int()
         {
             var xs = Expression.Parameter(typeof(int[]));
@@ -661,11 +659,11 @@ namespace Tests
 
             int val = f(vals, 0);
 
-            Assert.AreEqual(42, val);
-            Assert.AreEqual(42, vals[0]);
+            Assert.Equal(42, val);
+            Assert.Equal(42, vals[0]);
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Read_SideEffects()
         {
             AssertCompile((log, append) =>
@@ -702,7 +700,7 @@ namespace Tests
             }, new LogAndResult<object> { Log = { "A", "I1", "I2" } });
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_Assign_SideEffects()
         {
             AssertCompile((log, append) =>
@@ -735,7 +733,7 @@ namespace Tests
             }, new LogAndResult<object> { Log = { "A", "I1", "I2", "V" } });
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_CompoundAssign_SideEffects()
         {
             AssertCompile((log, append) =>
@@ -768,7 +766,7 @@ namespace Tests
             }, new LogAndResult<object> { Log = { "A", "I1", "I2", "V" } });
         }
 
-        [TestMethod]
+        [Fact]
         public void ArrayAccess_UnaryAssign_SideEffects()
         {
             AssertCompile((log, append) =>
@@ -801,7 +799,7 @@ namespace Tests
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<object> expected)
         {
             var res = WithLog(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
     }
 }

@@ -3,16 +3,15 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions.Compiler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class TypedLabelRewriterTests
     {
-        [TestMethod]
+        [Fact]
         public void TypedLabelRewriter_Simple()
         {
             var rw = new TypedLabelRewriter();
@@ -42,8 +41,8 @@ namespace Tests
             var f2 = Expression.Lambda<Func<bool, int>>(r, p);
             var d2 = f2.Compile();
 
-            Assert.AreEqual(d1(false), d2(false));
-            Assert.AreEqual(d1(true), d2(true));
+            Assert.Equal(d1(false), d2(false));
+            Assert.Equal(d1(true), d2(true));
         }
 
         // TODO: add test for nested cases

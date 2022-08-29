@@ -3,19 +3,18 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 using static Tests.ReflectionUtils;
 using static Tests.TestHelpers;
 
 namespace Tests
 {
-    [TestClass]
     public class InvocationTests
     {
-        [TestMethod]
+        [Fact]
         public void Invoke_Factory_ArgumentChecking()
         {
             // NB: A lot of checks are performed by LINQ helpers, so we omit tests for those cases.
@@ -57,7 +56,7 @@ namespace Tests
             AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Invoke(default(Expression), bindings.AsEnumerable()));
         }
 
-        [TestMethod]
+        [Fact]
         public void Invoke_Factory_Expression()
         {
             var function = Expression.Constant(new D((x, y) => x + y));
@@ -71,13 +70,13 @@ namespace Tests
                 CSharpExpression.Invoke(function, args.AsEnumerable()),
             })
             {
-                Assert.AreSame(function, e.Expression);
+                Assert.Same(function, e.Expression);
 
-                Assert.AreEqual(1, e.Arguments.Count);
+                Assert.Single(e.Arguments);
 
-                Assert.AreEqual(method.GetParameters()[0], e.Arguments[0].Parameter);
+                Assert.Equal(method.GetParameters()[0], e.Arguments[0].Parameter);
 
-                Assert.AreSame(args[0], e.Arguments[0].Expression);
+                Assert.Same(args[0], e.Arguments[0].Expression);
             }
 
             var tooLittle = new Expression[0];
@@ -103,7 +102,7 @@ namespace Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Invoke_Properties()
         {
             var invoke = MethodInfoOf((Func<int, int, int> f) => f.Invoke(default(int), default(int)));
@@ -124,23 +123,23 @@ namespace Tests
             {
                 var res = CSharpExpression.Invoke(function, arg0, arg1);
 
-                Assert.AreEqual(CSharpExpressionType.Invoke, res.CSharpNodeType);
-                Assert.AreSame(function, res.Expression);
-                Assert.AreEqual(typeof(int), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Invoke, res.CSharpNodeType);
+                Assert.Same(function, res.Expression);
+                Assert.Equal(typeof(int), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
 
             {
                 var res = CSharpExpression.Invoke(function, new[] { arg0, arg1 }.AsEnumerable());
 
-                Assert.AreEqual(CSharpExpressionType.Invoke, res.CSharpNodeType);
-                Assert.AreSame(function, res.Expression);
-                Assert.AreEqual(typeof(int), res.Type);
-                Assert.IsTrue(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+                Assert.Equal(CSharpExpressionType.Invoke, res.CSharpNodeType);
+                Assert.Same(function, res.Expression);
+                Assert.Equal(typeof(int), res.Type);
+                Assert.True(res.Arguments.SequenceEqual(new[] { arg0, arg1 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Invoke_Update()
         {
             var invoke = MethodInfoOf((Func<int, int, int> f) => f.Invoke(default(int), default(int)));
@@ -163,17 +162,17 @@ namespace Tests
             var function1 = Expression.Constant(new Func<int, int, int>((x, y) => x + y));
 
             var upd1 = res.Update(function1, res.Arguments);
-            Assert.AreNotSame(upd1, res);
-            Assert.AreSame(res.Arguments, upd1.Arguments);
-            Assert.AreSame(function1, upd1.Expression);
+            Assert.NotSame(upd1, res);
+            Assert.Same(res.Arguments, upd1.Arguments);
+            Assert.Same(function1, upd1.Expression);
 
             var upd2 = res.Update(function, new[] { arg1, arg0 });
-            Assert.AreNotSame(upd2, res);
-            Assert.AreSame(res.Expression, upd2.Expression);
-            Assert.IsTrue(upd2.Arguments.SequenceEqual(new[] { arg1, arg0 }));
+            Assert.NotSame(upd2, res);
+            Assert.Same(res.Expression, upd2.Expression);
+            Assert.True(upd2.Arguments.SequenceEqual(new[] { arg1, arg0 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void Invoke_Compile1()
         {
             var invoke = MethodInfoOf((Func<int, int, int> f) => f.Invoke(default(int), default(int)));
@@ -205,7 +204,7 @@ namespace Tests
             );
         }
 
-        [TestMethod]
+        [Fact]
         public void Invoke_Compile2()
         {
             var invoke = MethodInfoOf((D f) => f.Invoke(default(int), default(int)));
@@ -239,10 +238,10 @@ namespace Tests
         private void AssertCompile<T>(Func<Func<Expression, string, Expression>, Expression> createExpression, LogAndResult<T> expected)
         {
             var res = WithLogValue<T>(createExpression).Compile()();
-            Assert.AreEqual(expected, res);
+            Assert.Equal(expected, res);
         }
 
-        [TestMethod]
+        [Fact]
         public void Invoke_Visitor()
         {
             var invoke = MethodInfoOf((Func<int, int, int> f) => f.Invoke(default(int), default(int)));
@@ -260,8 +259,8 @@ namespace Tests
             var res = CSharpExpression.Invoke(function, CSharpExpression.Bind(parameterArg1, valueArg1), CSharpExpression.Bind(parameterArg2, valueArg2));
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

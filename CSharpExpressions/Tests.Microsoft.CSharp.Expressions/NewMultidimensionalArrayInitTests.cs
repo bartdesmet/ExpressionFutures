@@ -3,18 +3,17 @@
 // bartde - October 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class NewMultidimensionalArrayInitTests
     {
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_Factory_ArgumentChecking()
         {
             var type = typeof(int);
@@ -43,29 +42,29 @@ namespace Tests
             AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(long), bounds, inits));
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_Factory_CanQuote()
         {
             var e2 = (Expression<Func<int>>)(() => 42);
             var e1 = Expression.Constant(e2);
             var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(Expression<Func<int>>), new[] { 1, 2 }, e1, e2);
 
-            Assert.AreEqual(ExpressionType.Quote, res.Expressions[1].NodeType);
-            Assert.AreSame(e2, ((UnaryExpression)res.Expressions[1]).Operand);
+            Assert.Equal(ExpressionType.Quote, res.Expressions[1].NodeType);
+            Assert.Same(e2, ((UnaryExpression)res.Expressions[1]).Operand);
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_Properties()
         {
             var inits = Enumerable.Range(0, 6).Select(i => Expression.Constant(i)).ToArray();
             var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3 }, inits);
 
-            Assert.AreEqual(CSharpExpressionType.NewMultidimensionalArrayInit, res.CSharpNodeType);
-            Assert.AreEqual(typeof(int).MakeArrayType(2), res.Type);
-            Assert.IsTrue(res.Expressions.SequenceEqual(inits));
+            Assert.Equal(CSharpExpressionType.NewMultidimensionalArrayInit, res.CSharpNodeType);
+            Assert.Equal(typeof(int).MakeArrayType(2), res.Type);
+            Assert.True(res.Expressions.SequenceEqual(inits));
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_GetExpression_ArgumentChecking()
         {
             var inits = Enumerable.Range(0, 6).Select(i => Expression.Constant(i));
@@ -85,59 +84,59 @@ namespace Tests
             AssertEx.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(0, 4));
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_GetExpression()
         {
             var inits = Enumerable.Range(0, 6).Select(i => Expression.Constant(i)).ToArray();
             var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3 }, inits);
 
-            Assert.AreSame(inits[0], res.GetExpression(0, 0));
-            Assert.AreSame(inits[1], res.GetExpression(0, 1));
-            Assert.AreSame(inits[2], res.GetExpression(0, 2));
-            Assert.AreSame(inits[3], res.GetExpression(1, 0));
-            Assert.AreSame(inits[4], res.GetExpression(1, 1));
-            Assert.AreSame(inits[5], res.GetExpression(1, 2));
+            Assert.Same(inits[0], res.GetExpression(0, 0));
+            Assert.Same(inits[1], res.GetExpression(0, 1));
+            Assert.Same(inits[2], res.GetExpression(0, 2));
+            Assert.Same(inits[3], res.GetExpression(1, 0));
+            Assert.Same(inits[4], res.GetExpression(1, 1));
+            Assert.Same(inits[5], res.GetExpression(1, 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_Update()
         {
             var inits = Enumerable.Range(0, 6).Select(i => Expression.Constant(i)).ToArray();
             var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3 }, inits);
 
-            Assert.AreSame(res, res.Update(res.Expressions));
+            Assert.Same(res, res.Update(res.Expressions));
 
             var rev = inits.Reverse().ToArray();
             var upd = res.Update(rev);
 
-            Assert.AreNotSame(res, upd);
-            Assert.IsTrue(upd.Expressions.SequenceEqual(rev));
+            Assert.NotSame(res, upd);
+            Assert.True(upd.Expressions.SequenceEqual(rev));
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_Compile()
         {
             var inits = Enumerable.Range(0, 6).Select(i => Expression.Constant(42 - i * 3)).ToArray();
             var expr = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3 }, inits);
             var res = Expression.Lambda<Func<int[,]>>(expr).Compile()();
 
-            Assert.AreEqual(inits[0].Value, res[0, 0]);
-            Assert.AreEqual(inits[1].Value, res[0, 1]);
-            Assert.AreEqual(inits[2].Value, res[0, 2]);
-            Assert.AreEqual(inits[3].Value, res[1, 0]);
-            Assert.AreEqual(inits[4].Value, res[1, 1]);
-            Assert.AreEqual(inits[5].Value, res[1, 2]);
+            Assert.Equal(inits[0].Value, res[0, 0]);
+            Assert.Equal(inits[1].Value, res[0, 1]);
+            Assert.Equal(inits[2].Value, res[0, 2]);
+            Assert.Equal(inits[3].Value, res[1, 0]);
+            Assert.Equal(inits[4].Value, res[1, 1]);
+            Assert.Equal(inits[5].Value, res[1, 2]);
         }
 
-        [TestMethod]
+        [Fact]
         public void NewMultidimensionalArrayInit_Visitor()
         {
             var inits = Enumerable.Range(0, 6).Select(i => Expression.Constant(i)).ToArray();
             var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3 }, inits);
 
             var v = new V();
-            Assert.AreSame(res, v.Visit(res));
-            Assert.IsTrue(v.Visited);
+            Assert.Same(res, v.Visit(res));
+            Assert.True(v.Visited);
         }
 
         class V : CSharpExpressionVisitor

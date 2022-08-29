@@ -12,7 +12,6 @@ var nodes = new[] { "PreIncrementAssign", "PreDecrementAssign", "PostIncrementAs
 // bartde - November 2015
 
 using Microsoft.CSharp.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
 using static Tests.ReflectionUtils;
@@ -25,7 +24,7 @@ namespace Tests
 foreach (var node in nodes)
 {
 #>
-        [TestMethod]
+        [Fact]
         public void AssignUnary_Factory_<#=node#>()
         {
             var a = Expression.Parameter(typeof(int));
@@ -35,19 +34,19 @@ foreach (var node in nodes)
                 var m = MethodInfoOf(() => Op(0));
 
                 var a1 = CSharpExpression.<#=node#>(o);
-                Assert.AreSame(o, a1.Operand);
-                Assert.IsNull(a1.Method);
+                Assert.Same(o, a1.Operand);
+                Assert.Null(a1.Method);
 
                 var a2 = CSharpExpression.<#=node#>(o, m);
-                Assert.AreSame(o, a2.Operand);
-                Assert.AreSame(m, a2.Method);
+                Assert.Same(o, a2.Operand);
+                Assert.Same(m, a2.Method);
 
                 var a3 = a2.Update(o);
-                Assert.AreSame(a3, a2);
+                Assert.Same(a3, a2);
 
                 var a4 = a2.Update(a);
-                Assert.AreSame(a, a4.Operand);
-                Assert.AreSame(m, a4.Method);
+                Assert.Same(a, a4.Operand);
+                Assert.Same(m, a4.Method);
             }
         }
 
