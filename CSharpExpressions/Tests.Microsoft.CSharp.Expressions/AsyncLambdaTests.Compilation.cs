@@ -32,7 +32,7 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
-            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+            Assert.Throws<InvalidOperationException>(() => e.Compile());
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
-            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+            Assert.Throws<InvalidOperationException>(() => e.Compile());
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task<Func<int>>>>(expr);
-            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+            Assert.Throws<InvalidOperationException>(() => e.Compile());
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Tests
             );
 
             var e = CSharpExpression.AsyncLambda<Func<Task<Func<int>>>>(expr);
-            AssertEx.Throws<InvalidOperationException>(() => e.Compile());
+            Assert.Throws<InvalidOperationException>(() => e.Compile());
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Tests
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
 
             // DynamicMethod does not support BeginExceptFilterBlock (see https://github.com/dotnet/coreclr/issues/1764)
-            AssertEx.Throws<NotSupportedException>(() => e.Compile());
+            Assert.Throws<NotSupportedException>(() => e.Compile());
         }
 
         [Fact]
@@ -830,7 +830,7 @@ namespace Tests
             var call = Expression.Call(method, elem, CSharpExpression.Await(v));
             var e = CSharpExpression.AsyncLambda<Func<Task>>(Expression.Block(new[] { xs }, newArray, call));
             var f = e.Compile();
-            AssertEx.Throws<IndexOutOfRangeException>(() => f().GetAwaiter().GetResult());
+            Assert.Throws<IndexOutOfRangeException>(() => f().GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -861,7 +861,7 @@ namespace Tests
             var e = CSharpExpression.AsyncLambda<Func<Task>>(Expression.Block(new[] { b }, newBox, call));
             var f = e.Compile();
             var t = f();
-            AssertEx.Throws<NullReferenceException>(() => f().GetAwaiter().GetResult());
+            Assert.Throws<NullReferenceException>(() => f().GetAwaiter().GetResult());
         }
 
         [Fact]

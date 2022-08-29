@@ -17,36 +17,36 @@ namespace Tests
         public void TupleConvert_Factory_ArgumentChecking()
         {
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(null, typeof(int)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(null, typeof(int), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int, int>), new LambdaExpression[2] { null, null }));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(null, typeof(int)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(null, typeof(int), new LambdaExpression[0]));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int, int>), new LambdaExpression[2] { null, null }));
 
             // not a tuple type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant(1), typeof(ValueTuple<int>)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant(1), typeof(ValueTuple<int>), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(int), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant(1), typeof(ValueTuple<int>)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant(1), typeof(ValueTuple<int>), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(int), new LambdaExpression[0]));
 
             // mismatched tuple arities
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int>)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int>), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int>)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<int>), new LambdaExpression[0]));
 
             // invalid conversion count
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[0]));
 
             // invalid conversion signature
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<long>>)(() => 1), (Expression<Func<int, long>>)(x => x) }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<int, int, long>>)((x, y) => x), (Expression<Func<int, long>>)(x => x) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<long>>)(() => 1), (Expression<Func<int, long>>)(x => x) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<int, int, long>>)((x, y) => x), (Expression<Func<int, long>>)(x => x) }));
 
             // invalid conversion types
             // NB: exception type derived from LINQ helpers
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<bool, long>>)(b => 1), (Expression<Func<int, long>>)(x => x) }));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<int, bool>>)(_ => false), (Expression<Func<int, long>>)(x => x) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<bool, long>>)(b => 1), (Expression<Func<int, long>>)(x => x) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<long, long>), new LambdaExpression[] { (Expression<Func<int, bool>>)(_ => false), (Expression<Func<int, long>>)(x => x) }));
 
             // no conversion found
             // NB: exception type derived from LINQ helpers
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<string, bool>)));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, (2, 3))), typeof(ValueTuple<int, ValueTuple<string, bool>>)));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, 2)), typeof(ValueTuple<string, bool>)));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleConvert(Expression.Constant((1, (2, 3))), typeof(ValueTuple<int, ValueTuple<string, bool>>)));
 
             // TODO: Contravariance allowed for conversion?
         }
@@ -249,7 +249,7 @@ namespace Tests
                 var f = CreateTupleConvert<ValueTuple<int, long, int, object, DateTime>?, ValueTuple<long, int, object, int, DateTimeOffset>>(conversions);
 
                 Assert.Equal((1, 2, 3, 4, dto), f((1, 2, 3, 4, dt)));
-                AssertEx.Throws<InvalidOperationException>(() => f(null));
+                Assert.Throws<InvalidOperationException>(() => f(null));
             }
         }
 

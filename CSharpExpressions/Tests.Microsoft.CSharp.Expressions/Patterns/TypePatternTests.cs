@@ -17,16 +17,16 @@ namespace Tests
         public void TypePattern_ArgumentChecking()
         {
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpPattern.Type(type: null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(object)), type: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpPattern.Type(type: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(object)), type: null));
 
             // invalid type
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Type(typeof(void)));
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Type(typeof(int).MakeByRefType()));
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Type(typeof(int).MakePointerType()));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Type(typeof(void)));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Type(typeof(int).MakeByRefType()));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Type(typeof(int).MakePointerType()));
 
             // incompatible types
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(long)));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Type(CSharpPattern.PatternInfo(typeof(object), typeof(int)), typeof(long)));
         }
 
         [Fact]

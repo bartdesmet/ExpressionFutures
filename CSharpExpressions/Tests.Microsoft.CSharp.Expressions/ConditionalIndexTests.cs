@@ -25,16 +25,16 @@ namespace Tests
             var getInfo = propInfo.GetGetMethod(true);
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(default(Expression), propInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(expr, default(PropertyInfo)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(default(Expression), getInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(expr, default(MethodInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(default(Expression), propInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(expr, default(PropertyInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(default(Expression), getInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalIndex(expr, default(MethodInfo)));
 
             // property - NB: this is allowed (and safe) in LINQ and it is here, too
-            // AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalIndex(expr, expr.Type.GetProperty("P")));
+            // Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalIndex(expr, expr.Type.GetProperty("P")));
 
             // wrong declaring type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalIndex(other, propInfo));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalIndex(other, propInfo));
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Tests
                 () => CSharpExpression.ConditionalIndex(obj, substring, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
@@ -95,7 +95,7 @@ namespace Tests
                 () => CSharpExpression.ConditionalIndex(obj, substring, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

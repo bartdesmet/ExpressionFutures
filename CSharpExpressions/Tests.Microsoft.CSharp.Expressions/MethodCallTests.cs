@@ -44,20 +44,20 @@ namespace Tests
             var argValue = CSharpExpression.Bind(valueParameter, value);
 
             // duplicate
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Call(obj, substring, argStartIndex, argStartIndex));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Call(obj, substring, argStartIndex, argStartIndex));
 
             // unbound
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Call(obj, substring, argStartIndex));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Call(obj, substring, argStartIndex));
 
             // wrong member
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Call(obj, substring, argValue));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Call(obj, substring, argValue));
 
             // null
             var bindings = new[] { argStartIndex, argLength };
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Call(default(MethodInfo), bindings));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Call(default(MethodInfo), bindings.AsEnumerable()));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Call(obj, default(MethodInfo), bindings));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Call(obj, default(MethodInfo), bindings.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Call(default(MethodInfo), bindings));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Call(default(MethodInfo), bindings.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Call(obj, default(MethodInfo), bindings));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Call(obj, default(MethodInfo), bindings.AsEnumerable()));
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Tests
                 () => CSharpExpression.Call(null, method, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = args.Concat(args).ToArray();
@@ -111,7 +111,7 @@ namespace Tests
                 () => CSharpExpression.Call(null, method, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

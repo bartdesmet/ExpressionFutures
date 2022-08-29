@@ -16,16 +16,16 @@ namespace Tests
         public void VarPattern_ArgumentChecking()
         {
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpPattern.Var(info: null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpPattern.Var(variable: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpPattern.Var(info: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpPattern.Var(variable: null));
 
             // by-ref type
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Var(variable: Expression.Variable(typeof(int).MakeByRefType())));
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Var(info: null, variable: Expression.Variable(typeof(int).MakeByRefType())));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Var(variable: Expression.Variable(typeof(int).MakeByRefType())));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Var(info: null, variable: Expression.Variable(typeof(int).MakeByRefType())));
 
             // invalid typing
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(object), typeof(int)), variable: null)));
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), Expression.Variable(typeof(long)))));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(object), typeof(int)), variable: null)));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), Expression.Variable(typeof(long)))));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Tests
             var p = CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), variable: t));
 
             var u = Expression.Variable(typeof(long));
-            AssertEx.Throws<ArgumentException>(() => p.Update(u));
+            Assert.Throws<ArgumentException>(() => p.Update(u));
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Tests
             var t = Expression.Variable(typeof(int));
             var p = CSharpPattern.Var(CSharpPattern.ObjectPatternInfo(CSharpPattern.PatternInfo(typeof(int), typeof(int)), variable: t));
 
-            AssertEx.Throws<ArgumentException>(() => p.ChangeType(typeof(long)));
+            Assert.Throws<ArgumentException>(() => p.ChangeType(typeof(long)));
         }
 
         [Fact]

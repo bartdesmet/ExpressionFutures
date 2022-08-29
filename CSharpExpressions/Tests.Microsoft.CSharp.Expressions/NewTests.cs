@@ -44,22 +44,22 @@ namespace Tests
             var argTicks = CSharpExpression.Bind(ticksParameter, value);
 
             // duplicate
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.New(ctor, argHours, argHours));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.New(ctor, argHours, argHours));
 
             // unbound
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.New(ctor, argHours));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.New(ctor, argHours));
 
             // wrong member
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.New(ctor, argTicks));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.New(ctor, argTicks));
 
             // null
             var bindings = new[] { argHours, argMinutes };
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.New(default(ConstructorInfo), bindings));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.New(default(ConstructorInfo), bindings.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.New(default(ConstructorInfo), bindings));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.New(default(ConstructorInfo), bindings.AsEnumerable()));
 
             // static ctor
             var cctor = typeof(S).GetConstructors(BindingFlags.Static | BindingFlags.NonPublic).Single(c => c.IsStatic);
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.New(cctor));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.New(cctor));
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Tests
                 () => CSharpExpression.New(constructor, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = args.Concat(args).ToArray();
@@ -105,7 +105,7 @@ namespace Tests
                 () => CSharpExpression.New(constructor, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

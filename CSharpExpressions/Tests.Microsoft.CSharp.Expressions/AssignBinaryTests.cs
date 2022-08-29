@@ -22,7 +22,7 @@ namespace Tests
             var l = Expression.Parameter(typeof(int));
             var r = Expression.Constant(2);
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MakeBinaryAssign(CSharpExpressionType.Await, l, r, null, null, null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MakeBinaryAssign(CSharpExpressionType.Await, l, r, null, null, null));
         }
 
         [Fact]
@@ -30,8 +30,8 @@ namespace Tests
         {
             var s = Expression.Parameter(typeof(string));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(s, Expression.Default(typeof(string))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(s, Expression.Default(typeof(object))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(s, Expression.Default(typeof(string))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(s, Expression.Default(typeof(object))));
 
             // the following are valid
             Assert.NotNull(CSharpExpression.AddAssign(s, Expression.Default(typeof(string))));
@@ -46,16 +46,16 @@ namespace Tests
         public void AssignBinary_Factory_Delegate_ArgumentChecking()
         {
             // NB: LINQ checks this one
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.AddAssignChecked(Expression.Parameter(typeof(Delegate)), Expression.Default(typeof(Delegate))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.AddAssignChecked(Expression.Parameter(typeof(Delegate)), Expression.Default(typeof(Delegate))));
 
             // NB: Our library checks this one (TODO: should we make the exceptions consistent?)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.SubtractAssignChecked(Expression.Parameter(typeof(MulticastDelegate)), Expression.Default(typeof(MulticastDelegate))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.SubtractAssignChecked(Expression.Parameter(typeof(MulticastDelegate)), Expression.Default(typeof(MulticastDelegate))));
 
             var d = Expression.Parameter(typeof(Action<string>));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AddAssignChecked(d, Expression.Default(typeof(Action))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(d, Expression.Default(typeof(Action<int>))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.DivideAssign(d, Expression.Default(typeof(Action<string>))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AddAssignChecked(d, Expression.Default(typeof(Action))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.SubtractAssign(d, Expression.Default(typeof(Action<int>))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.DivideAssign(d, Expression.Default(typeof(Action<string>))));
 
             // the following are valid
             Assert.NotNull(CSharpExpression.AddAssign(d, Expression.Default(typeof(Action<string>))));
@@ -271,7 +271,7 @@ namespace Tests
             var f = Expression.Lambda<Func<byte, byte>>(CSharpExpression.AddAssignChecked(p, Expression.Constant((byte)1, typeof(byte))), p).Compile();
 
             Assert.Equal((byte)42, f(41));
-            AssertEx.Throws<OverflowException>(() => f(byte.MaxValue));
+            Assert.Throws<OverflowException>(() => f(byte.MaxValue));
         }
 
         [Fact]
@@ -356,9 +356,9 @@ namespace Tests
             var p5 = Expression.Parameter(typeof(string));
 
             // NB: Inherits exception behavior from ValidateCoalesceArgTypes.
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.NullCoalescingAssign(p0, p1));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p4, p2));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p2, p4));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.NullCoalescingAssign(p0, p1));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p4, p2));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p2, p4));
 
             // the following are valid
             CSharpExpression.NullCoalescingAssign(p2, p0);

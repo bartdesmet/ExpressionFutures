@@ -25,45 +25,45 @@ namespace Tests
             var fieldInfo = typeof(Bar).GetField(fieldName);
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(default(Expression), propName));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(expr, default(string)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(default(Expression), propInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(expr, default(PropertyInfo)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(default(Expression), getInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(expr, default(MethodInfo)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(default(Expression), fieldName));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(expr, default(string)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(default(Expression), fieldInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(expr, default(FieldInfo)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.MakeConditionalMemberAccess(default(Expression), propInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.MakeConditionalMemberAccess(expr, default(MemberInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(default(Expression), propName));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(expr, default(string)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(default(Expression), propInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(expr, default(PropertyInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(default(Expression), getInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalProperty(expr, default(MethodInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(default(Expression), fieldName));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(expr, default(string)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(default(Expression), fieldInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalField(expr, default(FieldInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.MakeConditionalMemberAccess(default(Expression), propInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.MakeConditionalMemberAccess(expr, default(MemberInfo)));
 
             // not exist
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "X"));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(expr, "X"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "X"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(expr, "X"));
 
             // static
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, expr.Type.GetProperty("SP")));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(expr, expr.Type.GetField("SF")));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "SP"));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(expr, "SF"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, expr.Type.GetProperty("SP")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(expr, expr.Type.GetField("SF")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "SP"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(expr, "SF"));
 
             // set-only
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, expr.Type.GetProperty("XP")));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "XP"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, expr.Type.GetProperty("XP")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "XP"));
 
             // indexer
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, expr.Type.GetProperty("Item")));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "Item"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, expr.Type.GetProperty("Item")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(expr, "Item"));
 
             // wrong declaring type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(other, expr.Type.GetProperty("P")));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(other, "P"));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(other, expr.Type.GetField("F")));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(other, "F"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(other, expr.Type.GetProperty("P")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalProperty(other, "P"));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(other, expr.Type.GetField("F")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalField(other, "F"));
 
             // not field or property
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MakeConditionalMemberAccess(expr, expr.Type.GetConstructors()[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MakeConditionalMemberAccess(expr, expr.Type.GetConstructors()[0]));
         }
 
         [Fact]

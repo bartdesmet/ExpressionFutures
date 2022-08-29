@@ -21,21 +21,21 @@ namespace Tests
             var continueLabel = Expression.Label();
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Do(default(Expression), test));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Do(body, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Do(default(Expression), test, breakLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Do(body, default(Expression), breakLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Do(default(Expression), test, breakLabel, continueLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Do(body, default(Expression), breakLabel, continueLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Do(default(Expression), test));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Do(body, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Do(default(Expression), test, breakLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Do(body, default(Expression), breakLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Do(default(Expression), test, breakLabel, continueLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Do(body, default(Expression), breakLabel, continueLabel));
 
             // non-bool
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Do(body, Expression.Default(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Do(body, Expression.Default(typeof(int)), breakLabel));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Do(body, Expression.Default(typeof(int)), breakLabel, continueLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Do(body, Expression.Default(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Do(body, Expression.Default(typeof(int)), breakLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Do(body, Expression.Default(typeof(int)), breakLabel, continueLabel));
 
             // labels must be void
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Do(body, test, Expression.Label(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Do(body, test, breakLabel, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Do(body, test, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Do(body, test, breakLabel, Expression.Label(typeof(int))));
         }
 
         [Fact]

@@ -24,22 +24,22 @@ namespace Tests
             var expr = Expression.Constant(42);
             
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(ParameterInfo), expr));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(parameter, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(MethodInfo), name, expr));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, default(string), expr));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, name, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(MethodInfo), 0, expr));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, 0, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(ParameterInfo), expr));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(parameter, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(MethodInfo), name, expr));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, default(string), expr));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, name, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(default(MethodInfo), 0, expr));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Bind(method, 0, default(Expression)));
 
             // can't find
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, "y", expr));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, -1, expr));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, 1, expr));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(method, 2, expr));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Bind(method, "y", expr));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Bind(method, -1, expr));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Bind(method, 1, expr));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Bind(method, 2, expr));
 
             // type mismatch
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Bind(parameter, Expression.Constant("bar")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Bind(parameter, Expression.Constant("bar")));
         }
 
         [Fact]

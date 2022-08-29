@@ -17,17 +17,17 @@ namespace Tests
         public void InterpolatedString_Factory_ArgumentChecking()
         {
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringLiteral(value: null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null, format: "X"));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null, format: "X", alignment: 1));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null, alignment: 1));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringLiteral(value: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null, format: "X"));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null, format: "X", alignment: 1));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.InterpolationStringInsert(value: null, alignment: 1));
 
             // empty format string
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.InterpolationStringInsert(Expression.Constant(1), format: ""));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.InterpolationStringInsert(Expression.Constant(1), format: ""));
 
             // invalid type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.InterpolatedString(typeof(int)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.InterpolatedString(typeof(int)));
         }
 
         [Fact]

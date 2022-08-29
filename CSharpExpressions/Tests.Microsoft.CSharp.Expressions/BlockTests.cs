@@ -25,11 +25,11 @@ namespace Tests
             var hasNull = new Expression[] { Expression.Constant(1), null, Expression.Constant(2) };
 
             // duplicate variable
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Block(dups, exprs, ret));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.Block(dups, exprs, ret));
 
             // null item
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Block(hasNull, ret));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.Block(dups, hasNull, ret));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.Block(hasNull, ret));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.Block(dups, hasNull, ret));
         }
 
         [Fact]

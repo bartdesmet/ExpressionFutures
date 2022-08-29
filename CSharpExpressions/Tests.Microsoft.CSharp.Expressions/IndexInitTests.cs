@@ -27,27 +27,27 @@ namespace Tests
             var xIndex = typeof(X).GetProperty("Item");
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(PropertyInfo), args, value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(PropertyInfo), args.AsEnumerable(), value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, default(Expression[]), value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, default(IEnumerable<Expression>), value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, args, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, args.AsEnumerable(), default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(MethodInfo), args, value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(MethodInfo), args.AsEnumerable(), value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, default(Expression[]), value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, default(IEnumerable<Expression>), value));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, args, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, args.AsEnumerable(), default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(PropertyInfo), args, value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(PropertyInfo), args.AsEnumerable(), value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, default(Expression[]), value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, default(IEnumerable<Expression>), value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, args, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(index, args.AsEnumerable(), default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(MethodInfo), args, value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(default(MethodInfo), args.AsEnumerable(), value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, default(Expression[]), value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, default(IEnumerable<Expression>), value));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, args, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexInit(setter, args.AsEnumerable(), default(Expression)));
 
             // only getter
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexInit(xIndex, new[] { value }, value));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexInit(xIndex, new[] { value }, value));
 
             // argument types
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexInit(index, new[] { value }, value));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexInit(setter, new[] { value }, value));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexInit(index, args, args[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexInit(setter, args, args[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexInit(index, new[] { value }, value));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexInit(setter, new[] { value }, value));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexInit(index, args, args[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexInit(setter, args, args[0]));
         }
 
         [Fact]

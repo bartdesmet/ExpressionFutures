@@ -25,37 +25,37 @@ namespace Tests
             var continueLabel = Expression.Label();
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.For(initializers, test, iterators, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.For(initializers, test, iterators, default(Expression), breakLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.For(initializers, test, iterators, default(Expression), breakLabel, continueLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, default(Expression), breakLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, default(Expression), breakLabel, continueLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.For(initializers, test, iterators, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.For(initializers, test, iterators, default(Expression), breakLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.For(initializers, test, iterators, default(Expression), breakLabel, continueLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, default(Expression), breakLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, default(Expression), breakLabel, continueLabel));
 
             // non-bool
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers, Expression.Default(typeof(int)), iterators, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers, Expression.Default(typeof(int)), iterators, body, breakLabel));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers, Expression.Default(typeof(int)), iterators, body, breakLabel, continueLabel));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, Expression.Default(typeof(int)), iterators, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, Expression.Default(typeof(int)), iterators, body, breakLabel));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, Expression.Default(typeof(int)), iterators, body, breakLabel, continueLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers, Expression.Default(typeof(int)), iterators, body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers, Expression.Default(typeof(int)), iterators, body, breakLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers, Expression.Default(typeof(int)), iterators, body, breakLabel, continueLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, Expression.Default(typeof(int)), iterators, body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, Expression.Default(typeof(int)), iterators, body, breakLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, Expression.Default(typeof(int)), iterators, body, breakLabel, continueLabel));
 
             // labels must be void
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers, test, iterators, body, Expression.Label(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers, test, iterators, body, breakLabel, Expression.Label(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, Expression.Label(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers, test, iterators, body, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers, test, iterators, body, breakLabel, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel, Expression.Label(typeof(int))));
 
             // duplicate variable
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers.Concat(initializers), test, iterators, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i, i }, initializers, test, iterators, body, breakLabel, continueLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers.Concat(initializers), test, iterators, body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i, i }, initializers, test, iterators, body, breakLabel, continueLabel));
 
             // invalid initializer
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { Expression.Add(i, i) }, test, iterators, body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { Expression.Add(i, i) }, test, iterators, body));
 
             // duplicate labels
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(initializers, test, iterators, body, breakLabel, breakLabel));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel, breakLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(initializers, test, iterators, body, breakLabel, breakLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.For(new[] { i }, initializers, test, iterators, body, breakLabel, breakLabel));
         }
 
         [Fact]

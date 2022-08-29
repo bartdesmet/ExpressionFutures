@@ -328,7 +328,7 @@ namespace Tests
         [Fact]
         public void Dynamic_Unary_Factory_ArgumentChecking()
         {
-            AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Add, Expression.Constant(0)));
+            Assert.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicUnary(ExpressionType.Add, Expression.Constant(0)));
         }
 
         [Fact]
@@ -437,7 +437,7 @@ namespace Tests
         [Fact]
         public void Dynamic_Binary_Factory_ArgumentChecking()
         {
-            AssertEx.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Negate, Expression.Constant(0), Expression.Constant(0)));
+            Assert.Throws<NotSupportedException>(() => DynamicCSharpExpression.MakeDynamicBinary(ExpressionType.Negate, Expression.Constant(0), Expression.Constant(0)));
         }
 
         [Fact]

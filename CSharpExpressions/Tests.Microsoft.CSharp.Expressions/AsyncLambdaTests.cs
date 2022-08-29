@@ -52,14 +52,14 @@ namespace Tests
         {
             var p = Expression.Parameter(typeof(int));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), p, p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), new[] { p, p }.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), p, p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), new[] { p, p }.AsEnumerable()));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(Action<int, int>), Expression.Empty(), p, p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(Action<int, int>), Expression.Empty(), new[] { p, p }.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(Action<int, int>), Expression.Empty(), p, p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(Action<int, int>), Expression.Empty(), new[] { p, p }.AsEnumerable()));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<int, int>>(Expression.Empty(), p, p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<int, int>>(Expression.Empty(), new[] { p, p }.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<int, int>>(Expression.Empty(), p, p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<int, int>>(Expression.Empty(), new[] { p, p }.AsEnumerable()));
         }
 
         [Fact]
@@ -67,14 +67,14 @@ namespace Tests
         {
             var p = Expression.Parameter(typeof(int).MakeByRefType());
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), new[] { p }.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(Expression.Empty(), new[] { p }.AsEnumerable()));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(ByRef), Expression.Empty(), p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(ByRef), Expression.Empty(), new[] { p }.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(ByRef), Expression.Empty(), p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(ByRef), Expression.Empty(), new[] { p }.AsEnumerable()));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<ByRef>(Expression.Empty(), p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<ByRef>(Expression.Empty(), new[] { p }.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<ByRef>(Expression.Empty(), p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<ByRef>(Expression.Empty(), new[] { p }.AsEnumerable()));
         }
 
         [Fact]
@@ -82,26 +82,26 @@ namespace Tests
         {
             var p = Expression.Parameter(typeof(int));
 
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(default(Expression), p));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(default(Expression), new[] { p }.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(default(Expression), p));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(default(Expression), new[] { p }.AsEnumerable()));
 
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(typeof(Action<int>), default(Expression), p));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(typeof(Action<int>), default(Expression), new[] { p }.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(typeof(Action<int>), default(Expression), p));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda(typeof(Action<int>), default(Expression), new[] { p }.AsEnumerable()));
 
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda<Action<int>>(default(Expression), p));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda<Action<int>>(default(Expression), new[] { p }.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda<Action<int>>(default(Expression), p));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.AsyncLambda<Action<int>>(default(Expression), new[] { p }.AsEnumerable()));
         }
 
         [Fact]
         public void AsyncLambda_Factory_ArgumentChecking_MustHaveDelegateType()
         {
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<int>(Expression.Empty()));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<MulticastDelegate>(Expression.Empty()));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Delegate>(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<int>(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<MulticastDelegate>(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Delegate>(Expression.Empty()));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(int), Expression.Empty()));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(MulticastDelegate), Expression.Empty()));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(Delegate), Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(int), Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(MulticastDelegate), Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda(typeof(Delegate), Expression.Empty()));
         }
 
         [Fact]
@@ -109,23 +109,23 @@ namespace Tests
         {
             var p = Expression.Parameter(typeof(int));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action>(Expression.Empty(), p));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<int>>(Expression.Empty()));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<string>>(Expression.Empty(), p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action>(Expression.Empty(), p));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<int>>(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Action<string>>(Expression.Empty(), p));
         }
 
         [Fact]
         public void AsyncLambda_Factory_ArgumentChecking_CompatibleReturnType()
         {
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Empty()));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<Task<long>>>(Expression.Constant(1)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<Task<string>>>(Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<Task<int>>>(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<Task<long>>>(Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<Task<string>>>(Expression.Constant(1)));
         }
 
         [Fact]
         public void AsyncLambda_Factory_ArgumentChecking_MustHaveAsyncReturnType()
         {
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<int>>(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.AsyncLambda<Func<int>>(Expression.Empty()));
         }
 
         [Fact]

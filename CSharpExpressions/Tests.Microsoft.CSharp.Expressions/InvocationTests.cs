@@ -42,18 +42,18 @@ namespace Tests
             var function = Expression.Constant(new Func<int, int, int>((x, y) => x + y));
 
             // duplicate
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Invoke(function, argArg1, argArg1));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Invoke(function, argArg1, argArg1));
 
             // unbound
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Invoke(function, argArg1));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Invoke(function, argArg1));
 
             // wrong member
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Invoke(function, argValue));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Invoke(function, argValue));
 
             // null
             var bindings = new[] { argArg1, argArg2 };
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Invoke(default(Expression), bindings));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Invoke(default(Expression), bindings.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Invoke(default(Expression), bindings));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Invoke(default(Expression), bindings.AsEnumerable()));
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Tests
                 () => CSharpExpression.Invoke(function, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
@@ -98,7 +98,7 @@ namespace Tests
                 () => CSharpExpression.Invoke(function, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

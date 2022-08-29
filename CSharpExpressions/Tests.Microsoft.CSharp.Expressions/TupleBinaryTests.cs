@@ -17,63 +17,63 @@ namespace Tests
         public void TupleBinary_Factory_ArgumentChecking()
         {
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(null, Expression.Constant((1, 2))));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(null, Expression.Constant((1, 2)), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[2] { null, null }));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(null, Expression.Constant((1, 2))));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(null, Expression.Constant((1, 2)), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[2] { null, null }));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(null, Expression.Constant((1, 2))));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(null, Expression.Constant((1, 2)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[2] { null, null }));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(null, Expression.Constant((1, 2))));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(null, Expression.Constant((1, 2)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), null, new LambdaExpression[0]));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[2] { null, null }));
 
             // not a tuple type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant(1), Expression.Constant((1, 2))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant(1), Expression.Constant((1, 2)), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant(1), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant(1), Expression.Constant((1, 2))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant(1), Expression.Constant((1, 2)), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant(1), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant(1), Expression.Constant((1, 2))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant(1), Expression.Constant((1, 2)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant(1), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant(1), Expression.Constant((1, 2))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant(1), Expression.Constant((1, 2)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant(1), new LambdaExpression[0]));
 
             // mismatched tuple arities
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3)), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2, 3)), new LambdaExpression[0]));
 
             // invalid check count
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2)), Expression.Constant((1, 2)), new LambdaExpression[0]));
 
             // invalid check signature
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int>>)(() => 1), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int>>)(x => x), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int, bool>>)((x, y, z) => x == y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int>>)(() => 1), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int>>)(x => x), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int, bool>>)((x, y, z) => x == y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int>>)(() => 1), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int>>)(x => x), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int, bool>>)((x, y, z) => x == y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int>>)(() => 1), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int>>)(x => x), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int, bool>>)((x, y, z) => x == y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
 
             // invalid check parameter types
             // NB: exception type derived from LINQ helpers
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
 
             // invalid check return type
             // NB: exception type derived from LINQ helpers
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
 
             // can't infer equality check
             // NB: exception type derived from LINQ helpers
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1L, 2)), Expression.Constant((1, 2))));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, (2, 3))), Expression.Constant((1, 2L))));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2L)), Expression.Constant((1, (2, 3)))));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1L, 2)), Expression.Constant((1, 2))));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, (2, 3))), Expression.Constant((1, 2L))));
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2L)), Expression.Constant((1, (2, 3)))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1L, 2)), Expression.Constant((1, 2))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, (2, 3))), Expression.Constant((1, 2L))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, 2L)), Expression.Constant((1, (2, 3)))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1L, 2)), Expression.Constant((1, 2))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, (2, 3))), Expression.Constant((1, 2L))));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, 2L)), Expression.Constant((1, (2, 3)))));
 
             // TODO: Contravariance allowed for checks?
         }

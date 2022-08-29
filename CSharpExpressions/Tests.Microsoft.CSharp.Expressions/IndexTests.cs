@@ -43,23 +43,23 @@ namespace Tests
             var argValue = CSharpExpression.Bind(valueParameter, value);
 
             // duplicate
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(obj, substring, argStartIndex, argStartIndex));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Index(obj, substring, argStartIndex, argStartIndex));
 
             // unbound
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(obj, substring, argLength));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Index(obj, substring, argLength));
 
             // wrong member
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(obj, substring, argValue));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Index(obj, substring, argValue));
 
             // null
             var bindings = new[] { argStartIndex, argLength };
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(default(Expression), substring, bindings));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(default(Expression), substring, bindings.AsEnumerable()));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(obj, default(PropertyInfo), bindings));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Index(obj, default(PropertyInfo), bindings.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Index(default(Expression), substring, bindings));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Index(default(Expression), substring, bindings.AsEnumerable()));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Index(obj, default(PropertyInfo), bindings));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Index(obj, default(PropertyInfo), bindings.AsEnumerable()));
 
             // only setter
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Index(Expression.Default(typeof(X)), typeof(X).GetProperty("Item")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Index(Expression.Default(typeof(X)), typeof(X).GetProperty("Item")));
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace Tests
                 () => CSharpExpression.Index(obj, substring, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
@@ -120,7 +120,7 @@ namespace Tests
                 () => CSharpExpression.Index(obj, substring, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

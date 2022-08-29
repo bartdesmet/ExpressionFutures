@@ -21,8 +21,8 @@ namespace Tests
             var expr = Expression.Default(typeof(Task<int>));
             var getAwaiter = expr.Type.GetMethod("GetAwaiter");
 
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Await(default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Await(default(Expression), getAwaiter));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Await(default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Await(default(Expression), getAwaiter));
         }
 
         [Fact]
@@ -31,28 +31,28 @@ namespace Tests
             foreach (var t in new[] { typeof(A1), typeof(A2), typeof(A3) })
             {
                 var getAwaiter = t.GetMethod("GetAwaiter");
-                AssertEx.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t)));
-                AssertEx.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t), getAwaiter));
+                Assert.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t)));
+                Assert.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t), getAwaiter));
 
                 if (getAwaiter.IsGenericMethod)
                 {
-                    AssertEx.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t), getAwaiter.MakeGenericMethod(typeof(int))));
+                    Assert.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t), getAwaiter.MakeGenericMethod(typeof(int))));
                 }
             }
 
             foreach (var getAwaiter in this.GetType().GetMethods(BindingFlags.Static | BindingFlags.NonPublic).Where(m => m.Name.StartsWith("GetAwaiterA4")))
             {
-                AssertEx.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(typeof(A4)), getAwaiter));
+                Assert.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(typeof(A4)), getAwaiter));
 
                 if (getAwaiter.IsGenericMethod)
                 {
-                    AssertEx.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(typeof(A4)), getAwaiter.MakeGenericMethod(typeof(int))));
+                    Assert.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(typeof(A4)), getAwaiter.MakeGenericMethod(typeof(int))));
                 }
             }
 
             foreach (var t in new[] { typeof(A4), typeof(A5), typeof(A6), typeof(A7), typeof(A8), typeof(A9), typeof(A10), typeof(A11), typeof(A12) })
             {
-                AssertEx.Throws<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t)));
+                Assert.ThrowsAny<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t)));
             }
         }
 
@@ -89,7 +89,7 @@ namespace Tests
             Assert.Same(expr, expr.Reduce());
 
             var f = Expression.Lambda<Func<int>>(expr);
-            AssertEx.Throws<ArgumentException>(() => f.Compile());
+            Assert.Throws<ArgumentException>(() => f.Compile());
         }
 
         [Fact]

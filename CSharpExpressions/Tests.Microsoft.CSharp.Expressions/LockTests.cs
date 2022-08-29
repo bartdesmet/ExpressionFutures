@@ -20,12 +20,12 @@ namespace Tests
             var body = Expression.Empty();
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Lock(default(Expression), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Lock(@lock, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Lock(default(Expression), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Lock(@lock, default(Expression)));
 
             // value type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Lock(Expression.Default(typeof(int)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Lock(Expression.Default(typeof(int?)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Lock(Expression.Default(typeof(int)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Lock(Expression.Default(typeof(int?)), body));
         }
 
         [Fact]

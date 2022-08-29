@@ -24,14 +24,14 @@ namespace Tests
             var methodInfo = typeof(Bar).GetMethod(methodName);
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalCall(default(Expression), methodInfo));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalCall(expr, default(MethodInfo)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalCall(default(Expression), methodInfo));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalCall(expr, default(MethodInfo)));
 
             // static
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(expr, expr.Type.GetMethod("Qux")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(expr, expr.Type.GetMethod("Qux")));
 
             // wrong declaring type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(other, methodInfo));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(other, methodInfo));
         }
 
         [Fact]
@@ -43,15 +43,15 @@ namespace Tests
             var reverse = MethodInfoOf(() => Ext.Reverse(default(string)));
 
             // needs instance
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(null, reverse, new Expression[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(null, reverse, new[] { s }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(null, reverse, new Expression[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(null, reverse, new[] { s }));
 
             // duplicate binding
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(s, reverse, new[] { s }));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(s, reverse, CSharpExpression.Bind(reverse.GetParameters()[0], s)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(s, reverse, new[] { s }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(s, reverse, CSharpExpression.Bind(reverse.GetParameters()[0], s)));
 
             // wrong type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(x, reverse));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalCall(x, reverse));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Tests
                 () => CSharpExpression.ConditionalCall(obj, method, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = args.Concat(args).ToArray();
@@ -100,7 +100,7 @@ namespace Tests
                 () => CSharpExpression.ConditionalCall(obj, method, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

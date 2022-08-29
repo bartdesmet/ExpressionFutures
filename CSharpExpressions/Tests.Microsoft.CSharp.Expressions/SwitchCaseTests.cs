@@ -21,58 +21,58 @@ namespace Tests
             var objs = new object[] { 1, 2 };
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(int[]), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(IEnumerable<int>), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(object[]), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(IEnumerable<object>), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(vals, default(Expression[])));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(vals, default(IEnumerable<Expression>)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(objs, default(Expression[])));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(objs, default(IEnumerable<Expression>)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCaseDefault(default(Expression[])));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCaseDefault(default(IEnumerable<Expression>)));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(int[]), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(IEnumerable<int>), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(object[]), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(default(IEnumerable<object>), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(vals, default(Expression[])));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(vals, default(IEnumerable<Expression>)));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(objs, default(Expression[])));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCase(objs, default(IEnumerable<Expression>)));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCaseDefault(default(Expression[])));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.SwitchCaseDefault(default(IEnumerable<Expression>)));
 
             // empty
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Array.Empty<int>(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Enumerable.Empty<int>(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Array.Empty<object>(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Enumerable.Empty<object>(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(vals, Array.Empty<Expression>()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(vals, Enumerable.Empty<Expression>()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(objs, Array.Empty<Expression>()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(objs, Enumerable.Empty<Expression>()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCaseDefault(Array.Empty<Expression>()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCaseDefault(Enumerable.Empty<Expression>()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Array.Empty<int>(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Enumerable.Empty<int>(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Array.Empty<object>(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(Enumerable.Empty<object>(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(vals, Array.Empty<Expression>()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(vals, Enumerable.Empty<Expression>()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(objs, Array.Empty<Expression>()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(objs, Enumerable.Empty<Expression>()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCaseDefault(Array.Empty<Expression>()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCaseDefault(Enumerable.Empty<Expression>()));
 
             // switch type
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }, body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }, body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }, body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new double[] { 0.0 }.AsEnumerable(), body.AsEnumerable()));
 
             // duplicate value
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 1, 2 }, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }, body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 1, 2 }, body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }, body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }.AsEnumerable(), body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }, body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 1, 2 }, body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }, body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }, body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 1, 2 }, body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }, body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new int[] { 1, 2, 1 }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }, body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2, 1 }.AsEnumerable(), body.AsEnumerable()));
 
             // inconsistent typing
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, "foo", 1 }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { "foo", null, 1 }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2L }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, 1, 2L }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, null, 2L }.AsEnumerable(), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, "foo", 1 }.AsEnumerable(), body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { "foo", null, 1 }.AsEnumerable(), body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2L }.AsEnumerable(), body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, 1, 2L }.AsEnumerable(), body.AsEnumerable()));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, null, 2L }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, "foo", 1 }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { "foo", null, 1 }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2L }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, 1, 2L }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, null, 2L }.AsEnumerable(), body));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, "foo", 1 }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { "foo", null, 1 }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, 2L }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { null, 1, 2L }.AsEnumerable(), body.AsEnumerable()));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.SwitchCase(new object[] { 1, null, 2L }.AsEnumerable(), body.AsEnumerable()));
 
             // those are ok
             CSharpStatement.SwitchCase(new int?[] { null, 1 }, body);

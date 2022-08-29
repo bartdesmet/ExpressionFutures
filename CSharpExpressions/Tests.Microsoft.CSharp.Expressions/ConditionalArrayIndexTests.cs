@@ -23,21 +23,21 @@ namespace Tests
             var indexes = new[] { Expression.Constant(1) };
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalArrayIndex(default(Expression), indexes));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalArrayIndex(array, default(Expression[])));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalArrayIndex(array, default(IEnumerable<Expression>)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalArrayIndex(default(Expression), indexes));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalArrayIndex(array, default(Expression[])));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalArrayIndex(array, default(IEnumerable<Expression>)));
 
             // not an array
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(long))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(long))));
 
             // wrong amount of indexes
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[]))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[])), Expression.Constant(1), Expression.Constant(2)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,]))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,])), Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[]))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[])), Expression.Constant(1), Expression.Constant(2)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,]))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,])), Expression.Constant(1)));
 
             // indexes not of type int
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,])), Expression.Constant(1), Expression.Constant("bar")));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalArrayIndex(Expression.Default(typeof(string[,])), Expression.Constant(1), Expression.Constant("bar")));
         }
 
         [Fact]

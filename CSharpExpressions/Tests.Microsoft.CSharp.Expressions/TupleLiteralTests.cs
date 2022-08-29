@@ -39,7 +39,7 @@ namespace Tests
             var names = Enumerable.Range(1, tupleTypes.Length).Select(i => ((char)('a' + i)).ToString()).ToArray();
 
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.TupleLiteral(null, args, null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleLiteral(null, args, null));
 
             // valid
             for (int i = 0; i < tupleTypes.Length; i++)
@@ -50,40 +50,40 @@ namespace Tests
             }
 
             // argument count
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type1, args.Take(2), null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(1), null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(3), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type1, args.Take(2), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(1), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(3), null));
 
             // name count
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(2), new string[0]));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(2), names.Take(1)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(2), names.Take(3)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(2), new string[0]));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(2), names.Take(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, args.Take(2), names.Take(3)));
 
             // invalid tuple type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(int), args.Take(1), null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(List<int>), args.Take(1), null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(Tuple<int>), args.Take(1), null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(ValueTuple<int, bool, string, char, long, double, byte, decimal>), args.Take(8), null)); // Rest needs to be nested tuple
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(int), args.Take(1), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(List<int>), args.Take(1), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(Tuple<int>), args.Take(1), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(typeof(ValueTuple<int, bool, string, char, long, double, byte, decimal>), args.Take(8), null)); // Rest needs to be nested tuple
 
             // invalid argument type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, new[] { args[0], args[2] }, null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, new[] { args[1], args[0] }, null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, new[] { args[0], args[2] }, null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(type2, new[] { args[1], args[0] }, null));
         }
 
         [Fact]
         public void TupleLiteral_Factory_ArgumentChecking_InferType()
         {
             // empty
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral());
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral());
 
             // null component
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(new Expression[] { null }));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.TupleLiteral(new Expression[] { null }));
 
             // void
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(Expression.Empty()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(Expression.Empty()));
 
             // name count mismatch
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(new Expression[] { Expression.Constant(1) }, new string[] { "x", "y" }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleLiteral(new Expression[] { Expression.Constant(1) }, new string[] { "x", "y" }));
         }
 
         [Fact]

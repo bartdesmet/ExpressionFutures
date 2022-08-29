@@ -26,13 +26,13 @@ namespace Tests
             var continueLabel = Expression.Label();
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ForEach(default(ParameterExpression), collection, body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ForEach(variable, default(Expression), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ForEach(variable, collection, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ForEach(default(ParameterExpression), collection, body));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ForEach(variable, default(Expression), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ForEach(variable, collection, default(Expression)));
 
             // labels must be void
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, Expression.Label(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, Expression.Label(typeof(int))));
 
             // conversion checks
             var p1_int32 = Expression.Parameter(typeof(int));
@@ -41,18 +41,18 @@ namespace Tests
             var conv1 = Expression.Lambda(Expression.Default(typeof(int)), p1_int32, p2_int32);
             var conv2 = Expression.Lambda(Expression.Default(typeof(int)), p3_string);
             var conv3 = Expression.Lambda(Expression.Default(typeof(string)), p1_int32);
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conv1));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conv2));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conv3));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conv1));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conv2));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, collection, body, breakLabel, continueLabel, conv3));
 
             // pattern mismatch
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(int)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern1>)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern2>)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern3>)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern4>)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern5>)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(MoreThanOneEnumerable)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(int)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern1>)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern2>)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern3>)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern4>)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(Enumerable<NoPattern5>)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ForEach(variable, Expression.Default(typeof(MoreThanOneEnumerable)), body));
         }
 
         class Enumerable<T>

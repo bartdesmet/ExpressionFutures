@@ -51,20 +51,20 @@ namespace Tests
             var t = Expression.Parameter(typeof(SliceAndIndexList));
 
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(null, i, StringLength, StringChars));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(s, null, StringLength, StringChars));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(null, i, StringLength, StringChars));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(s, null, StringLength, StringChars));
 
             // can't find Length or Count property
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, i, default(PropertyInfo), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, i, default(MethodInfo), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, r, default(PropertyInfo), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, r, default(MethodInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, i, default(PropertyInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, i, default(MethodInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, r, default(PropertyInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(o, r, default(MethodInfo), null));
 
             // can't find indexer or slice
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, i, default(PropertyInfo), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, i, default(MethodInfo), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, r, default(PropertyInfo), null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, r, default(MethodInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, i, default(PropertyInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, i, default(MethodInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, r, default(PropertyInfo), null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.IndexerAccess(a, r, default(MethodInfo), null));
 
             // auto-resolve indexer
             var strIndx1 = CSharpExpression.IndexerAccess(s, i, default(MethodInfo), null);
@@ -109,29 +109,29 @@ namespace Tests
             Assert.NotNull(CSharpExpression.IndexerAccess(c, i, CLength, CIndexer.GetMethod));
             Assert.NotNull(CSharpExpression.IndexerAccess(c, r, CLength, CSlice));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(s, o, StringLength, StringChars)); // invalid index type
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(s, o, StringLength, StringChars)); // invalid index type
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty(nameof(C.LengthWriteOnly)), CIndexer)); // no getter
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty(nameof(C.LengthString)), CIndexer)); // not int
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty(nameof(C.LengthStatic)), CIndexer)); // not instance
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty("Item", new[] { typeof(string) }), CIndexer)); // not a property
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, StringLength, CIndexer)); // wrong declaring type
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty(nameof(C.LengthWriteOnly)), CIndexer)); // no getter
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty(nameof(C.LengthString)), CIndexer)); // not int
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty(nameof(C.LengthStatic)), CIndexer)); // not instance
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, typeof(C).GetProperty("Item", new[] { typeof(string) }), CIndexer)); // not a property
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, StringLength, CIndexer)); // wrong declaring type
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, typeof(C).GetField(nameof(C.LengthField)))); // not an indexer
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, CSlice)); // not an indexer
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, typeof(C).GetProperty("Item", new[] { typeof(string) }))); // not int
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, typeof(C).GetProperty("Item", new[] { typeof(int), typeof(int) }))); // not (int)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, StringChars)); // wrong declaring type
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, typeof(C).GetField(nameof(C.LengthField)))); // not an indexer
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, CSlice)); // not an indexer
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, typeof(C).GetProperty("Item", new[] { typeof(string) }))); // not int
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, typeof(C).GetProperty("Item", new[] { typeof(int), typeof(int) }))); // not (int)
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, i, CLength, StringChars)); // wrong declaring type
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, CLength)); // not a method
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, StringSubstring)); // wrong declaring type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetField(nameof(C.LengthField)))); // not a method
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.SliceStatic)))); // not instance
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice0)))); // not (int, int)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice1)))); // not (int, int)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice2X)))); // not (int, int)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice2Y)))); // not (int, int)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice3)))); // not (int, int)
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, CLength)); // not a method
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, StringSubstring)); // wrong declaring type
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetField(nameof(C.LengthField)))); // not a method
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.SliceStatic)))); // not instance
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice0)))); // not (int, int)
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice1)))); // not (int, int)
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice2X)))); // not (int, int)
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice2Y)))); // not (int, int)
+            Assert.Throws<ArgumentException>(() => CSharpExpression.IndexerAccess(c, r, CLength, typeof(C).GetMethod(nameof(C.Slice3)))); // not (int, int)
         }
 
         [Fact]

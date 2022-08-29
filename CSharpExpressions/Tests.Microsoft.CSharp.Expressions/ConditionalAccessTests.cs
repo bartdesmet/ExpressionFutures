@@ -23,30 +23,30 @@ namespace Tests
             var wnn = Expression.Constant(1);
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(default(Expression), nrc, wnn));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(rec, default(ConditionalReceiver), wnn));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(rec, nrc, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(default(Expression), nrc, wnn));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(rec, default(ConditionalReceiver), wnn));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalAccess(rec, nrc, default(Expression)));
 
             // invalid receiver type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Empty(), nrc, wnn));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(int)), nrc, wnn));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(int).MakeByRefType()), nrc, wnn));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Empty(), nrc, wnn));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(int)), nrc, wnn));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(int).MakeByRefType()), nrc, wnn));
 
             // type mismatch receiver
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(long?)), nrc, wnn));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(string)), nrc, wnn));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(long?)), nrc, wnn));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalAccess(Expression.Default(typeof(string)), nrc, wnn));
         }
 
         [Fact]
         public void ConditionalReceiver_ArgumentChecking()
         {
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalReceiver(default(Type)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalReceiver(default(Type)));
 
             // invalid receiver type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(void)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int?)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int).MakeByRefType()));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(void)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int?)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ConditionalReceiver(typeof(int).MakeByRefType()));
         }
 
         [Fact]

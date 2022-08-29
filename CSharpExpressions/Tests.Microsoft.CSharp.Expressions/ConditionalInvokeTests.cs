@@ -20,7 +20,7 @@ namespace Tests
             var expr = Expression.Default(typeof(Func<int>));
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalInvoke(default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ConditionalInvoke(default(Expression)));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Tests
                 () => CSharpExpression.ConditionalInvoke(function, tooLittle.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
 
             var tooMany = new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) };
@@ -65,7 +65,7 @@ namespace Tests
                 () => CSharpExpression.ConditionalInvoke(function, tooMany.AsEnumerable()),
             })
             {
-                AssertEx.Throws<ArgumentException>(() => f());
+                Assert.Throws<ArgumentException>(() => f());
             }
         }
 

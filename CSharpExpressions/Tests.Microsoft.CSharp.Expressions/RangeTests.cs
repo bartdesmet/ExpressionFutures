@@ -20,38 +20,38 @@ namespace Tests
             var argn2 = Expression.Constant(new Index(1), typeof(Index?));
 
             // invalid method
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.Generic)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.DoesNotReturnRange)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NotStatic)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.Generic)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.DoesNotReturnRange)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NotStatic)), typeof(Range)));
 
             // invalid method (argument count mismatch)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NoArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.ThreeArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NoArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.ThreeArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NoArgs)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.OneArg)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.ThreeArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NoArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.ThreeArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NoArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.ThreeArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.NoArgs)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.OneArg)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.ThreeArgs)), typeof(Range)));
 
             // invalid method (argument type)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.OneArgInvalid)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.OneArgInvalid)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgsInvalid1)), typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgsInvalid2)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, null, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.OneArgInvalid)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(null, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.OneArgInvalid)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgsInvalid1)), typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, typeof(InvalidRangeFactoryMethods).GetMethod(nameof(InvalidRangeFactoryMethods.TwoArgsInvalid2)), typeof(Range)));
 
             // invalid type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, method: null, typeof(int)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, method: null, typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, method: null, typeof(Range?)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(argn1, arg2, method: null, typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, argn2, method: null, typeof(Range)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(argn1, argn2, method: null, typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, method: null, typeof(int)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, method: null, typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, arg2, method: null, typeof(Range?)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(argn1, arg2, method: null, typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(arg1, argn2, method: null, typeof(Range)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(argn1, argn2, method: null, typeof(Range)));
 
             // invalid operand type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(Expression.Constant(0L), null));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Range(null, Expression.Constant(1L)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(Expression.Constant(0L), null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Range(null, Expression.Constant(1L)));
         }
 
         [Fact]

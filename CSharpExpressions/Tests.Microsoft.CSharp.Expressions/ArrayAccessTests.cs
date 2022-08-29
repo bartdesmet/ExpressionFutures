@@ -27,10 +27,10 @@ namespace Tests
             var r = Expression.Constant(new Range());
 
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(null, i));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new Expression[] { null }));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new List<Expression> { null }));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(null, i));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new Expression[] { null }));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.ArrayAccess(xs, new List<Expression> { null }));
 
             // the following are valid
             Assert.NotNull(CSharpExpression.ArrayAccess(xs, i));
@@ -38,11 +38,11 @@ namespace Tests
             Assert.NotNull(CSharpExpression.ArrayAccess(xs, r));
             Assert.NotNull(CSharpExpression.ArrayAccess(xss, i, i));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xs, s)); // invalid index type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, i)); // wrong rank
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, j, j)); // no Index support for multi-dimensional
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, r, r)); // no Range support for multi-dimensional
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(s, i)); // invalid array type
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xs, s)); // invalid index type
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, i)); // wrong rank
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, j, j)); // no Index support for multi-dimensional
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(xss, r, r)); // no Range support for multi-dimensional
+            Assert.Throws<ArgumentException>(() => CSharpExpression.ArrayAccess(s, i)); // invalid array type
         }
 
         // TODO: Tests when used in assignment positions, e.g. xs[1..2] = i is invalid.

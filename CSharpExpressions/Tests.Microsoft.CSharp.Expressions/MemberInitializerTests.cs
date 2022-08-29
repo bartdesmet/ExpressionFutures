@@ -16,22 +16,22 @@ namespace Tests
         public void MemberInitializer_Factory_ArgumentChecking()
         {
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.MemberInitializer(member: null, Expression.Constant(1)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetField(nameof(Foo.Bar)), expression: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.MemberInitializer(member: null, Expression.Constant(1)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetField(nameof(Foo.Bar)), expression: null));
 
             // invalid member type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetConstructor(Type.EmptyTypes), Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetConstructor(Type.EmptyTypes), Expression.Constant(1)));
 
             // static field or property
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetField(nameof(Foo.StaticBar)), Expression.Constant(1)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.StaticQux)), Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetField(nameof(Foo.StaticBar)), Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.StaticQux)), Expression.Constant(1)));
 
             // indexer
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(List<int>).GetProperty("Item"), Expression.Constant(1)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(List<int>).GetProperty("Item"), Expression.Constant(1)));
 
             // incompatible types
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Bar)), Expression.Constant(42L)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Qux)), Expression.Constant("bar")));
+            Assert.ThrowsAny<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Bar)), Expression.Constant(42L)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MemberInitializer(typeof(Foo).GetProperty(nameof(Foo.Qux)), Expression.Constant("bar")));
         }
 
         [Fact]

@@ -21,25 +21,25 @@ namespace Tests
             var inits = Enumerable.Range(0, 30).Select(i => Expression.Constant(i));
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.NewMultidimensionalArrayInit(default(Type), bounds, inits));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, default(int[]), inits));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, default(IEnumerable<Expression>)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.NewMultidimensionalArrayInit(default(Type), bounds, inits));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, default(int[]), inits));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, default(IEnumerable<Expression>)));
 
             // typeof(void)
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(void), bounds, inits));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(void), bounds, inits));
 
             // no bounds
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, new int[0], inits));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, new int[0], inits));
 
             // bound < 0
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, new[] { 2, -1, 5 }, inits));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, new[] { 2, -1, 5 }, inits));
 
             // wrong # of inits
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Take(29)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Concat(inits).Take(31)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Take(29)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Concat(inits).Take(31)));
 
             // element mismatch (NB: exception type comes from LINQ)
-            AssertEx.Throws<InvalidOperationException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(long), bounds, inits));
+            Assert.Throws<InvalidOperationException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(long), bounds, inits));
         }
 
         [Fact]
@@ -71,17 +71,17 @@ namespace Tests
             var res = CSharpExpression.NewMultidimensionalArrayInit(typeof(int), new[] { 2, 3 }, inits);
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => res.GetExpression(null));
+            Assert.Throws<ArgumentNullException>(() => res.GetExpression(null));
 
             // rank mismatch
-            AssertEx.Throws<ArgumentException>(() => res.GetExpression());
-            AssertEx.Throws<ArgumentException>(() => res.GetExpression(1));
+            Assert.Throws<ArgumentException>(() => res.GetExpression());
+            Assert.Throws<ArgumentException>(() => res.GetExpression(1));
 
             // out of range
-            AssertEx.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(-1, 0));
-            AssertEx.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(2, 0));
-            AssertEx.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(0, -1));
-            AssertEx.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(0, 4));
+            Assert.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(-1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(2, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => res.GetExpression(0, 4));
         }
 
         [Fact]

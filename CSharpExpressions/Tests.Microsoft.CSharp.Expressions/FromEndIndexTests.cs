@@ -15,27 +15,27 @@ namespace Tests
         public void FromEndIndex_Factory_ArgumentChecking()
         {
             // null checks
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.FromEndIndex(operand: null));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.FromEndIndex(operand: null, method: null, type: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.FromEndIndex(operand: null));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.FromEndIndex(operand: null, method: null, type: null));
 
             // invalid operand type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(42L)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(42L), method: null, type: null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(42L)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(42L), method: null, type: null));
 
             // invalid type
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0, typeof(int)), method: null, typeof(int)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0, typeof(int)), method: null, typeof(Index?)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0, typeof(int?)), method: null, typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0, typeof(int)), method: null, typeof(int)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0, typeof(int)), method: null, typeof(Index?)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0, typeof(int?)), method: null, typeof(Index)));
 
             // invalid method
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.Generic)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.DoesNotReturnIndex)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.NotStatic)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.NoArgs)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.OneArgInvalid)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TwoArgsInvalid1)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TwoArgsInvalid2)), typeof(Index)));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TooManyArgs)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.Generic)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.DoesNotReturnIndex)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.NotStatic)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.NoArgs)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.OneArgInvalid)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TwoArgsInvalid1)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TwoArgsInvalid2)), typeof(Index)));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.FromEndIndex(Expression.Constant(0), typeof(InvalidIndexFactoryMethods).GetMethod(nameof(InvalidIndexFactoryMethods.TooManyArgs)), typeof(Index)));
         }
 
         [Fact]

@@ -20,7 +20,7 @@ namespace Tests
         {
             var o = Expression.Parameter(typeof(int));
 
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.MakeUnaryAssign(CSharpExpressionType.Await, o, null));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.MakeUnaryAssign(CSharpExpressionType.Await, o, null));
         }
 
         [Fact]
@@ -307,22 +307,22 @@ namespace Tests
 
             {
                 var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostIncrementAssignChecked(x), x).Compile();
-                AssertEx.Throws<OverflowException>(() => f(int.MaxValue));
+                Assert.Throws<OverflowException>(() => f(int.MaxValue));
             }
 
             {
                 var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PreIncrementAssignChecked(x), x).Compile();
-                AssertEx.Throws<OverflowException>(() => f(int.MaxValue));
+                Assert.Throws<OverflowException>(() => f(int.MaxValue));
             }
 
             {
                 var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostDecrementAssignChecked(x), x).Compile();
-                AssertEx.Throws<OverflowException>(() => f(int.MinValue));
+                Assert.Throws<OverflowException>(() => f(int.MinValue));
             }
 
             {
                 var f = Expression.Lambda<Func<int, int>>(CSharpExpression.PostDecrementAssignChecked(x), x).Compile();
-                AssertEx.Throws<OverflowException>(() => f(int.MinValue));
+                Assert.Throws<OverflowException>(() => f(int.MinValue));
             }
         }
 

@@ -21,21 +21,21 @@ namespace Tests
             var continueLabel = Expression.Label();
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.While(test, default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.While(default(Expression), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.While(test, default(Expression), breakLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.While(default(Expression), body, breakLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.While(test, default(Expression), breakLabel, continueLabel));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.While(default(Expression), body, breakLabel, continueLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.While(test, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.While(default(Expression), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.While(test, default(Expression), breakLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.While(default(Expression), body, breakLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.While(test, default(Expression), breakLabel, continueLabel));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.While(default(Expression), body, breakLabel, continueLabel));
 
             // non-bool
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.While(Expression.Default(typeof(int)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.While(Expression.Default(typeof(int)), body, breakLabel));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.While(Expression.Default(typeof(int)), body, breakLabel, continueLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.While(Expression.Default(typeof(int)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.While(Expression.Default(typeof(int)), body, breakLabel));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.While(Expression.Default(typeof(int)), body, breakLabel, continueLabel));
 
             // labels must be void
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.While(test, body, Expression.Label(typeof(int))));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.While(test, body, breakLabel, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.While(test, body, Expression.Label(typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.While(test, body, breakLabel, Expression.Label(typeof(int))));
         }
 
         [Fact]

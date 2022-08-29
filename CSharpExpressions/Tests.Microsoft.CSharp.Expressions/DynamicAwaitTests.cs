@@ -15,9 +15,9 @@ namespace Tests
         [Fact]
         public void DynamicAwait_Factory_ArgumentChecking()
         {
-            AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression)));
-            AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), false));
-            AssertEx.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), false, typeof(DynamicAwaitTests)));
+            Assert.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), false));
+            Assert.Throws<ArgumentNullException>(() => DynamicCSharpExpression.DynamicAwait(default(Expression), false, typeof(DynamicAwaitTests)));
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Tests
             Assert.Same(expr, expr.Reduce());
 
             var f = Expression.Lambda<Func<object>>(expr);
-            AssertEx.Throws<ArgumentException>(() => f.Compile());
+            Assert.Throws<ArgumentException>(() => f.Compile());
         }
 
         [Fact]

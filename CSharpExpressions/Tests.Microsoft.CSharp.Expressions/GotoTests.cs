@@ -15,20 +15,20 @@ namespace Tests
         public void GotoLabel_Factory_ArgumentChecking()
         {
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpStatement.GotoLabel(default(LabelTarget)));
+            Assert.Throws<ArgumentNullException>(() => CSharpStatement.GotoLabel(default(LabelTarget)));
 
             // type
             var l = Expression.Label(typeof(int));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoLabel(l));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.GotoLabel(l));
         }
 
         [Fact]
         public void GotoCase_Factory_ArgumentChecking()
         {
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0f));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0m));
-            AssertEx.Throws<ArgumentException>(() => CSharpStatement.GotoCase(TimeSpan.Zero));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0f));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.GotoCase(0.0m));
+            Assert.Throws<ArgumentException>(() => CSharpStatement.GotoCase(TimeSpan.Zero));
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Tests
             Assert.Same(o, g.Value);
 
             Assert.False(g.CanReduce);
-            AssertEx.Throws<InvalidOperationException>(() => g.Reduce());
+            Assert.Throws<InvalidOperationException>(() => g.Reduce());
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Tests
             Assert.Equal(CSharpGotoKind.GotoDefault, g.Kind);
 
             Assert.False(g.CanReduce);
-            AssertEx.Throws<InvalidOperationException>(() => g.Reduce());
+            Assert.Throws<InvalidOperationException>(() => g.Reduce());
         }
 
         [Fact]

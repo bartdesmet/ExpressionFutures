@@ -16,7 +16,7 @@ namespace Tests
         public void DiscardPattern_ArgumentChecking()
         {
             // invalid typing
-            AssertEx.Throws<ArgumentException>(() => CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(object), typeof(int))));
+            Assert.Throws<ArgumentException>(() => CSharpPattern.Discard(CSharpPattern.PatternInfo(typeof(object), typeof(int))));
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Tests
         {
             var res = CSharpPattern.Discard(typeof(int));
 
-            AssertEx.Throws<ArgumentException>(() => res.Reduce(Expression.Default(typeof(long))));
+            Assert.Throws<ArgumentException>(() => res.Reduce(Expression.Default(typeof(long))));
         }
 
         private void AssertCompile(Func<Func<string, Expression>, Expression, Expression> createExpression, LogAndResult<bool> expected)

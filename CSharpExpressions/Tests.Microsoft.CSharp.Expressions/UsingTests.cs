@@ -23,15 +23,15 @@ namespace Tests
             var body = Expression.Empty();
 
             // null
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Using(default(Expression), body));
-            AssertEx.Throws<ArgumentNullException>(() => CSharpExpression.Using(resource, default(Expression)));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Using(default(Expression), body));
+            Assert.Throws<ArgumentNullException>(() => CSharpExpression.Using(resource, default(Expression)));
 
             // not IDisposable
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Using(Expression.Default(typeof(int)), body));
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Using(Expression.Default(typeof(string)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Using(Expression.Default(typeof(int)), body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Using(Expression.Default(typeof(string)), body));
 
             // not assignable
-            AssertEx.Throws<ArgumentException>(() => CSharpExpression.Using(variable, resource, body));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.Using(variable, resource, body));
         }
 
         [Fact]
