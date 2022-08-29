@@ -2,23 +2,22 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class ToCSharpTypeTests
     {
-        [TestMethod]
+        [Fact]
         public void ToCSharpType_Null()
         {
-            Assert.IsNull(default(Type).ToCSharp());
+            Assert.Null(default(Type).ToCSharp());
         }
 
-        [TestMethod]
+        [Fact]
         public void ToCSharpType_Simple()
         {
             var cases = new Dictionary<Type, string>
@@ -35,12 +34,12 @@ namespace Tests
 
             foreach (var kv in cases)
             {
-                Assert.AreEqual(kv.Value, kv.Key.ToCSharp());
-                Assert.AreEqual(kv.Value, kv.Key.ToCSharp("System", "System.Collections.Generic"));
+                Assert.Equal(kv.Value, kv.Key.ToCSharp());
+                Assert.Equal(kv.Value, kv.Key.ToCSharp("System", "System.Collections.Generic"));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ToCSharpType_CustomNamespace()
         {
             var cases = new Dictionary<Type, string>
@@ -50,9 +49,9 @@ namespace Tests
 
             foreach (var kv in cases)
             {
-                Assert.AreEqual(kv.Value, kv.Key.ToCSharp(new string[0]));
-                Assert.AreEqual(kv.Value, kv.Key.ToCSharp(default(string[])));
-                Assert.AreEqual(kv.Value, kv.Key.ToCSharp("System"));
+                Assert.Equal(kv.Value, kv.Key.ToCSharp(new string[0]));
+                Assert.Equal(kv.Value, kv.Key.ToCSharp(default(string[])));
+                Assert.Equal(kv.Value, kv.Key.ToCSharp("System"));
             }
         }
     }

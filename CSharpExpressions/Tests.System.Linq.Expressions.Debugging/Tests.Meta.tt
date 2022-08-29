@@ -111,15 +111,14 @@ var toEscapedString = new Func<object, string>(o => "@\"" + o.ToString().Replace
 //
 //       Regressions can still be caught given that the T4 won't be re-run unless it gets saved in the IDE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class DebugViewTests
     {
 <#
@@ -130,10 +129,10 @@ foreach (var expr in exprs)
         private Expression expr<#=i#> = <#=expr#>;
         private string dbg<#=i#> = \<#=toEscapedString(<#=expr#>.DebugView())\#>;
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test<#=i#>()
         {
-            Assert.AreEqual(dbg<#=i#>, expr<#=i#>.DebugView().ToString());
+            Assert.Equal(dbg<#=i#>, expr<#=i#>.DebugView().ToString());
         }
 
 <#

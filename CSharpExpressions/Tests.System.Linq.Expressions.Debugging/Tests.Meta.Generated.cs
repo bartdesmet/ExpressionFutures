@@ -8,33 +8,32 @@
 //
 //       Regressions can still be caught given that the T4 won't be re-run unless it gets saved in the IDE.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using Xunit;
 
 namespace Tests
 {
-    [TestClass]
     public class DebugViewTests
     {
         private Expression expr0 = Expression.Default(typeof(int));
         private string dbg0 = @"<Default Type=""System.Int32"" />";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test0()
         {
-            Assert.AreEqual(dbg0, expr0.DebugView().ToString());
+            Assert.Equal(dbg0, expr0.DebugView().ToString());
         }
 
         private Expression expr1 = Expression.Constant(1);
         private string dbg1 = @"<Constant Type=""System.Int32"" Value=""1"" />";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test1()
         {
-            Assert.AreEqual(dbg1, expr1.DebugView().ToString());
+            Assert.Equal(dbg1, expr1.DebugView().ToString());
         }
 
         private Expression expr2 = ((Expression<Func<int, int>>)(x => x));
@@ -47,10 +46,10 @@ namespace Tests
   </Body>
 </Lambda>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test2()
         {
-            Assert.AreEqual(dbg2, expr2.DebugView().ToString());
+            Assert.Equal(dbg2, expr2.DebugView().ToString());
         }
 
         private Expression expr3 = ((Expression<Func<int, int>>)(x => x + 1)).Body;
@@ -63,10 +62,10 @@ namespace Tests
   </Right>
 </Add>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test3()
         {
-            Assert.AreEqual(dbg3, expr3.DebugView().ToString());
+            Assert.Equal(dbg3, expr3.DebugView().ToString());
         }
 
         private Expression expr4 = ((Expression<Func<TimeSpan, TimeSpan, TimeSpan>>)((a, b) => a + b)).Body;
@@ -79,10 +78,10 @@ namespace Tests
   </Right>
 </Add>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test4()
         {
-            Assert.AreEqual(dbg4, expr4.DebugView().ToString());
+            Assert.Equal(dbg4, expr4.DebugView().ToString());
         }
 
         private Expression expr5 = ((Expression<Func<int, int>>)(x => -x)).Body;
@@ -92,10 +91,10 @@ namespace Tests
   </Operand>
 </Negate>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test5()
         {
-            Assert.AreEqual(dbg5, expr5.DebugView().ToString());
+            Assert.Equal(dbg5, expr5.DebugView().ToString());
         }
 
         private Expression expr6 = ((Expression<Func<TimeSpan, TimeSpan>>)(x => -x)).Body;
@@ -105,10 +104,10 @@ namespace Tests
   </Operand>
 </Negate>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test6()
         {
-            Assert.AreEqual(dbg6, expr6.DebugView().ToString());
+            Assert.Equal(dbg6, expr6.DebugView().ToString());
         }
 
         private Expression expr7 = ((Expression<Func<string, int>>)(s => s.Length)).Body;
@@ -118,19 +117,19 @@ namespace Tests
   </Expression>
 </MemberAccess>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test7()
         {
-            Assert.AreEqual(dbg7, expr7.DebugView().ToString());
+            Assert.Equal(dbg7, expr7.DebugView().ToString());
         }
 
         private Expression expr8 = ((Expression<Func<DateTime>>)(() => DateTime.Now)).Body;
         private string dbg8 = @"<MemberAccess Type=""System.DateTime"" Member=""System.DateTime Now"" />";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test8()
         {
-            Assert.AreEqual(dbg8, expr8.DebugView().ToString());
+            Assert.Equal(dbg8, expr8.DebugView().ToString());
         }
 
         private Expression expr9 = ((Expression<Func<string, string>>)(s => s.Substring(1))).Body;
@@ -143,10 +142,10 @@ namespace Tests
   </Arguments>
 </Call>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test9()
         {
-            Assert.AreEqual(dbg9, expr9.DebugView().ToString());
+            Assert.Equal(dbg9, expr9.DebugView().ToString());
         }
 
         private Expression expr10 = ((Expression<Func<string, int>>)(x => int.Parse(x))).Body;
@@ -156,10 +155,10 @@ namespace Tests
   </Arguments>
 </Call>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test10()
         {
-            Assert.AreEqual(dbg10, expr10.DebugView().ToString());
+            Assert.Equal(dbg10, expr10.DebugView().ToString());
         }
 
         private Expression expr11 = ((Expression<Func<bool, int, int, int>>)((b, t, f) => b ? t : f)).Body;
@@ -175,10 +174,10 @@ namespace Tests
   </IfFalse>
 </Conditional>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test11()
         {
-            Assert.AreEqual(dbg11, expr11.DebugView().ToString());
+            Assert.Equal(dbg11, expr11.DebugView().ToString());
         }
 
         private Expression expr12 = Expression.IfThen(Expression.Constant(true), Expression.Empty());
@@ -194,10 +193,10 @@ namespace Tests
   </IfFalse>
 </Conditional>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test12()
         {
-            Assert.AreEqual(dbg12, expr12.DebugView().ToString());
+            Assert.Equal(dbg12, expr12.DebugView().ToString());
         }
 
         private Expression expr13 = ((Expression<Func<List<string>, int, string>>)((ss, i) => ss[i])).Body;
@@ -210,10 +209,10 @@ namespace Tests
   </Arguments>
 </Call>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test13()
         {
-            Assert.AreEqual(dbg13, expr13.DebugView().ToString());
+            Assert.Equal(dbg13, expr13.DebugView().ToString());
         }
 
         private Expression expr14 = Expression.MakeIndex(Expression.Default(typeof(List<string>)), typeof(List<string>).GetProperty("Item"), new[] { Expression.Constant(1) });
@@ -226,10 +225,10 @@ namespace Tests
   </Arguments>
 </Index>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test14()
         {
-            Assert.AreEqual(dbg14, expr14.DebugView().ToString());
+            Assert.Equal(dbg14, expr14.DebugView().ToString());
         }
 
         private Expression expr15 = ((Expression<Func<TimeSpan>>)(() => new TimeSpan())).Body;
@@ -237,10 +236,10 @@ namespace Tests
   <Arguments />
 </New>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test15()
         {
-            Assert.AreEqual(dbg15, expr15.DebugView().ToString());
+            Assert.Equal(dbg15, expr15.DebugView().ToString());
         }
 
         private Expression expr16 = ((Expression<Func<TimeSpan>>)(() => new TimeSpan(1L))).Body;
@@ -250,10 +249,10 @@ namespace Tests
   </Arguments>
 </New>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test16()
         {
-            Assert.AreEqual(dbg16, expr16.DebugView().ToString());
+            Assert.Equal(dbg16, expr16.DebugView().ToString());
         }
 
         private Expression expr17 = ((Expression<Func<object>>)(() => new { a = 1 })).Body;
@@ -266,10 +265,10 @@ namespace Tests
   </Members>
 </New>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test17()
         {
-            Assert.AreEqual(dbg17, expr17.DebugView().ToString());
+            Assert.Equal(dbg17, expr17.DebugView().ToString());
         }
 
         private Expression expr18 = ((Expression<Func<int[,]>>)(() => new int[1, 2])).Body;
@@ -280,10 +279,10 @@ namespace Tests
   </Expressions>
 </NewArrayBounds>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test18()
         {
-            Assert.AreEqual(dbg18, expr18.DebugView().ToString());
+            Assert.Equal(dbg18, expr18.DebugView().ToString());
         }
 
         private Expression expr19 = ((Expression<Func<int[]>>)(() => new int[] { 1, 2 })).Body;
@@ -294,10 +293,10 @@ namespace Tests
   </Expressions>
 </NewArrayInit>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test19()
         {
-            Assert.AreEqual(dbg19, expr19.DebugView().ToString());
+            Assert.Equal(dbg19, expr19.DebugView().ToString());
         }
 
         private Expression expr20 = ((Expression<Func<Func<int, int, int>, int, int, int>>)((f, x, y) => f(x, y))).Body;
@@ -311,10 +310,10 @@ namespace Tests
   </Arguments>
 </Invoke>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test20()
         {
-            Assert.AreEqual(dbg20, expr20.DebugView().ToString());
+            Assert.Equal(dbg20, expr20.DebugView().ToString());
         }
 
         private Expression expr21 = ((Expression<Func<object, bool>>)(o => o is string)).Body;
@@ -324,10 +323,10 @@ namespace Tests
   </Expression>
 </TypeIs>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test21()
         {
-            Assert.AreEqual(dbg21, expr21.DebugView().ToString());
+            Assert.Equal(dbg21, expr21.DebugView().ToString());
         }
 
         private Expression expr22 = ((Expression<Func<StrongBox<int>>>)(() => new StrongBox<int>() { Value = 1 })).Body;
@@ -346,10 +345,10 @@ namespace Tests
   </Bindings>
 </MemberInit>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test22()
         {
-            Assert.AreEqual(dbg22, expr22.DebugView().ToString());
+            Assert.Equal(dbg22, expr22.DebugView().ToString());
         }
 
         private Expression expr23 = ((Expression<Func<StrongBox<StrongBox<int>>>>)(() => new StrongBox<StrongBox<int>>() { Value = { Value = 1 } })).Body;
@@ -372,10 +371,10 @@ namespace Tests
   </Bindings>
 </MemberInit>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test23()
         {
-            Assert.AreEqual(dbg23, expr23.DebugView().ToString());
+            Assert.Equal(dbg23, expr23.DebugView().ToString());
         }
 
         private Expression expr24 = ((Expression<Func<StrongBox<List<int>>>>)(() => new StrongBox<List<int>>() { Value = { 1 } })).Body;
@@ -398,10 +397,10 @@ namespace Tests
   </Bindings>
 </MemberInit>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test24()
         {
-            Assert.AreEqual(dbg24, expr24.DebugView().ToString());
+            Assert.Equal(dbg24, expr24.DebugView().ToString());
         }
 
         private Expression expr25 = ((Expression<Func<List<int>>>)(() => new List<int>() { 1 })).Body;
@@ -420,10 +419,10 @@ namespace Tests
   </Initializers>
 </ListInit>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test25()
         {
-            Assert.AreEqual(dbg25, expr25.DebugView().ToString());
+            Assert.Equal(dbg25, expr25.DebugView().ToString());
         }
 
         private Expression expr26 = Expression.Block(Expression.Empty());
@@ -433,10 +432,10 @@ namespace Tests
   </Expressions>
 </Block>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test26()
         {
-            Assert.AreEqual(dbg26, expr26.DebugView().ToString());
+            Assert.Equal(dbg26, expr26.DebugView().ToString());
         }
 
         private Expression expr27 = Expression.Block(new[] { Expression.Parameter(typeof(int)) }, Expression.Empty());
@@ -449,10 +448,10 @@ namespace Tests
   </Expressions>
 </Block>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test27()
         {
-            Assert.AreEqual(dbg27, expr27.DebugView().ToString());
+            Assert.Equal(dbg27, expr27.DebugView().ToString());
         }
 
         private Expression expr28 = Expression.Block(typeof(int), Expression.Constant(1));
@@ -462,10 +461,10 @@ namespace Tests
   </Expressions>
 </Block>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test28()
         {
-            Assert.AreEqual(dbg28, expr28.DebugView().ToString());
+            Assert.Equal(dbg28, expr28.DebugView().ToString());
         }
 
         private Expression expr29 = Expression.Switch(Expression.Parameter(typeof(int)), Expression.Constant(1), new[] { Expression.SwitchCase(Expression.Constant(2), Expression.Constant(3), Expression.Constant(4)) });
@@ -489,10 +488,10 @@ namespace Tests
   </DefaultBody>
 </Switch>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test29()
         {
-            Assert.AreEqual(dbg29, expr29.DebugView().ToString());
+            Assert.Equal(dbg29, expr29.DebugView().ToString());
         }
 
         private Expression expr30 = Expression.Switch(Expression.Parameter(typeof(int)), new[] { Expression.SwitchCase(Expression.Empty(), Expression.Constant(3), Expression.Constant(4)) });
@@ -513,10 +512,10 @@ namespace Tests
   </Cases>
 </Switch>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test30()
         {
-            Assert.AreEqual(dbg30, expr30.DebugView().ToString());
+            Assert.Equal(dbg30, expr30.DebugView().ToString());
         }
 
         private Expression expr31 = Expression.Label(Expression.Label());
@@ -526,10 +525,10 @@ namespace Tests
   </Target>
 </Label>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test31()
         {
-            Assert.AreEqual(dbg31, expr31.DebugView().ToString());
+            Assert.Equal(dbg31, expr31.DebugView().ToString());
         }
 
         private Expression expr32 = Expression.Label(Expression.Label(typeof(int)), Expression.Default(typeof(int)));
@@ -542,10 +541,10 @@ namespace Tests
   </DefaultValue>
 </Label>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test32()
         {
-            Assert.AreEqual(dbg32, expr32.DebugView().ToString());
+            Assert.Equal(dbg32, expr32.DebugView().ToString());
         }
 
         private Expression expr33 = Expression.Label(Expression.Label(typeof(int), "foo"), Expression.Default(typeof(int)));
@@ -558,10 +557,10 @@ namespace Tests
   </DefaultValue>
 </Label>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test33()
         {
-            Assert.AreEqual(dbg33, expr33.DebugView().ToString());
+            Assert.Equal(dbg33, expr33.DebugView().ToString());
         }
 
         private Expression expr34 = Expression.Break(Expression.Label());
@@ -571,10 +570,10 @@ namespace Tests
   </Target>
 </Goto>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test34()
         {
-            Assert.AreEqual(dbg34, expr34.DebugView().ToString());
+            Assert.Equal(dbg34, expr34.DebugView().ToString());
         }
 
         private Expression expr35 = Expression.Break(Expression.Label(typeof(int)), Expression.Constant(1));
@@ -587,10 +586,10 @@ namespace Tests
   </Value>
 </Goto>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test35()
         {
-            Assert.AreEqual(dbg35, expr35.DebugView().ToString());
+            Assert.Equal(dbg35, expr35.DebugView().ToString());
         }
 
         private Expression expr36 = Expression.Continue(Expression.Label());
@@ -600,10 +599,10 @@ namespace Tests
   </Target>
 </Goto>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test36()
         {
-            Assert.AreEqual(dbg36, expr36.DebugView().ToString());
+            Assert.Equal(dbg36, expr36.DebugView().ToString());
         }
 
         private Expression expr37 = Expression.Goto(Expression.Label());
@@ -613,10 +612,10 @@ namespace Tests
   </Target>
 </Goto>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test37()
         {
-            Assert.AreEqual(dbg37, expr37.DebugView().ToString());
+            Assert.Equal(dbg37, expr37.DebugView().ToString());
         }
 
         private Expression expr38 = Expression.Goto(Expression.Label(), Expression.Constant(1));
@@ -629,10 +628,10 @@ namespace Tests
   </Value>
 </Goto>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test38()
         {
-            Assert.AreEqual(dbg38, expr38.DebugView().ToString());
+            Assert.Equal(dbg38, expr38.DebugView().ToString());
         }
 
         private Expression expr39 = Expression.TryCatch(Expression.Constant(1), Expression.Catch(Expression.Parameter(typeof(Exception)), Expression.Constant(2)));
@@ -652,10 +651,10 @@ namespace Tests
   </Handlers>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test39()
         {
-            Assert.AreEqual(dbg39, expr39.DebugView().ToString());
+            Assert.Equal(dbg39, expr39.DebugView().ToString());
         }
 
         private Expression expr40 = Expression.TryCatch(Expression.Constant(1), Expression.Catch(typeof(Exception), Expression.Constant(2)));
@@ -672,10 +671,10 @@ namespace Tests
   </Handlers>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test40()
         {
-            Assert.AreEqual(dbg40, expr40.DebugView().ToString());
+            Assert.Equal(dbg40, expr40.DebugView().ToString());
         }
 
         private Expression expr41 = Expression.TryCatch(Expression.Constant(1), Expression.Catch(Expression.Parameter(typeof(Exception)), Expression.Constant(2), Expression.Constant(true)));
@@ -698,10 +697,10 @@ namespace Tests
   </Handlers>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test41()
         {
-            Assert.AreEqual(dbg41, expr41.DebugView().ToString());
+            Assert.Equal(dbg41, expr41.DebugView().ToString());
         }
 
         private Expression expr42 = Expression.TryCatch(Expression.Constant(1), Expression.Catch(typeof(Exception), Expression.Constant(2), Expression.Constant(true)));
@@ -721,10 +720,10 @@ namespace Tests
   </Handlers>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test42()
         {
-            Assert.AreEqual(dbg42, expr42.DebugView().ToString());
+            Assert.Equal(dbg42, expr42.DebugView().ToString());
         }
 
         private Expression expr43 = Expression.TryCatchFinally(Expression.Constant(1), Expression.Empty(), Expression.Catch(Expression.Parameter(typeof(Exception)), Expression.Constant(2)));
@@ -747,10 +746,10 @@ namespace Tests
   </Finally>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test43()
         {
-            Assert.AreEqual(dbg43, expr43.DebugView().ToString());
+            Assert.Equal(dbg43, expr43.DebugView().ToString());
         }
 
         private Expression expr44 = Expression.TryFinally(Expression.Constant(1), Expression.Empty());
@@ -763,10 +762,10 @@ namespace Tests
   </Finally>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test44()
         {
-            Assert.AreEqual(dbg44, expr44.DebugView().ToString());
+            Assert.Equal(dbg44, expr44.DebugView().ToString());
         }
 
         private Expression expr45 = Expression.TryFault(Expression.Constant(1), Expression.Empty());
@@ -779,10 +778,10 @@ namespace Tests
   </Fault>
 </Try>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test45()
         {
-            Assert.AreEqual(dbg45, expr45.DebugView().ToString());
+            Assert.Equal(dbg45, expr45.DebugView().ToString());
         }
 
         private Expression expr46 = Expression.Loop(Expression.Empty());
@@ -792,10 +791,10 @@ namespace Tests
   </Body>
 </Loop>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test46()
         {
-            Assert.AreEqual(dbg46, expr46.DebugView().ToString());
+            Assert.Equal(dbg46, expr46.DebugView().ToString());
         }
 
         private Expression expr47 = Expression.Loop(Expression.Empty(), Expression.Label(typeof(void), "break"));
@@ -808,10 +807,10 @@ namespace Tests
   </BreakLabel>
 </Loop>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test47()
         {
-            Assert.AreEqual(dbg47, expr47.DebugView().ToString());
+            Assert.Equal(dbg47, expr47.DebugView().ToString());
         }
 
         private Expression expr48 = Expression.Loop(Expression.Empty(), Expression.Label(typeof(void), "break"), Expression.Label(typeof(void), "continue"));
@@ -827,10 +826,10 @@ namespace Tests
   </ContinueLabel>
 </Loop>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test48()
         {
-            Assert.AreEqual(dbg48, expr48.DebugView().ToString());
+            Assert.Equal(dbg48, expr48.DebugView().ToString());
         }
 
         private Expression expr49 = Expression.RuntimeVariables(Expression.Parameter(typeof(int)));
@@ -840,28 +839,28 @@ namespace Tests
   </Variables>
 </RuntimeVariables>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test49()
         {
-            Assert.AreEqual(dbg49, expr49.DebugView().ToString());
+            Assert.Equal(dbg49, expr49.DebugView().ToString());
         }
 
         private Expression expr50 = Expression.ClearDebugInfo(Expression.SymbolDocument("foo"));
         private string dbg50 = @"<DebugInfo Type=""System.Void"" FileName=""foo"" IsClear=""true"" />";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test50()
         {
-            Assert.AreEqual(dbg50, expr50.DebugView().ToString());
+            Assert.Equal(dbg50, expr50.DebugView().ToString());
         }
 
         private Expression expr51 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4);
         private string dbg51 = @"<DebugInfo Type=""System.Void"" FileName=""foo"" StartLine=""1"" StartColumn=""2"" EndLine=""3"" EndColumn=""4"" />";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test51()
         {
-            Assert.AreEqual(dbg51, expr51.DebugView().ToString());
+            Assert.Equal(dbg51, expr51.DebugView().ToString());
         }
 
         private Expression expr52 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1));
@@ -874,10 +873,10 @@ namespace Tests
   </Arguments>
 </Dynamic>";
 
-        [TestMethod]
+        [Fact]
         public void DebugView_Test52()
         {
-            Assert.AreEqual(dbg52, expr52.DebugView().ToString());
+            Assert.Equal(dbg52, expr52.DebugView().ToString());
         }
 
     }
