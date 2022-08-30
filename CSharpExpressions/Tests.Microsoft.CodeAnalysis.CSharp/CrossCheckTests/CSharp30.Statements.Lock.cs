@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Lock()
         {
             var f = Compile<Action<object>>(@"o =>
@@ -42,7 +42,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<ArgumentNullException>(() => f(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Lock_Error()
         {
             var f = Compile<Action<object>>(@"o =>
@@ -60,7 +60,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(new object()));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Lock_ManOrBoy()
         {
             var f = Compile<Func<int, int>>(@"N =>
@@ -94,7 +94,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     return n;
 }");
-            Assert.AreEqual(20000, f(10000));
+            Assert.Equal(20000, f(10000));
         }
     }
 }

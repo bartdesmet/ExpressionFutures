@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Threading.Tasks;
 
@@ -25,7 +25,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_AwaitUsing_IAsyncDisposable()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -50,7 +50,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_AwaitUsing_PatternDispose()
         {
             var f = Compile<Func<int>>(@"() =>

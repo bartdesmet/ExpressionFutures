@@ -2,7 +2,7 @@
 //
 // bartde - August 2022
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 
@@ -25,14 +25,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedString_Basics()
         {
             var f = Compile<Func<int, string>>("x => $\"x = {Return(x)}\"");
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedString_Curlies()
         {
             var f = Compile<Func<int, string>>("x => $\"{{ {Return(x)} }}\"");

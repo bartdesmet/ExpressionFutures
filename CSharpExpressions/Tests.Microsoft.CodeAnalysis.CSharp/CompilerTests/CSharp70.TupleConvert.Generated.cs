@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp70_TupleConvert
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_5948_DA1F()
         {
             // (Expression<Func<(int, DateTime), (int, DateTime)?>>)(t => t)
@@ -57,13 +56,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Convert>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_5948_DA1F();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5948_DA1F() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_D7DE_3D5E()
         {
             // (Expression<Func<(int, DateTime), (long, DateTimeOffset)>>)(t => t)
@@ -107,13 +106,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleConvert>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_D7DE_3D5E();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D7DE_3D5E() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_2695_BEC3()
         {
             // (Expression<Func<(int, DateTime), (int?, DateTime?)>>)(t => t)
@@ -157,13 +156,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleConvert>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_2695_BEC3();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2695_BEC3() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_7419_0AE5()
         {
             // (Expression<Func<(int, int), (object, IFormattable)>>)(t => t)
@@ -207,7 +206,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleConvert>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_7419_0AE5();
         }
 
@@ -215,7 +214,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

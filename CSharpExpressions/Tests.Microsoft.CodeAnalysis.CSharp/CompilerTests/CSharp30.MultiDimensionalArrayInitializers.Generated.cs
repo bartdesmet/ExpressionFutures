@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp30_MultiDimensionalArrayInitializers
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_F51F_71B6()
         {
             // (Expression<Func<int[,]>>)(() => new int[1, 1] { { 42 } })
@@ -55,13 +54,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpNewMultidimensionalArrayInit>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_F51F_71B6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F51F_71B6() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_E70E_4B35()
         {
             // (Expression<Func<int[,]>>)(() => new int[1, 2] { { 42, 43 } })
@@ -78,13 +77,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpNewMultidimensionalArrayInit>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_E70E_4B35();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E70E_4B35() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_59A0_FFB9()
         {
             // (Expression<Func<int[,]>>)(() => new int[2, 1] { { 42 }, { 43 } })
@@ -101,13 +100,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpNewMultidimensionalArrayInit>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_59A0_FFB9();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_59A0_FFB9() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_789A_453A()
         {
             // (Expression<Func<int[,]>>)(() => new int[2, 2] { { 41, 42 }, { 43, 44 } })
@@ -126,7 +125,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpNewMultidimensionalArrayInit>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_789A_453A();
         }
 
@@ -134,7 +133,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

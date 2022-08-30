@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp80_AwaitUsing
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_5CA8_D276()
         {
             // (Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d) ; })
@@ -104,13 +103,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Invoke>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_5CA8_D276();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CA8_D276() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_F768_BBF7()
         {
             // (Expression<Func<IAsyncDisposable, Task>>)(async d => { await using (d.ConfigureAwait(false)) ; })
@@ -195,7 +194,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </Invoke>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_F768_BBF7();
         }
 
@@ -203,7 +202,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

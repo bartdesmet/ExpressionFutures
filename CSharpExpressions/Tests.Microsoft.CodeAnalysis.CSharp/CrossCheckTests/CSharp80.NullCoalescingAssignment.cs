@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NullCoalescingAssignment_Reference()
         {
             var f = Compile<Func<string, string>>("s => { Log(s); s ??= Return(\"foo\"); Log(s); return s; }");
@@ -32,7 +32,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NullCoalescingAssignment_Nullable()
         {
             var f = Compile<Func<int?, int?>>("x => { Log(x); x ??= Return(43); Log(x); return x; }");

@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp30_Statements_Block
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A8D0_49C3()
         {
             // (Expression<Action>)(() => { })
@@ -56,13 +55,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A8D0_49C3();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A8D0_49C3() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_197A_C7FA()
         {
             // (Expression<Action>)(() => { int x; x = 5; })
@@ -91,13 +90,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_197A_C7FA();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_197A_C7FA() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_27AA_4144()
         {
             // (Expression<Action>)(() => { int x; x = 5; { int y = x + 1; Console.WriteLine(y); } })
@@ -153,7 +152,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_27AA_4144();
         }
 
@@ -161,7 +160,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

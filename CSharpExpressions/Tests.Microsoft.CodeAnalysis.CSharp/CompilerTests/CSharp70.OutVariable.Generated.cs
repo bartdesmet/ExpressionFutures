@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp70_OutVariable
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_C10F_4079()
         {
             // (Expression<Func<string, bool>>)(s => int.TryParse(s, out var x) && x > 0)
@@ -82,13 +81,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_C10F_4079();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C10F_4079() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_3002_1169()
         {
             // (Expression<Action<string>>)(s => { if (int.TryParse(s, out var x)) { Console.WriteLine(x); } })
@@ -135,7 +134,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3002_1169();
         }
 
@@ -143,7 +142,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

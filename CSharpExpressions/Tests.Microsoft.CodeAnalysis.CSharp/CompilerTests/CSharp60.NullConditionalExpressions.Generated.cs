@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp60_NullConditionalExpressions
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_B340_BC70()
         {
             // (Expression<Func<string, int?>>)(s => s?.Length)
@@ -67,13 +66,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B340_BC70();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B340_BC70() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_9320_B6D2()
         {
             // (Expression<Func<string, int?>>)(s => s?.ToUpper()?.Length)
@@ -116,13 +115,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_9320_B6D2();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9320_B6D2() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A997_18C3()
         {
             // (Expression<Func<string, string>>)(s => s?.ToUpper())
@@ -151,13 +150,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A997_18C3();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A997_18C3() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A5F9_6775()
         {
             // (Expression<Func<string, string>>)(s => s?.Substring(1)?.ToUpper())
@@ -203,13 +202,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A5F9_6775();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A5F9_6775() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_F165_9386()
         {
             // (Expression<Func<DateTimeOffset?, TimeSpan?>>)(d => d?.Offset)
@@ -237,13 +236,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_F165_9386();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F165_9386() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_2462_8DFD()
         {
             // (Expression<Func<DateTimeOffset?, int?>>)(d => (d?.Offset)?.Hours)
@@ -285,13 +284,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_2462_8DFD();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2462_8DFD() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_3041_FAE0()
         {
             // (Expression<Func<DateTimeOffset?, int?>>)(d => d?.Offset.Hours)
@@ -323,13 +322,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3041_FAE0();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3041_FAE0() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_CB0C_60AB()
         {
             // (Expression<Func<string, char?>>)(s => s?[42])
@@ -364,13 +363,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_CB0C_60AB();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CB0C_60AB() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_CF40_3D45()
         {
             // (Expression<Func<Func<int, int>, int?>>)(f => f?.Invoke(42))
@@ -401,13 +400,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_CF40_3D45();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_CF40_3D45() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_4241_E360()
         {
             // (Expression<Func<string, string>>)(s => s?.Substring(length: 1, startIndex: 0).ToUpper()?.ToLower())
@@ -467,7 +466,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpConditionalAccess>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_4241_E360();
         }
 
@@ -475,7 +474,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

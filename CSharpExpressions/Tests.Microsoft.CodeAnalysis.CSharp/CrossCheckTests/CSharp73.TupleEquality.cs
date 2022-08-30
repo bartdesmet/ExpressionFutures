@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality()
         {
             var eq = Compile<Func<(int, int), (int, int), bool>>("(t1, t2) => Return(t1, \"L\") == Return(t2, \"R\")");
@@ -38,7 +38,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             ne((1, 2), (1, -2));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality_Lifted()
         {
             var eq = Compile<Func<(int, int)?, (int, int)?, bool>>("(t1, t2) => Return(t1, \"L\") == Return(t2, \"R\")");
@@ -62,7 +62,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             ne((1, 2), (1, -2));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality_Literal()
         {
             Compile<Func<bool>>("() => (Return(1, \"L1\"), Return(2, \"L2\")) == (Return(1, \"R1\"), Return(2, \"R2\"))")();
@@ -93,22 +93,21 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             ne2((1, -2));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality_Null()
         {
             Compile<Func<bool>>("() => (1, null, 2L) == (1, \"\", 2L)")();
             Compile<Func<bool>>("() => (1, null, 2L) != (1, \"\", 2L)")();
         }
 
-        [TestMethod]
-        [Ignore] // TODO: These literals have no type, causing us to raise an (intentional) error. Turn this into a test for the appropriate compiler warning.
+        [Fact(Skip = "TODO: These literals have no type, causing us to raise an (intentional) error. Turn this into a test for the appropriate compiler warning.")]
         public void CrossCheck_TupleEquality_NullNull()
         {
             Compile<Func<bool>>("() => (1, null, 2L) == (1, null, 2L)")();
             Compile<Func<bool>>("() => (1, null, 2L) != (1, null, 2L)")();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality_Nested()
         {
             var dt = DateTime.Now;
@@ -134,7 +133,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             ne((1, (true, "bar"), (2, (3L, 4L), dt)), (1, (true, "bar"), (2, (3L, 4L), dt.AddSeconds(1))));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality_Nested_Literal()
         {
             var eqs = new[]
@@ -163,7 +162,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             Compile<Func<bool>>("() => (Return(1, \"L1\"), (Return(true, \"L2\"), Return(\"bar\", \"L3\")), (Return(2, \"L4\"), (Return(3L, \"L5\"), Return(4L, \"L6\")), Return(new DateTime(1983, 2, 11), \"L7\"))) != (Return(1, \"R1\"), (Return(true, \"R2\"), Return(\"bar\", \"R3\")), (Return(2, \"R4\"), (Return(-3L, \"R5\"), Return(4L, \"R6\")), Return(new DateTime(1983, 2, 11), \"R7\")))")();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleEquality_Dynamic()
         {
             var eqs = new[]

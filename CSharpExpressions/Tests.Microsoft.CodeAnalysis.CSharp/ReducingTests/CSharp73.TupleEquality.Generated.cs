@@ -31,28 +31,27 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp73_TupleEquality_Reducing
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_E117_F776()
         {
             // (Expression<Func<bool>>)(() => (1, 2) == (3, 4))
             var actual = ToCSharp(@"(Expression<Func<bool>>)(() => (1, 2) == (3, 4))", reduce: true);
             var expected = @"
 () => 1 == 3 && 2 == 4";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_E117_F776();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E117_F776() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_F202_FB1D()
         {
             // (Expression<Func<bool>>)(() => (1, int.Parse("2")) != (int.Parse("3"), 4))
@@ -65,13 +64,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     __right0 = int.Parse(""3"");
     return 1 != __right0 || __left1 != 4;
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_F202_FB1D();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_F202_FB1D() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_9411_0D00()
         {
             // (Expression<Func<(int, int), bool>>)(t => t == (3, 4))
@@ -83,13 +82,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     __left = t;
     return __left.Item1 == 3 && __left.Item2 == 4;
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_9411_0D00();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9411_0D00() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_36A3_3E5F()
         {
             // (Expression<Func<(int, int), bool>>)(t => (1, 2) != t)
@@ -101,26 +100,26 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     __right = t;
     return 1 != __right.Item1 || 2 != __right.Item2;
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_36A3_3E5F();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_36A3_3E5F() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_B5AA_125F()
         {
             // (Expression<Func<bool>>)(() => (1, (true, "foo")) == (3, (false, "bar")))
             var actual = ToCSharp(@"(Expression<Func<bool>>)(() => (1, (true, ""foo"")) == (3, (false, ""bar"")))", reduce: true);
             var expected = @"
 () => 1 == 3 && true == false && ""foo"" == ""bar""";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B5AA_125F();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B5AA_125F() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_02A6_E636()
         {
             // (Expression<Func<bool>>)(() => (int.Parse("1"), (true, "foo".ToUpper())) != (3, ("qux".StartsWith("z"), "bar")))
@@ -136,13 +135,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     __right1_0 = ""qux"".StartsWith(""z"");
     return __left0 != 3 || true != __right1_0 || __left1_1 != ""bar"";
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_02A6_E636();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_02A6_E636() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_0830_8FE6()
         {
             // (Expression<Func<(bool, string), bool>>)(t => (1, t) == (3, (false, "bar")))
@@ -154,13 +153,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     __left1 = t;
     return 1 == 3 && __left1.Item1 == false && __left1.Item2 == ""bar"";
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0830_8FE6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0830_8FE6() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_B038_1EAB()
         {
             // (Expression<Func<(bool, string), bool>>)(t => (1, (true, "foo")) != (3, t))
@@ -172,7 +171,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     __right1 = t;
     return 1 != 3 || true != __right1.Item1 || ""foo"" != __right1.Item2;
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B038_1EAB();
         }
 
@@ -180,7 +179,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

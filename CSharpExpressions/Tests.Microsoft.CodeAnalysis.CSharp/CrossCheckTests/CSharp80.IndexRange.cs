@@ -3,7 +3,7 @@
 // bartde - May 2020
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +28,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Index_ImplicitConversion()
         {
             var f = Compile<Func<int, Index>>("i => i");
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Index_ImplicitConversion_Lifted()
         {
             var f = Compile<Func<int?, Index?>>("i => i");
@@ -43,7 +43,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Index_FromEnd()
         {
             var f = Compile<Func<int, Index>>("i => ^i");
@@ -53,7 +53,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             g(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Index_FromEnd_Lifted()
         {
             var f = Compile<Func<int?, Index?>>("i => ^i");
@@ -63,7 +63,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             g(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Range()
         {
             Compile<Func<Range>>("() => ..")();
@@ -79,7 +79,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             Compile<Func<Range>>("() => Return(1)..Return(2)")();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Range_Index()
         {
             Compile<Func<Index, Range>>("i => i..")(1);
@@ -93,7 +93,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             Compile<Func<Index, Index, Range>>("(i, j) => Return(i)..Return(j)")(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Range_Lifted()
         {
             var f1 = Compile<Func<Index?, Range?>>("i => i..");
@@ -125,7 +125,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f6(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IndexerAccess_Array_Index()
         {
             var f1 = Compile<Func<int[], Index, int>>("(xs, i) => xs[i]");
@@ -153,7 +153,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f4(new[] { 1 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IndexerAccess_List_Index()
         {
             var f1 = Compile<Func<List<int>, Index, int>>("(xs, i) => xs[i]");
@@ -181,7 +181,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<ArgumentOutOfRangeException>(() => f4(new List<int> { 1, 2 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IndexerAccess_String_Index()
         {
             var f1 = Compile<Func<string, Index, char>>("(s, i) => s[i]");
@@ -213,8 +213,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f4("ba"));
         }
 
-        [TestMethod]
-        [Ignore] // TODO: Address `error CS0656: Missing compiler required member 'System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray'` by moving tests to run on .NET Core.
+        [Fact(Skip = "TODO: Address `error CS0656: Missing compiler required member 'System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray'` by moving tests to run on .NET Core.")]
         public void CrossCheck_IndexerAccess_Array_Slice()
         {
             var xs = Enumerable.Range(7, 50).ToArray();
@@ -225,7 +224,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // TODO: The test above won't succeed because EqualityComparer<int[]>.Default won't do the right thing.
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IndexerAccess_String_Slice()
         {
             var f1 = Compile<Func<string, Range, string>>("(s, i) => s[i]");
@@ -248,7 +247,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<ArgumentOutOfRangeException>(() => f2(""));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IndexerAccess_CustomString_Slice()
         {
             var f1 = Compile<Func<MySliceableString, Range, MySliceableString>>("(s, i) => s[i]", typeof(MySliceableString).Assembly);

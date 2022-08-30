@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp100_InterpolatedStringHandlers
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_87DF_089A()
         {
             // (Expression<Func<SimpleInterpolatedStringHandler>>)(() => $"Hello")
@@ -99,13 +98,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_87DF_089A();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_87DF_089A() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_7395_1C24()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandler>>)(x => $"x = {x}")
@@ -186,13 +185,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_7395_1C24();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7395_1C24() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_7B35_4D2E()
         {
             // (Expression<Func<int, bool, SimpleInterpolatedStringHandler>>)((x, b) => $"x = {x}, b = {b}")
@@ -312,13 +311,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_7B35_4D2E();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_7B35_4D2E() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_856E_8640()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandler>>)(x => $"x = {x,5}")
@@ -409,13 +408,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_856E_8640();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_856E_8640() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_3CDF_C020()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandler>>)(x => $"x = {x:X}")
@@ -506,13 +505,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3CDF_C020();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3CDF_C020() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A49F_41E1()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandler>>)(x => $"x = {x,5:X}")
@@ -609,13 +608,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A49F_41E1();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A49F_41E1() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_C2F4_B3FA()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandlerCtorOutBool>>)(x => $"x = {x}")
@@ -698,13 +697,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_C2F4_B3FA();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_C2F4_B3FA() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_D484_7A71()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandlerAppendReturnBool>>)(x => $"x = {x}")
@@ -785,13 +784,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_D484_7A71();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D484_7A71() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A221_B2CB()
         {
             // (Expression<Func<int, SimpleInterpolatedStringHandlerCtorOutBoolAppendReturnBool>>)(x => $"x = {x}")
@@ -874,13 +873,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A221_B2CB();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A221_B2CB() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A227_1CB0()
         {
             // (Expression<Func<dynamic, SimpleInterpolatedStringHandler>>)(x => $"x = {x}")
@@ -965,13 +964,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A227_1CB0();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A227_1CB0() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_B033_4813()
         {
             // (Expression<Func<dynamic, SimpleInterpolatedStringHandlerCtorOutBool>>)(x => $"x = {x}")
@@ -1058,13 +1057,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B033_4813();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B033_4813() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_1D5D_1392()
         {
             // (Expression<Func<dynamic, SimpleInterpolatedStringHandlerAppendReturnBool>>)(x => $"x = {x}")
@@ -1153,13 +1152,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1D5D_1392();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1D5D_1392() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A6E0_98ED()
         {
             // (Expression<Func<dynamic, SimpleInterpolatedStringHandlerCtorOutBoolAppendReturnBool>>)(x => $"x = {x}")
@@ -1250,13 +1249,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A6E0_98ED();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A6E0_98ED() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_56C2_F36B()
         {
             // (Expression<Func<int, bool, string, SimpleInterpolatedStringHandler>>)((x, y, z) => $"x = {x}, " + ($"y = {y}, " + $"z = {z}"))
@@ -1473,13 +1472,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_56C2_F36B();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_56C2_F36B() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_3809_1F73()
         {
             // (Expression<Func<int, bool, string, SimpleInterpolatedStringHandler>>)((x, y, z) => ($"x = {x}, " + $"y = {y}, ") + $"z = {z}")
@@ -1696,13 +1695,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpInterpolatedStringHandlerConversion>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3809_1F73();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3809_1F73() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_1FF7_87E2()
         {
             // (Expression<Action<Logger, int>>)((logger, x) => logger.LogMessage(LogLevel.Error, $"x = {x}"))
@@ -1808,7 +1807,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpCall>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1FF7_87E2();
         }
 
@@ -1816,7 +1815,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

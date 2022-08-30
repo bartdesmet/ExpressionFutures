@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Linq;
 
@@ -27,7 +27,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         // NB: Tests in this file are derived from https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns.
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_DeclarationPatternWithDiscard()
         {
             var f = Compile<Func<Vehicle, decimal>>(@"
@@ -46,7 +46,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new Truck());
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_TypePattern()
         {
             var f = Compile<Func<Vehicle, decimal>>(@"
@@ -65,7 +65,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new Truck());
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_ConstantPattern()
         {
             var f = Compile<Func<int, decimal>>(@"
@@ -90,7 +90,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<ArgumentException>(() => f(5));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_RelationalPattern_Double()
         {
             var f = Compile<Func<double, string>>(@"
@@ -111,7 +111,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_RelationalPattern_AndOr()
         {
             var f = Compile<Func<DateTime, string>>(@"
@@ -131,7 +131,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_And()
         {
             var f = Compile<Func<double, string>>(@"
@@ -152,7 +152,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Or()
         {
             var f = Compile<Func<DateTime, string>>(@"
@@ -172,7 +172,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Property()
         {
             var f = Compile<Func<object, string>>(@"
@@ -195,7 +195,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new[] { 'a', 'b', 'c' });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Positional_Deconstruct()
         {
             var f = Compile<Func<Point, string>>(@"
@@ -214,7 +214,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new Point { X = 1, Y = 1 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Positional_Tuple()
         {
             var f = Compile<Func<int, DateTime, decimal>>(@"
@@ -244,7 +244,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Positional_Declaration()
         {
             var f = Compile<Func<object, string>>(@"
@@ -273,7 +273,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_PositionalAndProperty()
         {
             var f = Compile<Func<WeightedPoint, bool>>("point => point is (>= 1, >= 2) { Weight: >= 3.0 }", typeof(WeightedPoint).Assembly);
@@ -289,7 +289,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new WeightedPoint(2, 3) { Weight = 4.0 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_PositionalAndProperty_Declaration()
         {
             var f = Compile<Action<WeightedPoint>>(@"
@@ -312,7 +312,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new WeightedPoint(2, 3) { Weight = 4.0 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Var()
         {
             var f = Compile<Func<Func<int, int[]>, int, int, bool>>(@"
@@ -339,7 +339,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Var()
         {
             var f = Compile<Func<Point2DRecord, Point2DRecord>>(@"
@@ -360,7 +360,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_SwitchExpression_Discard()
         {
             var f = Compile<Func<DayOfWeek?, decimal>>(@"

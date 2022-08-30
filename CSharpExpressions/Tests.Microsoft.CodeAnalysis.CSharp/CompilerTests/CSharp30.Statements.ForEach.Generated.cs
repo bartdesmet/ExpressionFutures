@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp30_Statements_ForEach
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_245A_D038()
         {
             // (Expression<Action<string>>)(s => { foreach (var c in s) Console.Write(c); })
@@ -124,13 +123,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_245A_D038();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_245A_D038() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_DA7B_94B8()
         {
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) Console.Write(x); })
@@ -219,13 +218,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_DA7B_94B8();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_DA7B_94B8() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_34B8_1000()
         {
             // (Expression<Action<object[]>>)(xs => { foreach (int x in xs) Console.Write(x); })
@@ -324,13 +323,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_34B8_1000();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_34B8_1000() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_3958_BEB6()
         {
             // (Expression<Action<IEnumerable<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
@@ -415,13 +414,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_3958_BEB6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_3958_BEB6() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_1525_A28E()
         {
             // (Expression<Action<List<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
@@ -506,13 +505,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1525_A28E();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1525_A28E() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_720D_F421()
         {
             // (Expression<Action<IList<int>>>)(xs => { foreach (var x in xs) Console.Write(x); })
@@ -597,13 +596,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_720D_F421();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_720D_F421() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_0041_CDCE()
         {
             // (Expression<Action<ArrayList>>)(xs => { foreach (int x in xs) Console.Write(x); })
@@ -702,13 +701,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0041_CDCE();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0041_CDCE() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_AE67_70A6()
         {
             // (Expression<Action<int[]>>)(xs => { foreach (var x in xs) { if (x == 5) continue; if (x == 8) break; } })
@@ -840,13 +839,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_AE67_70A6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_AE67_70A6() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_8AE9_1642()
         {
             // (Expression<Action<dynamic>>)(xs => { foreach (int x in xs) Console.Write(x); })
@@ -949,7 +948,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_8AE9_1642();
         }
 
@@ -957,7 +956,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

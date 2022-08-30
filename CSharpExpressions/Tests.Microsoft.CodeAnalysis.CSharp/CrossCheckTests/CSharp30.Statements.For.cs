@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For1()
         {
             var f = Compile<Action>(@"() =>
@@ -53,7 +53,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For2()
         {
             var f = Compile<Action>(@"() =>
@@ -70,7 +70,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For_Conversion()
         {
             var f = Compile<Action>(@"() =>
@@ -87,7 +87,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For_Infinite()
         {
             var f = Compile<Action>(@"() =>
@@ -114,7 +114,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For_Complex()
         {
             var f = Compile<Action>(@"() =>
@@ -131,7 +131,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For_NoDeclarations()
         {
             var f = Compile<Action>(@"() =>
@@ -151,7 +151,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_For_Locals()
         {
             var f = Compile<Action>(@"() =>

@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Integral()
         {
             var values = Enumerable.Range(0, 20);
@@ -42,7 +42,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             CrossCheck_Switch_Integral_Core<long>(values);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Integral_Nullable()
         {
             var values = Enumerable.Range(0, 20).Select(x => (int?)x).Concat(new int?[] { null });
@@ -61,49 +61,49 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             //CrossCheck_Switch_Integral_Nullable_Core<long?>(values);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Char()
         {
             CrossCheck_Switch_Char_Core(new char[] { 'a', 'b', '0', '1', 'p', 'q', 'r', 'x', 'y', 'z', '\t', '\r', '\n' });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Char_Nullable()
         {
             CrossCheck_Switch_Char_Nullable_Core(new char?[] { null, 'a', 'b', '0', '1', 'p', 'q', 'r', 'x', 'y', 'z', '\t', '\r', '\n' });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Boolean()
         {
             CrossCheck_Switch_Boolean_Core(new bool[] { false, true });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Boolean_Nullable()
         {
             CrossCheck_Switch_Boolean_Nullable_Core(new bool?[] { null, false, true });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_String()
         {
             CrossCheck_Switch_String_Core(new string[] { null, "", " ", "bar", "foo", "baz", "qux" });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Enum()
         {
             CrossCheck_Switch_Enum_Core(new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Cyan });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Enum_Nullable()
         {
             CrossCheck_Switch_Enum_Nullable_Core(new ConsoleColor?[] { null, ConsoleColor.White, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Cyan });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Empty()
         {
             var f = Compile<Action<int>>(@"x =>
@@ -119,7 +119,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_NoBreak()
         {
             var f = Compile<Func<bool, int>>(@"x =>
@@ -140,7 +140,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Goto()
         {
             var f = Compile<Action<int>>(@"x =>
@@ -179,7 +179,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Goto_Nullable()
         {
             var f = Compile<Action<int?>>(@"x =>
@@ -225,7 +225,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Goto_String()
         {
             var f = Compile<Action<string>>(@"x =>
@@ -258,7 +258,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("I'm not meta");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Goto_Enum()
         {
             var f = Compile<Action<ConsoleColor>>(@"x =>
@@ -287,7 +287,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Cyan);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Conversion()
         {
             var f = Compile<Action<Inty>>(@"x =>
@@ -310,7 +310,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new Inty(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Switch_Locals()
         {
             var f = Compile<Action<int>>(@"x =>

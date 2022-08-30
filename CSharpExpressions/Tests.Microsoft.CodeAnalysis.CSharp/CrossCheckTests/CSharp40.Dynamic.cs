@@ -3,7 +3,7 @@
 // bartde - December 2015
 
 using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Unary
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Unary_Negate()
         {
             var f = CrossCheck_Dynamic_UnaryCore("-");
@@ -49,7 +49,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Unary_NegateChecked()
         {
             // NB: byte, sbyte, ushort, short widen to int
@@ -60,7 +60,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertDynamicUnaryCheckedThrows<long>("-", long.MinValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Unary_UnaryPlus()
         {
             var f = CrossCheck_Dynamic_UnaryCore("+");
@@ -75,7 +75,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Unary_OnesComplement()
         {
             var f = CrossCheck_Dynamic_UnaryCore("~");
@@ -88,7 +88,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Unary_Not()
         {
             var f = CrossCheck_Dynamic_UnaryCore("!");
@@ -112,7 +112,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Binary
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Add()
         {
             var f = CrossCheck_Dynamic_BinaryCore("+");
@@ -132,7 +132,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("foo", "bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_AddChecked()
         {
             // NB: byte, sbyte, ushort, short widen to int
@@ -143,7 +143,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertDynamicBinaryCheckedThrows<ulong>("+", ulong.MaxValue, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Subtract()
         {
             var f = CrossCheck_Dynamic_BinaryCore("-");
@@ -162,7 +162,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Red, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_SubtractChecked()
         {
             // NB: byte, sbyte, ushort, short widen to int
@@ -173,7 +173,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertDynamicBinaryCheckedThrows<ulong>("-", ulong.MinValue, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Multiply()
         {
             var f = CrossCheck_Dynamic_BinaryCore("*");
@@ -188,7 +188,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_MultiplyChecked()
         {
             // NB: byte, sbyte, ushort, short widen to int
@@ -199,7 +199,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertDynamicBinaryCheckedThrows<ulong>("*", ulong.MaxValue, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Divide()
         {
             var f = CrossCheck_Dynamic_BinaryCore("/");
@@ -214,7 +214,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Modulo()
         {
             var f = CrossCheck_Dynamic_BinaryCore("%");
@@ -229,7 +229,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_And()
         {
             var f = CrossCheck_Dynamic_BinaryCore("&");
@@ -247,7 +247,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(BindingFlags.Public | BindingFlags.Instance, BindingFlags.Static);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Or()
         {
             var f = CrossCheck_Dynamic_BinaryCore("|");
@@ -264,7 +264,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(BindingFlags.Public, BindingFlags.Instance);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_ExclusiveOr()
         {
             var f = CrossCheck_Dynamic_BinaryCore("^");
@@ -281,7 +281,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(BindingFlags.Public, BindingFlags.Instance);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_AndAlso()
         {
             var f = CrossCheck_Dynamic_BinaryCore("&&");
@@ -296,7 +296,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_OrElse()
         {
             var f = CrossCheck_Dynamic_BinaryCore("||");
@@ -311,7 +311,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_LeftShift()
         {
             var f = CrossCheck_Dynamic_BinaryCore("<<");
@@ -329,7 +329,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_RightShift()
         {
             var f = CrossCheck_Dynamic_BinaryCore(">>");
@@ -347,7 +347,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_Equal()
         {
             var f = CrossCheck_Dynamic_BinaryCore("==");
@@ -370,7 +370,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_NotEqual()
         {
             var f = CrossCheck_Dynamic_BinaryCore("!=");
@@ -393,7 +393,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_LessThan()
         {
             var f = CrossCheck_Dynamic_BinaryCore("<");
@@ -412,7 +412,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_LessThanOrEqual()
         {
             var f = CrossCheck_Dynamic_BinaryCore("<=");
@@ -431,7 +431,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_GreaterThan()
         {
             var f = CrossCheck_Dynamic_BinaryCore(">");
@@ -450,7 +450,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(TimeSpan.FromSeconds(42), TimeSpan.FromSeconds(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Binary_GreaterThanOrEqual()
         {
             var f = CrossCheck_Dynamic_BinaryCore(">=");
@@ -480,7 +480,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Member
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetMember1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.Length");
@@ -491,7 +491,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[42]);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetMember2()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.Value");
@@ -500,7 +500,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<int>(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetMember3()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.Ticks");
@@ -513,7 +513,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Index
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetIndex1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d[1]");
@@ -529,7 +529,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<KeyNotFoundException>(() => f(new Dictionary<int, string> { { 0, "zero" } }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetIndex2()
         {
             var f = Compile<Func<int[], dynamic, dynamic>>("(int[] xs, dynamic d) => xs[d]");
@@ -540,7 +540,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f(new int[0], 0));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetIndex3()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic, dynamic>>("(dynamic d, dynamic e, dynamic f) => d[e, f]");
@@ -551,7 +551,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new string[2, 2] { { "40", "41" }, { "43", "42" } }, 1, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetIndex4()
         {
             var f = Compile<Func<int[,], dynamic, dynamic, dynamic>>("(int[,] xs, dynamic e, dynamic f) => xs[e, f]");
@@ -559,7 +559,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[1, 1] { { 42 } }, 0, 0);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetIndex5()
         {
             var f = Compile<Func<dynamic, int, int, dynamic>>("(dynamic d, int e, int f) => d[e, f]");
@@ -567,7 +567,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[1, 1] { { 42 } }, 0, 0);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_GetIndex_Named()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic xs, dynamic index) => xs[index: Return(index)]");
@@ -579,7 +579,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Invoke
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Invoke1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d(42)");
@@ -591,7 +591,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<RuntimeBinderException>(() => f(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Invoke2()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic e) => d(e)");
@@ -606,7 +606,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(new Func<string, string>(s => s.ToUpper()), null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Invoke3()
         {
             var f = Compile<Func<Func<int, int>, dynamic, dynamic>>("(Func<int, int> f, dynamic d) => f(d)");
@@ -618,7 +618,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // AssertEx.Throws<NullReferenceException>(() => f(null, 42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Invoke_Named()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic, dynamic, dynamic>>("(dynamic f, dynamic arg1, dynamic arg2, dynamic arg3) => f(arg2: Return(arg2), arg3: Return(arg3), arg1: Return(arg1))");
@@ -630,7 +630,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region InvokeMember
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_ToString()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => d.ToString()");
@@ -645,7 +645,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Red);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Static()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => int.Parse(d)");
@@ -654,7 +654,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<FormatException>(() => f("bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Out()
         {
             var f = Compile<Action<dynamic>>(@"(dynamic d) => {
@@ -669,7 +669,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Ref1()
         {
             var f = Compile<Action<dynamic>>(@"(dynamic d) => {
@@ -683,7 +683,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Ref2()
         {
             var f = Compile<Action<dynamic, dynamic>>(@"(dynamic location, dynamic value) => {
@@ -696,7 +696,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41, 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Overloads()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => Math.Abs(d)");
@@ -707,7 +707,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(-42.0m);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Static_Generic()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic d) => Utils.DynamicInvokeWithGeneric<double>(new Func<string, string>(Log), d)");
@@ -717,7 +717,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Instance_Generic()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic x) => d.Return<int>(x)");
@@ -725,7 +725,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new DynamicInvoker(), 42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeMember_Named()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic, dynamic>>("(dynamic s, dynamic startIndex, dynamic length) => s.Substring(length: Return(length), startIndex: Return(startIndex))");
@@ -737,7 +737,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region InvokeConstructor
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeConstructor1()
         {
             var f = Compile<Func<dynamic, TimeSpan>>("(dynamic d) => new TimeSpan(d)");
@@ -746,7 +746,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(42L);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeConstructor2()
         {
             var f = Compile<Func<dynamic, dynamic, DateTimeOffset>>("(dynamic d1, dynamic d2) => new DateTimeOffset(d1, d2)");
@@ -757,7 +757,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(dt.Ticks, TimeSpan.FromHours(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_InvokeConstructor_Named()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic, TimeSpan>>("(dynamic hours, dynamic minutes, dynamic seconds) => new TimeSpan(minutes: Return(minutes), hours: Return(hours), seconds: Return(seconds))");
@@ -769,7 +769,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Convert
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Convert1()
         {
             var f = Compile<Func<dynamic, DateTimeOffset>>("(dynamic d) => (DateTimeOffset)d");
@@ -778,7 +778,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new DateTimeOffset(new DateTime(1983, 2, 11), TimeSpan.FromHours(1)));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Convert2()
         {
             var f = Compile<Func<dynamic, int>>("(dynamic d) => checked((int)d)");
@@ -792,7 +792,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Assignment
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Assign1()
         {
             var f = Compile<Action<dynamic>>("(dynamic d) => { Log<object>(d); var e = d; Log<object>(e); }");
@@ -802,7 +802,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Assign2()
         {
             var f = Compile<Action<int>>("(int x) => { Log(x); dynamic d = x; Log(d); }");
@@ -810,7 +810,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_Assign3()
         {
             var f = Compile<Action<dynamic>>("(dynamic d) => { Log(d); int x = d; Log(x); }"); // also has convert
@@ -822,7 +822,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         #region Compound assignment
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Variable1()
         {
             var f = Compile<Func<dynamic, dynamic, dynamic>>("(dynamic d, dynamic e) => { Log(d += Return(e)); return d; }");
@@ -830,7 +830,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Variable2()
         {
             var f = Compile<Func<int, dynamic, dynamic>>("(int d, dynamic e) => { Log(d += Return(e)); return d; }");
@@ -838,7 +838,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Variable3()
         {
             var f = Compile<Func<dynamic, int, dynamic>>("(dynamic d, int e) => { Log(d += Return(e)); return d; }");
@@ -846,7 +846,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_ArrayIndex1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new[] { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
@@ -854,7 +854,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_ArrayIndex2()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { int[] d = new[] { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
@@ -862,7 +862,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_ArrayIndex3()
         {
             var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new[] { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
@@ -870,7 +870,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Index1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new List<int> { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
@@ -878,7 +878,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Index2()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { List<int> d = new List<int> { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
@@ -886,7 +886,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Index3()
         {
             var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new List<int> { 41 }; Log(d[Return(0)] += Return(e)); return d[0]; }");
@@ -894,7 +894,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_CSharpIndex1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new List<int> { 41 }; Log(d[index: Return(0)] += Return(e)); return d[0]; }");
@@ -902,7 +902,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_CSharpIndex2()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { List<int> d = new List<int> { 41 }; Log(d[index: Return(0)] += Return(e)); return d[0]; }");
@@ -910,7 +910,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_CSharpIndex3()
         {
             var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new List<int> { 41 }; Log(d[index: Return(0)] += Return(e)); return d[0]; }");
@@ -918,7 +918,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Member1()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { dynamic d = new StrongBox<int> { Value = 41 }; Log(d.Value += Return(e)); return d.Value; }");
@@ -926,7 +926,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Member2()
         {
             var f = Compile<Func<dynamic, dynamic>>("(dynamic e) => { StrongBox<int> d = new StrongBox<int> { Value = 41 }; Log(d.Value += Return(e)); return d.Value; }");
@@ -934,7 +934,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Dynamic_CompoundAssign_Member3()
         {
             var f = Compile<Func<int, dynamic>>("(int e) => { dynamic d = new StrongBox<int> { Value = 41 }; Log(d.Value += Return(e)); return d.Value; }");

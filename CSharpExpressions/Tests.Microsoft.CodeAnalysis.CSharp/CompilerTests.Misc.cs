@@ -2,13 +2,13 @@
 //
 // bartde - January 2022
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void ExpressionTreeWithClosure()
         {
             var code = @"
@@ -29,7 +29,7 @@ public static class Test
 
             var asm = TestUtilities.Compile(code, out _);
             var res = (int)asm.GetType("Test").GetMethod("Run").Invoke(null, new object[0]);
-            Assert.AreEqual(1, res);
+            Assert.Equal(1, res);
         }
     }
 }

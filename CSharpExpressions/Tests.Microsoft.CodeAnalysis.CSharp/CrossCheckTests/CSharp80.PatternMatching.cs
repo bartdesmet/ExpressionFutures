@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -25,7 +25,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Tuple()
         {
             var f = Compile<Func<(int, string), bool>>("t => t is (1, \"bar\")");
@@ -35,7 +35,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, "bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Tuple_Named()
         {
             var f = Compile<Func<(int x, string s), bool>>("((int x, string s) t) => t is (x: 1, s: \"bar\")");
@@ -45,7 +45,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((x: 1, s: "bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Tuple_NullableComponents()
         {
             var f = Compile<Func<(int?, long?), bool>>("t => t is (42, null)");
@@ -55,7 +55,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((null, null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Tuple_Nested()
         {
             var f = Compile<Func<(int, ((long, char), bool)), bool>>("t => t is (42, ((123L, 'a'), true))");
@@ -66,7 +66,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((42, ((123L, 'a'), true)));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Tuple_HighArity()
         {
             var f = Compile<Func<(int, string, char, bool, double, ConsoleColor, byte, long, uint), bool>>("t => t is (1, \"bar\", 'a', true, Math.PI, ConsoleColor.Red, (byte)255, 42L, (uint)123)");
@@ -82,7 +82,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, "bar", 'a', true, Math.PI, ConsoleColor.Red, (byte)255, 42L, (uint)123));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Deconstruct_Instance1()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point(Log) { X = x, Y = y } is (1, 2)");
@@ -93,7 +93,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Deconstruct_Instance2()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point(Log) { X = x, Y = y } is (x: 1, y: 2)");
@@ -104,7 +104,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Deconstruct_Static1()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point2D(Log) { X = x, Y = y } is (1, 2)");
@@ -115,7 +115,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_Deconstruct_Static2()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point2D(Log) { X = x, Y = y } is (x: 1, y: 2)");
@@ -126,7 +126,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_All()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point(Log) { X = x, Y = y } is { X: 1, Y: 2 }");
@@ -137,7 +137,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Reordered()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point(Log) { X = x, Y = y } is { Y: 2, X: 1 }");
@@ -148,7 +148,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Some()
         {
             var f = Compile<Func<int, int, bool>>("(x, y) => new Point(Log) { X = x, Y = y } is { Y: 2 }");
@@ -159,7 +159,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Field()
         {
             var f = Compile<Func<StrongBox<int>, bool>>("b => b is { Value: 42 }");
@@ -169,7 +169,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<int>(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Field_Nullable()
         {
             var f = Compile<Func<StrongBox<int?>, bool>>("b => b is { Value: 42 }");
@@ -179,7 +179,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<int?>(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Field_Tuple()
         {
             var f = Compile<Func<(int x, string s), bool>>("((int x, string s) t) => t is { x: 42, s: \"bar\" }");
@@ -188,7 +188,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((42, "bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_NotNullCheck()
         {
             var f = Compile<Func<object, bool>>("o => o is { }");
@@ -198,7 +198,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_NotNullCheck_Nullable()
         {
             var f = Compile<Func<int?, bool>>("x => x is { }");
@@ -206,7 +206,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Positional_ITuple()
         {
             var f = Compile<Func<object[], bool>>("args => new MyTuple(args, Log) is (42, \"bar\", 123L)");

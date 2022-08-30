@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Linq;
 
@@ -25,7 +25,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Relational_Object_Int32()
         {
             foreach (var op in new[] { "<", "<=", ">", ">=" })
@@ -39,7 +39,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Relational_NullableInt32_Int32()
         {
             foreach (var op in new[] { "<", "<=", ">", ">=" })
@@ -52,7 +52,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Relational_Int32_Int32()
         {
             foreach (var op in new[] { "<", "<=", ">", ">=" })
@@ -64,7 +64,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Relational_Object_Decimal()
         {
             foreach (var op in new[] { "<", "<=", ">", ">=" })
@@ -78,7 +78,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_And()
         {
             var f = Compile<Func<int, bool>>("x => x is >= 0 and < 10");
@@ -89,7 +89,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Or()
         {
             var f = Compile<Func<DateTime, bool>>("date => date is { Year: 2020, Month: 5, Day: 19 or 20 or 21 }");
@@ -106,7 +106,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_AndOr()
         {
             var f = Compile<Func<char, bool>>("c => c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z') or '.' or ','");
@@ -117,7 +117,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Not_Null()
         {
             var f = Compile<Func<object, bool>>($"o => o is not null");
@@ -126,7 +126,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Not_Int32()
         {
             var f = Compile<Func<object, bool>>($"o => o is not 42");

@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp73_TupleEquality
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_41C6_D6EC()
         {
             // (Expression<Func<(int, string), (int, string), bool>>)((l, r) => l == r)
@@ -95,13 +94,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_41C6_D6EC();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_41C6_D6EC() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_1183_EE62()
         {
             // (Expression<Func<(int, string), (int, string), bool>>)((l, r) => l != r)
@@ -157,13 +156,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1183_EE62();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1183_EE62() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_E39A_78A2()
         {
             // (Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l == r)
@@ -219,13 +218,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_E39A_78A2();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E39A_78A2() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_9A78_F30E()
         {
             // (Expression<Func<(int?, string), (int?, string), bool>>)((l, r) => l != r)
@@ -281,13 +280,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_9A78_F30E();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_9A78_F30E() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_B73C_68B9()
         {
             // (Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l == r)
@@ -359,13 +358,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B73C_68B9();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B73C_68B9() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_530F_CF5A()
         {
             // (Expression<Func<(int, string, DateTime), (int, string, DateTime), bool>>)((l, r) => l != r)
@@ -437,13 +436,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_530F_CF5A();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_530F_CF5A() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_E4CE_9D5B()
         {
             // (Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l == r)
@@ -499,13 +498,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_E4CE_9D5B();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_E4CE_9D5B() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_0B1F_7212()
         {
             // (Expression<Func<(int, string)?, (int, string)?, bool>>)((l, r) => l != r)
@@ -561,13 +560,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0B1F_7212();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_0B1F_7212() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_A78C_7F57()
         {
             // (Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l == r)
@@ -673,13 +672,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_A78C_7F57();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_A78C_7F57() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_235E_24DF()
         {
             // (Expression<Func<(int, (string, bool), long), (int, (string, bool), long), bool>>)((l, r) => l != r)
@@ -785,13 +784,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_235E_24DF();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_235E_24DF() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_D6B8_C461()
         {
             // (Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l == r)
@@ -897,13 +896,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_D6B8_C461();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_D6B8_C461() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_5CFE_A5A4()
         {
             // (Expression<Func<(int, (string, bool)?, long), (int, (string, bool)?, long), bool>>)((l, r) => l != r)
@@ -1009,13 +1008,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_5CFE_A5A4();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_5CFE_A5A4() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_27FD_7B61()
         {
             // (Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l == r)
@@ -1121,13 +1120,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_27FD_7B61();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_27FD_7B61() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_157E_20F1()
         {
             // (Expression<Func<(int, (string, bool)?, long)?, (int, (string, bool)?, long)?, bool>>)((l, r) => l != r)
@@ -1233,13 +1232,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_157E_20F1();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_157E_20F1() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_2CC6_948A()
         {
             // (Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l == r)
@@ -1395,13 +1394,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_2CC6_948A();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_2CC6_948A() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_B81E_0DAE()
         {
             // (Expression<Func<(int, (string, (bool, DateTime, double)), long), (int, (string, (bool, DateTime, double)), long), bool>>)((l, r) => l != r)
@@ -1557,13 +1556,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleNotEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_B81E_0DAE();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_B81E_0DAE() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_BC36_A04C()
         {
             // (Expression<Func<(char, byte), (char, byte), bool>>)((l, r) => l == r)
@@ -1679,7 +1678,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpTupleEqual>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_BC36_A04C();
         }
 
@@ -1687,7 +1686,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

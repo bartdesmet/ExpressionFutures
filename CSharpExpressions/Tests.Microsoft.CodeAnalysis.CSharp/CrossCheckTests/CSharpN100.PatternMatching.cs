@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -25,7 +25,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Nested()
         {
             var f = Compile<Func<DateTimeOffset, bool>>("d => d is { Date.Year: 2021 }");
@@ -33,7 +33,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new DateTimeOffset(new DateTime(2021, 12, 17)));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Nested_Deep()
         {
             var f = Compile<Func<StrongBox<DateTimeOffset>, bool>>("b => b is { Value.Date.Year: 2021 }");
@@ -41,7 +41,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<DateTimeOffset>(new DateTimeOffset(new DateTime(2021, 12, 17))));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Nested_Nullable()
         {
             var f = Compile<Func<StrongBox<DateTimeOffset?>, bool>>("b => b is { Value.Date.Year: 2021 }");
@@ -50,7 +50,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StrongBox<DateTimeOffset?>(new DateTimeOffset(new DateTime(2021, 12, 17))));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Property_Nested_Tuple()
         {
             var f = Compile<Func<int, bool>>("y => { var t = (x: 0, yz: (y: y, z: false)); return t is { yz.y: 3 }; }");

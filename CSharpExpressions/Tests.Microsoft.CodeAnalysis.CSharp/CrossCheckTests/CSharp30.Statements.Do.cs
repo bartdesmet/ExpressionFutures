@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Do1()
         {
             var f = Compile<Action>(@"() =>
@@ -58,7 +58,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Do2()
         {
             var f = Compile<Action>(@"() =>
@@ -79,7 +79,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Do_Conversion()
         {
             var f = Compile<Action>(@"() =>
@@ -100,7 +100,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Do_Locals()
         {
             var f = Compile<Action>(@"() =>

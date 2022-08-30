@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp80_PatternSwitchStatement
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_EF4A_69D6()
         {
             // (Expression<Action<object>>)(o => { switch (o) { case string { Length: 0 }: Console.WriteLine("Empty"); break; case string { Length: 1 } s: Console.Write(s[0]); break; } })
@@ -160,13 +159,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_EF4A_69D6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_EF4A_69D6() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_1C06_9AD6()
         {
             // (Expression<Action<object>>)(o => { switch (o) { case (0, 0): Console.WriteLine("Origin"); break; } })
@@ -237,13 +236,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_1C06_9AD6();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_1C06_9AD6() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_0A27_89A9()
         {
             // (Expression<Action<(int, int)>>)(o => { switch (o) { case (0, 0) p: Console.WriteLine(p); break; } })
@@ -324,7 +323,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     </CSharpBlock>
   </Body>
 </Lambda>";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_0A27_89A9();
         }
 
@@ -332,7 +331,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

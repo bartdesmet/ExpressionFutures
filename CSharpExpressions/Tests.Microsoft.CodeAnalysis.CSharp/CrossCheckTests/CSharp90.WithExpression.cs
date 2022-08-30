@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Record1()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -40,7 +40,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Record2()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -55,7 +55,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Record3()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -70,7 +70,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Struct1()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -86,7 +86,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Struct2()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -101,7 +101,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Struct3()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -116,7 +116,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Anonymous1()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -132,7 +132,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Anonymous2()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -147,7 +147,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_WithExpression_Anonymous3()
         {
             var f = Compile<Func<string>>(@"() => {

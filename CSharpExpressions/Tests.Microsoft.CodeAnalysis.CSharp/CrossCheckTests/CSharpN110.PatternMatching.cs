@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Array_Empty()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is []");
@@ -36,7 +36,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Array_OneElement_Constant()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1]");
@@ -47,7 +47,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 2, 1 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Array_TwoElements_Constant()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, 2]");
@@ -59,7 +59,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2, 3 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Array_TwoElements_ComplexPatterns()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [<= 0, > 0 and < 4]");
@@ -83,7 +83,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 0, 1, 2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Array_DiscardSome()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, _, _, 4]");
@@ -98,7 +98,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2, 3, 4, 5 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Array_Assign()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, _, 3] ys && ys[1] == 2");
@@ -110,7 +110,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2, 3, 4 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_String_Empty()
         {
             var f = Compile<Func<string, bool>>("s => s is []");
@@ -120,7 +120,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("ab");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_String_OneChar()
         {
             var f = Compile<Func<string, bool>>("s => s is ['a']");
@@ -132,7 +132,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("ba");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_String_TwoChars_ComplexPatterns()
         {
             var f = Compile<Func<string, bool>>("s => s is [>= 'a' and <= 'z', (>= '0' and <= '9') or '_']");
@@ -151,7 +151,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("123");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_List_Empty()
         {
             var f = Compile<Func<List<int>, bool>>("xs => xs is []");
@@ -161,7 +161,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new List<int> { 1, 2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_List_SomeElements()
         {
             var f = Compile<Func<List<int>, bool>>("xs => xs is [1, 2, 3]");
@@ -176,7 +176,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new List<int> { 1, 2, 3, 4 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_ListOfTuple()
         {
             var f = Compile<Func<List<(string, int)>, bool>>("d => d is [(\"bar\", 42)]");
@@ -187,7 +187,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new List<(string, int)> { ( "foo", 42) });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_OddCollection_Empty()
         {
             var f = Compile<Func<OddCollection, bool>>("o => o is []", typeof(OddCollection).Assembly);
@@ -196,7 +196,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new OddCollection { Count = 1 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_OddCollection_Exception()
         {
             var f = Compile<Func<OddCollection, bool>>("o => o is [0]", typeof(OddCollection).Assembly);
@@ -206,7 +206,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new OddCollection { Count = 2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_OddCollection_NoException_Discard()
         {
             // NB: Index at even positions throws exception, but access is not performed for discard patterns.
@@ -219,7 +219,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new OddCollection { Count = 4 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Struct()
         {
             var f = Compile<Func<StructList<int>, bool>>("xs => xs is [1, 2]", typeof(StructList<>).Assembly);
@@ -230,7 +230,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StructList<int>(new List<int> { 1, 2, 3 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_List_Struct_Nullable()
         {
             var f = Compile<Func<StructList<int>?, bool>>("xs => xs is [1, 2]", typeof(StructList<>).Assembly);
@@ -242,7 +242,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StructList<int>(new List<int> { 1, 2, 3 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_NonEmpty()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [..]");
@@ -252,7 +252,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_Prefix()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, ..]");
@@ -263,7 +263,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 2, 1 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_Suffix()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [.., 2]");
@@ -274,7 +274,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 2, 1 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_PrefixAndSuffix()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, .., 9]");
@@ -289,7 +289,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 
 #if NET6_0_OR_GREATER // Compilation to a Func<...> delegate relies on RuntimeHelpers.GetSubArray.
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_VarPattern()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, .. var s, 9] && s.Length == 0");
@@ -303,7 +303,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2, 8, 9 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_PropertyPattern()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, .. { Length: 1 }, 9]");
@@ -317,7 +317,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new int[] { 1, 2, 8, 9 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_Array_ListPattern()
         {
             var f = Compile<Func<int[], bool>>("xs => xs is [1, .. [2, .., 8], 9]");
@@ -335,7 +335,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_String_NonEmpty()
         {
             var f = Compile<Func<string, bool>>("s => s is [..]");
@@ -345,7 +345,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("ab");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_String_Prefix()
         {
             var f = Compile<Func<string, bool>>("s => s is ['a', ..]");
@@ -358,7 +358,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("abc");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_StringSuffix()
         {
             var f = Compile<Func<string, bool>>("s => s is [.., 'z']");
@@ -371,7 +371,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("xyz");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_String_PrefixAndSuffix()
         {
             var f = Compile<Func<string, bool>>("s => s is ['a', .., 'z']");
@@ -387,7 +387,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("abyz");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_String_VarPatter()
         {
             var f = Compile<Func<string, bool>>("s => s is ['a', .. var t, 'z'] && t.Length > 0");
@@ -403,7 +403,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("abyz");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_String_PropertyPattern()
         {
             var f = Compile<Func<string, bool>>("s => s is ['a', .. { Length: > 0 }, 'z']");
@@ -419,7 +419,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("abyz");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_String_ListPattern()
         {
             var f = Compile<Func<string, bool>>("s => s is ['a', .. ['b', .., 'y'], 'z']");
@@ -437,7 +437,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("abcxyz");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_CustomType_RangeIndexer()
         {
             var f = Compile<Func<StructList<int>, bool>>("xs => xs is [0, .. [1, .., 8], 9]", typeof(StructList<>).Assembly);
@@ -455,7 +455,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StructList<int>(new List<int> { 0, 1, 2, 7, 8, -9 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_CustomType_SliceMethod()
         {
             var f = Compile<Func<StructListWithSlice<int>, bool>>("xs => xs is [0, .. [1, .., 8], 9]", typeof(StructListWithSlice<>).Assembly);
@@ -473,7 +473,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new StructListWithSlice<int>(new List<int> { 0, 1, 2, 7, 8, -9 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_CustomType_NoException()
         {
             // NB: Slice in even position does throw exception, but we don't access it so it skips evaluation.
@@ -486,7 +486,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new OddCollection { Count = 4 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_CustomType_NoException_Discard()
         {
             // NB: Slice in even position does throw exception, but we don't access it so it skips evaluation.
@@ -499,7 +499,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new OddCollection { Count = 4 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_CustomType_NoException_VarPattern()
         {
             // NB: Slice in odd position does not throw exception.
@@ -511,7 +511,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new OddCollection { Count = 3 });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IsExpression_Slice_CustomType_Exception_VarPattern()
         {
             // NB: Slice in even position does throw exception.

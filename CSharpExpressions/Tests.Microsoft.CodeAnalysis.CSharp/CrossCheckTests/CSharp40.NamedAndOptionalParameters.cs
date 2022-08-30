@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -29,7 +29,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         // TODO: any issues with interface methods?
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call()
         {
             var f = Compile<Func<string, string>>(@"s =>
@@ -41,7 +41,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef1()
         {
             var f = Compile<Func<int[], int>>(@"xs =>
@@ -53,7 +53,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef2()
         {
             var f = Compile<Func<StrongBox<int>, int>>(@"b =>
@@ -64,7 +64,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef3()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -75,7 +75,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef4()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -91,7 +91,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef5()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -107,7 +107,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef6()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -123,7 +123,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef7()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -139,7 +139,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef8()
         {
             var f = Compile<Func<WeakBox<int>[], int>>(@"b =>
@@ -151,7 +151,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[0]));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef9()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -167,7 +167,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef10()
         {
             var f = Compile<Func<WeakBox<int>[][], int>>(@"b =>
@@ -180,7 +180,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[1][] { new WeakBox<int>[0] }));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef11()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -196,7 +196,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Call_ByRef12()
         {
             var f = Compile<Func<WeakBox<int>[,], int>>(@"b =>
@@ -210,21 +210,21 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f(new WeakBox<int>[1, 0]));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_New()
         {
             var f = Compile<Func<int>>("() => new NamedAndOptionalParameters(z: Return(false), y: Return(\"foobar\"), x: Return(43)).Value");
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Index()
         {
             var f = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[z: Return(false), y: Return(\"foobar\"), x: Return(43)]");
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_NamedParameters_Invoke()
         {
             var f = Compile<Func<DelegateWithNamedAndOptionalParameters, int>>("f => f(z: Return(false), y: Return(\"foobar\"), x: Return(43))");
@@ -239,7 +239,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO: ref/out
         // TODO: generic methods with default(T)
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_Call1()
         {
             var f1 = Compile<Func<int>>("() => Utils.OptionalParams()");
@@ -255,7 +255,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f4();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_Call2()
         {
             var f1 = Compile<Func<int>>("() => Utils.OptionalParams(Return(43), y: Return(\"foobar\"))");
@@ -268,7 +268,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f3();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_New1()
         {
             var f1 = Compile<Func<int>>("() => new NamedAndOptionalParameters().Value");
@@ -284,7 +284,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f4();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_New2()
         {
             var f1 = Compile<Func<int>>("() => new NamedAndOptionalParameters(Return(43), y: Return(\"foobar\")).Value");
@@ -297,7 +297,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f3();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_Index1()
         {
             // NB: Need at least one argument for an indexer.
@@ -312,7 +312,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f4();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_Index2()
         {
             var f1 = Compile<Func<int>>("() => new IndexerWithNamedAndOptionalParameters()[Return(43), y: Return(\"foobar\")]");
@@ -325,7 +325,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f3();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_Invoke1()
         {
             var d = new DelegateWithNamedAndOptionalParameters((x, y, z) => x + y.Length + (z ? 1 : 0));
@@ -343,7 +343,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f4(d);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_OptionalParameters_Invoke2()
         {
             var d = new DelegateWithNamedAndOptionalParameters((x, y, z) => x + y.Length + (z ? 1 : 0));

@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ThrowExpression_NullCoalesce()
         {
             var f = Compile<Func<string, string>>("s => Return(s) ?? throw new Exception(\"Bang!\")");
@@ -32,7 +32,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<Exception>(() => f(null), ex => ex.Message == "Bang!");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ThrowExpression_Conditional()
         {
             var f = Compile<Func<bool, int>>("b => Return(b) ? Return(1) : throw new Exception(\"Bang!\")");

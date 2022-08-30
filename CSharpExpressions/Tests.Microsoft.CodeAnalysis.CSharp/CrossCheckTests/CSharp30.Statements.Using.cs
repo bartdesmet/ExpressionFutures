@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Class1()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -42,7 +42,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Class2()
         {
             var f = Compile<Action<bool, bool>>(@"(b, c) =>
@@ -65,7 +65,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(true, true));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Class3()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -84,7 +84,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Struct1()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -102,7 +102,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Struct2()
         {
             var f = Compile<Action<bool>>(@"c =>
@@ -122,7 +122,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(true));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Struct3()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -141,7 +141,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Struct4()
         {
             var f = Compile<Action>(@"() =>
@@ -158,7 +158,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Dynamic()
         {
             var f = Compile<Action<dynamic>>(@"(dynamic d) =>
@@ -176,7 +176,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new ResourceStruct(_ => _));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Using_Many()
         {
             var f = Compile<Action<bool, bool>>(@"(bool b1, bool b2) =>

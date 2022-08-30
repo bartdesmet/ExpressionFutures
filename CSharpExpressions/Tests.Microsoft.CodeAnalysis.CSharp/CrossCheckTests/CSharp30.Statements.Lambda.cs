@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -26,7 +26,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         // TODO: add tests for quoted lambdas in statement bodies
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Lambda_Nested()
         {
             var f = Compile<Action>(@"() =>
@@ -47,7 +47,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Lambda_Nested_Closure()
         {
             var f = Compile<Action>(@"() =>

@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleLiteral()
         {
             var f = Compile<Func<int, string, (int, string)>>("(x, s) => (Return(x), Return(s))");
@@ -32,7 +32,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, "bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleLiteral_Named()
         {
             var f = Compile<Func<int, string, (int, string)>>("(x, s) => (x: Return(x), s: Return(s))");
@@ -40,14 +40,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, "bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleLiteral_Constants()
         {
             var f = Compile<Func<(int, string)>>("() => (1, \"foo\")");
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleLiteral_Nested()
         {
             var f = Compile<Func<int, string, bool, (int, (string, bool))>>("(x, s, b) => (Return(x), (Return(s), Return(b)))");
@@ -55,14 +55,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, "bar", false);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleLiteral_Many()
         {
             var f = Compile<Func<(int, int, int, int, int, int, int, int, int, int)>>("() => (Return(0), Return(1), Return(2), Return(3), Return(4), Return(5), Return(6), Return(7), Return(8), Return(9))");
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleLiteral_Null()
         {
             var f1 = Compile<Func<(int, string)>>("() => (0, null)");

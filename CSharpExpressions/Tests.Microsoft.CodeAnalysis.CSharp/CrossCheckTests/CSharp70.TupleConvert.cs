@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,14 +24,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleConvert()
         {
             var f = Compile<Func<(int, DateTime), (long, DateTimeOffset)>>("t => t");
             f((1, DateTime.Now));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TupleConvert_Nested()
         {
             var f = Compile<Func<(int, (DateTime, string)), (long, (DateTimeOffset, object))>>("t => t");

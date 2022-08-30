@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,14 +24,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Discard_Assign()
         {
             var f = Compile<Action>("() => { _ = Return(1); }");
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Discard_Out()
         {
             var f = Compile<Func<string, bool>>("s => int.TryParse(s, out _)");

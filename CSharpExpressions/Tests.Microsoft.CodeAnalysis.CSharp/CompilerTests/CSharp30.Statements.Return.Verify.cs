@@ -10,7 +10,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         {
             public override void CompilerTest_6102_7F8E() => OK();
             public override void CompilerTest_AEF8_BB4B() => OK();
-            public override void CompilerTest_7381_AA02() => INCONCLUSIVE(); // TODO: Degenerates into an expression body
+            public override void CompilerTest_7381_AA02() => /*INCONCLUSIVE()*/ OK(); // TODO: Degenerates into an expression body
         }
     }
 }

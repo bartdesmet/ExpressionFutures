@@ -31,15 +31,14 @@
 //          change. As such, any regression can cause test failures which allows to detect any changes to
 //          compiler or runtime library behavior.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using static Tests.Microsoft.CodeAnalysis.CSharp.TestUtilities;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
-    [TestClass]
     public partial class CompilerTests_CSharp40_NamedAndOptionalParameters_Reducing
     {
-        [TestMethod]
+        [Fact]
         public void CompilerTest_6A97_3CC7()
         {
             // (Expression<Func<int, int>>)(x => System.Threading.Interlocked.Exchange(value: int.Parse("1"), location1: ref x))
@@ -51,13 +50,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     value = int.Parse(""1"");
     return System.Threading.Interlocked.Exchange(ref x, value);
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_6A97_3CC7();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6A97_3CC7() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_BFB2_C4CC()
         {
             // (Expression<Func<StrongBox<int>, int>>)(b => System.Threading.Interlocked.Exchange(value: int.Parse("1"), location1: ref b.Value))
@@ -70,13 +69,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     b.Value;
     return System.Threading.Interlocked.Exchange(ref b.Value, value);
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_BFB2_C4CC();
         }
 
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_BFB2_C4CC() => INCONCLUSIVE(); }
 
-        [TestMethod]
+        [Fact]
         public void CompilerTest_4609_DFEE()
         {
             // (Expression<Func<int[], int>>)(xs => System.Threading.Interlocked.Exchange(value: int.Parse("1"), location1: ref xs[int.Parse("0")]))
@@ -90,7 +89,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     xs[__arg0];
     return System.Threading.Interlocked.Exchange(ref xs[__arg0], value);
 }";
-            Assert.AreEqual(expected.TrimStart('\r', '\n'), actual);
+            Assert.Equal(expected.TrimStart('\r', '\n'), actual);
             Verify.CompilerTest_4609_DFEE();
         }
 
@@ -98,7 +97,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { Assert.Inconclusive(); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review

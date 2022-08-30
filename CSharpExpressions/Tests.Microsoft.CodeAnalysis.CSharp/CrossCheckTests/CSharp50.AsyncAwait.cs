@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +29,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO: await with spilling of by-ref locals (known limitation)
         // TODO: more stack spilling cases
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitVoid()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -48,7 +48,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitNonVoid()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -67,7 +67,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitDynamicVoid()
         {
             var f = Compile<Action<dynamic>>(@"(dynamic d) =>
@@ -84,7 +84,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(Task.Yield());
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitDynamicNonVoid()
         {
             var f = Compile<Func<dynamic, int>>(@"(dynamic d) =>
@@ -103,7 +103,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(Task.FromResult(42));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_ConfigureAwait()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -122,7 +122,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitPatterns_Void()
         {
             foreach (var result in new[]
@@ -156,7 +156,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitPatterns_Void_Throws()
         {
             foreach (var result in new[]
@@ -190,7 +190,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitPatterns_NonVoid()
         {
             foreach (var result in new[]
@@ -226,7 +226,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitPatterns_NonVoid_Throws()
         {
             foreach (var result in new[]
@@ -262,7 +262,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_Binary()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -281,7 +281,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_Call()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -300,7 +300,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_New()
         {
             var f = Compile<Func<long>>(@"() =>
@@ -319,7 +319,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_NewArrayInit()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -338,7 +338,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_NewArrayBounds()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -358,7 +358,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_Index()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -378,7 +378,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_ByRefLocals1()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -398,7 +398,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_ByRefLocals2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -418,7 +418,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_ByRefLocals3()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -438,7 +438,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_ByRefReceivers1()
         {
             var f = Compile<Action>(@"() =>
@@ -458,7 +458,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_ByRefReceivers2()
         {
             var f = Compile<Action>(@"() =>
@@ -478,7 +478,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_ByRefReceivers3()
         {
             var f = Compile<Action>(@"() =>
@@ -498,7 +498,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_MemberInit_Assign1()
         {
             var f = Compile<Action>(@"() =>
@@ -513,7 +513,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_MemberInit_Assign2()
         {
             var f = Compile<Action>(@"() =>
@@ -528,7 +528,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_MemberInit_Member()
         {
             var f = Compile<Action>(@"() =>
@@ -543,7 +543,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Spilling_MemberInit_ManOrBoy()
         {
             var f = Compile<Action>(@"() =>
@@ -571,7 +571,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_AwaitInExpression()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -590,7 +590,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_AwaitInTry()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -619,7 +619,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_AwaitInTry_Throws()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -648,7 +648,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_AwaitInFinally()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -677,7 +677,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_AwaitInFinally_Throws()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -707,7 +707,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_AwaitInTry()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -740,7 +740,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_AwaitInTry_Throws()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -773,7 +773,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_AwaitInCatch()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -802,7 +802,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_AwaitInCatch_Throws()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -833,7 +833,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_AwaitInCatch_Rethrow()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -864,8 +864,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
         }
 
-        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
-        [TestMethod]
+        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
         public void CrossCheck_Async_TryCatchWhen_AwaitInTry()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -899,8 +898,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
-        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
-        [TestMethod]
+        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
         public void CrossCheck_Async_TryCatchWhen_AwaitInTry_Throws()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -934,8 +932,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
-        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
-        [TestMethod]
+        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
         public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -965,8 +962,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(false);
         }
 
-        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
-        [TestMethod]
+        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
         public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen_Throws()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -998,8 +994,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
-        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
-        [TestMethod]
+        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
         public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen_Rethrow()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -1031,7 +1026,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryNested1()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1078,7 +1073,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryNested2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1141,7 +1136,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Try_ManOrBoy()
         {
             const int N = 9;
@@ -1226,7 +1221,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             // TODO: add more cases
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_BranchPending()
         {
             var f = Compile<Func<int, int>>(@"(int b) =>
@@ -1282,7 +1277,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_BranchPending_SyncTry()
         {
             var f = Compile<Func<int, int>>(@"(int b) =>
@@ -1334,7 +1329,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_BranchPending_SyncFinally()
         {
             var f = Compile<Func<int, int>>(@"(int b) =>
@@ -1389,7 +1384,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryFinally_BranchPending_Return()
         {
             var f = Compile<Func<int, int>>(@"(int b) =>
@@ -1440,7 +1435,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_BranchPending()
         {
             var f = Compile<Func<bool, int, int>>(@"(bool t, int b) =>
@@ -1505,7 +1500,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                     f(t, b);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_TryCatch_BranchPending_Return()
         {
             var f = Compile<Func<bool, int, int>>(@"(bool t, int b) =>
@@ -1565,7 +1560,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
                     f(t, b);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Goto()
         {
             var f = Compile<Action>(@"() =>
@@ -1599,7 +1594,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_CovariantAssignment()
         {
             var f = Compile<Action>(@"() =>
@@ -1616,7 +1611,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_DeepAssignment()
         {
             var f = Compile<Func<bool>>(@"() =>
@@ -1635,7 +1630,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_If_Test1()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -1658,7 +1653,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_If_Test2()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -1683,7 +1678,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_While_Test1()
         {
             var f = Compile<Action>(@"() =>
@@ -1703,7 +1698,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_While_Test2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1725,7 +1720,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_Do_Test1()
         {
             var f = Compile<Action>(@"() =>
@@ -1745,7 +1740,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_Do_Test2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1767,7 +1762,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_For_Test1()
         {
             var f = Compile<Action>(@"() =>
@@ -1785,7 +1780,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_For_Test2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1805,7 +1800,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_ForEach_Collection1()
         {
             var f = Compile<Action>(@"() =>
@@ -1823,7 +1818,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_ForEach_Collection2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1843,7 +1838,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_Using_Resource1()
         {
             var f = Compile<Action>(@"() =>
@@ -1861,7 +1856,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_Using_Resource2()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -1881,7 +1876,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_Switch_SwitchValue1()
         {
             var f = Compile<Action<int>>(@"x =>
@@ -1909,7 +1904,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Async_Await_Switch_SwitchValue2()
         {
             var f = Compile<Func<int, int>>(@"x =>

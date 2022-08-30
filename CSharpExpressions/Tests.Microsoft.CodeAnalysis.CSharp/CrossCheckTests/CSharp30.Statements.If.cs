@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IfThen1()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -40,7 +40,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IfThen2()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -58,7 +58,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IfThenElse1()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -76,7 +76,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IfThenElse2()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -98,7 +98,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IfThen_IsTrue()
         {
             // REVIEW: This uses a Call node for is_True; should it produce a cleaner tree?
@@ -118,7 +118,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new Truthy(true));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_IfThen_Implicit()
         {
             var f = Compile<Action<Booleany>>(@"b =>

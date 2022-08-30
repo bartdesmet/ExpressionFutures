@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryFinally()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -54,7 +54,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(true));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatch()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -85,7 +85,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatchAll()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -115,7 +115,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatchMany()
         {
             var f = Compile<Action<int>>(@"i =>
@@ -156,7 +156,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatchFinally()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -191,7 +191,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatchManyFinally()
         {
             var f = Compile<Action<int>>(@"i =>
@@ -236,7 +236,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatch_Rethrow()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -268,7 +268,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(true));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_TryCatchFinally_Rethrow()
         {
             var f = Compile<Action<bool>>(@"b =>
@@ -304,8 +304,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(true));
         }
 
-        [Ignore] // See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.
-        [TestMethod]
+        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
         public void CrossCheck_TryCatchWhen()
         {
             var f = Compile<Action<bool, bool>>(@"(b, c) =>

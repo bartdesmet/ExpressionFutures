@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,14 +24,14 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Arithmetic()
         {
             var f = Compile<Func<int>>("() => Return(1) + Return(2)");
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ParamsArray()
         {
             var f = Compile<Func<string>>("() => string.Format(\"{0},{1},{2}\", 42, true, \"bar\")");

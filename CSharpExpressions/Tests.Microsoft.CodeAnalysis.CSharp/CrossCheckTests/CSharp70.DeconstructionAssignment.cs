@@ -2,7 +2,7 @@
 //
 // bartde - December 2021
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Tuple()
         {
             var f = Compile<Action<(int, int)>>("t => { var (x, y) = t; Log(x); Log(y); }");
@@ -32,7 +32,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_TupleLiteral()
         {
             var f = Compile<Action>("() => { var (x, y) = (1, 2); Log(x); Log(y); }");
@@ -40,7 +40,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_TupleConvert1()
         {
             var f = Compile<Action>("() => { (byte x, byte y) = (1, 2); Log(x); Log(y); }");
@@ -48,7 +48,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_TupleConvert2()
         {
             var f = Compile<Action>("() => { (int x, string y) = (1, null); Log(x); Log(y); }");
@@ -56,7 +56,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Tuple_Large()
         {
             var f = Compile<Action<(int, int, int, int, int, int, int, int, int, int)>>(@"t => {
@@ -67,7 +67,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Tuple_Nested_NoRecursiveDeconstruction()
         {
             var f = Compile<Action<(int, (bool, char), string)>>(@"t => {
@@ -78,7 +78,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, (true, 'a'), "bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Tuple_Nested_RecursiveDeconstruction()
         {
             var f = Compile<Action<(int, (bool, char), string)>>(@"t => {
@@ -89,7 +89,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, (true, 'a'), "bar"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Tuple_Nested_DeepLeft()
         {
             var f = Compile<Action<(int, (int, (int, int)))>>(@"t => {
@@ -100,7 +100,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((1, (2, (3, 4))));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Tuple_Nested_DeepRight()
         {
             var f = Compile<Action<(((int, int), int), int)>>(@"t => {
@@ -111,7 +111,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f((((1, 2), 3), 4));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Point_Deconstruct_InstanceMethod()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -122,7 +122,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Point2D_Deconstruct_ExtensionMethod()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -133,7 +133,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_TuplePoint_Recursive()
         {
             var f = Compile<Action<int, int, int, int>>(@"(px1, py1, px2, py2) => {
@@ -148,7 +148,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2, 3, 4);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Deconstruct_Nested_DeepLeft()
         {
             var f = Compile<Action<int, int, int, int>>(@"(x1, x2, x3, x4) => {
@@ -173,7 +173,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2, 3, 4);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Deconstruct_Nested_DeepRight()
         {
             var f = Compile<Action<int, int, int, int>>(@"(x1, x2, x3, x4) => {
@@ -198,7 +198,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2, 3, 4);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Deconstruct_Nested_Left_NullReference()
         {
             var f = Compile<Action<MyTuple<int, MyTuple<int, int>>>>(@"t => {
@@ -209,7 +209,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(new MyTuple<int, MyTuple<int, int>>(1, null)));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Deconstruct_Nested_Right_NullReference()
         {
             var f = Compile<Action<MyTuple<MyTuple<int, int>, int>>>(@"t => {
@@ -220,7 +220,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(new MyTuple<MyTuple<int, int>, int>(null, 1)));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_MyTuplePoint_Recursive()
         {
             var f = Compile<Action<int, int, int, int>>(@"(px1, py1, px2, py2) => {
@@ -235,7 +235,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2, 3, 4);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_LhsNonTrivialVariables()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -250,7 +250,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Lhs_ArrayFromEnd()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -263,7 +263,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(3, 4);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_LhsTuple()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -276,7 +276,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_OrderOfEffects()
         {
             var f = Compile<Action>(@"() => {
@@ -289,7 +289,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_WriteOnlyProperty()
         {
             var f = Compile<Action>(@"() => {
@@ -303,7 +303,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Conversion_Simple()
         {
             var f = Compile<Action<int, int>>(@"(px, py) => {
@@ -316,7 +316,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(1, 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Conversion_Nested_Tuple()
         {
             var f = Compile<Action<((int, int), int)>>(@"t => {
@@ -327,7 +327,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(((1, 2), 3));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Conversion_Nested_Deconstruct()
         {
             var f = Compile<Action<MyTuple<MyTuple<int, int>, int>>>(@"t => {
@@ -338,7 +338,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new MyTuple<MyTuple<int, int>, int>(new MyTuple<int, int>(1, 2), 3));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_Conversion_Nested_TupleConversion()
         {
             var f = Compile<Action<((int, int), int)>>(@"t => {
@@ -349,7 +349,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(((1, 2), 3));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_DeconstructionAssignment_ForEach()
         {
             var f = Compile<Action>(@"() => {

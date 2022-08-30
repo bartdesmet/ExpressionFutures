@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -28,7 +28,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     {
         #region Assignment
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Assignment_Primitives()
         {
             CrossCheck_Assignment_Core<byte>()(42);
@@ -47,7 +47,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             CrossCheck_Assignment_Core<string>()("bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_Assignment_More()
         {
             CrossCheck_Assignment_Core<byte?>()(42);
@@ -79,7 +79,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         // TODO: compound with conversions
         // TODO: compound with char
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Integral()
         {
             Parallel.ForEach(new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" }, op =>
@@ -95,7 +95,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Integral_Nullable()
         {
             Parallel.ForEach(new[] { "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=" }, op =>
@@ -138,7 +138,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Integral_Overflow()
         {
             AssertCheckedThrows<byte>("+=", byte.MaxValue, 1);
@@ -174,7 +174,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<OverflowException>(() => CrossCheck_CompoundAssignment_Checked_Core<T>(op)(value, rhs));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Float()
         {
             Parallel.ForEach(new[] { "+=", "-=", "*=", "/=", "%=" }, op =>
@@ -185,7 +185,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Boolean()
         {
             Parallel.ForEach(new[] { "&=", "|=", "^=" }, op =>
@@ -202,7 +202,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Shift()
         {
             Parallel.ForEach(new[] { "<<=", ">>=" }, op =>
@@ -214,7 +214,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_String1()
         {
             var f = Compile<Func<string, string, string>>("(s, t) => { Log(s += t); return s; }");
@@ -226,7 +226,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("foo", null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_String2()
         {
             var f = Compile<Func<string, object, string>>("(s, t) => { Log(s += t); return s; }");
@@ -237,7 +237,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("foo", null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Delegate()
         {
             var f = Compile<Action>(@"() => {
@@ -251,7 +251,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Enum_Add()
         {
             var f = Compile<Func<ConsoleColor, int, ConsoleColor>>("(e, u) => { Log(e += u); return e; }");
@@ -259,7 +259,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Red, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Enum_Subtract1()
         {
             var f = Compile<Func<ConsoleColor, int, ConsoleColor>>("(e, u) => { Log(e -= u); return e; }");
@@ -267,7 +267,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Red, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Enum_Subtract2()
         {
             var f = Compile<Func<ConsoleColor, ConsoleColor, ConsoleColor>>("(e1, e2) => { Log(e1 -= e2); return e1; }");
@@ -275,7 +275,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(ConsoleColor.Red, ConsoleColor.Blue);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Custom()
         {
             var f = Compile<Func<DateTime, TimeSpan, DateTime>>("(dt, ts) => { Log(dt += ts); return dt; }");
@@ -283,7 +283,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(new DateTime(1983, 2, 11), TimeSpan.FromHours(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment_Custom_Nullable()
         {
             var f = Compile<Func<DateTime?, TimeSpan?, DateTime?>>("(dt, ts) => { Log(dt += ts); return dt; }");
@@ -294,7 +294,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null, null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_CompoundAssignment()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -309,7 +309,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
+        [Fact] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Binary_Repro1()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -324,7 +324,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
+        [Fact] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Binary_Repro2()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -393,7 +393,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         // TODO: conversions
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_UnaryAssignment_Integral()
         {
             Parallel.ForEach(new[] { "++", "--" }, op =>
@@ -420,7 +420,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_UnaryAssignment_Integral_Nullable()
         {
             Parallel.ForEach(new[] { "++", "--" }, op =>
@@ -491,7 +491,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_UnaryAssignment_Integral_Overflow()
         {
             AssertCheckedThrows<byte>("++", byte.MaxValue);
@@ -519,7 +519,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<OverflowException>(() => CrossCheck_UnaryPostAssignment_Checked_Core<T>(op)(value));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_UnaryAssignment_Float()
         {
             Parallel.ForEach(new[] { "++", "--" }, op =>
@@ -534,7 +534,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             });
         }
 
-        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
+        [Fact] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Unary_Repro1()
         {
             var f = Compile<Func<int, int>>(@"i =>
@@ -549,7 +549,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(41);
         }
 
-        [TestMethod] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
+        [Fact] // See https://github.com/dotnet/corefx/issues/4984 for a relevant discussion
         public void CrossCheck_Issue4984_Unary_Repro2()
         {
             var f = Compile<Func<int, int>>(@"i =>

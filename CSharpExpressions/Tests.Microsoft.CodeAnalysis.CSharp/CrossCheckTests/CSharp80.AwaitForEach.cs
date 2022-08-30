@@ -2,7 +2,7 @@
 //
 // bartde - May 2020
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -27,7 +27,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_AwaitForEach_IAsyncEnumerable()
         {
             var f = Compile<Func<int>>(@"() =>
@@ -60,7 +60,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_AwaitForEach_IAsyncEnumerable_ConfigureAwait()
         {
             var f = Compile<Func<int>>(@"() =>

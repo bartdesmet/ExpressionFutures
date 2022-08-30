@@ -2,7 +2,7 @@
 //
 // bartde - January 2022
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -28,49 +28,49 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Basic_LiteralOnly()
         {
             var f = Compile<Func<string>>("() => { BasicInterpolatedStringHandler h = $\"Hello\"; return h.GetFormattedText(); }", typeof(BasicInterpolatedStringHandler).Assembly);
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Basic_OneValue()
         {
             var f = Compile<Func<int, string>>("x => { BasicInterpolatedStringHandler h = $\"x = {Return(x)}\"; return h.GetFormattedText(); }", typeof(BasicInterpolatedStringHandler).Assembly);
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Basic_OneValue_Alignment()
         {
             var f = Compile<Func<int, string>>("x => { BasicInterpolatedStringHandler h = $\"x = {Return(x),5}\"; return h.GetFormattedText(); }", typeof(BasicInterpolatedStringHandler).Assembly);
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Basic_OneValue_Format()
         {
             var f = Compile<Func<int, string>>("x => { BasicInterpolatedStringHandler h = $\"x = {Return(x):X}\"; return h.GetFormattedText(); }", typeof(BasicInterpolatedStringHandler).Assembly);
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Basic_OneValue_Alignment_Format()
         {
             var f = Compile<Func<int, string>>("x => { BasicInterpolatedStringHandler h = $\"x = {Return(x),5:X}\"; return h.GetFormattedText(); }", typeof(BasicInterpolatedStringHandler).Assembly);
             f(42);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Basic_ManyValues()
         {
             var f = Compile<Func<int, bool, string, string>>("(x, b, s) => { BasicInterpolatedStringHandler h = $\"x = {Return(x)}; b = {Return(b)}; s = {Return(s)}\"; return h.GetFormattedText(); }", typeof(BasicInterpolatedStringHandler).Assembly);
             f(42, true, "bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_CtorOutBool()
         {
             var f0 = Compile<Func<string>>("() => { InterpolatedStringHandlerCtorOutBool h = $\"Hello\"; return h.GetFormattedText(); }", typeof(InterpolatedStringHandlerCtorOutBool).Assembly);
@@ -83,7 +83,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f2(42, Math.PI);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_AppendReturnBool_AppendLiteral()
         {
             var f0 = Compile<Func<string>>("() => { InterpolatedStringHandlerAppendReturnBool h = $\"Hello\"; return h.GetFormattedText(); }", typeof(InterpolatedStringHandlerAppendReturnBool).Assembly);
@@ -102,7 +102,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f4(0);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_AppendReturnBool_AppendFormatted()
         {
             var f1 = Compile<Func<object, string>>("o => { InterpolatedStringHandlerAppendReturnBool h = $\"o = {Return(o)}\"; return h.GetFormattedText(); }", typeof(InterpolatedStringHandlerAppendReturnBool).Assembly);
@@ -122,7 +122,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f5("foo", 0);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_InterpolatedStringHandlers_Call()
         {
             var f = Compile<Func<int, bool, string, string>>("(x, b, s) => new Printer(t => Log(t)).Print(123, $\"x = {Return(x)}; b = {Return(b)}; s = {Return(s)}\")", typeof(Printer).Assembly);

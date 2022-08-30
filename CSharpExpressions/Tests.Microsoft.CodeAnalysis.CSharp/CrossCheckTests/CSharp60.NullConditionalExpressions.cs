@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +25,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Member1()
         {
             var f = Compile<Func<string, int?>>("s => Return(s)?.Length");
@@ -33,7 +33,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Member2()
         {
             var f = Compile<Func<TimeSpan?, int?>>("t => Return(t)?.Seconds");
@@ -42,7 +42,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Call1()
         {
             var f = Compile<Func<string, string>>("s => Return(s)?.Substring(Return(1), Return(2))");
@@ -51,7 +51,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<ArgumentOutOfRangeException>(() => f(""));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Call2()
         {
             var f = Compile<Func<TimeSpan?, TimeSpan?>>("t => Return(t)?.Add(new TimeSpan(Return(1), Return(2), Return(3)))");
@@ -60,7 +60,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Index1()
         {
             var f = Compile<Func<string, char?>>("s => Return(s)?[Return(1)]");
@@ -68,7 +68,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Index2()
         {
             var f = Compile<Func<int[], int?>>("xs => Return(xs)?[Return(1)]");
@@ -77,7 +77,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f(new int[0]));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Index3()
         {
             var f = Compile<Func<List<int>, int?>>("xs => Return(xs)?[Return(1)]");
@@ -86,7 +86,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<ArgumentOutOfRangeException>(() => f(new List<int>()));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Invoke()
         {
             var f = Compile<Func<Func<int, int>, int?>>("f => Return(f)?.Invoke(Return(1))");
@@ -94,7 +94,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Many()
         {
             var i = 1;
@@ -145,7 +145,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ConditionalAccess_Loop()
         {
             var f = Compile<Action<string[]>>(@"ss =>

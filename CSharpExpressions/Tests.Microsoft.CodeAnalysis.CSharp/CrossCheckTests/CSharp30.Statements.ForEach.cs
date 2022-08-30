@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_IEnumerable()
         {
             var f = Compile<Action>(@"() =>
@@ -55,7 +55,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_String()
         {
             var f = Compile<Action>(@"() =>
@@ -86,7 +86,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_QueryExpression()
         {
             var f = Compile<Action>(@"() =>
@@ -115,7 +115,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_Array()
         {
             var f = Compile<Action>(@"() =>
@@ -144,7 +144,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_Array_MultiDimensional()
         {
             var f = Compile<Action>(@"() =>
@@ -173,7 +173,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_Convert()
         {
             var f = Compile<Action>(@"() =>
@@ -202,7 +202,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_NoBreakContinue()
         {
             var f = Compile<Action>(@"() =>
@@ -219,7 +219,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_Pattern1()
         {
             var f = Compile<Action>(@"() =>
@@ -236,7 +236,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_Pattern2()
         {
             var f = Compile<Action>(@"() =>
@@ -253,7 +253,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_NullReference()
         {
             var f = Compile<Action<IEnumerable<int>>>(@"xs =>
@@ -270,7 +270,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<NullReferenceException>(() => f(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_ForEach_Dynamic()
         {
             var f = Compile<Action<dynamic>>(@"(dynamic xs) =>

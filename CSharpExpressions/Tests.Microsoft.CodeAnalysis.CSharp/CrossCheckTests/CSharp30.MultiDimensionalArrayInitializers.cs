@@ -2,7 +2,7 @@
 //
 // bartde - December 2015
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System;
 
 namespace Tests.Microsoft.CodeAnalysis.CSharp
@@ -24,7 +24,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
     partial class CompilerTests
     {
-        [TestMethod]
+        [Fact]
         public void CrossCheck_MultidimensionalArrayInit1()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -34,7 +34,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_MultidimensionalArrayInit2()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -44,7 +44,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_MultidimensionalArrayInit3()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -54,7 +54,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_MultidimensionalArrayInit4()
         {
             var f = Compile<Func<string>>(@"() => {
@@ -64,7 +64,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f();
         }
 
-        [TestMethod]
+        [Fact]
         public void CrossCheck_MultidimensionalArrayInit5()
         {
             var f = Compile<Func<string>>(@"() => {
