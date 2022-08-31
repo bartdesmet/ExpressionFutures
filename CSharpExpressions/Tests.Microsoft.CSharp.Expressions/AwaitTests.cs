@@ -50,7 +50,7 @@ namespace Tests
                 }
             }
 
-            foreach (var t in new[] { typeof(A4), typeof(A5), typeof(A6), typeof(A7), typeof(A8), typeof(A9), typeof(A10), typeof(A11), typeof(A12) })
+            foreach (var t in new[] { typeof(A4), typeof(A5), typeof(A6), typeof(A7), typeof(A8), typeof(A9), typeof(A10), typeof(A11) })
             {
                 Assert.ThrowsAny<ArgumentException>(() => CSharpExpression.Await(Expression.Default(t)));
             }
@@ -265,28 +265,6 @@ namespace Tests
 
                 public void GetResult<T>()
                 {
-                }
-            }
-        }
-
-        class A12
-        {
-            public A GetAwaiter()
-            {
-                throw new NotImplementedException();
-            }
-
-            public class A : INotifyCompletion
-            {
-                public void OnCompleted(Action continuation)
-                {
-                }
-
-                public bool IsCompleted { get; }
-
-                public unsafe int* GetResult()
-                {
-                    return null;
                 }
             }
         }
