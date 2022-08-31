@@ -27,7 +27,7 @@ for (int i = 1; i <= 16; i++)
 for (int j = 1; j <= i; j++)
 {
 #>
-    /// <typeparam name="TOutput">The type of the <#=ordinals[j]#> component obtained by deconstruction.</typeparam>
+    /// <typeparam name="TOutput<#=j#>">The type of the <#=ordinals[j]#> component obtained by deconstruction.</typeparam>
 <#
 }
 #>
