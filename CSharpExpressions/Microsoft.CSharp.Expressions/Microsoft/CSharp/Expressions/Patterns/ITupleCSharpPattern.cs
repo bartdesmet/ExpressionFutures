@@ -133,21 +133,21 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpPattern
     {
         /// <summary>
-        /// Creates a pattern that matches a tuple using the <see cref="ITuple"/> interface.
+        /// Creates a pattern that matches a tuple using the <see cref="System.Runtime.CompilerServices.ITuple"/> interface.
         /// </summary>
         /// <param name="deconstruction">The subpatterns to apply to the tuple elements.</param>
         /// <returns>A <see cref="ITupleCSharpPattern" /> representing a tuple pattern.</returns>
         public static ITupleCSharpPattern ITuple(IEnumerable<PositionalCSharpSubpattern> deconstruction) => ITuple(info: null, getLengthMethod: null, getItemMethod: null, deconstruction);
 
         /// <summary>
-        /// Creates a pattern that matches a tuple using the <see cref="ITuple"/> interface.
+        /// Creates a pattern that matches a tuple using the <see cref="System.Runtime.CompilerServices.ITuple"/> interface.
         /// </summary>
         /// <param name="deconstruction">The subpatterns to apply to the tuple elements.</param>
         /// <returns>A <see cref="ITupleCSharpPattern" /> representing a tuple pattern.</returns>
         public static ITupleCSharpPattern ITuple(params PositionalCSharpSubpattern[] deconstruction) => ITuple(info: null, getLengthMethod: null, getItemMethod: null, deconstruction);
 
         /// <summary>
-        /// Creates a pattern that matches a tuple using the <see cref="ITuple"/> interface.
+        /// Creates a pattern that matches a tuple using the <see cref="System.Runtime.CompilerServices.ITuple"/> interface.
         /// </summary>
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="getLengthMethod">The method used to obtain the tuple element count.</param>

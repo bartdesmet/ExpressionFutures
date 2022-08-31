@@ -57,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new object that is like this one, but using the supplied children. If all of the children are the same, it will return this object.
         /// </summary>
-        /// <param name="getAwaiter">The <see cref="AwaitInfo.GetAwaiter"/> property of the result.</param>
+        /// <param name="getAwaiter">The <see cref="StaticAwaitInfo.GetAwaiter"/> property of the result.</param>
         /// <returns>This object if no children changed, or an object with the updated children.</returns>
         public AwaitInfo Update(LambdaExpression getAwaiter)
         {

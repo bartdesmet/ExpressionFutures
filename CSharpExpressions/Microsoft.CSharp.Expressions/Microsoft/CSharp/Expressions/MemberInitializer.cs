@@ -130,11 +130,11 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a <see cref="MemberInitializer"/> binding the specified value to the given property.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.MemberInitializer"/> binding the specified value to the given property.
         /// </summary>
         /// <param name="propertyAccessor">The <see cref="MethodInfo"/> for the property get or set method of the property which is being assigned to.</param>
         /// <param name="expression">The value to be assigned to the property.</param>
-        /// <returns>The created <see cref="MemberInitializer"/>.</returns>
+        /// <returns>The created <see cref="Microsoft.CSharp.Expressions.MemberInitializer"/>.</returns>
         public static MemberInitializer MemberInitializer(MethodInfo propertyAccessor, Expression expression)
         {
             RequiresNotNull(propertyAccessor, nameof(propertyAccessor));

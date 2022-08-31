@@ -71,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="target">The <see cref="Target" /> property of the result.</param>
+        /// <param name="target">The <see cref="GotoCSharpStatement.Target" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public GotoLabelCSharpStatement Update(LabelTarget target)
         {
@@ -116,7 +116,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="target">The <see cref="Target" /> property of the result.</param>
+        /// <param name="target">The <see cref="GotoCSharpStatement.Target" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public GotoCaseCSharpStatement Update(LabelTarget target)
         {
@@ -155,7 +155,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="target">The <see cref="Target" /> property of the result.</param>
+        /// <param name="target">The <see cref="GotoCSharpStatement.Target" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public GotoDefaultCSharpStatement Update(LabelTarget target)
         {

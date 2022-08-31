@@ -121,6 +121,12 @@ namespace Microsoft.CSharp.Expressions
             return MakeStringFormat(sb.ToString(), values);
         }
 
+        /// <summary>
+        /// Builds an expression to call string.Format.
+        /// </summary>
+        /// <param name="format">The format string.</param>
+        /// <param name="args">The formatting arguments to pass.</param>
+        /// <returns>An expression with a call to string.Format.</returns>
         protected virtual Expression MakeStringFormat(string format, List<Expression> args)
         {
             //

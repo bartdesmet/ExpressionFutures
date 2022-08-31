@@ -40,7 +40,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="variable">The <see cref="Variable" /> property of the result.</param>
+        /// <param name="variable">The <see cref="CSharpObjectPattern.Variable" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public DeclarationCSharpPattern Update(ParameterExpression variable)
         {

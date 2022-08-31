@@ -11,6 +11,9 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class CSharpObjectPattern : CSharpPattern
     {
+        /// <summary>
+        /// Pattern info.
+        /// </summary>
         protected readonly CSharpObjectPatternInfo _objectInfo;
 
         internal CSharpObjectPattern(CSharpObjectPatternInfo info)

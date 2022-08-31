@@ -161,8 +161,21 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Block(variables, res);
         }
 
+        /// <summary>
+        /// Reduces the expression node to a simpler expression by flattening any nested using statements.
+        /// </summary>
+        /// <param name="declaredVariables">The set that will be updated to contain all declared variables.</param>
+        /// <returns>The reduced expression.</returns>
         protected abstract Expression ReduceAndFlatten(HashSet<ParameterExpression> declaredVariables);
 
+        /// <summary>
+        /// Reduces a single using statement to a simpler expression.
+        /// </summary>
+        /// <param name="variable">The variable of the resource.</param>
+        /// <param name="resource">The resource expression.</param>
+        /// <param name="body">The body of the using statement.</param>
+        /// <param name="declaredVariables">The set that will be updated to contain all declared variables.</param>
+        /// <returns>The reduced expression.</returns>
         protected Expression ReduceSingle(ParameterExpression variable, Expression resource, Expression body, HashSet<ParameterExpression> declaredVariables)
         {
             var madeTempVariable = false;

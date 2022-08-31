@@ -126,7 +126,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates an <see cref="AwaitCSharpExpression"/> that represents awaiting an asynchronous operation.
         /// </summary>
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
-        /// <param name="info">An <see cref="AwaitInfo"/> that specifies binding information for the await operation.</param>
+        /// <param name="info">An <see cref="Microsoft.CSharp.Expressions.AwaitInfo"/> that specifies binding information for the await operation.</param>
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression Await(Expression operand, AwaitInfo info)
         {

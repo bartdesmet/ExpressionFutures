@@ -44,7 +44,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="pattern">The <see cref="Pattern" /> property of the result.</param>
+        /// <param name="pattern">The <see cref="CSharpSubpattern.Pattern" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public PositionalCSharpSubpattern Update(CSharpPattern pattern)
         {
@@ -56,6 +56,11 @@ namespace Microsoft.CSharp.Expressions
             return Rewrite(pattern);
         }
 
+        /// <summary>
+        /// Helper method used by <see cref="Update"/> to be overridden by derived types.
+        /// </summary>
+        /// <param name="pattern">The <see cref="CSharpSubpattern.Pattern" /> property of the result.</param>
+        /// <returns>An expression with the updated children.</returns>
         protected abstract PositionalCSharpSubpattern Rewrite(CSharpPattern pattern);
 
         internal sealed class WithField : PositionalCSharpSubpattern

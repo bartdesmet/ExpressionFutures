@@ -217,7 +217,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         /// <summary>
-        /// Visits a <see cref="ForEachCSharpStatement"/>, keeping track of the variable declared in <see cref="ForEachCSharpStatement.Variable"/>.
+        /// Visits a <see cref="ForEachCSharpStatement"/>, keeping track of the variables declared in <see cref="ForEachCSharpStatement.Variables"/>.
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
@@ -362,7 +362,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         /// <summary>
-        /// Visits a <see cref="PatternSwitchCSharpStatement"/>, keeping track of the variables declared in <see cref="PatternSwitchCSharpStatement.Variables"/>.
+        /// Visits a <see cref="PatternSwitchCSharpStatement"/>, keeping track of the variables declared in <see cref="SwitchCSharpStatementBase.Variables"/>.
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>

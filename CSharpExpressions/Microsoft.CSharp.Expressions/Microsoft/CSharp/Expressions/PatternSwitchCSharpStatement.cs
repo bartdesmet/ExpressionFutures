@@ -45,9 +45,9 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
         /// </summary>
-        /// <param name="switchValue">The <see cref="SwitchValue" /> property of the result.</param>
-        /// <param name="breakLabel">The <see cref="BreakLabel"/> property of the result.</param>
-        /// <param name="variables">The <see cref="Variables" /> property of the result.</param>
+        /// <param name="switchValue">The <see cref="SwitchCSharpStatementBase.SwitchValue" /> property of the result.</param>
+        /// <param name="breakLabel">The <see cref="SwitchCSharpStatementBase.BreakLabel"/> property of the result.</param>
+        /// <param name="variables">The <see cref="SwitchCSharpStatementBase.Variables" /> property of the result.</param>
         /// <param name="sections">The <see cref="Sections" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public PatternSwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<SwitchSection> sections)

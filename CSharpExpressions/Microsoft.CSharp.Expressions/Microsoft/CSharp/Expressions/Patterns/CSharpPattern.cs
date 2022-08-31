@@ -16,17 +16,20 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class CSharpPattern
     {
+        /// <summary>
+        /// The pattern's typing information.
+        /// </summary>
         protected readonly CSharpPatternInfo _info;
 
         internal CSharpPattern(CSharpPatternInfo info) => _info = info;
 
         /// <summary>
-        /// Gets the <see cref="Type" /> of the input expressions handled by the pattern.
+        /// Gets the <see cref="System.Type" /> of the input expressions handled by the pattern.
         /// </summary>
         public Type InputType => _info.InputType;
 
         /// <summary>
-        /// Gets the <see cref="Type" /> the pattern narrows the input type to in case of a successful match.
+        /// Gets the <see cref="System.Type" /> the pattern narrows the input type to in case of a successful match.
         /// </summary>
         public Type NarrowedType => _info.NarrowedType;
 
