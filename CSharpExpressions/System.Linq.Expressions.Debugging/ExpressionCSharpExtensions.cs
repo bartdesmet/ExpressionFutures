@@ -180,7 +180,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        public static bool IsTupleType(Type type)
+        internal static bool IsTupleType(Type type)
         {
             if (!type.IsConstructedGenericType)
             {
