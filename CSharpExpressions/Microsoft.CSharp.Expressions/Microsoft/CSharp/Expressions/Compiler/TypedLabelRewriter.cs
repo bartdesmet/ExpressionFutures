@@ -77,7 +77,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             {
                 _labels.Pop();
 
-                var newVariables = map.Values.Map(i => i.Value);
+                var newVariables = map.Values.Select(i => i.Value);
                 res = res.Update(res.Variables.Concat(newVariables), res.Expressions);
             }
 

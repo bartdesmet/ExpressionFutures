@@ -170,7 +170,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: We need the bounds to NewArrayBounds and all values from 0 to each bound for ArrayAccess.
             var consts = Enumerable.Range(0, Bounds.Max() + 1).Select(CreateConstantInt32).ToArray();
 
-            exprs[0] = Expression.Assign(res, Expression.NewArrayBounds(Type.GetElementType(), Bounds.Map(i => consts[i])));
+            exprs[0] = Expression.Assign(res, Expression.NewArrayBounds(Type.GetElementType(), Bounds.Select(i => consts[i]).ToArray()));
 
             var indexValues = new int[rank];
 
@@ -186,7 +186,7 @@ namespace Microsoft.CSharp.Expressions
                     idx /= bound;
                 }
 
-                var indexes = new TrueReadOnlyCollection<Expression>(indexValues.Map(j => consts[j]));
+                var indexes = new TrueReadOnlyCollection<Expression>(indexValues.Select(j => consts[j]).ToArray());
                 var element = Expression.ArrayAccess(res, indexes);
 
                 exprs[i] = Expression.Assign(element, value);

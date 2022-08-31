@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Compiler;
 using System.Runtime.CompilerServices;
@@ -27,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
             else
             {
                 // NB: This is a trick to leverage MakeCallSiteDelegate; we should refactor it to take in an array of types.
-                var args = argumentTypes.Map(a => (Expression)Expression.Default(a)).ToReadOnly();
+                var args = argumentTypes.Select(a => (Expression)Expression.Default(a)).ToReadOnly();
                 var delegateType = DelegateHelpers.MakeCallSiteDelegate(args, type);
                 return Expression.MakeDynamic(delegateType, binder, arguments);
             }
