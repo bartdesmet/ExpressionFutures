@@ -77,6 +77,8 @@ namespace System.Linq.Expressions
             return Visit(switchCase);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         protected override Expression VisitConstant(ConstantExpression node)
         {
             return Push(node, new XAttribute(nameof(node.Value), node.Value ?? "null"));
@@ -699,5 +701,7 @@ namespace System.Linq.Expressions
 
             return id;
         }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
