@@ -396,10 +396,10 @@ namespace Tests
             var d2 = f2.Compile();
 
             Assert.Equal(1, d1(1));
-            Assert.Equal(d2(1), 1);
+            Assert.Equal(1, d2(1));
 
             Assert.Equal(42, d1(null));
-            Assert.Equal(d2(null), 42);
+            Assert.Equal(42, d2(null));
         }
 
         [Fact]
