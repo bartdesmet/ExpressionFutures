@@ -100,9 +100,9 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Creates a <see cref="ParameterAssignment"/> binding the specified value to the given parameter.
         /// </summary>
-        /// <param name="method">The <see cref="MethodInfo"/> for the method whose <paramref name="parameter"/> is being assigned to.</param>
+        /// <param name="method">The <see cref="MethodInfo"/> for the method whose parameter is being assigned to.</param>
         /// <param name="index">The index of the parameter on <paramref name="method"/> which is being assigned to.</param>
-        /// <param name="expression">The value to be assigned to <paramref name="parameter"/>.</param>
+        /// <param name="expression">The value to be assigned to the parameter.</param>
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ParameterAssignment Bind(MethodBase method, int index, Expression expression)

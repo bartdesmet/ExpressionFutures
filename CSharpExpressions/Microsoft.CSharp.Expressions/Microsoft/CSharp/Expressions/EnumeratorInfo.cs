@@ -129,7 +129,7 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpExpression
     {
         /// <summary>
-        /// Creates a new <see cref="EnumeratorInfo"/> object providing binding information for foreach operations.
+        /// Creates a new <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.
         /// </summary>
         /// <param name="isAsync">A Boolean indicating whether the enumeration is asynchronous.</param>
         /// <param name="collectionType">The type of the collection being enumerated.</param>
@@ -141,7 +141,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="needsDisposal">A Boolean indicating whether a call to Dispose or DisposeAsync is required.</param>
         /// <param name="disposeAwaitInfo">The information required to await the DisposeAsync operation for await foreach statements.</param>
         /// <param name="patternDispose">The (optional) <see cref="LambdaExpression"/> representing how to call the dispose method.</param>
-        /// <returns>A <see cref="EnumeratorInfo"/> object providing binding information for foreach operations.</returns>
+        /// <returns>A <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.</returns>
         public static EnumeratorInfo EnumeratorInfo(
             bool isAsync,
             Type collectionType,
@@ -167,7 +167,7 @@ namespace Microsoft.CSharp.Expressions
             );
 
         /// <summary>
-        /// Creates a new <see cref="EnumeratorInfo"/> object providing binding information for foreach operations.
+        /// Creates a new <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.
         /// </summary>
         /// <param name="isAsync">A Boolean indicating whether the enumeration is asynchronous.</param>
         /// <param name="collectionType">The type of the collection being enumerated.</param>
@@ -179,7 +179,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="needsDisposal">A Boolean indicating whether a call to Dispose or DisposeAsync is required.</param>
         /// <param name="disposeAwaitInfo">The information required to await the DisposeAsync operation for await foreach statements.</param>
         /// <param name="patternDispose">The (optional) <see cref="LambdaExpression"/> representing how to call the dispose method.</param>
-        /// <returns>A <see cref="EnumeratorInfo"/> object providing binding information for foreach operations.</returns>
+        /// <returns>A <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.</returns>
         public static EnumeratorInfo EnumeratorInfo(
             bool isAsync,
             Type collectionType,
@@ -269,11 +269,11 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Creates a new <see cref="EnumeratorInfo"/> object providing binding information for foreach operations.
+        /// Creates a new <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.
         /// </summary>
         /// <param name="isAsync">A Boolean indicating whether the enumeration is asynchronous.</param>
         /// <param name="collectionType">The type of the collection being enumerated.</param>
-        /// <returns>A <see cref="EnumeratorInfo"/> object providing binding information for foreach operations.</returns>
+        /// <returns>A <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.</returns>
         public static EnumeratorInfo EnumeratorInfo(bool isAsync, Type collectionType)
         {
             RequiresNotNull(collectionType, nameof(collectionType));

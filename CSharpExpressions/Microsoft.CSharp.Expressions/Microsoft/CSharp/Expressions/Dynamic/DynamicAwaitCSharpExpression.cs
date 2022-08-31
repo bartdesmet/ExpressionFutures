@@ -15,7 +15,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates an <see cref="AwaitCSharpExpression"/> that represents awaiting an asynchronous operation.
         /// </summary>
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
-        /// <returns>An instance of the <see cref="DynamicAwaitCSharpExpression"/>.</returns>
+        /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression DynamicAwait(Expression operand) =>
             DynamicAwait(operand, resultDiscarded: false, context: null);
 
@@ -24,7 +24,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
         /// <param name="resultDiscarded">Indicates whether the result of the await operation is discarded, causing the expression to have type <see cref="System.Void"/>.</param>
-        /// <returns>An instance of the <see cref="DynamicAwaitCSharpExpression"/>.</returns>
+        /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression DynamicAwait(Expression operand, bool resultDiscarded) =>
             DynamicAwait(operand, resultDiscarded, context: null);
 
@@ -34,7 +34,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
         /// <param name="resultDiscarded">Indicates whether the result of the await operation is discarded, causing the expression to have type <see cref="System.Void"/>.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
-        /// <returns>An instance of the <see cref="DynamicAwaitCSharpExpression"/>.</returns>
+        /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression DynamicAwait(Expression operand, bool resultDiscarded, Type context)
         {
             RequiresCanRead(operand, nameof(operand));

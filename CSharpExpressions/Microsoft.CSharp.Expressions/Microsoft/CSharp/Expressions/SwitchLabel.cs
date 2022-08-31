@@ -62,36 +62,35 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpExpression
     {
         /// <summary>
-        /// Creates a <see cref="SwitchLabel"/> that represents a switch case.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/> that represents a switch case.
         /// </summary>
         /// <param name="pattern">The pattern matched by the switch case.</param>
-        /// <param name="whenClause">The expression representing the optional when clause.</param>
-        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
         public static SwitchLabel SwitchLabel(CSharpPattern pattern) => SwitchLabel(label: null, pattern, whenClause: null);
 
         /// <summary>
-        /// Creates a <see cref="SwitchLabel"/> that represents a switch case.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/> that represents a switch case.
         /// </summary>
         /// <param name="pattern">The pattern matched by the switch case.</param>
         /// <param name="whenClause">The expression representing the optional when clause.</param>
-        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
         public static SwitchLabel SwitchLabel(CSharpPattern pattern, Expression whenClause) => SwitchLabel(label: null, pattern, whenClause);
 
         /// <summary>
-        /// Creates a <see cref="SwitchLabel"/> that represents a switch case.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/> that represents a switch case.
         /// </summary>
         /// <param name="label">The label used to jump to the case, e.g. using a <c>goto case</c> statement.</param>
         /// <param name="pattern">The pattern matched by the switch case.</param>
-        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
         public static SwitchLabel SwitchLabel(LabelTarget label, CSharpPattern pattern) => SwitchLabel(label, pattern, whenClause: null);
 
         /// <summary>
-        /// Creates a <see cref="SwitchLabel"/> that represents a switch case.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/> that represents a switch case.
         /// </summary>
         /// <param name="label">The label used to jump to the case, e.g. using a <c>goto case</c> statement.</param>
         /// <param name="pattern">The pattern matched by the switch case.</param>
         /// <param name="whenClause">The expression representing the optional when clause.</param>
-        /// <returns>The created <see cref="SwitchLabel"/>.</returns>
+        /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
         public static SwitchLabel SwitchLabel(LabelTarget label, CSharpPattern pattern, Expression whenClause)
         {
             if (label != null && label.Type != typeof(void))

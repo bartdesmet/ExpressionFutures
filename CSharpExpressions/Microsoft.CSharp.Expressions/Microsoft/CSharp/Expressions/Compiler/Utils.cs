@@ -17,7 +17,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <summary>
         /// Creates an expression to rethrow the exception specified in <paramref name="exception"/>, preserving the original stack trace if possible.
         /// </summary>
-        /// <param name="exception">Expression representing the exception to rethrow. This expression can be of any type; if the type derives from <see cref="System.Exception"/>, the generated expression will use <see cref="ExceptionDispatchInfo.Throw"/> to rethrow the exception preserving the stack trace.</param>
+        /// <param name="exception">Expression representing the exception to rethrow. This expression can be of any type; if the type derives from <see cref="System.Exception"/>, the generated expression will use <see cref="ExceptionDispatchInfo.Throw(Exception)"/> to rethrow the exception preserving the stack trace.</param>
         /// <param name="beforeThrow">Expression to emit before the rethrow code.</param>
         /// <returns>Expression to rethrow the exception specified in <paramref name="exception"/>, optionally prepended by the expression specified in <paramref name="beforeThrow"/>.</returns>
         public static Expression CreateRethrow(Expression exception, Expression beforeThrow = null)

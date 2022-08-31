@@ -61,35 +61,35 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpExpression
     {
         /// <summary>
-        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/> that represents an interpolation containing a string insert.
         /// </summary>
         /// <param name="value">The expression representing the value being interpolated.</param>
-        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        /// <returns>An instance of the <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/>.</returns>
         public static InterpolationStringInsert InterpolationStringInsert(Expression value) => InterpolationStringInsert(value, format: null, alignment: null);
 
         /// <summary>
-        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional format specifier.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional format specifier.
         /// </summary>
         /// <param name="value">The expression representing the value being interpolated.</param>
         /// <param name="format">The expression representing the format specifier, if any.</param>
-        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        /// <returns>An instance of the <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/>.</returns>
         public static InterpolationStringInsert InterpolationStringInsert(Expression value, string format) => InterpolationStringInsert(value, format, alignment: null);
 
         /// <summary>
-        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional alignment specifier.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional alignment specifier.
         /// </summary>
         /// <param name="value">The expression representing the value being interpolated.</param>
         /// <param name="alignment">The expression representing the alignment specifier, if any.</param>
-        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        /// <returns>An instance of the <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/>.</returns>
         public static InterpolationStringInsert InterpolationStringInsert(Expression value, int? alignment) => InterpolationStringInsert(value, format: null, alignment);
 
         /// <summary>
-        /// Creates a <see cref="InterpolationStringInsert"/> that represents an interpolation containing a string insert with optional format and alignment specifiers.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/> that represents an interpolation containing a string insert with optional format and alignment specifiers.
         /// </summary>
         /// <param name="value">The expression representing the value being interpolated.</param>
         /// <param name="format">The expression representing the format specifier, if any.</param>
         /// <param name="alignment">The expression representing the alignment specifier, if any.</param>
-        /// <returns>An instance of the <see cref="InterpolationStringInsert"/>.</returns>
+        /// <returns>An instance of the <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/>.</returns>
         public static InterpolationStringInsert InterpolationStringInsert(Expression value, string format, int? alignment)
         {
             RequiresCanRead(value, nameof(value));

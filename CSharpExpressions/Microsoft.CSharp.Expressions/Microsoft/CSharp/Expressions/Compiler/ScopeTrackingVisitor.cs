@@ -317,7 +317,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         }
 
         /// <summary>
-        /// Visits a <see cref="SwitchCSharpStatement"/>, keeping track of the variables declared in <see cref="SwitchCSharpStatement.Variables"/>.
+        /// Visits a <see cref="SwitchCSharpStatement"/>, keeping track of the variables declared in <see cref="SwitchCSharpStatementBase.Variables"/>.
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>

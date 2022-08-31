@@ -54,11 +54,11 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpExpression
     {
         /// <summary>
-        /// Creates a <see cref="MemberInitializer"/> binding the specified value to the given member.
+        /// Creates a <see cref="Microsoft.CSharp.Expressions.MemberInitializer"/> binding the specified value to the given member.
         /// </summary>
         /// <param name="member">The <see cref="MemberInfo"/> for the member which is being assigned to.</param>
         /// <param name="expression">The value to be assigned to <paramref name="member"/>.</param>
-        /// <returns>The created <see cref="MemberInitializer"/>.</returns>
+        /// <returns>The created <see cref="Microsoft.CSharp.Expressions.MemberInitializer"/>.</returns>
         public static MemberInitializer MemberInitializer(MemberInfo member, Expression expression)
         {
             RequiresNotNull(member, nameof(member));
