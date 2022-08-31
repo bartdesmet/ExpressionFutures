@@ -228,7 +228,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The expression representing the lower bound index of the range.</param>
         /// <param name="right">The expression representing the upper bound index of the range.</param>
         /// <param name="method">The method or constructor used to instantiate the index.</param>
-        /// <param name="type">The index type, either <see cref="System.Index"/> or <see cref="System.Index?"/>.</param>
+        /// <param name="type">The index type, either <see cref="System.Index"/> or a nullable <see cref="System.Index"/>.</param>
         /// <returns>The created <see cref="RangeCSharpExpression"/>.</returns>
         public static RangeCSharpExpression Range(Expression left, Expression right, MethodBase method, Type type)
         {

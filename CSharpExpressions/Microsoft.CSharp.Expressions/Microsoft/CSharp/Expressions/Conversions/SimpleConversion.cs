@@ -77,7 +77,7 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a simple conversion using the specified <paramref name="conversion"/> lambda.
         /// </summary>
         /// <param name="conversion">The lambda expression representing the conversion.</param>
-        /// <returns>A <see cref="SimpleConversion"/ object.</returns>
+        /// <returns>A <see cref="SimpleConversion"/> object.</returns>
         public static SimpleConversion Convert(LambdaExpression conversion)
         {
             RequiresNotNull(conversion, nameof(conversion));

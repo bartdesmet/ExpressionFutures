@@ -178,7 +178,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="operand">The expression representing the index value.</param>
         /// <param name="method">The method or constructor used to instantiate the index.</param>
-        /// <param name="type">The index type, either <see cref="System.Index"/> or <see cref="System.Index?"/>.</param>
+        /// <param name="type">The index type, either <see cref="System.Index"/> or a nullable <see cref="System.Index"/>.</param>
         /// <returns>The created <see cref="FromEndIndexCSharpExpression"/>.</returns>
         public static FromEndIndexCSharpExpression FromEndIndex(Expression operand, MethodBase method, Type type)
         {

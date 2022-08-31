@@ -136,14 +136,14 @@ namespace Microsoft.CSharp.Expressions
         /// Creates a deconstruction conversion for a tuple type using the specified <paramref name="conversions"/> to apply to the tuple components.
         /// </summary>
         /// <param name="conversions">The conversions to apply to the tuple components.</param>
-        /// <returns>A <see cref="DeconstructionConversion"/ object representing the deconstruction of a tuple.</returns>
+        /// <returns>A <see cref="DeconstructionConversion"/> object representing the deconstruction of a tuple.</returns>
         public static DeconstructionConversion Deconstruct(params Conversion[] conversions) => Deconstruct(deconstruct: null, (IEnumerable<Conversion>)conversions);
 
         /// <summary>
         /// Creates a deconstruction conversion for a tuple type using the specified <paramref name="conversions"/> to apply to the tuple components.
         /// </summary>
         /// <param name="conversions">The conversions to apply to the tuple components.</param>
-        /// <returns>A <see cref="DeconstructionConversion"/ object representing the deconstruction of a tuple.</returns>
+        /// <returns>A <see cref="DeconstructionConversion"/> object representing the deconstruction of a tuple.</returns>
         public static DeconstructionConversion Deconstruct(IEnumerable<Conversion> conversions) => Deconstruct(deconstruct: null, conversions);
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="deconstruct">The deconstruction lambda to invoke if the input is not a tuple type.</param>
         /// <param name="conversions">The conversions to apply to the tuple components.</param>
-        /// <returns>A <see cref="DeconstructionConversion"/ object representing the deconstruction of an object.</returns>
+        /// <returns>A <see cref="DeconstructionConversion"/> object representing the deconstruction of an object.</returns>
         public static DeconstructionConversion Deconstruct(LambdaExpression deconstruct, params Conversion[] conversions) => Deconstruct(deconstruct, (IEnumerable<Conversion>)conversions);
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="deconstruct">The deconstruction lambda to invoke if the input is not a tuple type.</param>
         /// <param name="conversions">The conversions to apply to the tuple components.</param>
-        /// <returns>A <see cref="DeconstructionConversion"/ object representing the deconstruction of an object.</returns>
+        /// <returns>A <see cref="DeconstructionConversion"/> object representing the deconstruction of an object.</returns>
         public static DeconstructionConversion Deconstruct(LambdaExpression deconstruct, IEnumerable<Conversion> conversions)
         {
             var conversionsList = conversions.ToReadOnly();

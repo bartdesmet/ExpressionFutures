@@ -40,22 +40,22 @@ namespace Microsoft.CSharp.Expressions
         Not,
 
         /// <summary>
-        /// A relational less than pattern, e.g. '< 0'.
+        /// A relational less than pattern, e.g. '&lt; 0'.
         /// </summary>
         LessThan,
 
         /// <summary>
-        /// A relational less than or equal pattern, e.g. '<= 0'.
+        /// A relational less than or equal pattern, e.g. '&lt;= 0'.
         /// </summary>
         LessThanOrEqual,
 
         /// <summary>
-        /// A relational greater than pattern, e.g. '> 0'.
+        /// A relational greater than pattern, e.g. '&gt; 0'.
         /// </summary>
         GreaterThan,
 
         /// <summary>
-        /// A relational greater than or equal pattern, e.g. '>= 0'.
+        /// A relational greater than or equal pattern, e.g. '&gt;= 0'.
         /// </summary>
         GreaterThanOrEqual,
 
