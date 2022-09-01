@@ -9,10 +9,9 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -239,7 +238,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(breakLabel, nameof(breakLabel));
 
             if (switchValue.Type == typeof(void))
-                throw LinqError.ArgumentCannotBeOfTypeVoid();
+                throw ArgumentCannotBeOfTypeVoid(nameof(switchValue));
 
             if (breakLabel.Type != typeof(void))
                 throw Error.SwitchBreakLabelShouldBeVoid();

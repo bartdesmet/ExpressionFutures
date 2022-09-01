@@ -11,8 +11,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -203,7 +204,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (type != null)
             {
-                ValidateType(type);
+                ValidateType(type, nameof(type));
 
                 if (type == typeof(void))
                     throw Error.SwitchExpressionTypeShouldNotBeVoid();
@@ -236,6 +237,27 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return new SwitchCSharpExpression(type, expression, armsCollection);
+        }
+
+        private static void ValidateSwitchCaseType(Expression @case, bool customType, Type resultType, string parameterName)
+        {
+            if (customType)
+            {
+                if (resultType != typeof(void))
+                {
+                    if (!AreReferenceAssignable(resultType, @case.Type))
+                    {
+                        throw ArgumentTypesMustMatch(parameterName);
+                    }
+                }
+            }
+            else
+            {
+                if (!AreEquivalent(resultType, @case.Type))
+                {
+                    throw AllCaseBodiesMustHaveSameType(parameterName);
+                }
+            }
         }
     }
 

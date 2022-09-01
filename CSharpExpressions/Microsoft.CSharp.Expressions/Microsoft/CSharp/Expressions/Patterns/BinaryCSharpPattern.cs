@@ -253,7 +253,7 @@ namespace Microsoft.CSharp.Expressions
                     // When the types are equivalent, merge them.
                     return bestSoFar;
                 }
-                else if (TypeUtils.HasReferenceConversion(bestSoFar, possiblyLessSpecificCandidate)) // REVIEW: Same semantics as Roslyn?
+                else if (bestSoFar.HasReferenceConversionTo(possiblyLessSpecificCandidate)) // REVIEW: Same semantics as Roslyn?
                 {
                     // When there is an implicit reference conversion from T to U, U is less specific
                     return possiblyLessSpecificCandidate;

@@ -55,16 +55,14 @@ namespace Tests
             Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int, bool>>)((x, y, z) => x == y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
 
             // invalid check parameter types
-            // NB: exception type derived from LINQ helpers
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<char, char, bool>>)((c1, c2) => c1 == c2), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, bool>>)((i1, i2) => i1 == i2), (Expression<Func<long, long, bool>>)((l1, l2) => l1 == l2) }));
 
             // invalid check return type
-            // NB: exception type derived from LINQ helpers
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.TupleNotEqual(Expression.Constant((1, "")), Expression.Constant((1, "")), new LambdaExpression[] { (Expression<Func<int, int, int>>)((x, y) => x + y), (Expression<Func<string, string, bool>>)((s1, s2) => s1 == s2) }));
 
             // can't infer equality check
             // NB: exception type derived from LINQ helpers

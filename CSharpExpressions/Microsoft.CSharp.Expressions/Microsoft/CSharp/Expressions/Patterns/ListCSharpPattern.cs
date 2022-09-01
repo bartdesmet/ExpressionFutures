@@ -11,8 +11,8 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -289,7 +289,7 @@ namespace Microsoft.CSharp.Expressions
 
             var info = ObjectPatternInfo(PatternInfo(inputType, collectionType), variable);
 
-            ValidateType(collectionType);
+            ValidateType(collectionType, nameof(collectionType));
 
             Expression lengthAccess, indexerAccess;
 
@@ -393,7 +393,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            return new ListCSharpPattern(info, lengthAccess, indexerAccess, new TrueReadOnlyCollection<CSharpPattern>(patternsList));
+            return new ListCSharpPattern(info, lengthAccess, indexerAccess, patternsList.ToReadOnlyUnsafe());
         }
     }
 

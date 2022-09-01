@@ -14,14 +14,7 @@
 // NB: When the Members property is left unspecified, all members on the specified type are exported as stubs.
 var types = new[]
 {
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.ContractUtils", Members = default(string[]), Suffix = default(string), Partial = false },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeExtensions", Members = new string[] { "GetReturnType", "GetParametersCached", "IsByRefParameter" }, Suffix = default(string), Partial = false },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.CollectionExtensions", Members = new string[] { "ToReadOnly", "Map", "RemoveFirst", "AddFirst", "AddLast", "Last" }, Suffix = default(string), Partial = false },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Dynamic.Utils.TypeUtils", Members = default(string[]), Suffix = default(string), Partial = false },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Expression", Members = new string[] { "RequiresCanRead", "RequiresCanWrite", "ValidateOneArgument", "TryQuote", "ValidateMethodInfo", "ValidateStaticOrInstanceMethod", "GetInvokeMethod", "ValidateCallInstanceType", "GetProperty", "ValidateArgumentTypes", "ValidateIndexedProperty", "ValidateCoalesceArgTypes", "ParameterIsAssignable", "ValidateAnonymousTypeMember", "ValidateSwitchCaseType" }, Suffix = "Stubs", Partial = false },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Error", Members = new string[] { "ArgumentCannotBeOfTypeVoid", "BoundsCannotBeLessThanOne", "ExpressionTypeCannotInitializeArrayType", "ExpressionTypeDoesNotMatchParameter", "DuplicateVariable", "LambdaTypeMustBeDerivedFromSystemDelegate", "IncorrectNumberOfLambdaDeclarationParameters", "ParameterExpressionNotValidAsDelegate", "IncorrectNumberOfLambdaDeclarationParameters", "ExpressionTypeDoesNotMatchReturn", "LabelTypeMustBeVoid", "ArgumentMustBeBoolean", "ExpressionTypeDoesNotMatchAssignment", "IncorrectNumberOfMethodCallArguments", "ArgumentTypesMustMatch", "MemberNotFieldOrProperty", "FieldInfoNotDefinedForType", "InstanceFieldNotDefinedForType", "InstancePropertyNotDefinedForType", "PropertyNotDefinedForType", "NotSupported", "ArgumentMustBeArray", "IncorrectNumberOfIndexes", "ArgumentMustBeArrayIndexType", "TryNotSupportedForValueTypeInstances", "CannotAutoInitializeValueTypeElementThroughProperty", "TryNotSupportedForMethodsWithRefArgs", "UnhandledBinding", "CannotAutoInitializeValueTypeMemberThroughProperty", "InvalidLvalue", "UnhandledBinary", "UnhandledUnary", "OperandTypesDoNotMatchParameters", "PropertyDoesNotHaveAccessor", "IncorrectNumberOfMethodCallArguments", "ArgumentMustBeFieldInfoOrPropertInfo", "NotAMemberOfType", "ArgumentMemberNotDeclOnType", "ArgumentCannotBeOfTypeVoid", "VariableMustNotBeByRef", "TryMustHaveCatchFinallyOrFault" }, Suffix = default(string), Partial = true },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Strings", Members = new string[] { "ExpressionMustBeWriteable" }, Suffix = default(string), Partial = true },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Compiler.DelegateHelpers", Members = new string[] { "MakeDelegateType", "MakeCallSiteDelegate" }, Suffix = default(string), Partial = true },
+    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Compiler.DelegateHelpers", Members = new string[] { "MakeCallSiteDelegate" }, Suffix = default(string), Partial = true },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Compiler.StackSpiller", Members = new string[] { "AnalyzeLambda" }, Suffix = "Stub", Partial = true },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.MemberExpression", Members = new string[] { "Make" }, Suffix = "Stubs", Partial = true },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.BinaryExpression", Members = new string[] { "Create" }, Suffix = "Stubs", Partial = true },
@@ -332,7 +325,7 @@ if (prop.SetMethod != null)
                 closeGen = ".MakeGenericMethod(" + string.Join(", ", mtd.GetGenericArguments().Select(a => "typeof(" + toCSharp(a) + ")")) + ")";
             }
 #>
-        private static readonly MethodInfo <#=mtdInfoName#> = <#=mtdInfoGet#>;
+        private static readonly Lazy<MethodInfo> <#=mtdInfoName#> = new Lazy<MethodInfo>(() => <#=mtdInfoGet#>);
 
         public <#=mods#><#=ret#> <#=mtd.Name#><#=genArgs#>(<#=pars#>)
         {
@@ -347,7 +340,7 @@ foreach (var p in mtd.GetParameters().Where(p => p.IsOut))
             try
             {
                 var args = new object[] { <#=args#> };
-                var res = <#=mtdInfoName#><#=closeGen#>.Invoke(<#=obj#>, args);
+                var res = <#=mtdInfoName#>.Value<#=closeGen#>.Invoke(<#=obj#>, args);
 <#
 foreach (var p in mtd.GetParameters())
 {

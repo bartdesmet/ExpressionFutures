@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
                     newArgs[i++] = arg;
                 }
 
-                var newArguments = new TrueReadOnlyCollection<ParameterAssignment>(newArgs);
+                var newArguments = newArgs.ToReadOnlyUnsafe();
                 
                 return CSharpExpression.Call(null, method, newArguments); // TODO: call ctor directly
             }
@@ -176,7 +176,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(method, nameof(method));
 
-            ValidateMethodInfo(method);
+            ValidateMethodInfo(method, nameof(method));
 
             if (method.IsStatic)
             {

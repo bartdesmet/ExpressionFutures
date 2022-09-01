@@ -2,25 +2,11 @@
 //
 // bartde - October 2015
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-
-namespace System.Runtime.CompilerServices
-{
-    // NOTE: This could should be removed in the product and use the real TrueReadOnlyCollection<T>.
-
-    [ExcludeFromCodeCoverage]
-    internal sealed class TrueReadOnlyCollection<T> : ReadOnlyCollection<T>
-    {
-        internal TrueReadOnlyCollection(T[] list) : base(list)
-        {
-        }
-    }
-}
 
 namespace System.Linq.Expressions
 {

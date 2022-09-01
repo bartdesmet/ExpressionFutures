@@ -13,10 +13,9 @@ using System.Threading.Tasks;
 using Microsoft.CSharp.Expressions.Compiler;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -392,7 +391,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var declType = declaration.Variable.Type;
 
-                    ValidateType(declType);
+                    ValidateType(declType, nameof(resources));
 
                     if (resourceType == null)
                     {
@@ -643,7 +642,7 @@ namespace Microsoft.CSharp.Expressions
 
         internal static void CheckUsingResourceType(Type resourceType, AwaitInfo awaitInfo, LambdaExpression patternDispose, bool allowConvertToDisposable = false)
         {
-            ValidateType(resourceType);
+            ValidateType(resourceType, nameof(resourceType));
 
             var resourceTypeNonNull = resourceType.GetNonNullableType();
 
@@ -686,7 +685,7 @@ namespace Microsoft.CSharp.Expressions
                     //     just like it does for those type of conversions in various other places.
                     if (!disposableInterface.IsAssignableFrom(resourceTypeNonNull))
                     {
-                        throw LinqError.ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, disposableInterface);
+                        throw ExpressionTypeDoesNotMatchAssignment(resourceTypeNonNull, disposableInterface);
                     }
                 }
             }

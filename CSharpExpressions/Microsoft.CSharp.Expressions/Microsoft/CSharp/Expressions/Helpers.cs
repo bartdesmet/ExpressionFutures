@@ -328,7 +328,7 @@ namespace Microsoft.CSharp.Expressions
                 bindings[i] = CSharpExpression.Bind(parameters[i], arguments[i]);
             }
 
-            return new TrueReadOnlyCollection<ParameterAssignment>(bindings);
+            return bindings.ToReadOnlyUnsafe();
         }
 
         private const int MinConstInt32 = -2;
@@ -953,7 +953,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (type.IsValueType && type != typeof(void) && !type.IsNullableType())
             {
-                return GetNullableType(type);
+                return type.GetNullableType();
             }
 
             return type;
@@ -1083,7 +1083,7 @@ namespace Microsoft.CSharp.Expressions
                             }
                         }
 
-                        ExpressionStubs.RequiresCanWrite(expression, paramName);
+                        ExpressionUtils.RequiresCanWrite(expression, paramName);
                         break;
                     }
             }
@@ -1118,7 +1118,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (!index.Indexer.CanWrite)
             {
-                throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+                throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
             }
         }
 
@@ -1126,7 +1126,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (arrayAccess.Indexes[0].Type == typeof(Range))
             {
-                throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+                throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
             }
         }
 
@@ -1134,7 +1134,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (indexerAccess.Type == typeof(Range))
             {
-                throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+                throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
             }
             else
             {
@@ -1142,7 +1142,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (!indexer.CanWrite)
                 {
-                    throw new ArgumentException(System.Linq.Expressions.Strings.ExpressionMustBeWriteable, paramName);
+                    throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
                 }
             }
         }
@@ -1259,7 +1259,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                return index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
+                return index.Update(obj, args.ToReadOnlyUnsafe());
             }
         }
 
@@ -1397,7 +1397,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            index = index.Update(obj, new TrueReadOnlyCollection<Expression>(args));
+            index = index.Update(obj, args.ToReadOnlyUnsafe());
 
             if (prefix)
             {

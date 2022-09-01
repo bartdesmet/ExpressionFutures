@@ -10,11 +10,11 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using static System.Dynamic.Utils.ContractUtils;
-using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
+using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -407,7 +407,7 @@ namespace Microsoft.CSharp.Expressions
                     inferredChecks[i] = Expression.Lambda(equalityCheckBody, leftComponentParameter, rightComponentParameter);
                 }
 
-                checks = new TrueReadOnlyCollection<LambdaExpression>(inferredChecks);
+                checks = inferredChecks.ToReadOnlyUnsafe();
             }
             else
             {
@@ -420,7 +420,7 @@ namespace Microsoft.CSharp.Expressions
 
                 for (int i = 0; i < arityLeft; i++)
                 {
-                    CheckEqualityCheck(kind, checks[i], leftTypes[i], rightTypes[i]);
+                    CheckEqualityCheck(kind, checks[i], leftTypes[i], rightTypes[i], nameof(equalityChecks), i);
                 }
             }
 
@@ -445,19 +445,19 @@ namespace Microsoft.CSharp.Expressions
                 return operandType;
             }
 
-            static void CheckEqualityCheck(CSharpExpressionType nodeType, LambdaExpression check, Type left, Type right)
+            static void CheckEqualityCheck(CSharpExpressionType nodeType, LambdaExpression check, Type left, Type right, string paramName, int index)
             {
                 var method = check.Type.GetMethod("Invoke");
                 var parameters = method.GetParametersCached();
 
                 if (parameters.Length != 2)
-                    throw LinqError.IncorrectNumberOfMethodCallArguments(check);
+                    throw IncorrectNumberOfMethodCallArguments(check, paramName, index);
 
                 if (!AreEquivalent(method.ReturnType, typeof(bool)))
-                    throw LinqError.OperandTypesDoNotMatchParameters(nodeType, check.ToString());
+                    throw OperandTypesDoNotMatchParameters(nodeType, check.ToString(), paramName, index);
 
                 if (!ParameterIsAssignable(parameters[0], left) || !ParameterIsAssignable(parameters[1], right))
-                    throw LinqError.OperandTypesDoNotMatchParameters(nodeType, check.ToString());
+                    throw OperandTypesDoNotMatchParameters(nodeType, check.ToString(), paramName, index);
             }
         }
     }

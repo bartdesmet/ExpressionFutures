@@ -38,8 +38,8 @@ namespace Tests
             Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Take(29)));
             Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(type, bounds, inits.Concat(inits).Take(31)));
 
-            // element mismatch (NB: exception type comes from LINQ)
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(long), bounds, inits));
+            // element mismatch
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NewMultidimensionalArrayInit(typeof(long), bounds, inits));
         }
 
         [Fact]

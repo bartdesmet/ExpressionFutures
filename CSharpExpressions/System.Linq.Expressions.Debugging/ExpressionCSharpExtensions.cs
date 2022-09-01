@@ -2045,7 +2045,7 @@ namespace System.Linq.Expressions
                     return node;
                 case ExpressionType.Convert:
                     var convert = (UnaryExpression)node;
-                    if (!TypeUtils2.HasReferenceConversion(convert.Operand.Type, convert.Type))
+                    if (!TypeUtils2.HasReferenceConversionTo(convert.Operand.Type, convert.Type))
                     {
                         HasUncheckedOperation = true;
                         return node;

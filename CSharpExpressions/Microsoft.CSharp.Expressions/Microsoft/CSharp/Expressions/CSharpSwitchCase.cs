@@ -197,7 +197,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCaseDefault(IEnumerable<Expression> statements)
         {
-            var testValues = s_default ??= new TrueReadOnlyCollection<object>(new[] { s_SwitchCaseDefaultValue });
+            var testValues = s_default ??= new[] { s_SwitchCaseDefaultValue }.ToReadOnlyUnsafe();
             return SwitchCase(testValues, statements);
         }
 

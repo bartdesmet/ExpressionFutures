@@ -64,7 +64,7 @@ using System.Linq.Expressions;
 
 using Microsoft.CSharp.RuntimeBinder;
 
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -175,7 +175,7 @@ foreach (var et in bts)
 #>
                     break;
                 default:
-                    throw LinqError.NotSupported();
+                    throw NotSupported();
             }
         }
 
@@ -193,7 +193,7 @@ foreach (var et in uts)
 #>
                     break;
                 default:
-                    throw LinqError.NotSupported();
+                    throw NotSupported();
             }
         }
     }

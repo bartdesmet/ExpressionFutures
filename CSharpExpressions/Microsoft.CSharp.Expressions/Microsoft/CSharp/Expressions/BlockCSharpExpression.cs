@@ -179,11 +179,11 @@ namespace Microsoft.CSharp.Expressions
                         newStatements[statementCount - 1] = Expression.Return(ReturnLabel, lastStatement);
                         newStatements[statementCount] = returnLabel;
 
-                        statements = new TrueReadOnlyCollection<Expression>(newStatements);
+                        statements = newStatements.ToReadOnlyUnsafe();
                     }
                     else
                     {
-                        statements = new TrueReadOnlyCollection<Expression>(Statements.AddLast(returnLabel));
+                        statements = Statements.Append(returnLabel).ToArray().ToReadOnlyUnsafe();
                     }
                 }
             }

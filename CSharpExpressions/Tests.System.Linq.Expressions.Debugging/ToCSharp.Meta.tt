@@ -185,8 +185,8 @@ var exprs = new string[]
 	"((Expression<Func<List<int>>>)(() => new List<int> { 2, 3, 5 })).Body",
 	"((Expression<Func<Dictionary<int, bool>>>)(() => new Dictionary<int, bool> { { 2, true }, { 3, false } })).Body",
 	
-	"((Expression<Func<object>>)(() => new AppDomainSetup { ApplicationBase = \"bar\", ApplicationName = \"foo\" })).Body",
-	"((Expression<Func<object>>)(() => new StrongBox<AppDomainSetup> { Value = { ApplicationBase = \"bar\", ApplicationName = \"foo\" } })).Body",
+	//"((Expression<Func<object>>)(() => new AppDomainSetup { ApplicationBase = \"bar\", ApplicationName = \"foo\" })).Body",
+	//"((Expression<Func<object>>)(() => new StrongBox<AppDomainSetup> { Value = { ApplicationBase = \"bar\", ApplicationName = \"foo\" } })).Body",
 	"((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body",
 	"((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body",
 	"((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body",
@@ -243,8 +243,8 @@ var exprs = new string[]
 
 	"Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int)))",
 
-	"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, \"foo\", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1))",
-	"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2))",
+	//"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, \"foo\", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1))",
+	//"Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2))",
 
 	"((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)))",
 	"((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })))",

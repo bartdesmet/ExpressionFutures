@@ -1400,8 +1400,8 @@ namespace Tests
             Assert.Equal(dbg150, expr150.ToCSharp());
         }
 
-        private Expression expr151 = ((Expression<Func<object>>)(() => new AppDomainSetup { ApplicationBase = "bar", ApplicationName = "foo" })).Body;
-        private string dbg151 = <#=toEscapedString(((Expression<Func<object>>)(() => new AppDomainSetup { ApplicationBase = "bar", ApplicationName = "foo" })).Body.ToCSharp())#>;
+        private Expression expr151 = ((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body;
+        private string dbg151 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body.ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test151()
@@ -1409,8 +1409,8 @@ namespace Tests
             Assert.Equal(dbg151, expr151.ToCSharp());
         }
 
-        private Expression expr152 = ((Expression<Func<object>>)(() => new StrongBox<AppDomainSetup> { Value = { ApplicationBase = "bar", ApplicationName = "foo" } })).Body;
-        private string dbg152 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<AppDomainSetup> { Value = { ApplicationBase = "bar", ApplicationName = "foo" } })).Body.ToCSharp())#>;
+        private Expression expr152 = ((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body;
+        private string dbg152 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body.ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test152()
@@ -1418,8 +1418,8 @@ namespace Tests
             Assert.Equal(dbg152, expr152.ToCSharp());
         }
 
-        private Expression expr153 = ((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body;
-        private string dbg153 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body.ToCSharp())#>;
+        private Expression expr153 = ((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body;
+        private string dbg153 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body.ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test153()
@@ -1427,8 +1427,8 @@ namespace Tests
             Assert.Equal(dbg153, expr153.ToCSharp());
         }
 
-        private Expression expr154 = ((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body;
-        private string dbg154 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body.ToCSharp())#>;
+        private Expression expr154 = Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int));
+        private string dbg154 = <#=toEscapedString(Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test154()
@@ -1436,8 +1436,8 @@ namespace Tests
             Assert.Equal(dbg154, expr154.ToCSharp());
         }
 
-        private Expression expr155 = ((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body;
-        private string dbg155 = <#=toEscapedString(((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body.ToCSharp())#>;
+        private Expression expr155 = Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int));
+        private string dbg155 = <#=toEscapedString(Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test155()
@@ -1445,8 +1445,8 @@ namespace Tests
             Assert.Equal(dbg155, expr155.ToCSharp());
         }
 
-        private Expression expr156 = Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int));
-        private string dbg156 = <#=toEscapedString(Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int)).ToCSharp())#>;
+        private Expression expr156 = Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")));
+        private string dbg156 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true"))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test156()
@@ -1454,8 +1454,8 @@ namespace Tests
             Assert.Equal(dbg156, expr156.ToCSharp());
         }
 
-        private Expression expr157 = Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int));
-        private string dbg157 = <#=toEscapedString(Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int)).ToCSharp())#>;
+        private Expression expr157 = Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false")));
+        private string dbg157 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false"))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test157()
@@ -1463,8 +1463,8 @@ namespace Tests
             Assert.Equal(dbg157, expr157.ToCSharp());
         }
 
-        private Expression expr158 = Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")));
-        private string dbg158 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true"))).ToCSharp())#>;
+        private Expression expr158 = Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty()));
+        private string dbg158 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty())).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test158()
@@ -1472,8 +1472,8 @@ namespace Tests
             Assert.Equal(dbg158, expr158.ToCSharp());
         }
 
-        private Expression expr159 = Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false")));
-        private string dbg159 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false"))).ToCSharp())#>;
+        private Expression expr159 = Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty()));
+        private string dbg159 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty())).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test159()
@@ -1481,8 +1481,8 @@ namespace Tests
             Assert.Equal(dbg159, expr159.ToCSharp());
         }
 
-        private Expression expr160 = Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty()));
-        private string dbg160 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty())).ToCSharp())#>;
+        private Expression expr160 = ((Expression<Func<int>>)(() => 42));
+        private string dbg160 = <#=toEscapedString(((Expression<Func<int>>)(() => 42)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test160()
@@ -1490,8 +1490,8 @@ namespace Tests
             Assert.Equal(dbg160, expr160.ToCSharp());
         }
 
-        private Expression expr161 = Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty()));
-        private string dbg161 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty())).ToCSharp())#>;
+        private Expression expr161 = ((Expression<Func<int, int>>)(x => x));
+        private string dbg161 = <#=toEscapedString(((Expression<Func<int, int>>)(x => x)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test161()
@@ -1499,8 +1499,8 @@ namespace Tests
             Assert.Equal(dbg161, expr161.ToCSharp());
         }
 
-        private Expression expr162 = ((Expression<Func<int>>)(() => 42));
-        private string dbg162 = <#=toEscapedString(((Expression<Func<int>>)(() => 42)).ToCSharp())#>;
+        private Expression expr162 = ((Expression<Func<string, int, bool>>)((s, x) => s.Length == x));
+        private string dbg162 = <#=toEscapedString(((Expression<Func<string, int, bool>>)((s, x) => s.Length == x)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test162()
@@ -1508,8 +1508,8 @@ namespace Tests
             Assert.Equal(dbg162, expr162.ToCSharp());
         }
 
-        private Expression expr163 = ((Expression<Func<int, int>>)(x => x));
-        private string dbg163 = <#=toEscapedString(((Expression<Func<int, int>>)(x => x)).ToCSharp())#>;
+        private Expression expr163 = Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void))));
+        private string dbg163 = <#=toEscapedString(Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void)))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test163()
@@ -1517,8 +1517,8 @@ namespace Tests
             Assert.Equal(dbg163, expr163.ToCSharp());
         }
 
-        private Expression expr164 = ((Expression<Func<string, int, bool>>)((s, x) => s.Length == x));
-        private string dbg164 = <#=toEscapedString(((Expression<Func<string, int, bool>>)((s, x) => s.Length == x)).ToCSharp())#>;
+        private Expression expr164 = Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType()));
+        private string dbg164 = <#=toEscapedString(Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType())).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test164()
@@ -1526,8 +1526,8 @@ namespace Tests
             Assert.Equal(dbg164, expr164.ToCSharp());
         }
 
-        private Expression expr165 = Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void))));
-        private string dbg165 = <#=toEscapedString(Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void)))).ToCSharp())#>;
+        private Expression expr165 = Expression.Rethrow();
+        private string dbg165 = <#=toEscapedString(Expression.Rethrow().ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test165()
@@ -1535,8 +1535,8 @@ namespace Tests
             Assert.Equal(dbg165, expr165.ToCSharp());
         }
 
-        private Expression expr166 = Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType()));
-        private string dbg166 = <#=toEscapedString(Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType())).ToCSharp())#>;
+        private Expression expr166 = Expression.Throw(Expression.Parameter(typeof(Exception), "ex"));
+        private string dbg166 = <#=toEscapedString(Expression.Throw(Expression.Parameter(typeof(Exception), "ex")).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test166()
@@ -1544,8 +1544,8 @@ namespace Tests
             Assert.Equal(dbg166, expr166.ToCSharp());
         }
 
-        private Expression expr167 = Expression.Rethrow();
-        private string dbg167 = <#=toEscapedString(Expression.Rethrow().ToCSharp())#>;
+        private Expression expr167 = Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), "ex")));
+        private string dbg167 = <#=toEscapedString(Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), "ex"))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test167()
@@ -1553,8 +1553,8 @@ namespace Tests
             Assert.Equal(dbg167, expr167.ToCSharp());
         }
 
-        private Expression expr168 = Expression.Throw(Expression.Parameter(typeof(Exception), "ex"));
-        private string dbg168 = <#=toEscapedString(Expression.Throw(Expression.Parameter(typeof(Exception), "ex")).ToCSharp())#>;
+        private Expression expr168 = Expression.Block(Expression.Empty(), Expression.Empty());
+        private string dbg168 = <#=toEscapedString(Expression.Block(Expression.Empty(), Expression.Empty()).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test168()
@@ -1562,8 +1562,8 @@ namespace Tests
             Assert.Equal(dbg168, expr168.ToCSharp());
         }
 
-        private Expression expr169 = Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), "ex")));
-        private string dbg169 = <#=toEscapedString(Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), "ex"))).ToCSharp())#>;
+        private Expression expr169 = Expression.Block(Expression.Empty(), Expression.Constant(42));
+        private string dbg169 = <#=toEscapedString(Expression.Block(Expression.Empty(), Expression.Constant(42)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test169()
@@ -1571,8 +1571,8 @@ namespace Tests
             Assert.Equal(dbg169, expr169.ToCSharp());
         }
 
-        private Expression expr170 = Expression.Block(Expression.Empty(), Expression.Empty());
-        private string dbg170 = <#=toEscapedString(Expression.Block(Expression.Empty(), Expression.Empty()).ToCSharp())#>;
+        private Expression expr170 = Expression.Block(new[] { Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "y"), Expression.Parameter(typeof(string), "s") }, Expression.Empty());
+        private string dbg170 = <#=toEscapedString(Expression.Block(new[] { Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "y"), Expression.Parameter(typeof(string), "s") }, Expression.Empty()).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test170()
@@ -1580,8 +1580,8 @@ namespace Tests
             Assert.Equal(dbg170, expr170.ToCSharp());
         }
 
-        private Expression expr171 = Expression.Block(Expression.Empty(), Expression.Constant(42));
-        private string dbg171 = <#=toEscapedString(Expression.Block(Expression.Empty(), Expression.Constant(42)).ToCSharp())#>;
+        private Expression expr171 = Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("finally")));
+        private string dbg171 = <#=toEscapedString(Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("finally"))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test171()
@@ -1589,8 +1589,8 @@ namespace Tests
             Assert.Equal(dbg171, expr171.ToCSharp());
         }
 
-        private Expression expr172 = Expression.Block(new[] { Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "y"), Expression.Parameter(typeof(string), "s") }, Expression.Empty());
-        private string dbg172 = <#=toEscapedString(Expression.Block(new[] { Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "y"), Expression.Parameter(typeof(string), "s") }, Expression.Empty()).ToCSharp())#>;
+        private Expression expr172 = Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("fault")));
+        private string dbg172 = <#=toEscapedString(Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("fault"))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test172()
@@ -1598,8 +1598,8 @@ namespace Tests
             Assert.Equal(dbg172, expr172.ToCSharp());
         }
 
-        private Expression expr173 = Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("finally")));
-        private string dbg173 = <#=toEscapedString(Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("finally"))).ToCSharp())#>;
+        private Expression expr173 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private string dbg173 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test173()
@@ -1607,8 +1607,8 @@ namespace Tests
             Assert.Equal(dbg173, expr173.ToCSharp());
         }
 
-        private Expression expr174 = Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("fault")));
-        private string dbg174 = <#=toEscapedString(Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("fault"))).ToCSharp())#>;
+        private Expression expr174 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private string dbg174 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test174()
@@ -1616,8 +1616,8 @@ namespace Tests
             Assert.Equal(dbg174, expr174.ToCSharp());
         }
 
-        private Expression expr175 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
-        private string dbg175 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")))).ToCSharp())#>;
+        private Expression expr175 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private string dbg175 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test175()
@@ -1625,8 +1625,8 @@ namespace Tests
             Assert.Equal(dbg175, expr175.ToCSharp());
         }
 
-        private Expression expr176 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
-        private string dbg176 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")))).ToCSharp())#>;
+        private Expression expr176 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")), Expression.Constant(true)));
+        private string dbg176 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")), Expression.Constant(true))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test176()
@@ -1634,8 +1634,8 @@ namespace Tests
             Assert.Equal(dbg176, expr176.ToCSharp());
         }
 
-        private Expression expr177 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
-        private string dbg177 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")))).ToCSharp())#>;
+        private Expression expr177 = Expression.Loop(Expression.Empty());
+        private string dbg177 = <#=toEscapedString(Expression.Loop(Expression.Empty()).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test177()
@@ -1643,8 +1643,8 @@ namespace Tests
             Assert.Equal(dbg177, expr177.ToCSharp());
         }
 
-        private Expression expr178 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")), Expression.Constant(true)));
-        private string dbg178 = <#=toEscapedString(Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")), Expression.Constant(true))).ToCSharp())#>;
+        private Expression expr178 = Expression.Loop(Expression.Block(Expression.Empty()));
+        private string dbg178 = <#=toEscapedString(Expression.Loop(Expression.Block(Expression.Empty())).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test178()
@@ -1652,8 +1652,8 @@ namespace Tests
             Assert.Equal(dbg178, expr178.ToCSharp());
         }
 
-        private Expression expr179 = Expression.Loop(Expression.Empty());
-        private string dbg179 = <#=toEscapedString(Expression.Loop(Expression.Empty()).ToCSharp())#>;
+        private Expression expr179 = Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2);
+        private string dbg179 = <#=toEscapedString(Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test179()
@@ -1661,8 +1661,8 @@ namespace Tests
             Assert.Equal(dbg179, expr179.ToCSharp());
         }
 
-        private Expression expr180 = Expression.Loop(Expression.Block(Expression.Empty()));
-        private string dbg180 = <#=toEscapedString(Expression.Loop(Expression.Block(Expression.Empty())).ToCSharp())#>;
+        private Expression expr180 = Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2);
+        private string dbg180 = <#=toEscapedString(Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test180()
@@ -1670,8 +1670,8 @@ namespace Tests
             Assert.Equal(dbg180, expr180.ToCSharp());
         }
 
-        private Expression expr181 = Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2);
-        private string dbg181 = <#=toEscapedString(Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2).ToCSharp())#>;
+        private Expression expr181 = Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2);
+        private string dbg181 = <#=toEscapedString(Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test181()
@@ -1679,8 +1679,8 @@ namespace Tests
             Assert.Equal(dbg181, expr181.ToCSharp());
         }
 
-        private Expression expr182 = Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2);
-        private string dbg182 = <#=toEscapedString(Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2).ToCSharp())#>;
+        private Expression expr182 = Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2);
+        private string dbg182 = <#=toEscapedString(Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test182()
@@ -1688,8 +1688,8 @@ namespace Tests
             Assert.Equal(dbg182, expr182.ToCSharp());
         }
 
-        private Expression expr183 = Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2);
-        private string dbg183 = <#=toEscapedString(Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2).ToCSharp())#>;
+        private Expression expr183 = Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2);
+        private string dbg183 = <#=toEscapedString(Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test183()
@@ -1697,8 +1697,8 @@ namespace Tests
             Assert.Equal(dbg183, expr183.ToCSharp());
         }
 
-        private Expression expr184 = Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2);
-        private string dbg184 = <#=toEscapedString(Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2).ToCSharp())#>;
+        private Expression expr184 = Expression.Break(_lbl1);
+        private string dbg184 = <#=toEscapedString(Expression.Break(_lbl1).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test184()
@@ -1706,8 +1706,8 @@ namespace Tests
             Assert.Equal(dbg184, expr184.ToCSharp());
         }
 
-        private Expression expr185 = Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2);
-        private string dbg185 = <#=toEscapedString(Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2).ToCSharp())#>;
+        private Expression expr185 = Expression.Continue(_lbl1);
+        private string dbg185 = <#=toEscapedString(Expression.Continue(_lbl1).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test185()
@@ -1715,8 +1715,8 @@ namespace Tests
             Assert.Equal(dbg185, expr185.ToCSharp());
         }
 
-        private Expression expr186 = Expression.Break(_lbl1);
-        private string dbg186 = <#=toEscapedString(Expression.Break(_lbl1).ToCSharp())#>;
+        private Expression expr186 = Expression.Return(_lbl1);
+        private string dbg186 = <#=toEscapedString(Expression.Return(_lbl1).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test186()
@@ -1724,8 +1724,8 @@ namespace Tests
             Assert.Equal(dbg186, expr186.ToCSharp());
         }
 
-        private Expression expr187 = Expression.Continue(_lbl1);
-        private string dbg187 = <#=toEscapedString(Expression.Continue(_lbl1).ToCSharp())#>;
+        private Expression expr187 = Expression.Break(_lbl3, Expression.Constant(1));
+        private string dbg187 = <#=toEscapedString(Expression.Break(_lbl3, Expression.Constant(1)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test187()
@@ -1733,8 +1733,8 @@ namespace Tests
             Assert.Equal(dbg187, expr187.ToCSharp());
         }
 
-        private Expression expr188 = Expression.Return(_lbl1);
-        private string dbg188 = <#=toEscapedString(Expression.Return(_lbl1).ToCSharp())#>;
+        private Expression expr188 = Expression.Return(_lbl3, Expression.Constant(1));
+        private string dbg188 = <#=toEscapedString(Expression.Return(_lbl3, Expression.Constant(1)).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test188()
@@ -1742,8 +1742,8 @@ namespace Tests
             Assert.Equal(dbg188, expr188.ToCSharp());
         }
 
-        private Expression expr189 = Expression.Break(_lbl3, Expression.Constant(1));
-        private string dbg189 = <#=toEscapedString(Expression.Break(_lbl3, Expression.Constant(1)).ToCSharp())#>;
+        private Expression expr189 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
+        private string dbg189 = <#=toEscapedString(Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test189()
@@ -1751,8 +1751,8 @@ namespace Tests
             Assert.Equal(dbg189, expr189.ToCSharp());
         }
 
-        private Expression expr190 = Expression.Return(_lbl3, Expression.Constant(1));
-        private string dbg190 = <#=toEscapedString(Expression.Return(_lbl3, Expression.Constant(1)).ToCSharp())#>;
+        private Expression expr190 = Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
+        private string dbg190 = <#=toEscapedString(Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test190()
@@ -1760,8 +1760,8 @@ namespace Tests
             Assert.Equal(dbg190, expr190.ToCSharp());
         }
 
-        private Expression expr191 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
-        private string dbg191 = <#=toEscapedString(Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4))).ToCSharp())#>;
+        private Expression expr191 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.UnaryPlus(Expression.Constant(2))));
+        private string dbg191 = <#=toEscapedString(Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.UnaryPlus(Expression.Constant(2)))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test191()
@@ -1769,8 +1769,8 @@ namespace Tests
             Assert.Equal(dbg191, expr191.ToCSharp());
         }
 
-        private Expression expr192 = Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
-        private string dbg192 = <#=toEscapedString(Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4))).ToCSharp())#>;
+        private Expression expr192 = Expression.ClearDebugInfo(Expression.SymbolDocument("foo"));
+        private string dbg192 = <#=toEscapedString(Expression.ClearDebugInfo(Expression.SymbolDocument("foo")).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test192()
@@ -1778,8 +1778,8 @@ namespace Tests
             Assert.Equal(dbg192, expr192.ToCSharp());
         }
 
-        private Expression expr193 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.UnaryPlus(Expression.Constant(2))));
-        private string dbg193 = <#=toEscapedString(Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.UnaryPlus(Expression.Constant(2)))).ToCSharp())#>;
+        private Expression expr193 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4);
+        private string dbg193 = <#=toEscapedString(Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test193()
@@ -1787,8 +1787,8 @@ namespace Tests
             Assert.Equal(dbg193, expr193.ToCSharp());
         }
 
-        private Expression expr194 = Expression.ClearDebugInfo(Expression.SymbolDocument("foo"));
-        private string dbg194 = <#=toEscapedString(Expression.ClearDebugInfo(Expression.SymbolDocument("foo")).ToCSharp())#>;
+        private Expression expr194 = Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int)));
+        private string dbg194 = <#=toEscapedString(Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test194()
@@ -1796,8 +1796,8 @@ namespace Tests
             Assert.Equal(dbg194, expr194.ToCSharp());
         }
 
-        private Expression expr195 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4);
-        private string dbg195 = <#=toEscapedString(Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4).ToCSharp())#>;
+        private Expression expr195 = ((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)));
+        private string dbg195 = <#=toEscapedString(((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test195()
@@ -1805,8 +1805,8 @@ namespace Tests
             Assert.Equal(dbg195, expr195.ToCSharp());
         }
 
-        private Expression expr196 = Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int)));
-        private string dbg196 = <#=toEscapedString(Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int))).ToCSharp())#>;
+        private Expression expr196 = ((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })));
+        private string dbg196 = <#=toEscapedString(((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x }))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test196()
@@ -1814,8 +1814,8 @@ namespace Tests
             Assert.Equal(dbg196, expr196.ToCSharp());
         }
 
-        private Expression expr197 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, "foo", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1));
-        private string dbg197 = <#=toEscapedString(Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, "foo", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1)).ToCSharp())#>;
+        private Expression expr197 = Expression.Lambda(Expression.Block(Expression.Empty()));
+        private string dbg197 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Empty())).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test197()
@@ -1823,8 +1823,8 @@ namespace Tests
             Assert.Equal(dbg197, expr197.ToCSharp());
         }
 
-        private Expression expr198 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2));
-        private string dbg198 = <#=toEscapedString(Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2)).ToCSharp())#>;
+        private Expression expr198 = Expression.Lambda(Expression.Block(Expression.Constant(1)));
+        private string dbg198 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Constant(1))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test198()
@@ -1832,8 +1832,8 @@ namespace Tests
             Assert.Equal(dbg198, expr198.ToCSharp());
         }
 
-        private Expression expr199 = ((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)));
-        private string dbg199 = <#=toEscapedString(((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0))).ToCSharp())#>;
+        private Expression expr199 = Expression.Lambda(Expression.Block(Expression.Return(_lbl1)));
+        private string dbg199 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Return(_lbl1))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test199()
@@ -1841,8 +1841,8 @@ namespace Tests
             Assert.Equal(dbg199, expr199.ToCSharp());
         }
 
-        private Expression expr200 = ((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })));
-        private string dbg200 = <#=toEscapedString(((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x }))).ToCSharp())#>;
+        private Expression expr200 = Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1))));
+        private string dbg200 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1)))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test200()
@@ -1850,8 +1850,8 @@ namespace Tests
             Assert.Equal(dbg200, expr200.ToCSharp());
         }
 
-        private Expression expr201 = Expression.Lambda(Expression.Block(Expression.Empty()));
-        private string dbg201 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Empty())).ToCSharp())#>;
+        private Expression expr201 = Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!"))));
+        private string dbg201 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!")))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test201()
@@ -1859,49 +1859,13 @@ namespace Tests
             Assert.Equal(dbg201, expr201.ToCSharp());
         }
 
-        private Expression expr202 = Expression.Lambda(Expression.Block(Expression.Constant(1)));
-        private string dbg202 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Constant(1))).ToCSharp())#>;
+        private Expression expr202 = Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!")));
+        private string dbg202 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!"))).ToCSharp())#>;
 
         [Fact]
         public void ToCSharp_Test202()
         {
             Assert.Equal(dbg202, expr202.ToCSharp());
-        }
-
-        private Expression expr203 = Expression.Lambda(Expression.Block(Expression.Return(_lbl1)));
-        private string dbg203 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Return(_lbl1))).ToCSharp())#>;
-
-        [Fact]
-        public void ToCSharp_Test203()
-        {
-            Assert.Equal(dbg203, expr203.ToCSharp());
-        }
-
-        private Expression expr204 = Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1))));
-        private string dbg204 = <#=toEscapedString(Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1)))).ToCSharp())#>;
-
-        [Fact]
-        public void ToCSharp_Test204()
-        {
-            Assert.Equal(dbg204, expr204.ToCSharp());
-        }
-
-        private Expression expr205 = Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!"))));
-        private string dbg205 = <#=toEscapedString(Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!")))).ToCSharp())#>;
-
-        [Fact]
-        public void ToCSharp_Test205()
-        {
-            Assert.Equal(dbg205, expr205.ToCSharp());
-        }
-
-        private Expression expr206 = Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!")));
-        private string dbg206 = <#=toEscapedString(Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!"))).ToCSharp())#>;
-
-        [Fact]
-        public void ToCSharp_Test206()
-        {
-            Assert.Equal(dbg206, expr206.ToCSharp());
         }
 
     }

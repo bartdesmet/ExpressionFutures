@@ -6,9 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Linq.Expressions.Compiler;
 using System.Runtime.CompilerServices;
 
 using Microsoft.CSharp.RuntimeBinder;
@@ -27,9 +25,13 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                // NB: This is a trick to leverage MakeCallSiteDelegate; we should refactor it to take in an array of types.
-                var args = argumentTypes.Select(a => (Expression)Expression.Default(a)).ToReadOnly();
-                var delegateType = DelegateHelpers.MakeCallSiteDelegate(args, type);
+                var types = new Type[argumentTypes.Length + 2];
+                types[0] = typeof(CallSite);
+                Array.Copy(argumentTypes, 0, types, 1, argumentTypes.Length);
+                types[types.Length - 1] = type;
+
+                var delegateType = Expression.GetDelegateType(types);
+                
                 return Expression.MakeDynamic(delegateType, binder, arguments);
             }
         }
@@ -50,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var i = CopyArguments(member.Object, member.Arguments, prefix, out DynamicCSharpArgument[] args, out Expression[] block, out ParameterExpression[] temps);
 
-            member = member.Update(temps[0], new TrueReadOnlyCollection<DynamicCSharpArgument>(args));
+            member = member.Update(temps[0], args.ToReadOnlyUnsafe());
 
             if (prefix)
             {
@@ -75,7 +77,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var i = CopyArguments(index.Object, index.Arguments, prefix, out DynamicCSharpArgument[] args, out Expression[] block, out ParameterExpression[] temps);
 
-            index = index.Update(temps[0], new TrueReadOnlyCollection<DynamicCSharpArgument>(args));
+            index = index.Update(temps[0], args.ToReadOnlyUnsafe());
 
             if (prefix)
             {
@@ -139,7 +141,7 @@ namespace Microsoft.CSharp.Expressions
 
         public static void RequiresCanRead(Expression expression, string paramName)
         {
-            ExpressionStubs.RequiresCanRead(expression, paramName);
+            ExpressionUtils.RequiresCanRead(expression, paramName);
         }
     }
 }

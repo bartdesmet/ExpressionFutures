@@ -70,7 +70,7 @@ namespace Microsoft.CSharp.Expressions
 
             RequiresNotNull(type, nameof(type));
 
-            ValidateType(type);
+            ValidateType(type, nameof(type));
 
             if (type.IsByRef)
                 throw Error.TypeMustNotBeByRef();

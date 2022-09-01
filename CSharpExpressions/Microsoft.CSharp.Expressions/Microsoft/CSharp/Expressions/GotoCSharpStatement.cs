@@ -5,8 +5,7 @@
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -203,7 +202,7 @@ namespace Microsoft.CSharp.Expressions
             
             if (target.Type != typeof(void))
             {
-                throw LinqError.LabelTypeMustBeVoid();
+                throw LabelTypeMustBeVoid(nameof(target));
             }
 
             return new GotoLabelCSharpStatement(target);

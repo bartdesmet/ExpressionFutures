@@ -9,7 +9,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {

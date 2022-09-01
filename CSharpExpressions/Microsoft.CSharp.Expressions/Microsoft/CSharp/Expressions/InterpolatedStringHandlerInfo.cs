@@ -13,8 +13,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -118,7 +118,7 @@ namespace Microsoft.CSharp.Expressions
         public static InterpolatedStringHandlerInfo InterpolatedStringHandlerInfo(Type type, LambdaExpression construction, IEnumerable<int> argumentIndices, IEnumerable<LambdaExpression> append)
         {
             RequiresNotNull(type, nameof(type));
-            ValidateType(type);
+            ValidateType(type, nameof(type));
 
             if (!type.IsDefined(typeof(InterpolatedStringHandlerAttribute), inherit: false))
                 throw Error.InvalidInterpolatedStringHandlerType(type);

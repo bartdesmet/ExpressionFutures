@@ -5,10 +5,9 @@
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -66,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: No non-null value to nullable value assignment allowed here. This is consistent with Assign,
             //     and the C# compiler should insert the Convert node.
             if (!AreReferenceAssignable(variable.Type, expression.Type))
-                throw LinqError.ExpressionTypeDoesNotMatchAssignment(expression.Type, variable.Type);
+                throw ExpressionTypeDoesNotMatchAssignment(expression.Type, variable.Type);
 
             return new LocalDeclaration(variable, expression);
         }

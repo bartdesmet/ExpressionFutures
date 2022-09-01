@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -167,7 +167,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (getLengthMethod != null)
             {
-                ValidateMethodInfo(getLengthMethod);
+                ValidateMethodInfo(getLengthMethod, nameof(getLengthMethod));
 
                 // NB: The check for an instance method with no args is part of the Call factory.
                 var checkCallGetLength = Expression.Call(Expression.Default(info.NarrowedType), getLengthMethod);
@@ -182,7 +182,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (getItemMethod != null)
             {
-                ValidateMethodInfo(getItemMethod);
+                ValidateMethodInfo(getItemMethod, nameof(getItemMethod));
 
                 // NB: The check for an instance method with a single integer args is part of the Call factory.
                 var checkCallGetItem = Expression.Call(Expression.Default(info.NarrowedType), getItemMethod, Expression.Default(typeof(int)));

@@ -8,8 +8,7 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -265,15 +264,17 @@ namespace Microsoft.CSharp.Expressions
             var uniqueVariables = new HashSet<ParameterExpression>();
             var variables = new List<ParameterExpression>();
 
-            foreach (BinaryExpression initializer in initializerList)
+            for (int i = 0, n = initializerList.Count; i < n; i++)
             {
+                var initializer = (BinaryExpression)initializerList[i];
+
                 if (initializer.NodeType != ExpressionType.Assign || initializer.Left.NodeType != ExpressionType.Parameter)
                     throw Error.InvalidInitializer();
 
                 var variable = (ParameterExpression)initializer.Left;
 
                 if (!uniqueVariables.Add(variable))
-                    throw LinqError.DuplicateVariable(variable);
+                    throw DuplicateVariable(variable, nameof(initializers), i);
 
                 // NB: We keep them in the order specified and don't rely on the hash set.
                 variables.Add(variable);

@@ -16,10 +16,9 @@ using System.Threading.Tasks;
 
 using Microsoft.CSharp.Expressions.Compiler;
 
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -567,12 +566,12 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var parameter = parameterList[i];
 
-                    ValidateAsyncParameter(parameter, nameof(parameters));
+                    ValidateAsyncParameter(parameter, nameof(parameters), i);
 
                     types[i] = parameter.Type;
 
                     if (set.Contains(parameter))
-                        throw LinqError.DuplicateVariable(parameter);
+                        throw DuplicateVariable(parameter, nameof(parameters), i);
 
                     set.Add(parameter);
                 }
@@ -587,7 +586,7 @@ namespace Microsoft.CSharp.Expressions
                 types[count] = typeof(Task<>).MakeGenericType(body.Type);
             }
 
-            return CreateAsyncLambda(DelegateHelpers.MakeDelegateType(types), body, parameterList);
+            return CreateAsyncLambda(Expression.GetDelegateType(types), body, parameterList);
         }
 
         /// <summary>
@@ -679,7 +678,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(body, nameof(body));
 
             if (!typeof(MulticastDelegate).IsAssignableFrom(delegateType) || delegateType == typeof(MulticastDelegate))
-                throw LinqError.LambdaTypeMustBeDerivedFromSystemDelegate();
+                throw LambdaTypeMustBeDerivedFromSystemDelegate(nameof(delegateType));
 
             var count = parameters.Count;
 
@@ -689,35 +688,35 @@ namespace Microsoft.CSharp.Expressions
             if (parametersCached.Length != 0)
             {
                 if (parametersCached.Length != count)
-                    throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
+                    throw IncorrectNumberOfLambdaDeclarationParameters();
 
                 var set = new Set<ParameterExpression>(count);
 
                 for (var i = 0; i < count; i++)
                 {
                     var parameter = parameters[i];
-                    ValidateAsyncParameter(parameter, nameof(parameters));
+                    ValidateAsyncParameter(parameter, nameof(parameters), i);
 
                     var parameterType = parametersCached[i].ParameterType;
 
                     if (!AreReferenceAssignable(parameter.Type, parameterType))
-                        throw LinqError.ParameterExpressionNotValidAsDelegate(parameter.Type, parameterType);
+                        throw ParameterExpressionNotValidAsDelegate(parameter.Type, parameterType, nameof(parameters), i);
 
                     if (set.Contains(parameter))
-                        throw LinqError.DuplicateVariable(parameter);
+                        throw DuplicateVariable(parameter, nameof(parameters), i);
 
                     set.Add(parameter);
                 }
             }
             else if (count > 0)
             {
-                throw LinqError.IncorrectNumberOfLambdaDeclarationParameters();
+                throw IncorrectNumberOfLambdaDeclarationParameters();
             }
 
             if (IsTaskLikeType(method.ReturnType, out var resultType))
             {
                 if (resultType != typeof(void) && !AreReferenceAssignable(resultType, body.Type) && !TryQuote(resultType, ref body))
-                    throw LinqError.ExpressionTypeDoesNotMatchReturn(body.Type, method.ReturnType);
+                    throw ExpressionTypeDoesNotMatchReturn(body.Type, method.ReturnType);
             }
             else
             {
@@ -732,9 +731,9 @@ namespace Microsoft.CSharp.Expressions
             return (AsyncLambdaCSharpExpression)create.Invoke(null, new object[] { body, parameters });
         }
 
-        private static void ValidateAsyncParameter(ParameterExpression parameter, string paramName)
+        private static void ValidateAsyncParameter(ParameterExpression parameter, string paramName, int index)
         {
-            RequiresCanRead(parameter, paramName);
+            RequiresCanRead(parameter, paramName, index);
 
             if (parameter.IsByRef)
                 throw Error.AsyncLambdaCantHaveByRefParameter(parameter);

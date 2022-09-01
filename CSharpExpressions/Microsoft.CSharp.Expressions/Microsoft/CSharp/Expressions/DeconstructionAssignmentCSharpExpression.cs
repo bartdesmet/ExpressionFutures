@@ -10,8 +10,8 @@ using System.Linq;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -468,7 +468,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (type != null)
             {
-                ValidateType(type);
+                ValidateType(type, nameof(type));
 
                 if (!AreEquivalent(type, resultType))
                     throw Error.DeconstructingAssignmentTypeMismatch(resultType, type);

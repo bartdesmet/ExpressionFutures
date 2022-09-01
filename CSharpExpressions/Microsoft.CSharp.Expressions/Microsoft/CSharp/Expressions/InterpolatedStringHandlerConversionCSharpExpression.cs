@@ -10,8 +10,8 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -116,7 +116,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 shouldAppend = Expression.Variable(typeof(bool), "shouldAppend");
                 vars.Add(shouldAppend);
-                arguments = arguments.AddLast(shouldAppend);
+                arguments = arguments.Append(shouldAppend).ToArray();
 
                 if (usesBoolAppend)
                 {

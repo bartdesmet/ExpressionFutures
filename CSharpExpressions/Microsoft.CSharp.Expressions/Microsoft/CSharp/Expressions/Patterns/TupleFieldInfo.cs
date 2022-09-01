@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.TupleFieldIndexMustBePositive();
 
             RequiresNotNull(type, nameof(type));
-            ValidateType(type);
+            ValidateType(type, nameof(type));
 
             return new TupleFieldInfo(fieldName, fieldIndex, type);
         }

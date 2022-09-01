@@ -10,10 +10,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -257,18 +256,18 @@ namespace Microsoft.CSharp.Expressions
                 if (clone == null)
                     throw Error.WithExpressionShouldHaveClone(@object.Type);
 
-                ValidateMethodInfo(clone);
+                ValidateMethodInfo(clone, nameof(clone));
 
                 if (clone.IsStatic)
                     throw Error.CloneMethodMustNotBeStatic(clone.Name);
 
                 if (!clone.DeclaringType.IsAssignableFrom(@object.Type))
-                    throw LinqError.NotAMemberOfType(clone.Name, @object.Type);
+                    throw NotAMemberOfType(clone.Name, @object.Type, nameof(clone));
 
                 if (clone.GetParametersCached().Length != 0)
                     throw Error.CloneMethodShouldHaveNoParameters(clone.Name);
 
-                if (!HasReferenceConversion(clone.ReturnType, @object.Type))
+                if (!clone.ReturnType.HasReferenceConversionTo(@object.Type))
                     throw Error.CloneMethodShouldReturnCompatibleType(clone.Name, @object.Type);
             }
 
@@ -311,12 +310,12 @@ namespace Microsoft.CSharp.Expressions
             {
                 var member = membersCollection[i];
 
-                RequiresNotNull(member, nameof(member));
+                RequiresNotNull(member, nameof(members), i);
 
                 if (!AreEquivalent(member.DeclaringType, @object.Type))
-                    throw LinqError.ArgumentMemberNotDeclOnType(member.Name, @object.Type.Name);
+                    throw ArgumentMemberNotDeclOnType(member.Name, @object.Type.Name, nameof(members), i);
 
-                ValidateAnonymousTypeMember(ref member, out var memberType);
+                ValidateAnonymousTypeMember(ref member, out var memberType, nameof(members), i);
 
                 newMembers[i] = member;
                 memberTypes[i] = memberType;
@@ -340,12 +339,12 @@ namespace Microsoft.CSharp.Expressions
             {
                 var initializer = initializers[i];
 
-                RequiresNotNull(initializer, nameof(initializers));
+                RequiresNotNull(initializer, nameof(initializers), i);
 
                 var member = initializer.Member;
 
                 if (!member.DeclaringType.IsAssignableFrom(@object.Type))
-                    throw LinqError.NotAMemberOfType(member.Name, @object.Type);
+                    throw NotAMemberOfType(member.Name, @object.Type, nameof(initializers));
 
                 if (requiresCanAssign)
                 {
@@ -364,6 +363,47 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
             }
+        }
+
+        private static void ValidateAnonymousTypeMember(ref MemberInfo member, out Type memberType, string paramName, int index)
+        {
+            if (member is FieldInfo field)
+            {
+                if (field.IsStatic)
+                {
+                    throw ArgumentMustBeInstanceMember(paramName, index);
+                }
+                memberType = field.FieldType;
+                return;
+            }
+
+            if (member is PropertyInfo pi)
+            {
+                if (!pi.CanRead)
+                {
+                    throw PropertyDoesNotHaveGetter(pi, paramName, index);
+                }
+                if (pi.GetGetMethod()!.IsStatic)
+                {
+                    throw ArgumentMustBeInstanceMember(paramName, index);
+                }
+                memberType = pi.PropertyType;
+                return;
+            }
+
+            if (member is MethodInfo method)
+            {
+                if (method.IsStatic)
+                {
+                    throw ArgumentMustBeInstanceMember(paramName, index);
+                }
+
+                PropertyInfo prop = GetProperty(method, paramName, index);
+                member = prop;
+                memberType = prop.PropertyType;
+                return;
+            }
+            throw ArgumentMustBeFieldInfoOrPropertyInfoOrMethod(paramName, index);
         }
     }
 

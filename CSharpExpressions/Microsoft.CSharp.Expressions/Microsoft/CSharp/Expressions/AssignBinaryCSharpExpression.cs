@@ -8,10 +8,9 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -179,7 +178,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.AddAssignChecked => Expression.AddChecked(left, right, method),
                 CSharpExpressionType.MultiplyAssignChecked => Expression.MultiplyChecked(left, right, method),
                 CSharpExpressionType.SubtractAssignChecked => Expression.SubtractChecked(left, right, method),
-                _ => throw LinqError.UnhandledBinary(binaryType),
+                _ => throw UnhandledBinary(binaryType),
             };
 
         internal static AssignBinaryCSharpExpression Make(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion) =>
@@ -204,6 +203,31 @@ namespace Microsoft.CSharp.Expressions
             // TODO: Add optimized layouts
 
             return new WithConversions(binaryType, left, right, method, leftConversion, finalConversion);
+        }
+
+        private static Type ValidateCoalesceArgTypes(Type left, Type right)
+        {
+            Type leftStripped = left.GetNonNullableType();
+            if (left.IsValueType && !left.IsNullableType())
+            {
+                throw CoalesceUsedOnNonNullType();
+            }
+            else if (left.IsNullableType() && right.IsImplicitlyConvertibleTo(leftStripped))
+            {
+                return leftStripped;
+            }
+            else if (right.IsImplicitlyConvertibleTo(left))
+            {
+                return left;
+            }
+            else if (leftStripped.IsImplicitlyConvertibleTo(right))
+            {
+                return right;
+            }
+            else
+            {
+                throw ArgumentTypesMustMatch();
+            }
         }
 
         private static void ValidateCustomBinaryAssign(CSharpExpressionType binaryType, Expression left, Expression right, ref MethodInfo method, LambdaExpression leftConversion, LambdaExpression finalConversion)
@@ -251,10 +275,10 @@ namespace Microsoft.CSharp.Expressions
 
             var invokeParameters = invoke.GetParametersCached();
             if (invokeParameters.Length != 1)
-                throw LinqError.IncorrectNumberOfMethodCallArguments(conversion);
+                throw IncorrectNumberOfMethodCallArguments(conversion, nameof(conversion));
 
             if (!AreEquivalent(invokeParameters[0].ParameterType, inputType))
-                throw LinqError.OperandTypesDoNotMatchParameters(nodeType, conversion.ToString());
+                throw OperandTypesDoNotMatchParameters(nodeType, conversion.ToString(), nameof(conversion));
 
             return invoke.ReturnType;
         }
@@ -419,7 +443,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.MultiplyAssignChecked => MultiplyAssignChecked(left, right, method, leftConversion, finalConversion),
                 CSharpExpressionType.SubtractAssignChecked => SubtractAssignChecked(left, right, method, leftConversion, finalConversion),
                 CSharpExpressionType.NullCoalescingAssign => NullCoalescingAssign(left, right),
-                _ => throw LinqError.UnhandledBinary(binaryType),
+                _ => throw UnhandledBinary(binaryType),
             };
 
         private static AssignBinaryCSharpExpression MakeBinaryAssignCore(CSharpExpressionType binaryType, Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion)

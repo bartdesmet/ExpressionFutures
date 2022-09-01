@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 using Microsoft.CSharp.RuntimeBinder;
 
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -863,7 +863,7 @@ namespace Microsoft.CSharp.Expressions
                 case CSharpExpressionType.SubtractAssignChecked:
                     break;
                 default:
-                    throw LinqError.NotSupported();
+                    throw NotSupported();
             }
         }
 
@@ -881,7 +881,7 @@ namespace Microsoft.CSharp.Expressions
                 case CSharpExpressionType.PostDecrementAssignChecked:
                     break;
                 default:
-                    throw LinqError.NotSupported();
+                    throw NotSupported();
             }
         }
     }

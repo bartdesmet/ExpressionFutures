@@ -355,8 +355,7 @@ namespace Tests
             var p4 = Expression.Parameter(typeof(string));
             var p5 = Expression.Parameter(typeof(string));
 
-            // NB: Inherits exception behavior from ValidateCoalesceArgTypes.
-            Assert.Throws<InvalidOperationException>(() => CSharpExpression.NullCoalescingAssign(p0, p1));
+            Assert.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p0, p1));
             Assert.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p4, p2));
             Assert.Throws<ArgumentException>(() => CSharpExpression.NullCoalescingAssign(p2, p4));
 

@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -119,7 +119,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(expression, nameof(expression));
             RequiresCanRead(body, nameof(body));
 
-            ValidateType(expression.Type);
+            ValidateType(expression.Type, nameof(expression));
 
             if (expression.Type.IsValueType)
                 throw Error.LockNeedsReferenceType(expression.Type);

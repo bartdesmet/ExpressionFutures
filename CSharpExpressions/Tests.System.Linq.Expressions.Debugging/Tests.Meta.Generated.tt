@@ -501,14 +501,5 @@ namespace Tests
             Assert.Equal(dbg51, expr51.DebugView().ToString());
         }
 
-        private Expression expr52 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1));
-        private string dbg52 = <#=toEscapedString(Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1)).DebugView())#>;
-
-        [Fact]
-        public void DebugView_Test52()
-        {
-            Assert.Equal(dbg52, expr52.DebugView().ToString());
-        }
-
     }
 }

@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {

@@ -863,21 +863,5 @@ namespace Tests
             Assert.Equal(dbg51, expr51.DebugView().ToString());
         }
 
-        private Expression expr52 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.UnaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(int), new[] { Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, null) }), typeof(object), Expression.Constant(1));
-        private string dbg52 = @"<Dynamic Type=""System.Object"" DelegateType=""System.Func`3[System.Runtime.CompilerServices.CallSite,System.Int32,System.Object]"">
-  <Binder IsChecked=""true"" CallingContext=""System.Int32"" ReturnType=""System.Object"" Operation=""Negate"" IsStandardBinder=""true"">
-    <ArgumentInfo>Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo</ArgumentInfo>
-  </Binder>
-  <Arguments>
-    <Constant Type=""System.Int32"" Value=""1"" />
-  </Arguments>
-</Dynamic>";
-
-        [Fact]
-        public void DebugView_Test52()
-        {
-            Assert.Equal(dbg52, expr52.DebugView().ToString());
-        }
-
     }
 }

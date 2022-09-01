@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {

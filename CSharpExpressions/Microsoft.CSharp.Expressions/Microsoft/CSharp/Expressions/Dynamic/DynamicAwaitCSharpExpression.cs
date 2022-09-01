@@ -5,7 +5,7 @@
 using System;
 using System.Linq.Expressions;
 
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {

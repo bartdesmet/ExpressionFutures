@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -136,7 +136,7 @@ namespace Microsoft.CSharp.Expressions
                 _method = method;
             }
 
-            public override PropertyInfo Indexer => GetProperty(_method);
+            public override PropertyInfo Indexer => GetProperty(_method, "method");
 
             internal override IndexCSharpExpression Rewrite(Expression @object, IEnumerable<ParameterAssignment> arguments)
             {
@@ -185,7 +185,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(indexer, nameof(indexer));
 
-            var property = GetProperty(indexer);
+            var property = GetProperty(indexer, nameof(indexer));
             return IndexCore(instance, property, indexer, indexer.GetParametersCached(), arguments);
         }
 
@@ -233,7 +233,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(indexer, nameof(indexer));
 
-            var property = GetProperty(indexer);
+            var property = GetProperty(indexer, nameof(indexer));
             return IndexCore(instance, property, indexer, indexer.GetParametersCached(), arguments);
         }
 
@@ -345,8 +345,8 @@ namespace Microsoft.CSharp.Expressions
                 args[i] = Expression.Default(parameters[i].ParameterType);
             }
 
-            var original = new TrueReadOnlyCollection<Expression>(args);
-            var argList = (ReadOnlyCollection<Expression>)original;
+            var original = new ReadOnlyCollectionBuilder<Expression>(args).ToReadOnlyCollection();
+            var argList = original;
             ValidateIndexedProperty(Expression.Default(instanceType), indexer, ref argList);
 
             // NB: We don't expect mutations because all expressions match the corresponding indexer parameter

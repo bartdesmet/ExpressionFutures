@@ -8,9 +8,8 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -97,19 +96,19 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(indexes, nameof(indexes));
 
             if (!array.Type.IsArray)
-                throw LinqError.ArgumentMustBeArray();
+                throw ArgumentMustBeArray(nameof(array));
 
             var indexList = indexes.ToReadOnly();
 
             if (array.Type.GetArrayRank() != indexList.Count)
-                throw LinqError.IncorrectNumberOfIndexes();
+                throw IncorrectNumberOfIndexes();
 
             foreach (var index in indexList)
             {
-                RequiresCanRead(index, "indexes");
+                RequiresCanRead(index, nameof(indexes));
 
                 if (index.Type != typeof(int))
-                    throw LinqError.ArgumentMustBeArrayIndexType();
+                    throw ArgumentMustBeArrayIndexType(nameof(indexes));
             }
 
             return new ConditionalArrayIndexCSharpExpression(array, indexList);

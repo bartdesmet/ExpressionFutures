@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -53,7 +53,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(indexer, nameof(indexer));
 
-            return IndexInit(GetProperty(indexer), arguments, value);
+            return IndexInit(GetProperty(indexer, nameof(indexer)), arguments, value);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Microsoft.CSharp.Expressions
 
             ValidateIndexer(indexer.DeclaringType, indexer);
 
-            ValidateArgumentTypes(setter, ExpressionType.Call, ref argList);
+            ValidateArgumentTypes(setter, ExpressionType.Call, ref argList, nameof(indexer));
 
             return ElementInitStub.Create(setter, argList);
         }

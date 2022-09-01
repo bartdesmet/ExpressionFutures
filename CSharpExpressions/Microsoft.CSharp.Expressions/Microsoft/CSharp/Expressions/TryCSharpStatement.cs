@@ -8,9 +8,8 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -163,7 +162,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else if (handlers.Count == 0)
             {
-                throw LinqError.TryMustHaveCatchFinallyOrFault();
+                throw TryMustHaveCatchFinallyOrFault();
             }
 
             return new TryCSharpStatement(tryBlock, handlers, finallyBlock);

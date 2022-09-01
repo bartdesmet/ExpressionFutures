@@ -4,7 +4,7 @@
 
 using System.Linq.Expressions;
 
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -45,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
             if (variable != null)
             {
                 if (variable.Type.IsByRef)
-                    throw LinqError.VariableMustNotBeByRef(variable, variable.Type);
+                    throw VariableMustNotBeByRef(variable, variable.Type, nameof(variable));
 
                 RequiresCompatiblePatternTypes(info.NarrowedType, variable.Type);
             }

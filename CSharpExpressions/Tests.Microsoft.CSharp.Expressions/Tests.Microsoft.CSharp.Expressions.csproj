@@ -1,269 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props')" />
-  <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{099B1D7F-69C2-4C91-AF48-896CF3189493}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.4.2\lib\netstandard1.1\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.4.2\lib\net452\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.4.2\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise />
-  </Choose>
-  <ItemGroup>
-    <Compile Include="ArrayAccessTests.cs" />
-    <Compile Include="AssignDynamicTests.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssignDynamicTests.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AssignUnaryTests.Generated.cs">
-      <DependentUpon>AssignUnaryTests.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="AssignUnaryTests.cs" />
-    <Compile Include="AssignBinaryTests.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssignBinaryTests.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AssignmentPercolatorTests.cs" />
-    <Compile Include="AssignBinaryTests.cs" />
-    <Compile Include="BlockTests.cs" />
-    <Compile Include="DynamicAwaitTests.cs" />
-    <Compile Include="ConditionalArrayIndexTests.cs" />
-    <Compile Include="CSharpExpressionVisitorTests.cs" />
-    <Compile Include="AssertEx.cs" />
-    <Compile Include="AsyncLambdaTests.cs" />
-    <Compile Include="AsyncLambdaTests.Compilation.cs" />
-    <Compile Include="AwaitTests.cs" />
-    <Compile Include="ConditionalAccessTests.cs" />
-    <Compile Include="ConditionalInvokeTests.cs" />
-    <Compile Include="ConditionalCallTests.cs" />
-    <Compile Include="ConditionalIndexTests.cs" />
-    <Compile Include="ConditionalMemberTests.cs" />
-    <Compile Include="DynamicTests.Generated.cs">
-      <DependentUpon>DynamicTests.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="DynamicTests.cs" />
-    <Compile Include="MemberInitializerTests.cs" />
-    <Compile Include="Patterns\TypePatternTests.cs" />
-    <Compile Include="Patterns\DiscardPatternTests.cs" />
-    <Compile Include="Patterns\VarPatternTests.cs" />
-    <Compile Include="WithTests.cs" />
-    <Compile Include="InterpolatedStringTests.cs" />
-    <Compile Include="RangeTests.cs" />
-    <Compile Include="FromEndIndexTests.cs" />
-    <Compile Include="GotoTests.cs" />
-    <Compile Include="HelpersTests.cs" />
-    <Compile Include="AliasEliminatorTests.cs" />
-    <Compile Include="TupleBinaryTests.cs" />
-    <Compile Include="TupleConvertTests.cs" />
-    <Compile Include="TupleLiteralTests.cs" />
-    <Compile Include="IndexerAccessTests.cs" />
-    <Compile Include="IndexInitTests.cs" />
-    <Compile Include="OptimizerTests.cs" />
-    <Compile Include="OptimizerTests.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OptimizerTests.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="RethrowRewriterTests.cs" />
-    <Compile Include="ShadowEliminatorTests.cs" />
-    <Compile Include="ParameterSubstitutorTests.cs" />
-    <Compile Include="ShallowVisitorTests.cs" />
-    <Compile Include="SpillerTests.cs" />
-    <Compile Include="ForEachTests.cs" />
-    <Compile Include="ForTests.cs" />
-    <Compile Include="SwitchCaseTests.cs" />
-    <Compile Include="SwitchTests.cs" />
-    <Compile Include="Tests.Meta.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ToCSharp.Meta.Generated.cs">
-      <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="TypedLabelRewriterTests.cs" />
-    <Compile Include="WhileTests.cs" />
-    <Compile Include="InvocationTests.cs" />
-    <Compile Include="IndexTests.cs" />
-    <Compile Include="DoTests.cs" />
-    <Compile Include="UsingTests.cs" />
-    <Compile Include="LockTests.cs" />
-    <Compile Include="NewTests.cs" />
-    <Compile Include="MethodCallTests.cs" />
-    <Compile Include="ParameterAssignmentTests.cs" />
-    <Compile Include="NewMultidimensionalArrayInitTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionUtils.cs" />
-    <Compile Include="TestHelpers.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj">
-      <Project>{6fa07859-fbeb-4e2e-a70c-1373118a6740}</Project>
-      <Name>BclExtensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj">
-      <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
-      <Name>Microsoft.CSharp.Expressions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
-      <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
-      <Name>System.Linq.Expressions.Debugging</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="AssignDynamicTests.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssignDynamicTests.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="AssignUnaryTests.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssignUnaryTests.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="AssignBinaryTests.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssignBinaryTests.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="DynamicTests.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="OptimizerTests.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>OptimizerTests.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Tests.Meta.Generated.tt">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Tests.Meta.tt</DependentUpon>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Tests.Meta.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Tests.Meta.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Tests.Meta.Generated.tt</LastGenOutput>
-    </Content>
-    <Content Include="ToCSharp.Meta.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ToCSharp.Meta.tt</DependentUpon>
-      <LastGenOutput>ToCSharp.Meta.Generated.cs</LastGenOutput>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Content>
-    <Content Include="ToCSharp.Meta.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ToCSharp.Meta.Generated.tt</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\xunit.analyzers.1.0.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
-    <Analyzer Include="..\packages\xunit.analyzers.1.0.0\analyzers\dotnet\cs\xunit.analyzers.fixes.dll" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.2\build\xunit.core.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.core.2.4.2\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.2\build\xunit.core.targets'))" />
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props'))" />
-  </Target>
-  <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Tests.Microsoft.CSharp.Expressions</RootNamespace>
+		<TargetFrameworks>net6.0</TargetFrameworks>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector" Version="3.1.2">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+		<Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="AssignBinaryTests.Generated.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AssignBinaryTests.Generated.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="AssignDynamicTests.Generated.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AssignDynamicTests.Generated.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="AssignUnaryTests.Generated.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AssignUnaryTests.Generated.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="DynamicTests.Generated.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>DynamicTests.Generated.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="OptimizerTests.Generated.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>OptimizerTests.Generated.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="Tests.Meta.Generated.cs">
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="ToCSharp.Meta.Generated.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="AssignBinaryTests.Generated.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>AssignBinaryTests.Generated.cs</LastGenOutput>
+	  </None>
+	  <None Update="AssignDynamicTests.Generated.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>AssignDynamicTests.Generated.cs</LastGenOutput>
+	  </None>
+	  <None Update="AssignUnaryTests.Generated.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>AssignUnaryTests.Generated.cs</LastGenOutput>
+	  </None>
+	  <None Update="DynamicTests.Generated.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
+	  </None>
+	  <None Update="OptimizerTests.Generated.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>OptimizerTests.Generated.cs</LastGenOutput>
+	  </None>
+	  <None Update="Tests.Meta.Generated.tt">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Tests.Meta.tt</DependentUpon>
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>Tests.Meta.Generated.cs</LastGenOutput>
+	  </None>
+	  <None Update="Tests.Meta.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>Tests.Meta.Generated.tt</LastGenOutput>
+	  </None>
+	  <None Update="ToCSharp.Meta.Generated.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>ToCSharp.Meta.Generated.cs</LastGenOutput>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>ToCSharp.Meta.tt</DependentUpon>
+	  </None>
+	  <None Update="ToCSharp.Meta.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>ToCSharp.Meta.Generated.tt</LastGenOutput>
+	  </None>
+	</ItemGroup>
 </Project>

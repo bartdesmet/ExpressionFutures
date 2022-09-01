@@ -4,9 +4,8 @@
 
 using System.Linq.Expressions;
 
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -46,10 +45,10 @@ namespace Microsoft.CSharp.Expressions
             
             // DESIGN: C# statement behavior; can be revisited.
             if (@break != null && @break.Type != typeof(void))
-                throw LinqError.LabelTypeMustBeVoid();
+                throw LabelTypeMustBeVoid(nameof(@break));
 
             if (@continue != null && @continue.Type != typeof(void))
-                throw LinqError.LabelTypeMustBeVoid();
+                throw LabelTypeMustBeVoid(nameof(@continue));
 
             if (@break != null && @continue != null && @break == @continue)
                 throw Error.DuplicateLabels();

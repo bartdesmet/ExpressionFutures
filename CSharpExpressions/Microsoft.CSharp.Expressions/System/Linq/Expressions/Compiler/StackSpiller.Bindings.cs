@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 
 namespace System.Linq.Expressions.Compiler
 {
+    using Error = System.Dynamic.Utils.ErrorUtils;
+
     internal partial class StackSpiller
     {
         private abstract class BindingRewriter

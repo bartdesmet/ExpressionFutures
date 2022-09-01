@@ -12,10 +12,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -504,7 +503,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>A new <see cref="IndexerAccessCSharpExpression"/> instance representing the array access operation.</returns>
         public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument, MethodInfo lengthOrCount, MemberInfo indexOrSlice)
         {
-            var property = lengthOrCount != null ? GetProperty(lengthOrCount) : null;
+            var property = lengthOrCount != null ? GetProperty(lengthOrCount, nameof(lengthOrCount)) : null;
 
             return IndexerAccess(@object, argument, property, indexOrSlice);
         }
@@ -543,21 +542,21 @@ namespace Microsoft.CSharp.Expressions
             var lengthOrCountGetMethod = lengthOrCount.GetGetMethod(nonPublic: true); // NB: System.Linq.Expressions allows non-public properties.
 
             if (lengthOrCountGetMethod == null)
-                throw LinqError.PropertyDoesNotHaveAccessor(lengthOrCount);
+                throw PropertyDoesNotHaveAccessor(lengthOrCount, nameof(lengthOrCount));
 
             if (lengthOrCountGetMethod.IsStatic)
                 throw Error.AccessorCannotBeStatic(lengthOrCountGetMethod);
 
             if (lengthOrCountGetMethod.GetParametersCached().Length != 0)
-                throw LinqError.IncorrectNumberOfMethodCallArguments(lengthOrCountGetMethod);
+                throw IncorrectNumberOfMethodCallArguments(lengthOrCountGetMethod, nameof(lengthOrCount));
 
             if (!IsValidInstanceType(lengthOrCount, @object.Type))
-                throw LinqError.PropertyNotDefinedForType(lengthOrCount, @object.Type);
+                throw PropertyNotDefinedForType(lengthOrCount, @object.Type, nameof(lengthOrCount));
 
             if (lengthOrCount.PropertyType != typeof(int))
                 throw Error.InvalidLengthOrCountPropertyType(lengthOrCount);
 
-            ValidateMethodInfo(lengthOrCountGetMethod);
+            ValidateMethodInfo(lengthOrCountGetMethod, nameof(lengthOrCount));
 
             if (argument.Type == typeof(Index))
             {
@@ -580,7 +579,7 @@ namespace Microsoft.CSharp.Expressions
 
                 RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
-                var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice));
+                var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice), nameof(indexOrSlice));
 
                 indexOrSlice = index; // NB: Store the property rather than a method.
 
@@ -588,26 +587,26 @@ namespace Microsoft.CSharp.Expressions
 
                 if (indexAccessor == null)
                 {
-                    indexAccessor = index.GetSetMethod(nonPublic: true) ?? throw LinqError.PropertyDoesNotHaveAccessor(indexOrSlice);
+                    indexAccessor = index.GetSetMethod(nonPublic: true) ?? throw PropertyDoesNotHaveAccessor(indexOrSlice, nameof(indexOrSlice));
 
                     if (indexAccessor.GetParametersCached().Length != 2)
-                        throw LinqError.IncorrectNumberOfMethodCallArguments(indexAccessor);
+                        throw IncorrectNumberOfMethodCallArguments(indexAccessor, nameof(indexOrSlice));
                 }
                 else if (indexAccessor.GetParametersCached().Length != 1)
                 {
-                    throw LinqError.IncorrectNumberOfMethodCallArguments(indexAccessor);
+                    throw IncorrectNumberOfMethodCallArguments(indexAccessor, nameof(indexOrSlice));
                 }
 
                 if (indexAccessor.IsStatic)
                     throw Error.AccessorCannotBeStatic(indexAccessor);
 
                 if (!IsValidInstanceType(indexAccessor, @object.Type))
-                    throw LinqError.PropertyNotDefinedForType(indexAccessor, @object.Type);
+                    throw PropertyNotDefinedForType(indexAccessor, @object.Type, nameof(indexOrSlice));
 
                 if (indexAccessor.GetParametersCached()[0].ParameterType != typeof(int))
                     throw Error.InvalidIndexerParameterType(indexOrSlice);
 
-                ValidateMethodInfo(indexAccessor);
+                ValidateMethodInfo(indexAccessor, nameof(indexOrSlice));
             }
             else
             {
@@ -625,7 +624,7 @@ namespace Microsoft.CSharp.Expressions
 
                 var slice = indexOrSlice as MethodInfo ?? throw Error.InvalidSliceMember(indexOrSlice);
 
-                ValidateMethodInfo(slice);
+                ValidateMethodInfo(slice, nameof(indexOrSlice));
 
                 if (slice.IsStatic)
                     throw Error.SliceMethodMustNotBeStatic(slice);

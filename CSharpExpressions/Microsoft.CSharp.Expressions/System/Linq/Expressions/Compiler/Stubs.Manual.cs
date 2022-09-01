@@ -38,20 +38,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        private static readonly MethodInfo s_InvocationExpression_Rewrite = typeof(InvocationExpression).GetMethod("Rewrite", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, null, new[] { typeof(Expression), typeof(Expression[]) }, null);
-
-        public static InvocationExpression Rewrite(this InvocationExpression expression, Expression lambda, Expression[] arguments)
-        {
-            try
-            {
-                return (InvocationExpression)s_InvocationExpression_Rewrite.Invoke(expression, new object[] { lambda, arguments });
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
-
+#if LINQ
         private static readonly PropertyInfo s_InvocationExpression_LambdaOperand = typeof(InvocationExpression).GetProperty("LambdaOperand", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
         public static LambdaExpression LambdaOperand(this InvocationExpression expression)
@@ -65,62 +52,7 @@ namespace System.Linq.Expressions
                 throw ex.InnerException;
             }
         }
-
-        private static readonly MethodInfo s_MethodCallExpression_Rewrite = typeof(MethodCallExpression).GetMethod("Rewrite", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, null, new[] { typeof(Expression), typeof(IList<Expression>) }, null);
-
-        public static MethodCallExpression Rewrite(this MethodCallExpression expression, Expression instance, IList<Expression> args)
-        {
-            try
-            {
-                return (MethodCallExpression)s_MethodCallExpression_Rewrite.Invoke(expression, new object[] { instance, args });
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
-
-        private static readonly MethodInfo s_BlockExpression_Rewrite = typeof(BlockExpression).GetMethod("Rewrite", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, null, new[] { typeof(ReadOnlyCollection<ParameterExpression>), typeof(Expression[]) }, null);
-
-        public static BlockExpression Rewrite(this BlockExpression expression, ReadOnlyCollection<ParameterExpression> variables, Expression[] args)
-        {
-            try
-            {
-                return (BlockExpression)s_BlockExpression_Rewrite.Invoke(expression, new object[] { variables, args });
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
-
-        private static readonly MethodInfo s_BlockExpression_GetExpression = typeof(BlockExpression).GetMethod("GetExpression", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance, null, new[] { typeof(int) }, null);
-
-        public static Expression GetExpression(this BlockExpression expression, int index)
-        {
-            try
-            {
-                return (Expression)s_BlockExpression_GetExpression.Invoke(expression, new object[] { index });
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
-
-        private static readonly PropertyInfo s_BlockExpression_ExpressionCount = typeof(BlockExpression).GetProperty("ExpressionCount", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-
-        public static int ExpressionCount(this BlockExpression expression)
-        {
-            try
-            {
-                return (int)s_BlockExpression_ExpressionCount.GetValue(expression);
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
+#endif
 
         public static Expression<T> CreateExpression<T>(Expression body, string name, bool tailCall, ReadOnlyCollection<ParameterExpression> parameters)
         {

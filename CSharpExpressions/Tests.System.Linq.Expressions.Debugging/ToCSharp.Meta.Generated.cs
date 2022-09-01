@@ -1382,8 +1382,8 @@ namespace Tests
             Assert.Equal(dbg150, expr150.ToCSharp());
         }
 
-        private Expression expr151 = ((Expression<Func<object>>)(() => new AppDomainSetup { ApplicationBase = "bar", ApplicationName = "foo" })).Body;
-        private string dbg151 = @"new AppDomainSetup() { ApplicationBase = ""bar"", ApplicationName = ""foo"" }";
+        private Expression expr151 = ((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body;
+        private string dbg151 = @"new System.Runtime.CompilerServices.StrongBox<int>() { Value = 1 }";
 
         [Fact]
         public void ToCSharp_Test151()
@@ -1391,8 +1391,8 @@ namespace Tests
             Assert.Equal(dbg151, expr151.ToCSharp());
         }
 
-        private Expression expr152 = ((Expression<Func<object>>)(() => new StrongBox<AppDomainSetup> { Value = { ApplicationBase = "bar", ApplicationName = "foo" } })).Body;
-        private string dbg152 = @"new System.Runtime.CompilerServices.StrongBox<AppDomainSetup>() { Value = { ApplicationBase = ""bar"", ApplicationName = ""foo"" } }";
+        private Expression expr152 = ((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body;
+        private string dbg152 = @"new System.Runtime.CompilerServices.StrongBox<System.Runtime.CompilerServices.StrongBox<int>>() { Value = { Value = 1 } }";
 
         [Fact]
         public void ToCSharp_Test152()
@@ -1400,8 +1400,8 @@ namespace Tests
             Assert.Equal(dbg152, expr152.ToCSharp());
         }
 
-        private Expression expr153 = ((Expression<Func<object>>)(() => new StrongBox<int> { Value = 1 })).Body;
-        private string dbg153 = @"new System.Runtime.CompilerServices.StrongBox<int>() { Value = 1 }";
+        private Expression expr153 = ((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body;
+        private string dbg153 = @"new System.Runtime.CompilerServices.StrongBox<List<int>>() { Value = { 2, 3, 5 } }";
 
         [Fact]
         public void ToCSharp_Test153()
@@ -1409,8 +1409,8 @@ namespace Tests
             Assert.Equal(dbg153, expr153.ToCSharp());
         }
 
-        private Expression expr154 = ((Expression<Func<object>>)(() => new StrongBox<StrongBox<int>> { Value = { Value = 1 } })).Body;
-        private string dbg154 = @"new System.Runtime.CompilerServices.StrongBox<System.Runtime.CompilerServices.StrongBox<int>>() { Value = { Value = 1 } }";
+        private Expression expr154 = Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int));
+        private string dbg154 = @"p0 is int";
 
         [Fact]
         public void ToCSharp_Test154()
@@ -1418,8 +1418,8 @@ namespace Tests
             Assert.Equal(dbg154, expr154.ToCSharp());
         }
 
-        private Expression expr155 = ((Expression<Func<object>>)(() => new StrongBox<List<int>> { Value = { 2, 3, 5 } })).Body;
-        private string dbg155 = @"new System.Runtime.CompilerServices.StrongBox<List<int>>() { Value = { 2, 3, 5 } }";
+        private Expression expr155 = Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int));
+        private string dbg155 = @"p0?.GetType() == typeof(int)";
 
         [Fact]
         public void ToCSharp_Test155()
@@ -1427,8 +1427,9 @@ namespace Tests
             Assert.Equal(dbg155, expr155.ToCSharp());
         }
 
-        private Expression expr156 = Expression.TypeIs(Expression.Parameter(typeof(object)), typeof(int));
-        private string dbg156 = @"p0 is int";
+        private Expression expr156 = Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")));
+        private string dbg156 = @"if (true)
+    Console.WriteLine(""true"");";
 
         [Fact]
         public void ToCSharp_Test156()
@@ -1436,8 +1437,11 @@ namespace Tests
             Assert.Equal(dbg156, expr156.ToCSharp());
         }
 
-        private Expression expr157 = Expression.TypeEqual(Expression.Parameter(typeof(object)), typeof(int));
-        private string dbg157 = @"p0?.GetType() == typeof(int)";
+        private Expression expr157 = Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false")));
+        private string dbg157 = @"if (true)
+    Console.WriteLine(""true"");
+else
+    Console.WriteLine(""false"");";
 
         [Fact]
         public void ToCSharp_Test157()
@@ -1445,9 +1449,11 @@ namespace Tests
             Assert.Equal(dbg157, expr157.ToCSharp());
         }
 
-        private Expression expr158 = Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")));
+        private Expression expr158 = Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty()));
         private string dbg158 = @"if (true)
-    Console.WriteLine(""true"");";
+{
+    ;
+}";
 
         [Fact]
         public void ToCSharp_Test158()
@@ -1455,32 +1461,8 @@ namespace Tests
             Assert.Equal(dbg158, expr158.ToCSharp());
         }
 
-        private Expression expr159 = Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("true")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("false")));
+        private Expression expr159 = Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty()));
         private string dbg159 = @"if (true)
-    Console.WriteLine(""true"");
-else
-    Console.WriteLine(""false"");";
-
-        [Fact]
-        public void ToCSharp_Test159()
-        {
-            Assert.Equal(dbg159, expr159.ToCSharp());
-        }
-
-        private Expression expr160 = Expression.IfThen(Expression.Constant(true), Expression.Block(Expression.Empty()));
-        private string dbg160 = @"if (true)
-{
-    ;
-}";
-
-        [Fact]
-        public void ToCSharp_Test160()
-        {
-            Assert.Equal(dbg160, expr160.ToCSharp());
-        }
-
-        private Expression expr161 = Expression.IfThenElse(Expression.Constant(true), Expression.Block(Expression.Empty()), Expression.Block(Expression.Empty()));
-        private string dbg161 = @"if (true)
 {
     ;
 }
@@ -1490,13 +1472,31 @@ else
 }";
 
         [Fact]
+        public void ToCSharp_Test159()
+        {
+            Assert.Equal(dbg159, expr159.ToCSharp());
+        }
+
+        private Expression expr160 = ((Expression<Func<int>>)(() => 42));
+        private string dbg160 = @"() => 42";
+
+        [Fact]
+        public void ToCSharp_Test160()
+        {
+            Assert.Equal(dbg160, expr160.ToCSharp());
+        }
+
+        private Expression expr161 = ((Expression<Func<int, int>>)(x => x));
+        private string dbg161 = @"(int x) => x";
+
+        [Fact]
         public void ToCSharp_Test161()
         {
             Assert.Equal(dbg161, expr161.ToCSharp());
         }
 
-        private Expression expr162 = ((Expression<Func<int>>)(() => 42));
-        private string dbg162 = @"() => 42";
+        private Expression expr162 = ((Expression<Func<string, int, bool>>)((s, x) => s.Length == x));
+        private string dbg162 = @"(string s, int x) => s.Length == x";
 
         [Fact]
         public void ToCSharp_Test162()
@@ -1504,8 +1504,11 @@ else
             Assert.Equal(dbg162, expr162.ToCSharp());
         }
 
-        private Expression expr163 = ((Expression<Func<int, int>>)(x => x));
-        private string dbg163 = @"(int x) => x";
+        private Expression expr163 = Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void))));
+        private string dbg163 = @"() =>
+{
+    ;
+}";
 
         [Fact]
         public void ToCSharp_Test163()
@@ -1513,8 +1516,8 @@ else
             Assert.Equal(dbg163, expr163.ToCSharp());
         }
 
-        private Expression expr164 = ((Expression<Func<string, int, bool>>)((s, x) => s.Length == x));
-        private string dbg164 = @"(string s, int x) => s.Length == x";
+        private Expression expr164 = Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType()));
+        private string dbg164 = @"(ref int p0 /*(null)*/) => 0";
 
         [Fact]
         public void ToCSharp_Test164()
@@ -1522,11 +1525,8 @@ else
             Assert.Equal(dbg164, expr164.ToCSharp());
         }
 
-        private Expression expr165 = Expression.Lambda<Action>(Expression.Block(Expression.Default(typeof(void))));
-        private string dbg165 = @"() =>
-{
-    ;
-}";
+        private Expression expr165 = Expression.Rethrow();
+        private string dbg165 = @"throw";
 
         [Fact]
         public void ToCSharp_Test165()
@@ -1534,8 +1534,8 @@ else
             Assert.Equal(dbg165, expr165.ToCSharp());
         }
 
-        private Expression expr166 = Expression.Lambda(Expression.Constant(0), Expression.Parameter(typeof(int).MakeByRefType()));
-        private string dbg166 = @"(ref int p0 /*(null)*/) => 0";
+        private Expression expr166 = Expression.Throw(Expression.Parameter(typeof(Exception), "ex"));
+        private string dbg166 = @"throw ex";
 
         [Fact]
         public void ToCSharp_Test166()
@@ -1543,8 +1543,10 @@ else
             Assert.Equal(dbg166, expr166.ToCSharp());
         }
 
-        private Expression expr167 = Expression.Rethrow();
-        private string dbg167 = @"throw";
+        private Expression expr167 = Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), "ex")));
+        private string dbg167 = @"{
+    throw ex;
+}";
 
         [Fact]
         public void ToCSharp_Test167()
@@ -1552,8 +1554,11 @@ else
             Assert.Equal(dbg167, expr167.ToCSharp());
         }
 
-        private Expression expr168 = Expression.Throw(Expression.Parameter(typeof(Exception), "ex"));
-        private string dbg168 = @"throw ex";
+        private Expression expr168 = Expression.Block(Expression.Empty(), Expression.Empty());
+        private string dbg168 = @"{
+    ;
+    ;
+}";
 
         [Fact]
         public void ToCSharp_Test168()
@@ -1561,9 +1566,10 @@ else
             Assert.Equal(dbg168, expr168.ToCSharp());
         }
 
-        private Expression expr169 = Expression.Block(Expression.Throw(Expression.Parameter(typeof(Exception), "ex")));
+        private Expression expr169 = Expression.Block(Expression.Empty(), Expression.Constant(42));
         private string dbg169 = @"{
-    throw ex;
+    ;
+    /*return*/ 42/*;*/
 }";
 
         [Fact]
@@ -1572,9 +1578,10 @@ else
             Assert.Equal(dbg169, expr169.ToCSharp());
         }
 
-        private Expression expr170 = Expression.Block(Expression.Empty(), Expression.Empty());
+        private Expression expr170 = Expression.Block(new[] { Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "y"), Expression.Parameter(typeof(string), "s") }, Expression.Empty());
         private string dbg170 = @"{
-    ;
+    int x, y;
+    string s;
     ;
 }";
 
@@ -1584,33 +1591,8 @@ else
             Assert.Equal(dbg170, expr170.ToCSharp());
         }
 
-        private Expression expr171 = Expression.Block(Expression.Empty(), Expression.Constant(42));
-        private string dbg171 = @"{
-    ;
-    /*return*/ 42/*;*/
-}";
-
-        [Fact]
-        public void ToCSharp_Test171()
-        {
-            Assert.Equal(dbg171, expr171.ToCSharp());
-        }
-
-        private Expression expr172 = Expression.Block(new[] { Expression.Parameter(typeof(int), "x"), Expression.Parameter(typeof(int), "y"), Expression.Parameter(typeof(string), "s") }, Expression.Empty());
-        private string dbg172 = @"{
-    int x, y;
-    string s;
-    ;
-}";
-
-        [Fact]
-        public void ToCSharp_Test172()
-        {
-            Assert.Equal(dbg172, expr172.ToCSharp());
-        }
-
-        private Expression expr173 = Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("finally")));
-        private string dbg173 = @"try
+        private Expression expr171 = Expression.TryFinally(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("finally")));
+        private string dbg171 = @"try
 {
     Console.WriteLine(""try"");
 }
@@ -1620,13 +1602,13 @@ finally
 }";
 
         [Fact]
-        public void ToCSharp_Test173()
+        public void ToCSharp_Test171()
         {
-            Assert.Equal(dbg173, expr173.ToCSharp());
+            Assert.Equal(dbg171, expr171.ToCSharp());
         }
 
-        private Expression expr174 = Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("fault")));
-        private string dbg174 = @"try
+        private Expression expr172 = Expression.TryFault(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("fault")));
+        private string dbg172 = @"try
 {
     Console.WriteLine(""try"");
 }
@@ -1636,17 +1618,49 @@ fault
 }";
 
         [Fact]
+        public void ToCSharp_Test172()
+        {
+            Assert.Equal(dbg172, expr172.ToCSharp());
+        }
+
+        private Expression expr173 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private string dbg173 = @"try
+{
+    Console.WriteLine(""try"");
+}
+catch
+{
+    Console.WriteLine(""catch"");
+}";
+
+        [Fact]
+        public void ToCSharp_Test173()
+        {
+            Assert.Equal(dbg173, expr173.ToCSharp());
+        }
+
+        private Expression expr174 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private string dbg174 = @"try
+{
+    Console.WriteLine(""try"");
+}
+catch (Exception)
+{
+    Console.WriteLine(""catch"");
+}";
+
+        [Fact]
         public void ToCSharp_Test174()
         {
             Assert.Equal(dbg174, expr174.ToCSharp());
         }
 
-        private Expression expr175 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(object), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private Expression expr175 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
         private string dbg175 = @"try
 {
     Console.WriteLine(""try"");
 }
-catch
+catch (Exception ex)
 {
     Console.WriteLine(""catch"");
 }";
@@ -1657,12 +1671,12 @@ catch
             Assert.Equal(dbg175, expr175.ToCSharp());
         }
 
-        private Expression expr176 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(typeof(Exception), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
+        private Expression expr176 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")), Expression.Constant(true)));
         private string dbg176 = @"try
 {
     Console.WriteLine(""try"");
 }
-catch (Exception)
+catch (Exception ex) when (true)
 {
     Console.WriteLine(""catch"");
 }";
@@ -1673,15 +1687,9 @@ catch (Exception)
             Assert.Equal(dbg176, expr176.ToCSharp());
         }
 
-        private Expression expr177 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch"))));
-        private string dbg177 = @"try
-{
-    Console.WriteLine(""try"");
-}
-catch (Exception ex)
-{
-    Console.WriteLine(""catch"");
-}";
+        private Expression expr177 = Expression.Loop(Expression.Empty());
+        private string dbg177 = @"while (true)
+    ;";
 
         [Fact]
         public void ToCSharp_Test177()
@@ -1689,14 +1697,10 @@ catch (Exception ex)
             Assert.Equal(dbg177, expr177.ToCSharp());
         }
 
-        private Expression expr178 = Expression.TryCatch(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("try")), Expression.Catch(Expression.Parameter(typeof(Exception), "ex"), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("catch")), Expression.Constant(true)));
-        private string dbg178 = @"try
+        private Expression expr178 = Expression.Loop(Expression.Block(Expression.Empty()));
+        private string dbg178 = @"while (true)
 {
-    Console.WriteLine(""try"");
-}
-catch (Exception ex) when (true)
-{
-    Console.WriteLine(""catch"");
+    ;
 }";
 
         [Fact]
@@ -1705,9 +1709,9 @@ catch (Exception ex) when (true)
             Assert.Equal(dbg178, expr178.ToCSharp());
         }
 
-        private Expression expr179 = Expression.Loop(Expression.Empty());
+        private Expression expr179 = Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2);
         private string dbg179 = @"while (true)
-    ;";
+    break;";
 
         [Fact]
         public void ToCSharp_Test179()
@@ -1715,11 +1719,9 @@ catch (Exception ex) when (true)
             Assert.Equal(dbg179, expr179.ToCSharp());
         }
 
-        private Expression expr180 = Expression.Loop(Expression.Block(Expression.Empty()));
+        private Expression expr180 = Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2);
         private string dbg180 = @"while (true)
-{
-    ;
-}";
+    continue;";
 
         [Fact]
         public void ToCSharp_Test180()
@@ -1727,9 +1729,14 @@ catch (Exception ex) when (true)
             Assert.Equal(dbg180, expr180.ToCSharp());
         }
 
-        private Expression expr181 = Expression.Loop(Expression.Break(_lbl1), _lbl1, _lbl2);
+        private Expression expr181 = Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2);
         private string dbg181 = @"while (true)
-    break;";
+{
+    L0 /*(null)*/:
+    while (true)
+        goto L1;
+}
+L1 /*(null)*/:";
 
         [Fact]
         public void ToCSharp_Test181()
@@ -1737,9 +1744,16 @@ catch (Exception ex) when (true)
             Assert.Equal(dbg181, expr181.ToCSharp());
         }
 
-        private Expression expr182 = Expression.Loop(Expression.Continue(_lbl2), _lbl1, _lbl2);
+        private Expression expr182 = Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2);
         private string dbg182 = @"while (true)
-    continue;";
+{
+    L0 /*(null)*/:
+    while (true)
+    {
+        goto L0;
+    }
+}
+L1 /*(null)*/:";
 
         [Fact]
         public void ToCSharp_Test182()
@@ -1747,12 +1761,14 @@ catch (Exception ex) when (true)
             Assert.Equal(dbg182, expr182.ToCSharp());
         }
 
-        private Expression expr183 = Expression.Loop(Expression.Loop(Expression.Break(_lbl1)), _lbl1, _lbl2);
+        private Expression expr183 = Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2);
         private string dbg183 = @"while (true)
 {
     L0 /*(null)*/:
     while (true)
-        goto L1;
+    {
+        goto L0;
+    }
 }
 L1 /*(null)*/:";
 
@@ -1762,16 +1778,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg183, expr183.ToCSharp());
         }
 
-        private Expression expr184 = Expression.Loop(Expression.Loop(Expression.Block(Expression.Continue(_lbl2))), _lbl1, _lbl2);
-        private string dbg184 = @"while (true)
-{
-    L0 /*(null)*/:
-    while (true)
-    {
-        goto L0;
-    }
-}
-L1 /*(null)*/:";
+        private Expression expr184 = Expression.Break(_lbl1);
+        private string dbg184 = @"goto L0;";
 
         [Fact]
         public void ToCSharp_Test184()
@@ -1779,16 +1787,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg184, expr184.ToCSharp());
         }
 
-        private Expression expr185 = Expression.Loop(Expression.Block(Expression.Loop(Expression.Block(Expression.Continue(_lbl2)))), _lbl1, _lbl2);
-        private string dbg185 = @"while (true)
-{
-    L0 /*(null)*/:
-    while (true)
-    {
-        goto L0;
-    }
-}
-L1 /*(null)*/:";
+        private Expression expr185 = Expression.Continue(_lbl1);
+        private string dbg185 = @"goto L0;";
 
         [Fact]
         public void ToCSharp_Test185()
@@ -1796,8 +1796,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg185, expr185.ToCSharp());
         }
 
-        private Expression expr186 = Expression.Break(_lbl1);
-        private string dbg186 = @"goto L0;";
+        private Expression expr186 = Expression.Return(_lbl1);
+        private string dbg186 = @"return;";
 
         [Fact]
         public void ToCSharp_Test186()
@@ -1805,8 +1805,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg186, expr186.ToCSharp());
         }
 
-        private Expression expr187 = Expression.Continue(_lbl1);
-        private string dbg187 = @"goto L0;";
+        private Expression expr187 = Expression.Break(_lbl3, Expression.Constant(1));
+        private string dbg187 = @"goto L0/*(1)*/;";
 
         [Fact]
         public void ToCSharp_Test187()
@@ -1814,8 +1814,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg187, expr187.ToCSharp());
         }
 
-        private Expression expr188 = Expression.Return(_lbl1);
-        private string dbg188 = @"return;";
+        private Expression expr188 = Expression.Return(_lbl3, Expression.Constant(1));
+        private string dbg188 = @"return 1;";
 
         [Fact]
         public void ToCSharp_Test188()
@@ -1823,26 +1823,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg188, expr188.ToCSharp());
         }
 
-        private Expression expr189 = Expression.Break(_lbl3, Expression.Constant(1));
-        private string dbg189 = @"goto L0/*(1)*/;";
-
-        [Fact]
-        public void ToCSharp_Test189()
-        {
-            Assert.Equal(dbg189, expr189.ToCSharp());
-        }
-
-        private Expression expr190 = Expression.Return(_lbl3, Expression.Constant(1));
-        private string dbg190 = @"return 1;";
-
-        [Fact]
-        public void ToCSharp_Test190()
-        {
-            Assert.Equal(dbg190, expr190.ToCSharp());
-        }
-
-        private Expression expr191 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
-        private string dbg191 = @"switch (1)
+        private Expression expr189 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
+        private string dbg189 = @"switch (1)
 {
     case 2:
         Console.WriteLine(""case 2"");
@@ -1854,13 +1836,13 @@ L1 /*(null)*/:";
 }";
 
         [Fact]
-        public void ToCSharp_Test191()
+        public void ToCSharp_Test189()
         {
-            Assert.Equal(dbg191, expr191.ToCSharp());
+            Assert.Equal(dbg189, expr189.ToCSharp());
         }
 
-        private Expression expr192 = Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
-        private string dbg192 = @"switch (1)
+        private Expression expr190 = Expression.Switch(Expression.Constant(1), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("default")), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.Constant(2)), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 3 & 4")), Expression.Constant(3), Expression.Constant(4)));
+        private string dbg190 = @"switch (1)
 {
     case 2:
         Console.WriteLine(""case 2"");
@@ -1875,13 +1857,13 @@ L1 /*(null)*/:";
 }";
 
         [Fact]
-        public void ToCSharp_Test192()
+        public void ToCSharp_Test190()
         {
-            Assert.Equal(dbg192, expr192.ToCSharp());
+            Assert.Equal(dbg190, expr190.ToCSharp());
         }
 
-        private Expression expr193 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.UnaryPlus(Expression.Constant(2))));
-        private string dbg193 = @"switch (1)
+        private Expression expr191 = Expression.Switch(Expression.Constant(1), Expression.SwitchCase(Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("case 2")), Expression.UnaryPlus(Expression.Constant(2))));
+        private string dbg191 = @"switch (1)
 {
     case /* +2 */:
         Console.WriteLine(""case 2"");
@@ -1889,13 +1871,31 @@ L1 /*(null)*/:";
 }";
 
         [Fact]
+        public void ToCSharp_Test191()
+        {
+            Assert.Equal(dbg191, expr191.ToCSharp());
+        }
+
+        private Expression expr192 = Expression.ClearDebugInfo(Expression.SymbolDocument("foo"));
+        private string dbg192 = @"";
+
+        [Fact]
+        public void ToCSharp_Test192()
+        {
+            Assert.Equal(dbg192, expr192.ToCSharp());
+        }
+
+        private Expression expr193 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4);
+        private string dbg193 = @"";
+
+        [Fact]
         public void ToCSharp_Test193()
         {
             Assert.Equal(dbg193, expr193.ToCSharp());
         }
 
-        private Expression expr194 = Expression.ClearDebugInfo(Expression.SymbolDocument("foo"));
-        private string dbg194 = @"";
+        private Expression expr194 = Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int)));
+        private string dbg194 = @"RuntimeVariables(p0, p1)";
 
         [Fact]
         public void ToCSharp_Test194()
@@ -1903,8 +1903,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg194, expr194.ToCSharp());
         }
 
-        private Expression expr195 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 2, 3, 4);
-        private string dbg195 = @"";
+        private Expression expr195 = ((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)));
+        private string dbg195 = @"(IQueryable<int> xs) => xs.Where<int>((int x) => x > 0)";
 
         [Fact]
         public void ToCSharp_Test195()
@@ -1912,8 +1912,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg195, expr195.ToCSharp());
         }
 
-        private Expression expr196 = Expression.RuntimeVariables(Expression.Parameter(typeof(int)), Expression.Parameter(typeof(int)));
-        private string dbg196 = @"RuntimeVariables(p0, p1)";
+        private Expression expr196 = ((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })));
+        private string dbg196 = @"(IQueryable<int> xs) => xs.Where<int>((int x) => x > 0).Select((int x) => new { x = x })";
 
         [Fact]
         public void ToCSharp_Test196()
@@ -1921,8 +1921,11 @@ L1 /*(null)*/:";
             Assert.Equal(dbg196, expr196.ToCSharp());
         }
 
-        private Expression expr197 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.GetMember(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, "foo", typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1));
-        private string dbg197 = @"1/*dynamic*/.foo";
+        private Expression expr197 = Expression.Lambda(Expression.Block(Expression.Empty()));
+        private string dbg197 = @"() =>
+{
+    ;
+}";
 
         [Fact]
         public void ToCSharp_Test197()
@@ -1930,8 +1933,11 @@ L1 /*(null)*/:";
             Assert.Equal(dbg197, expr197.ToCSharp());
         }
 
-        private Expression expr198 = Expression.Dynamic(Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None, ExpressionType.Add, typeof(int), new Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo[0]), typeof(int), Expression.Constant(1), Expression.Constant(2));
-        private string dbg198 = @"1 /*dynamic*/ + 2";
+        private Expression expr198 = Expression.Lambda(Expression.Block(Expression.Constant(1)));
+        private string dbg198 = @"() =>
+{
+    return 1;
+}";
 
         [Fact]
         public void ToCSharp_Test198()
@@ -1939,8 +1945,11 @@ L1 /*(null)*/:";
             Assert.Equal(dbg198, expr198.ToCSharp());
         }
 
-        private Expression expr199 = ((Expression<Func<IQueryable<int>, IQueryable<int>>>)(xs => xs.Where(x => x > 0)));
-        private string dbg199 = @"(IQueryable<int> xs) => xs.Where<int>((int x) => x > 0)";
+        private Expression expr199 = Expression.Lambda(Expression.Block(Expression.Return(_lbl1)));
+        private string dbg199 = @"() =>
+{
+    return;
+}";
 
         [Fact]
         public void ToCSharp_Test199()
@@ -1948,8 +1957,11 @@ L1 /*(null)*/:";
             Assert.Equal(dbg199, expr199.ToCSharp());
         }
 
-        private Expression expr200 = ((Expression<Func<IQueryable<int>, IQueryable>>)(xs => xs.Where(x => x > 0).Select(x => new { x })));
-        private string dbg200 = @"(IQueryable<int> xs) => xs.Where<int>((int x) => x > 0).Select((int x) => new { x = x })";
+        private Expression expr200 = Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1))));
+        private string dbg200 = @"() =>
+{
+    return 1;
+}";
 
         [Fact]
         public void ToCSharp_Test200()
@@ -1957,11 +1969,12 @@ L1 /*(null)*/:";
             Assert.Equal(dbg200, expr200.ToCSharp());
         }
 
-        private Expression expr201 = Expression.Lambda(Expression.Block(Expression.Empty()));
-        private string dbg201 = @"() =>
-{
-    ;
-}";
+        private Expression expr201 = Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!"))));
+        private string dbg201 = @"if (true)
+    if (true)
+        Console.WriteLine(""if/if"");
+    else
+        Console.WriteLine(""I'm not a dangler!"");";
 
         [Fact]
         public void ToCSharp_Test201()
@@ -1969,57 +1982,8 @@ L1 /*(null)*/:";
             Assert.Equal(dbg201, expr201.ToCSharp());
         }
 
-        private Expression expr202 = Expression.Lambda(Expression.Block(Expression.Constant(1)));
-        private string dbg202 = @"() =>
-{
-    return 1;
-}";
-
-        [Fact]
-        public void ToCSharp_Test202()
-        {
-            Assert.Equal(dbg202, expr202.ToCSharp());
-        }
-
-        private Expression expr203 = Expression.Lambda(Expression.Block(Expression.Return(_lbl1)));
-        private string dbg203 = @"() =>
-{
-    return;
-}";
-
-        [Fact]
-        public void ToCSharp_Test203()
-        {
-            Assert.Equal(dbg203, expr203.ToCSharp());
-        }
-
-        private Expression expr204 = Expression.Lambda(Expression.Block(Expression.Return(_lbl3, Expression.Constant(1))));
-        private string dbg204 = @"() =>
-{
-    return 1;
-}";
-
-        [Fact]
-        public void ToCSharp_Test204()
-        {
-            Assert.Equal(dbg204, expr204.ToCSharp());
-        }
-
-        private Expression expr205 = Expression.IfThen(Expression.Constant(true), Expression.IfThenElse(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if")), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("I'm not a dangler!"))));
-        private string dbg205 = @"if (true)
-    if (true)
-        Console.WriteLine(""if/if"");
-    else
-        Console.WriteLine(""I'm not a dangler!"");";
-
-        [Fact]
-        public void ToCSharp_Test205()
-        {
-            Assert.Equal(dbg205, expr205.ToCSharp());
-        }
-
-        private Expression expr206 = Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!")));
-        private string dbg206 = @"if (true)
+        private Expression expr202 = Expression.IfThenElse(Expression.Constant(true), Expression.IfThen(Expression.Constant(true), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("if/if"))), Expression.Call(null, typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), Expression.Constant("don't dangle me!")));
+        private string dbg202 = @"if (true)
 {
     if (true)
         Console.WriteLine(""if/if"");
@@ -2028,9 +1992,9 @@ else
     Console.WriteLine(""don't dangle me!"");";
 
         [Fact]
-        public void ToCSharp_Test206()
+        public void ToCSharp_Test202()
         {
-            Assert.Equal(dbg206, expr206.ToCSharp());
+            Assert.Equal(dbg202, expr202.ToCSharp());
         }
 
     }

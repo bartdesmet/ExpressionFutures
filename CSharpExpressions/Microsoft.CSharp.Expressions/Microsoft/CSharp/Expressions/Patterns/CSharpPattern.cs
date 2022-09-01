@@ -5,9 +5,8 @@
 using System;
 using System.Linq.Expressions;
 
+using static System.Dynamic.Utils.ErrorUtils;
 using static System.Dynamic.Utils.TypeUtils;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -101,14 +100,14 @@ namespace Microsoft.CSharp.Expressions
 
         internal static void ValidatePatternType(Type type)
         {
-            ValidateType(type);
+            ValidateType(type, nameof(type));
 
             if (type.IsByRef)
                 throw Error.TypeMustNotBeByRef();
             if (type.IsPointer)
                 throw Error.TypeMustNotBePointer();
             if (type == typeof(void))
-                throw LinqError.ArgumentCannotBeOfTypeVoid();
+                throw ArgumentCannotBeOfTypeVoid(nameof(type));
         }
     }
 

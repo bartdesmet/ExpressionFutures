@@ -110,7 +110,7 @@ namespace Tests
             Assert.Equal(42, e.Compile()().Result().Result);
         }
 
-        [Fact]
+        [Fact(Skip = "Used to be NotSupportedException but may be fixed now. Review https://github.com/dotnet/coreclr/issues/1764.")]
         public void AsyncLambda_Compilation_NotInFilter_NoFalsePositive()
         {
             var p = Expression.Parameter(typeof(Exception));

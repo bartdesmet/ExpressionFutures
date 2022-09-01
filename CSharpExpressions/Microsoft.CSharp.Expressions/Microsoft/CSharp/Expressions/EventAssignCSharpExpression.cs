@@ -8,10 +8,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -107,7 +106,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 CSharpExpressionType.EventAddAssign => EventAddAssign(@object, @event, handler),
                 CSharpExpressionType.EventSubtractAssign => EventSubtractAssign(@object, @event, handler),
-                _ => throw LinqError.UnhandledBinary(type),
+                _ => throw UnhandledBinary(type),
             };
 
         /// <summary>
@@ -153,7 +152,7 @@ namespace Microsoft.CSharp.Expressions
         private static EventAssignCSharpExpression EventAssign(Expression @object, MethodInfo eventAccessor, Expression handler, bool isAddition)
         {
             RequiresNotNull(eventAccessor, nameof(eventAccessor));
-            ValidateMethodInfo(eventAccessor);
+            ValidateMethodInfo(eventAccessor, nameof(eventAccessor));
 
             return EventAssign(@object, GetEvent(eventAccessor), handler, isAddition);
         }

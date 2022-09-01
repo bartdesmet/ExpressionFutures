@@ -13,8 +13,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -274,9 +274,11 @@ namespace Microsoft.CSharp.Expressions
 
             var typeArgList = typeArguments.ToReadOnly();
 
+            int i = 0;
             foreach (var type in typeArgList)
             {
-                ValidateType(type);
+                ValidateType(type, nameof(typeArguments), i);
+                i++;
             }
 
             var argList = arguments.ToReadOnly();
@@ -395,13 +397,15 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(type, nameof(type));
             RequiresNotNull(name, nameof(name));
 
-            ValidateType(type);
+            ValidateType(type, nameof(type));
 
             var typeArgList = typeArguments.ToReadOnly();
 
+            int i = 0;
             foreach (var typeArg in typeArgList)
             {
-                ValidateType(typeArg);
+                ValidateType(typeArg, nameof(typeArguments), i);
+                i++;
             }
 
             var argList = arguments.ToReadOnly();

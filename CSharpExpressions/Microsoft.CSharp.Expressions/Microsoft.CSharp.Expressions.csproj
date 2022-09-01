@@ -1,324 +1,105 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6CD01EF9-CF8D-498E-B9BE-B7AFD1540302}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.CSharp.Expressions</RootNamespace>
     <AssemblyName>Microsoft.CSharp.Expressions</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Microsoft.CSharp.Expressions.xml</DocumentationFile>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj" />
+    <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Friends.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\EventAssignCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\RefLocalRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\EnumeratorInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Conversions\DeconstructionConversion.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Conversions\Conversion.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Conversions\SimpleConversion.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpCatchBlock.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringHandlerConversionCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringHandlerInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\IsPatternCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\DeconstructionAssignmentCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ArrayAccessCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.cs">
-      <DependentUpon>AssignUnaryCSharpExpression.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssignBinaryCSharpExpression.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Microsoft\CSharp\Expressions\AsyncLambdaCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\AwaitCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\AwaitInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AssignmentPercolator.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitChecker.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AwaitTrackingVisitor.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ParameterSubstitutor.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\RethrowRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\CatchRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\FinallyAndFaultRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\GotoRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\LeaveLabelData.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\Reducer.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\AliasEliminator.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ParameterSubstitutionVisitor.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ScopeTrackingVisitor.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\Utils.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalAccessCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalArrayIndexCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalMethodCallCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalMemberCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalReceiver.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Debugging.CSharp.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Debugging.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.Helpers.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\BlockCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\DebuggerTypeProxies.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Microsoft\CSharp\Expressions\LocalDeclaration.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\MemberInitializer.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\PatternSwitchCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\BinaryCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\ConstantCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpObjectPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpObjectPatternInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPattern.Debugging.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPattern.Debugging.CSharp.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPatternInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPatternType.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpSubpattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpSubpatternType.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\IPositionalCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\SliceCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\ListCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PatternHelpers.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PositionalCSharpSubpattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PropertyCSharpSubpattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\PropertyCSharpSubpatternMember.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\ITupleCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\RecursiveCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\TupleFieldInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\VarCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\DeclarationCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\DiscardCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\CSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\NotCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\RelationalCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Patterns\TypeCSharpPattern.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpStatementBase.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\SwitchExpressionArm.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\SwitchLabel.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\SwitchSection.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\WithCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\RangeCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\FromEndIndexCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Interpolation.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\InterpolatedStringCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\DiscardCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.cs">
-      <DependentUpon>AssignDynamicCSharpExpression.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignBinaryDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\AssignUnaryDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicAwaitInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicHelpers.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\GotoCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpIndexInit.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpSwitchCase.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\ConvertDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicAwaitCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DynamicCSharpExpression.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\InvokeConstructorDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\BinaryDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpArgument.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\GetIndexDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\GetMemberDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\InvokeDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\InvokeMemberDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Dynamic\UnaryDynamicCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Error.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Error.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Microsoft\CSharp\Expressions\ForCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ForEachCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Helpers.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalIndexCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalInvocationCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\InterpolationStringInsert.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\InterpolationStringLiteral.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\InvocationCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\IndexCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\IndexerAccessCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ConditionalLoopCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\NewCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\NewMultidimensionalArrayInitCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\Optimizer.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpression.Optimize.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Discard.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Blocks.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Try.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Optimizer\CSharpExpressionOptimizer.Loops.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\ParameterAssignment.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionType.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\CSharpExpressionVisitor.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\MethodCallCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ShadowEliminator.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\ShallowVisitor.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\Spiller.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\Compiler\TypedLabelRewriter.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\BinaryCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\StaticAwaitInfo.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\TryCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\TupleConvertCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\TupleBinaryCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\TupleLiteralCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\UnaryCSharpExpression.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\LoopCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\DoCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\LockCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\SwitchCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\UsingCSharpStatement.cs" />
-    <Compile Include="Microsoft\CSharp\Expressions\WhileCSharpStatement.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SR.cs" />
-    <Compile Include="Stubs.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Stubs.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Stubs.Manual.cs" />
-    <Compile Include="System\Linq\Expressions\BetterExpressionVisitor.cs" />
-    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Bindings.cs" />
-    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.cs" />
-    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.CSharp.cs" />
-    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Generated.cs" />
-    <Compile Include="System\Linq\Expressions\Compiler\StackSpiller.Temps.cs" />
-    <Compile Include="System\Linq\Expressions\Compiler\Stubs.Manual.cs" />
-    <Compile Include="System\Runtime\CompilerServices\ActionByRef.cs" />
-    <Compile Include="System\Runtime\CompilerServices\InterpolatedStringHandlerConstructionDelegate.cs">
-      <DependentUpon>InterpolatedStringHandlerConstructionDelegate.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="System\Runtime\CompilerServices\FuncByRef.cs" />
-    <Compile Include="System\Runtime\CompilerServices\InterpolatedStringHandlerAppendDelegate.cs" />
-    <Compile Include="System\Runtime\CompilerServices\RefHolder.cs" />
-    <Compile Include="System\Runtime\CompilerServices\DeconstructDelegates.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DeconstructDelegates.tt</DependentUpon>
-    </Compile>
-    <Compile Include="System\Runtime\CompilerServices\Discard.cs" />
-    <Compile Include="System\Runtime\CompilerServices\RuntimeAsyncStateMachine.cs" />
-    <Compile Include="System\Runtime\CompilerServices\RuntimeOpsEx.cs" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="CodeAnalysis.xml" />
-    <Content Include="gaps.txt" />
-    <Content Include="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssignUnaryCSharpExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.Generated.tt">
+    <None Update="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssignBinaryCSharpExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Microsoft\CSharp\Expressions\DebuggerTypeProxies.tt">
+    </None>
+    <None Update="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignUnaryCSharpExpression.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Microsoft\CSharp\Expressions\DebuggerTypeProxies.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DebuggerTypeProxies.cs</LastGenOutput>
-    </Content>
-    <Content Include="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.tt">
+    </None>
+    <None Update="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssignDynamicCSharpExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.tt">
+    </None>
+    <None Update="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DynamicCSharpExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Microsoft\CSharp\Expressions\Error.tt">
+    </None>
+    <None Update="Microsoft\CSharp\Expressions\Error.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Error.cs</LastGenOutput>
-    </Content>
-    <Content Include="notes.txt" />
-    <Content Include="Stubs.tt">
+    </None>
+    <None Update="Stubs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Stubs.cs</LastGenOutput>
-    </Content>
-    <Content Include="System\Runtime\CompilerServices\InterpolatedStringHandlerConstructionDelegate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>InterpolatedStringHandlerConstructionDelegate.cs</LastGenOutput>
-    </Content>
-    <Content Include="System\Runtime\CompilerServices\DeconstructDelegates.tt">
+    </None>
+    <None Update="System\Runtime\CompilerServices\DeconstructDelegates.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DeconstructDelegates.cs</LastGenOutput>
-    </Content>
+    </None>
+    <None Update="System\Runtime\CompilerServices\InterpolatedStringHandlerConstructionDelegate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>InterpolatedStringHandlerConstructionDelegate.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj">
-      <Project>{6fa07859-fbeb-4e2e-a70c-1373118a6740}</Project>
-      <Name>BclExtensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
-      <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
-      <Name>System.Linq.Expressions.Debugging</Name>
-    </ProjectReference>
+    <Compile Update="Microsoft\CSharp\Expressions\AssignBinaryCSharpExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssignBinaryCSharpExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Microsoft\CSharp\Expressions\AssignUnaryCSharpExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssignUnaryCSharpExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Microsoft\CSharp\Expressions\DebuggerTypeProxies.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DebuggerTypeProxies.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Microsoft\CSharp\Expressions\Dynamic\AssignDynamicCSharpExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssignDynamicCSharpExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Microsoft\CSharp\Expressions\Dynamic\DynamicCSharpExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DynamicCSharpExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Microsoft\CSharp\Expressions\Error.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Error.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Stubs.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Stubs.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Runtime\CompilerServices\DeconstructDelegates.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DeconstructDelegates.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Runtime\CompilerServices\InterpolatedStringHandlerConstructionDelegate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InterpolatedStringHandlerConstructionDelegate.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

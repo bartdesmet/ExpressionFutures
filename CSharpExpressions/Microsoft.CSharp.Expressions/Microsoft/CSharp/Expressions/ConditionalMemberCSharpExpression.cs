@@ -6,10 +6,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -89,7 +88,7 @@ namespace Microsoft.CSharp.Expressions
                 PropertyInfo propertyInfo => ConditionalProperty(expression, propertyInfo),
 
                 // NB: LINQ doesn't allow a MethodInfo for a property getter here either; should we change this?
-                _ => throw LinqError.MemberNotFieldOrProperty(member)
+                _ => throw MemberNotFieldOrProperty(member, nameof(member))
             };
         }
 
@@ -111,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
             var type = expression.Type.GetNonNullReceiverType();
 
             if (!AreReferenceAssignable(field.DeclaringType, type))
-                throw LinqError.FieldInfoNotDefinedForType(field.DeclaringType, field.Name, type);
+                throw FieldInfoNotDefinedForType(field.DeclaringType, field.Name, type);
 
             return ConditionalMemberCSharpExpression.Make(expression, field);
         }
@@ -135,7 +134,7 @@ namespace Microsoft.CSharp.Expressions
                 ?? type.GetField(fieldName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
             if (field == null)
-                throw LinqError.InstanceFieldNotDefinedForType(fieldName, type);
+                throw InstanceFieldNotDefinedForType(fieldName, type);
 
             return ConditionalField(expression, field);
         }
@@ -164,7 +163,7 @@ namespace Microsoft.CSharp.Expressions
             var type = expression.Type.GetNonNullReceiverType();
 
             if (!IsValidInstanceType(property, type))
-                throw LinqError.PropertyNotDefinedForType(property, type);
+                throw PropertyNotDefinedForType(property, type, nameof(property));
 
             return ConditionalMemberCSharpExpression.Make(expression, property);
         }
@@ -188,7 +187,7 @@ namespace Microsoft.CSharp.Expressions
                 ?? type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
             if (property == null)
-                throw LinqError.InstancePropertyNotDefinedForType(propertyName, type);
+                throw InstancePropertyNotDefinedForType(propertyName, type, nameof(propertyName));
 
             return ConditionalProperty(expression, property);
         }
@@ -203,9 +202,9 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(propertyAccessor, nameof(propertyAccessor));
 
-            ValidateMethodInfo(propertyAccessor);
+            ValidateMethodInfo(propertyAccessor, nameof(propertyAccessor));
 
-            return ConditionalProperty(expression, GetProperty(propertyAccessor));
+            return ConditionalProperty(expression, GetProperty(propertyAccessor, nameof(propertyAccessor)));
         }
 
         // TODO: Add PropertyOrField equivalent?

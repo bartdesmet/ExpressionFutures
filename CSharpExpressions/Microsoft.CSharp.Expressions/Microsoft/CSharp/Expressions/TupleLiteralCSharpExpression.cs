@@ -13,8 +13,6 @@ using System.Reflection;
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.TypeUtils;
 
-using LinqError = System.Linq.Expressions.Error;
-
 namespace Microsoft.CSharp.Expressions
 {
     using static Helpers;
@@ -294,9 +292,9 @@ namespace Microsoft.CSharp.Expressions
                 var parameterType = parameters[i].ParameterType;
                 var argumentType = args[i].Type;
 
-                ValidateType(type);
+                ValidateType(type, nameof(type), i);
                 if (!AreReferenceAssignable(parameterType, argumentType))
-                    throw LinqError.ExpressionTypeDoesNotMatchParameter(argumentType, parameterType);
+                    throw Error.ExpressionTypeDoesNotMatchParameter(argumentType, parameterType);
             }
 
             var argNames = argumentNames?.ToReadOnly();

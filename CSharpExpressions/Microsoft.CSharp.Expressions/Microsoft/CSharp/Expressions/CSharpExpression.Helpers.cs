@@ -8,9 +8,8 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -29,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
             //       Note that this behavior is the same as IfThen, but we could also add C# specific nodes for those,
             //       with the more flexible construction behavior.
             if (test.Type != typeof(bool))
-                throw LinqError.ArgumentMustBeBoolean();
+                throw ArgumentMustBeBoolean(nameof(test));
         }
 
         internal static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
@@ -42,11 +41,13 @@ namespace Microsoft.CSharp.Expressions
 
                 var uniqueVariables = new HashSet<ParameterExpression>(variablesList.Count);
 
-                foreach (var variable in variablesList)
+                for (int i = 0, n = variablesList.Count; i < n; i++)
                 {
+                    var variable = variablesList[i];
+
                     if (!uniqueVariables.Add(variable))
                     {
-                        throw LinqError.DuplicateVariable(variable);
+                        throw DuplicateVariable(variable, nameof(variables), i);
                     }
                 }
             }

@@ -9,10 +9,10 @@ using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -328,7 +328,7 @@ namespace Microsoft.CSharp.Expressions
                     inferredConversions[i] = Expression.Lambda(conversionBody, fromComponentParameter);
                 }
 
-                conversions = new TrueReadOnlyCollection<LambdaExpression>(inferredConversions);
+                conversions = inferredConversions.ToReadOnlyUnsafe();
             }
             else
             {
@@ -341,25 +341,25 @@ namespace Microsoft.CSharp.Expressions
 
                 for (int i = 0; i < arityFrom; i++)
                 {
-                    CheckConversion(conversions[i], fromTypes[i], toTypes[i]);
+                    CheckConversion(conversions[i], fromTypes[i], toTypes[i], nameof(elementConversions), i);
                 }
             }
 
             return new TupleConvertCSharpExpression(operand, type, conversions);
 
-            static void CheckConversion(LambdaExpression conversion, Type from, Type to)
+            static void CheckConversion(LambdaExpression conversion, Type from, Type to, string paramName, int index)
             {
                 var method = conversion.Type.GetMethod("Invoke");
                 var parameters = method.GetParametersCached();
 
                 if (parameters.Length != 1)
-                    throw LinqError.IncorrectNumberOfMethodCallArguments(conversion);
+                    throw IncorrectNumberOfMethodCallArguments(conversion, paramName, index);
 
                 if (!TypeUtils.AreEquivalent(method.ReturnType, to))
-                    throw LinqError.OperandTypesDoNotMatchParameters(CSharpExpressionType.TupleConvert, conversion.ToString());
+                    throw OperandTypesDoNotMatchParameters(CSharpExpressionType.TupleConvert, conversion.ToString(), paramName, index);
 
                 if (!ParameterIsAssignable(parameters[0], from))
-                    throw LinqError.OperandTypesDoNotMatchParameters(CSharpExpressionType.TupleConvert, conversion.ToString());
+                    throw OperandTypesDoNotMatchParameters(CSharpExpressionType.TupleConvert, conversion.ToString(), paramName, index);
             }
         }
     }

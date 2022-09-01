@@ -9,9 +9,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -139,9 +137,9 @@ namespace Microsoft.CSharp.Expressions
         {
             // NB: This is the overload the C# compiler binds to.
 
-            ValidateMethodInfo(isCompleted);
+            ValidateMethodInfo(isCompleted, nameof(isCompleted));
 
-            return AwaitInfo(getAwaiter, GetProperty(isCompleted), getResult);
+            return AwaitInfo(getAwaiter, GetProperty(isCompleted, nameof(isCompleted)), getResult);
         }
 
         /// <summary>
@@ -194,7 +192,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
         {
-            ValidateMethodInfo(getAwaiterMethod);
+            ValidateMethodInfo(getAwaiterMethod, nameof(getAwaiterMethod));
 
             // NB: We don't check whether the name of the method is GetAwaiter, just like we don't check the name of
             //     operator op_* methods in Binary and Unary node factories in LINQ. We could tighten this, but there
@@ -212,7 +210,7 @@ namespace Microsoft.CSharp.Expressions
                 var firstParam = getAwaiterParams[0];
 
                 if (!TypeUtils.AreReferenceAssignable(firstParam.ParameterType, operandType))
-                    throw LinqError.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType);
+                    throw Error.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType);
             }
             else
             {

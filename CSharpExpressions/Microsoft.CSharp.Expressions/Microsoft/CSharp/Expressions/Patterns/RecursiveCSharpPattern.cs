@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -434,7 +434,7 @@ namespace Microsoft.CSharp.Expressions
 
                     void validateWithDeconstructMethod()
                     {
-                        ValidateMethodInfo(deconstructMethod);
+                        ValidateMethodInfo(deconstructMethod, nameof(deconstructMethod));
 
                         if (deconstructMethod.ReturnType != typeof(void))
                             throw Error.DeconstructShouldReturnVoid(deconstructMethod);
@@ -446,7 +446,7 @@ namespace Microsoft.CSharp.Expressions
                             if (parameters.Length == 0)
                                 throw Error.DeconstructExtensionMethodMissingThis(deconstructMethod);
 
-                            ValidateOneArgument(deconstructMethod, ExpressionType.Call, objParam, parameters[0]);
+                            ValidateOneArgument(deconstructMethod, ExpressionType.Call, objParam, parameters[0], nameof(deconstructMethod), "this");
 
                             parameters = parameters.RemoveFirst();
                         }

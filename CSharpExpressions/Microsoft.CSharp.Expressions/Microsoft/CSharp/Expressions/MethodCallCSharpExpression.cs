@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -135,7 +135,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(method, nameof(method));
 
-            ValidateMethodInfo(method);
+            ValidateMethodInfo(method, nameof(method));
             ValidateStaticOrInstanceMethod(instance, method);
 
             return MakeCall(instance, method, arguments);
@@ -182,7 +182,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(method, nameof(method));
 
-            ValidateMethodInfo(method);
+            ValidateMethodInfo(method, nameof(method));
             ValidateStaticOrInstanceMethod(instance, method);
 
             var bindings = GetParameterBindings(method, arguments);

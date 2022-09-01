@@ -12,10 +12,9 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -260,7 +259,7 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Label(BreakLabel),
                 };
 
-                res = Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(new[] { value }), new TrueReadOnlyCollection<Expression>(exprs));
+                res = Expression.Block(new[] { value }.ToReadOnlyUnsafe(), exprs.ToReadOnlyUnsafe());
             }
             else
             {
@@ -272,7 +271,7 @@ namespace Microsoft.CSharp.Expressions
                     Expression.Label(BreakLabel),
                 };
 
-                res = Expression.Block(new TrueReadOnlyCollection<Expression>(exprs));
+                res = Expression.Block(exprs.ToReadOnlyUnsafe());
             }
 
             return res;
@@ -356,7 +355,7 @@ namespace Microsoft.CSharp.Expressions
                 Expression.Label(BreakLabel),
             };
 
-            return Expression.Block(new TrueReadOnlyCollection<ParameterExpression>(vars), new TrueReadOnlyCollection<Expression>(exprs));
+            return Expression.Block(vars.ToReadOnlyUnsafe(), exprs.ToReadOnlyUnsafe());
         }
 
         private Expression WithVariableScope(Expression expression)
@@ -603,7 +602,7 @@ namespace Microsoft.CSharp.Expressions
                     //       break;
                     //  }
 
-                    var roDefaultTestValues = new TrueReadOnlyCollection<object>(new[] { SwitchCaseDefaultValue });
+                    var roDefaultTestValues = new[] { SwitchCaseDefaultValue }.ToReadOnlyUnsafe();
                     var newDefaultCase = new CSharpSwitchCase(roDefaultTestValues, DefaultCase.Statements);
 
                     if (DefaultCase == NullCase)
@@ -660,7 +659,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (switchValue.Type == typeof(void))
             {
-                throw LinqError.ArgumentCannotBeOfTypeVoid();
+                throw ArgumentCannotBeOfTypeVoid(nameof(switchValue));
             }
 
             if (breakLabel.Type != typeof(void))

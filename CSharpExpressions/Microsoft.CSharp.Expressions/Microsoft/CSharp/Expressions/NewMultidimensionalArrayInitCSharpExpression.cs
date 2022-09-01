@@ -11,9 +11,8 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -186,7 +185,7 @@ namespace Microsoft.CSharp.Expressions
                     idx /= bound;
                 }
 
-                var indexes = new TrueReadOnlyCollection<Expression>(indexValues.Select(j => consts[j]).ToArray());
+                var indexes = indexValues.Select(j => consts[j]).ToArray().ToReadOnlyUnsafe();
                 var element = Expression.ArrayAccess(res, indexes);
 
                 exprs[i] = Expression.Assign(element, value);
@@ -239,13 +238,13 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(initializers, nameof(initializers));
 
             if (type.Equals(typeof(void)))
-                throw LinqError.ArgumentCannotBeOfTypeVoid();
+                throw ArgumentCannotBeOfTypeVoid(nameof(type));
 
             var boundsList = bounds.ToReadOnly();
 
             int dimensions = boundsList.Count;
             if (dimensions <= 0)
-                throw LinqError.BoundsCannotBeLessThanOne();
+                throw BoundsCannotBeLessThanOne(nameof(bounds));
 
             var length = 1;
 
@@ -274,7 +273,7 @@ namespace Microsoft.CSharp.Expressions
                 if (!TypeUtils.AreReferenceAssignable(type, expr.Type))
                 {
                     if (!TryQuote(type, ref expr))
-                        throw LinqError.ExpressionTypeCannotInitializeArrayType(expr.Type, type);
+                        throw ExpressionTypeCannotInitializeArrayType(expr.Type, type);
 
                     if (newList == null)
                     {
@@ -294,7 +293,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (newList != null)
             {
-                initializerList = new TrueReadOnlyCollection<Expression>(newList);
+                initializerList = newList.ToReadOnlyUnsafe();
             }
 
             return new NewMultidimensionalArrayInitCSharpExpression(type.MakeArrayType(boundsList.Count), boundsList, initializerList);

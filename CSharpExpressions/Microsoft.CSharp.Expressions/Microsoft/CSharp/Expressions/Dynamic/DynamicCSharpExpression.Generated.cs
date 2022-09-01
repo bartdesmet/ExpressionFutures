@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 using Microsoft.CSharp.RuntimeBinder;
 
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -1234,7 +1234,7 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.SubtractChecked:
                     break;
                 default:
-                    throw LinqError.NotSupported();
+                    throw NotSupported();
             }
         }
 
@@ -1253,7 +1253,7 @@ namespace Microsoft.CSharp.Expressions
                 case ExpressionType.IsFalse:
                     break;
                 default:
-                    throw LinqError.NotSupported();
+                    throw NotSupported();
             }
         }
     }

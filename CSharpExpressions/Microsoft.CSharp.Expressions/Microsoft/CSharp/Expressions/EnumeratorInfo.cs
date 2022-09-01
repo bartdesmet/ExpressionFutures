@@ -13,8 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -158,7 +158,7 @@ namespace Microsoft.CSharp.Expressions
                 collectionType,
                 getEnumerator,
                 moveNext,
-                GetProperty(currentPropertyGetMethod),
+                GetProperty(currentPropertyGetMethod, nameof(currentPropertyGetMethod)),
                 currentConversion,
                 elementType,
                 needsDisposal,
@@ -193,7 +193,7 @@ namespace Microsoft.CSharp.Expressions
             LambdaExpression patternDispose)
         {
             RequiresNotNull(collectionType, nameof(collectionType));
-            ValidateType(collectionType);
+            ValidateType(collectionType, nameof(collectionType));
 
             RequiresCanRead(getEnumerator, nameof(getEnumerator));
 
@@ -277,7 +277,7 @@ namespace Microsoft.CSharp.Expressions
         public static EnumeratorInfo EnumeratorInfo(bool isAsync, Type collectionType)
         {
             RequiresNotNull(collectionType, nameof(collectionType));
-            ValidateType(collectionType);
+            ValidateType(collectionType, nameof(collectionType));
 
             if (collectionType == typeof(string))
             {
@@ -379,7 +379,7 @@ namespace Microsoft.CSharp.Expressions
                     bool CanConvertToDisposeInterface()
                     {
                         var disposeInterface = isAsync ? typeof(IAsyncDisposable) : typeof(IDisposable);
-                        return HasReferenceConversion(enumeratorType, disposeInterface); // REVIEW - Roslyn checks for implicit conversion
+                        return enumeratorType.HasReferenceConversionTo(disposeInterface); // REVIEW - Roslyn checks for implicit conversion
                     }
 
                     if ((!enumeratorType.IsSealed && !isAsync) || CanConvertToDisposeInterface())

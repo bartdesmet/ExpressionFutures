@@ -7,10 +7,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -97,7 +96,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var accessor = p.GetGetMethod(nonPublic: true) ?? p.GetSetMethod(nonPublic: true);
                     if (accessor == null)
-                        throw LinqError.PropertyDoesNotHaveAccessor(p);
+                        throw PropertyDoesNotHaveAccessor(p, nameof(member));
                     
                     if (accessor.IsStatic)
                         throw Error.MemberInitializerMemberMustNotBeStatic(member.Name);
@@ -108,7 +107,7 @@ namespace Microsoft.CSharp.Expressions
                     break;
 
                 default:
-                    throw LinqError.ArgumentMustBeFieldInfoOrPropertInfo();
+                    throw ArgumentMustBeFieldInfoOrPropertyInfo(nameof(member));
             }
 
             RequiresCanRead(expression, nameof(expression));
@@ -119,12 +118,12 @@ namespace Microsoft.CSharp.Expressions
             //
 
             if (!memberType.IsAssignableFrom(expression.Type))
-                throw LinqError.ArgumentTypesMustMatch();
+                throw ArgumentTypesMustMatch(nameof(expression));
 
             if (member.DeclaringType == null)
                 throw Error.NotAMemberOfAnyType(member);
 
-            ValidateType(member.DeclaringType);
+            ValidateType(member.DeclaringType, nameof(member));
 
             return new MemberInitializer(member, expression);
         }
@@ -140,9 +139,9 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(propertyAccessor, nameof(propertyAccessor));
             RequiresNotNull(expression, nameof(expression));
 
-            ValidateMethodInfo(propertyAccessor);
+            ValidateMethodInfo(propertyAccessor, nameof(propertyAccessor));
 
-            return MemberInitializer(GetProperty(propertyAccessor), expression);
+            return MemberInitializer(GetProperty(propertyAccessor, nameof(propertyAccessor)), expression);
         }
     }
 

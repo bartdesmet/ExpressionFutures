@@ -11,9 +11,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -330,12 +329,12 @@ namespace Microsoft.CSharp.Expressions
             var arrayType = array.Type;
 
             if (!arrayType.IsArray)
-                throw LinqError.ArgumentMustBeArray();
+                throw ArgumentMustBeArray(nameof(array));
 
             var indexesList = indexes.ToReadOnly();
 
             if (arrayType.GetArrayRank() != indexesList.Count)
-                throw LinqError.IncorrectNumberOfIndexes();
+                throw IncorrectNumberOfIndexes();
 
             foreach (var index in indexesList)
             {
@@ -355,7 +354,7 @@ namespace Microsoft.CSharp.Expressions
             foreach (var index in indexesList)
             {
                 if (index.Type != typeof(int))
-                    throw LinqError.ArgumentMustBeArrayIndexType();
+                    throw ArgumentMustBeArrayIndexType(nameof(indexes));
             }
 
             return new ArrayAccessCSharpExpression(array, indexesList);

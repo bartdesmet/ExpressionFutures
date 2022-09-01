@@ -5,9 +5,8 @@
 using System;
 using System.Linq.Expressions;
 
+using static System.Dynamic.Utils.ErrorUtils;
 using static System.Dynamic.Utils.TypeUtils;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -61,7 +60,7 @@ namespace Microsoft.CSharp.Expressions
         internal override Expression Reduce(Expression @object)
         {
             if (!AreReferenceAssignable(InputType, @object.Type))
-                throw LinqError.ExpressionTypeDoesNotMatchAssignment(@object.Type, InputType);
+                throw ExpressionTypeDoesNotMatchAssignment(@object.Type, InputType);
 
             // NB: RecursiveCSharpPattern has a peephole optimization for the pattern below.
 

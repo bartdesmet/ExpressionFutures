@@ -153,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
         {
             RequiresNotNull(type, nameof(type));
 
-            ValidateType(type);
+            ValidateType(type, nameof(type));
 
             var argList = arguments.ToReadOnly();
 

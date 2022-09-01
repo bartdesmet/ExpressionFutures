@@ -10,10 +10,9 @@ using System.Linq.Expressions;
 using Microsoft.CSharp.Expressions.Compiler;
 
 using static System.Dynamic.Utils.ContractUtils;
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -289,7 +288,7 @@ namespace Microsoft.CSharp.Expressions
             if (variable != null)
             {
                 if (variable.IsByRef)
-                    throw LinqError.VariableMustNotBeByRef(variable, variable.Type);
+                    throw VariableMustNotBeByRef(variable, variable.Type, nameof(variable));
 
                 // REVIEW: See UsingCSharpStatement for a similar situation.
 
@@ -307,7 +306,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else if (type != null)
             {
-                ValidateType(type);
+                ValidateType(type, nameof(type));
             }
             else
             {
@@ -321,7 +320,7 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCanRead(filter, nameof(filter));
 
                 if (filter.Type != typeof(bool))
-                    throw LinqError.ArgumentMustBeBoolean();
+                    throw ArgumentMustBeBoolean(nameof(filter));
             }
 
             return new CSharpCatchBlock(variablesList, type, variable, body, filter);

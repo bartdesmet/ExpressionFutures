@@ -7,10 +7,9 @@ using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using static System.Dynamic.Utils.ErrorUtils;
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
-using static System.Linq.Expressions.ExpressionStubs;
-
-using LinqError = System.Linq.Expressions.Error;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -241,7 +240,7 @@ namespace Microsoft.CSharp.Expressions
                     return Expression.PostIncrementAssign(operand, method);
             }
 
-            throw LinqError.UnhandledUnary(unaryType);
+            throw UnhandledUnary(unaryType);
         }
 
         internal sealed class Custom : AssignUnaryCSharpExpression
@@ -276,7 +275,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpressionType.PostIncrementAssignChecked => PostIncrementAssignChecked(operand, method),
                 CSharpExpressionType.PostDecrementAssign => PostDecrementAssign(operand, method),
                 CSharpExpressionType.PostDecrementAssignChecked => PostDecrementAssignChecked(operand, method),
-                _ => throw LinqError.UnhandledUnary(unaryType),
+                _ => throw UnhandledUnary(unaryType),
             };
 
         private static AssignUnaryCSharpExpression MakeUnaryAssignCore(CSharpExpressionType unaryType, Expression operand, MethodInfo method)

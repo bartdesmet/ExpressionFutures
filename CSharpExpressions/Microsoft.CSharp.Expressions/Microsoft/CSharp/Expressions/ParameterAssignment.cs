@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using static System.Dynamic.Utils.ContractUtils;
-using static System.Linq.Expressions.ExpressionStubs;
+using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
@@ -134,7 +134,7 @@ namespace Microsoft.CSharp.Expressions
                 pType = pType.GetElementType();
             }
 
-            TypeUtils.ValidateType(pType);
+            TypeUtils.ValidateType(pType, parameter.Name);
 
             if (!TypeUtils.AreReferenceAssignable(pType, expression.Type) && !TryQuote(pType, ref expression))
                 throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType);

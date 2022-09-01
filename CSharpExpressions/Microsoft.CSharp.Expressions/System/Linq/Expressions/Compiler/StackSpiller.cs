@@ -9,15 +9,19 @@ using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
+using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Linq.Expressions.ExpressionExtensions;
+
 #if LINQ
 using BinaryExpressionStubs = System.Linq.Expressions.BinaryExpression;
 using MemberExpressionStubs = System.Linq.Expressions.MemberExpression;
-using ExpressionStubs = System.Linq.Expressions.Expression;
 #endif
 
 namespace System.Linq.Expressions.Compiler
 {
+    using Error = System.Dynamic.Utils.ErrorUtils;
+
     /// <summary>
     /// Expression rewriting to spill the CLR stack into temporary variables
     /// in order to guarantee some properties of code generation, for
@@ -539,7 +543,7 @@ namespace System.Linq.Expressions.Compiler
 #endif
             }
 
-            return cr.Finish(cr.Rewrite ? node.Rewrite(cr[0], cr[1, -1]) : expr);
+            return cr.Finish(cr.Rewrite ? node.Update(cr[0], cr[1, -1]) : expr);
         }
 
         // NewArrayExpression
@@ -597,7 +601,7 @@ namespace System.Linq.Expressions.Compiler
 
                 if (cr.Action == RewriteAction.SpillStack)
                 {
-                    RequireNoRefArgs(ExpressionStubs.GetInvokeMethod(node.Expression));
+                    RequireNoRefArgs(GetInvokeMethod(node.Expression));
                 }
 
                 // Lambda body also executes on current stack 
@@ -625,13 +629,13 @@ namespace System.Linq.Expressions.Compiler
             if (cr.Action == RewriteAction.SpillStack)
             {
 #if LINQ
-                RequireNoRefArgs(ExpressionStubs.GetInvokeMethod(node.Expression));
+                RequireNoRefArgs(GetInvokeMethod(node.Expression));
 #else
-                MarkRefArgs(cr, ExpressionStubs.GetInvokeMethod(node.Expression), 1);
+                MarkRefArgs(cr, GetInvokeMethod(node.Expression), 1);
 #endif
             }
 
-            return cr.Finish(cr.Rewrite ? node.Rewrite(cr[0], cr[1, -1]) : expr);
+            return cr.Finish(cr.Rewrite ? node.Update(cr[0], cr[1, -1]) : expr);
         }
 
         // NewExpression
@@ -912,12 +916,12 @@ namespace System.Linq.Expressions.Compiler
         {
             BlockExpression node = (BlockExpression)expr;
 
-            int count = node.ExpressionCount();
+            int count = node.Expressions.Count;
             RewriteAction action = RewriteAction.None;
             Expression[] clone = null;
             for (int i = 0; i < count; i++)
             {
-                Expression expression = node.GetExpression(i);
+                Expression expression = node.Expressions[i];
                 // All statements within the block execute at the
                 // same stack state.
                 Result rewritten = RewriteExpression(expression, stack);
@@ -937,7 +941,7 @@ namespace System.Linq.Expressions.Compiler
             if (action != RewriteAction.None)
             {
                 // okay to wrap since we know no one can mutate the clone array
-                expr = node.Rewrite(null, clone);
+                expr = node.Update(node.Variables, clone);
             }
             return new Result(action, expr);
         }
