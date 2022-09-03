@@ -1,108 +1,108 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>Library</OutputType>
-		<RootNamespace>Tests.Microsoft.CSharp.Expressions</RootNamespace>
-		<TargetFrameworks>net6.0</TargetFrameworks>
-	</PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-		<PackageReference Include="xunit" Version="2.4.1" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="coverlet.collector" Version="3.1.2">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-	</ItemGroup>
-	<ItemGroup>
-		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-		<Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="AssignBinaryTests.Generated.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>AssignBinaryTests.Generated.tt</DependentUpon>
-	  </Compile>
-	  <Compile Update="AssignDynamicTests.Generated.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>AssignDynamicTests.Generated.tt</DependentUpon>
-	  </Compile>
-	  <Compile Update="AssignUnaryTests.Generated.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>AssignUnaryTests.Generated.tt</DependentUpon>
-	  </Compile>
-	  <Compile Update="DynamicTests.Generated.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>DynamicTests.Generated.tt</DependentUpon>
-	  </Compile>
-	  <Compile Update="OptimizerTests.Generated.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>OptimizerTests.Generated.tt</DependentUpon>
-	  </Compile>
-	  <Compile Update="Tests.Meta.Generated.cs">
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
-	  </Compile>
-	  <Compile Update="ToCSharp.Meta.Generated.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Update="AssignBinaryTests.Generated.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>AssignBinaryTests.Generated.cs</LastGenOutput>
-	  </None>
-	  <None Update="AssignDynamicTests.Generated.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>AssignDynamicTests.Generated.cs</LastGenOutput>
-	  </None>
-	  <None Update="AssignUnaryTests.Generated.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>AssignUnaryTests.Generated.cs</LastGenOutput>
-	  </None>
-	  <None Update="DynamicTests.Generated.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
-	  </None>
-	  <None Update="OptimizerTests.Generated.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>OptimizerTests.Generated.cs</LastGenOutput>
-	  </None>
-	  <None Update="Tests.Meta.Generated.tt">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Tests.Meta.tt</DependentUpon>
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>Tests.Meta.Generated.cs</LastGenOutput>
-	  </None>
-	  <None Update="Tests.Meta.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>Tests.Meta.Generated.tt</LastGenOutput>
-	  </None>
-	  <None Update="ToCSharp.Meta.Generated.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>ToCSharp.Meta.Generated.cs</LastGenOutput>
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>ToCSharp.Meta.tt</DependentUpon>
-	  </None>
-	  <None Update="ToCSharp.Meta.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>ToCSharp.Meta.Generated.tt</LastGenOutput>
-	  </None>
-	</ItemGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Tests.Microsoft.CSharp.Expressions</RootNamespace>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="AssignBinaryTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssignBinaryTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="AssignDynamicTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssignDynamicTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="AssignUnaryTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssignUnaryTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DynamicTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DynamicTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="OptimizerTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OptimizerTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Tests.Meta.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Tests.Meta.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ToCSharp.Meta.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ToCSharp.Meta.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="AssignBinaryTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignBinaryTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="AssignDynamicTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignDynamicTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="AssignUnaryTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssignUnaryTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="DynamicTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DynamicTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="OptimizerTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OptimizerTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Tests.Meta.Generated.tt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Tests.Meta.tt</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Tests.Meta.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Tests.Meta.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Tests.Meta.Generated.tt</LastGenOutput>
+    </None>
+    <None Update="ToCSharp.Meta.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ToCSharp.Meta.Generated.cs</LastGenOutput>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ToCSharp.Meta.tt</DependentUpon>
+    </None>
+    <None Update="ToCSharp.Meta.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ToCSharp.Meta.Generated.tt</LastGenOutput>
+    </None>
+  </ItemGroup>
 </Project>
