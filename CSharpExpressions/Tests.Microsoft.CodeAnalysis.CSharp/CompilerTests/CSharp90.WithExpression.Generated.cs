@@ -147,13 +147,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
         partial class Review
         {
-            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.Fail("INCONCLUSIVE"); }
+            protected void INCONCLUSIVE() { /* Assert.Inconclusive(); */ Assert.True(false, "INCONCLUSIVE"); }
         }
 
         partial class Reviewed : Review
         {
             private void OK() { }
-            private void FAIL(string message = "") { Assert.Fail(message); }
+            private void FAIL(string message = "") { Assert.True(false, message); }
         }
 
         private readonly Reviewed Verify = new Reviewed();
