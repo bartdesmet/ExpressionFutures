@@ -29,8 +29,8 @@ namespace System.Dynamic.Utils
 
         public static MethodInfo? GetAnyStaticMethodValidated(this Type type, string name, Type[] types)
         {
-            MethodInfo method = type.GetMethod(name, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, null, types, null);
-            if (!method.MatchesArgumentTypes(types))
+            MethodInfo? method = type.GetMethod(name, BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, null, types, null);
+            if (method != null && !method.MatchesArgumentTypes(types))
             {
                 return null;
             }
