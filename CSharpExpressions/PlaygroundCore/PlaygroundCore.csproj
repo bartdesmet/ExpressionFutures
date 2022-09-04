@@ -7,6 +7,26 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj" />
+    <ProjectReference Include="..\Tests.Microsoft.CodeAnalysis.CSharp.Helpers\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeAnalysis">
+      <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp">
+      <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
+      <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces">
+      <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
