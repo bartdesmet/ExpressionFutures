@@ -641,7 +641,6 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f("foo");
             f(true);
             f(new DateTime(1983, 2, 11));
-            f(new AppDomainSetup());
             f(ConsoleColor.Red);
         }
 
