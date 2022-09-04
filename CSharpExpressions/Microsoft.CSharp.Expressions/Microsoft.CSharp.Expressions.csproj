@@ -4,11 +4,10 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.CSharp.Expressions</RootNamespace>
     <AssemblyName>Microsoft.CSharp.Expressions</AssemblyName>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj" />
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj" />
   </ItemGroup>
   <ItemGroup>
