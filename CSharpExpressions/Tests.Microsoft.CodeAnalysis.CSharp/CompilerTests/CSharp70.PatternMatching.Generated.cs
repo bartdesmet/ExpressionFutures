@@ -497,7 +497,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
         partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_6C86_EFA0() => INCONCLUSIVE(); }
 
         [Fact]
-        public void CompilerTest_06E8_C93B()
+        public void CompilerTest_06E8_C407()
         {
             // (Expression<Func<object, bool>>)(o => o is Math.PI)
             var actual = GetDebugView(@"(Expression<Func<object, bool>>)(o => o is Math.PI)");
@@ -513,17 +513,17 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
       </Expression>
       <Pattern>
         <ConstantPattern InputType=""System.Object"" NarrowedType=""System.Double"">
-          <Constant Type=""System.Double"" Value=""3.1415926535897931"" />
+          <Constant Type=""System.Double"" Value=""3.141592653589793"" />
         </ConstantPattern>
       </Pattern>
     </CSharpIsPattern>
   </Body>
 </Lambda>";
             Assert.Equal(expected.TrimStart('\r', '\n'), actual);
-            Verify.CompilerTest_06E8_C93B();
+            Verify.CompilerTest_06E8_C407();
         }
 
-        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_06E8_C93B() => INCONCLUSIVE(); }
+        partial class Review { /* override in .Verify.cs */ public virtual void CompilerTest_06E8_C407() => INCONCLUSIVE(); }
 
         [Fact]
         public void CompilerTest_D3F0_6F64()
@@ -651,7 +651,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             public override void CompilerTest_9EC8_A4DC() => OK();
             public override void CompilerTest_6BE1_D655() => OK();
             public override void CompilerTest_6C86_EFA0() => OK();
-            public override void CompilerTest_06E8_C93B() => OK();
+            public override void CompilerTest_06E8_C407() => OK();
             public override void CompilerTest_D3F0_6F64() => OK();
             public override void CompilerTest_2177_7A0C() => OK();
             public override void CompilerTest_4EE9_55F5() => OK();

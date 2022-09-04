@@ -1,693 +1,477 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.props" Condition="Exists('..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.props')" />
-  <Import Project="..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props')" />
-  <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{75E2D8F4-111D-456F-A098-0FC34077C2A5}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tests.Microsoft.CodeAnalysis.CSharp</RootNamespace>
-    <AssemblyName>Tests.Microsoft.CodeAnalysis.CSharp</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <IsTestProject>true</IsTestProject>
-    <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFrameworks>net6.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj" />
+    <ProjectReference Include="..\Tests.Microsoft.CodeAnalysis.CSharp.Helpers\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="6.0.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis">
       <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp">
       <HintPath>..\..\Binaries\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.CodeCoverage.Shim, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\lib\net462\Microsoft.VisualStudio.CodeCoverage.Shim.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reflection.Metadata">
-      <HintPath>..\..\Binaries\System.Reflection.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.4.2\lib\netstandard1.1\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.4.2\lib\net452\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.4.2\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise />
-  </Choose>
   <ItemGroup>
-    <Compile Include="AssertEx.cs" />
-    <Compile Include="CompilerTests.cs" />
-    <Compile Include="CompilerTests.Misc.cs" />
-    <Compile Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.cs">
-      <DependentUpon>CSharp30.MultiDimensionalArrayInitializers.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="CompilerTests\CSharp30.Assignments.Generated.cs">
       <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Assignments.Generated.cs">
+      <AutoGen>True</AutoGen>
       <DependentUpon>CSharp30.Assignments.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CompilerTests\CSharp30.Assignments.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Block.Generated.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.cs">
       <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Block.Generated.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.MultiDimensionalArrayInitializers.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Do.Generated.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="CompilerTests\CSharp30.Original.Generated.cs">
       <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Do.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Empty.Generated.cs">
       <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Empty.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.For.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.For.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.ForEach.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.ForEach.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Goto.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Goto.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.If.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.If.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Lock.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Lock.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Return.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Return.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Switch.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Switch.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Throw.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Throw.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Try.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Try.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Using.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.Using.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Throw.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Try.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Switch.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Return.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Lock.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.If.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Goto.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.ForEach.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.For.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Empty.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Do.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.Block.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.While.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Statements.While.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSharp30.Statements.While.Generated.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp50.AsyncAwait.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.DeconstructionAssignment.Generated.cs">
-      <DependentUpon>CSharp70.DeconstructionAssignment.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.DeconstructionAssignment.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.TupleConvert.Generated.cs">
-      <DependentUpon>CSharp70.TupleConvert.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.TupleConvert.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.PatternSwitchStatement.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.PatternSwitchStatement.Generated.cs">
-      <DependentUpon>CSharp80.PatternSwitchStatement.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.PatternSwitchStatement.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.PatternSwitchStatement.Generated.cs">
-      <DependentUpon>CSharp70.PatternSwitchStatement.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.OutVariable.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.OutVariable.Generated.cs">
-      <DependentUpon>CSharp70.OutVariable.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.IsExpression.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.IsExpression.Generated.cs">
-      <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp80.SwitchExpression.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.SwitchExpression.Generated.cs">
-      <DependentUpon>CSharp80.SwitchExpression.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharpN100.InterpolatedStringHandlers.Generated.cs">
-      <DependentUpon>CSharpN100.InterpolatedStringHandlers.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharpN100.InterpolatedStringHandlers.Verify.cs" />
-    <Compile Include="CompilerTests\CSharpN110.PatternMatching.Verify.cs" />
-    <Compile Include="CompilerTests\CSharpN110.PatternMatching.Generated.cs">
-      <DependentUpon>CSharpN110.PatternMatching.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharpN100.PatternMatching.Generated.cs">
-      <DependentUpon>CSharpN100.PatternMatching.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharpN100.PatternMatching.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp90.PatternMatching.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.PatternMatching.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.PatternMatching.Generated.cs">
-      <DependentUpon>CSharp80.PatternMatching.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.PatternMatching.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.PatternMatching.Generated.cs">
-      <DependentUpon>CSharp70.PatternMatching.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp73.TupleEquality.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp73.TupleEquality.Generated.cs">
-      <DependentUpon>CSharp73.TupleEquality.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.TupleLiterals.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.TupleLiterals.Generated.cs">
-      <DependentUpon>CSharp70.TupleLiterals.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.Discard.Generated.cs">
-      <DependentUpon>CSharp70.Discard.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.ThrowExpression.Generated.cs">
-      <DependentUpon>CSharp70.ThrowExpression.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp70.Discard.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.AwaitUsing.Generated.cs">
-      <DependentUpon>CSharp80.AwaitUsing.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp80.AwaitUsing.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp90.PatternMatching.Generated.cs">
-      <DependentUpon>CSharp90.PatternMatching.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp90.WithExpression.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp90.WithExpression.Generated.cs">
-      <DependentUpon>CSharp90.WithExpression.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp80.NullCoalescingAssignment.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.cs">
-      <DependentUpon>CSharp80.NullCoalescingAssignment.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp80.IndexRange.Generated.cs">
-      <DependentUpon>CSharp80.IndexRange.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Statements.Using.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp40.Dynamic.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp60.NullConditionalExpressions.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp60.NullConditionalExpressions.Generated.cs">
-      <DependentUpon>CSharp60.NullConditionalExpressions.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp50.AsyncAwait.Generated.cs">
-      <DependentUpon>CSharp50.AsyncAwait.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp40.NamedAndOptionalParameters.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp70.ThrowExpression.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp80.IndexRange.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp30.Original.Verify.cs" />
-    <Compile Include="CompilerTests\CSharp40.Dynamic.Generated.cs">
-      <DependentUpon>CSharp40.Dynamic.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp40.NamedAndOptionalParameters.Generated.cs">
-      <DependentUpon>CSharp40.NamedAndOptionalParameters.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="CompilerTests\CSharp30.Original.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>CSharp30.Original.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="CrossCheckTests\CSharp30.MultiDimensionalArrayInitializers.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Try.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Goto.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Return.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Lock.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Using.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.ForEach.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.For.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Do.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.While.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Switch.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.If.cs" />
-    <Compile Include="CrossCheckTests\CSharp60.InterpolatedString.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.DeconstructionAssignment.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.TupleConvert.cs" />
-    <Compile Include="CrossCheckTests\CSharp80.AwaitForEach.cs" />
-    <Compile Include="CrossCheckTests\CSharp80.AwaitUsing.cs" />
-    <Compile Include="CrossCheckTests\CSharp80.SwitchExpression.cs" />
-    <Compile Include="CrossCheckTests\CSharp90.PatternMatching.cs" />
-    <Compile Include="CrossCheckTests\CSharpN100.InterpolatedStringHandlers.cs" />
-    <Compile Include="CrossCheckTests\CSharpN110.PatternMatching.cs" />
-    <Compile Include="CrossCheckTests\CSharpN100.PatternMatching.cs" />
-    <Compile Include="CrossCheckTests\CSharp80.PatternMatching.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.IsExpression.cs" />
-    <Compile Include="CrossCheckTests\CSharp90.WithExpression.cs" />
-    <Compile Include="CrossCheckTests\CSharp80.NullCoalescingAssignment.cs" />
-    <Compile Include="CrossCheckTests\CSharp80.IndexRange.cs" />
-    <Compile Include="CrossCheckTests\CSharp73.TupleEquality.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.TupleLiterals.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.ThrowExpression.cs" />
-    <Compile Include="CrossCheckTests\CSharp70.Discard.cs" />
-    <Compile Include="CrossCheckTests\CSharp60.NullConditionalExpressions.cs" />
-    <Compile Include="CrossCheckTests\CSharp50.AsyncAwait.cs" />
-    <Compile Include="CrossCheckTests\CSharp40.Dynamic.cs" />
-    <Compile Include="CrossCheckTests\CSharp40.NamedAndOptionalParameters.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Statements.Lambda.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Assignments.cs" />
-    <Compile Include="CrossCheckTests\CSharp30.Original.cs" />
-    <Compile Include="LogAndResult.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReducingTests\CSharp30.Statements.Try.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp30.Statements.Try.Generated.cs">
-      <DependentUpon>CSharp30.Statements.Try.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
+    <Compile Update="CompilerTests\CSharp30.Statements.Block.Generated.cs">
       <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="ReducingTests\CSharp70.IsExpression.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp70.IsExpression.Generated.cs">
-      <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
       <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharp30.Statements.Block.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="ReducingTests\CSharp30.Statements.Lock.Generated.cs">
+    <Compile Update="CompilerTests\CSharp30.Statements.Do.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Do.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Empty.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Empty.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.For.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.For.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.ForEach.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.ForEach.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Goto.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Goto.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.If.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.If.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Lock.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>CSharp30.Statements.Lock.Generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Generated.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="CompilerTests\CSharp30.Statements.Return.Generated.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Return.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Switch.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Switch.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Throw.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Throw.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Try.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Try.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.Using.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Using.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp30.Statements.While.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.While.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp40.Dynamic.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp40.Dynamic.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp40.NamedAndOptionalParameters.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>CSharp40.NamedAndOptionalParameters.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp73.TupleEquality.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp30.Assignments.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp30.Statements.Lock.Verify.cs" />
-    <Compile Include="ReducingTests\CSharp30.Assignments.Generated.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="CompilerTests\CSharp50.AsyncAwait.Generated.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp50.AsyncAwait.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp60.NullConditionalExpressions.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp60.NullConditionalExpressions.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.DeconstructionAssignment.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.DeconstructionAssignment.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.Discard.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.Discard.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.IsExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.OutVariable.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.OutVariable.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.PatternMatching.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.PatternMatching.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.PatternSwitchStatement.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.PatternSwitchStatement.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.ThrowExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.ThrowExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.TupleConvert.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.TupleConvert.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp70.TupleLiterals.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.TupleLiterals.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp73.TupleEquality.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp73.TupleEquality.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp80.AwaitUsing.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp80.AwaitUsing.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp80.IndexRange.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp80.IndexRange.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp80.NullCoalescingAssignment.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp80.PatternMatching.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp80.PatternMatching.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp80.PatternSwitchStatement.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp80.PatternSwitchStatement.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp80.SwitchExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp80.SwitchExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp90.PatternMatching.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp90.PatternMatching.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharp90.WithExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp90.WithExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharpN100.InterpolatedStringHandlers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharpN100.InterpolatedStringHandlers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharpN100.PatternMatching.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharpN100.PatternMatching.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="CompilerTests\CSharpN110.PatternMatching.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharpN110.PatternMatching.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReducingTests\CSharp30.Assignments.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>CSharp30.Assignments.Generated.tt</DependentUpon>
     </Compile>
-    <Compile Include="ReducingTests\CSharp73.TupleEquality.Generated.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="ReducingTests\CSharp30.Statements.Lock.Generated.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Lock.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReducingTests\CSharp30.Statements.Try.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp30.Statements.Try.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReducingTests\CSharp40.NamedAndOptionalParameters.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp40.NamedAndOptionalParameters.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReducingTests\CSharp70.IsExpression.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CSharp70.IsExpression.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReducingTests\CSharp73.TupleEquality.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>CSharp73.TupleEquality.Generated.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BclExtensions\BclExtensions.csproj">
-      <Project>{6fa07859-fbeb-4e2e-a70c-1373118a6740}</Project>
-      <Name>BclExtensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.CSharp.Expressions\Microsoft.CSharp.Expressions.csproj">
-      <Project>{6cd01ef9-cf8d-498e-b9be-b7afd1540302}</Project>
-      <Name>Microsoft.CSharp.Expressions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj">
-      <Project>{29fb50cd-fa28-4051-9688-9a35ee0e51a9}</Project>
-      <Name>System.Linq.Expressions.Debugging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tests.Microsoft.CodeAnalysis.CSharp.Helpers\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.csproj">
-      <Project>{6e9836d3-2075-4a50-851c-ac15612bf926}</Project>
-      <Name>Tests.Microsoft.CodeAnalysis.CSharp.Helpers</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.tt">
+    <None Update="CompilerTestsBase.t4">
+      <Generator></Generator>
+    </None>
+    <None Update="CompilerTests\CSharp30.Assignments.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.MultiDimensionalArrayInitializers.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.MultiDimensionalArrayInitializers.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Assignments.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Block.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Block.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Do.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Do.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Empty.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Empty.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.For.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.For.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.ForEach.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.ForEach.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Goto.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Goto.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.If.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.If.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Lock.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Lock.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Return.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Return.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Switch.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Switch.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Throw.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Throw.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Try.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Try.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.Using.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Using.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Statements.While.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.While.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.DeconstructionAssignment.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.DeconstructionAssignment.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.TupleConvert.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.TupleConvert.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp80.PatternSwitchStatement.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp80.PatternSwitchStatement.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.PatternSwitchStatement.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.PatternSwitchStatement.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.OutVariable.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.OutVariable.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.IsExpression.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp80.SwitchExpression.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp80.SwitchExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp80.PatternMatching.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp80.PatternMatching.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.PatternMatching.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.PatternMatching.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp73.TupleEquality.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.TupleLiterals.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.TupleLiterals.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.Discard.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.Discard.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp70.ThrowExpression.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.ThrowExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp80.AwaitUsing.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp80.AwaitUsing.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharpN100.InterpolatedStringHandlers.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharpN100.InterpolatedStringHandlers.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharpN110.PatternMatching.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharpN110.PatternMatching.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharpN100.PatternMatching.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharpN100.PatternMatching.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp90.PatternMatching.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp90.PatternMatching.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp90.WithExpression.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp90.WithExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp80.NullCoalescingAssignment.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp80.IndexRange.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp80.IndexRange.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp40.Dynamic.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp40.Dynamic.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp60.NullConditionalExpressions.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp60.NullConditionalExpressions.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp50.AsyncAwait.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp50.AsyncAwait.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp40.NamedAndOptionalParameters.Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp40.NamedAndOptionalParameters.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="CompilerTests\CSharp30.Original.Generated.tt">
+    </None>
+    <None Update="CompilerTests\CSharp30.Original.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Original.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="ReducingTests\CSharp30.Statements.Try.Generated.tt">
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Block.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Statements.Try.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="ReducingTests\CSharp70.IsExpression.Generated.tt">
+      <LastGenOutput>CSharp30.Statements.Block.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Do.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="ReducingTests\CSharp30.Statements.Lock.Generated.tt">
+      <LastGenOutput>CSharp30.Statements.Do.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Empty.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Empty.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.For.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.For.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.ForEach.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.ForEach.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Goto.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Goto.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.If.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.If.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Lock.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp30.Statements.Lock.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="ReducingTests\CSharp30.Assignments.Generated.tt">
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Return.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="ReducingTests\CSharp40.NamedAndOptionalParameters.Generated.tt">
+      <LastGenOutput>CSharp30.Statements.Return.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Switch.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Switch.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Throw.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Throw.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Try.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Try.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.Using.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Using.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp30.Statements.While.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.While.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp40.Dynamic.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp40.Dynamic.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp40.NamedAndOptionalParameters.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp40.NamedAndOptionalParameters.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="ReducingTests\CSharp73.TupleEquality.Generated.tt">
+    </None>
+    <None Update="CompilerTests\CSharp50.AsyncAwait.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp50.AsyncAwait.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp60.NullConditionalExpressions.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp60.NullConditionalExpressions.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.DeconstructionAssignment.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.DeconstructionAssignment.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.Discard.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.Discard.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.IsExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.OutVariable.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.OutVariable.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.PatternMatching.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.PatternSwitchStatement.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.PatternSwitchStatement.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.ThrowExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.ThrowExpression.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.TupleConvert.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.TupleConvert.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp70.TupleLiterals.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.TupleLiterals.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp73.TupleEquality.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
-    </Content>
+    </None>
+    <None Update="CompilerTests\CSharp80.AwaitUsing.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.AwaitUsing.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp80.IndexRange.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.IndexRange.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp80.NullCoalescingAssignment.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.NullCoalescingAssignment.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp80.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.PatternMatching.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp80.PatternSwitchStatement.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.PatternSwitchStatement.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp80.SwitchExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp80.SwitchExpression.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp90.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp90.PatternMatching.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharp90.WithExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp90.WithExpression.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharpN100.InterpolatedStringHandlers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharpN100.InterpolatedStringHandlers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharpN100.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharpN100.PatternMatching.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="CompilerTests\CSharpN110.PatternMatching.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharpN110.PatternMatching.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ReducingTests\CSharp30.Assignments.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Assignments.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ReducingTests\CSharp30.Statements.Lock.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Lock.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ReducingTests\CSharp30.Statements.Try.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp30.Statements.Try.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ReducingTests\CSharp40.NamedAndOptionalParameters.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp40.NamedAndOptionalParameters.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ReducingTests\CSharp70.IsExpression.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp70.IsExpression.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ReducingTests\CSharp73.TupleEquality.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CSharp73.TupleEquality.Generated.cs</LastGenOutput>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="CompilerTests\CompilerTests.t4" />
-    <None Include="CompilerTestsBase.t4" />
-    <None Include="packages.config" />
-    <None Include="ReducingTests\CompilerTests.t4" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\xunit.analyzers.1.0.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
-    <Analyzer Include="..\packages\xunit.analyzers.1.0.0\analyzers\dotnet\cs\xunit.analyzers.fixes.dll" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.2\build\xunit.core.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.core.2.4.2\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.2\build\xunit.core.targets'))" />
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.targets'))" />
-  </Target>
-  <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.targets')" />
-  <Import Project="..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.targets" Condition="Exists('..\packages\Microsoft.CodeCoverage.17.4.0-preview-20220726-02\build\netstandard1.0\Microsoft.CodeCoverage.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

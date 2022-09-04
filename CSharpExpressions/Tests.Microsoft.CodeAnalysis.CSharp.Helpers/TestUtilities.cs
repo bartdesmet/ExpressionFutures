@@ -23,11 +23,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 {
     public static class TestUtilities
     {
+#if FALSE
         // NB: This domain is used to load custom-built Roslyn assemblies when invoking TestUtilities from the T4
         //     text template when generating tests. The problem is that the T4 engine is loaded in VS, with the Roslyn
         //     binaries on the AppDomain's probing path. If we don't tweak this, it will pick up the v1 RTM binaries
         //     from "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\PrivateAssemblies".
         private static AppDomain s_roslyn;
+#endif
 
         // TODO: Move the code below to RuntimeTestUtils.cs instead once this solution builds using the latest C#
         //       language version.
@@ -41,6 +43,7 @@ public record class Person
 }
 ";
 
+#if FALSE
         public static void InitializeDomain(string path)
         {
             var setup = new AppDomainSetup
@@ -59,17 +62,20 @@ public record class Person
                 // NB: not setting to null, so subsequent invocations fail DoCallBack upon misuse
             }
         }
+#endif
 
         public static string GetDebugView(string expr, bool reduce = false)
         {
+#if FALSE
             if (s_roslyn != null)
             {
                 return GetDebugViewMarshal(expr, reduce);
             }
-
+#endif
             return GetDebugViewCore(expr, reduce);
         }
 
+#if FALSE
         private static string GetDebugViewMarshal(string expr, bool reduce)
         {
             s_roslyn.SetData("expr", expr);
@@ -89,6 +95,7 @@ public record class Person
             var res = GetDebugViewCore(expr, reduce);
             AppDomain.CurrentDomain.SetData("debugView", res);
         }
+#endif
 
         private static string GetDebugViewCore(string expr, bool reduce)
         {
@@ -107,14 +114,17 @@ public record class Person
 
         public static string ToCSharp(string expr, bool reduce = false)
         {
+#if FALSE
             if (s_roslyn != null)
             {
                 return ToCSharpMarshal(expr, reduce);
             }
+#endif
 
             return ToCSharpCore(expr, reduce);
         }
 
+#if FALSE
         private static string ToCSharpMarshal(string expr, bool reduce)
         {
             s_roslyn.SetData("expr", expr);
@@ -134,6 +144,7 @@ public record class Person
             var res = ToCSharpCore(expr, reduce);
             AppDomain.CurrentDomain.SetData("csharp", res);
         }
+#endif
 
         private static string ToCSharpCore(string expr, bool reduce)
         {
@@ -188,8 +199,24 @@ public static class {typeName}
             var typ = asm.GetType(typeName);
             var prp = typ.GetProperty(propName);
 
+            //if (true)
+            //{
+            //    throw new InvalidProgramException(string.Join("\r\n", AppDomain.CurrentDomain.GetAssemblies().Select(a =>
+            //    {
+            //        string loc = "???";
+            //        try
+            //        {
+            //            loc = a.Location;
+            //        }
+            //        catch { }
+            //        return a.FullName + " at " + loc;
+            //    })));
+            //}
+
             return prp.GetValue(null);
         }
+
+        private static int s_id = 0;
 
         public static Assembly Compile(string code, out SemanticModel sem, bool includingExpressions = true, bool trimCR = false, params Assembly[] references)
         {
@@ -310,6 +337,7 @@ public static class {typeName}
         {
             AppendMethod(compiled.Method, sb);
 
+#if FALSE
             if (compiled.Target is Closure closure)
             {
                 var objects = new Queue<object>((closure.Locals ?? Array.Empty<object>()).Concat(closure.Constants ?? Array.Empty<object>()));
@@ -333,6 +361,7 @@ public static class {typeName}
                     }
                 }
             }
+#endif
         }
 
         private static void AppendMethod(MethodBase method, StringBuilder sb)
@@ -458,6 +487,11 @@ public static class {typeName}
 
         private static CSharpCompilation GetCSharpCompilation(bool includingExpressions, params Assembly[] references)
         {
+            var self = typeof(TestUtilities).Assembly;
+
+            var refs = self.GetReferencedAssemblies().Select(asm => Assembly.Load(asm.FullName)).ToArray();
+            references = references.Concat(refs).ToArray();
+
             return CSharpCompilation
                 // A class library `Expressions` which will be emitted in memory
                 .Create("Expressions")
@@ -479,7 +513,7 @@ public static class {typeName}
                 .AddReferences(MetadataReference.CreateFromFile(typeof(CSharpDynamic.Binder).Assembly.Location))
 
                 // Test utilities
-                .AddReferences(MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location))
+                .AddReferences(MetadataReference.CreateFromFile(self.Location))
 
                 // Our custom assembly
                 .AddReferences(includingExpressions ? new[] { MetadataReference.CreateFromFile(typeof(CSharpExpression).Assembly.Location) } : Array.Empty<MetadataReference>())

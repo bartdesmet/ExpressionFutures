@@ -30,7 +30,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
 
             // Constant - Misc
             public override void CompilerTest_6C86_EFA0() => OK();
-            public override void CompilerTest_06E8_C93B() => OK();
+            public override void CompilerTest_06E8_C407() => OK();
             public override void CompilerTest_D3F0_6F64() => OK();
             public override void CompilerTest_2177_7A0C() => OK();
             public override void CompilerTest_4EE9_55F5() => OK();
