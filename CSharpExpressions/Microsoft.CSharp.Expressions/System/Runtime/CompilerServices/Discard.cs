@@ -11,9 +11,13 @@ namespace System.Runtime.CompilerServices
     /// <typeparam name="T">The type of the value to assign.</typeparam>
     public static class Discard<T>
     {
+#pragma warning disable CA2211 // Non-constant fields should not be visible. (By design for discard.)
+
         /// <summary>
         /// The field to assign to.
         /// </summary>
         public static T _;
+
+#pragma warning restore CA2211 // Non-constant fields should not be visible. (By design for discard.)
     }
 }
