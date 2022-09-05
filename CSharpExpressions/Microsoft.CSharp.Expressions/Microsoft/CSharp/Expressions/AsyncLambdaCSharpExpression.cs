@@ -560,7 +560,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (count > 0)
             {
-                var set = new Set<ParameterExpression>(count);
+                var set = new HashSet<ParameterExpression>(count);
 
                 for (var i = 0; i < count; i++)
                 {
@@ -690,7 +690,7 @@ namespace Microsoft.CSharp.Expressions
                 if (parametersCached.Length != count)
                     throw IncorrectNumberOfLambdaDeclarationParameters();
 
-                var set = new Set<ParameterExpression>(count);
+                var set = new HashSet<ParameterExpression>(count);
 
                 for (var i = 0; i < count; i++)
                 {
