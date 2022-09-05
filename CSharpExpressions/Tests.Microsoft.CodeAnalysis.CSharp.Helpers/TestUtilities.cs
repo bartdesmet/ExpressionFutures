@@ -216,8 +216,6 @@ public static class {typeName}
             return prp.GetValue(null);
         }
 
-        private static int s_id = 0;
-
         public static Assembly Compile(string code, out SemanticModel sem, bool includingExpressions = true, bool trimCR = false, params Assembly[] references)
         {
             if (trimCR)
