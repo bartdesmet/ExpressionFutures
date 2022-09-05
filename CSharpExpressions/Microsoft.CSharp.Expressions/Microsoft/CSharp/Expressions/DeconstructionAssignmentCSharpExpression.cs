@@ -272,7 +272,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static bool IsTupleExpression(Expression e) => e is TupleLiteralCSharpExpression; // REVIEW: ConvertedTupleLiteral
 
-        private List<Expression> AccessTupleFields(Expression expression, List<ParameterExpression> temps, List<Expression> effects, Func<Type, ParameterExpression> createTemp)
+        private static List<Expression> AccessTupleFields(Expression expression, List<ParameterExpression> temps, List<Expression> effects, Func<Type, ParameterExpression> createTemp)
         {
             Debug.Assert(IsTupleType(expression.Type));
 
@@ -324,7 +324,7 @@ namespace Microsoft.CSharp.Expressions
             throw ContractUtils.Unreachable;
         }
 
-        private List<Expression> InvokeDeconstructLambda(LambdaExpression deconstruction, Expression target, List<Expression> effects, List<ParameterExpression> temps, Func<Type, ParameterExpression> createTemp)
+        private static List<Expression> InvokeDeconstructLambda(LambdaExpression deconstruction, Expression target, List<Expression> effects, List<ParameterExpression> temps, Func<Type, ParameterExpression> createTemp)
         {
             var locals = new List<Expression>();
 
@@ -377,7 +377,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private Expression EvaluateSideEffectingArgumentToTemp(Expression arg, List<Expression> effects, List<ParameterExpression> temps, Func<Type, ParameterExpression> createTemp)
+        private static Expression EvaluateSideEffectingArgumentToTemp(Expression arg, List<Expression> effects, List<ParameterExpression> temps, Func<Type, ParameterExpression> createTemp)
         {
             var temp = createTemp(arg.Type);
             var assignmentToTemp = Expression.Assign(temp, arg);

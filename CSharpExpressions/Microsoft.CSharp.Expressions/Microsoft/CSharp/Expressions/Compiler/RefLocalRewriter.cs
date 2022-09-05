@@ -145,7 +145,7 @@ namespace Microsoft.CSharp.Expressions
                 return false;
             }
 
-            private bool TryRewriteRefHolderAssignment(BinaryExpression node, Dictionary<ParameterExpression, ReplacementInfo> nearestScope, out Expression result)
+            private static bool TryRewriteRefHolderAssignment(BinaryExpression node, Dictionary<ParameterExpression, ReplacementInfo> nearestScope, out Expression result)
             {
                 // NB: This detects another use case of RefHolder<T> used for assignment
                 //
