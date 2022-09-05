@@ -2,6 +2,8 @@
 //
 // bartde - May 2020
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -97,7 +99,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce() => Reduce(length: null);
 
-        internal Expression Reduce(Expression length)
+        internal Expression Reduce(Expression? length)
         {
             var lengthTemp = default(ParameterExpression);
 
@@ -155,7 +157,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (isByRef)
                 {
-                    var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef));
+                    var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef))!;
                     method = method.MakeGenericMethod(Object.Type, Type);
                     var delegateType = typeof(FuncByRef<,>).MakeGenericType(Object.Type, Type);
 
@@ -263,7 +265,7 @@ namespace Microsoft.CSharp.Expressions
                     {
                         // a..b    ->  (b - a)
 
-                        sizeExpr = CreateConstantInt32((int)endConst.Value - (int)startConst.Value);
+                        sizeExpr = CreateConstantInt32((int)endConst.Value! - (int)startConst.Value!);
                     }
                     else if (startExpr is BinaryExpression { NodeType: ExpressionType.Subtract } s && s.Left == length &&
                              endExpr is BinaryExpression { NodeType: ExpressionType.Subtract } e && e.Left == length &&
@@ -399,7 +401,7 @@ namespace Microsoft.CSharp.Expressions
             switch (index)
             {
                 case ConstantExpression ce:
-                    var indexValue = (Index)ce.Value;
+                    var indexValue = (Index)ce.Value!;
                     if (indexValue.IsFromEnd)
                     {
                         useLength = true;
@@ -466,7 +468,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (left is ConstantExpression l && right is ConstantExpression r)
             {
-                return CreateConstantInt32((int)l.Value - (int)r.Value);
+                return CreateConstantInt32((int)l.Value! - (int)r.Value!);
             }
 
             return Expression.Subtract(left, right);
@@ -474,14 +476,14 @@ namespace Microsoft.CSharp.Expressions
 
         private static Expression MakeConstantIfDefault(Expression e) => e is DefaultExpression ? CreateConstantInt32(0) : e;
 
-        private static MethodInfo s_getOffset;
-        private static MethodInfo GetOffsetMethod => s_getOffset ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), BindingFlags.Public | BindingFlags.Instance, new[] { typeof(int) });
+        private static MethodInfo? s_getOffset;
+        private static MethodInfo GetOffsetMethod => s_getOffset ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), BindingFlags.Public | BindingFlags.Instance, new[] { typeof(int) })!;
 
-        private static PropertyInfo s_start;
-        private static PropertyInfo StartProperty => s_start ??= typeof(Range).GetProperty(nameof(System.Range.Start), BindingFlags.Public | BindingFlags.Instance);
+        private static PropertyInfo? s_start;
+        private static PropertyInfo StartProperty => s_start ??= typeof(Range).GetProperty(nameof(System.Range.Start), BindingFlags.Public | BindingFlags.Instance)!;
 
-        private static PropertyInfo s_end;
-        private static PropertyInfo EndProperty => s_end ??= typeof(Range).GetProperty(nameof(System.Range.End), BindingFlags.Public | BindingFlags.Instance);
+        private static PropertyInfo? s_end;
+        private static PropertyInfo EndProperty => s_end ??= typeof(Range).GetProperty(nameof(System.Range.End), BindingFlags.Public | BindingFlags.Instance)!;
     }
 
     partial class CSharpExpression
@@ -503,7 +505,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="lengthOrCount">The property used to retrieve the element count of the object getting accessed.</param>
         /// <param name="indexOrSlice">The member used to index or slice the object.</param>
         /// <returns>A new <see cref="IndexerAccessCSharpExpression"/> instance representing the array access operation.</returns>
-        public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument, MethodInfo lengthOrCount, MemberInfo indexOrSlice)
+        public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument, MethodInfo? lengthOrCount, MemberInfo? indexOrSlice)
         {
             var property = lengthOrCount != null ? GetProperty(lengthOrCount, nameof(lengthOrCount)) : null;
 
@@ -518,7 +520,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="lengthOrCount">The property used to retrieve the element count of the object getting accessed.</param>
         /// <param name="indexOrSlice">The member used to index or slice the object.</param>
         /// <returns>A new <see cref="IndexerAccessCSharpExpression"/> instance representing the array access operation.</returns>
-        public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument, PropertyInfo lengthOrCount, MemberInfo indexOrSlice)
+        public static IndexerAccessCSharpExpression IndexerAccess(Expression @object, Expression argument, PropertyInfo? lengthOrCount, MemberInfo? indexOrSlice)
         {
             RequiresCanRead(@object, nameof(@object));
 
@@ -537,11 +539,11 @@ namespace Microsoft.CSharp.Expressions
 
             lengthOrCount ??= FindCountProperty("Length") ?? FindCountProperty("Count");
 
-            PropertyInfo FindCountProperty(string name) => @object.Type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance, binder: null, typeof(int), Type.EmptyTypes, modifiers: null);
+            PropertyInfo? FindCountProperty(string name) => @object.Type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance, binder: null, typeof(int), Type.EmptyTypes, modifiers: null);
 
             RequiresNotNull(lengthOrCount, nameof(lengthOrCount));
 
-            var lengthOrCountGetMethod = lengthOrCount.GetGetMethod(nonPublic: true); // NB: System.Linq.Expressions allows non-public properties.
+            var lengthOrCountGetMethod = lengthOrCount!.GetGetMethod(nonPublic: true); // NB: System.Linq.Expressions allows non-public properties.
 
             if (lengthOrCountGetMethod == null)
                 throw PropertyDoesNotHaveAccessor(lengthOrCount, nameof(lengthOrCount));
@@ -568,7 +570,7 @@ namespace Microsoft.CSharp.Expressions
 
                 indexOrSlice ??= FindIndexer();
 
-                PropertyInfo FindIndexer()
+                PropertyInfo? FindIndexer()
                 {
                     var indexers = (from p in @object.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                     let i = p.GetIndexParameters()
@@ -620,7 +622,7 @@ namespace Microsoft.CSharp.Expressions
 
                 indexOrSlice ??= FindSliceMethod();
 
-                MethodInfo FindSliceMethod() => @object.Type.GetMethod(@object.Type == typeof(string) ? nameof(string.Substring) : "Slice", BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null);
+                MethodInfo? FindSliceMethod() => @object.Type.GetMethod(@object.Type == typeof(string) ? nameof(string.Substring) : "Slice", BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null);
 
                 RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
@@ -638,6 +640,8 @@ namespace Microsoft.CSharp.Expressions
                 if (sliceParams.Length != 2 || sliceParams[0].ParameterType != typeof(int) || sliceParams[1].ParameterType != typeof(int))
                     throw Error.InvalidSliceParameters(slice);
             }
+
+            Debug.Assert(indexOrSlice is not null);
 
             return new IndexerAccessCSharpExpression(@object, argument, lengthOrCount, indexOrSlice);
         }

@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,7 +41,7 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public override Type Type => Indexes[0].Type == typeof(Range) ? Array.Type : Array.Type.GetElementType();
+        public override Type Type => Indexes[0].Type == typeof(Range) ? Array.Type : Array.Type.GetElementType()!;
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the array getting accessed.
@@ -81,7 +83,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce() => Reduce(length: null);
 
-        internal Expression Reduce(Expression length)
+        internal Expression Reduce(Expression? length)
         {
             if (IsSimpleArrayAccess())
             {
@@ -124,7 +126,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 // System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray(array, Range)
 
-                var elemType = Array.Type.GetElementType(); // REVIEW
+                var elemType = Array.Type.GetElementType()!; // REVIEW
                 var getSubArrayMethod = GetSubArrayMethod.MakeGenericMethod(elemType);
 
                 return Expression.Call(getSubArrayMethod, Array, Indexes[0]);
@@ -273,7 +275,7 @@ namespace Microsoft.CSharp.Expressions
             return array;
         }
 
-        private static Expression GetIntIndexExpression(Expression array, Expression length, Expression index)
+        private static Expression GetIntIndexExpression(Expression array, Expression? length, Expression index)
         {
             //
             // NB: The Roslyn compiler also allows the array.Length expression to be evaluated after evaluating the index expression,
@@ -287,8 +289,8 @@ namespace Microsoft.CSharp.Expressions
             return IndexerAccessCSharpExpression.GetIndexOffset(index, length, out _);
         }
 
-        private static MethodInfo s_getSubArray;
-        private static MethodInfo GetSubArrayMethod => s_getSubArray ??= typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), BindingFlags.Public | BindingFlags.Static);
+        private static MethodInfo? s_getSubArray;
+        private static MethodInfo GetSubArrayMethod => s_getSubArray ??= typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), BindingFlags.Public | BindingFlags.Static)!;
 
         //
         // BUG: This node can't be passed to a ref parameter. E.g. Interlocked.Exchange(ref xs[^i], val)
