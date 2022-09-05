@@ -115,16 +115,15 @@ namespace System.Linq.Expressions
 
     internal static class BinaryExpressionExtensions
     {
-        private static readonly Assembly s_asm = Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-        private static readonly Type s_typ = s_asm.GetType("System.Linq.Expressions.BinaryExpression");
+        private static readonly Type s_typ = typeof(BinaryExpression);
         private static readonly PropertyInfo s_1 = s_typ.GetProperty("IsLiftedLogical", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
         private static readonly MethodInfo s_2 = s_typ.GetMethod("ReduceUserdefinedLifted", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
-        public static System.Boolean get_IsLiftedLogical(this System.Linq.Expressions.BinaryExpression obj)
+        public static bool get_IsLiftedLogical(this BinaryExpression obj)
         {
             try
             {
-                return (System.Boolean)s_1.GetValue(obj);
+                return (bool)s_1.GetValue(obj);
             }
             catch (TargetInvocationException ex)
             {
@@ -132,11 +131,11 @@ namespace System.Linq.Expressions
             }
         }
 
-        public static System.Linq.Expressions.Expression ReduceUserdefinedLifted(this System.Linq.Expressions.BinaryExpression obj)
+        public static Expression ReduceUserdefinedLifted(this BinaryExpression obj)
         {
             try
             {
-                return (System.Linq.Expressions.Expression)s_2.Invoke(obj, new object[0]);
+                return (Expression)s_2.Invoke(obj, Array.Empty<object>());
             }
             catch (TargetInvocationException ex)
             {
