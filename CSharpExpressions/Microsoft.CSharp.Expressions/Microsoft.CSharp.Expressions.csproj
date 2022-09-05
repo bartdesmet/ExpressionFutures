@@ -38,10 +38,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Error.cs</LastGenOutput>
     </None>
-    <None Update="Stubs.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Stubs.cs</LastGenOutput>
-    </None>
     <None Update="System\Runtime\CompilerServices\DeconstructDelegates.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DeconstructDelegates.cs</LastGenOutput>
@@ -84,11 +80,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Error.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Stubs.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Stubs.tt</DependentUpon>
     </Compile>
     <Compile Update="System\Runtime\CompilerServices\DeconstructDelegates.cs">
       <DesignTime>True</DesignTime>
