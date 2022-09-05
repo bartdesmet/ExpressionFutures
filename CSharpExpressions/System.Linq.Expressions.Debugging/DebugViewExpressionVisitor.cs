@@ -666,7 +666,7 @@ namespace System.Linq.Expressions
             return new XElement(name, res);
         }
 
-        protected XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
+        protected static XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
         {
             var res = new List<XNode>();
 
@@ -692,11 +692,11 @@ namespace System.Linq.Expressions
             return node;
         }
 
-        public int MakeInstanceId(object o)
+        public int MakeInstanceId(object value)
         {
-            if (!_instanceIds.TryGetValue(o, out int id))
+            if (!_instanceIds.TryGetValue(value, out int id))
             {
-                _instanceIds[o] = id = _instanceIds.Count;
+                _instanceIds[value] = id = _instanceIds.Count;
             }
 
             return id;

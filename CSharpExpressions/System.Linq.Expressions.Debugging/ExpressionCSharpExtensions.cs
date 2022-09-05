@@ -545,7 +545,7 @@ namespace System.Linq.Expressions
                     if (asMethod)
                     {
                         // NB: Not preserving evaluation semantics for indexers etc.
-                        if (op.EndsWith("="))
+                        if (op.EndsWith("=", StringComparison.Ordinal))
                         {
                             Visit(node.Left);
                             Out(" = ");
@@ -908,7 +908,7 @@ namespace System.Linq.Expressions
                 {
                     Out("new ");
 
-                    if (node.Members != null || (node.Type.IsDefined(typeof(CompilerGeneratedAttribute)) && node.Type.Name.StartsWith("<>f__AnonymousType")))
+                    if (node.Members != null || (node.Type.IsDefined(typeof(CompilerGeneratedAttribute)) && node.Type.Name.StartsWith("<>f__AnonymousType", StringComparison.Ordinal)))
                     {
                         Out("{");
 
@@ -2494,7 +2494,7 @@ namespace System.Linq.Expressions
 
         public static bool CanInferGenericArguments(MethodBase method)
         {
-            if (method.GetGenericArguments().Any(t => t.IsDefined(typeof(CompilerGeneratedAttribute)) && t.Name.StartsWith("<>f__AnonymousType")))
+            if (method.GetGenericArguments().Any(t => t.IsDefined(typeof(CompilerGeneratedAttribute)) && t.Name.StartsWith("<>f__AnonymousType", StringComparison.Ordinal)))
             {
                 return true;
             }
