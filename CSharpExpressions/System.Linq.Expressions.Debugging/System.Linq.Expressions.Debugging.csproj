@@ -6,7 +6,7 @@
     <AssemblyName>System.Linq.Expressions.Debugging</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <Nullable>enable</Nullable>
   </PropertyGroup>
