@@ -46,19 +46,19 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the implementing method for the binary operation.
         /// </summary>
-        /// <returns>The <see cref="T:System.Reflection.MethodInfo" /> that represents the implementing method.</returns>
+        /// <returns>The <see cref="System.Reflection.MethodInfo" /> that represents the implementing method.</returns>
         public abstract MethodInfo Method { get; }
 
         /// <summary>
         /// Gets the type conversion function that is used to convert the left hand side of the compound assignment operation prior to use by the underlying operation.
         /// </summary>
-        /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that represents a type conversion function.</returns>
+        /// <returns>A <see cref="System.Linq.Expressions.LambdaExpression" /> that represents a type conversion function.</returns>
         public abstract LambdaExpression LeftConversion { get; }
 
         /// <summary>
         /// Gets the type conversion function that is used to convert the result of the underlying operation prior to assignment to the left hand side of the compound assignment operation.
         /// </summary>
-        /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that represents a type conversion function.</returns>
+        /// <returns>A <see cref="System.Linq.Expressions.LambdaExpression" /> that represents a type conversion function.</returns>
         public abstract LambdaExpression FinalConversion { get; }
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         /// <summary>
-        /// Gets the <see cref="T:System.Type" /> that indicates where this operation is used.
+        /// Gets the <see cref="System.Type" /> that indicates where this operation is used.
         /// </summary>
         public Type Context { get; }
 
