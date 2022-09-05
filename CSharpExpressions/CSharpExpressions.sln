@@ -30,11 +30,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Microsoft.CodeAnalysi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Microsoft.CodeAnalysis.CSharp.Helpers", "Tests.Microsoft.CodeAnalysis.CSharp.Helpers\Tests.Microsoft.CodeAnalysis.CSharp.Helpers.csproj", "{6E9836D3-2075-4A50-851C-AC15612BF926}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "PlaygroundCore\Playground.csproj", "{16AA6A23-AC15-4FBF-A76F-7E208B256114}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "Playground\Playground.csproj", "{16AA6A23-AC15-4FBF-A76F-7E208B256114}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Microsoft.CodeAnalysis.CSharp.Generator", "Tests.Microsoft.CodeAnalysis.CSharp.Generator\Tests.Microsoft.CodeAnalysis.CSharp.Generator.csproj", "{815A6D31-08EE-4BAD-B580-729DFEC4EF5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPad", "RoslynPadCore\RoslynPad.csproj", "{58F7CEB5-23AA-4BED-918B-5AB0827A6421}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynPad", "RoslynPad\RoslynPad.csproj", "{58F7CEB5-23AA-4BED-918B-5AB0827A6421}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
