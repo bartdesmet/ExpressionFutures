@@ -34,4 +34,50 @@ namespace System.Linq.Expressions
             }
         }
     }
+
+    internal static class MemberExpressionStubs
+    {
+        private static readonly Type s_typ = typeof(MemberExpression);
+        private static readonly ILookup<string, MethodInfo> s_mtds = s_typ.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).ToLookup(m => m.Name);
+
+        private static readonly MethodInfo s_0 = s_mtds["Make"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(Expression), typeof(MemberInfo) }));
+
+        public static MemberExpression Make(Expression expression, MemberInfo member)
+        {
+            try
+            {
+                var args = new object[] { expression, member };
+                var res = s_0.Invoke(null, args);
+                return (MemberExpression)res;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+    }
+
+    internal static class BinaryExpressionStubs
+    {
+        private static readonly Type s_typ = typeof(BinaryExpression);
+        private static readonly ILookup<string, MethodInfo> s_mtds = s_typ.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).ToLookup(m => m.Name);
+
+        private static readonly MethodInfo s_0 = s_mtds["Create"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(ExpressionType), typeof(Expression), typeof(Expression), typeof(Type), typeof(MethodInfo), typeof(LambdaExpression) }));
+
+        public static Expression Create(ExpressionType nodeType, Expression left, Expression right, Type type, MethodInfo method, LambdaExpression conversion)
+        {
+            try
+            {
+                var args = new object[] { nodeType, left, right, type, method, conversion };
+                var res = s_0.Invoke(null, args);
+                return (Expression)res;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+    }
 }

@@ -15,8 +15,6 @@
 var types = new[]
 {
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Compiler.StackSpiller", Members = new string[] { "AnalyzeLambda" }, Suffix = "Stub", Partial = true },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.MemberExpression", Members = new string[] { "Make" }, Suffix = "Stubs", Partial = true },
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.BinaryExpression", Members = new string[] { "Create" }, Suffix = "Stubs", Partial = true },
 };
 
 // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/
