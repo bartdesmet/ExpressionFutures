@@ -7,6 +7,7 @@ using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
 using System.Dynamic.Utils;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -2283,7 +2284,7 @@ namespace Microsoft.CSharp.Expressions
                         if (insert.Alignment != null)
                         {
                             visitor.Out(",");
-                            visitor.Out(insert.Alignment.Value.ToString());
+                            visitor.Out(insert.Alignment.Value.ToString(CultureInfo.InvariantCulture));
                         }
 
                         if (insert.Format != null)
