@@ -12,6 +12,8 @@ using System.Reflection;
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.ExpressionUtils;
 
+#pragma warning disable CA1720 // Identifier contains type name (use of Object property).
+
 namespace Microsoft.CSharp.Expressions
 {
     using static Helpers;
