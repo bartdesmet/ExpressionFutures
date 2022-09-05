@@ -14,7 +14,6 @@
 // NB: When the Members property is left unspecified, all members on the specified type are exported as stubs.
 var types = new[]
 {
-    new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Compiler.DelegateHelpers", Members = new string[] { "MakeCallSiteDelegate" }, Suffix = default(string), Partial = true },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.Compiler.StackSpiller", Members = new string[] { "AnalyzeLambda" }, Suffix = "Stub", Partial = true },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.MemberExpression", Members = new string[] { "Make" }, Suffix = "Stubs", Partial = true },
     new { Assembly = typeof(Expression).Assembly, Type = "System.Linq.Expressions.BinaryExpression", Members = new string[] { "Create" }, Suffix = "Stubs", Partial = true },
