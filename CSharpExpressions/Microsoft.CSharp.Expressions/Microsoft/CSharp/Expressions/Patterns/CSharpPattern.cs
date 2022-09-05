@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// The pattern's typing information.
         /// </summary>
-        protected readonly CSharpPatternInfo _info;
+        private protected readonly CSharpPatternInfo _info;
 
         internal CSharpPattern(CSharpPatternInfo info) => _info = info;
 
