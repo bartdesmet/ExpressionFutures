@@ -111,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
                         }
                         break;
                     case InterpolationStringLiteral literal:
-                        sb.Append(literal.Value.Replace("{", "{{").Replace("}", "}}"));
+                        sb.Append(literal.Value.Replace("{", "{{", StringComparison.Ordinal).Replace("}", "}}", StringComparison.Ordinal));
                         break;
                     default:
                         throw ContractUtils.Unreachable;

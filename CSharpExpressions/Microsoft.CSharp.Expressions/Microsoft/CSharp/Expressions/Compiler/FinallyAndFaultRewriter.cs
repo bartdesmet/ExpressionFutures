@@ -55,9 +55,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 }
                 else
                 {
-                    Debug.Assert(node.Finally == null);
-
-
                     if (VisitAndFindAwait(node.Fault, out Expression fault))
                     {
                         Debug.Assert(handlers.Count == 0);

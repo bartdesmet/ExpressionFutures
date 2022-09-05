@@ -900,7 +900,7 @@ namespace Microsoft.CSharp.Expressions
             return obj switch
             {
                 null => "null",
-                string s => "\"" + s.Replace("\"", "\\\"") + "\"",
+                string s => "\"" + s.Replace("\"", "\\\"", StringComparison.Ordinal) + "\"",
                 _ => obj.ToString(),
             };
         }

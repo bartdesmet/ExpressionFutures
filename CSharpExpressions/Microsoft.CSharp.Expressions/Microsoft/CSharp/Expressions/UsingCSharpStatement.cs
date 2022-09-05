@@ -126,9 +126,6 @@ namespace Microsoft.CSharp.Expressions
             
             if (resources != null)
             {
-                if (resource != null)
-                    throw Error.InvalidUsingStatement();
-
                 var resourcesList = resources.ToReadOnly();
 
                 return WithResources.Make(variablesList, resourcesList, body, awaitInfo, patternDispose);
