@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Prototyping extended expression trees for C#.
+//
+// bartde - September 2022
+
+// NB: This executable gets invoked by T4 templates to generate test code.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
