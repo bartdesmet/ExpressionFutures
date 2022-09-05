@@ -22,7 +22,7 @@ namespace System.Dynamic.Utils
             get
             {
                 Debug.Fail("Unreachable");
-                return new Exception();
+                return new UnreachableException();
             }
         }
 
