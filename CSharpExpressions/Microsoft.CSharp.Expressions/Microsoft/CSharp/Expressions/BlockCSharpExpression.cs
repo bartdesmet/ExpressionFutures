@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -62,7 +64,7 @@ namespace Microsoft.CSharp.Expressions
         //         type is always inferred from the return label. That'd make the node not usable as a substitute for
         //         a regular Block.
 
-        internal BlockCSharpExpression(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> statements, LabelTarget returnLabel)
+        internal BlockCSharpExpression(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> statements, LabelTarget? returnLabel)
         {
             Variables = variables;
             Statements = statements;
@@ -82,7 +84,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the return label to exit the block.
         /// </summary>
-        public LabelTarget ReturnLabel { get; }
+        public LabelTarget? ReturnLabel { get; }
 
         /// <summary>
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
@@ -111,7 +113,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The <see cref="Statements" /> property of the result.</param>
         /// <param name="returnLabel">The <see cref="ReturnLabel" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public BlockCSharpExpression Update(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget returnLabel)
+        public BlockCSharpExpression Update(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget? returnLabel)
         {
             if (SameElements(ref variables, Variables) && SameElements(ref statements, Statements) && returnLabel == ReturnLabel)
             {
@@ -210,7 +212,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The statements in the block.</param>
         /// <param name="returnLabel">The return label used to exist the block.</param>
         /// <returns>The created <see cref="BlockCSharpExpression"/>.</returns>
-        public static BlockCSharpExpression Block(IEnumerable<Expression> statements, LabelTarget returnLabel) => Block(Array.Empty<ParameterExpression>(), statements, returnLabel);
+        public static BlockCSharpExpression Block(IEnumerable<Expression> statements, LabelTarget? returnLabel) => Block(Array.Empty<ParameterExpression>(), statements, returnLabel);
 
         /// <summary>
         /// Creates a <see cref="BlockCSharpExpression"/> that represents a block.
@@ -219,7 +221,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The statements in the block.</param>
         /// <param name="returnLabel">The return label used to exist the block.</param>
         /// <returns>The created <see cref="BlockCSharpExpression"/>.</returns>
-        public static BlockCSharpExpression Block(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget returnLabel)
+        public static BlockCSharpExpression Block(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget? returnLabel)
         {
             var variablesList = CheckUniqueVariables(variables, nameof(variables));
 
