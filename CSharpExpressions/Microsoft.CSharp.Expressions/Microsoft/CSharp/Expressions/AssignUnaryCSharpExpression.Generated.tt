@@ -12,6 +12,8 @@ var checkedNodes = new[] { "PreIncrementAssignChecked", "PreDecrementAssignCheck
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -59,7 +61,7 @@ foreach (var node in nodes)
         /// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
         /// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
         /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-        public static new AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method) =>
+        public static new AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo? method) =>
             MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
 
 <#
@@ -83,7 +85,7 @@ foreach (var node in checkedNodes)
         /// <returns>A <see cref="AssignUnaryCSharpExpression" /> that represents the operation.</returns>
         /// <param name="operand">An <see cref="Expression" /> to set the <see cref="UnaryCSharpExpression.Operand" /> property equal to.</param>
         /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignUnaryCSharpExpression.Method" /> property equal to.</param>
-        public static AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo method) =>
+        public static AssignUnaryCSharpExpression <#=node#>(Expression operand, MethodInfo? method) =>
             MakeUnaryAssignCore(CSharpExpressionType.<#=node#>, operand, method);
 
 <#

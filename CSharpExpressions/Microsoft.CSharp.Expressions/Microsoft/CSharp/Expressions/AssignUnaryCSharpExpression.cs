@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
@@ -41,7 +43,7 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the implementing method for the unary operation.
         /// </summary>
         /// <returns>The <see cref="System.Reflection.MethodInfo" /> that represents the implementing method.</returns>
-        public abstract MethodInfo Method { get; }
+        public abstract MethodInfo? Method { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -190,7 +192,7 @@ namespace Microsoft.CSharp.Expressions
                 _ => throw ContractUtils.Unreachable,
             };
 
-        internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+        internal static AssignUnaryCSharpExpression Make(CSharpExpressionType unaryType, Expression operand, MethodInfo? method)
         {
             ValidateCustomUnaryAssign(unaryType, operand, ref method);
 
@@ -199,7 +201,7 @@ namespace Microsoft.CSharp.Expressions
             return new Custom(unaryType, operand, method);
         }
 
-        private static void ValidateCustomUnaryAssign(CSharpExpressionType unaryType, Expression operand, ref MethodInfo method)
+        private static void ValidateCustomUnaryAssign(CSharpExpressionType unaryType, Expression operand, ref MethodInfo? method)
         {
             var operandType = operand.Type;
 
@@ -222,7 +224,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.InvalidUnaryAssignmentWithOperands(unaryType, operand.Type);
         }
 
-        private static UnaryExpression FunctionalOp(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+        private static UnaryExpression FunctionalOp(CSharpExpressionType unaryType, Expression operand, MethodInfo? method)
         {
             switch (unaryType)
             {
@@ -245,13 +247,13 @@ namespace Microsoft.CSharp.Expressions
 
         internal sealed class Custom : AssignUnaryCSharpExpression
         {
-            public Custom(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+            public Custom(CSharpExpressionType unaryType, Expression operand, MethodInfo? method)
                 : base(unaryType, operand)
             {
                 Method = method;
             }
 
-            public override MethodInfo Method { get; }
+            public override MethodInfo? Method { get; }
         }
     }
 
@@ -264,7 +266,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The operand of the assignment operation, i.e. the assignment target.</param>
         /// <param name="method">The method implementing the assignment operation.</param>
         /// <returns>A new <see cref="AssignUnaryCSharpExpression"/> instance representing the unary assignment.</returns>
-        public static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, Expression operand, MethodInfo method) =>
+        public static AssignUnaryCSharpExpression MakeUnaryAssign(CSharpExpressionType unaryType, Expression operand, MethodInfo? method) =>
             unaryType switch
             {
                 CSharpExpressionType.PreIncrementAssign => PreIncrementAssign(operand, method),
@@ -278,7 +280,7 @@ namespace Microsoft.CSharp.Expressions
                 _ => throw UnhandledUnary(unaryType),
             };
 
-        private static AssignUnaryCSharpExpression MakeUnaryAssignCore(CSharpExpressionType unaryType, Expression operand, MethodInfo method)
+        private static AssignUnaryCSharpExpression MakeUnaryAssignCore(CSharpExpressionType unaryType, Expression operand, MethodInfo? method)
         {
             RequiresCanRead(operand, nameof(operand));
             Helpers.RequiresCanWrite(operand, nameof(operand));
