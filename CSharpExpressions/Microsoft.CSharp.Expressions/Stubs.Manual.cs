@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.ObjectModel;
 using System.Reflection;
 
@@ -20,17 +22,17 @@ namespace System.Linq.Expressions
     internal static class BinaryExpressionExtensions
     {
         private static readonly Type s_typ = typeof(BinaryExpression);
-        private static readonly MethodInfo s_2 = s_typ.GetMethod("ReduceUserdefinedLifted", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+        private static readonly MethodInfo s_2 = s_typ.GetMethod("ReduceUserdefinedLifted", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance)!;
 
         public static Expression ReduceUserdefinedLifted(this BinaryExpression obj)
         {
             try
             {
-                return (Expression)s_2.Invoke(obj, Array.Empty<object>());
+                return (Expression)s_2.Invoke(obj, Array.Empty<object>())!;
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException;
+                throw ex.InnerException!;
             }
         }
     }
@@ -47,12 +49,12 @@ namespace System.Linq.Expressions
             try
             {
                 var args = new object[] { expression, member };
-                var res = s_0.Invoke(null, args);
+                var res = s_0.Invoke(null, args)!;
                 return (MemberExpression)res;
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException;
+                throw ex.InnerException!;
             }
         }
 
@@ -65,17 +67,17 @@ namespace System.Linq.Expressions
 
         private static readonly MethodInfo s_0 = s_mtds["Create"].Single(m => m.IsStatic && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new Type[] { typeof(ExpressionType), typeof(Expression), typeof(Expression), typeof(Type), typeof(MethodInfo), typeof(LambdaExpression) }));
 
-        public static Expression Create(ExpressionType nodeType, Expression left, Expression right, Type type, MethodInfo method, LambdaExpression conversion)
+        public static Expression Create(ExpressionType nodeType, Expression left, Expression right, Type? type, MethodInfo? method, LambdaExpression? conversion)
         {
             try
             {
-                var args = new object[] { nodeType, left, right, type, method, conversion };
-                var res = s_0.Invoke(null, args);
+                var args = new object?[] { nodeType, left, right, type, method, conversion };
+                var res = s_0.Invoke(null, args)!;
                 return (Expression)res;
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException;
+                throw ex.InnerException!;
             }
         }
 

@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -54,7 +56,7 @@ namespace System.Linq.Expressions
         }
 #endif
 
-        public static Expression<T> CreateExpression<T>(Expression body, string name, bool tailCall, ReadOnlyCollection<ParameterExpression> parameters)
+        public static Expression<T> CreateExpression<T>(Expression body, string? name, bool tailCall, ReadOnlyCollection<ParameterExpression> parameters)
         {
 #if LINQ
             return new Expression<T>(body, name, tailCall, parameters);
