@@ -3,6 +3,7 @@
 // bartde - December 2015
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Dynamic.Utils;
 using System.Globalization;
@@ -62,7 +63,8 @@ namespace System.Linq.Expressions
         /// <param name="type">The type to get a C# representation for.</param>
         /// <returns>A C# representation of the specified <paramref name="type"/>.</returns>
         /// <remarks>The produced C# may contain inaccuracies because the CLR type system is more expressive than the subset made available in the C# language. Use the output of this method for debugging purposes only.</remarks>
-        public static string ToCSharp(this Type type)
+        [return: NotNullIfNotNull("type")] // TODO: C# 11.0 nameof
+        public static string? ToCSharp(this Type? type)
         {
             return ToCSharp(type, s_defaultNamespaces);
         }
@@ -75,12 +77,14 @@ namespace System.Linq.Expressions
         /// <returns>A C# representation of the specified <paramref name="type"/>.</returns>
         /// <remarks>The produced C# may contain inaccuracies because the CLR type system is more expressive than the subset made available in the C# language. Use the output of this method for debugging purposes only.</remarks>
 
-        public static string ToCSharp(this Type type, params string[] namespaces)
+        [return: NotNullIfNotNull("type")] // TODO: C# 11.0 nameof
+        public static string? ToCSharp(this Type? type, params string[] namespaces)
         {
             return ToCSharp(type, new HashSet<string>(namespaces ?? Array.Empty<string>()));
         }
 
-        private static string ToCSharp(this Type type, HashSet<string> namespaces)
+        [return: NotNullIfNotNull("type")] // TODO: C# 11.0 nameof
+        private static string? ToCSharp(this Type? type, HashSet<string> namespaces)
         {
             if (type == null)
             {
@@ -89,7 +93,7 @@ namespace System.Linq.Expressions
 
             if (type.IsArray)
             {
-                var elem = ToCSharp(type.GetElementType(), namespaces);
+                var elem = ToCSharp(type.GetElementType()!, namespaces);
                 var rank = type.GetArrayRank(); // NB: ignores multi-dimensional with rank 1
                 return $"{elem}[{new string(',', rank - 1)}]";
             }
@@ -97,7 +101,7 @@ namespace System.Linq.Expressions
             {
                 if (type.IsGenericTypeDefinition)
                 {
-                    var name = namespaces.Contains(type.Namespace) ? type.Name : type.FullName;
+                    var name = type.Namespace is string ns && namespaces.Contains(ns) ? type.Name : type.FullName!;
 
                     var tick = name.IndexOf('`');
                     if (tick >= 0)
@@ -155,7 +159,7 @@ namespace System.Linq.Expressions
                     }
                     else
                     {
-                        var name = namespaces.Contains(def.Namespace) ? def.Name : def.FullName;
+                        var name = def.Namespace is string ns && namespaces.Contains(ns) ? def.Name : def.FullName!;
 
                         var tick = name.IndexOf('`');
                         if (tick >= 0)
@@ -171,12 +175,12 @@ namespace System.Linq.Expressions
             }
             else
             {
-                if (s_primitives.TryGetValue(type, out string res))
+                if (s_primitives.TryGetValue(type, out string? res))
                 {
                     return res;
                 }
 
-                return namespaces.Contains(type.Namespace) ? type.Name : type.FullName;
+                return type.Namespace is string ns && namespaces.Contains(ns) ? type.Name : (type.FullName ?? type.Name);
             }
         }
 
@@ -243,8 +247,8 @@ namespace System.Linq.Expressions
             private readonly Dictionary<object, string> _variables = new Dictionary<object, string>();
             private readonly Dictionary<object, string> _labels = new Dictionary<object, string>();
             private readonly Stack<Expression> _stack = new Stack<Expression>();
-            private readonly Stack<LabelTarget> _breaks = new Stack<LabelTarget>();
-            private readonly Stack<LabelTarget> _continues = new Stack<LabelTarget>();
+            private readonly Stack<LabelTarget?> _breaks = new Stack<LabelTarget?>();
+            private readonly Stack<LabelTarget?> _continues = new Stack<LabelTarget?>();
             private string _indent = "";
 
             public CSharpPrinter(TextWriter writer, HashSet<string> namespaces)
@@ -256,12 +260,12 @@ namespace System.Linq.Expressions
             // TODO: improve analysis of `checked` so we can emit `unchecked` as well
             public bool InCheckedContext { get; set; }
 
-            public void PushBreak(LabelTarget target)
+            public void PushBreak(LabelTarget? target)
             {
                 _breaks.Push(target);
             }
 
-            public void PushContinue(LabelTarget target)
+            public void PushContinue(LabelTarget? target)
             {
                 _continues.Push(target);
             }
@@ -276,7 +280,8 @@ namespace System.Linq.Expressions
                 _continues.Pop();
             }
 
-            public override Expression Visit(Expression node)
+            [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+            public override Expression? Visit(Expression? node)
             {
                 var res = node;
 
@@ -367,12 +372,12 @@ namespace System.Linq.Expressions
                 return node;
             }
 
-            public void Literal(object value, Type type)
+            public void Literal(object? value, Type type)
             {
                 Literal(value, type, false);
             }
 
-            private void Literal(object value, Type type, bool allowCast)
+            private void Literal(object? value, Type type, bool allowCast)
             {
                 // TODO: support printing nullable values types
 
@@ -551,7 +556,7 @@ namespace System.Linq.Expressions
                             Out(" = ");
                         }
 
-                        StaticMethodCall(node.Method, node.Left, node.Right);
+                        StaticMethodCall(node.Method!, node.Left, node.Right);
                         return node;
                     }
 
@@ -704,7 +709,7 @@ namespace System.Linq.Expressions
                         Out(" = ");
                     }
 
-                    StaticMethodCall(node.Method, node.Operand);
+                    StaticMethodCall(node.Method!, node.Operand);
                     return node;
                 }
 
@@ -811,7 +816,7 @@ namespace System.Linq.Expressions
 
             protected override Expression VisitIndex(IndexExpression node)
             {
-                ParenthesizedVisit(node, node.Object);
+                ParenthesizedVisit(node, node.Object!);
 
                 Out("[");
                 if (node.Indexer == null)
@@ -820,7 +825,8 @@ namespace System.Linq.Expressions
                 }
                 else
                 {
-                    ArgsVisit(node.Arguments, node.Indexer.GetGetMethod(true)); // TODO: Indexer could have non-default name
+                    var method = node.Indexer.GetGetMethod(true) ?? node.Indexer.GetSetMethod(true);
+                    ArgsVisit(node.Arguments, method!); // TODO: Indexer could have non-default name
                 }
                 Out("]");
 
@@ -832,7 +838,7 @@ namespace System.Linq.Expressions
                 ParenthesizedVisit(node, node.Expression);
 
                 Out("(");
-                ArgsVisit(node.Arguments, node.Expression.Type.GetMethod("Invoke"));
+                ArgsVisit(node.Arguments, node.Expression.Type.GetMethod("Invoke")!);
                 Out(")");
 
                 return node;
@@ -844,16 +850,19 @@ namespace System.Linq.Expressions
 
                 if (node.Expression == null)
                 {
-                    Out(ToCSharp(node.Member.DeclaringType));
-                    Out(".");
-                    Out(node.Member.Name);
+                    if (node.Member.DeclaringType is Type dt)
+                    {
+                        Out(ToCSharp(dt));
+                        Out(".");
+                    }
                 }
                 else
                 {
                     ParenthesizedVisit(node, node.Expression);
                     Out(".");
-                    Out(node.Member.Name);
                 }
+                
+                Out(node.Member.Name);
 
                 return node;
             }
@@ -867,18 +876,23 @@ namespace System.Linq.Expressions
                 if (node.Object != null)
                 {
                     ParenthesizedVisit(node, node.Object);
+                    Out(".");
                 }
-                else if (node.Method.IsDefined(typeof(ExtensionAttribute)) && _namespaces.Contains(node.Method.DeclaringType.Namespace) && node.Arguments.Count >= 1)
+                else if (node.Method.IsDefined(typeof(ExtensionAttribute)) && node.Method.DeclaringType?.Namespace is string ns && _namespaces.Contains(ns) && node.Arguments.Count >= 1)
                 {
                     ParenthesizedVisit(node, node.Arguments[0]);
+                    Out(".");
                     startIndex = 1;
                 }
                 else
                 {
-                    Out(ToCSharp(node.Method.DeclaringType));
+                    if (node.Method.DeclaringType is Type dt)
+                    {
+                        Out(ToCSharp(dt));
+                        Out(".");
+                    }
                 }
 
-                Out(".");
                 Out(node.Method.Name);
 
                 if (node.Method.IsGenericMethod && !CSharpLanguageHelpers.CanInferGenericArguments(node.Method))
@@ -912,21 +926,23 @@ namespace System.Linq.Expressions
                     {
                         Out("{");
 
-                        var n = node.Members?.Count ?? 0;
-                        for (var i = 0; i < n; i++)
+                        if (node.Members != null)
                         {
-                            Out(" ");
-
-                            var member = node.Members[i];
-                            var arg = node.Arguments[i];
-
-                            Out(member.Name);
-                            Out(" = ");
-                            Visit(arg);
-
-                            if (i != n - 1)
+                            for (int i = 0, n = node.Members.Count; i < n; i++)
                             {
-                                Out(",");
+                                Out(" ");
+
+                                var member = node.Members[i];
+                                var arg = node.Arguments[i];
+
+                                Out(member.Name);
+                                Out(" = ");
+                                Visit(arg);
+
+                                if (i != n - 1)
+                                {
+                                    Out(",");
+                                }
                             }
                         }
 
@@ -952,7 +968,7 @@ namespace System.Linq.Expressions
             protected override Expression VisitNewArray(NewArrayExpression node)
             {
                 Out("new ");
-                Out(ToCSharp(node.Type.GetElementType()));
+                Out(ToCSharp(node.Type.GetElementType()!));
 
                 if (node.NodeType == ExpressionType.NewArrayBounds)
                 {
@@ -1313,8 +1329,8 @@ namespace System.Linq.Expressions
                 return node;
             }
 
-            private LabelTarget ClosestBreak => _breaks.Count > 0 ? _breaks.Peek() : null;
-            private LabelTarget ClosestContinue => _continues.Count > 0 ? _continues.Peek() : null;
+            private LabelTarget? ClosestBreak => _breaks.Count > 0 ? _breaks.Peek() : null;
+            private LabelTarget? ClosestContinue => _continues.Count > 0 ? _continues.Peek() : null;
 
             protected override Expression VisitGoto(GotoExpression node)
             {
@@ -1605,7 +1621,8 @@ namespace System.Linq.Expressions
                     Out("Dynamic(");
 
                     Out("/* ");
-                    Out(node.Binder.GetType().FullName);
+                    var binderType = node.Binder.GetType();
+                    Out(binderType.FullName ?? binderType.Name);
                     Out(" */ ");
 
                     var n = node.Arguments.Count;
@@ -1626,7 +1643,7 @@ namespace System.Linq.Expressions
 
                 void VisitCallInfo(int firstIndex, int lastIndex, CallInfo info)
                 {
-                    string GetArgName(int index)
+                    string? GetArgName(int index)
                     {
                         if (info.ArgumentNames != null)
                         {
@@ -1678,12 +1695,12 @@ namespace System.Linq.Expressions
 
             public string GetLabelName(LabelTarget target, bool declarationSite = false)
             {
-                if (CSharpLanguageHelpers.AsValidIdentifier(target.Name, out string res))
+                if (CSharpLanguageHelpers.AsValidIdentifier(target.Name, out string? res))
                 {
                     return res;
                 }
 
-                if (!_labels.TryGetValue(target, out string name))
+                if (!_labels.TryGetValue(target, out string? name))
                 {
                     name = $"L{_labels.Count}";
                     _labels.Add(target, name);
@@ -1699,12 +1716,12 @@ namespace System.Linq.Expressions
 
             public string GetVariableName(ParameterExpression node, bool declarationSite = false)
             {
-                if (CSharpLanguageHelpers.AsValidIdentifier(node.Name, out string res))
+                if (CSharpLanguageHelpers.AsValidIdentifier(node.Name, out string? res))
                 {
                     return res;
                 }
 
-                if (!_variables.TryGetValue(node, out string name))
+                if (!_variables.TryGetValue(node, out string? name))
                 {
                     name = $"p{_variables.Count}";
                     _variables.Add(node, name);
@@ -1766,8 +1783,12 @@ namespace System.Linq.Expressions
 
             public void StaticMethodCall(MethodInfo method, params Expression[] args)
             {
-                Out(ToCSharp(method.DeclaringType));
-                Out(".");
+                if (method.DeclaringType is Type dt)
+                {
+                    Out(ToCSharp(dt));
+                    Out(".");
+                }
+
                 Out(method.Name);
 
                 Out("(");
@@ -1881,7 +1902,7 @@ namespace System.Linq.Expressions
 
             private static string Escape(char ch)
             {
-                if (!TryEscape(ch, '\"', out string res))
+                if (!TryEscape(ch, '\"', out string? res))
                 {
                     res = ch.ToString();
                 }
@@ -1889,7 +1910,7 @@ namespace System.Linq.Expressions
                 return res;
             }
 
-            private static bool TryEscape(char ch, char noEscape, out string res)
+            private static bool TryEscape(char ch, char noEscape, [NotNullWhen(true)] out string? res)
             {
                 res = null;
 
@@ -1944,7 +1965,7 @@ namespace System.Linq.Expressions
                 {
                     var ch = str[i];
 
-                    if (TryEscape(ch, '\'', out string chStr))
+                    if (TryEscape(ch, '\'', out string? chStr))
                     {
                         if (sb == null)
                         {
@@ -1971,7 +1992,8 @@ namespace System.Linq.Expressions
                 return str;
             }
 
-            public string ToCSharp(Type type)
+            [return: NotNullIfNotNull("type")] // TODO: C# 11.0 nameof
+            public string? ToCSharp(Type? type)
             {
                 return type.ToCSharp(_namespaces);
             }
@@ -1979,12 +2001,12 @@ namespace System.Linq.Expressions
             class NonLocalJumpAnalyzer : ExpressionVisitor
             {
                 private readonly Stack<LoopExpression> _stack = new Stack<LoopExpression>();
-                private readonly LabelTarget _break;
-                private readonly LabelTarget _continue;
+                private readonly LabelTarget? _break;
+                private readonly LabelTarget? _continue;
 
                 public bool HasNonLocalJump;
 
-                public NonLocalJumpAnalyzer(LabelTarget @break, LabelTarget @continue)
+                public NonLocalJumpAnalyzer(LabelTarget? @break, LabelTarget? @continue)
                 {
                     _break = @break;
                     _continue = @continue;
@@ -2025,7 +2047,7 @@ namespace System.Linq.Expressions
     {
         public bool HasUncheckedOperation;
 
-        public override Expression Visit(Expression node)
+        public override Expression? Visit(Expression? node)
         {
             if (node == null)
             {
@@ -2235,7 +2257,7 @@ namespace System.Linq.Expressions
 
         public static string GetOperatorSyntax(ExpressionType nodeType)
         {
-            var op = default(string);
+            string op;
 
             switch (nodeType)
             {
@@ -2374,12 +2396,18 @@ namespace System.Linq.Expressions
                 case ExpressionType.PostIncrementAssign:
                     op = "++";
                     break;
+                case ExpressionType.Quote:
+                    op = "";
+                    break;
+                default:
+                    op = $"/* {nodeType} */";
+                    break;
             }
 
             return op;
         }
 
-        public static string GetClsMethodName(ExpressionType nodeType)
+        public static string? GetClsMethodName(ExpressionType nodeType)
         {
             var mtd = default(string);
 
@@ -2525,7 +2553,7 @@ namespace System.Linq.Expressions
             "volatile", "while"
         };
 
-        public static bool AsValidIdentifier(string value, out string result)
+        public static bool AsValidIdentifier(string? value, [NotNullWhen(true)] out string? result)
         {
             if (string.IsNullOrEmpty(value))
             {

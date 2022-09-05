@@ -117,8 +117,8 @@ namespace System.Dynamic.Utils
                             return false;
                         }
 
-                        source = source.GetElementType();
-                        dest = dest.GetElementType();
+                        source = source.GetElementType()!;
+                        dest = dest.GetElementType()!;
                         skipNonArray = false;
                     }
                     else
@@ -162,7 +162,7 @@ namespace System.Dynamic.Utils
             {
                 if (AreEquivalent(destGen, iface))
                 {
-                    return StrictHasReferenceConversionTo(source.GetElementType(), destParams[0], false);
+                    return StrictHasReferenceConversionTo(source.GetElementType()!, destParams[0], false);
                 }
             }
 
@@ -189,7 +189,7 @@ namespace System.Dynamic.Utils
             {
                 if (AreEquivalent(sourceGen, iface))
                 {
-                    return StrictHasReferenceConversionTo(sourceParams[0], dest.GetElementType(), false);
+                    return StrictHasReferenceConversionTo(sourceParams[0], dest.GetElementType()!, false);
                 }
             }
 
@@ -296,6 +296,6 @@ namespace System.Dynamic.Utils
 
         private static bool IsImplicitReferenceConversion(Type source, Type destination) => destination.IsAssignableFrom(source);
 
-        private static bool IsSZArray(Type t) => t.IsArray && t.GetElementType().MakeArrayType() == t;
+        private static bool IsSZArray(Type t) => t.IsArray && t.GetElementType()!.MakeArrayType() == t;
     }
 }

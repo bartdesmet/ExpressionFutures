@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -22,7 +23,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="expression">The expression to get a debug view for.</param>
         /// <returns>Debug view for the specified expression.</returns>
-        public XNode GetDebugView(Expression expression)
+        [return: NotNullIfNotNull("expression")] // TODO: C# 11.0 nameof
+        public XNode? GetDebugView(Expression? expression)
         {
             return Visit(expression);
         }
@@ -32,7 +34,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="label">The label to get a debug view for.</param>
         /// <returns>Debug view for the specified label.</returns>
-        public XNode GetDebugView(LabelTarget label)
+        [return: NotNullIfNotNull("label")] // TODO: C# 11.0 nameof
+        public XNode? GetDebugView(LabelTarget? label)
         {
             return Visit(label);
         }
@@ -42,7 +45,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="binding">The member binding to get a debug view for.</param>
         /// <returns>Debug view for the specified member binding.</returns>
-        public XNode GetDebugView(MemberBinding binding)
+        [return: NotNullIfNotNull("binding")] // TODO: C# 11.0 nameof
+        public XNode? GetDebugView(MemberBinding? binding)
         {
             return Visit(binding);
         }
@@ -52,7 +56,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="initializer">The element initializer to get a debug view for.</param>
         /// <returns>Debug view for the specified element initializer.</returns>
-        public XNode GetDebugView(ElementInit initializer)
+        [return: NotNullIfNotNull("initializer")] // TODO: C# 11.0 nameof
+        public XNode? GetDebugView(ElementInit? initializer)
         {
             return Visit(initializer);
         }
@@ -62,7 +67,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="catchBlock">The catch block to get a debug view for.</param>
         /// <returns>Debug view for the specified catch block.</returns>
-        public XNode GetDebugView(CatchBlock catchBlock)
+        [return: NotNullIfNotNull("catchBlock")] // TODO: C# 11.0 nameof
+        public XNode? GetDebugView(CatchBlock? catchBlock)
         {
             return Visit(catchBlock);
         }
@@ -72,7 +78,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="switchCase">The switch case to get a debug view for.</param>
         /// <returns>Debug view for the specified switch case.</returns>
-        public XNode GetDebugView(SwitchCase switchCase)
+        [return: NotNullIfNotNull("switchCase")] // TODO: C# 11.0 nameof
+        public XNode? GetDebugView(SwitchCase? switchCase)
         {
             return Visit(switchCase);
         }
@@ -448,20 +455,24 @@ namespace System.Linq.Expressions
             return Push(node, args);
         }
 
-        protected override LabelTarget VisitLabelTarget(LabelTarget node)
+        protected override LabelTarget? VisitLabelTarget(LabelTarget? node)
         {
-            var args = new List<object>
+            if (node != null)
             {
-                new XAttribute(nameof(node.Type), node.Type),
-                new XAttribute("Id", MakeInstanceId(node))
-            };
+                var args = new List<object>
+                {
+                    new XAttribute(nameof(node.Type), node.Type),
+                    new XAttribute("Id", MakeInstanceId(node))
+                };
 
-            if (node.Name != null)
-            {
-                args.Add(new XAttribute(nameof(node.Name), node.Name));
+                if (node.Name != null)
+                {
+                    args.Add(new XAttribute(nameof(node.Name), node.Name));
+                }
+
+                _nodes.Push(new XElement(nameof(LabelTarget), args));
             }
 
-            _nodes.Push(new XElement(nameof(LabelTarget), args));
             return node;
         }
 
@@ -576,7 +587,8 @@ namespace System.Linq.Expressions
             }
         }
 
-        protected new XNode Visit(Expression expression)
+        [return: NotNullIfNotNull("expression")] // TODO: C# 11.0 nameof
+        protected new XNode? Visit(Expression? expression)
         {
             var res = default(XNode);
 
@@ -589,7 +601,8 @@ namespace System.Linq.Expressions
             return res;
         }
 
-        protected XNode Visit(LabelTarget node)
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        protected XNode? Visit(LabelTarget? node)
         {
             var res = default(XNode);
 
@@ -602,7 +615,8 @@ namespace System.Linq.Expressions
             return res;
         }
 
-        protected XNode Visit(MemberBinding node)
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        protected XNode? Visit(MemberBinding? node)
         {
             var res = default(XNode);
 
@@ -615,7 +629,8 @@ namespace System.Linq.Expressions
             return res;
         }
 
-        protected XNode Visit(ElementInit node)
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        protected XNode? Visit(ElementInit? node)
         {
             var res = default(XNode);
 
@@ -628,7 +643,8 @@ namespace System.Linq.Expressions
             return res;
         }
 
-        protected XNode Visit(CatchBlock node)
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        protected XNode? Visit(CatchBlock? node)
         {
             var res = default(XNode);
 
@@ -641,7 +657,8 @@ namespace System.Linq.Expressions
             return res;
         }
 
-        protected XNode Visit(SwitchCase node)
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        protected XNode? Visit(SwitchCase? node)
         {
             var res = default(XNode);
 
@@ -666,13 +683,13 @@ namespace System.Linq.Expressions
             return new XElement(name, res);
         }
 
-        protected static XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T, XNode> visit)
+        protected static XNode Visit<T>(string name, IEnumerable<T> expressions, Func<T?, XNode?> visit)
         {
             var res = new List<XNode>();
 
             foreach (var expression in expressions)
             {
-                res.Add(visit(expression));
+                res.Add(visit(expression)!);
             }
 
             return new XElement(name, res);

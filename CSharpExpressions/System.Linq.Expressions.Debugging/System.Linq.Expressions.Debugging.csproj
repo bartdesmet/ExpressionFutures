@@ -4,10 +4,11 @@
     <OutputType>Library</OutputType>
     <RootNamespace>System.Linq.Expressions.Debugging</RootNamespace>
     <AssemblyName>System.Linq.Expressions.Debugging</AssemblyName>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
