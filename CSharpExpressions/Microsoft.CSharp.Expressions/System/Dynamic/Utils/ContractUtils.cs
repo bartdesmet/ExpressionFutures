@@ -64,7 +64,7 @@ namespace System.Dynamic.Utils
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="value"/> is <c>null</c>.
         /// </exception>
-        public static void RequiresNotNull(object value, string paramName, int index = -1)
+        public static void RequiresNotNull(object? value, string paramName, int index = -1)
         {
             Debug.Assert(!string.IsNullOrEmpty(paramName));
 
@@ -86,7 +86,7 @@ namespace System.Dynamic.Utils
         /// <exception cref="ArgumentException">
         /// Thrown if the <paramref name="collection"/> is empty.
         /// </exception>
-        public static void RequiresNotEmpty<T>(ICollection<T> collection, string paramName)
+        public static void RequiresNotEmpty<T>(ICollection<T>? collection, string paramName)
         {
             if (collection == null)
             {
