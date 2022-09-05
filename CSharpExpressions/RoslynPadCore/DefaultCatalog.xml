@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Expressions>
+  <Expression Name="Constant">
+    <Code><![CDATA[(Expression<Func<int>>)(() => 42)]]></Code>
+  </Expression>
+  <Expression Name="Arithmetic">
+    <Code><![CDATA[(Expression<Func<int, int>>)(x => x * 2 + 1)]]></Code>
+  </Expression>
+  <Expression Name="Anonymous object">
+    <Code><![CDATA[(Expression<Func<object>>)(() => new { a = 1, b = 2 })]]></Code>
+  </Expression>
+  <Expression Name="Conditional access">
+    <Code><![CDATA[(Expression<Func<DateTimeOffset?, int?>>)(dt => dt?.Offset.Hours)]]></Code>
+  </Expression>
+  <Expression Name="Named parameters">
+    <Code><![CDATA[(Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(length: j, startIndex: i))]]></Code>
+  </Expression>
+  <Expression Name="Block">
+    <Code><![CDATA[(Expression<Action>)(() =>
+{
+  // Add statements here
+})]]></Code>
+  </Expression>
+  <Expression Name="Async">
+    <Code><![CDATA[(Expression<Func<int, Task<int>>>)(async x =>
+{
+  await Task.Delay(1000);
+  return 2 * await Task.FromResult(x);
+})]]></Code>
+  </Expression>
+  <Expression Name="Primes">
+    <Code><![CDATA[(Expression<Func<int, List<int>>>)(max =>
+{
+  var res = new List<int>();
+
+  for (var i = 2; i <= max; i++)
+  {
+    Console.Write(i);
+
+    var hasDiv = false;
+
+    for (var d = 2; d <= Math.Sqrt(i); d++)
+    {
+      if (i % d == 0)
+      {
+        Console.WriteLine($" has divisor {d}");
+        hasDiv = true;
+        break;
+      }
+    }
+
+    if (!hasDiv)
+    {
+      Console.WriteLine(" is prime");
+      res.Add(i);
+    }
+  }
+
+  return res;
+})]]></Code>
+  </Expression>
+  <Expression Name="Primes async">
+    <Code><![CDATA[(Expression<Func<int, Task<List<int>>>>)(async max =>
+{
+  var res = new List<int>();
+
+  for (var i = 2; i <= max; i++)
+  {
+    await Task.Delay(50);
+    Console.Write(i);
+    await Task.Delay(50);
+
+    var hasDiv = false;
+
+    for (var d = 2; d <= Math.Sqrt(i); d++)
+    {
+      if (i % d == 0)
+      {
+        Console.WriteLine($" has divisor {d}");
+        hasDiv = true;
+        break;
+      }
+    }
+
+    if (!hasDiv)
+    {
+      Console.WriteLine(" is prime");
+      res.Add(i);
+    }
+  }
+
+  return res;
+})]]></Code>
+  </Expression>
+  <Expression Name="Dynamic">
+    <Code><![CDATA[(Expression<Func<dynamic, dynamic>>)(d => d.Substring(1).Length * 2)]]></Code>
+  </Expression>
+  <Expression Name="ForEach">
+    <Code><![CDATA[(Expression<Action>)(() =>
+{
+  foreach (var x in from y in new[] { 1, 2, 3 } where y % 2 == 0 select y + 1)
+  {
+    Console.WriteLine(x);
+  }
+})]]></Code>
+  </Expression>
+  <Expression Name="Throw expression">
+    <Code><![CDATA[(Expression<Action<object>>)(o =>
+{
+  var x = o ?? throw new Exception();
+})]]></Code>
+  </Expression>
+  <Expression Name="Discard expression">
+    <Code>
+      <![CDATA[(Expression<Action<string>>)(s => {
+  if (int.TryParse(s, out int _))
+  {
+    _ = Console.ReadLine();
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (properties)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is Point { X: > 0, Y: < 10 } p)
+  {
+    Console.WriteLine(p.X);
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (deconstruct)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is Point(x: > 0, y: _) p)
+  {
+    Console.WriteLine(p.X);
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (positional)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is Point(> 0, _) p)
+  {
+    Console.WriteLine(p.X);
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (tuple)">
+    <Code>
+      <![CDATA[(Expression<Action<(int, string)>>)(o => {
+  if (o is (> 0 and var x, { Length: > 0 and var s }))
+  {
+    Console.WriteLine($"x = {x}; s = {s}");
+  }
+})
+]]></Code>
+  </Expression>
+  <Expression Name="Pattern matching (ITuple)">
+    <Code>
+      <![CDATA[(Expression<Action<object>>)(o => {
+  if (o is (0, 0))
+  {
+  }
+})
+]]></Code>
+  </Expression>
+</Expressions>
