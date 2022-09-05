@@ -11,6 +11,8 @@ var nodes = new[] { "AddAssign", "SubtractAssign", "MultiplyAssign", "DivideAssi
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -77,7 +79,7 @@ foreach (var node in nodes)
         /// <param name="left">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
-        public static new AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo method) =>
+        public static new AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo? method) =>
             <#=node#>(left, right, method, finalConversion: null, leftConversion: null);
 
         /// <summary>
@@ -88,7 +90,7 @@ foreach (var node in nodes)
         /// <param name="right">An <see cref="Expression" /> to set the <see cref="BinaryCSharpExpression.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
         /// <param name="conversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
-        public static new AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo method, LambdaExpression conversion) =>
+        public static new AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo? method, LambdaExpression? conversion) =>
             <#=node#>(left, right, method, conversion, leftConversion: null);
 
         /// <summary>
@@ -100,7 +102,7 @@ foreach (var node in nodes)
         /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="AssignBinaryCSharpExpression.Method" /> property equal to.</param>
         /// <param name="finalConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.FinalConversion" /> property equal to.</param>
         /// <param name="leftConversion">A <see cref="LambdaExpression" /> to set the <see cref="AssignBinaryCSharpExpression.LeftConversion" /> property equal to.</param>
-        public static AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo method, LambdaExpression finalConversion, LambdaExpression leftConversion) =>
+        public static AssignBinaryCSharpExpression <#=node#>(Expression left, Expression right, MethodInfo? method, LambdaExpression? finalConversion, LambdaExpression? leftConversion) =>
             MakeBinaryAssignCore(CSharpExpressionType.<#=node#>, left, right, method, finalConversion, leftConversion);
 
 <#
