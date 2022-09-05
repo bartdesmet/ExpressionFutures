@@ -218,7 +218,7 @@ namespace Microsoft.CSharp.Expressions
             return new TupleLiteralCSharpExpression(tupleType, builder.ToReadOnly(), argumentNames: null);
         }
 
-        private IList<Expression> GetRightParts(Expression right, Conversion conversion, List<ParameterExpression> temps, DeconstructionSideEffects effects, ref bool inInit, Func<Type, ParameterExpression> createTemp)
+        private static IList<Expression> GetRightParts(Expression right, Conversion conversion, List<ParameterExpression> temps, DeconstructionSideEffects effects, ref bool inInit, Func<Type, ParameterExpression> createTemp)
         {
             // Example:
             // var (x, y) = new Point(1, 2);
@@ -297,7 +297,7 @@ namespace Microsoft.CSharp.Expressions
             return builder;
         }
 
-        private Expression EvaluateConversionToTemp(Expression expression, Conversion conversion, List<ParameterExpression> temps, List<Expression> effects, Func<Type, ParameterExpression> createTemp)
+        private static Expression EvaluateConversionToTemp(Expression expression, Conversion conversion, List<ParameterExpression> temps, List<Expression> effects, Func<Type, ParameterExpression> createTemp)
         {
             if (conversion is SimpleConversion simple)
             {
