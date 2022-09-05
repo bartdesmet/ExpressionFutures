@@ -198,20 +198,20 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(getEnumerator, nameof(getEnumerator));
 
             if (getEnumerator.Parameters.Count != 1)
-                throw new Exception(); // TODO
+                throw Error.GetEnumeratorShouldHaveSingleParameter();
             if (!AreReferenceAssignable(getEnumerator.Parameters[0].Type, collectionType))
-                throw new Exception(); // TODO
+                throw Error.InvalidGetEnumeratorFirstArgType(getEnumerator.Parameters[0].Type, collectionType);
 
             var enumeratorType = getEnumerator.ReturnType;
 
             RequiresCanRead(moveNext, nameof(moveNext));
 
             if (moveNext.Parameters.Count != 1)
-                throw new Exception(); // TODO
+                throw Error.MoveNextShouldHaveSingleParameter();
             if (!AreReferenceAssignable(moveNext.Parameters[0].Type, enumeratorType))
-                throw new Exception(); // TODO
+                throw Error.InvalidMoveNextFirstArgType(moveNext.Parameters[0].Type, enumeratorType);
             if (!isAsync && moveNext.ReturnType != typeof(bool))
-                throw new Exception(); // TOOD
+                throw Error.MoveNextShouldHaveBooleanReturnType();
 
             //
             // REVIEW: We don't have info about the await operation on MoveNextAsync here, so can't validate the return type.
@@ -224,32 +224,32 @@ namespace Microsoft.CSharp.Expressions
 
             var currentGetMethod = current.GetGetMethod(nonPublic: false);
             if (currentGetMethod == null)
-                throw new Exception(); // TOOD
+                throw Error.PropertyDoesNotHaveGetAccessor(current);
             if (currentGetMethod.IsStatic)
-                throw new Exception();
+                throw Error.AccessorCannotBeStatic(current);
             if (current.GetIndexParameters().Length != 0)
-                throw new Exception();
+                throw Error.PropertyShouldNotBeIndexer(current);
 
             var currentType = current.PropertyType;
 
             if (currentType == typeof(void))
-                throw new Exception(); // TOOD
+                throw Error.PropertyShouldNotReturnVoid(current);
 
             if (currentConversion != null)
             {
                 RequiresCanRead(currentConversion, nameof(currentConversion));
 
                 if (currentConversion.Parameters.Count != 1)
-                    throw new Exception(); // TODO
+                    throw Error.CurrentConversionShouldHaveSingleParameter();
                 if (!AreReferenceAssignable(currentConversion.Parameters[0].Type, currentType))
-                    throw new Exception(); // TODO
+                    throw Error.InvalidCurrentConversionFirstArgType(currentConversion.Parameters[0].Type, currentType);
                 if (!AreReferenceAssignable(elementType, currentConversion.ReturnType))
-                    throw new Exception(); // TODO
+                    throw Error.InvalidCurrentReturnType(elementType, currentConversion.ReturnType);
             }
             else
             {
                 if (!AreReferenceAssignable(elementType, currentType))
-                    throw new Exception(); // TODO
+                    throw Error.InvalidCurrentReturnType(elementType, currentType);
             }
 
             if (patternDispose != null)
@@ -282,14 +282,14 @@ namespace Microsoft.CSharp.Expressions
             if (collectionType == typeof(string))
             {
                 if (isAsync)
-                    throw new Exception(); // TODO - no async enumeration over string
+                    throw Error.AsyncEnumerationNotSupportedForString();
 
                 return StringEnumeratorInfo;
             }
             else if (collectionType.IsArray)
             {
                 if (isAsync)
-                    throw new Exception(); // TODO - no async enumeration over arrays
+                    throw Error.AsyncEnumerationNotSupportedForArray();
 
                 return CreateArrayEnumeratorInfo(collectionType);
             }
@@ -310,7 +310,7 @@ namespace Microsoft.CSharp.Expressions
                                 if (parameters.Length == 0)
                                 {
                                     if (result != null)
-                                        throw new Exception(); // TODO - ambiguous
+                                        throw Error.AmbiguousEnumeratorMethod(type, name);
 
                                     result = m;
                                 }
@@ -322,7 +322,7 @@ namespace Microsoft.CSharp.Expressions
                                 if (parameters.Length == 0 || parameters.All(p => p.HasDefaultValue))
                                 {
                                     if (result != null)
-                                        throw new Exception(); // TODO - ambiguous
+                                        throw Error.AmbiguousEnumeratorMethod(type, name);
 
                                     result = m;
                                 }
@@ -358,7 +358,7 @@ namespace Microsoft.CSharp.Expressions
                         : moveNextMethod.ReturnType;
 
                     if (moveNextReturnType != typeof(bool))
-                        throw new Exception(); // TODO
+                        throw Error.MoveNextShouldHaveBooleanReturnType();
 
                     var moveNextBody = CSharpExpression.Call(enumeratorParameter, moveNextMethod, Array.Empty<ParameterAssignment>());
                     var moveNext = Expression.Lambda(moveNextBody, enumeratorParameter);

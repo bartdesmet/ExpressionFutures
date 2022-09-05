@@ -1061,6 +1061,71 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception InvalidFormatParameterType(object p0) => new ArgumentException(Strings.InvalidFormatParameterType(p0));
 
+        /// <summary>
+        /// ArgumentException with message like "The 'getEnumerator' lambda should have a single parameter."
+        /// </summary>
+        internal static Exception GetEnumeratorShouldHaveSingleParameter() => new ArgumentException(Strings.GetEnumeratorShouldHaveSingleParameter);
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' of the first parameter of the 'getEnumerator' lambda is not compatible with the collection type '{1}'."
+        /// </summary>
+        internal static Exception InvalidGetEnumeratorFirstArgType(object p0, object p1) => new ArgumentException(Strings.InvalidGetEnumeratorFirstArgType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The 'moveNext' lambda should have a single parameter."
+        /// </summary>
+        internal static Exception MoveNextShouldHaveSingleParameter() => new ArgumentException(Strings.MoveNextShouldHaveSingleParameter);
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' of the first parameter of the 'moveNext' lambda is not compatible with the enumerator type '{1}'."
+        /// </summary>
+        internal static Exception InvalidMoveNextFirstArgType(object p0, object p1) => new ArgumentException(Strings.InvalidMoveNextFirstArgType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The 'moveNext' lambda should return 'bool'."
+        /// </summary>
+        internal static Exception MoveNextShouldHaveBooleanReturnType() => new ArgumentException(Strings.MoveNextShouldHaveBooleanReturnType);
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' property should not have indexer parameters."
+        /// </summary>
+        internal static Exception PropertyShouldNotBeIndexer(object p0) => new ArgumentException(Strings.PropertyShouldNotBeIndexer(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}' property should not have a 'void' type."
+        /// </summary>
+        internal static Exception PropertyShouldNotReturnVoid(object p0) => new ArgumentException(Strings.PropertyShouldNotReturnVoid(p0));
+
+        /// <summary>
+        /// ArgumentException with message like "The 'currentConversion' lambda should have a single parameter."
+        /// </summary>
+        internal static Exception CurrentConversionShouldHaveSingleParameter() => new ArgumentException(Strings.CurrentConversionShouldHaveSingleParameter);
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' of the first parameter of the 'currentConversion' lambda is not compatible with the collection type '{1}'."
+        /// </summary>
+        internal static Exception InvalidCurrentConversionFirstArgType(object p0, object p1) => new ArgumentException(Strings.InvalidCurrentConversionFirstArgType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "The element type '{0}' is not compatible with the type '{1}' returned by the 'Current' property."
+        /// </summary>
+        internal static Exception InvalidCurrentReturnType(object p0, object p1) => new ArgumentException(Strings.InvalidCurrentReturnType(p0, p1));
+
+        /// <summary>
+        /// ArgumentException with message like "Asynchronous enumeration is not supported for array types."
+        /// </summary>
+        internal static Exception AsyncEnumerationNotSupportedForArray() => new ArgumentException(Strings.AsyncEnumerationNotSupportedForArray);
+
+        /// <summary>
+        /// ArgumentException with message like "Asynchronous enumeration is not supported on type 'String'."
+        /// </summary>
+        internal static Exception AsyncEnumerationNotSupportedForString() => new ArgumentException(Strings.AsyncEnumerationNotSupportedForString);
+
+        /// <summary>
+        /// ArgumentException with message like "The '{0}.{1}' method is ambiguous."
+        /// </summary>
+        internal static Exception AmbiguousEnumeratorMethod(object p0, object p1) => new ArgumentException(Strings.AmbiguousEnumeratorMethod(p0, p1));
+
     }
 
     /// <summary>
@@ -2118,6 +2183,71 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string InvalidFormatParameterType(object p0) => SR.Format(SR.InvalidFormatParameterType, p0);
 
+        /// <summary>
+        /// A string like "The 'getEnumerator' lambda should have a single parameter."
+        /// </summary>
+        internal static string GetEnumeratorShouldHaveSingleParameter => SR.GetEnumeratorShouldHaveSingleParameter;
+
+        /// <summary>
+        /// A string like "The type '{0}' of the first parameter of the 'getEnumerator' lambda is not compatible with the collection type '{1}'."
+        /// </summary>
+        internal static string InvalidGetEnumeratorFirstArgType(object p0, object p1) => SR.Format(SR.InvalidGetEnumeratorFirstArgType, p0, p1);
+
+        /// <summary>
+        /// A string like "The 'moveNext' lambda should have a single parameter."
+        /// </summary>
+        internal static string MoveNextShouldHaveSingleParameter => SR.MoveNextShouldHaveSingleParameter;
+
+        /// <summary>
+        /// A string like "The type '{0}' of the first parameter of the 'moveNext' lambda is not compatible with the enumerator type '{1}'."
+        /// </summary>
+        internal static string InvalidMoveNextFirstArgType(object p0, object p1) => SR.Format(SR.InvalidMoveNextFirstArgType, p0, p1);
+
+        /// <summary>
+        /// A string like "The 'moveNext' lambda should return 'bool'."
+        /// </summary>
+        internal static string MoveNextShouldHaveBooleanReturnType => SR.MoveNextShouldHaveBooleanReturnType;
+
+        /// <summary>
+        /// A string like "The '{0}' property should not have indexer parameters."
+        /// </summary>
+        internal static string PropertyShouldNotBeIndexer(object p0) => SR.Format(SR.PropertyShouldNotBeIndexer, p0);
+
+        /// <summary>
+        /// A string like "The '{0}' property should not have a 'void' type."
+        /// </summary>
+        internal static string PropertyShouldNotReturnVoid(object p0) => SR.Format(SR.PropertyShouldNotReturnVoid, p0);
+
+        /// <summary>
+        /// A string like "The 'currentConversion' lambda should have a single parameter."
+        /// </summary>
+        internal static string CurrentConversionShouldHaveSingleParameter => SR.CurrentConversionShouldHaveSingleParameter;
+
+        /// <summary>
+        /// A string like "The type '{0}' of the first parameter of the 'currentConversion' lambda is not compatible with the collection type '{1}'."
+        /// </summary>
+        internal static string InvalidCurrentConversionFirstArgType(object p0, object p1) => SR.Format(SR.InvalidCurrentConversionFirstArgType, p0, p1);
+
+        /// <summary>
+        /// A string like "The element type '{0}' is not compatible with the type '{1}' returned by the 'Current' property."
+        /// </summary>
+        internal static string InvalidCurrentReturnType(object p0, object p1) => SR.Format(SR.InvalidCurrentReturnType, p0, p1);
+
+        /// <summary>
+        /// A string like "Asynchronous enumeration is not supported for array types."
+        /// </summary>
+        internal static string AsyncEnumerationNotSupportedForArray => SR.AsyncEnumerationNotSupportedForArray;
+
+        /// <summary>
+        /// A string like "Asynchronous enumeration is not supported on type 'String'."
+        /// </summary>
+        internal static string AsyncEnumerationNotSupportedForString => SR.AsyncEnumerationNotSupportedForString;
+
+        /// <summary>
+        /// A string like "The '{0}.{1}' method is ambiguous."
+        /// </summary>
+        internal static string AmbiguousEnumeratorMethod(object p0, object p1) => SR.Format(SR.AmbiguousEnumeratorMethod, p0, p1);
+
     }
 }
 
@@ -2335,5 +2465,18 @@ namespace System
         public const string InvalidAppendFormattedValueType = "The type '{0}' of the 'value' parameter for the 'AppendFormatted' operation is not compatible with the expected type '{1}' for the interpolated string's interpolation value.";
         public const string InvalidAlignmentParameterType = "The type '{0}' is invalid for the alignment parameter and should be 'int'.";
         public const string InvalidFormatParameterType = "The type '{0}' is invalid for the format parameter and should be 'string'.";
+        public const string GetEnumeratorShouldHaveSingleParameter = "The 'getEnumerator' lambda should have a single parameter.";
+        public const string InvalidGetEnumeratorFirstArgType = "The type '{0}' of the first parameter of the 'getEnumerator' lambda is not compatible with the collection type '{1}'.";
+        public const string MoveNextShouldHaveSingleParameter = "The 'moveNext' lambda should have a single parameter.";
+        public const string InvalidMoveNextFirstArgType = "The type '{0}' of the first parameter of the 'moveNext' lambda is not compatible with the enumerator type '{1}'.";
+        public const string MoveNextShouldHaveBooleanReturnType = "The 'moveNext' lambda should return 'bool'.";
+        public const string PropertyShouldNotBeIndexer = "The '{0}' property should not have indexer parameters.";
+        public const string PropertyShouldNotReturnVoid = "The '{0}' property should not have a 'void' type.";
+        public const string CurrentConversionShouldHaveSingleParameter = "The 'currentConversion' lambda should have a single parameter.";
+        public const string InvalidCurrentConversionFirstArgType = "The type '{0}' of the first parameter of the 'currentConversion' lambda is not compatible with the collection type '{1}'.";
+        public const string InvalidCurrentReturnType = "The element type '{0}' is not compatible with the type '{1}' returned by the 'Current' property.";
+        public const string AsyncEnumerationNotSupportedForArray = "Asynchronous enumeration is not supported for array types.";
+        public const string AsyncEnumerationNotSupportedForString = "Asynchronous enumeration is not supported on type 'String'.";
+        public const string AmbiguousEnumeratorMethod = "The '{0}.{1}' method is ambiguous.";
     }
 }
