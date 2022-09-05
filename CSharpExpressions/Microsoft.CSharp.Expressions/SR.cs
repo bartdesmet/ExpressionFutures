@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#pragma warning disable CA1305 // Specify IFormatProvider. (Stub file.)
+
 namespace System
 {
     // NOTE: A similar file exists in System. This minimal copy of the functionality should be removed.
