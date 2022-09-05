@@ -103,7 +103,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         internal static Expression ReduceLogical(BinaryExpression node)
         {
-            if (node.Method != null && !node.get_IsLiftedLogical())
+            if (node.Method != null && !node.IsLiftedLogical())
             {
                 return ReduceLogicalMethod(node);
             }
@@ -111,7 +111,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             {
                 return ReduceLogicalLifted(node);
             }
-            else if (node.get_IsLiftedLogical())
+            else if (node.IsLiftedLogical())
             {
                 return node.ReduceUserdefinedLifted();
             }

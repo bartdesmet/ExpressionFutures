@@ -20,20 +20,7 @@ namespace System.Linq.Expressions
     internal static class BinaryExpressionExtensions
     {
         private static readonly Type s_typ = typeof(BinaryExpression);
-        private static readonly PropertyInfo s_1 = s_typ.GetProperty("IsLiftedLogical", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
         private static readonly MethodInfo s_2 = s_typ.GetMethod("ReduceUserdefinedLifted", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-
-        public static bool get_IsLiftedLogical(this BinaryExpression obj)
-        {
-            try
-            {
-                return (bool)s_1.GetValue(obj);
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
-        }
 
         public static Expression ReduceUserdefinedLifted(this BinaryExpression obj)
         {

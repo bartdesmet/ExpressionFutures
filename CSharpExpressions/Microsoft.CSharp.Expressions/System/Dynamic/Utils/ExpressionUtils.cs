@@ -315,6 +315,21 @@ namespace System.Dynamic.Utils
             }
         }
 
+        internal static bool IsLiftedLogical(this BinaryExpression b)
+        {
+            Type left = b.Left.Type;
+            Type right = b.Right.Type;
+            MethodInfo? method = b.Method;
+            ExpressionType kind = b.NodeType;
+
+            return
+                (kind == ExpressionType.AndAlso || kind == ExpressionType.OrElse) &&
+                TypeUtils.AreEquivalent(right, left) &&
+                left.IsNullableType() &&
+                method != null &&
+                TypeUtils.AreEquivalent(method.ReturnType, left.GetNonNullableType());
+        }
+
         private static string? GetParamName(string? paramName, int index) => index >= 0 ? $"{paramName}[{index}]" : paramName;
     }
 }
