@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -192,6 +194,8 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var leftTarget = leftTargets[i].Single;
 
+                    Debug.Assert(leftTarget is { });
+
                     var rightPart = rightParts[i];
                     if (inInit)
                     {
@@ -350,7 +354,7 @@ namespace Microsoft.CSharp.Expressions
 
             return locals;
 
-            Expression TryOptimize()
+            Expression? TryOptimize()
             {
                 if (deconstruction.Body is MethodCallExpression m)
                 {
@@ -398,9 +402,9 @@ namespace Microsoft.CSharp.Expressions
                 NestedVariables = expression;
             }
 
-            public Expression Single { get; }
+            public Expression? Single { get; }
 
-            public List<DeconstructionVariable> NestedVariables { get; }
+            public List<DeconstructionVariable>? NestedVariables { get; }
         }
 
         private sealed class DeconstructionSideEffects
@@ -457,7 +461,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="right">The expression representing the object to deconstruct.</param>
         /// <param name="conversion">The deconstruction conversion specifying the deconstruction step and the conversions to the elements obtained from deconstructing the object.</param>
         /// <returns>A <see cref="DeconstructionAssignmentCSharpExpression"/> representing the deconstruction assignment.</returns>
-        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(Type type, TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)
+        public static DeconstructionAssignmentCSharpExpression DeconstructionAssignment(Type? type, TupleLiteralCSharpExpression left, Expression right, DeconstructionConversion conversion)
         {
             // NB: The Roslyn compiler binds to this overload.
 
@@ -480,7 +484,7 @@ namespace Microsoft.CSharp.Expressions
 
             return new DeconstructionAssignmentCSharpExpression(type, left, right, conversion);
 
-            Type ValidateDeconstruction(Expression left, Type rhsType, Conversion rightConversion, int depth, int component)
+            static Type ValidateDeconstruction(Expression left, Type rhsType, Conversion rightConversion, int depth, int component)
             {
                 if (rightConversion is DeconstructionConversion deconstruct)
                 {

@@ -2,9 +2,12 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
@@ -31,11 +34,11 @@ namespace Microsoft.CSharp.Expressions
             LambdaExpression getEnumerator,
             LambdaExpression moveNext,
             PropertyInfo current,
-            LambdaExpression currentConversion,
+            LambdaExpression? currentConversion,
             Type elementType,
             bool needsDisposal,
-            AwaitInfo disposeAwaitInfo,
-            LambdaExpression patternDispose)
+            AwaitInfo? disposeAwaitInfo,
+            LambdaExpression? patternDispose)
         {
             IsAsync = isAsync;
             CollectionType = collectionType;
@@ -77,7 +80,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="LambdaExpression"/> representing the conversion of the object returned from the <see cref="Current"/> property to the <see cref="ElementType"/>.
         /// </summary>
-        public LambdaExpression CurrentConversion { get; }
+        public LambdaExpression? CurrentConversion { get; }
 
         /// <summary>
         /// Gets the type of the elements obtained by the iteration.
@@ -92,12 +95,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the information required to await the DisposeAsync operation for await foreach statements.
         /// </summary>
-        public AwaitInfo DisposeAwaitInfo { get; }
+        public AwaitInfo? DisposeAwaitInfo { get; }
 
         /// <summary>
         /// Gets the (optional) <see cref="LambdaExpression"/> representing how to call the dispose method.
         /// </summary>
-        public LambdaExpression PatternDispose { get; }
+        public LambdaExpression? PatternDispose { get; }
 
         /// <summary>
         /// Creates a new object that is like this one, but using the supplied children. If all of the children are the same, it will return this object.
@@ -108,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="disposeAwaitInfo">The <see cref="DisposeAwaitInfo"/> property of the result.</param>
         /// <param name="patternDispose">The <see cref="PatternDispose"/> property of the result.</param>
         /// <returns>This object if no children changed, or an object with the updated children.</returns>
-        public EnumeratorInfo Update(LambdaExpression getEnumerator, LambdaExpression moveNext, LambdaExpression currentConversion, AwaitInfo disposeAwaitInfo, LambdaExpression patternDispose)
+        public EnumeratorInfo Update(LambdaExpression getEnumerator, LambdaExpression moveNext, LambdaExpression? currentConversion, AwaitInfo? disposeAwaitInfo, LambdaExpression? patternDispose)
         {
             if (getEnumerator == GetEnumerator && moveNext == MoveNext && currentConversion == CurrentConversion && disposeAwaitInfo == DisposeAwaitInfo && patternDispose == PatternDispose)
             {
@@ -148,11 +151,11 @@ namespace Microsoft.CSharp.Expressions
             LambdaExpression getEnumerator,
             LambdaExpression moveNext,
             MethodInfo currentPropertyGetMethod,
-            LambdaExpression currentConversion,
+            LambdaExpression? currentConversion,
             Type elementType,
             bool needsDisposal,
-            AwaitInfo disposeAwaitInfo,
-            LambdaExpression patternDispose) =>
+            AwaitInfo? disposeAwaitInfo,
+            LambdaExpression? patternDispose) =>
             EnumeratorInfo(
                 isAsync,
                 collectionType,
@@ -186,11 +189,11 @@ namespace Microsoft.CSharp.Expressions
             LambdaExpression getEnumerator,
             LambdaExpression moveNext,
             PropertyInfo current,
-            LambdaExpression currentConversion,
+            LambdaExpression? currentConversion,
             Type elementType,
             bool needsDisposal,
-            AwaitInfo disposeAwaitInfo,
-            LambdaExpression patternDispose)
+            AwaitInfo? disposeAwaitInfo,
+            LambdaExpression? patternDispose)
         {
             RequiresNotNull(collectionType, nameof(collectionType));
             ValidateType(collectionType, nameof(collectionType));
@@ -295,9 +298,9 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                static MethodInfo FindInstanceMethod(Type type, string name, bool allowOptionalParams)
+                static MethodInfo? FindInstanceMethod(Type type, string name, bool allowOptionalParams)
                 {
-                    var result = default(MethodInfo);
+                    var result = default(MethodInfo?);
 
                     foreach (var m in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
                     {
@@ -333,9 +336,9 @@ namespace Microsoft.CSharp.Expressions
                     return result;
                 }
 
-                MethodInfo FindGetEnumerator(Type collectionType) => FindInstanceMethod(collectionType, isAsync ? "GetAsyncEnumerator" : "GetEnumerator", allowOptionalParams: isAsync);
-                MethodInfo FindMoveNext(Type enumeratorType) => FindInstanceMethod(enumeratorType, isAsync ? "MoveNextAsync" : "MoveNext", allowOptionalParams: isAsync);
-                MethodInfo FindDispose(Type enumeratorType) => FindInstanceMethod(enumeratorType, isAsync ? "DisposeAsync" : "Dispose", allowOptionalParams: false);
+                MethodInfo? FindGetEnumerator(Type collectionType) => FindInstanceMethod(collectionType, isAsync ? "GetAsyncEnumerator" : "GetEnumerator", allowOptionalParams: isAsync);
+                MethodInfo? FindMoveNext(Type enumeratorType) => FindInstanceMethod(enumeratorType, isAsync ? "MoveNextAsync" : "MoveNext", allowOptionalParams: isAsync);
+                MethodInfo? FindDispose(Type enumeratorType) => FindInstanceMethod(enumeratorType, isAsync ? "DisposeAsync" : "Dispose", allowOptionalParams: false);
 
                 var getEnumeratorMethod = FindGetEnumerator(collectionType);
                 if (getEnumeratorMethod != null)
@@ -373,8 +376,8 @@ namespace Microsoft.CSharp.Expressions
                     var elementType = currentProperty.PropertyType;
 
                     bool needsDisposal = false;
-                    LambdaExpression patternDispose = null;
-                    AwaitInfo disposeAwaitInfo = null;
+                    LambdaExpression? patternDispose = null;
+                    AwaitInfo? disposeAwaitInfo = null;
 
                     bool CanConvertToDisposeInterface()
                     {
@@ -458,12 +461,12 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static EnumeratorInfo s_stringEnumeratorInfo;
-        private static EnumeratorInfo StringEnumeratorInfo => s_stringEnumeratorInfo ??= CreateStringEnumeratorInfo();
+        private static EnumeratorInfo? s_stringEnumeratorInfo;
+        private static EnumeratorInfo StringEnumeratorInfo => s_stringEnumeratorInfo ??= CreateStringEnumeratorInfo(); // TODO: well-known members
 
         private static EnumeratorInfo CreateStringEnumeratorInfo()
         {
-            var getEnumeratorMethod = typeof(string).GetMethod(nameof(string.GetEnumerator));
+            var getEnumeratorMethod = typeof(string).GetMethod(nameof(string.GetEnumerator))!; // TODO: well-known members
 
             // NB: See remarks on array. We'll lower using a For loop but populate info nonetheless.
 
@@ -475,9 +478,12 @@ namespace Microsoft.CSharp.Expressions
             var enumeratorVariable = Expression.Variable(enumeratorType, "e");
 
             var moveNextMethod = enumeratorType.GetMethod(nameof(IEnumerator.MoveNext), BindingFlags.Public | BindingFlags.Instance, binder: null, Type.EmptyTypes, modifiers: null);
+            Debug.Assert(moveNextMethod != null);
+
             var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, moveNextMethod), enumeratorVariable);
 
             var currentProperty = enumeratorType.GetProperty(nameof(IEnumerator.Current), BindingFlags.Public | BindingFlags.Instance);
+            Debug.Assert(currentProperty != null);
 
             var currentVariable = Expression.Parameter(currentProperty.PropertyType, "c");
             var currentConversion = Expression.Lambda(CreateConvert(currentVariable, typeof(char)), currentVariable);
@@ -495,18 +501,18 @@ namespace Microsoft.CSharp.Expressions
                 patternDispose: null);
         }
 
-        private static MethodInfo s_IEnumerable_GetEnumerator;
-        private static MethodInfo IEnumerable_GetEnumerator => s_IEnumerable_GetEnumerator ??= typeof(IEnumerable).GetMethod(nameof(IEnumerable.GetEnumerator));
+        private static MethodInfo? s_IEnumerable_GetEnumerator;
+        private static MethodInfo IEnumerable_GetEnumerator => s_IEnumerable_GetEnumerator ??= typeof(IEnumerable).GetMethod(nameof(IEnumerable.GetEnumerator))!; // TODO: well-known members
 
-        private static MethodInfo s_IEnumerator_MoveNext;
-        private static MethodInfo IEnumerator_MoveNext => s_IEnumerator_MoveNext ??= typeof(IEnumerator).GetMethod(nameof(IEnumerator.MoveNext));
-        
-        private static PropertyInfo s_IEnumerator_Current;
-        private static PropertyInfo IEnumerator_Current => s_IEnumerator_Current ??= typeof(IEnumerator).GetProperty(nameof(IEnumerator.Current));
+        private static MethodInfo? s_IEnumerator_MoveNext;
+        private static MethodInfo IEnumerator_MoveNext => s_IEnumerator_MoveNext ??= typeof(IEnumerator).GetMethod(nameof(IEnumerator.MoveNext))!; // TODO: well-known members
+
+        private static PropertyInfo? s_IEnumerator_Current;
+        private static PropertyInfo IEnumerator_Current => s_IEnumerator_Current ??= typeof(IEnumerator).GetProperty(nameof(IEnumerator.Current))!; // TODO: well-known members
 
         private static EnumeratorInfo CreateArrayEnumeratorInfo(Type arrayType)
         {
-            var elementType = arrayType.GetElementType();
+            var elementType = arrayType.GetElementType()!;
 
             // NB: In practice, we won't need some of these because we'll reduce ForEach over arrays to
             //     use For loops instead. However, we'll pretend to go through IEnumerable interfaces
@@ -534,7 +540,7 @@ namespace Microsoft.CSharp.Expressions
                 patternDispose: null);
         }
 
-        private static EnumeratorInfo s_nonGenericEnumeratorInfo;
+        private static EnumeratorInfo? s_nonGenericEnumeratorInfo;
         private static EnumeratorInfo NonGenericEnumeratorInfo => s_nonGenericEnumeratorInfo ??= CreateNonGenericEnumeratorInfo();
 
         private static EnumeratorInfo CreateNonGenericEnumeratorInfo()
@@ -598,6 +604,7 @@ namespace Microsoft.CSharp.Expressions
             var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, moveNextMethod), enumeratorVariable);
 
             var currentProperty = enumeratorType.GetProperty(nameof(IEnumerator.Current));
+            Debug.Assert(currentProperty != null);
 
             var currentVariable = Expression.Parameter(elementType, "o");
             var currentConversion = Expression.Lambda(currentVariable, currentVariable);
