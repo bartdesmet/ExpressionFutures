@@ -5,6 +5,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.TypeUtils;
@@ -48,6 +49,46 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Expression.Convert(expr, type);
+        }
+
+        public static Expression CreateVoid(params Expression[]? expressions)
+        {
+            return CreateVoid((IList<Expression>?)expressions);
+        }
+
+        public static Expression CreateVoid(IList<Expression>? expressions)
+        {
+            if (expressions == null || expressions.Count == 0)
+            {
+                return Expression.Empty();
+            }
+
+            if (expressions.Count == 1)
+            {
+                var expression = expressions[0];
+
+                if (expression.Type == typeof(void))
+                {
+                    return expression;
+                }
+
+                if (expression is BlockExpression block)
+                {
+                    return Expression.Block(typeof(void), block.Variables, block.Expressions);
+                }
+            }
+
+            return Expression.Block(typeof(void), expressions);
+        }
+
+        public static Expression Comma(List<ParameterExpression> variables, List<Expression> statements)
+        {
+            if (variables.Count == 0 && statements.Count == 1)
+            {
+                return statements[0];
+            }
+
+            return Expression.Block(variables, statements);
         }
     }
 }
