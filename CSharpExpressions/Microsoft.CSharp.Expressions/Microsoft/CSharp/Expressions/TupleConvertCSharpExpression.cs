@@ -2,13 +2,14 @@
 //
 // bartde - May 2020
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.ErrorUtils;
@@ -75,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">The <see cref="Operand" /> property of the result.</param>
         /// <param name="elementConversions">The <see cref="ElementConversions" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public TupleConvertCSharpExpression Update(Expression operand, IEnumerable<LambdaExpression> elementConversions)
+        public TupleConvertCSharpExpression Update(Expression operand, IEnumerable<LambdaExpression>? elementConversions)
         {
             if (operand == Operand && SameElements(ref elementConversions, ElementConversions))
             {
@@ -262,8 +263,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The <see cref="Type" /> that represents the tuple type to convert to.</param>
         /// <param name="elementConversions">An array of one or more of <see cref="LambdaExpression" /> objects that represent the conversions of the tuple elements.</param>
         /// <returns>A <see cref="TupleConvertCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleConvert" /> and the <see cref="TupleConvertCSharpExpression.Operand" /> and <see cref="TupleConvertCSharpExpression.ElementConversions" /> properties set to the specified values.</returns>
-        public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, params LambdaExpression[] elementConversions) =>
-            TupleConvert(operand, type, (IEnumerable<LambdaExpression>)elementConversions);
+        public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, params LambdaExpression[]? elementConversions) =>
+            TupleConvert(operand, type, (IEnumerable<LambdaExpression>?)elementConversions);
 
         /// <summary>
         /// Creates a <see cref="TupleConvertCSharpExpression" /> that represents a tuple conversion.
@@ -272,7 +273,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The <see cref="Type" /> that represents the tuple type to convert to.</param>
         /// <param name="elementConversions">An array of one or more of <see cref="LambdaExpression" /> objects that represent the conversions of the tuple elements.</param>
         /// <returns>A <see cref="TupleConvertCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleConvert" /> and the <see cref="TupleConvertCSharpExpression.Operand" /> and <see cref="TupleConvertCSharpExpression.ElementConversions" /> properties set to the specified values.</returns>
-        public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, IEnumerable<LambdaExpression> elementConversions)
+        public static TupleConvertCSharpExpression TupleConvert(Expression operand, Type type, IEnumerable<LambdaExpression>? elementConversions)
         {
             RequiresCanRead(operand, nameof(operand));
 
@@ -349,7 +350,7 @@ namespace Microsoft.CSharp.Expressions
 
             static void CheckConversion(LambdaExpression conversion, Type from, Type to, string paramName, int index)
             {
-                var method = conversion.Type.GetMethod("Invoke");
+                var method = conversion.Type.GetMethod("Invoke")!;
                 var parameters = method.GetParametersCached();
 
                 if (parameters.Length != 1)

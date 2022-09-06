@@ -2,9 +2,12 @@
 //
 // bartde - May 2020
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,7 +25,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class TupleLiteralCSharpExpression : CSharpExpression
     {
-        internal TupleLiteralCSharpExpression(Type type, ReadOnlyCollection<Expression> arguments, ReadOnlyCollection<string> argumentNames)
+        internal TupleLiteralCSharpExpression(Type type, ReadOnlyCollection<Expression> arguments, ReadOnlyCollection<string>? argumentNames)
         {
             Type = type;
             Arguments = arguments;
@@ -43,7 +46,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a collection of names of the components of the tuple, or <c>null</c> if no names were specified.
         /// </summary>
-        public ReadOnlyCollection<string> ArgumentNames { get; }
+        public ReadOnlyCollection<string>? ArgumentNames { get; }
 
         /// <summary>
         /// Gets the type of the expression.
@@ -93,7 +96,10 @@ namespace Microsoft.CSharp.Expressions
 
                     for (int i = 0; i < arity; i++)
                     {
-                        members[i] = type.GetField(TupleItemNames[i], BindingFlags.Public | BindingFlags.Instance);
+                        var member = type.GetField(TupleItemNames[i], BindingFlags.Public | BindingFlags.Instance);
+                        Debug.Assert(member != null);
+
+                        members[i] = member;
                     }
 
                     res.Push((ctor, members));
@@ -111,7 +117,7 @@ namespace Microsoft.CSharp.Expressions
                 return res;
             }
 
-            NewExpression CreateTuple(ConstructorInfo ctor, MemberInfo[] members, int firstArg, Expression rest)
+            NewExpression CreateTuple(ConstructorInfo ctor, MemberInfo[] members, int firstArg, Expression? rest)
             {
                 var n = members.Length;
 
@@ -142,9 +148,11 @@ namespace Microsoft.CSharp.Expressions
 
             var argIndex = Arguments.Count;
 
-            Expression res = null;
+            Expression? res = null;
 
-            while (chain.Count > 0)
+            Debug.Assert(chain.Count > 0);
+
+            do
             {
                 var (ctor, members) = chain.Pop();
 
@@ -152,6 +160,7 @@ namespace Microsoft.CSharp.Expressions
 
                 res = CreateTuple(ctor, members, argIndex, rest: res);
             }
+            while (chain.Count > 0);
 
             return res;
         }
@@ -181,7 +190,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
         /// <param name="argumentNames">An array of names corresponding to the tuple components, or <c>null</c> if no names were specified.</param>
         /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
-        public static TupleLiteralCSharpExpression TupleLiteral(IEnumerable<Expression> arguments, IEnumerable<string> argumentNames)
+        public static TupleLiteralCSharpExpression TupleLiteral(IEnumerable<Expression> arguments, IEnumerable<string>? argumentNames)
         {
             var args = arguments.ToReadOnly();
             RequiresNotEmpty(args, nameof(arguments));
@@ -234,7 +243,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the components of the tuple.</param>
         /// <param name="argumentNames">An array of names corresponding to the tuple components, or <c>null</c> if no names were specified.</param>
         /// <returns>A <see cref="TupleLiteralCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.TupleLiteral" /> and the <see cref="TupleLiteralCSharpExpression.Arguments" /> and <see cref="TupleLiteralCSharpExpression.ArgumentNames" /> properties set to the specified values.</returns>
-        public static TupleLiteralCSharpExpression TupleLiteral(Type type, IEnumerable<Expression> arguments, IEnumerable<string> argumentNames)
+        public static TupleLiteralCSharpExpression TupleLiteral(Type type, IEnumerable<Expression> arguments, IEnumerable<string>? argumentNames)
         {
             RequiresNotNull(type, nameof(type));
 
