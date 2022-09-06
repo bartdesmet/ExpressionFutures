@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -66,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The <see cref="Expression" /> property of the result.</param>
         /// <param name="arms">The <see cref="Arms" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchCSharpExpression Update(Expression expression, IEnumerable<SwitchExpressionArm> arms)
+        public SwitchCSharpExpression Update(Expression expression, IEnumerable<SwitchExpressionArm>? arms)
         {
             if (expression == Expression && SameElements(ref arms, Arms))
             {
@@ -133,7 +135,7 @@ namespace Microsoft.CSharp.Expressions
 
                 stmts.Add(armHandler);
 
-                static bool IsAlwaysTrue(Expression e) => e is ConstantExpression c && (bool)c.Value;
+                static bool IsAlwaysTrue(Expression e) => e is ConstantExpression c && c.Value is bool b && b;
             }
 
             var throwExpr =
@@ -150,10 +152,10 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Block(Type, new[] { obj }, stmts);
         }
 
-        private static ConstructorInfo s_switchExpressionExceptionCtor;
+        private static ConstructorInfo? s_switchExpressionExceptionCtor;
 
         private static ConstructorInfo SwitchExpressionExceptionCtor =>
-            s_switchExpressionExceptionCtor ??= typeof(SwitchExpressionException).GetConstructor(new[] { typeof(object) });
+            s_switchExpressionExceptionCtor ??= typeof(SwitchExpressionException).GetConstructor(new[] { typeof(object) })!; // TODO: well-known members
     }
 
     partial class CSharpExpression
@@ -164,8 +166,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the object to switch on.</param>
         /// <param name="arms">The arms representing the patterns to match.</param>
         /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
-        public static SwitchCSharpExpression SwitchExpression(Expression expression, params SwitchExpressionArm[] arms) =>
-            SwitchExpression(type: null, expression, (IEnumerable<SwitchExpressionArm>)arms);
+        public static SwitchCSharpExpression SwitchExpression(Expression expression, params SwitchExpressionArm[]? arms) =>
+            SwitchExpression(type: null, expression, (IEnumerable<SwitchExpressionArm>?)arms);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpExpression"/> that represents a switch expression.
@@ -173,7 +175,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the object to switch on.</param>
         /// <param name="arms">The arms representing the patterns to match.</param>
         /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
-        public static SwitchCSharpExpression SwitchExpression(Expression expression, IEnumerable<SwitchExpressionArm> arms) =>
+        public static SwitchCSharpExpression SwitchExpression(Expression expression, IEnumerable<SwitchExpressionArm>? arms) =>
             SwitchExpression(type: null, expression, arms);
 
         /// <summary>
@@ -183,8 +185,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the object to switch on.</param>
         /// <param name="arms">The arms representing the patterns to match.</param>
         /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
-        public static SwitchCSharpExpression SwitchExpression(Type type, Expression expression, params SwitchExpressionArm[] arms) =>
-            SwitchExpression(type, expression, (IEnumerable<SwitchExpressionArm>)arms);
+        public static SwitchCSharpExpression SwitchExpression(Type? type, Expression expression, params SwitchExpressionArm[]? arms) =>
+            SwitchExpression(type, expression, (IEnumerable<SwitchExpressionArm>?)arms);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpExpression"/> that represents a switch expression.
@@ -193,7 +195,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the object to switch on.</param>
         /// <param name="arms">The arms representing the patterns to match.</param>
         /// <returns>The created <see cref="SwitchCSharpExpression"/>.</returns>
-        public static SwitchCSharpExpression SwitchExpression(Type type, Expression expression, IEnumerable<SwitchExpressionArm> arms)
+        public static SwitchCSharpExpression SwitchExpression(Type? type, Expression expression, IEnumerable<SwitchExpressionArm>? arms)
         {
             RequiresCanRead(expression, nameof(expression));
 

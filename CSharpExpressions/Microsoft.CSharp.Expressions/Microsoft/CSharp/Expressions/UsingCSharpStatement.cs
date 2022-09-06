@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class UsingCSharpStatement : CSharpStatement
     {
-        internal UsingCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+        internal UsingCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
         {
             Variables = variables;
             Body = body;
@@ -45,12 +47,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the resource if the statement is of the form <c>[await] using (expr) body</c>.
         /// </summary>
-        public abstract Expression Resource { get; }
+        public abstract Expression? Resource { get; }
 
         /// <summary>
         /// Gets a collection of <see cref="LocalDeclaration" /> declarations representing the resources if the statement is of the form <c>[await] using (declarations) body</c>.
         /// </summary>
-        public abstract ReadOnlyCollection<LocalDeclaration> Declarations { get; }
+        public abstract ReadOnlyCollection<LocalDeclaration>? Declarations { get; }
 
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the body.
@@ -60,12 +62,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the information required to await the DisposeAsync operation for await using statements.
         /// </summary>
-        public new AwaitInfo AwaitInfo { get; }
+        public new AwaitInfo? AwaitInfo { get; }
 
         /// <summary>
         /// Gets the (optional) <see cref="LambdaExpression"/> representing how to call the dispose method.
         /// </summary>
-        public LambdaExpression PatternDispose { get; }
+        public LambdaExpression? PatternDispose { get; }
 
         /// <summary>
         /// Gets a Boolean indicating whether the using statement is asynchronous.
@@ -96,7 +98,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="awaitInfo">The <see cref="AwaitInfo"/> property of the result.</param>
         /// <param name="patternDispose">The <see cref="PatternDispose"/> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public UsingCSharpStatement Update(IEnumerable<ParameterExpression> variables, Expression resource, IEnumerable<LocalDeclaration> declarations, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+        public UsingCSharpStatement Update(IEnumerable<ParameterExpression> variables, Expression? resource, IEnumerable<LocalDeclaration>? declarations, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
         {
             if (SameElements(ref variables, Variables) && resource == Resource && SameElements(ref declarations, Declarations) && body == Body && awaitInfo == AwaitInfo && patternDispose == PatternDispose)
             {
@@ -106,7 +108,7 @@ namespace Microsoft.CSharp.Expressions
             return Make(variables, resource, declarations, body, awaitInfo, patternDispose);
         }
 
-        internal static UsingCSharpStatement Make(IEnumerable<ParameterExpression> variables, Expression resource, IEnumerable<LocalDeclaration> resources, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+        internal static UsingCSharpStatement Make(IEnumerable<ParameterExpression>? variables, Expression? resource, IEnumerable<LocalDeclaration>? resources, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
         {
             if (patternDispose != null)
             {
@@ -172,11 +174,11 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the using statement.</param>
         /// <param name="declaredVariables">The set that will be updated to contain all declared variables.</param>
         /// <returns>The reduced expression.</returns>
-        protected Expression ReduceSingle(ParameterExpression variable, Expression resource, Expression body, HashSet<ParameterExpression> declaredVariables)
+        protected Expression ReduceSingle(ParameterExpression? variable, Expression resource, Expression body, HashSet<ParameterExpression> declaredVariables)
         {
             var madeTempVariable = false;
 
-            void MakeTempIfNull(ref ParameterExpression variable, Type type)
+            ParameterExpression MakeTempIfNull(ParameterExpression? variable, Type type)
             {
                 if (variable == null)
                 {
@@ -187,6 +189,8 @@ namespace Microsoft.CSharp.Expressions
                 {
                     declaredVariables.Add(variable);
                 }
+
+                return variable;
             }
 
             Expression CallPatternDispose(Expression nonNullResource)
@@ -201,7 +205,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (resourceType.IsValueType)
             {
-                MakeTempIfNull(ref variable, resourceType);
+                variable = MakeTempIfNull(variable, resourceType);
 
                 Expression variableValue;
 
@@ -229,7 +233,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var disposableInterface = IsAsync ? typeof(IAsyncDisposable) : typeof(IDisposable);
 
-                MakeTempIfNull(ref variable, disposableInterface);
+                variable = MakeTempIfNull(variable, disposableInterface);
 
                 // NB: This optimization would be more effective if the expression compiler would emit a `call` instruction,
                 //     but the JIT may still optimize it if it realizes the `callvirt` to the resource is predicated by a
@@ -267,7 +271,7 @@ namespace Microsoft.CSharp.Expressions
                     );
             }
 
-            ParameterExpression temp = default;
+            ParameterExpression? temp = default;
             Expression innerResource;
 
             if (!madeTempVariable)
@@ -340,16 +344,18 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class WithResource : UsingCSharpStatement
         {
-            internal WithResource(ReadOnlyCollection<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+            private Expression _resource;
+
+            internal WithResource(ReadOnlyCollection<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
                 : base(variables, body, awaitInfo, patternDispose)
             {
-                Resource = resource;
+                _resource = resource;
             }
 
-            public override Expression Resource { get; }
-            public override ReadOnlyCollection<LocalDeclaration> Declarations => null;
+            public override Expression? Resource => _resource;
+            public override ReadOnlyCollection<LocalDeclaration>? Declarations => null;
 
-            internal static WithResource Make(ReadOnlyCollection<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+            internal static WithResource Make(ReadOnlyCollection<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
             {
                 RequiresCanRead(resource, nameof(resource));
 
@@ -362,22 +368,24 @@ namespace Microsoft.CSharp.Expressions
 
             protected override Expression ReduceAndFlatten(HashSet<ParameterExpression> declaredVariables)
             {
-                return ReduceSingle(variable: null, Resource, Body, declaredVariables);
+                return ReduceSingle(variable: null, _resource, Body, declaredVariables);
             }
         }
 
         private sealed class WithResources : UsingCSharpStatement
         {
-            internal WithResources(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<LocalDeclaration> resources, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+            private readonly ReadOnlyCollection<LocalDeclaration> _declarations;
+
+            internal WithResources(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<LocalDeclaration> resources, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
                 : base(variables, body, awaitInfo, patternDispose)
             {
-                Declarations = resources;
+                _declarations = resources;
             }
 
-            public override Expression Resource => null;
-            public override ReadOnlyCollection<LocalDeclaration> Declarations { get; }
+            public override Expression? Resource => null;
+            public override ReadOnlyCollection<LocalDeclaration> Declarations => _declarations;
 
-            internal static WithResources Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<LocalDeclaration> resources, Expression body, AwaitInfo awaitInfo, LambdaExpression patternDispose)
+            internal static WithResources Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<LocalDeclaration> resources, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
             {
                 RequiresNotNullItems(resources, nameof(resources));
                 RequiresNotEmpty(resources, nameof(resources));
@@ -413,7 +421,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                CheckUsingResourceType(resourceType, awaitInfo, patternDispose);
+                CheckUsingResourceType(resourceType! /* NB: At least one resource. */, awaitInfo, patternDispose);
 
                 RequiresCanRead(body, nameof(body));
 
@@ -424,9 +432,9 @@ namespace Microsoft.CSharp.Expressions
             {
                 var expr = Body;
 
-                for (int n = Declarations.Count, i = n - 1; i >= 0; i--)
+                for (int n = _declarations.Count, i = n - 1; i >= 0; i--)
                 {
-                    var resource = Declarations[i];
+                    var resource = _declarations[i];
 
                     expr = ReduceSingle(resource.Variable, resource.Expression, expr, declaredVariables);
                 }
@@ -435,9 +443,9 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static MethodInfo s_disposeMethod, s_disposeAsyncMethod;
-        internal static MethodInfo DisposeMethod => s_disposeMethod ??= typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
-        internal static MethodInfo DisposeAsyncMethod => s_disposeAsyncMethod ??= typeof(IAsyncDisposable).GetMethod(nameof(IAsyncDisposable.DisposeAsync));
+        private static MethodInfo? s_disposeMethod, s_disposeAsyncMethod;
+        internal static MethodInfo DisposeMethod => s_disposeMethod ??= typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose))!; // TODO: well-known members
+        internal static MethodInfo DisposeAsyncMethod => s_disposeAsyncMethod ??= typeof(IAsyncDisposable).GetMethod(nameof(IAsyncDisposable.DisposeAsync))!; // TODO: well-known members
     }
 
     partial class CSharpExpression
@@ -505,7 +513,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, Expression resource, Expression body)
+        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression>? variables, Expression resource, Expression body)
             => Using(variables, resource, body, patternDispose: null);
 
         /// <summary>
@@ -516,7 +524,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the statement.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, Expression resource, Expression body, LambdaExpression patternDispose)
+        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression>? variables, Expression resource, Expression body, LambdaExpression? patternDispose)
             => Using(awaitInfo: null, variables, resource, body, patternDispose);
 
         /// <summary>
@@ -526,7 +534,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="declarations">The resources managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body)
+        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression>? variables, IEnumerable<LocalDeclaration> declarations, Expression body)
             => Using(variables, declarations, body, patternDispose: null);
 
         /// <summary>
@@ -537,7 +545,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the statement.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression patternDispose)
+        public static UsingCSharpStatement Using(IEnumerable<ParameterExpression>? variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression? patternDispose)
             => Using(awaitInfo: null, variables, declarations, body, patternDispose);
 
         /// <summary>
@@ -548,7 +556,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression resource, Expression body)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression>? variables, Expression resource, Expression body)
             => AwaitUsing(awaitInfo, variables, resource, body, patternDispose: null);
 
         /// <summary>
@@ -560,7 +568,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the statement.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression resource, Expression body, LambdaExpression patternDispose)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression>? variables, Expression resource, Expression body, LambdaExpression? patternDispose)
         {
             RequiresNotNull(resource, nameof(resource));
 
@@ -577,7 +585,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="declarations">The resources managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression>? variables, IEnumerable<LocalDeclaration> declarations, Expression body)
             => AwaitUsing(awaitInfo, variables, declarations, body, patternDispose: null);
 
         /// <summary>
@@ -589,7 +597,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the statement.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression patternDispose)
+        public static UsingCSharpStatement AwaitUsing(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression>? variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression? patternDispose)
         {
             RequiresNotNull(declarations, nameof(declarations));
 
@@ -609,7 +617,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the statement.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression resource, Expression body, LambdaExpression patternDispose)
+        public static UsingCSharpStatement Using(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression>? variables, Expression resource, Expression body, LambdaExpression? patternDispose)
         {
             RequiresNotNull(resource, nameof(resource));
 
@@ -625,19 +633,19 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the statement.</param>
         /// <param name="patternDispose">The (optional) lambda expression representing how to call the dispose method.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        public static UsingCSharpStatement Using(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression patternDispose)
+        public static UsingCSharpStatement Using(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression>? variables, IEnumerable<LocalDeclaration> declarations, Expression body, LambdaExpression? patternDispose)
         {
             RequiresNotNull(declarations, nameof(declarations));
 
             return UsingCSharpStatement.Make(variables, resource: null, declarations, body, awaitInfo, patternDispose);
         }
 
-        private static void AssertUsingAwaitInfo(ref AwaitInfo awaitInfo, LambdaExpression patternDispose)
+        private static void AssertUsingAwaitInfo(ref AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
         {
             awaitInfo ??= AwaitInfo(patternDispose?.ReturnType ?? typeof(ValueTask));
         }
 
-        internal static void CheckUsingResourceType(Type resourceType, AwaitInfo awaitInfo, LambdaExpression patternDispose, bool allowConvertToDisposable = false)
+        internal static void CheckUsingResourceType(Type resourceType, AwaitInfo? awaitInfo, LambdaExpression? patternDispose, bool allowConvertToDisposable = false)
         {
             ValidateType(resourceType, nameof(resourceType));
 

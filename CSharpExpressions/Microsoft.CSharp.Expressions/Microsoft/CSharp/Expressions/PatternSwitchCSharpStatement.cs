@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -49,7 +51,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variables">The <see cref="SwitchCSharpStatementBase.Variables" /> property of the result.</param>
         /// <param name="sections">The <see cref="Sections" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public PatternSwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<SwitchSection> sections)
+        public PatternSwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<SwitchSection>? sections)
         {
             if (switchValue == SwitchValue && breakLabel == BreakLabel && SameElements(ref variables, Variables) && SameElements(ref sections, Sections))
             {
@@ -168,7 +170,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                static bool IsAlwaysTrue(Expression e) => e is ConstantExpression c && (bool)c.Value;
+                static bool IsAlwaysTrue(Expression e) => e is ConstantExpression c && c.Value is bool b && b;
             }
 
             if (defaultBlock != null)
@@ -200,8 +202,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="breakLabel">The break label of the switch statement.</param>
         /// <param name="sections">The list of sections.</param>
         /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
-        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, params SwitchSection[] sections) =>
-            SwitchStatement(switchValue, breakLabel, variables: null, (IEnumerable<SwitchSection>)sections);
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, params SwitchSection[]? sections) =>
+            SwitchStatement(switchValue, breakLabel, variables: null, (IEnumerable<SwitchSection>?)sections);
 
         /// <summary>
         /// Creates a <see cref="PatternSwitchCSharpStatement"/> that represents a switch statement.
@@ -210,7 +212,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="breakLabel">The break label of the switch statement.</param>
         /// <param name="sections">The list of sections.</param>
         /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
-        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<SwitchSection> sections) =>
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<SwitchSection>? sections) =>
             SwitchStatement(switchValue, breakLabel, variables: null, sections);
 
         /// <summary>
@@ -221,8 +223,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variables">The variables in scope of the sections.</param>
         /// <param name="sections">The list of sections.</param>
         /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
-        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, params SwitchSection[] sections) =>
-            SwitchStatement(switchValue, breakLabel, variables, (IEnumerable<SwitchSection>)sections);
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, params SwitchSection[]? sections) =>
+            SwitchStatement(switchValue, breakLabel, variables, (IEnumerable<SwitchSection>?)sections);
 
         /// <summary>
         /// Creates a <see cref="PatternSwitchCSharpStatement"/> that represents a switch statement.
@@ -232,7 +234,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variables">The variables in scope of the sections.</param>
         /// <param name="sections">The list of sections.</param>
         /// <returns>The created <see cref="PatternSwitchCSharpStatement"/>.</returns>
-        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<SwitchSection> sections)
+        public static PatternSwitchCSharpStatement SwitchStatement(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<SwitchSection>? sections)
         {
             RequiresCanRead(switchValue, nameof(switchValue));
             RequiresNotNull(breakLabel, nameof(breakLabel));

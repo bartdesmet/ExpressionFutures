@@ -53,7 +53,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variables">The <see cref="SwitchCSharpStatementBase.Variables" /> property of the result.</param>
         /// <param name="cases">The <see cref="Cases" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<CSharpSwitchCase> cases)
+        public SwitchCSharpStatement Update(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<CSharpSwitchCase>? cases)
         {
             if (switchValue == SwitchValue && breakLabel == BreakLabel && SameElements(ref variables, Variables) && SameElements(ref cases, Cases))
             {
@@ -627,7 +627,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="breakLabel">The break label of the switch statement.</param>
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, params CSharpSwitchCase[] cases) =>
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, params CSharpSwitchCase[]? cases) =>
             Switch(switchValue, breakLabel, variables: null, cases);
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<CSharpSwitchCase> cases) =>
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<CSharpSwitchCase>? cases) =>
             Switch(switchValue, breakLabel, variables: null, cases);
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<CSharpSwitchCase> cases)
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<CSharpSwitchCase>? cases)
         {
             RequiresCanRead(switchValue, nameof(switchValue));
             RequiresNotNull(breakLabel, nameof(breakLabel));
@@ -723,8 +723,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="defaultBody">The body of the default case.</param>
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, Expression defaultBody, params CSharpSwitchCase[] cases) =>
-            Switch(switchValue, breakLabel, defaultBody, (IEnumerable<CSharpSwitchCase>)cases);
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, Expression defaultBody, params CSharpSwitchCase[]? cases) =>
+            Switch(switchValue, breakLabel, defaultBody, (IEnumerable<CSharpSwitchCase>?)cases);
 
         /// <summary>
         /// Creates a <see cref="SwitchCSharpStatement"/> that represents a switch statement.
@@ -735,7 +735,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, Expression defaultBody, IEnumerable<CSharpSwitchCase> cases)
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, Expression defaultBody, IEnumerable<CSharpSwitchCase>? cases)
         {
             if (defaultBody != null)
             {

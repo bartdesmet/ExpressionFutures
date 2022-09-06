@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
@@ -137,6 +139,7 @@ namespace Microsoft.CSharp.Expressions
         {
             // NB: This is the overload the C# compiler binds to.
 
+            RequiresNotNull(isCompleted, nameof(isCompleted));
             ValidateMethodInfo(isCompleted, nameof(isCompleted));
 
             return AwaitInfo(getAwaiter, GetProperty(isCompleted, nameof(isCompleted)), getResult);
@@ -149,7 +152,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="isCompleted">The property used to check whether the asynchronous operation has completed.</param>
         /// <param name="getResult">The method used to obtain the result returned by the asynchronous operation.</param>
         /// <returns>An object representing binding information for await operations.</returns>
-        public static StaticAwaitInfo AwaitInfo(LambdaExpression getAwaiter, PropertyInfo isCompleted, MethodInfo getResult)
+        public static StaticAwaitInfo AwaitInfo(LambdaExpression getAwaiter, PropertyInfo? isCompleted, MethodInfo? getResult)
         {
             RequiresNotNull(getAwaiter, nameof(getAwaiter));
 
@@ -164,30 +167,29 @@ namespace Microsoft.CSharp.Expressions
 
             ResolveAwaiterInfo(awaiterType, ref isCompleted, ref getResult);
 
-            RequiresNotNull(isCompleted, nameof(isCompleted));
-            RequiresNotNull(getResult, nameof(getResult));
-
             ValidateAwaiterType(awaiterType, isCompleted, getResult);
 
             //
             // Validate we can construct the IsCompleted and GetResult nodes.
             //
+            // NB: ValidateAwaiterType ensures these are non-null.
+            //
 
             var awaiterExpression = Expression.Parameter(awaiterType);
 
-            _ = Expression.Property(awaiterExpression, isCompleted);
-            _ = Expression.Call(awaiterExpression, getResult);
+            _ = Expression.Property(awaiterExpression, isCompleted!);
+            _ = Expression.Call(awaiterExpression, getResult!);
 
-            return new StaticAwaitInfo(getAwaiter, isCompleted, getResult);
+            return new StaticAwaitInfo(getAwaiter, isCompleted!, getResult!);
         }
 
-        private static void ResolveAwaiterInfo(Type awaiterType, ref PropertyInfo isCompleted, ref MethodInfo getResult)
+        private static void ResolveAwaiterInfo(Type awaiterType, ref PropertyInfo? isCompleted, ref MethodInfo? getResult)
         {
             isCompleted ??= awaiterType.GetProperty("IsCompleted", BindingFlags.Public | BindingFlags.Instance);
             getResult ??= awaiterType.GetNonGenericMethod("GetResult", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
         }
 
-        internal static MethodInfo GetGetAwaiter(Type awaiterType) =>
+        internal static MethodInfo? GetGetAwaiter(Type awaiterType) =>
             awaiterType.GetNonGenericMethod("GetAwaiter", BindingFlags.Public | BindingFlags.Instance, Array.Empty<Type>());
 
         private static void ValidateGetAwaiterMethod(Type operandType, MethodInfo getAwaiterMethod)
@@ -227,7 +229,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.GetAwaiterShouldReturnAwaiterType();
         }
 
-        private static void ValidateAwaiterType(Type awaiterType, PropertyInfo isCompleted, MethodInfo getResult)
+        private static void ValidateAwaiterType(Type awaiterType, PropertyInfo? isCompleted, MethodInfo? getResult)
         {
             if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
                 throw Error.AwaiterTypeShouldImplementINotifyCompletion(awaiterType);

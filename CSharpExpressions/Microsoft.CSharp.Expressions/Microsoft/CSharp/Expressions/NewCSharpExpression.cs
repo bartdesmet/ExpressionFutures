@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,7 +38,7 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the static type of the expression that this <see cref="Expression" /> represents. (Inherited from <see cref="Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public override Type Type => Constructor.DeclaringType;
+        public override Type Type => Constructor.DeclaringType!;
 
         /// <summary>
         /// Gets the <see cref="ConstructorInfo" /> for the constructor to be called.
@@ -61,7 +63,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public NewCSharpExpression Update(IEnumerable<ParameterAssignment> arguments)
+        public NewCSharpExpression Update(IEnumerable<ParameterAssignment>? arguments)
         {
             if (SameElements(ref arguments, Arguments))
             {
@@ -93,7 +95,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static NewCSharpExpression New(ConstructorInfo constructor, params ParameterAssignment[] arguments) => New(constructor, (IEnumerable<ParameterAssignment>)arguments);
+        public static NewCSharpExpression New(ConstructorInfo constructor, params ParameterAssignment[]? arguments) => New(constructor, (IEnumerable<ParameterAssignment>?)arguments);
 
         /// <summary>
         /// Creates a <see cref="NewCSharpExpression" /> that represents calling the specified constructor with the specified arguments.
@@ -101,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="NewCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and the <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<ParameterAssignment> arguments)
+        public static NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<ParameterAssignment>? arguments)
         {
             RequiresNotNull(constructor, nameof(constructor));
 
@@ -116,9 +118,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the call arguments.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static new NewCSharpExpression New(ConstructorInfo constructor, Expression[] arguments) =>
+        public static new NewCSharpExpression New(ConstructorInfo constructor, Expression[]? arguments) =>
             // NB: no params array to avoid overload resolution ambiguity
-            New(constructor, (IEnumerable<Expression>)arguments);
+            New(constructor, (IEnumerable<Expression>?)arguments);
 
         /// <summary>
         /// Creates a <see cref="NewCSharpExpression" /> that represents calling the specified constructor with the specified arguments.
@@ -126,7 +128,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="constructor">The <see cref="ConstructorInfo"/> to set the <see cref="NewCSharpExpression.Constructor"/> property equal to.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="NewCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="NewCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.New" /> and the <see cref="NewCSharpExpression.Constructor" /> and <see cref="NewCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static new NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<Expression> arguments)
+        public static new NewCSharpExpression New(ConstructorInfo constructor, IEnumerable<Expression>? arguments)
         {
             RequiresNotNull(constructor, nameof(constructor));
 
@@ -137,7 +139,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeNew(constructor, bindings);
         }
 
-        private static NewCSharpExpression MakeNew(ConstructorInfo constructor, IEnumerable<ParameterAssignment> arguments)
+        private static NewCSharpExpression MakeNew(ConstructorInfo constructor, IEnumerable<ParameterAssignment>? arguments)
         {
             var argList = arguments.ToReadOnly();
             ValidateParameterBindings(constructor, argList);
