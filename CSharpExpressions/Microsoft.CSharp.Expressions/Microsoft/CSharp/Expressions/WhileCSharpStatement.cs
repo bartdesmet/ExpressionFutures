@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -15,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class WhileCSharpStatement : ConditionalLoopCSharpStatement
     {
-        internal WhileCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> locals)
+        internal WhileCSharpStatement(Expression test, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> locals)
             : base(test, body, breakLabel, continueLabel, locals)
         {
         }
@@ -43,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
         /// <param name="locals">The <see cref="ConditionalLoopCSharpStatement.Locals" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public WhileCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression test, Expression body, IEnumerable<ParameterExpression> locals)
+        public WhileCSharpStatement Update(LabelTarget? breakLabel, LabelTarget? continueLabel, Expression test, Expression body, IEnumerable<ParameterExpression> locals)
         {
             if (breakLabel == BreakLabel && continueLabel == ContinueLabel && test == Test && body == Body && SameElements(ref locals, Locals))
             {
@@ -106,7 +108,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
-        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break) => While(test, body, @break, @continue: null, locals: null);
+        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget? @break) => While(test, body, @break, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="WhileCSharpStatement"/> that represents a while loop.
@@ -116,7 +118,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
-        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break, LabelTarget @continue) => While(test, body, @break, @continue, locals: null);
+        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget? @break, LabelTarget? @continue) => While(test, body, @break, @continue, locals: null);
 
         /// <summary>
         /// Creates a <see cref="WhileCSharpStatement"/> that represents a while loop.
@@ -127,7 +129,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="locals">The variables that are in scope of the loop.</param>
         /// <returns>The created <see cref="WhileCSharpStatement"/>.</returns>
-        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget @break, LabelTarget @continue, IEnumerable<ParameterExpression> locals)
+        public static WhileCSharpStatement While(Expression test, Expression body, LabelTarget? @break, LabelTarget? @continue, IEnumerable<ParameterExpression>? locals)
         {
             var localsList = CheckUniqueVariables(locals, nameof(locals));
 

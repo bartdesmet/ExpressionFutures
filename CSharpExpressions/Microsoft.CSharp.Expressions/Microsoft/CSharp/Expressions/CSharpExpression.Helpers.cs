@@ -2,8 +2,12 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
@@ -15,12 +19,14 @@ namespace Microsoft.CSharp.Expressions
 {
     partial class CSharpExpression
     {
-        private static void ValidateCondition(Expression test, bool optionalTest = false)
+        private static void ValidateCondition(Expression? test, bool optionalTest = false)
         {
             if (optionalTest && test == null)
             {
                 return;
             }
+
+            Debug.Assert(test != null);
 
             RequiresCanRead(test, nameof(test));
 
@@ -31,7 +37,7 @@ namespace Microsoft.CSharp.Expressions
                 throw ArgumentMustBeBoolean(nameof(test));
         }
 
-        internal static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression> variables, string paramName)
+        internal static ReadOnlyCollection<ParameterExpression> CheckUniqueVariables(IEnumerable<ParameterExpression>? variables, string paramName)
         {
             var variablesList = variables.ToReadOnly();
 

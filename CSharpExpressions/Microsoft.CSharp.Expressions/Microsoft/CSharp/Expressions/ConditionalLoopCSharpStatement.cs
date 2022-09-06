@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
@@ -12,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class ConditionalLoopCSharpStatement : LoopCSharpStatement
     {
-        internal ConditionalLoopCSharpStatement(Expression test, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> locals)
+        internal ConditionalLoopCSharpStatement(Expression test, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> locals)
             : base(body, breakLabel, continueLabel)
         {
             Test = test;
@@ -32,7 +34,7 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
-        private static void ValidateLoop(Expression test, Expression body, LabelTarget @break, LabelTarget @continue, bool optionalTest = false)
+        private static void ValidateLoop(Expression test, Expression body, LabelTarget? @break, LabelTarget? @continue, bool optionalTest = false)
         {
             ValidateCondition(test, optionalTest);
 

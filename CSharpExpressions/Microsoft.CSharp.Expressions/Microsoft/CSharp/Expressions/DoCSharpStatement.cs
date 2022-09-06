@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -15,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class DoCSharpStatement : ConditionalLoopCSharpStatement
     {
-        internal DoCSharpStatement(Expression body, Expression test, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> locals)
+        internal DoCSharpStatement(Expression body, Expression test, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> locals)
             : base(test, body, breakLabel, continueLabel, locals)
         {
         }
@@ -43,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="test">The <see cref="ConditionalLoopCSharpStatement.Test" /> property of the result.</param>
         /// <param name="locals">The <see cref="ConditionalLoopCSharpStatement.Locals" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public DoCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, Expression body, Expression test, IEnumerable<ParameterExpression> locals)
+        public DoCSharpStatement Update(LabelTarget? breakLabel, LabelTarget? continueLabel, Expression body, Expression test, IEnumerable<ParameterExpression> locals)
         {
             if (breakLabel == BreakLabel && continueLabel == ContinueLabel && body == Body && test == Test && SameElements(ref locals, this.Locals))
             {
@@ -131,7 +133,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="test">The condition of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
-        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break) => Do(body, test, @break, @continue: null, locals: null);
+        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget? @break) => Do(body, test, @break, @continue: null, locals: null);
 
         /// <summary>
         /// Creates a <see cref="DoCSharpStatement"/> that represents a do...while loop.
@@ -141,7 +143,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
-        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break, LabelTarget @continue) => Do(body, test, @break, @continue, locals: null);
+        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget? @break, LabelTarget? @continue) => Do(body, test, @break, @continue, locals: null);
 
         /// <summary>
         /// Creates a <see cref="DoCSharpStatement"/> that represents a do...while loop.
@@ -152,7 +154,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="locals">The variables that are in scope of the loop.</param>
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
-        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget @break, LabelTarget @continue, IEnumerable<ParameterExpression> locals)
+        public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget? @break, LabelTarget? @continue, IEnumerable<ParameterExpression>? locals)
         {
             var localsList = CheckUniqueVariables(locals, nameof(locals)); 
 

@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ErrorUtils;
@@ -14,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class LoopCSharpStatement : CSharpStatement
     {
-        internal LoopCSharpStatement(Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        internal LoopCSharpStatement(Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
         {
             Body = body;
             BreakLabel = breakLabel;
@@ -29,17 +31,17 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the break target used by the loop body.
         /// </summary>
-        public LabelTarget BreakLabel { get; }
+        public LabelTarget? BreakLabel { get; }
 
         /// <summary>
         /// Gets the continue target used by the loop body.
         /// </summary>
-        public LabelTarget ContinueLabel { get; }
+        public LabelTarget? ContinueLabel { get; }
     }
 
     partial class CSharpExpression
     {
-        internal static void ValidateLoop(Expression body, LabelTarget @break, LabelTarget @continue)
+        internal static void ValidateLoop(Expression body, LabelTarget? @break, LabelTarget? @continue)
         {
             RequiresCanRead(body, nameof(body));
             
