@@ -92,7 +92,7 @@ namespace Microsoft.CSharp.Expressions
 
             exprs[i++] =
                 Expression.IfThen(
-                    Test,
+                    Test!, // NB: Inherited from base but guaranteed non-null for Do.
                     Expression.Goto(begin)
                 );
 
@@ -177,7 +177,7 @@ namespace Microsoft.CSharp.Expressions
                 VisitLabelTarget(node.BreakLabel),
                 VisitLabelTarget(node.ContinueLabel),
                 Visit(node.Body),
-                Visit(node.Test),
+                Visit(node.Test!), // NB: Inherited from base but guaranteed non-null for Do.
                 VisitAndConvert(node.Locals, nameof(VisitDo))
             );
     }

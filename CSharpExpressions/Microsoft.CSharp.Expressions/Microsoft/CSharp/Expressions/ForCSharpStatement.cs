@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -17,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class ForCSharpStatement : ConditionalLoopCSharpStatement
     {
-        internal ForCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals)
+        internal ForCSharpStatement(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression? test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals)
             : base(test, body, breakLabel, continueLabel, innerLocals)
         {
             Variables = variables;
@@ -66,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The <see cref="LoopCSharpStatement.Body" /> property of the result.</param>
         /// <param name="locals">The <see cref="ConditionalLoopCSharpStatement.Locals" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ForCSharpStatement Update(LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, IEnumerable<ParameterExpression> locals)
+        public ForCSharpStatement Update(LabelTarget? breakLabel, LabelTarget? continueLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, IEnumerable<ParameterExpression>? locals)
         {
             if (breakLabel == BreakLabel &&
                 continueLabel == ContinueLabel &&
@@ -83,7 +85,7 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.For(variables, initializers, test, iterators, body, breakLabel, continueLabel, locals);
         }
 
-        internal static ForCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals) =>
+        internal static ForCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression? test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals) =>
             // TODO: optimized nodes for for(;;) and loops with a single initializer and single iterator
             new ForCSharpStatement(variables, initializers, test, iterators, body, breakLabel, continueLabel, innerLocals);
 
@@ -126,7 +128,7 @@ namespace Microsoft.CSharp.Expressions
             if (test != null)
             {
                 innerBlock.Add(Expression.Label(test));
-                innerBlock.Add(Expression.IfThen(Test, Expression.Goto(begin)));
+                innerBlock.Add(Expression.IfThen(Test!, Expression.Goto(begin)));
             }
             else
             {
@@ -212,7 +214,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="iterators">The loop iterators.</param>
         /// <param name="body">The body of the loop.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<BinaryExpression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body) =>
+        public static ForCSharpStatement For(IEnumerable<BinaryExpression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body) =>
             For(initializers, test, iterators, body, @break: null, @continue: null, locals: null);
 
         /// <summary>
@@ -224,7 +226,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<BinaryExpression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break) =>
+        public static ForCSharpStatement For(IEnumerable<BinaryExpression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, LabelTarget @break) =>
             For(initializers, test, iterators, body, @break, @continue: null, locals: null);
 
         /// <summary>
@@ -237,7 +239,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<BinaryExpression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue) =>
+        public static ForCSharpStatement For(IEnumerable<BinaryExpression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, LabelTarget? @break, LabelTarget? @continue) =>
             For(initializers, test, iterators, body, @break, @continue, locals: null);
 
         /// <summary>
@@ -251,7 +253,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="locals">The variables that are in scope of the loop.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<BinaryExpression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue, IEnumerable<ParameterExpression> locals)
+        public static ForCSharpStatement For(IEnumerable<BinaryExpression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, LabelTarget? @break, LabelTarget? @continue, IEnumerable<ParameterExpression>? locals)
         {
             ValidateLoop(test, body, @break, @continue, optionalTest: true);
 
@@ -299,7 +301,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="iterators">The loop iterators.</param>
         /// <param name="body">The body of the loop.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body) =>
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body) =>
             For(variables, initializers, test, iterators, body, @break: null, @continue: null, locals: null);
 
         /// <summary>
@@ -312,7 +314,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break) =>
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, LabelTarget @break) =>
             For(variables, initializers, test, iterators, body, @break, @continue: null, locals: null);
 
         /// <summary>
@@ -326,7 +328,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue) =>
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, LabelTarget? @break, LabelTarget? @continue) =>
             For(variables, initializers, test, iterators, body, @break, @continue, locals: null);
 
         /// <summary>
@@ -341,7 +343,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="locals">The variables that are in scope of the loop.</param>
         /// <returns>The created <see cref="ForCSharpStatement"/>.</returns>
-        public static ForCSharpStatement For(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> initializers, Expression test, IEnumerable<Expression> iterators, Expression body, LabelTarget @break, LabelTarget @continue, IEnumerable<ParameterExpression> locals)
+        public static ForCSharpStatement For(IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? initializers, Expression? test, IEnumerable<Expression>? iterators, Expression body, LabelTarget? @break, LabelTarget? @continue, IEnumerable<ParameterExpression>? locals)
         {
             ValidateLoop(test, body, @break, @continue, optionalTest: true);
 

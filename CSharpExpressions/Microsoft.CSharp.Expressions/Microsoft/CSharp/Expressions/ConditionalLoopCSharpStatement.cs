@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class ConditionalLoopCSharpStatement : LoopCSharpStatement
     {
-        internal ConditionalLoopCSharpStatement(Expression test, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> locals)
+        internal ConditionalLoopCSharpStatement(Expression? test, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> locals)
             : base(body, breakLabel, continueLabel)
         {
             Test = test;
@@ -24,7 +24,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the loop condition.
         /// </summary>
-        public Expression Test { get; }
+        public Expression? Test { get; }
 
         /// <summary>
         /// Gets a collection of <see cref="ParameterExpression"/> representing the variables that are in scope of the loop.
@@ -34,7 +34,7 @@ namespace Microsoft.CSharp.Expressions
 
     partial class CSharpExpression
     {
-        private static void ValidateLoop(Expression test, Expression body, LabelTarget? @break, LabelTarget? @continue, bool optionalTest = false)
+        private static void ValidateLoop(Expression? test, Expression body, LabelTarget? @break, LabelTarget? @continue, bool optionalTest = false)
         {
             ValidateCondition(test, optionalTest);
 

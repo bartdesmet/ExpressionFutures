@@ -68,7 +68,7 @@ namespace Microsoft.CSharp.Expressions
                 Expression.Loop(
                     Expression.Block(
                         Expression.IfThen(
-                            Expression.Not(Test),
+                            Expression.Not(Test!), // NB: Inherited from base but guaranteed non-null for While.
                             Expression.Break(@break)
                         ),
                         Body
@@ -151,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
             node.Update(
                 VisitLabelTarget(node.BreakLabel),
                 VisitLabelTarget(node.ContinueLabel),
-                Visit(node.Test),
+                Visit(node.Test!), // NB: Inherited from base but guaranteed non-null for While.
                 Visit(node.Body),
                 VisitAndConvert(node.Locals, nameof(VisitDo))
             );
