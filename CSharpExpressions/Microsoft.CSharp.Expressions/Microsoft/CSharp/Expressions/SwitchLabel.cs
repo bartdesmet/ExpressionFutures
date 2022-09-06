@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
@@ -14,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class SwitchLabel
     {
-        internal SwitchLabel(LabelTarget label, CSharpPattern pattern, Expression whenClause)
+        internal SwitchLabel(LabelTarget? label, CSharpPattern pattern, Expression? whenClause)
         {
             Label = label;
             Pattern = pattern;
@@ -24,7 +26,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="LabelTarget"/> representing the optional label to jump to the case, e.g. using a <c>goto case</c> statement.
         /// </summary>
-        public LabelTarget Label { get; }
+        public LabelTarget? Label { get; }
 
         /// <summary>
         /// Gets the <see cref="CSharpPattern" /> representing the pattern matched by the case.
@@ -34,7 +36,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the optional when clause.
         /// </summary>
-        public Expression WhenClause { get; }
+        public Expression? WhenClause { get; }
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -43,7 +45,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="pattern">The <see cref="Pattern" /> property of the result.</param>
         /// <param name="whenClause">The <see cref="WhenClause" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchLabel Update(LabelTarget label, CSharpPattern pattern, Expression whenClause)
+        public SwitchLabel Update(LabelTarget? label, CSharpPattern pattern, Expression? whenClause)
         {
             if (label == Label && pattern == Pattern && whenClause == WhenClause)
             {
@@ -74,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="pattern">The pattern matched by the switch case.</param>
         /// <param name="whenClause">The expression representing the optional when clause.</param>
         /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
-        public static SwitchLabel SwitchLabel(CSharpPattern pattern, Expression whenClause) => SwitchLabel(label: null, pattern, whenClause);
+        public static SwitchLabel SwitchLabel(CSharpPattern pattern, Expression? whenClause) => SwitchLabel(label: null, pattern, whenClause);
 
         /// <summary>
         /// Creates a <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/> that represents a switch case.
@@ -82,7 +84,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="label">The label used to jump to the case, e.g. using a <c>goto case</c> statement.</param>
         /// <param name="pattern">The pattern matched by the switch case.</param>
         /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
-        public static SwitchLabel SwitchLabel(LabelTarget label, CSharpPattern pattern) => SwitchLabel(label, pattern, whenClause: null);
+        public static SwitchLabel SwitchLabel(LabelTarget? label, CSharpPattern pattern) => SwitchLabel(label, pattern, whenClause: null);
 
         /// <summary>
         /// Creates a <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/> that represents a switch case.
@@ -91,7 +93,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="pattern">The pattern matched by the switch case.</param>
         /// <param name="whenClause">The expression representing the optional when clause.</param>
         /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchLabel"/>.</returns>
-        public static SwitchLabel SwitchLabel(LabelTarget label, CSharpPattern pattern, Expression whenClause)
+        public static SwitchLabel SwitchLabel(LabelTarget? label, CSharpPattern pattern, Expression? whenClause)
         {
             if (label != null && label.Type != typeof(void))
                 throw Error.SwitchLabelTargetShouldBeVoid();

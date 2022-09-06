@@ -2,6 +2,8 @@
 //
 // bartde - Decmeber 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,7 +50,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="labels">The <see cref="Labels" /> property of the result.</param>
         /// <param name="statements">The <see cref="Statements" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchSection Update(IEnumerable<ParameterExpression> locals, IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements)
+        public SwitchSection Update(IEnumerable<ParameterExpression>? locals, IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements)
         {
             if (SameElements(ref locals, Locals) && SameElements(ref labels, Labels) && SameElements(ref statements, Statements))
             {
@@ -104,7 +106,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="labels">The labels handled by the section.</param>
         /// <param name="statements">The statements in the body of the section.</param>
         /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchSection"/>.</returns>
-        public static SwitchSection SwitchSection(IEnumerable<ParameterExpression> locals, IEnumerable<SwitchLabel> labels, params Expression[] statements) =>
+        public static SwitchSection SwitchSection(IEnumerable<ParameterExpression>? locals, IEnumerable<SwitchLabel> labels, params Expression[] statements) =>
             SwitchSection(locals, labels, (IEnumerable<Expression>)statements);
 
         /// <summary>
@@ -114,7 +116,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="labels">The labels handled by the section.</param>
         /// <param name="statements">The statements in the body of the section.</param>
         /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchSection"/>.</returns>
-        public static SwitchSection SwitchSection(IEnumerable<ParameterExpression> locals, IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements)
+        public static SwitchSection SwitchSection(IEnumerable<ParameterExpression>? locals, IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements)
         {
             var localsList = CheckUniqueVariables(locals, nameof(locals));
 

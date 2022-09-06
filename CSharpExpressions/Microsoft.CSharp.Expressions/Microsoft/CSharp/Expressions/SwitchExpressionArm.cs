@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -18,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class SwitchExpressionArm
     {
-        internal SwitchExpressionArm(ReadOnlyCollection<ParameterExpression> variables, CSharpPattern pattern, Expression whenClause, Expression value)
+        internal SwitchExpressionArm(ReadOnlyCollection<ParameterExpression> variables, CSharpPattern pattern, Expression? whenClause, Expression value)
         {
             Variables = variables;
             Pattern = pattern;
@@ -39,7 +41,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the optional when clause.
         /// </summary>
-        public Expression WhenClause { get; }
+        public Expression? WhenClause { get; }
 
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the value returned by the arm.
@@ -54,7 +56,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="whenClause">The <see cref="WhenClause" /> property of the result.</param>
         /// <param name="value">The <see cref="Value" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SwitchExpressionArm Update(IEnumerable<ParameterExpression> variables, CSharpPattern pattern, Expression whenClause, Expression value)
+        public SwitchExpressionArm Update(IEnumerable<ParameterExpression>? variables, CSharpPattern pattern, Expression? whenClause, Expression value)
         {
             if (SameElements(ref variables, Variables) && pattern == Pattern && whenClause == WhenClause && value == Value)
             {
@@ -104,7 +106,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="whenClause">The expression representing the optional when clause.</param>
         /// <param name="value">The expression representing the value returned by the arm.</param>
         /// <returns>The created <see cref="Microsoft.CSharp.Expressions.SwitchExpressionArm"/>.</returns>
-        public static SwitchExpressionArm SwitchExpressionArm(IEnumerable<ParameterExpression> variables, CSharpPattern pattern, Expression whenClause, Expression value)
+        public static SwitchExpressionArm SwitchExpressionArm(IEnumerable<ParameterExpression>? variables, CSharpPattern pattern, Expression? whenClause, Expression value)
         {
             var variablesList = CheckUniqueVariables(variables, nameof(variables));
 
