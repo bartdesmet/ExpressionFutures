@@ -542,7 +542,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncLambdaCSharpExpression AsyncLambda(Expression body, params ParameterExpression[] parameters) => AsyncLambda(body, (IEnumerable<ParameterExpression>)parameters);
+        public static AsyncLambdaCSharpExpression AsyncLambda(Expression body, params ParameterExpression[]? parameters) => AsyncLambda(body, (IEnumerable<ParameterExpression>?)parameters);
 
         /// <summary>
         /// Creates an <see cref="AsyncLambdaCSharpExpression" /> by first constructing a delegate type.
@@ -551,7 +551,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="parameters">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static AsyncLambdaCSharpExpression AsyncLambda(Expression body, IEnumerable<ParameterExpression> parameters)
+        public static AsyncLambdaCSharpExpression AsyncLambda(Expression body, IEnumerable<ParameterExpression>? parameters)
         {
             ContractUtils.RequiresNotNull(body, nameof(body));
 
@@ -598,7 +598,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, params ParameterExpression[] parameters) => AsyncLambda(delegateType, body, (IEnumerable<ParameterExpression>)parameters);
+        public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, params ParameterExpression[]? parameters) => AsyncLambda(delegateType, body, (IEnumerable<ParameterExpression>?)parameters);
 
         /// <summary>
         /// Creates an <see cref="AsyncLambdaCSharpExpression" /> using the specified delegate type.
@@ -607,7 +607,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, IEnumerable<ParameterExpression> parameters)
+        public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, IEnumerable<ParameterExpression>? parameters)
         {
             var parameterList = parameters.ToReadOnly();
 
@@ -622,7 +622,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, params ParameterExpression[] parameters) => AsyncLambda<TDelegate>(body, (IEnumerable<ParameterExpression>)parameters);
+        public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, params ParameterExpression[]? parameters) => AsyncLambda<TDelegate>(body, (IEnumerable<ParameterExpression>?)parameters);
 
         /// <summary>
         /// Creates an <see cref="AsyncCSharpExpression{TDelegate}" /> where the delegate type is known at compile time.
@@ -630,7 +630,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> to set the <see cref="AsyncLambdaCSharpExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterExpression" /> objects to use to populate the <see cref="AsyncLambdaCSharpExpression.Parameters" /> collection.</param>
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
-        public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, IEnumerable<ParameterExpression> parameters)
+        public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, IEnumerable<ParameterExpression>? parameters)
         {
             var parameterList = parameters.ToReadOnly();
 
@@ -646,7 +646,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">An <see cref="Expression" /> representing the body of the lambda.</param>
         /// <param name="parameters">An array of <see cref="ParameterExpression" /> objects that represent the parameters passed to the lambda.</param>
         /// <returns>An expression representing a lambda with the specified body and parameters.</returns>
-        public static Expression<TDelegate> Lambda<TDelegate>(bool isAsync, Expression body, params ParameterExpression[] parameters)
+        public static Expression<TDelegate> Lambda<TDelegate>(bool isAsync, Expression body, params ParameterExpression[]? parameters)
         {
             // NB: If we were to omit the isAsync parameter, we could try to check the TDelegate return type and
             //     match it with the body type to determine whether the intent is to create a sync or an async
