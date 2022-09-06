@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,9 +21,9 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class DeconstructionConversion : Conversion
     {
-        private Type _inputType, _resultType;
+        private Type? _inputType, _resultType;
 
-        internal DeconstructionConversion(LambdaExpression deconstruct, ReadOnlyCollection<Conversion> conversions)
+        internal DeconstructionConversion(LambdaExpression? deconstruct, ReadOnlyCollection<Conversion> conversions)
         {
             Deconstruct = deconstruct;
             Conversions = conversions;
@@ -85,7 +87,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="LambdaExpression"/> representing the deconstruction step.
         /// </summary>
-        public LambdaExpression Deconstruct { get; }
+        public LambdaExpression? Deconstruct { get; }
 
         /// <summary>
         /// Gets a collection of conversions applied to the components obtained during the <see cref="Deconstruct"/> step.
@@ -98,7 +100,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="deconstruct">The <see cref="Deconstruct" /> property of the result.</param>
         /// <param name="conversions">The <see cref="Conversions" /> property of the result.</param>
         /// <returns>This conversion if no children changed, or an conversion with the updated children.</returns>
-        public DeconstructionConversion Update(LambdaExpression deconstruct, IEnumerable<Conversion> conversions)
+        public DeconstructionConversion Update(LambdaExpression? deconstruct, IEnumerable<Conversion> conversions)
         {
             if (deconstruct == Deconstruct && conversions == Conversions)
             {
@@ -153,7 +155,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="deconstruct">The deconstruction lambda to invoke if the input is not a tuple type.</param>
         /// <param name="conversions">The conversions to apply to the tuple components.</param>
         /// <returns>A <see cref="DeconstructionConversion"/> object representing the deconstruction of an object.</returns>
-        public static DeconstructionConversion Deconstruct(LambdaExpression deconstruct, params Conversion[] conversions) => Deconstruct(deconstruct, (IEnumerable<Conversion>)conversions);
+        public static DeconstructionConversion Deconstruct(LambdaExpression? deconstruct, params Conversion[] conversions) => Deconstruct(deconstruct, (IEnumerable<Conversion>)conversions);
 
         /// <summary>
         /// Creates a deconstruction conversion using the specified <paramref name="conversions"/> to apply to the components obtained through deconstruction.
@@ -161,7 +163,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="deconstruct">The deconstruction lambda to invoke if the input is not a tuple type.</param>
         /// <param name="conversions">The conversions to apply to the tuple components.</param>
         /// <returns>A <see cref="DeconstructionConversion"/> object representing the deconstruction of an object.</returns>
-        public static DeconstructionConversion Deconstruct(LambdaExpression deconstruct, IEnumerable<Conversion> conversions)
+        public static DeconstructionConversion Deconstruct(LambdaExpression? deconstruct, IEnumerable<Conversion> conversions)
         {
             var conversionsList = conversions.ToReadOnly();
 
