@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -122,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal static RelationalCSharpPattern Make(CSharpPatternInfo info, CSharpPatternType type, ConstantExpression value)
+        internal static RelationalCSharpPattern Make(CSharpPatternInfo? info, CSharpPatternType type, ConstantExpression value)
         {
             RequiresNotNull(value, nameof(value));
 
@@ -149,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="value">The value to compare with.</param>
         /// <returns>A <see cref="RelationalCSharpPattern" /> representing a relational pattern.</returns>
-        public static RelationalCSharpPattern LessThan(CSharpPatternInfo info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.LessThan, value);
+        public static RelationalCSharpPattern LessThan(CSharpPatternInfo? info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.LessThan, value);
 
         /// <summary>
         /// Creates a relational less than or equal pattern that compares against a constant value.
@@ -157,7 +159,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="value">The value to compare with.</param>
         /// <returns>A <see cref="RelationalCSharpPattern" /> representing a relational pattern.</returns>
-        public static RelationalCSharpPattern LessThanOrEqual(CSharpPatternInfo info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.LessThanOrEqual, value);
+        public static RelationalCSharpPattern LessThanOrEqual(CSharpPatternInfo? info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.LessThanOrEqual, value);
 
         /// <summary>
         /// Creates a relational greater than pattern that compares against a constant value.
@@ -165,7 +167,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="value">The value to compare with.</param>
         /// <returns>A <see cref="RelationalCSharpPattern" /> representing a relational pattern.</returns>
-        public static RelationalCSharpPattern GreaterThan(CSharpPatternInfo info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.GreaterThan, value);
+        public static RelationalCSharpPattern GreaterThan(CSharpPatternInfo? info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.GreaterThan, value);
 
         /// <summary>
         /// Creates a relational greater than or equal pattern that compares against a constant value.
@@ -173,7 +175,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="value">The value to compare with.</param>
         /// <returns>A <see cref="RelationalCSharpPattern" /> representing a relational pattern.</returns>
-        public static RelationalCSharpPattern GreaterThanOrEqual(CSharpPatternInfo info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.GreaterThanOrEqual, value);
+        public static RelationalCSharpPattern GreaterThanOrEqual(CSharpPatternInfo? info, ConstantExpression value) => RelationalCSharpPattern.Make(info, CSharpPatternType.GreaterThanOrEqual, value);
 
         /// <summary>
         /// Creates a relational less than pattern that compares against a constant value.

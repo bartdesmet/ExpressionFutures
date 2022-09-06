@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -42,7 +44,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="variable">The <see cref="CSharpObjectPattern.Variable" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public DeclarationCSharpPattern Update(ParameterExpression variable)
+        public DeclarationCSharpPattern Update(ParameterExpression? variable)
         {
             if (variable == Variable)
             {
@@ -137,7 +139,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="variable">The variable to assign to.</param>
         /// <returns>A <see cref="DeclarationCSharpPattern" /> that represents a pattern that checks convertibility to a type and assigns to a variable.</returns>
-        public static DeclarationCSharpPattern Declaration(CSharpPatternInfo info, ParameterExpression variable)
+        public static DeclarationCSharpPattern Declaration(CSharpPatternInfo? info, ParameterExpression variable)
         {
             RequiresNotNull(variable, nameof(variable));
 

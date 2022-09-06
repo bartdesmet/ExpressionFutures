@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,22 +24,22 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract class PropertyCSharpSubpatternMember
     {
-        internal PropertyCSharpSubpatternMember(PropertyCSharpSubpatternMember receiver) => Receiver = receiver;
+        internal PropertyCSharpSubpatternMember(PropertyCSharpSubpatternMember? receiver) => Receiver = receiver;
 
         /// <summary>
         /// Gets the receiver to access the member on, if any.
         /// </summary>
-        public PropertyCSharpSubpatternMember Receiver { get; }
+        public PropertyCSharpSubpatternMember? Receiver { get; }
 
         /// <summary>
         /// Gets the member accessed by the subpattern.
         /// </summary>
-        public abstract MemberInfo Member { get; }
+        public abstract MemberInfo? Member { get; }
 
         /// <summary>
         /// Gets the tuple field accessed by the subpattern.
         /// </summary>
-        public abstract TupleFieldInfo TupleField { get; }
+        public abstract TupleFieldInfo? TupleField { get; }
 
         /// <summary>
         /// Gets the type returned by the member.
@@ -85,17 +87,19 @@ namespace Microsoft.CSharp.Expressions
 
         internal sealed class WithMemberInfo : PropertyCSharpSubpatternMember
         {
-            public WithMemberInfo(PropertyCSharpSubpatternMember receiver, MemberInfo member)
+            private readonly MemberInfo _member;
+
+            public WithMemberInfo(PropertyCSharpSubpatternMember? receiver, MemberInfo member)
                 : base(receiver)
             {
-                Member = member;
+                _member = member;
             }
 
-            public override MemberInfo Member { get; }
+            public override MemberInfo? Member => _member;
 
-            public override TupleFieldInfo TupleField => null;
+            public override TupleFieldInfo? TupleField => null;
 
-            public override Type Type => Member switch
+            public override Type Type => _member switch
             {
                 PropertyInfo p => p.PropertyType,
                 FieldInfo f => f.FieldType,
@@ -106,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 get
                 {
-                    if (Member is PropertyInfo p && p.PropertyType == typeof(int))
+                    if (_member is PropertyInfo p && p.PropertyType == typeof(int))
                     {
                         if (p.Name == nameof(ICollection.Count) || p.Name == nameof(Array.Length))
                         {
@@ -120,29 +124,31 @@ namespace Microsoft.CSharp.Expressions
 
             internal override Expression ReduceCore(Expression @object)
             {
-                return Expression.MakeMemberAccess(@object, Member);
+                return Expression.MakeMemberAccess(@object, _member);
             }
         }
 
         internal sealed class WithTupleField : PropertyCSharpSubpatternMember
         {
-            public WithTupleField(PropertyCSharpSubpatternMember receiver, TupleFieldInfo field)
+            private readonly TupleFieldInfo _field;
+
+            public WithTupleField(PropertyCSharpSubpatternMember? receiver, TupleFieldInfo field)
                 : base(receiver)
             {
-                TupleField = field;
+                _field = field;
             }
 
-            public override MemberInfo Member => null;
+            public override MemberInfo? Member => null;
 
-            public override TupleFieldInfo TupleField { get; }
+            public override TupleFieldInfo? TupleField => _field;
 
-            public override Type Type => TupleField.Type;
+            public override Type Type => _field.Type;
 
             public override bool IsLengthOrCount => false;
 
             internal override Expression ReduceCore(Expression @object)
             {
-                return Helpers.GetTupleItemAccess(@object, TupleField.Index);
+                return Helpers.GetTupleItemAccess(@object, _field.Index);
             }
         }
     }
@@ -169,7 +175,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="receiver">The subpattern member to access the member on.</param>
         /// <param name="member">The member to access.</param>
         /// <returns>A <see cref="PropertyCSharpSubpatternMember" /> representing a member accessed by a property subpattern.</returns>
-        public static PropertyCSharpSubpatternMember PropertySubpatternMember(PropertyCSharpSubpatternMember receiver, MemberInfo member)
+        public static PropertyCSharpSubpatternMember PropertySubpatternMember(PropertyCSharpSubpatternMember? receiver, MemberInfo member)
         {
             RequiresNotNull(member, nameof(member));
 
@@ -183,7 +189,7 @@ namespace Microsoft.CSharp.Expressions
                 case PropertyInfo p:
                     if (!p.CanRead)
                         throw Error.PropertyPatternMemberShouldBeReadable(p);
-                    if (p.GetGetMethod().IsStatic)
+                    if (p.GetGetMethod()!.IsStatic)
                         throw Error.PropertyPatternMemberShouldNotBeStatic(p);
                     if (p.GetIndexParameters().Length > 0)
                         throw Error.PropertyPatternMemberShouldNotBeIndexer(p);
@@ -215,7 +221,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="receiver">The subpattern member to access the member on.</param>
         /// <param name="field">The tuple field to access.</param>
         /// <returns>A <see cref="PropertyCSharpSubpatternMember" /> representing a tuple field accessed by a property subpattern.</returns>
-        public static PropertyCSharpSubpatternMember PropertySubpatternMember(PropertyCSharpSubpatternMember receiver, TupleFieldInfo field)
+        public static PropertyCSharpSubpatternMember PropertySubpatternMember(PropertyCSharpSubpatternMember? receiver, TupleFieldInfo field)
         {
             RequiresNotNull(field, nameof(field));
 

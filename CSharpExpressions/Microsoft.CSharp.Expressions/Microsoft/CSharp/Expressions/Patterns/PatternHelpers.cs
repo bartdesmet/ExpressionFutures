@@ -2,8 +2,11 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
@@ -15,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
     {
         public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce) => Reduce(@object, reduce, vars: null, stmts: null);
 
-        public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce, List<ParameterExpression> vars, List<Expression> stmts)
+        public static Expression Reduce(Expression @object, Func<Expression, Expression> reduce, List<ParameterExpression>? vars, List<Expression>? stmts)
         {
             if (@object.IsPure(readOnly: true))
             {
@@ -36,6 +39,8 @@ namespace Microsoft.CSharp.Expressions
 
                 if (vars != null)
                 {
+                    Debug.Assert(stmts != null);
+
                     vars.Add(p);
                     stmts.Add(Expression.Assign(p, @object));
                     return reduce(r);
@@ -82,11 +87,11 @@ namespace Microsoft.CSharp.Expressions
                 case TypeCode.Decimal:
                     break;
                 case TypeCode.Single:
-                    if (isRelational && float.IsNaN((float)value.Value))
+                    if (isRelational && float.IsNaN((float)value.Value!))
                         throw Error.CannotUsePatternConstantNaN();
                     break;
                 case TypeCode.Double:
-                    if (isRelational && double.IsNaN((double)value.Value))
+                    if (isRelational && double.IsNaN((double)value.Value!))
                         throw Error.CannotUsePatternConstantNaN();
                     break;
                 case TypeCode.Boolean:
@@ -161,7 +166,7 @@ namespace Microsoft.CSharp.Expressions
             stmts.Add(expr);
         }
 
-        public static Expression AddNullCheck(Expression obj, Type typeCheck, LabelTarget exit, List<ParameterExpression>  vars, List<Expression> stmts)
+        public static Expression AddNullCheck(Expression obj, Type? typeCheck, LabelTarget exit, List<ParameterExpression>  vars, List<Expression> stmts)
         {
             void emitTypeCheck(Type type)
             {

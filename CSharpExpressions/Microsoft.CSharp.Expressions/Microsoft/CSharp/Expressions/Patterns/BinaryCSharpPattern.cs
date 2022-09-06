@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -114,7 +116,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The left pattern.</param>
         /// <param name="right">The right pattern.</param>
         /// <returns>A <see cref="NotCSharpPattern" /> representing an and pattern.</returns>
-        public static BinaryCSharpPattern And(CSharpPatternInfo info, CSharpPattern left, CSharpPattern right)
+        public static BinaryCSharpPattern And(CSharpPatternInfo? info, CSharpPattern left, CSharpPattern right)
         {
             RequiresNotNull(left, nameof(left));
             RequiresNotNull(right, nameof(right));
@@ -143,7 +145,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The left pattern.</param>
         /// <param name="right">The right pattern.</param>
         /// <returns>A <see cref="NotCSharpPattern" /> representing an or pattern.</returns>
-        public static BinaryCSharpPattern Or(CSharpPatternInfo info, CSharpPattern left, CSharpPattern right)
+        public static BinaryCSharpPattern Or(CSharpPatternInfo? info, CSharpPattern left, CSharpPattern right)
         {
             RequiresNotNull(left, nameof(left));
             RequiresNotNull(right, nameof(right));
@@ -184,7 +186,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The left pattern.</param>
         /// <param name="right">The right pattern.</param>
         /// <returns>A <see cref="NotCSharpPattern" /> representing a binary pattern.</returns>
-        public static BinaryCSharpPattern MakeBinary(CSharpPatternInfo info, CSharpPatternType type, CSharpPattern left, CSharpPattern right) =>
+        public static BinaryCSharpPattern MakeBinary(CSharpPatternInfo? info, CSharpPatternType type, CSharpPattern left, CSharpPattern right) =>
             type switch
             {
                 CSharpPatternType.And => And(info, left, right),
@@ -214,11 +216,11 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            static Type leastSpecificType(List<Type> candidates)
+            static Type? leastSpecificType(List<Type> candidates)
             {
                 Debug.Assert(candidates.Count >= 2);
 
-                Type bestSoFar = candidates[0];
+                Type? bestSoFar = candidates[0];
 
                 // first pass: select a candidate for which no other has been shown to be an improvement.
                 for (int i = 1, n = candidates.Count; i < n; i++)
@@ -231,7 +233,7 @@ namespace Microsoft.CSharp.Expressions
                 for (int i = 0, n = candidates.Count; i < n; i++)
                 {
                     Type candidate = candidates[i];
-                    Type spoiler = lessSpecificCandidate(candidate, bestSoFar);
+                    Type? spoiler = lessSpecificCandidate(candidate, bestSoFar);
                     if (spoiler is null)
                     {
                         bestSoFar = null;
@@ -246,7 +248,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             // Given a candidate least specific type so far, attempt to refine it with a possibly less specific candidate.
-            static Type lessSpecificCandidate(Type bestSoFar, Type possiblyLessSpecificCandidate)
+            static Type? lessSpecificCandidate(Type bestSoFar, Type possiblyLessSpecificCandidate)
             {
                 if (bestSoFar == possiblyLessSpecificCandidate)
                 {

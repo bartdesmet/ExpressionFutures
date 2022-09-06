@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -76,7 +78,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="info">Type information about the pattern.</param>
         /// <returns>A <see cref="DiscardCSharpPattern" /> that represents a pattern that always matches.</returns>
-        public static DiscardCSharpPattern Discard(CSharpPatternInfo info)
+        public static DiscardCSharpPattern Discard(CSharpPatternInfo? info)
         {
             if (info != null)
             {

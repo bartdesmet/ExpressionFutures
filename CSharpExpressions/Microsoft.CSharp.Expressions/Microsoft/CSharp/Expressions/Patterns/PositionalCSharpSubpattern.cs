@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System.Dynamic.Utils;
 using System.Reflection;
 
@@ -27,12 +29,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the field of the tuple corresponding to the position being matched.
         /// </summary>
-        public abstract TupleFieldInfo Field { get; }
+        public abstract TupleFieldInfo? Field { get; }
 
         /// <summary>
         /// Gets the parameter of the Deconstruct method corresponding to the position being matched.
         /// </summary>
-        public abstract ParameterInfo Parameter { get; }
+        public abstract ParameterInfo? Parameter { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -65,30 +67,34 @@ namespace Microsoft.CSharp.Expressions
 
         internal sealed class WithField : PositionalCSharpSubpattern
         {
+            private readonly TupleFieldInfo _field;
+
             internal WithField(CSharpPattern pattern, TupleFieldInfo field)
                 : base(pattern)
             {
-                Field = field;
+                _field = field;
             }
 
-            public override TupleFieldInfo Field { get; }
-            public override ParameterInfo Parameter => null;
+            public override TupleFieldInfo? Field => _field;
+            public override ParameterInfo? Parameter => null;
 
-            protected override PositionalCSharpSubpattern Rewrite(CSharpPattern pattern) => CSharpPattern.PositionalSubpattern(pattern, Field);
+            protected override PositionalCSharpSubpattern Rewrite(CSharpPattern pattern) => CSharpPattern.PositionalSubpattern(pattern, _field);
         }
 
         internal sealed class WithParameter : PositionalCSharpSubpattern
         {
+            private readonly ParameterInfo _parameter;
+
             internal WithParameter(CSharpPattern pattern, ParameterInfo parameter)
                 : base(pattern)
             {
-                Parameter = parameter;
+                _parameter = parameter;
             }
 
-            public override TupleFieldInfo Field => null;
-            public override ParameterInfo Parameter { get; }
+            public override TupleFieldInfo? Field => null;
+            public override ParameterInfo? Parameter => _parameter;
 
-            protected override PositionalCSharpSubpattern Rewrite(CSharpPattern pattern) => CSharpPattern.PositionalSubpattern(pattern, Parameter);
+            protected override PositionalCSharpSubpattern Rewrite(CSharpPattern pattern) => CSharpPattern.PositionalSubpattern(pattern, _parameter);
         }
 
         internal sealed class Simple : PositionalCSharpSubpattern
@@ -98,8 +104,8 @@ namespace Microsoft.CSharp.Expressions
             {
             }
 
-            public override TupleFieldInfo Field => null;
-            public override ParameterInfo Parameter => null;
+            public override TupleFieldInfo? Field => null;
+            public override ParameterInfo? Parameter => null;
 
             protected override PositionalCSharpSubpattern Rewrite(CSharpPattern pattern) => CSharpPattern.PositionalSubpattern(pattern);
         }

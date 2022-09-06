@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -89,7 +91,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                MethodInfo CheckNaN() => Value.Value switch
+                MethodInfo? CheckNaN() => Value.Value switch
                 {
                     float f when float.IsNaN(f) => FloatIsNaN,
                     double d when double.IsNaN(d) => DoubleIsNaN,
@@ -107,11 +109,11 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static MethodInfo _floatIsNaN;
-        private static MethodInfo FloatIsNaN => _floatIsNaN ??= typeof(float).GetMethod(nameof(float.IsNaN), new[] { typeof(float) });
+        private static MethodInfo? _floatIsNaN;
+        private static MethodInfo FloatIsNaN => _floatIsNaN ??= typeof(float).GetMethod(nameof(float.IsNaN), new[] { typeof(float) })!; // TODO: well-known members
 
-        private static MethodInfo _doubleIsNaN;
-        private static MethodInfo DoubleIsNaN => _doubleIsNaN ??= typeof(double).GetMethod(nameof(double.IsNaN), new[] { typeof(double) });
+        private static MethodInfo? _doubleIsNaN;
+        private static MethodInfo DoubleIsNaN => _doubleIsNaN ??= typeof(double).GetMethod(nameof(double.IsNaN), new[] { typeof(double) })!; // TODO: well-known members
     }
 
     partial class CSharpPattern
@@ -122,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="value">The value used for the constant check.</param>
         /// <returns>A <see cref="ConstantCSharpPattern" /> representing a constant pattern.</returns>
-        public static ConstantCSharpPattern Constant(CSharpPatternInfo info, ConstantExpression value)
+        public static ConstantCSharpPattern Constant(CSharpPatternInfo? info, ConstantExpression value)
         {
             RequiresNotNull(value, nameof(value));
 

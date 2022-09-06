@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -74,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="type">The type to check for.</param>
         /// <returns>A <see cref="TypeCSharpPattern" /> that represents a pattern that checks for a type.</returns>
-        public static TypeCSharpPattern Type(CSharpPatternInfo info, Type type)
+        public static TypeCSharpPattern Type(CSharpPatternInfo? info, Type type)
         {
             RequiresNotNull(type, nameof(type));
 

@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -25,6 +27,6 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the variable to assign to.
         /// </summary>
-        public ParameterExpression Variable => _objectInfo.Variable;
+        public ParameterExpression? Variable => _objectInfo.Variable;
     }
 }

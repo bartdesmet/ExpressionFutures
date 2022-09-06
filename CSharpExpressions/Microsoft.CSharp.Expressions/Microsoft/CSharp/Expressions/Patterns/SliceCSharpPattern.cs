@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -18,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class SliceCSharpPattern : CSharpPattern
     {
-        internal SliceCSharpPattern(CSharpPatternInfo info, LambdaExpression indexerAccess, CSharpPattern pattern)
+        internal SliceCSharpPattern(CSharpPatternInfo info, LambdaExpression? indexerAccess, CSharpPattern? pattern)
             : base(info)
         {
             IndexerAccess = indexerAccess;
@@ -33,12 +35,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="LambdaExpression"/> representing the indexer access used to retrieve a slice from the collection.
         /// </summary>
-        public LambdaExpression IndexerAccess { get; }
+        public LambdaExpression? IndexerAccess { get; }
 
         /// <summary>
         /// Gets the <see cref="CSharpPattern"/> representing the optional pattern to apply to the slice.
         /// </summary>
-        public CSharpPattern Pattern { get; }
+        public CSharpPattern? Pattern { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -53,7 +55,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexerAccess">The <see cref="IndexerAccess" /> property of the result.</param>
         /// <param name="pattern">The <see cref="Pattern" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public SliceCSharpPattern Update(LambdaExpression indexerAccess, CSharpPattern pattern)
+        public SliceCSharpPattern Update(LambdaExpression? indexerAccess, CSharpPattern? pattern)
         {
             if (indexerAccess == IndexerAccess && pattern == Pattern)
             {
@@ -95,7 +97,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="length">The (optional) precomputed length of the object.</param>
         /// <param name="range">The range to extract from the object.</param>
         /// <returns>The expression representing the pattern applied to the specified object and range.</returns>
-        internal Expression Reduce(Expression @object, Expression length, Range range)
+        internal Expression Reduce(Expression @object, Expression? length, Range range)
         {
             Expression GetSlice(Expression obj)
             {
@@ -146,7 +148,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexerAccess">The <see cref="LambdaExpression"/> representing the indexer access used to retrieve a slice from the collection.</param>
         /// <param name="pattern">The <see cref="CSharpPattern"/> representing the optional pattern to apply to the slice.</param>
         /// <returns>A <see cref="SliceCSharpPattern" /> representing a slice pattern.</returns>
-        public static SliceCSharpPattern Slice(CSharpPatternInfo info, LambdaExpression indexerAccess, CSharpPattern pattern)
+        public static SliceCSharpPattern Slice(CSharpPatternInfo info, LambdaExpression? indexerAccess, CSharpPattern? pattern)
         {
             RequiresNotNull(info, nameof(info));
 
@@ -173,7 +175,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 RequiresNotNull(indexerAccess, nameof(indexerAccess));
 
-                RequiresCompatiblePatternTypes(indexerAccess.ReturnType, ref pattern);
+                RequiresCompatiblePatternTypes(indexerAccess!.ReturnType, ref pattern);
                 RequiresCompatiblePatternTypes(pattern.NarrowedType, info.NarrowedType);
             }
 

@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -91,7 +93,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="negated">The pattern to negate.</param>
         /// <returns>A <see cref="NotCSharpPattern" /> representing a negated pattern.</returns>
-        public static NotCSharpPattern Not(CSharpPatternInfo info, CSharpPattern negated)
+        public static NotCSharpPattern Not(CSharpPatternInfo? info, CSharpPattern negated)
         {
             RequiresNotNull(negated, nameof(negated));
 

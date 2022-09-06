@@ -234,6 +234,7 @@ var errors = new[]
     new { Name = "AsyncEnumerationNotSupportedForArray", ExceptionType = "ArgumentException", Args = 0, Message = "Asynchronous enumeration is not supported for array types." },
     new { Name = "AsyncEnumerationNotSupportedForString", ExceptionType = "ArgumentException", Args = 0, Message = "Asynchronous enumeration is not supported on type 'String'." },
     new { Name = "AmbiguousEnumeratorMethod", ExceptionType = "ArgumentException", Args = 2, Message = "The '{0}.{1}' method is ambiguous." },
+    new { Name = "ListPatternShouldHaveCollectionTypeOrVariable", ExceptionType = "ArgumentException", Args = 0, Message = "List pattern should have a collection type or a variable." },
 };
 
 var escape = new Func<string, string>(s => s.Replace("<", "&lt;").Replace(">", "&gt;"));

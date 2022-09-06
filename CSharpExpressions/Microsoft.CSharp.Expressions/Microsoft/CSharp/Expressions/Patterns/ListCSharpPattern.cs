@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,7 +69,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexerAccess">The <see cref="IndexerAccess" /> property of the result.</param>
         /// <param name="patterns">The <see cref="Patterns" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ListCSharpPattern Update(ParameterExpression variable, LambdaExpression lengthAccess, LambdaExpression indexerAccess, IEnumerable<CSharpPattern> patterns)
+        public ListCSharpPattern Update(ParameterExpression? variable, LambdaExpression lengthAccess, LambdaExpression indexerAccess, IEnumerable<CSharpPattern> patterns)
         {
             if (variable == Variable && lengthAccess == LengthAccess && indexerAccess == IndexerAccess && SameElements(ref patterns, Patterns))
             {
@@ -267,7 +269,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
         /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
-        public static ListCSharpPattern List(Type collectionType, ParameterExpression variable, params CSharpPattern[] patterns) => List(collectionType, variable, (IEnumerable<CSharpPattern>)patterns);
+        public static ListCSharpPattern List(Type? collectionType, ParameterExpression? variable, params CSharpPattern[] patterns) => List(collectionType, variable, (IEnumerable<CSharpPattern>)patterns);
 
         /// <summary>
         /// Creates a list pattern.
@@ -276,15 +278,21 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="variable">The variable to assign to.</param>
         /// <param name="patterns">The list of <see cref="CSharpPattern"/> patterns to apply to the elements of the collection, optionally containing a slice pattern.</param>
         /// <returns>A <see cref="ListCSharpPattern" /> representing a list pattern.</returns>
-        public static ListCSharpPattern List(Type collectionType, ParameterExpression variable, IEnumerable<CSharpPattern> patterns)
+        public static ListCSharpPattern List(Type? collectionType, ParameterExpression? variable, IEnumerable<CSharpPattern> patterns)
         {
             collectionType ??= variable?.Type;
+
             var inputType = collectionType;
 
             if (inputType != null && inputType.IsValueType && !inputType.IsNullableType())
             {
                 // NB: The pattern implies a null check so we "widen" the target type to nullable.
                 inputType = typeof(Nullable<>).MakeGenericType(inputType);
+            }
+
+            if (collectionType == null || inputType == null)
+            {
+                throw Error.ListPatternShouldHaveCollectionTypeOrVariable();
             }
 
             var info = ObjectPatternInfo(PatternInfo(inputType, collectionType), variable);

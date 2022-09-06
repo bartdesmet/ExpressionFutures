@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -118,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="info">Type information about the pattern.</param>
         /// <param name="variable">The variable to assign to.</param>
         /// <returns>A <see cref="DiscardCSharpPattern" /> that represents a pattern that always matches.</returns>
-        public static VarCSharpPattern Var(CSharpPatternInfo info, ParameterExpression variable)
+        public static VarCSharpPattern Var(CSharpPatternInfo? info, ParameterExpression variable)
         {
             RequiresNotNull(variable, nameof(variable));
 
@@ -145,7 +147,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual CSharpPattern VisitVarPattern(VarCSharpPattern node) =>
             node.Update(
-                VisitAndConvert(node.Variable, nameof(VisitVarPattern))
+                VisitAndConvert(node.Variable! /* NB: Non-null for var pattern. */, nameof(VisitVarPattern))
             );
     }
 }

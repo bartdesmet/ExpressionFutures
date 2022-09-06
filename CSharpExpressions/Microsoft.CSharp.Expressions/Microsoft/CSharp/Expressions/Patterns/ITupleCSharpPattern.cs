@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -154,7 +156,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="getItemMethod">The method used to access a tuple element.</param>
         /// <param name="deconstruction">The subpatterns to apply to the tuple elements.</param>
         /// <returns>A <see cref="ITupleCSharpPattern" /> representing a tuple pattern.</returns>
-        public static ITupleCSharpPattern ITuple(CSharpPatternInfo info, MethodInfo getLengthMethod, MethodInfo getItemMethod, IEnumerable<PositionalCSharpSubpattern> deconstruction)
+        public static ITupleCSharpPattern ITuple(CSharpPatternInfo? info, MethodInfo? getLengthMethod, MethodInfo? getItemMethod, IEnumerable<PositionalCSharpSubpattern> deconstruction)
         {
             if (info != null)
             {
@@ -220,10 +222,10 @@ namespace Microsoft.CSharp.Expressions
             return new ITupleCSharpPattern(info, getLengthMethod, getItemMethod, deconstructionCollection);
         }
 
-        private static MethodInfo s_itupleGetLength, s_itupleGetItem;
+        private static MethodInfo? s_itupleGetLength, s_itupleGetItem;
 
-        private static MethodInfo ITupleGetLength => s_itupleGetLength ??= typeof(ITuple).GetProperty(nameof(System.Runtime.CompilerServices.ITuple.Length)).GetGetMethod();
-        private static MethodInfo ITupleGetItem => s_itupleGetItem ??= typeof(ITuple).GetProperty("Item").GetGetMethod();
+        private static MethodInfo ITupleGetLength => s_itupleGetLength ??= typeof(ITuple).GetProperty(nameof(System.Runtime.CompilerServices.ITuple.Length))!.GetGetMethod()!; // TODO: well-known members
+        private static MethodInfo ITupleGetItem => s_itupleGetItem ??= typeof(ITuple).GetProperty("Item")!.GetGetMethod()!; // TODO: well-known members
     }
 
     partial class CSharpExpressionVisitor

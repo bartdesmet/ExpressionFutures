@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 
 using static System.Dynamic.Utils.ContractUtils;
@@ -14,7 +16,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed class TupleFieldInfo
     {
-        internal TupleFieldInfo(string name, int index, Type type)
+        internal TupleFieldInfo(string? name, int index, Type type)
         {
             Name = name;
             Index = index;
@@ -24,7 +26,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the user-specified name of the tuple field, if any.
         /// </summary>
-        public string Name { get; }
+        public string? Name { get; }
 
         /// <summary>
         /// Gets the index of the tuple field.
@@ -46,7 +48,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="fieldIndex">The index of the field in the tuple to match.</param>
         /// <param name="type">The type of the tuple field.</param>
         /// <returns>An object representing a tuple field.</returns>
-        public static TupleFieldInfo TupleFieldInfo(string fieldName, int fieldIndex, Type type)
+        public static TupleFieldInfo TupleFieldInfo(string? fieldName, int fieldIndex, Type type)
         {
             if (fieldIndex < 0)
                 throw Error.TupleFieldIndexMustBePositive();

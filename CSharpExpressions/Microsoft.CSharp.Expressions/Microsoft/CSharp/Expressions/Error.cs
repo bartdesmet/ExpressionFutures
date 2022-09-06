@@ -1126,6 +1126,11 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static Exception AmbiguousEnumeratorMethod(object p0, object p1) => new ArgumentException(Strings.AmbiguousEnumeratorMethod(p0, p1));
 
+        /// <summary>
+        /// ArgumentException with message like "List pattern should have a collection type or a variable."
+        /// </summary>
+        internal static Exception ListPatternShouldHaveCollectionTypeOrVariable() => new ArgumentException(Strings.ListPatternShouldHaveCollectionTypeOrVariable);
+
     }
 
     /// <summary>
@@ -2248,6 +2253,11 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         internal static string AmbiguousEnumeratorMethod(object p0, object p1) => SR.Format(SR.AmbiguousEnumeratorMethod, p0, p1);
 
+        /// <summary>
+        /// A string like "List pattern should have a collection type or a variable."
+        /// </summary>
+        internal static string ListPatternShouldHaveCollectionTypeOrVariable => SR.ListPatternShouldHaveCollectionTypeOrVariable;
+
     }
 }
 
@@ -2478,5 +2488,6 @@ namespace System
         public const string AsyncEnumerationNotSupportedForArray = "Asynchronous enumeration is not supported for array types.";
         public const string AsyncEnumerationNotSupportedForString = "Asynchronous enumeration is not supported on type 'String'.";
         public const string AmbiguousEnumeratorMethod = "The '{0}.{1}' method is ambiguous.";
+        public const string ListPatternShouldHaveCollectionTypeOrVariable = "List pattern should have a collection type or a variable.";
     }
 }
