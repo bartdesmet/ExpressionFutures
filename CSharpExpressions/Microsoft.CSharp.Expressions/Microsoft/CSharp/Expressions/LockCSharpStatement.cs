@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,7 +21,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class LockCSharpStatement : CSharpStatement
     {
-        private static MethodInfo s_enterMethod, s_exitMethod;
+        private static MethodInfo? s_enterMethod, s_exitMethod;
 
         internal LockCSharpStatement(Expression expression, Expression body)
         {
@@ -73,8 +75,8 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
-            var enterMethod = s_enterMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Enter), new[] { typeof(object), typeof(bool).MakeByRefType() });
-            var exitMethod = s_exitMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Exit), new[] { typeof(object) });
+            var enterMethod = s_enterMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Enter), new[] { typeof(object), typeof(bool).MakeByRefType() })!; // TODO: well-known members
+            var exitMethod = s_exitMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Exit), new[] { typeof(object) })!; // TODO: well-known members
 
             var temp = Expression.Parameter(Expression.Type, "__lock");
             var lockTaken = Expression.Parameter(typeof(bool), "__lockWasTaken");
