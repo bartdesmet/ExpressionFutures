@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;

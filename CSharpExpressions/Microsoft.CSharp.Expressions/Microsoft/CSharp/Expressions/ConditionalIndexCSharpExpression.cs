@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -73,14 +75,14 @@ namespace Microsoft.CSharp.Expressions
             }
 
             private MethodBased(Expression @object, ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments)
-                : this(@object, receiver, MakeAccess(receiver, method, arguments))
+                : this(@object, receiver, MakeAccess(receiver, method, arguments), method)
             {
-                _method = method;
             }
 
-            private MethodBased(Expression @object, ConditionalReceiver receiver, IndexCSharpExpression access)
+            private MethodBased(Expression @object, ConditionalReceiver receiver, IndexCSharpExpression access, MethodInfo method)
                 : base(@object, receiver, access)
             {
+                _method = method;
             }
 
             private static IndexCSharpExpression MakeAccess(ConditionalReceiver receiver, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments) =>
@@ -90,7 +92,7 @@ namespace Microsoft.CSharp.Expressions
                 CSharpExpression.ConditionalIndex(@object, _method, arguments);
 
             internal override ConditionalAccessCSharpExpression<IndexCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, IndexCSharpExpression whenNotNull) =>
-                new MethodBased(receiver, nonNullReceiver, whenNotNull);   
+                new MethodBased(receiver, nonNullReceiver, whenNotNull, _method);
         }
 
         internal sealed class PropertyBased : ConditionalIndexCSharpExpression
@@ -219,7 +221,7 @@ namespace Microsoft.CSharp.Expressions
         public static ConditionalIndexCSharpExpression ConditionalIndex(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments) =>
             ConditionalIndexCore(instance, indexer, method: null, parameters: null, arguments);
 
-        private static ConditionalIndexCSharpExpression ConditionalIndexCore(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        private static ConditionalIndexCSharpExpression ConditionalIndexCore(Expression instance, PropertyInfo indexer, MethodInfo? method, ParameterInfo[]? parameters, IEnumerable<ParameterAssignment> arguments)
         {
             RequiresNotNull(instance, nameof(instance));
             RequiresNotNull(indexer, nameof(indexer));
@@ -229,7 +231,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeConditionalIndex(instance, indexer, method, parameters, arguments);
         }
 
-        private static ConditionalIndexCSharpExpression ConditionalIndexCore(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
+        private static ConditionalIndexCSharpExpression ConditionalIndexCore(Expression instance, PropertyInfo indexer, MethodInfo? method, ParameterInfo[]? parameters, IEnumerable<Expression> arguments)
         {
             RequiresNotNull(instance, nameof(instance));
             RequiresNotNull(indexer, nameof(indexer));
@@ -241,7 +243,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeConditionalIndex(instance, indexer, method, parameters, bindings);
         }
 
-        private static ConditionalIndexCSharpExpression MakeConditionalIndex(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        private static ConditionalIndexCSharpExpression MakeConditionalIndex(Expression instance, PropertyInfo indexer, MethodInfo? method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
         {
             RequiresCanRead(instance, nameof(instance));
 

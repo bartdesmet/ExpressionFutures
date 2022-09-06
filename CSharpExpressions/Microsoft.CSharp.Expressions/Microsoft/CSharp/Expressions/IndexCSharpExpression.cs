@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -93,7 +95,7 @@ namespace Microsoft.CSharp.Expressions
             // TODO: Throw a proper exception if the indexer is set-only, which can happen when our node is used in
             //       a LINQ expression where RequiresCanRead just passes fine.
 
-            var method = Indexer.GetGetMethod(true);
+            var method = Indexer.GetGetMethod(true)!;
             var parameters = method.GetParametersCached();
 
             var res = BindArguments((obj, args) => Expression.Property(obj, Indexer, args), Object, parameters, Arguments);
@@ -119,7 +121,7 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression Reduce(Func<Expression, Expression> functionalOp, List<ParameterExpression> temps, List<Expression> stmts)
         {
-            var method = Indexer.GetGetMethod(true);
+            var method = Indexer.GetGetMethod(true)!;
             var parameters = method.GetParametersCached();
 
             // TODO: Check all writeback cases with mutable structs.
@@ -261,7 +263,7 @@ namespace Microsoft.CSharp.Expressions
         public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments) =>
             IndexCore(instance, indexer, method: null, parameters: null, arguments);
 
-        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, MethodInfo? method, ParameterInfo[]? parameters, IEnumerable<ParameterAssignment> arguments)
         {
             RequiresNotNull(instance, nameof(instance));
             RequiresNotNull(indexer, nameof(indexer));
@@ -271,7 +273,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeIndex(instance, indexer, method, parameters, arguments);
         }
 
-        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<Expression> arguments)
+        private static IndexCSharpExpression IndexCore(Expression instance, PropertyInfo indexer, MethodInfo? method, ParameterInfo[]? parameters, IEnumerable<Expression> arguments)
         {
             RequiresNotNull(instance, nameof(instance));
             RequiresNotNull(indexer, nameof(indexer));
@@ -283,7 +285,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeIndex(instance, indexer, method, parameters, bindings);
         }
 
-        private static IndexCSharpExpression MakeIndex(Expression instance, PropertyInfo indexer, MethodInfo method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
+        private static IndexCSharpExpression MakeIndex(Expression instance, PropertyInfo indexer, MethodInfo? method, ParameterInfo[] parameters, IEnumerable<ParameterAssignment> arguments)
         {
             RequiresCanRead(instance, nameof(instance));
 
@@ -301,7 +303,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static ParameterInfo[] GetParameters(PropertyInfo indexer, ParameterInfo[] parameters)
+        private static ParameterInfo[] GetParameters(PropertyInfo indexer, ParameterInfo[]? parameters)
         {
             return parameters ?? indexer.GetIndexParameters();
         }

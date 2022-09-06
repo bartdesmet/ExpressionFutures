@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -109,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
 
             var type = expression.Type.GetNonNullReceiverType();
 
-            if (!AreReferenceAssignable(field.DeclaringType, type))
+            if (!AreReferenceAssignable(field.DeclaringType! /* NB: Not static. */, type))
                 throw FieldInfoNotDefinedForType(field.DeclaringType, field.Name, type);
 
             return ConditionalMemberCSharpExpression.Make(expression, field);
@@ -157,7 +159,8 @@ namespace Microsoft.CSharp.Expressions
             if (property.GetIndexParameters().Length != 0)
                 throw Error.ConditionalAccessRequiresReadableProperty();
 
-            if (property.GetGetMethod(nonPublic: true).IsStatic)
+            var getMethod = property.GetGetMethod(nonPublic: true)!; // NB: CanRead is true.
+            if (getMethod.IsStatic)
                 throw Error.ConditionalAccessRequiresNonStaticMember();
 
             var type = expression.Type.GetNonNullReceiverType();
