@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;

@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -131,7 +133,7 @@ namespace Microsoft.CSharp.Expressions
             //     consistent here.
             if (pType.IsByRef)
             {
-                pType = pType.GetElementType();
+                pType = pType.GetElementType()!;
             }
 
             TypeUtils.ValidateType(pType, parameter.Name);
