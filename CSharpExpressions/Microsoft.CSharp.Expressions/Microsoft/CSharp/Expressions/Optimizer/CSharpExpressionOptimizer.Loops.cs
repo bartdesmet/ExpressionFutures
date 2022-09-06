@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -35,12 +37,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             var variables = VisitAndConvert(node.Locals, nameof(VisitFor));
 
-            var test = Visit(node.Test);
+            var test = Visit(node.Test!); // REVIEW: Can the derived While type assert non-null?
 
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
+            PopLabelInfo(out LabelTarget? @break, out LabelTarget? @continue);
 
             return node.Update(@break, @continue, test, body, variables);
         }
@@ -55,9 +57,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
+            PopLabelInfo(out LabelTarget? @break, out LabelTarget? @continue);
 
-            var test = Visit(node.Test);
+            var test = Visit(node.Test!); // REVIEW: Can the derived Do type assert non-null?
 
             return node.Update(@break, @continue, body, test, variables);
         }
@@ -76,7 +78,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
+            PopLabelInfo(out LabelTarget? @break, out LabelTarget? @continue);
 
             return node.Update(@break, @continue, variables, initializers, test, iterators, body, locals);
         }
@@ -96,7 +98,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
+            PopLabelInfo(out LabelTarget? @break, out LabelTarget? @continue);
 
             return node.Update(enumeratorInfo, @break, @continue, variables, collection, conversion, body, deconstruction, awaitInfo);
         }
@@ -107,7 +109,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PushLabelInfo(node);
 
             var body = Visit(node.Body);
-            PopLabelInfo(out LabelTarget @break, out LabelTarget @continue);
+            PopLabelInfo(out LabelTarget? @break, out LabelTarget? @continue);
 
             return node.Update(@break, @continue, body);
         }
@@ -127,7 +129,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoLabel(GotoLabelCSharpStatement node)
         {
-            MarkLoopLabel(node.Target);
+            MarkLoopLabel(node.Target!); // REVIEW: Can the derived GotoLabel type assert non-null?
 
             return base.VisitGotoLabel(node);
         }
@@ -233,7 +235,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return expression;
         }
 
-        private static Expression OptimizeIterator(Expression expression, Func<Expression, MethodInfo, Expression> factory, Expression operand, MethodInfo method)
+        private static Expression OptimizeIterator(Expression expression, Func<Expression, MethodInfo?, Expression> factory, Expression operand, MethodInfo? method)
         {
             if (operand.NodeType == ExpressionType.Parameter)
             {
@@ -256,7 +258,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             _loopLabels.Push(new LoopLabelInfo { Break = loop.BreakLabel, Continue = loop.ContinueLabel });
         }
 
-        private void PopLabelInfo(out LabelTarget @break, out LabelTarget @continue)
+        private void PopLabelInfo(out LabelTarget? @break, out LabelTarget? @continue)
         {
             var labelInfo = _loopLabels.Pop();
 
@@ -266,10 +268,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         class LoopLabelInfo
         {
-            public LabelTarget Break;
+            public LabelTarget? Break;
             public bool BreakHasReference;
 
-            public LabelTarget Continue;
+            public LabelTarget? Continue;
             public bool ContinueHasReference;
         }
     }

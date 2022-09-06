@@ -2,9 +2,12 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -76,7 +79,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 var expression = expressions[i];
                 var rewritten = Visit(expression);
 
-                if (TryGetStatements(rewritten, out IEnumerable<Expression> statements))
+                if (TryGetStatements(rewritten, out IEnumerable<Expression>? statements))
                 {
                     if (res == null)
                     {
@@ -107,7 +110,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return expressions;
         }
 
-        private static bool TryGetStatements(Expression node, out IEnumerable<Expression> statements)
+        private static bool TryGetStatements(Expression node, [NotNullWhen(true)] out IEnumerable<Expression>? statements)
         {
             if (node.Type == typeof(void))
             {

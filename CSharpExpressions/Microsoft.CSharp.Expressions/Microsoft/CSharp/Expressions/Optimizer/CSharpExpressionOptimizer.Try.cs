@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
@@ -64,7 +66,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
-        private static void MakeNullIfEmpty(ref Expression node)
+        private static void MakeNullIfEmpty(ref Expression? node)
         {
             if (node != null && node.Type == typeof(void) && node.NodeType == ExpressionType.Default)
             {
