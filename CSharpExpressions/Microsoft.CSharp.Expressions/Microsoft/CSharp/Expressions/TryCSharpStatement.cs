@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
@@ -20,7 +22,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class TryCSharpStatement : CSharpStatement
     {
-        internal TryCSharpStatement(Expression tryBlock, ReadOnlyCollection<CSharpCatchBlock> catchBlocks, Expression finallyBlock)
+        internal TryCSharpStatement(Expression tryBlock, ReadOnlyCollection<CSharpCatchBlock> catchBlocks, Expression? finallyBlock)
         {
             TryBlock = tryBlock;
             CatchBlocks = catchBlocks;
@@ -40,7 +42,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the finally block.
         /// </summary>
-        public Expression FinallyBlock { get; }
+        public Expression? FinallyBlock { get; }
 
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
@@ -63,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="catchBlocks">The <see cref="CatchBlocks" /> property of the result.</param>
         /// <param name="finallyBlock">The <see cref="FinallyBlock" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public TryCSharpStatement Update(Expression tryBlock, IEnumerable<CSharpCatchBlock> catchBlocks, Expression finallyBlock)
+        public TryCSharpStatement Update(Expression tryBlock, IEnumerable<CSharpCatchBlock> catchBlocks, Expression? finallyBlock)
         {
             if (tryBlock == TryBlock && SameElements(ref catchBlocks, CatchBlocks) && finallyBlock == FinallyBlock)
             {
@@ -149,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="handlerBlocks">The array of zero or more <see cref="CSharpCatchBlock" /> expressions representing the catch blocks to be associated with the try block.</param>
         /// <param name="finallyBlock">The finally block.</param>
         /// <returns>The created <see cref="TryCSharpStatement" />.</returns>
-        public static TryCSharpStatement Try(Expression tryBlock, IEnumerable<CSharpCatchBlock> handlerBlocks, Expression finallyBlock)
+        public static TryCSharpStatement Try(Expression tryBlock, IEnumerable<CSharpCatchBlock>? handlerBlocks, Expression? finallyBlock)
         {
             RequiresCanRead(tryBlock, nameof(tryBlock));
 

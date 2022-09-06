@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +25,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class CSharpCatchBlock
     {
-        internal CSharpCatchBlock(ReadOnlyCollection<ParameterExpression> variables, Type test, ParameterExpression variable, Expression body, Expression filter)
+        internal CSharpCatchBlock(ReadOnlyCollection<ParameterExpression> variables, Type test, ParameterExpression? variable, Expression body, Expression? filter)
         {
             Variables = variables;
             Test = test;
@@ -48,7 +50,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="ParameterExpression"/> representing the variable holding the exception object.
         /// </summary>
-        public ParameterExpression Variable { get; }
+        public ParameterExpression? Variable { get; }
 
         /// <summary>
         /// Gets the <see cref="Expression"/> representing the body.
@@ -58,7 +60,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression"/> representing the filter.
         /// </summary>
-        public Expression Filter { get; }
+        public Expression? Filter { get; }
 
         /// <summary>
         /// Creates a new expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
@@ -68,7 +70,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The <see cref="Body" /> property of the result.</param>
         /// <param name="filter">The <see cref="Filter" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public CSharpCatchBlock Update(IEnumerable<ParameterExpression> variables, ParameterExpression variable, Expression body, Expression filter)
+        public CSharpCatchBlock Update(IEnumerable<ParameterExpression> variables, ParameterExpression? variable, Expression body, Expression? filter)
         {
             if (SameElements(ref variables, Variables) && variable == Variable && body == Body && filter == Filter)
             {
@@ -169,7 +171,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static CSharpCatchBlock Catch(Expression body, Expression filter) => MakeCatchBlock(variables: null, type: null, variable: null, body, filter);
+        public static CSharpCatchBlock Catch(Expression body, Expression? filter) => MakeCatchBlock(variables: null, type: null, variable: null, body, filter);
 
         /// <summary>
         /// Creates a catch all block.
@@ -186,7 +188,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static CSharpCatchBlock Catch(IEnumerable<ParameterExpression> variables, Expression body, Expression filter) => MakeCatchBlock(variables, type: null, variable: null, body, filter);
+        public static CSharpCatchBlock Catch(IEnumerable<ParameterExpression> variables, Expression body, Expression? filter) => MakeCatchBlock(variables, type: null, variable: null, body, filter);
 
         /// <summary>
         /// Creates a catch block that handles exceptions of the specified type.
@@ -203,7 +205,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static new CSharpCatchBlock Catch(Type test, Expression body, Expression filter) => MakeCatchBlock(variables: null, test, variable: null, body, filter);
+        public static new CSharpCatchBlock Catch(Type test, Expression body, Expression? filter) => MakeCatchBlock(variables: null, test, variable: null, body, filter);
 
         /// <summary>
         /// Creates a catch block that handles exceptions of the specified type.
@@ -222,7 +224,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static CSharpCatchBlock Catch(IEnumerable<ParameterExpression> variables, Type test, Expression body, Expression filter) => MakeCatchBlock(variables, test, variable: null, body, filter);
+        public static CSharpCatchBlock Catch(IEnumerable<ParameterExpression> variables, Type test, Expression body, Expression? filter) => MakeCatchBlock(variables, test, variable: null, body, filter);
 
         /// <summary>
         /// Creates a catch block that handles exceptions of the type specified by the variable.
@@ -239,7 +241,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static new CSharpCatchBlock Catch(ParameterExpression variable, Expression body, Expression filter)
+        public static new CSharpCatchBlock Catch(ParameterExpression variable, Expression body, Expression? filter)
         {
             RequiresNotNull(variable, nameof(variable));
 
@@ -263,7 +265,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static CSharpCatchBlock Catch(IEnumerable<ParameterExpression> variables, ParameterExpression variable, Expression body, Expression filter)
+        public static CSharpCatchBlock Catch(IEnumerable<ParameterExpression> variables, ParameterExpression variable, Expression body, Expression? filter)
         {
             RequiresNotNull(variable, nameof(variable));
 
@@ -279,7 +281,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the catch block.</param>
         /// <param name="filter">The filter to apply.</param>
         /// <returns>The created <see cref="CSharpCatchBlock"/>.</returns>
-        public static CSharpCatchBlock MakeCatchBlock(IEnumerable<ParameterExpression> variables, Type type, ParameterExpression variable, Expression body, Expression filter)
+        public static CSharpCatchBlock MakeCatchBlock(IEnumerable<ParameterExpression>? variables, Type? type, ParameterExpression? variable, Expression body, Expression? filter)
         {
             var variablesList = CheckUniqueVariables(variables, nameof(variables));
 
