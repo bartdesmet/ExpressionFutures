@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -65,7 +67,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The <see cref="Expression" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public InvocationCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
+        public InvocationCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment>? arguments)
         {
             if (expression == Expression && SameElements(ref arguments, Arguments))
             {
@@ -97,7 +99,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the arguments that the delegate or lambda expression is applied to.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static InvocationCSharpExpression Invoke(Expression expression, params ParameterAssignment[] arguments) => Invoke(expression, (IEnumerable<ParameterAssignment>)arguments);
+        public static InvocationCSharpExpression Invoke(Expression expression, params ParameterAssignment[]? arguments) => Invoke(expression, (IEnumerable<ParameterAssignment>?)arguments);
 
         /// <summary>
         /// Creates an <see cref="InvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
@@ -106,7 +108,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="InvocationCSharpExpression.Arguments" /> collection.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static InvocationCSharpExpression Invoke(Expression expression, IEnumerable<ParameterAssignment> arguments)
+        public static InvocationCSharpExpression Invoke(Expression expression, IEnumerable<ParameterAssignment>? arguments)
         {
             RequiresCanRead(expression, nameof(expression));
 
@@ -121,9 +123,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the arguments that the delegate or lambda expression is applied to.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static new InvocationCSharpExpression Invoke(Expression expression, Expression[] arguments) =>
+        public static new InvocationCSharpExpression Invoke(Expression expression, Expression[]? arguments) =>
             // NB: no params array to avoid overload resolution ambiguity
-            Invoke(expression, (IEnumerable<Expression>)arguments);
+            Invoke(expression, (IEnumerable<Expression>?)arguments);
 
         /// <summary>
         /// Creates an <see cref="InvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
@@ -132,7 +134,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="InvocationCSharpExpression.Arguments" /> collection.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static new InvocationCSharpExpression Invoke(Expression expression, IEnumerable<Expression> arguments)
+        public static new InvocationCSharpExpression Invoke(Expression expression, IEnumerable<Expression>? arguments)
         {
             RequiresCanRead(expression, nameof(expression));
 
@@ -143,7 +145,7 @@ namespace Microsoft.CSharp.Expressions
             return MakeInvoke(expression, bindings, method);
         }
 
-        private static InvocationCSharpExpression MakeInvoke(Expression expression, IEnumerable<ParameterAssignment> arguments, MethodInfo method)
+        private static InvocationCSharpExpression MakeInvoke(Expression expression, IEnumerable<ParameterAssignment>? arguments, MethodInfo method)
         {
             var argList = arguments.ToReadOnly();
             ValidateParameterBindings(method, argList);
