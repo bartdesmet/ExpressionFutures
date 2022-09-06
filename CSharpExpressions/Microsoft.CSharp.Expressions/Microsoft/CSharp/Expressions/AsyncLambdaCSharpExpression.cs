@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -159,7 +161,7 @@ namespace Microsoft.CSharp.Expressions
             // rewritten top-level async method which sets up the builder, state machine, and kicks off
             // the async logic.
             //
-            var invokeMethod = typeof(TDelegate).GetMethod("Invoke");
+            var invokeMethod = typeof(TDelegate).GetMethod("Invoke")!;
             var returnType = invokeMethod.ReturnType;
 
             var builderInfo = GetAsyncMethodBuilderInfo(returnType);
@@ -209,7 +211,7 @@ namespace Microsoft.CSharp.Expressions
             //
             // __statemachine = new RuntimeAsyncStateMachine(body);
             //
-            var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) });
+            var stateMachineCtor = stateMachineVar.Type.GetConstructor(new[] { typeof(Action) })!;
             var createStateMachine = Expression.Assign(stateMachineVar, Expression.New(stateMachineCtor, body));
             exprs[i++] = createStateMachine;
 
@@ -285,7 +287,7 @@ namespace Microsoft.CSharp.Expressions
 
             var getVariable = new Func<Type, string, ParameterExpression>((t, s) =>
             {
-                if (!hoistedVars.TryGetValue(t, out ParameterExpression p))
+                if (!hoistedVars.TryGetValue(t, out ParameterExpression? p))
                 {
                     p = Expression.Parameter(t, s + hoistedVars.Count);
                     hoistedVars.Add(t, p);
@@ -312,7 +314,7 @@ namespace Microsoft.CSharp.Expressions
             //         that gets emitted dynamically?
             //
             var awaitOnCompletedMethod = builderInfo.AwaitOnCompleted;
-            var awaitOnCompletedArgs = new Type[] { default, typeof(RuntimeAsyncStateMachine) };
+            var awaitOnCompletedArgs = new Type[] { default!, typeof(RuntimeAsyncStateMachine) };
 
             var onCompletedFactory = new Func<Expression, Expression>(awaiter =>
             {
@@ -682,7 +684,7 @@ namespace Microsoft.CSharp.Expressions
 
             var count = parameters.Count;
 
-            var method = delegateType.GetMethod("Invoke"); // TODO: use cache from LINQ
+            var method = delegateType.GetMethod("Invoke")!; // TODO: use cache from LINQ
             var parametersCached = method.GetParametersCached();
 
             if (parametersCached.Length != 0)
@@ -727,8 +729,8 @@ namespace Microsoft.CSharp.Expressions
         private static AsyncLambdaCSharpExpression CreateAsyncLambda(Type delegateType, Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
             // TODO: use cache and lambda factory functionality from LINQ
-            var create = typeof(AsyncCSharpExpression<>).MakeGenericType(delegateType).GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic);
-            return (AsyncLambdaCSharpExpression)create.Invoke(null, new object[] { body, parameters });
+            var create = typeof(AsyncCSharpExpression<>).MakeGenericType(delegateType).GetMethod("Create", BindingFlags.Static | BindingFlags.NonPublic)!;
+            return (AsyncLambdaCSharpExpression)create.Invoke(null, new object[] { body, parameters })!;
         }
 
         private static void ValidateAsyncParameter(ParameterExpression parameter, string paramName, int index)

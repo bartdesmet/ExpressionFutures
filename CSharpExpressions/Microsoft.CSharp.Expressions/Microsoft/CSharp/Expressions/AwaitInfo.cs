@@ -2,7 +2,10 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions
@@ -44,7 +47,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="node">The object to visit.</param>
         /// <returns>The modified object, if it or any subexpression was modified; otherwise, returns the original object.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
-        protected internal virtual AwaitInfo VisitAwaitInfo(AwaitInfo node)
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        protected internal virtual AwaitInfo? VisitAwaitInfo(AwaitInfo? node)
         {
             if (node == null)
             {
