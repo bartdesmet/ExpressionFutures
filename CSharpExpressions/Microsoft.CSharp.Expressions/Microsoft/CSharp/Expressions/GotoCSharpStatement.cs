@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ContractUtils;
@@ -14,12 +16,12 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class GotoCSharpStatement : CSharpStatement
     {
-        internal GotoCSharpStatement(LabelTarget target) => Target = target;
+        internal GotoCSharpStatement(LabelTarget? target) => Target = target;
 
         /// <summary>
         /// Gets a <see cref="LabelTarget"/> representing the target label to jump to.
         /// </summary>
-        public LabelTarget Target { get; }
+        public LabelTarget? Target { get; }
 
         /// <summary>
         /// Returns the node type of this <see cref="CSharpExpression" />. (Inherited from <see cref="CSharpExpression" />.)
@@ -88,7 +90,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class GotoCaseCSharpStatement : GotoCSharpStatement
     {
-        internal GotoCaseCSharpStatement(object value, LabelTarget target)
+        internal GotoCaseCSharpStatement(object? value, LabelTarget? target)
             : base(target)
         {
             Value = value;
@@ -102,7 +104,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the value of the case to jump to.
         /// </summary>
-        public object Value { get; }
+        public object? Value { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
@@ -117,7 +119,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="target">The <see cref="GotoCSharpStatement.Target" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public GotoCaseCSharpStatement Update(LabelTarget target)
+        public GotoCaseCSharpStatement Update(LabelTarget? target)
         {
             if (target == Target)
             {
@@ -133,7 +135,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class GotoDefaultCSharpStatement : GotoCSharpStatement
     {
-        internal GotoDefaultCSharpStatement(LabelTarget target)
+        internal GotoDefaultCSharpStatement(LabelTarget? target)
             : base(target)
         {
         }
@@ -156,7 +158,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="target">The <see cref="GotoCSharpStatement.Target" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public GotoDefaultCSharpStatement Update(LabelTarget target)
+        public GotoDefaultCSharpStatement Update(LabelTarget? target)
         {
             if (target == Target)
             {
@@ -213,7 +215,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="value">The test value of the switch case to jump to.</param>
         /// <returns>The created <see cref="GotoCaseCSharpStatement"/>.</returns>
-        public static GotoCaseCSharpStatement GotoCase(object value) => GotoCase(value, target: null);
+        public static GotoCaseCSharpStatement GotoCase(object? value) => GotoCase(value, target: null);
 
         /// <summary>
         /// Creates a <see cref="GotoCaseCSharpStatement"/> that represents a goto statement.
@@ -221,7 +223,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="value">The test value of the switch case to jump to.</param>
         /// <param name="target">The label to jump to.</param>
         /// <returns>The created <see cref="GotoCaseCSharpStatement"/>.</returns>
-        public static GotoCaseCSharpStatement GotoCase(object value, LabelTarget target)
+        public static GotoCaseCSharpStatement GotoCase(object? value, LabelTarget? target)
         {
             if (value != null)
             {
@@ -242,7 +244,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="target">The label to jump to.</param>
         /// <returns>The created <see cref="GotoDefaultCSharpStatement"/>.</returns>
-        public static GotoDefaultCSharpStatement GotoDefault(LabelTarget target)
+        public static GotoDefaultCSharpStatement GotoDefault(LabelTarget? target)
         {
             return new GotoDefaultCSharpStatement(target);
         }
@@ -258,7 +260,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitGotoLabel(GotoLabelCSharpStatement node) =>
             node.Update(
-                VisitLabelTarget(node.Target)
+                VisitLabelTarget(node.Target!) // NB: Always non-null for GotoLabel.
             );
 
         /// <summary>

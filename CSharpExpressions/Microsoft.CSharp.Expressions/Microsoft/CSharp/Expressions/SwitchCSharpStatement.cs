@@ -449,7 +449,7 @@ namespace Microsoft.CSharp.Expressions
             public readonly IDictionary<CSharpSwitchCase, SwitchCaseInfo> SwitchCaseInfos = new Dictionary<CSharpSwitchCase, SwitchCaseInfo>();
 
             private SwitchCaseInfo _info;
-            private static HashSet<object>? s_empty;
+            private static HashSet<object?>? s_empty;
 
             public void Analyze(CSharpSwitchCase @case)
             {
@@ -463,7 +463,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (_info.GotoCases == null)
                 {
-                    _info.GotoCases = (s_empty ??= new HashSet<object>());
+                    _info.GotoCases = (s_empty ??= new HashSet<object?>());
                 }
 
                 SwitchCaseInfos.Add(@case, _info);
@@ -476,7 +476,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (_info.GotoCases == null)
                 {
-                    _info.GotoCases = new HashSet<object>();
+                    _info.GotoCases = new HashSet<object?>();
                 }
 
                 _info.GotoCases.Add(node.Value);
@@ -494,10 +494,10 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class SwitchCaseRewriter : ShallowSwitchCSharpExpressionVisitor
         {
-            private readonly Func<object, LabelTarget> _getGotoCaseLabel;
+            private readonly Func<object?, LabelTarget> _getGotoCaseLabel;
             private readonly LabelTarget? _gotoDefaultLabel;
 
-            public SwitchCaseRewriter(Func<object, LabelTarget> getGotoCaseLabel, LabelTarget? gotoDefaultLabel)
+            public SwitchCaseRewriter(Func<object?, LabelTarget> getGotoCaseLabel, LabelTarget? gotoDefaultLabel)
             {
                 _getGotoCaseLabel = getGotoCaseLabel;
                 _gotoDefaultLabel = gotoDefaultLabel;
@@ -517,7 +517,7 @@ namespace Microsoft.CSharp.Expressions
 
         private struct SwitchCaseInfo
         {
-            public HashSet<object> GotoCases;
+            public HashSet<object?> GotoCases;
             public bool HasGotoDefault;
         }
 
