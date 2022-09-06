@@ -2,9 +2,12 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -25,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class WithCSharpExpression : CSharpExpression
     {
-        internal WithCSharpExpression(Expression @object, ReadOnlyCollection<MemberInitializer> initializers, MethodInfo clone, ReadOnlyCollection<MemberInfo> members)
+        internal WithCSharpExpression(Expression @object, ReadOnlyCollection<MemberInitializer> initializers, MethodInfo? clone, ReadOnlyCollection<MemberInfo>? members)
         {
             Object = @object;
             Initializers = initializers;
@@ -46,12 +49,12 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="MethodInfo"/> representing the method used to clone the object.
         /// </summary>
-        public MethodInfo Clone { get; }
+        public MethodInfo? Clone { get; }
 
         /// <summary>
         /// Gets a collection of members corresponding to the constructor arguments if <see cref="Type"/> is an anonymous type.
         /// </summary>
-        public ReadOnlyCollection<MemberInfo> Members { get; }
+        public ReadOnlyCollection<MemberInfo>? Members { get; }
 
         /// <summary>
         /// Gets the static type of the expression.
@@ -147,6 +150,8 @@ namespace Microsoft.CSharp.Expressions
                 memberExpressions[initializer.Member] = expr;
             }
 
+            Debug.Assert(Members != null, "Expected non-null members for anonymous types.");
+
             var memberCount = Members.Count;
 
             var args = new Expression[memberCount];
@@ -170,6 +175,8 @@ namespace Microsoft.CSharp.Expressions
 
             var ctor = Object.Type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, memberTypes, modifiers: null);
 
+            Debug.Assert(ctor != null, "Expected memberwise constructor on anonymous type.");
+
             stmts.Add(Expression.New(ctor, args, Members));
 
             return Helpers.Comma(vars, stmts);
@@ -177,7 +184,11 @@ namespace Microsoft.CSharp.Expressions
 
         private Expression ReduceValueType() => ReduceWithClone(Object);
 
-        private Expression ReduceReferenceType() => ReduceWithClone(Expression.Call(Object, Clone));
+        private Expression ReduceReferenceType()
+        {
+            Debug.Assert(Clone != null, "Expected clone to be non-null for reference types.");
+            return ReduceWithClone(Expression.Call(Object, Clone));
+        }
 
         private Expression ReduceWithClone(Expression clone)
         {
@@ -228,7 +239,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="clone">The method used to clone the object.</param>
         /// <param name="initializers">The initializers used to mutate the cloned object.</param>
         /// <returns>The created <see cref="WithCSharpExpression"/>.</returns>
-        public static WithCSharpExpression With(Expression @object, MethodInfo clone, params MemberInitializer[] initializers) => With(@object, clone, (IEnumerable<MemberInitializer>)initializers);
+        public static WithCSharpExpression With(Expression @object, MethodInfo? clone, params MemberInitializer[] initializers) => With(@object, clone, (IEnumerable<MemberInitializer>)initializers);
 
         /// <summary>
         /// Creates a <see cref="WithCSharpExpression"/> that represents a with expression.
@@ -237,7 +248,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="clone">The method used to clone the object.</param>
         /// <param name="initializers">The initializers used to mutate the cloned object.</param>
         /// <returns>The created <see cref="WithCSharpExpression"/>.</returns>
-        public static WithCSharpExpression With(Expression @object, MethodInfo clone, IEnumerable<MemberInitializer> initializers)
+        public static WithCSharpExpression With(Expression @object, MethodInfo? clone, IEnumerable<MemberInitializer> initializers)
         {
             RequiresNotNull(@object, nameof(@object));
             RequiresNotNull(initializers, nameof(initializers));
@@ -263,7 +274,8 @@ namespace Microsoft.CSharp.Expressions
                 if (clone.IsStatic)
                     throw Error.CloneMethodMustNotBeStatic(clone.Name);
 
-                if (!clone.DeclaringType.IsAssignableFrom(@object.Type))
+                var declaringType = clone.DeclaringType;
+                if (declaringType == null || !declaringType.IsAssignableFrom(@object.Type))
                     throw NotAMemberOfType(clone.Name, @object.Type, nameof(clone));
 
                 if (clone.GetParametersCached().Length != 0)
@@ -345,7 +357,8 @@ namespace Microsoft.CSharp.Expressions
 
                 var member = initializer.Member;
 
-                if (!member.DeclaringType.IsAssignableFrom(@object.Type))
+                var declaringType = member.DeclaringType;
+                if (declaringType == null || !declaringType.IsAssignableFrom(@object.Type))
                     throw NotAMemberOfType(member.Name, @object.Type, nameof(initializers));
 
                 if (requiresCanAssign)
