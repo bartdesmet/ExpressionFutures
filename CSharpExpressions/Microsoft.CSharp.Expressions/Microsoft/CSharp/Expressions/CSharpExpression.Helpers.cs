@@ -26,14 +26,12 @@ namespace Microsoft.CSharp.Expressions
                 return;
             }
 
-            Debug.Assert(test != null);
-
-            RequiresCanRead(test, nameof(test));
+            RequiresCanRead(test!, nameof(test));
 
             // TODO: We can be more flexible and allow the rules in C# spec 7.20.
             //       Note that this behavior is the same as IfThen, but we could also add C# specific nodes for those,
             //       with the more flexible construction behavior.
-            if (test.Type != typeof(bool))
+            if (test!.Type != typeof(bool))
                 throw ArgumentMustBeBoolean(nameof(test));
         }
 
