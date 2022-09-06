@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -127,7 +129,7 @@ namespace Microsoft.CSharp.Expressions
 
                 foreach (var gotoCase in info.GotoCases)
                 {
-                    if (!testValueToCaseMap.TryGetValue(gotoCase.OrNullSentinel(), out CSharpSwitchCase @case))
+                    if (!testValueToCaseMap.TryGetValue(gotoCase.OrNullSentinel(), out CSharpSwitchCase? @case))
                     {
                         throw Error.InvalidGotoCase(gotoCase.ToDebugString());
                     }
@@ -166,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var newBody = rewriter.Visit(@case.Statements);
 
-                    if (caseJumpTargets.TryGetValue(@case, out LabelTarget jumpTarget))
+                    if (caseJumpTargets.TryGetValue(@case, out LabelTarget? jumpTarget))
                     {
                         newBody = newBody.AddFirst(Expression.Label(jumpTarget)).ToReadOnly();
                     }
@@ -184,10 +186,7 @@ namespace Microsoft.CSharp.Expressions
 
         private static SwitchAnalysis Analyze(IList<CSharpSwitchCase> cases)
         {
-            var res = new SwitchAnalysis
-            {
-                OtherCases = new List<CSharpSwitchCase>()
-            };
+            var res = new SwitchAnalysis();
 
             var n = cases.Count;
             for (var i = 0; i < n; i++)
@@ -387,6 +386,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             var otherCases = analysis.OtherCases;
+
             var n = otherCases.Count;
 
             var cases = new List<SwitchCase>(n);
@@ -449,7 +449,7 @@ namespace Microsoft.CSharp.Expressions
             public readonly IDictionary<CSharpSwitchCase, SwitchCaseInfo> SwitchCaseInfos = new Dictionary<CSharpSwitchCase, SwitchCaseInfo>();
 
             private SwitchCaseInfo _info;
-            private static HashSet<object> s_empty;
+            private static HashSet<object>? s_empty;
 
             public void Analyze(CSharpSwitchCase @case)
             {
@@ -495,9 +495,9 @@ namespace Microsoft.CSharp.Expressions
         private sealed class SwitchCaseRewriter : ShallowSwitchCSharpExpressionVisitor
         {
             private readonly Func<object, LabelTarget> _getGotoCaseLabel;
-            private readonly LabelTarget _gotoDefaultLabel;
+            private readonly LabelTarget? _gotoDefaultLabel;
 
-            public SwitchCaseRewriter(Func<object, LabelTarget> getGotoCaseLabel, LabelTarget gotoDefaultLabel)
+            public SwitchCaseRewriter(Func<object, LabelTarget> getGotoCaseLabel, LabelTarget? gotoDefaultLabel)
             {
                 _getGotoCaseLabel = getGotoCaseLabel;
                 _gotoDefaultLabel = gotoDefaultLabel;
@@ -511,7 +511,7 @@ namespace Microsoft.CSharp.Expressions
 
             protected internal override Expression VisitGotoDefault(GotoDefaultCSharpStatement node)
             {
-                return Expression.Goto(_gotoDefaultLabel);
+                return Expression.Goto(_gotoDefaultLabel!);
             }
         }
 
@@ -527,7 +527,7 @@ namespace Microsoft.CSharp.Expressions
             public Expression NullCase;
             public Expression DefaultCase;
 
-            public Expression Make(Expression switchValue, Expression defaultBody)
+            public Expression Make(Expression switchValue, Expression? defaultBody)
             {
                 if (Cases.Count > 0)
                 {
@@ -536,13 +536,12 @@ namespace Microsoft.CSharp.Expressions
                 else
                 {
                     var canDropSwitchValue = switchValue.IsPure(readOnly: true);
-                    var hasDefaultBody = defaultBody != null;
 
                     Expression[] exprs;
 
                     if (canDropSwitchValue)
                     {
-                        if (hasDefaultBody)
+                        if (defaultBody != null)
                         {
                             exprs = new[] { defaultBody };
                         }
@@ -553,7 +552,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                     else
                     {
-                        if (hasDefaultBody)
+                        if (defaultBody != null)
                         {
                             exprs = new[] { switchValue, defaultBody };
                         }
@@ -571,12 +570,12 @@ namespace Microsoft.CSharp.Expressions
         private sealed class SwitchAnalysis
         {
             public bool IsDefaultLonely;
-            public CSharpSwitchCase DefaultCase;
+            public CSharpSwitchCase? DefaultCase;
 
             public bool IsNullLonely;
-            public CSharpSwitchCase NullCase;
+            public CSharpSwitchCase? NullCase;
 
-            public IList<CSharpSwitchCase> OtherCases;
+            public readonly List<CSharpSwitchCase> OtherCases = new List<CSharpSwitchCase>();
 
             public void EnsureLonelyDefault()
             {
@@ -652,7 +651,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="cases">The set of cases to switch on.</param>
         /// <returns>The created <see cref="SwitchCSharpStatement"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression> variables, IEnumerable<CSharpSwitchCase> cases)
+        public static SwitchCSharpStatement Switch(Expression switchValue, LabelTarget breakLabel, IEnumerable<ParameterExpression>? variables, IEnumerable<CSharpSwitchCase> cases)
         {
             RequiresCanRead(switchValue, nameof(switchValue));
             RequiresNotNull(breakLabel, nameof(breakLabel));
@@ -679,7 +678,7 @@ namespace Microsoft.CSharp.Expressions
             var casesList = cases.ToReadOnly();
             if (casesList.Count > 0)
             {
-                var testValues = new HashSet<object>();
+                var testValues = new HashSet<object?>();
 
                 foreach (var @case in casesList)
                 {

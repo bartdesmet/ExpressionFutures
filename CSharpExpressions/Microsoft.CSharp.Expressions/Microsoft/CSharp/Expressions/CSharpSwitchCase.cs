@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +29,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class CSharpSwitchCase
     {
-        internal CSharpSwitchCase(ReadOnlyCollection<object> testValues, ReadOnlyCollection<Expression> statements)
+        internal CSharpSwitchCase(ReadOnlyCollection<object?> testValues, ReadOnlyCollection<Expression> statements)
         {
             TestValues = testValues;
             Statements = statements;
@@ -36,7 +38,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a collection of values to test for.
         /// </summary>
-        public ReadOnlyCollection<object> TestValues { get; }
+        public ReadOnlyCollection<object?> TestValues { get; }
 
         /// <summary>
         /// Gets a collection of <see cref="Expression" /> nodes representing the body of the case.
@@ -62,12 +64,12 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpExpression
     {
         private static readonly object s_SwitchCaseDefaultValue = new SwitchDefaultValue();
-        private static ReadOnlyCollection<object> s_default;
+        private static ReadOnlyCollection<object>? s_default;
 
         /// <summary>
         /// Gets an object representing the 'default' case.
         /// </summary>
-        public static object SwitchCaseDefaultValue => s_SwitchCaseDefaultValue;
+        public static object? SwitchCaseDefaultValue => s_SwitchCaseDefaultValue;
 
         // NB: Generic factory methods below help the user to provide consistent typing.
         //     The non-generic overload is used for easier binding without having to close the generic parameter.
@@ -100,11 +102,11 @@ namespace Microsoft.CSharp.Expressions
 
             CheckValidSwitchType(typeof(T));
 
-            var testValuesList = testValues.Select(value => (object)value).ToReadOnly();
+            var testValuesList = testValues.Select(value => (object?)value).ToReadOnly();
 
             RequiresNotEmpty(testValuesList, nameof(testValues));
 
-            var uniqueTestValues = new HashSet<object>();
+            var uniqueTestValues = new HashSet<object?>();
 
             foreach (var value in testValuesList)
             {
@@ -126,7 +128,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, params Expression[] statements) =>
+        public static CSharpSwitchCase SwitchCase(IEnumerable<object?> testValues, params Expression[] statements) =>
             SwitchCase(testValues, (IEnumerable<Expression>)statements);
 
         /// <summary>
@@ -136,7 +138,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static CSharpSwitchCase SwitchCase(IEnumerable<object> testValues, IEnumerable<Expression> statements)
+        public static CSharpSwitchCase SwitchCase(IEnumerable<object?> testValues, IEnumerable<Expression> statements)
         {
             RequiresNotNull(testValues, nameof(testValues));
             RequiresNotNull(statements, nameof(statements));
@@ -149,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
 
             var testType = default(Type);
 
-            var uniqueTestValues = new HashSet<object>();
+            var uniqueTestValues = new HashSet<object?>();
 
             foreach (var testValue in testValuesList)
             {
