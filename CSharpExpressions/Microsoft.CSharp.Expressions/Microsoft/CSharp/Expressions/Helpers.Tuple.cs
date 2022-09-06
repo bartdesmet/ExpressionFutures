@@ -54,6 +54,7 @@ namespace Microsoft.CSharp.Expressions
         public static readonly Type MaxTupleType = typeof(ValueTuple<,,,,,,,>);
 
         public const int ValueTupleRestPosition = 8;
+
         public static bool IsTupleType(Type type)
         {
             if (!type.IsConstructedGenericType)
