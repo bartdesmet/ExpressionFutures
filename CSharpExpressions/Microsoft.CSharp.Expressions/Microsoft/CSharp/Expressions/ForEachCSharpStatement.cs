@@ -2,8 +2,9 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -25,7 +26,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class ForEachCSharpStatement : LoopCSharpStatement
     {
-        internal ForEachCSharpStatement(EnumeratorInfo enumeratorInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        internal ForEachCSharpStatement(EnumeratorInfo enumeratorInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
             : base(body, breakLabel, continueLabel)
         {
             EnumeratorInfo = enumeratorInfo;
@@ -51,17 +52,17 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="LambdaExpression"/> representing the conversion of an element to the iteration variable.
         /// </summary>
-        public virtual LambdaExpression Conversion => null;
+        public virtual LambdaExpression? Conversion => null;
 
         /// <summary>
         /// Gets the <see cref="LambdaExpression"/> representing the deconstruction of an element to the iteration variables.
         /// </summary>
-        public virtual LambdaExpression Deconstruction => null;
+        public virtual LambdaExpression? Deconstruction => null;
 
         /// <summary>
         /// Gets the information required to await the MoveNextAsync operation for await foreach statements.
         /// </summary>
-        public new virtual AwaitInfo AwaitInfo => null;
+        public new virtual AwaitInfo? AwaitInfo => null;
 
         /// <summary>
         /// Gets a Boolean indicating whether the foreach statement is asynchronous.
@@ -95,7 +96,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="deconstruction">The <see cref="Deconstruction"/> property of the result.</param>
         /// <param name="awaitInfo">The <see cref="AwaitInfo"/> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ForEachCSharpStatement Update(EnumeratorInfo enumeratorInfo, LabelTarget breakLabel, LabelTarget continueLabel, IEnumerable<ParameterExpression> variables, Expression collection, LambdaExpression conversion, Expression body, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+        public ForEachCSharpStatement Update(EnumeratorInfo enumeratorInfo, LabelTarget? breakLabel, LabelTarget? continueLabel, IEnumerable<ParameterExpression> variables, Expression collection, LambdaExpression? conversion, Expression body, LambdaExpression? deconstruction, AwaitInfo? awaitInfo)
         {
             if (enumeratorInfo == EnumeratorInfo &&
                 breakLabel == BreakLabel &&
@@ -113,7 +114,7 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ForEach(awaitInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction);
         }
 
-        internal static ForEachCSharpStatement Make(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
+        internal static ForEachCSharpStatement Make(EnumeratorInfo enumeratorInfo, AwaitInfo? awaitInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, LambdaExpression? conversion, LambdaExpression? deconstruction)
         {
             if (variables.Count == 0)
                 throw Error.ForEachNeedsOneOrMoreVariables();
@@ -178,7 +179,7 @@ namespace Microsoft.CSharp.Expressions
             return new BoundForEachCSharpStatement(enumeratorInfo, variables, collection, body, breakLabel, continueLabel, conversion, deconstruction, awaitInfo);
         }
 
-        private static void ValidateConversion(Type variableType, Type elementType, ref LambdaExpression conversion)
+        private static void ValidateConversion(Type variableType, Type elementType, ref LambdaExpression? conversion)
         {
             if (conversion != null)
             {
@@ -206,7 +207,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static void ValidateDeconstruction(Type elementType, ref LambdaExpression conversion, LambdaExpression deconstruction, ReadOnlyCollection<ParameterExpression> variables)
+        private static void ValidateDeconstruction(Type elementType, ref LambdaExpression? conversion, LambdaExpression deconstruction, ReadOnlyCollection<ParameterExpression> variables)
         {
             if (deconstruction.Parameters.Count != 1)
                 throw Error.ForEachDeconstructionShouldHaveOneParameter();
@@ -230,7 +231,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static void ApplyConversion(LambdaExpression conversion, ref Expression operand)
+        private static void ApplyConversion(LambdaExpression? conversion, ref Expression operand)
         {
             if (conversion != null)
             {
@@ -301,7 +302,7 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class StringForEachStatement : ForEachCSharpStatement
         {
-            internal StringForEachStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+            internal StringForEachStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
             }
@@ -382,7 +383,7 @@ namespace Microsoft.CSharp.Expressions
 
         private abstract class ArrayForEachCSharpStatementBase : ForEachCSharpStatement
         {
-            protected ArrayForEachCSharpStatementBase(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+            protected ArrayForEachCSharpStatementBase(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
             }
@@ -428,7 +429,7 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i++] =
                     Variables.Count == 1
                         ? Expression.Assign(Variables[0], getElement)
-                        : InvokeDeconstruction(Deconstruction, getElement);
+                        : InvokeDeconstruction(Deconstruction!, getElement); // NB: More than one variable requires deconstruction.
                 exprs[i++] =
                     Body;
 
@@ -467,15 +468,15 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance", Justification = "Only part of the hierarchy is visible publicly.")]
         private sealed class ArrayForEachCSharpStatement : ArrayForEachCSharpStatementBase
         {
-            public ArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
+            public ArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, LambdaExpression? conversion, LambdaExpression? deconstruction)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
                 Deconstruction = deconstruction;
             }
 
-            public override LambdaExpression Conversion { get; }
-            public override LambdaExpression Deconstruction { get; }
+            public override LambdaExpression? Conversion { get; }
+            public override LambdaExpression? Deconstruction { get; }
 
             protected override Expression CreateConvert(Expression element)
             {
@@ -491,7 +492,7 @@ namespace Microsoft.CSharp.Expressions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance", Justification = "Only part of the hierarchy is visible publicly.")]
         private sealed class SimpleArrayForEachCSharpStatement : ArrayForEachCSharpStatementBase
         {
-            public SimpleArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+            public SimpleArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
             }
@@ -504,15 +505,15 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class MultiDimensionalArrayForEachCSharpStatement : ForEachCSharpStatement
         {
-            public MultiDimensionalArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction)
+            public MultiDimensionalArrayForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, LambdaExpression? conversion, LambdaExpression? deconstruction)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
                 Deconstruction = deconstruction;
             }
 
-            public override LambdaExpression Conversion { get; }
-            public override LambdaExpression Deconstruction { get; }
+            public override LambdaExpression? Conversion { get; }
+            public override LambdaExpression? Deconstruction { get; }
 
             protected override Expression ReduceCore()
             {
@@ -538,13 +539,12 @@ namespace Microsoft.CSharp.Expressions
                     var rangeVariable = Expression.Parameter(typeof(int), "__i" + i);
                     rangeVariables.Add(rangeVariable);
 
-                    var loopInfo = new LoopInfo
-                    {
-                        Variable = rangeVariable,
-                        Initializer = Expression.Assign(rangeVariable, Expression.Call(array, GetLowerBound, CreateConstantInt32(i))),
-                        Condition = Expression.LessThanOrEqual(rangeVariable, upperBound),
-                        Increment = Expression.Assign(rangeVariable, Expression.Add(rangeVariable, CreateConstantInt32(1)))
-                    };
+                    var loopInfo = new LoopInfo(
+                        variable: rangeVariable,
+                        initializer: Expression.Assign(rangeVariable, Expression.Call(array, GetLowerBound, CreateConstantInt32(i))),
+                        condition: Expression.LessThanOrEqual(rangeVariable, upperBound),
+                        increment: Expression.Assign(rangeVariable, Expression.Add(rangeVariable, CreateConstantInt32(1)))
+                    );
 
                     loops.Add(loopInfo);
                 }
@@ -564,6 +564,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else
                 {
+                    Debug.Assert(Deconstruction != null); // NB: More than one variable requires deconstruction.
                     bodyStmts.Add(InvokeDeconstruction(Deconstruction, element));
                 }
 
@@ -580,7 +581,7 @@ namespace Microsoft.CSharp.Expressions
                     var breakLabel = i == 0 ? BreakLabel : Expression.Label("__break" + i);
 
                     Expression loopBody;
-                    LabelTarget continueLabel;
+                    LabelTarget? continueLabel;
 
                     if (loop == null)
                     {
@@ -596,28 +597,36 @@ namespace Microsoft.CSharp.Expressions
                     loop = CSharpExpression.For(new[] { info.Variable }, new[] { info.Initializer }, info.Condition, new[] { info.Increment }, loopBody, breakLabel, continueLabel);
                 }
 
-                stmts.Add(loop);
+                stmts.Add(loop!); // NB: Rank is always > 0.
 
                 return Expression.Block(typeof(void), temps, stmts);
             }
 
-            private static MethodInfo s_getUpperBound, s_getLowerBound;
+            private static MethodInfo? s_getUpperBound, s_getLowerBound;
 
-            private static MethodInfo GetUpperBound => s_getUpperBound ??= typeof(Array).GetMethod(nameof(Array.GetUpperBound));
-            private static MethodInfo GetLowerBound => s_getLowerBound ??= typeof(Array).GetMethod(nameof(Array.GetLowerBound));
+            private static MethodInfo GetUpperBound => s_getUpperBound ??= typeof(Array).GetMethod(nameof(Array.GetUpperBound))!; // TODO: well-known members
+            private static MethodInfo GetLowerBound => s_getLowerBound ??= typeof(Array).GetMethod(nameof(Array.GetLowerBound))!; // TODO: well-known members
 
             private sealed class LoopInfo
             {
-                public ParameterExpression Variable;
-                public Expression Initializer;
-                public Expression Condition;
-                public Expression Increment;
+                public readonly ParameterExpression Variable;
+                public readonly Expression Initializer;
+                public readonly Expression Condition;
+                public readonly Expression Increment;
+
+                public LoopInfo(ParameterExpression variable, Expression initializer, Expression condition, Expression increment)
+                {
+                    Variable = variable;
+                    Initializer = initializer;
+                    Condition = condition;
+                    Increment = increment;
+                }
             }
         }
 
         private sealed class BoundForEachCSharpStatement : ForEachCSharpStatement
         {
-            internal BoundForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget breakLabel, LabelTarget continueLabel, LambdaExpression conversion, LambdaExpression deconstruction, AwaitInfo awaitInfo)
+            internal BoundForEachCSharpStatement(EnumeratorInfo info, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, LambdaExpression? conversion, LambdaExpression? deconstruction, AwaitInfo? awaitInfo)
                 : base(info, variables, collection, body, breakLabel, continueLabel)
             {
                 Conversion = conversion;
@@ -625,11 +634,11 @@ namespace Microsoft.CSharp.Expressions
                 AwaitInfo = awaitInfo;
             }
 
-            public override LambdaExpression Conversion { get; }
+            public override LambdaExpression? Conversion { get; }
 
-            public override LambdaExpression Deconstruction { get; }
+            public override LambdaExpression? Deconstruction { get; }
 
-            public override AwaitInfo AwaitInfo { get; }
+            public override AwaitInfo? AwaitInfo { get; }
 
             protected override Expression ReduceCore()
             {
@@ -747,7 +756,7 @@ namespace Microsoft.CSharp.Expressions
                                     Variables,
                                     Variables.Count == 1
                                         ? Expression.Assign(Variables[0], current)
-                                        : InvokeDeconstruction(Deconstruction, current),
+                                        : InvokeDeconstruction(Deconstruction!, current), // NB: More than one variable requires deconstruction.
                                     Body
                                 ),
                                 BreakLabel,
@@ -782,7 +791,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break) =>
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget? @break) =>
             ForEach(variable, collection, body, @break, @continue: null, conversion: null);
 
         /// <summary>
@@ -794,7 +803,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue) =>
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue) =>
             ForEach(variable, collection, body, @break, @continue, conversion: null);
 
         /// <summary>
@@ -807,7 +816,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion) =>
+        public static ForEachCSharpStatement ForEach(ParameterExpression variable, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue, LambdaExpression? conversion) =>
             ForEach(awaitInfo: null, new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null);
 
         /// <summary>
@@ -821,7 +830,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
+        public static ForEachCSharpStatement ForEach(IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue, LambdaExpression? conversion, LambdaExpression deconstruction) =>
             ForEach(awaitInfo: null, variables, collection, body, @break, @continue, conversion, deconstruction);
 
         /// <summary>
@@ -832,7 +841,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="collection">The collection to iterate over.</param>
         /// <param name="body">The body of the loop.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body) =>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo? awaitInfo, ParameterExpression variable, Expression collection, Expression body) =>
             AwaitForEach(awaitInfo, variable, collection, body, @break: null, @continue: null, conversion: null);
 
         /// <summary>
@@ -844,7 +853,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the loop.</param>
         /// <param name="break">The break target used by the loop body.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget @break) =>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo? awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget? @break) =>
             AwaitForEach(awaitInfo, variable, collection, body, @break, @continue: null, conversion: null);
 
         /// <summary>
@@ -857,7 +866,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="break">The break target used by the loop body.</param>
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue) =>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo? awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue) =>
             AwaitForEach(awaitInfo, variable, collection, body, @break, @continue, conversion: null);
 
         /// <summary>
@@ -871,7 +880,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="continue">The continue target used by the loop body.</param>
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion) =>
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo? awaitInfo, ParameterExpression variable, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue, LambdaExpression? conversion) =>
             AwaitForEach(awaitInfo, new[] { variable }, collection, body, @break, @continue, conversion, deconstruction: null);
 
         /// <summary>
@@ -886,7 +895,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement AwaitForEach(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction)
+        public static ForEachCSharpStatement AwaitForEach(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue, LambdaExpression? conversion, LambdaExpression? deconstruction)
         {
             AssertForEachAwaitInfo(ref awaitInfo, collection);
 
@@ -905,7 +914,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction) =>
+        public static ForEachCSharpStatement ForEach(AwaitInfo? awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue, LambdaExpression? conversion, LambdaExpression? deconstruction) =>
             ForEach(enumeratorInfo: null, awaitInfo, variables, collection, body, @break, @continue, conversion, deconstruction);
 
         // NB: The Roslyn compiler binds to the overload below.
@@ -923,7 +932,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="conversion">The conversion function used to convert elements in the collection to the iteration variable type.</param>
         /// <param name="deconstruction">The deconstruction step used to deconstruct elements in the collection and assign to the iteration variables.</param>
         /// <returns>The created <see cref="ForEachCSharpStatement"/>.</returns>
-        public static ForEachCSharpStatement ForEach(EnumeratorInfo enumeratorInfo, AwaitInfo awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget @break, LabelTarget @continue, LambdaExpression conversion, LambdaExpression deconstruction)
+        public static ForEachCSharpStatement ForEach(EnumeratorInfo? enumeratorInfo, AwaitInfo? awaitInfo, IEnumerable<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? @break, LabelTarget? @continue, LambdaExpression? conversion, LambdaExpression? deconstruction)
         {
             // NB: Conversion of the collection should be inserted as a Convert node by the compiler.
 
@@ -945,33 +954,42 @@ namespace Microsoft.CSharp.Expressions
             return ForEachCSharpStatement.Make(enumeratorInfo, awaitInfo, variablesCollection, collection, body, @break, @continue, conversion, deconstruction);
         }
 
-        private static void AssertForEachAwaitInfo(ref AwaitInfo awaitInfo, Expression collection)
+        private static void AssertForEachAwaitInfo(ref AwaitInfo? awaitInfo, Expression collection)
         {
             awaitInfo ??= new InferredAwaitInfo();
         }
 
         private sealed class InferredAwaitInfo : AwaitInfo
         {
-            private AwaitInfo _info;
+            private AwaitInfo? _info;
 
             public void Bind(EnumeratorInfo info)
             {
                 _info = CSharpExpression.AwaitInfo(info.MoveNext.ReturnType);
             }
 
-            public override bool IsDynamic => _info.IsDynamic;
+            private AwaitInfo Info
+            {
+                get
+                {
+                    Debug.Assert(_info != null, "Bind should have been called.");
+                    return _info;
+                }
+            }
 
-            public override Type Type => _info.Type;
+            public override bool IsDynamic => Info.IsDynamic;
 
-            protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor) => _info.Accept(visitor);
+            public override Type Type => Info.Type;
 
-            internal override Expression ReduceGetAwaiter(Expression operand) => _info.ReduceGetAwaiter(operand);
+            protected internal override AwaitInfo Accept(CSharpExpressionVisitor visitor) => Info.Accept(visitor);
 
-            internal override Expression ReduceGetResult(Expression awaiter) => _info.ReduceGetResult(awaiter);
+            internal override Expression ReduceGetAwaiter(Expression operand) => Info.ReduceGetAwaiter(operand);
 
-            internal override Expression ReduceIsCompleted(Expression awaiter) => _info.ReduceIsCompleted(awaiter);
+            internal override Expression ReduceGetResult(Expression awaiter) => Info.ReduceGetResult(awaiter);
 
-            internal override void RequiresCanBind(Expression operand) => _info.RequiresCanBind(operand);
+            internal override Expression ReduceIsCompleted(Expression awaiter) => Info.ReduceIsCompleted(awaiter);
+
+            internal override void RequiresCanBind(Expression operand) => Info.RequiresCanBind(operand);
         }
     }
 
