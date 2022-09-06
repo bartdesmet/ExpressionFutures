@@ -2,9 +2,12 @@
 //
 // bartde - January 2022
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-using System.Dynamic.Utils;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -103,14 +106,14 @@ namespace Microsoft.CSharp.Expressions
             var builder = Expression.Variable(Info.Type, "builder");
             vars.Add(builder);
 
-            stmts.Add(null); // NB: Placeholder for the construction and assignment.
+            stmts.Add(null!); // NB: Placeholder for the construction and assignment.
 
             var usesTrailingShouldAppend = ParameterListHasTrailingShouldAppend(Info.Construction.Parameters);
             var usesBoolAppend = GetAppendType(Info.Append[0]) == typeof(bool); // NB: We ensure at least one and uniform return types.
 
-            ParameterExpression shouldAppend = null;
-            Expression appendCalls;
-            List<Expression> appendStmts;
+            ParameterExpression? shouldAppend = null;
+            Expression? appendCalls;
+            List<Expression>? appendStmts;
 
             if (usesTrailingShouldAppend)
             {
@@ -192,6 +195,8 @@ namespace Microsoft.CSharp.Expressions
                     }
                     else
                     {
+                        Debug.Assert(appendStmts != null);
+
                         appendStmts.Add(appendCall);
                     }
                 }
@@ -203,10 +208,15 @@ namespace Microsoft.CSharp.Expressions
 
             if (usesBoolAppend)
             {
+                Debug.Assert(appendCalls != null);
+
                 stmts.Add(appendCalls); // NB: This is the chain of && checks.
             }
             else if (usesTrailingShouldAppend)
             {
+                Debug.Assert(appendStmts != null);
+                Debug.Assert(shouldAppend != null);
+
                 stmts.Add(
                     Expression.IfThen(
                         shouldAppend,
@@ -258,7 +268,7 @@ namespace Microsoft.CSharp.Expressions
 
                 return Expression.Invoke(append, args);
 
-                bool IsDynamicInvokeMember(Expression expr, out InvokeMemberDynamicCSharpExpression res)
+                bool IsDynamicInvokeMember(Expression expr, [NotNullWhen(true)] out InvokeMemberDynamicCSharpExpression? res)
                 {
                     if (expr is InvokeMemberDynamicCSharpExpression dc &&
                         append.Parameters.Count == dc.Arguments.Count + 1 &&
@@ -589,9 +599,9 @@ namespace Microsoft.CSharp.Expressions
             return Lambda(delegateType, body, parameters);
         }
 
-        private static Dictionary<(Type, Type, Type), Type> s_genericAppendDelegates;
+        private static Dictionary<(Type, Type?, Type?), Type>? s_genericAppendDelegates;
 
-        private static Dictionary<(Type returnType, Type firstType, Type secondType), Type> GenericAppendDelegates => s_genericAppendDelegates ??= new Dictionary<(Type, Type, Type), Type>
+        private static Dictionary<(Type returnType, Type? firstType, Type? secondType), Type> GenericAppendDelegates => s_genericAppendDelegates ??= new Dictionary<(Type, Type?, Type?), Type>
         {
             { (typeof(void), null, null), typeof(AppendFormatted<,>) },
             { (typeof(bool), null, null), typeof(TryAppendFormatted<,>) },

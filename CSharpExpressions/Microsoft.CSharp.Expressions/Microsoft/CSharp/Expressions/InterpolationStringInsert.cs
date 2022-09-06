@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 using static System.Dynamic.Utils.ExpressionUtils;
@@ -13,7 +15,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class InterpolationStringInsert : Interpolation
     {
-        internal InterpolationStringInsert(Expression value, string format, int? alignment)
+        internal InterpolationStringInsert(Expression value, string? format, int? alignment)
         {
             Value = value;
             Format = format;
@@ -28,7 +30,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the format specifier, if any.
         /// </summary>
-        public string Format { get; }
+        public string? Format { get; }
 
         /// <summary>
         /// Gets the alignment specifier, if any.
@@ -74,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="value">The expression representing the value being interpolated.</param>
         /// <param name="format">The expression representing the format specifier, if any.</param>
         /// <returns>An instance of the <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/>.</returns>
-        public static InterpolationStringInsert InterpolationStringInsert(Expression value, string format) => InterpolationStringInsert(value, format, alignment: null);
+        public static InterpolationStringInsert InterpolationStringInsert(Expression value, string? format) => InterpolationStringInsert(value, format, alignment: null);
 
         /// <summary>
         /// Creates a <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/> that represents an interpolation containing a string insert with an optional alignment specifier.
@@ -91,7 +93,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="format">The expression representing the format specifier, if any.</param>
         /// <param name="alignment">The expression representing the alignment specifier, if any.</param>
         /// <returns>An instance of the <see cref="Microsoft.CSharp.Expressions.InterpolationStringInsert"/>.</returns>
-        public static InterpolationStringInsert InterpolationStringInsert(Expression value, string format, int? alignment)
+        public static InterpolationStringInsert InterpolationStringInsert(Expression value, string? format, int? alignment)
         {
             RequiresCanRead(value, nameof(value));
 

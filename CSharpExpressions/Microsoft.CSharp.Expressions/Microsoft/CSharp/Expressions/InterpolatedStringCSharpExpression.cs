@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,8 +25,8 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public partial class InterpolatedStringCSharpExpression : CSharpExpression
     {
-        private static MethodInfo s_format_params;
-        private static MethodInfo[] s_format_args;
+        private static MethodInfo? s_format_params;
+        private static MethodInfo?[]? s_format_args;
 
         internal InterpolatedStringCSharpExpression(ReadOnlyCollection<Interpolation> interpolations) => Interpolations = interpolations;
 
@@ -146,15 +148,15 @@ namespace Microsoft.CSharp.Expressions
                 return formatString;
             }
 
-            EnsureStringFormatInfo();
+            EnsureStringFormatInfo(out var format_params, out var format_args);
 
             //
             // CONSIDER: Review the decision on https://github.com/dotnet/roslyn/issues/44168.
             //
 
-            if (n - 1 < s_format_args.Length)
+            if (n - 1 < format_args.Length)
             {
-                var method = s_format_args[n - 1];
+                var method = format_args[n - 1];
 
                 if (method != null)
                 {
@@ -162,10 +164,10 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            return Expression.Call(s_format_params, formatString, Expression.NewArrayInit(typeof(object), args));
+            return Expression.Call(format_params, formatString, Expression.NewArrayInit(typeof(object), args));
         }
 
-        private static void EnsureStringFormatInfo()
+        private static void EnsureStringFormatInfo(out MethodInfo format_params, out MethodInfo?[] format_args)
         {
             if (s_format_args == null)
             {
@@ -213,19 +215,22 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                s_format_args = new MethodInfo[maxArgs];
+                s_format_args = new MethodInfo?[maxArgs];
 
                 foreach (var method in methods)
                 {
                     s_format_args[method.GetParametersCached().Length - 2] = method;
                 }
             }
+
+            format_args = s_format_args;
+            format_params = s_format_params!; // NB: We expect to find the params overload regardless.
         }
     }
 
     internal sealed class FormattableInterpolatedStringCSharpExpression : InterpolatedStringCSharpExpression
     {
-        private static MethodInfo s_create;
+        private static MethodInfo? s_create;
 
         internal FormattableInterpolatedStringCSharpExpression(Type type, ReadOnlyCollection<Interpolation> interpolations)
             : base(interpolations)
@@ -237,7 +242,7 @@ namespace Microsoft.CSharp.Expressions
 
         protected override Expression MakeStringFormat(string format, List<Expression> args)
         {
-            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod(nameof(FormattableStringFactory.Create), BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) });
+            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod(nameof(FormattableStringFactory.Create), BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) }); // TODO: well-known members
 
             var call = Expression.Call(s_create, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
 

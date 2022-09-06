@@ -2,6 +2,8 @@
 //
 // bartde - January 2022
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -103,9 +105,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="argumentIndices">The optional index values of extra arguments passed to the <paramref name="construction"/> step.</param>
         /// <param name="append">A collection of lambda expressions representing the append calls of the interpolations to the handler instance.</param>
         /// <returns>An object representing the binding information for an interpolated string handler conversion.</returns>
-        public static InterpolatedStringHandlerInfo InterpolatedStringHandlerInfo(Type type, LambdaExpression construction, int[] argumentIndices, params LambdaExpression[] append) =>
+        public static InterpolatedStringHandlerInfo InterpolatedStringHandlerInfo(Type type, LambdaExpression construction, int[]? argumentIndices, params LambdaExpression[] append) =>
             // NB: The Roslyn compiler binds to this method.
-            InterpolatedStringHandlerInfo(type, construction, (IEnumerable<int>)argumentIndices, (IEnumerable<LambdaExpression>)append);
+            InterpolatedStringHandlerInfo(type, construction, (IEnumerable<int>?)argumentIndices, (IEnumerable<LambdaExpression>)append);
 
         /// <summary>
         /// Creates an object representing the binding information for an interpolated string handler conversion.
@@ -115,7 +117,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="argumentIndices">The optional index values of extra arguments passed to the <paramref name="construction"/> step.</param>
         /// <param name="append">A collection of lambda expressions representing the append calls of the interpolations to the handler instance.</param>
         /// <returns>An object representing the binding information for an interpolated string handler conversion.</returns>
-        public static InterpolatedStringHandlerInfo InterpolatedStringHandlerInfo(Type type, LambdaExpression construction, IEnumerable<int> argumentIndices, IEnumerable<LambdaExpression> append)
+        public static InterpolatedStringHandlerInfo InterpolatedStringHandlerInfo(Type type, LambdaExpression construction, IEnumerable<int>? argumentIndices, IEnumerable<LambdaExpression> append)
         {
             RequiresNotNull(type, nameof(type));
             ValidateType(type, nameof(type));
@@ -134,7 +136,7 @@ namespace Microsoft.CSharp.Expressions
 
             var argumentIndicesCollection = argumentIndices.ToReadOnly();
 
-            foreach (var i in argumentIndices)
+            foreach (var i in argumentIndicesCollection)
             {
                 if (i < -1)
                     throw Error.InvalidInterpolatedStringHandlerArgumentIndex(i);
@@ -244,7 +246,7 @@ namespace Microsoft.CSharp.Expressions
                 types[i + 1] = parameter.Type;
             }
 
-            Type delegateType = null;
+            Type? delegateType = null;
 
             if (!hasByRefArg)
             {

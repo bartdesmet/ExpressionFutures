@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using static System.Dynamic.Utils.ContractUtils;
 
 namespace Microsoft.CSharp.Expressions
