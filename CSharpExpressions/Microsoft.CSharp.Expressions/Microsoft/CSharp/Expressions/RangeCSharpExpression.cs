@@ -2,8 +2,11 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -17,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class RangeCSharpExpression : CSharpExpression
     {
-        internal RangeCSharpExpression(Expression left, Expression right, MethodBase method, Type type)
+        internal RangeCSharpExpression(Expression? left, Expression? right, MethodBase? method, Type? type)
         {
             Left = left;
             Right = right;
@@ -28,17 +31,17 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the lower bound index of the range.
         /// </summary>
-        public Expression Left { get; }
+        public Expression? Left { get; }
 
         /// <summary>
         /// Gets the <see cref="Expression" /> representing the upper bound index of the range.
         /// </summary>
-        public Expression Right { get; }
+        public Expression? Right { get; }
 
         /// <summary>
         /// Gets the (optional) method or constructor used to create an instance of type <see cref="Range"/>.
         /// </summary>
-        public MethodBase Method { get; }
+        public MethodBase? Method { get; }
 
         /// <summary>
         /// Gets the type of the expression.
@@ -70,7 +73,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The <see cref="Left" /> property of the result.</param>
         /// <param name="right">The <see cref="Right" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public RangeCSharpExpression Update(Expression left, Expression right)
+        public RangeCSharpExpression Update(Expression? left, Expression? right)
         {
             if (left == Left && right == Right)
             {
@@ -112,11 +115,12 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                Debug.Assert(stmts != null);
                 stmts.Add(make);
                 return Expression.Block(temps, stmts);
             }
 
-            Expression PrepareOperand(Expression operand)
+            Expression? PrepareOperand(Expression? operand)
             {
                 if (operand == null)
                 {
@@ -151,7 +155,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private Expression MakeRange(Expression left, Expression right)
+        private Expression MakeRange(Expression? left, Expression? right)
         {
             return GetMethod() switch
             {
@@ -203,13 +207,13 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static MethodInfo s_all, s_end_at, s_start_at;
-        private static ConstructorInfo s_ctor;
+        private static MethodInfo? s_all, s_end_at, s_start_at;
+        private static ConstructorInfo? s_ctor;
 
-        private static MethodInfo All => s_all ??= typeof(Range).GetProperty(nameof(System.Range.All)).GetGetMethod();
-        private static MethodInfo EndAt => s_end_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.EndAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) });
-        private static MethodInfo StartAt => s_start_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.StartAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) });
-        private static ConstructorInfo Ctor => s_ctor ??= typeof(Range).GetConstructor(new[] { typeof(System.Index), typeof(System.Index) });
+        private static MethodInfo All => s_all ??= typeof(Range).GetProperty(nameof(System.Range.All))!.GetGetMethod()!; // TODO: well-known members
+        private static MethodInfo EndAt => s_end_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.EndAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) })!; // TODO: well-known members
+        private static MethodInfo StartAt => s_start_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.StartAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) })!; // TODO: well-known members
+        private static ConstructorInfo Ctor => s_ctor ??= typeof(Range).GetConstructor(new[] { typeof(System.Index), typeof(System.Index) })!; // TODO: well-known members
     }
 
     partial class CSharpExpression
@@ -220,7 +224,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="left">The expression representing the lower bound index of the range.</param>
         /// <param name="right">The expression representing the upper bound index of the range.</param>
         /// <returns>The created <see cref="RangeCSharpExpression"/>.</returns>
-        public static RangeCSharpExpression Range(Expression left, Expression right) => Range(left, right, method: null, type: null);
+        public static RangeCSharpExpression Range(Expression? left, Expression? right) => Range(left, right, method: null, type: null);
 
         /// <summary>
         /// Creates a <see cref="RangeCSharpExpression"/> that represents a range in a sliceable object.
@@ -230,7 +234,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The method or constructor used to instantiate the index.</param>
         /// <param name="type">The index type, either <see cref="System.Index"/> or a nullable <see cref="System.Index"/>.</param>
         /// <returns>The created <see cref="RangeCSharpExpression"/>.</returns>
-        public static RangeCSharpExpression Range(Expression left, Expression right, MethodBase method, Type type)
+        public static RangeCSharpExpression Range(Expression? left, Expression? right, MethodBase? method, Type? type)
         {
             int operandCount = 0;
             bool lifted = false;
@@ -278,7 +282,7 @@ namespace Microsoft.CSharp.Expressions
 
             return new RangeCSharpExpression(left, right, method, type);
 
-            static void CheckOperand(ref Expression operand, string paramName, ref int operandCount, ref bool lifted)
+            static void CheckOperand(ref Expression? operand, string paramName, ref int operandCount, ref bool lifted)
             {
                 if (operand == null)
                 {

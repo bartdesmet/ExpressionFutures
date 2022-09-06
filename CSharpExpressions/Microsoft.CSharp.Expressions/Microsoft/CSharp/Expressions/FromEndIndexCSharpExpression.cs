@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
@@ -18,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class FromEndIndexCSharpExpression : CSharpExpression
     {
-        internal FromEndIndexCSharpExpression(Expression operand, MethodBase method, Type type)
+        internal FromEndIndexCSharpExpression(Expression operand, MethodBase? method, Type? type)
         {
             Operand = operand;
             Method = method;
@@ -33,7 +35,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the (optional) method or constructor used to create an instance of type <see cref="Index"/>.
         /// </summary>
-        public MethodBase Method { get; }
+        public MethodBase? Method { get; }
 
         /// <summary>
         /// Gets the type of the expression.
@@ -159,9 +161,9 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static MethodInfo s_from_end;
+        private static MethodInfo? s_from_end;
 
-        private static MethodInfo FromEnd => s_from_end ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.FromEnd), BindingFlags.Public | BindingFlags.Static, new[] { typeof(int) });
+        private static MethodInfo? FromEnd => s_from_end ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.FromEnd), BindingFlags.Public | BindingFlags.Static, new[] { typeof(int) }); // TODO: well-known members
     }
 
     partial class CSharpExpression
@@ -180,7 +182,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The method or constructor used to instantiate the index.</param>
         /// <param name="type">The index type, either <see cref="System.Index"/> or a nullable <see cref="System.Index"/>.</param>
         /// <returns>The created <see cref="FromEndIndexCSharpExpression"/>.</returns>
-        public static FromEndIndexCSharpExpression FromEndIndex(Expression operand, MethodBase method, Type type)
+        public static FromEndIndexCSharpExpression FromEndIndex(Expression operand, MethodBase? method, Type? type)
         {
             RequiresCanRead(operand, nameof(operand));
 
