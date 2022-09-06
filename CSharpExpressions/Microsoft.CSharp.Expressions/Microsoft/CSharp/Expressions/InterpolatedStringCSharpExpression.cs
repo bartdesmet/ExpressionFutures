@@ -242,7 +242,7 @@ namespace Microsoft.CSharp.Expressions
 
         protected override Expression MakeStringFormat(string format, List<Expression> args)
         {
-            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod(nameof(FormattableStringFactory.Create), BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) }); // TODO: well-known members
+            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod(nameof(FormattableStringFactory.Create), BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) })!; // TODO: well-known members
 
             var call = Expression.Call(s_create, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
 

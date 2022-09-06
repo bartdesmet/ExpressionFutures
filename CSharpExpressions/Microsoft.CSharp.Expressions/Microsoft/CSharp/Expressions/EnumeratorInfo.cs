@@ -591,6 +591,8 @@ namespace Microsoft.CSharp.Expressions
                 ? enumerableType.GetNonGenericMethod(nameof(IAsyncEnumerable<object>.GetAsyncEnumerator), BindingFlags.Public | BindingFlags.Instance, new[] { typeof(CancellationToken) })
                 : enumerableType.GetNonGenericMethod(nameof(IEnumerable<object>.GetEnumerator), BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes);
 
+            Debug.Assert(getEnumeratorMethod != null);
+
             var getEnumeratorBody = Expression.Call(collectionParameter, getEnumeratorMethod);
             var getEnumerator = Expression.Lambda(getEnumeratorBody, collectionParameter);
 
@@ -600,6 +602,8 @@ namespace Microsoft.CSharp.Expressions
             var moveNextMethod = isAsync
                 ? enumerableType.GetNonGenericMethod(nameof(IAsyncEnumerator<object>.MoveNextAsync), BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes)
                 : IEnumerator_MoveNext;
+
+            Debug.Assert(moveNextMethod != null);
 
             var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, moveNextMethod), enumeratorVariable);
 
