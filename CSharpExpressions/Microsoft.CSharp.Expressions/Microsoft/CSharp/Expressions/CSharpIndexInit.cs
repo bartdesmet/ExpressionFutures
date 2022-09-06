@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq;
@@ -88,7 +90,10 @@ namespace Microsoft.CSharp.Expressions
             if (setter == null)
                 throw Error.PropertyDoesNotHaveSetAccessor(indexer);
 
-            ValidateIndexer(indexer.DeclaringType, indexer);
+            var declaringType = indexer.DeclaringType;
+            RequiresNotNull(declaringType, nameof(indexer));
+
+            ValidateIndexer(declaringType!, indexer);
 
             ValidateArgumentTypes(setter, ExpressionType.Call, ref argList, nameof(indexer));
 
