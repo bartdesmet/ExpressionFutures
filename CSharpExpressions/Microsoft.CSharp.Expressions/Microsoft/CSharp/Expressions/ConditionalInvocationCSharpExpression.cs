@@ -59,7 +59,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The <see cref="Expression" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public ConditionalInvocationCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment> arguments)
+        public ConditionalInvocationCSharpExpression Update(Expression expression, IEnumerable<ParameterAssignment>? arguments)
         {
             if (expression == Expression && SameElements(ref arguments, Arguments))
             {
@@ -84,8 +84,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An array of one or more of <see cref="ParameterAssignment" /> objects that represent the arguments that the delegate or lambda expression is applied to.</param>
         /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalAccessCSharpExpression{InvocationExpression}.Receiver" /> and <see cref="ConditionalInvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, params ParameterAssignment[] arguments) =>
-            ConditionalInvoke(expression, (IEnumerable<ParameterAssignment>)arguments);
+        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, params ParameterAssignment[]? arguments) =>
+            ConditionalInvoke(expression, (IEnumerable<ParameterAssignment>?)arguments);
 
         /// <summary>
         /// Creates an <see cref="ConditionalInvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
@@ -94,7 +94,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="ConditionalInvocationCSharpExpression.Arguments" /> collection.</param>
         /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalAccessCSharpExpression{InvocationExpression}.Receiver" /> and <see cref="ConditionalInvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, IEnumerable<ParameterAssignment> arguments)
+        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, IEnumerable<ParameterAssignment>? arguments)
         {
             RequiresCanRead(expression, nameof(expression));
 
@@ -109,9 +109,9 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An array of one or more of <see cref="Expression" /> objects that represent the arguments that the delegate or lambda expression is applied to.</param>
         /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalAccessCSharpExpression{InvocationExpression}.Receiver" /> and <see cref="ConditionalInvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, Expression[] arguments) =>
+        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, Expression[]? arguments) =>
             // NB: no params array to avoid overload resolution ambiguity
-            ConditionalInvoke(expression, (IEnumerable<Expression>)arguments);
+            ConditionalInvoke(expression, (IEnumerable<Expression>?)arguments);
 
         /// <summary>
         /// Creates an <see cref="ConditionalInvocationCSharpExpression" /> that applies a delegate or lambda expression to a list of argument expressions.
@@ -120,7 +120,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="ConditionalInvocationCSharpExpression.Arguments" /> collection.</param>
         /// <returns>An <see cref="ConditionalInvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalAccessCSharpExpression{InvocationExpression}.Receiver" /> and <see cref="ConditionalInvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, IEnumerable<Expression> arguments)
+        public static ConditionalInvocationCSharpExpression ConditionalInvoke(Expression expression, IEnumerable<Expression>? arguments)
         {
             RequiresCanRead(expression, nameof(expression));
 
@@ -138,7 +138,7 @@ namespace Microsoft.CSharp.Expressions
             return GetInvokeMethod(nonNull);
         }
 
-        private static ConditionalInvocationCSharpExpression MakeConditionalInvoke(Expression expression, IEnumerable<ParameterAssignment> arguments, MethodInfo method)
+        private static ConditionalInvocationCSharpExpression MakeConditionalInvoke(Expression expression, IEnumerable<ParameterAssignment>? arguments, MethodInfo method)
         {
             var argList = arguments.ToReadOnly();
             ValidateParameterBindings(method, argList);
