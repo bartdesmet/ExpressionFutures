@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
@@ -251,7 +253,7 @@ namespace Microsoft.CSharp.Expressions
 <#
 foreach (var error in errors)
 {
-    var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object p" + i));
+    var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object? p" + i));
     var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
     var strArgs = error.Args > 0 ? "(" + args + ")" : "";
     var msg = escape(error.Message);
@@ -274,7 +276,7 @@ foreach (var error in errors)
 <#
 foreach (var error in errors)
 {
-    var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object p" + i));
+    var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object? p" + i));
     var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
     if (error.Args > 0)
     {
