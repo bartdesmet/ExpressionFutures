@@ -22,6 +22,7 @@ using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static DynamicHelpers;
     using static Helpers;
 
     /// <summary>

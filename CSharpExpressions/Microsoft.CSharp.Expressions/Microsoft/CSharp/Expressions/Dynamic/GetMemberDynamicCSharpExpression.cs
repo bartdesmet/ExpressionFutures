@@ -20,6 +20,7 @@ using static System.Dynamic.Utils.ExpressionUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
+    using static DynamicHelpers;
     using static Helpers;
 
     /// <summary>

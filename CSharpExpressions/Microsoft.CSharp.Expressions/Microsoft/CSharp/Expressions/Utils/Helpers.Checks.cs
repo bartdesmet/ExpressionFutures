@@ -47,7 +47,7 @@ namespace Microsoft.CSharp.Expressions
                         if (expression.NodeType == ExpressionType.Call)
                         {
                             var call = (MethodCallExpression)expression;
-                            if (IsArrayAssignment(call))
+                            if (IsArrayAssignment(call, out _))
                             {
                                 return;
                             }

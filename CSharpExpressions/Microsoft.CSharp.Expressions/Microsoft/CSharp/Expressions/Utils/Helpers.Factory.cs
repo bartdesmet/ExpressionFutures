@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using static System.Dynamic.Utils.TypeUtils;
 
@@ -123,6 +125,108 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return Expression.Invoke(lambda, expression);
+        }
+
+        public static Expression InvokeLambdaWithSingleParameter(LambdaExpression lambda, Expression argument)
+        {
+            // NB: The reduction of extensions enables e.g. the use of MethodCallCSharpExpression with
+            //     named and optional parameters to get reduced to a simpler construct. In the common case
+            //     of an optional parameter for GetAsyncEnumerator(CancellationToken token = default), we
+            //     end with up a MethodCallExpression that fills in the missing argument.
+
+            var body = lambda.Body.ReduceExtensions();
+
+            if (body is MethodCallExpression call)
+            {
+                var parameter = lambda.Parameters[0];
+                var method = call.Method;
+
+                var args = call.Arguments;
+
+                bool RemainderArgsArePure(int firstIndex)
+                {
+                    for (int i = firstIndex; i < args.Count; i++)
+                    {
+                        var arg = args[i];
+
+                        if (!IsPure(arg))
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                // NB: This covers the common cases of e.g. Get[Async]Enumerator instance and extension
+                //     methods that are wrapped in lambda expressions in EnumeratorInfo. The purity check
+                //     for remaining parameters deals with defaults for optional parameters that end up
+                //     as Constant nodes in these expressions (e.g. CancellationToken token = default).
+
+                if (method.IsStatic)
+                {
+                    if (args.Count >= 1 && args[0] == parameter && RemainderArgsArePure(firstIndex: 1))
+                    {
+                        var newArgs = new List<Expression>(args)
+                        {
+                            [0] = argument
+                        };
+
+                        return call.Update(call.Object, newArgs);
+                    }
+                }
+                else
+                {
+                    if (call.Object == parameter && RemainderArgsArePure(firstIndex: 0))
+                    {
+                        return call.Update(argument, args);
+                    }
+                }
+            }
+
+            return Expression.Invoke(lambda, argument);
+        }
+
+        public static Expression MakeWriteable(Expression lhs)
+        {
+            if (lhs is DiscardCSharpExpression)
+            {
+                return lhs.Reduce();
+            }
+
+            if (lhs.NodeType == ExpressionType.ArrayIndex)
+            {
+                var arrayIndex = (BinaryExpression)lhs;
+                return Expression.ArrayAccess(arrayIndex.Left, arrayIndex.Right);
+            }
+
+            if (lhs.NodeType == ExpressionType.Call)
+            {
+                var arrayIndex = (MethodCallExpression)lhs;
+                if (IsArrayAssignment(arrayIndex, out var array))
+                {
+                    return Expression.ArrayAccess(array, arrayIndex.Arguments);
+                }
+            }
+
+            return lhs;
+        }
+
+        private static bool IsArrayAssignment(MethodCallExpression call, [NotNullWhen(true)] out Expression? array)
+        {
+            if (call.Object is Expression { Type: var type } obj)
+            {
+                var method = call.Method;
+
+                if (!method.IsStatic && type.IsArray && method == type.GetMethod("Get", BindingFlags.Public | BindingFlags.Instance))
+                {
+                    array = obj;
+                    return true;
+                }
+            }
+
+            array = null;
+            return false;
         }
     }
 }

@@ -85,7 +85,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var parameters = _invokeMethod.GetParametersCached();
 
-            var res = BindArguments((obj, args) => Expression.Invoke(obj, args), Expression, parameters, Arguments);
+            var res = BindArguments((obj, args) => Expression.Invoke(obj!, args), Expression, parameters, Arguments);
 
             return res;
         }
