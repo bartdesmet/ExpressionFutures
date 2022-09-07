@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -458,7 +460,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <remarks>
         /// If the <paramref name="variable"/> is <c>null</c>, this method is a no-op.
         /// </remarks>
-        private void PushScope(ParameterExpression variable)
+        private void PushScope(ParameterExpression? variable)
         {
             if (variable != null)
             {
@@ -488,7 +490,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <remarks>
         /// If the <paramref name="variable"/> is <c>null</c>, this method is a no-op.
         /// </remarks>
-        private void PopScope(ParameterExpression variable)
+        private void PopScope(ParameterExpression? variable)
         {
             if (variable != null)
             {

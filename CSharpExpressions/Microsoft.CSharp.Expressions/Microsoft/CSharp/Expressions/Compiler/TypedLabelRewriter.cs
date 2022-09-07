@@ -2,8 +2,10 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
-using System.Dynamic.Utils;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -46,10 +48,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     var l = (LabelExpression)e;
                     if (l.Type != typeof(void))
                     {
-                        if (map == null)
-                        {
-                            map = new Dictionary<LabelTarget, LabelInfo>();
-                        }
+                        map ??= new Dictionary<LabelTarget, LabelInfo>();
 
                         var name = l.Target.Name;
                         var newLabel = Expression.Label(typeof(void), name);
@@ -89,6 +88,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             if (TryGetLabelInfo(node.Target, out LabelInfo info))
             {
+                Debug.Assert(node.DefaultValue != null, "Expected non-void label to have default value.");
+
                 var variable = info.Value;
                 var newTarget = info.Target;
 
@@ -110,6 +111,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             if (TryGetLabelInfo(node.Target, out LabelInfo info))
             {
+                Debug.Assert(node.Value != null, "Expected non-void goto to have value.");
+
                 var variable = info.Value;
                 var newTarget = info.Target;
 

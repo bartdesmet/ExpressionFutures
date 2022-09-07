@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -38,7 +40,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 {
                     Debug.Assert(node.Fault == null);
 
-
                     if (VisitAndFindAwait(node.Finally, out Expression @finally))
                     {
                         if (handlers.Count != 0)
@@ -55,6 +56,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 }
                 else
                 {
+                    Debug.Assert(node.Fault != null);
+
                     if (VisitAndFindAwait(node.Fault, out Expression fault))
                     {
                         Debug.Assert(handlers.Count == 0);
@@ -176,7 +179,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 exprs.Add(Expression.Switch(pendingBranch, cases.ToArray()));
             }
 
-            if (body.Type != typeof(void))
+            if (value != null)
             {
                 vars.Add(value);
                 exprs.Add(value);

@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -20,7 +22,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <param name="exception">Expression representing the exception to rethrow. This expression can be of any type; if the type derives from <see cref="System.Exception"/>, the generated expression will use <see cref="ExceptionDispatchInfo.Throw(Exception)"/> to rethrow the exception preserving the stack trace.</param>
         /// <param name="beforeThrow">Expression to emit before the rethrow code.</param>
         /// <returns>Expression to rethrow the exception specified in <paramref name="exception"/>, optionally prepended by the expression specified in <paramref name="beforeThrow"/>.</returns>
-        public static Expression CreateRethrow(Expression exception, Expression beforeThrow = null)
+        public static Expression CreateRethrow(Expression exception, Expression? beforeThrow = null)
         {
             var exprCount = (beforeThrow == null ? 0 : 1) /* before */ + 1 /* assign */ + 1 /* if */ + 1 /* clear */;
 
@@ -44,10 +46,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     Expression.Throw(exception), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
                     Expression.Call(
                         Expression.Call(
-                            typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Capture), BindingFlags.Public | BindingFlags.Static),
+                            ExceptionDispatchInfoCapture,
                             exStronglyTyped
                         ),
-                        typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Throw), BindingFlags.Public | BindingFlags.Instance)
+                        ExceptionDispatchInfoThrow
                     )
                 );
 
@@ -61,5 +63,9 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     exprs
                 );
         }
+
+        private static MethodInfo? s_ediCapture, s_ediThrow;
+        private static MethodInfo ExceptionDispatchInfoCapture => s_ediCapture ??= typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Capture), BindingFlags.Public | BindingFlags.Static)!; // TODO: well-known members
+        private static MethodInfo ExceptionDispatchInfoThrow => s_ediThrow ??= typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Throw), BindingFlags.Public | BindingFlags.Instance)!; // TODO: well-known members
     }
 }

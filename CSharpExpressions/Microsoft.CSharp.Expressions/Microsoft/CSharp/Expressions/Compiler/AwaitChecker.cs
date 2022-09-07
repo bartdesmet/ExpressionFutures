@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using static System.FormattableString;

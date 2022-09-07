@@ -2,8 +2,11 @@
 //
 // bartde - January 2022
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -89,7 +92,7 @@ namespace Microsoft.CSharp.Expressions
                 return base.VisitBinary(node);
             }
 
-            private bool TryRewriteRefHolderTempCreation(BinaryExpression node, Dictionary<ParameterExpression, ReplacementInfo> nearestScope, out Expression result)
+            private bool TryRewriteRefHolderTempCreation(BinaryExpression node, Dictionary<ParameterExpression, ReplacementInfo> nearestScope, [NotNullWhen(true)] out Expression? result)
             {
                 // NB: This detects the pattern introduced by CreateRefLocalAccess in Helpers.cs
                 //
@@ -145,7 +148,7 @@ namespace Microsoft.CSharp.Expressions
                 return false;
             }
 
-            private static bool TryRewriteRefHolderAssignment(BinaryExpression node, Dictionary<ParameterExpression, ReplacementInfo> nearestScope, out Expression result)
+            private static bool TryRewriteRefHolderAssignment(BinaryExpression node, Dictionary<ParameterExpression, ReplacementInfo> nearestScope, [NotNullWhen(true)] out Expression? result)
             {
                 // NB: This detects another use case of RefHolder<T> used for assignment
                 //
@@ -157,7 +160,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     Debug.Assert(m.Member is PropertyInfo prop && prop.Name == nameof(RefHolder<int>.Value));
 
-                    var expr = replacement.Replacement;
+                    var expr = replacement.Replacement!;
 
                     result = Expression.Assign(expr, node.Right);
                     return true;
@@ -187,7 +190,7 @@ namespace Microsoft.CSharp.Expressions
                         var action = (LambdaExpression)node.Arguments[0];
                         var argument = node.Arguments[1];
 
-                        var expr = replacement.Replacement;
+                        var expr = replacement.Replacement!;
 
                         if (action.Body is BinaryExpression assign &&
                             assign.NodeType == ExpressionType.Assign &&
@@ -217,6 +220,8 @@ namespace Microsoft.CSharp.Expressions
                     }
                     else
                     {
+                        Debug.Assert(m.Expression != null);
+
                         if (isByRef)
                         {
                             var obj = m.Expression;
@@ -253,6 +258,8 @@ namespace Microsoft.CSharp.Expressions
 
                     if (expression is IndexExpression i && i.Indexer == null)
                     {
+                        Debug.Assert(i.Object != null, "Array-based indexer should always have object.");
+
                         var newObj = Rewrite(i.Object, isByRef: false, temps, stmts, ref shouldEvalExpressionForSideEffects);
 
                         var newIndexes = new List<Expression>(i.Arguments.Count);
@@ -286,7 +293,7 @@ namespace Microsoft.CSharp.Expressions
             private sealed class ReplacementInfo
             {
                 public List<ParameterExpression> Temps { get; } = new List<ParameterExpression>();
-                public Expression Replacement { get; set; }
+                public Expression? Replacement { get; set; }
             }
         }
     }

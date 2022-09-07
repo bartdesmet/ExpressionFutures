@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -18,7 +20,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             foreach (var subst in _subst)
             {
-                if (subst.TryGetValue(node, out Expression res))
+                if (subst.TryGetValue(node, out Expression? res))
                 {
                     return res;
                 }

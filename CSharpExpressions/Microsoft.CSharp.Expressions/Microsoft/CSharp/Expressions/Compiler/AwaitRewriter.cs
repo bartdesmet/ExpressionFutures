@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic.Utils;
@@ -241,7 +243,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
-        private Expression RewriteHandler(Expression original)
+        private Expression? RewriteHandler(Expression? original)
         {
             var res = original;
 

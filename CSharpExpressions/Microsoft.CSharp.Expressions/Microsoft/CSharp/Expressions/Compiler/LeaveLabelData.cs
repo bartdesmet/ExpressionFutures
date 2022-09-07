@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
@@ -14,6 +16,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
     {
         public int Index;
         public LabelTarget Target;
-        public ParameterExpression Value;
+        public ParameterExpression? Value;
     }
 }

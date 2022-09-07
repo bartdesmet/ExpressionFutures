@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -169,7 +171,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         {
                             var @switch = (SwitchExpression)expr;
 
-                            var defaultBody = Percolate(result, @switch.DefaultBody);
+                            var defaultBody = @switch.DefaultBody != null ? Percolate(result, @switch.DefaultBody) : null;
 
                             var oldCases = @switch.Cases;
                             var n = oldCases.Count;

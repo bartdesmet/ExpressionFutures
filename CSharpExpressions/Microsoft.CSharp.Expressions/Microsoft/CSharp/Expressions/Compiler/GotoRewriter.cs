@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -116,7 +118,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         res =
                             Expression.Block(
                                 Expression.Assign(_pendingBranch, Helpers.CreateConstantInt32(data.Index)),
-                                Expression.Assign(data.Value, node.Value),
+                                Expression.Assign(data.Value, node.Value!),
                                 Expression.Goto(_exit, node.Type)
                             );
                     }

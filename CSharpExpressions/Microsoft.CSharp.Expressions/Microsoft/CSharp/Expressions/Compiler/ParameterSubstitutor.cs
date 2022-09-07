@@ -2,7 +2,10 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.Expressions.Compiler
@@ -13,12 +16,14 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal static class ParameterSubstitutor
     {
-        public static Expression Substitute(Expression expression, ParameterExpression original, Expression replacement)
+        [return: NotNullIfNotNull("expression")]
+        public static Expression? Substitute(Expression? expression, ParameterExpression original, Expression replacement)
         {
             return Substitute(expression, new Dictionary<ParameterExpression, Expression> { { original, replacement } });
         }
 
-        public static Expression Substitute(Expression expression, IDictionary<ParameterExpression, Expression> substitutions)
+        [return: NotNullIfNotNull("expression")]
+        public static Expression? Substitute(Expression? expression, IDictionary<ParameterExpression, Expression> substitutions)
         {
             return new Impl(substitutions).Visit(expression);
         }
@@ -45,7 +50,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-                if (_substitutions.TryGetValue(node, out Expression replacement))
+                if (_substitutions.TryGetValue(node, out Expression? replacement))
                 {
                     var found = false;
 

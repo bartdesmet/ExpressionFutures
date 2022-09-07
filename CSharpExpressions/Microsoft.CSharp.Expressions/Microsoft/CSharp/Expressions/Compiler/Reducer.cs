@@ -2,7 +2,10 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
@@ -139,7 +142,11 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private static Expression ReduceLogicalMethod(BinaryExpression node)
         {
-            var booleanOperator = TypeUtils.GetBooleanOperator(node.Method.DeclaringType, node.NodeType == ExpressionType.AndAlso ? "op_False" : "op_True");
+            Debug.Assert(node.Method != null);
+
+            var booleanOperator = TypeUtils.GetBooleanOperator(node.Method.DeclaringType!, node.NodeType == ExpressionType.AndAlso ? "op_False" : "op_True");
+
+            Debug.Assert(booleanOperator != null);
 
             var left = Expression.Parameter(node.Left.Type);
 
@@ -254,6 +261,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private static Expression ReduceLambdaReferenceCoalesce(BinaryExpression node)
         {
+            Debug.Assert(node.Conversion != null);
+
             var left = Expression.Parameter(node.Left.Type);
 
             return Expression.Block(
