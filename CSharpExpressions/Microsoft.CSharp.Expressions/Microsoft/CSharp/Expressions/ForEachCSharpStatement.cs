@@ -101,7 +101,7 @@ namespace Microsoft.CSharp.Expressions
             if (enumeratorInfo == EnumeratorInfo &&
                 breakLabel == BreakLabel &&
                 continueLabel == ContinueLabel &&
-                SameElements(ref variables, Variables) &&
+                SameElements(ref variables!, Variables) &&
                 collection == Collection &&
                 conversion == Conversion &&
                 body == Body &&

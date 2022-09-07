@@ -47,7 +47,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public WhileCSharpStatement Update(LabelTarget? breakLabel, LabelTarget? continueLabel, Expression test, Expression body, IEnumerable<ParameterExpression> locals)
         {
-            if (breakLabel == BreakLabel && continueLabel == ContinueLabel && test == Test && body == Body && SameElements(ref locals, Locals))
+            if (breakLabel == BreakLabel && continueLabel == ContinueLabel && test == Test && body == Body && SameElements(ref locals!, Locals))
             {
                 return this;
             }

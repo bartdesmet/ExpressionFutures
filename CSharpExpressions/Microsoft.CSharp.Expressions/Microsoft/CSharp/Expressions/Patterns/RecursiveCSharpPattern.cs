@@ -197,7 +197,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public RecursiveCSharpPattern Update(ParameterExpression? variable, IEnumerable<PositionalCSharpSubpattern> deconstruction, IEnumerable<PropertyCSharpSubpattern> properties)
         {
-            if (variable == Variable && SameElements(ref deconstruction, Deconstruction) && SameElements(ref properties, Properties))
+            if (variable == Variable && SameElements(ref deconstruction!, Deconstruction) && SameElements(ref properties!, Properties))
             {
                 return this;
             }

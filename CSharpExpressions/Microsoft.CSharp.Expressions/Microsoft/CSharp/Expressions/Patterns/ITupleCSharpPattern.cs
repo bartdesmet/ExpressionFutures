@@ -123,7 +123,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ITupleCSharpPattern Update(IEnumerable<PositionalCSharpSubpattern> deconstruction)
         {
-            if (SameElements(ref deconstruction, Deconstruction))
+            if (SameElements(ref deconstruction!, Deconstruction))
             {
                 return this;
             }

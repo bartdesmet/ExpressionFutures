@@ -67,7 +67,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public TryCSharpStatement Update(Expression tryBlock, IEnumerable<CSharpCatchBlock> catchBlocks, Expression? finallyBlock)
         {
-            if (tryBlock == TryBlock && SameElements(ref catchBlocks, CatchBlocks) && finallyBlock == FinallyBlock)
+            if (tryBlock == TryBlock && SameElements(ref catchBlocks!, CatchBlocks) && finallyBlock == FinallyBlock)
             {
                 return this;
             }

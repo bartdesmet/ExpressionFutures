@@ -71,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ListCSharpPattern Update(ParameterExpression? variable, LambdaExpression lengthAccess, LambdaExpression indexerAccess, IEnumerable<CSharpPattern> patterns)
         {
-            if (variable == Variable && lengthAccess == LengthAccess && indexerAccess == IndexerAccess && SameElements(ref patterns, Patterns))
+            if (variable == Variable && lengthAccess == LengthAccess && indexerAccess == IndexerAccess && SameElements(ref patterns!, Patterns))
             {
                 return this;
             }

@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public CSharpSwitchCase Update(IEnumerable<Expression> statements)
         {
-            if (SameElements(ref statements, Statements))
+            if (SameElements(ref statements!, Statements))
             {
                 return this;
             }

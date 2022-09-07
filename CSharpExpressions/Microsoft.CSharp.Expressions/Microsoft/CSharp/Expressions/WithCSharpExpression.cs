@@ -83,7 +83,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public WithCSharpExpression Update(Expression @object, IEnumerable<MemberInitializer> initializers)
         {
-            if (@object == Object && SameElements(ref initializers, Initializers))
+            if (@object == Object && SameElements(ref initializers!, Initializers))
             {
                 return this;
             }

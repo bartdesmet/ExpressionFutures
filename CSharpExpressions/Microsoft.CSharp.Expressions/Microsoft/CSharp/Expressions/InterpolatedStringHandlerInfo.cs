@@ -79,7 +79,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public InterpolatedStringHandlerInfo Update(LambdaExpression construction, IEnumerable<LambdaExpression> append)
         {
-            if (construction == Construction && SameElements(ref append, Append))
+            if (construction == Construction && SameElements(ref append!, Append))
             {
                 return this;
             }

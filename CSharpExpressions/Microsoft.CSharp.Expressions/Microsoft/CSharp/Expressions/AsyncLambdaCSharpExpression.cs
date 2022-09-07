@@ -111,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public AsyncCSharpExpression<TDelegate> Update(Expression body, IEnumerable<ParameterExpression> parameters)
         {
-            if (body == Body && SameElements(ref parameters, Parameters))
+            if (body == Body && SameElements(ref parameters!, Parameters))
             {
                 return this;
             }

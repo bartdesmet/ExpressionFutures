@@ -76,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public IndexCSharpExpression Update(Expression @object, IEnumerable<ParameterAssignment> arguments)
         {
-            if (@object == Object && SameElements(ref arguments, Arguments))
+            if (@object == Object && SameElements(ref arguments!, Arguments))
             {
                 return this;
             }

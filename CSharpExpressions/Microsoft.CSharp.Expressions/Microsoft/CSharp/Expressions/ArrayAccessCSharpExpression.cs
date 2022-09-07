@@ -69,7 +69,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public ArrayAccessCSharpExpression Update(Expression array, IEnumerable<Expression> indexes)
         {
-            if (array == Array && SameElements(ref indexes, Indexes))
+            if (array == Array && SameElements(ref indexes!, Indexes))
             {
                 return this;
             }

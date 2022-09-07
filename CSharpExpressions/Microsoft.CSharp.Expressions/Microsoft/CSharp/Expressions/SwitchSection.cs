@@ -52,7 +52,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public SwitchSection Update(IEnumerable<ParameterExpression>? locals, IEnumerable<SwitchLabel> labels, IEnumerable<Expression> statements)
         {
-            if (SameElements(ref locals, Locals) && SameElements(ref labels, Labels) && SameElements(ref statements, Statements))
+            if (SameElements(ref locals, Locals) && SameElements(ref labels!, Labels) && SameElements(ref statements!, Statements))
             {
                 return this;
             }

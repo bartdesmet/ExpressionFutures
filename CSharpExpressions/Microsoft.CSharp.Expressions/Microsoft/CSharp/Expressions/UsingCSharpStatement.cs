@@ -100,7 +100,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public UsingCSharpStatement Update(IEnumerable<ParameterExpression> variables, Expression? resource, IEnumerable<LocalDeclaration>? declarations, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
         {
-            if (SameElements(ref variables, Variables) && resource == Resource && SameElements(ref declarations, Declarations) && body == Body && awaitInfo == AwaitInfo && patternDispose == PatternDispose)
+            if (SameElements(ref variables!, Variables) && resource == Resource && SameElements(ref declarations!, Declarations) && body == Body && awaitInfo == AwaitInfo && patternDispose == PatternDispose)
             {
                 return this;
             }
@@ -344,7 +344,7 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class WithResource : UsingCSharpStatement
         {
-            private Expression _resource;
+            private readonly Expression _resource;
 
             internal WithResource(ReadOnlyCollection<ParameterExpression> variables, Expression resource, Expression body, AwaitInfo? awaitInfo, LambdaExpression? patternDispose)
                 : base(variables, body, awaitInfo, patternDispose)

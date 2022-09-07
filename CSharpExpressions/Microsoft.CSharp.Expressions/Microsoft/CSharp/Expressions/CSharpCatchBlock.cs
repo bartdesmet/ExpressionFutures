@@ -72,7 +72,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public CSharpCatchBlock Update(IEnumerable<ParameterExpression> variables, ParameterExpression? variable, Expression body, Expression? filter)
         {
-            if (SameElements(ref variables, Variables) && variable == Variable && body == Body && filter == Filter)
+            if (SameElements(ref variables!, Variables) && variable == Variable && body == Body && filter == Filter)
             {
                 return this;
             }

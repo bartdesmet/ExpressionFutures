@@ -115,7 +115,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
         public BlockCSharpExpression Update(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> statements, LabelTarget? returnLabel)
         {
-            if (SameElements(ref variables, Variables) && SameElements(ref statements, Statements) && returnLabel == ReturnLabel)
+            if (SameElements(ref variables!, Variables) && SameElements(ref statements!, Statements) && returnLabel == ReturnLabel)
             {
                 return this;
             }
