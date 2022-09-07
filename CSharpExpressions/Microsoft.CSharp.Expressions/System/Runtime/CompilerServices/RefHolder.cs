@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 /*
  * This provides a potential workaround for the lack of ref locals in expression trees, by storing
  * a local RefHolder<T> (which shall not be hoisted to the heap, so we'll need extra handling for
@@ -38,7 +40,6 @@
     Console.WriteLine(xs[1].Item1);
 
  */
-
 
 namespace System.Runtime.CompilerServices
 {

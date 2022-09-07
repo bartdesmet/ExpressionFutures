@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System.Diagnostics.CodeAnalysis;
 
 namespace System.Runtime.CompilerServices
@@ -102,7 +104,7 @@ namespace System.Runtime.CompilerServices
         /// Gets the caller member name.
         /// </summary>
         /// <returns>The caller member name, if found; otherwise, null.</returns>
-        public static string GetCallerMemberName()
+        public static string? GetCallerMemberName()
         {
             return new StackTrace(1, true).GetFrame(0)?.GetMethod()?.Name;
         }
@@ -128,7 +130,7 @@ namespace System.Runtime.CompilerServices
         /// Gets the caller file path.
         /// </summary>
         /// <returns>The caller file path, if found; otherwise, null.</returns>
-        public static string GetCallerFilePath()
+        public static string? GetCallerFilePath()
         {
             return new StackTrace(1, true).GetFrame(0)?.GetFileName();
         }

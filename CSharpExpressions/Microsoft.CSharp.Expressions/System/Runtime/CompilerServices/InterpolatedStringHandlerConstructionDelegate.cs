@@ -2,6 +2,8 @@
 //
 // bartde - January 2022
 
+#nullable enable
+
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
@@ -907,7 +909,7 @@ namespace System.Runtime.CompilerServices
 
     internal static class ConstructInterpolatedStringHandlerDelegateHelpers
     {
-        internal static Type GetConstructInterpolatedStringHandlerType(Type[] types) =>
+        internal static Type? GetConstructInterpolatedStringHandlerType(Type[] types) =>
             types.Length switch
             {
                 1 => typeof(ConstructInterpolatedStringHandler<>).MakeGenericType(types),
@@ -930,7 +932,7 @@ namespace System.Runtime.CompilerServices
                 _ => null
             };
 
-        internal static Type GetConstructInterpolatedStringHandlerTypeWithShouldAppend(Type[] types) =>
+        internal static Type? GetConstructInterpolatedStringHandlerTypeWithShouldAppend(Type[] types) =>
             types.Length switch
             {
                 1 => typeof(ConstructInterpolatedStringHandlerWithShouldAppend<>).MakeGenericType(types),

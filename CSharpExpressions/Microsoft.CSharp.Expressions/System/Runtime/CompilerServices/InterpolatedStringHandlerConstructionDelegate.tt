@@ -2,6 +2,8 @@
 //
 // bartde - January 2022
 
+#nullable enable
+
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
@@ -84,7 +86,7 @@ for (int j = 1; j <= i; j++)
 #>
     internal static class ConstructInterpolatedStringHandlerDelegateHelpers
     {
-        internal static Type GetConstructInterpolatedStringHandlerType(Type[] types) =>
+        internal static Type? GetConstructInterpolatedStringHandlerType(Type[] types) =>
             types.Length switch
             {
 <#
@@ -99,7 +101,7 @@ for (int i = 0; i <= 16; i++)
                 _ => null
             };
 
-        internal static Type GetConstructInterpolatedStringHandlerTypeWithShouldAppend(Type[] types) =>
+        internal static Type? GetConstructInterpolatedStringHandlerTypeWithShouldAppend(Type[] types) =>
             types.Length switch
             {
 <#

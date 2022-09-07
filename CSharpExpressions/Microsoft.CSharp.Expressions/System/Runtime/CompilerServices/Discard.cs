@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
@@ -16,7 +18,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// The field to assign to.
         /// </summary>
-        public static T _;
+        public static T? _;
 
 #pragma warning restore CA2211 // Non-constant fields should not be visible. (By design for discard.)
     }

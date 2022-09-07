@@ -2,6 +2,8 @@
 //
 // bartde - December 2021
 
+#nullable enable
+
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
@@ -254,7 +256,7 @@ namespace System.Runtime.CompilerServices
 
     internal static class DeconstructActionDelegateHelpers
     {
-        internal static Type GetDeconstructActionType(Type[] types) =>
+        internal static Type? GetDeconstructActionType(Type[] types) =>
             types.Length switch
             {
                 2 => typeof(DeconstructAction<,>).MakeGenericType(types),
