@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -18,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class BinaryDynamicCSharpExpression : DynamicCSharpExpression
     {
-        internal BinaryDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right)
+        internal BinaryDynamicCSharpExpression(Type? context, CSharpBinderFlags binderFlags, ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right)
             : base(context, binderFlags)
         {
             OperationNodeType = binaryType;
@@ -75,7 +77,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes)
         {
             var nodeType = OperationNodeType;
 
@@ -213,7 +215,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context)
+        public static BinaryDynamicCSharpExpression MakeDynamicBinary(ExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context)
         {
             RequiresNotNull(left, nameof(left));
             RequiresNotNull(right, nameof(right));

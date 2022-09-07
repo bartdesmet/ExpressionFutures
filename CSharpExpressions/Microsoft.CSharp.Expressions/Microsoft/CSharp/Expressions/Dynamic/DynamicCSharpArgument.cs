@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System.Linq.Expressions;
 
 using Microsoft.CSharp.RuntimeBinder;
@@ -15,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class DynamicCSharpArgument
     {
-        internal DynamicCSharpArgument(CSharpArgumentInfoFlags flags, string name, Expression expression)
+        internal DynamicCSharpArgument(CSharpArgumentInfoFlags flags, string? name, Expression expression)
         {
             Flags = flags;
             Name = name;
@@ -30,7 +32,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the name of the argument.
         /// </summary>
-        public string Name { get; }
+        public string? Name { get; }
 
         /// <summary>
         /// Gets the expression assigned to the argument.
@@ -74,7 +76,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">The expression representing the value of the argument.</param>
         /// <param name="name">The name of the argument to bind.</param>
         /// <returns>An object representing a dynamically bound argument.</returns>
-        public static DynamicCSharpArgument DynamicArgument(Expression expression, string name) =>
+        public static DynamicCSharpArgument DynamicArgument(Expression expression, string? name) =>
             DynamicArgument(expression, name, GetFlags(expression));
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="name">The name of the argument to bind.</param>
         /// <param name="argumentFlags">The argument flags denoting various properties about the dynamically bound argument.</param>
         /// <returns>An object representing a dynamically bound argument.</returns>
-        public static DynamicCSharpArgument DynamicArgument(Expression expression, string name, CSharpArgumentInfoFlags argumentFlags)
+        public static DynamicCSharpArgument DynamicArgument(Expression expression, string? name, CSharpArgumentInfoFlags argumentFlags)
         {
             RequiresCanRead(expression, nameof(expression));
 

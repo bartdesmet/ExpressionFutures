@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +25,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class InvokeConstructorDynamicCSharpExpression : DynamicCSharpExpression
     {
-        internal InvokeConstructorDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Type type, ReadOnlyCollection<DynamicCSharpArgument> arguments)
+        internal InvokeConstructorDynamicCSharpExpression(Type? context, CSharpBinderFlags binderFlags, Type type, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)
         {
             Type = type;
@@ -52,7 +54,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes)
         {
             var n = Arguments.Count;
 
@@ -82,7 +84,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public InvokeConstructorDynamicCSharpExpression Update(IEnumerable<DynamicCSharpArgument> arguments)
+        public InvokeConstructorDynamicCSharpExpression Update(IEnumerable<DynamicCSharpArgument>? arguments)
         {
             if (SameElements(ref arguments, Arguments))
             {
@@ -101,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, params Expression[] arguments) =>
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, params Expression[]? arguments) =>
             DynamicInvokeConstructor(type, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<Expression> arguments) =>
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<Expression>? arguments) =>
             DynamicInvokeConstructor(type, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An array of expressions dynamic arguments the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, DynamicCSharpArgument[] arguments) =>
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, DynamicCSharpArgument[]? arguments) =>
             DynamicInvokeConstructor(type, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the object to instantiate.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the constructor upon object creation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments) =>
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument>? arguments) =>
             DynamicInvokeConstructor(type, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the constructor upon object creation.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument>? arguments, CSharpBinderFlags binderFlags) =>
             DynamicInvokeConstructor(type, arguments, binderFlags, context: null);
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound constructor invocation.</returns>
-        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context)
+        public static InvokeConstructorDynamicCSharpExpression DynamicInvokeConstructor(Type type, IEnumerable<DynamicCSharpArgument>? arguments, CSharpBinderFlags binderFlags, Type? context)
         {
             RequiresNotNull(type, nameof(type));
 

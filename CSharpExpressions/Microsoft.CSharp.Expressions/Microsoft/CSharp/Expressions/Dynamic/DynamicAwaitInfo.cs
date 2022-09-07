@@ -2,6 +2,8 @@
 //
 // bartde - February 2020
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -15,7 +17,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class DynamicAwaitInfo : AwaitInfo
     {
-        internal DynamicAwaitInfo(Type context, bool resultDiscarded)
+        internal DynamicAwaitInfo(Type? context, bool resultDiscarded)
         {
             Context = context;
             ResultDiscarded = resultDiscarded;
@@ -34,7 +36,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the context in which the dynamic operation is bound.
         /// </summary>
-        public Type Context { get; }
+        public Type? Context { get; }
 
         /// <summary>
         /// Indicates whether the result of the await operation is discarded.
@@ -110,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The context in which the dynamic operation is bound.</param>
         /// <param name="resultDiscarded">Indicates whether the result of the await operation is discarded.</param>
         /// <returns>An object representing binding information for await operations.</returns>
-        public static DynamicAwaitInfo DynamicAwaitInfo(Type context, bool resultDiscarded) =>
+        public static DynamicAwaitInfo DynamicAwaitInfo(Type? context, bool resultDiscarded) =>
             // NB: This is the overload the C# compiler binds to.
             new DynamicAwaitInfo(context, resultDiscarded);
     }

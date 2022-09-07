@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
 
     internal static class DynamicHelpers
     {
-        public static Expression MakeDynamic(Type type, CallSiteBinder binder, IEnumerable<Expression> arguments, Type[] argumentTypes)
+        public static Expression MakeDynamic(Type type, CallSiteBinder binder, IEnumerable<Expression> arguments, Type[]? argumentTypes)
         {
             if (argumentTypes == null)
             {

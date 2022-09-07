@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -35,7 +37,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resultDiscarded">Indicates whether the result of the await operation is discarded, causing the expression to have type <see cref="System.Void"/>.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
-        public static AwaitCSharpExpression DynamicAwait(Expression operand, bool resultDiscarded, Type context)
+        public static AwaitCSharpExpression DynamicAwait(Expression operand, bool resultDiscarded, Type? context)
         {
             RequiresCanRead(operand, nameof(operand));
 

@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Dynamic.Utils;
@@ -117,7 +119,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.Assign, left, right, binderFlags, context);
 
         /// <summary>
@@ -156,7 +158,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicNullCoalescingAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.NullCoalescingAssign, left, right, binderFlags, context);
     }
 }

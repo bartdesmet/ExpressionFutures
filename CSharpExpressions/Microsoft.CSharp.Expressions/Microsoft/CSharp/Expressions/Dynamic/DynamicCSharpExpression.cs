@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -18,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public abstract partial class DynamicCSharpExpression : CSharpExpression
     {
-        internal DynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags)
+        internal DynamicCSharpExpression(Type? context, CSharpBinderFlags binderFlags)
         {
             Context = context;
             Flags = binderFlags;
@@ -27,7 +29,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the <see cref="System.Type" /> that indicates where this operation is used.
         /// </summary>
-        public Type Context { get; }
+        public Type? Context { get; }
 
         /// <summary>
         /// Gets the flags with the dynamic operation binder will be initialized.
@@ -46,7 +48,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         public override Expression Reduce()
         {
-            ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);
+            ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes);
 
             return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
         }
@@ -58,6 +60,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", Justification = "For internal use only.")]
-        protected abstract void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);
+        protected abstract void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes);
     }
 }

@@ -2,6 +2,8 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using System;
 using System.Linq.Expressions;
 
@@ -51,7 +53,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AddAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicAddAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicAddAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.AddAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AndAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicAndAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicAndAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.AndAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -133,7 +135,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'DivideAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicDivideAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicDivideAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.DivideAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -174,7 +176,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'ExclusiveOrAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicExclusiveOrAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicExclusiveOrAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.ExclusiveOrAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -215,7 +217,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'LeftShiftAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicLeftShiftAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicLeftShiftAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.LeftShiftAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -256,7 +258,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'ModuloAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicModuloAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicModuloAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.ModuloAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -297,7 +299,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'MultiplyAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicMultiplyAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicMultiplyAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.MultiplyAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -338,7 +340,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'OrAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicOrAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicOrAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.OrAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -379,7 +381,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'RightShiftAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicRightShiftAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicRightShiftAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.RightShiftAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -420,7 +422,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'SubtractAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicSubtractAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicSubtractAssign(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.SubtractAssign, left, right, binderFlags, context);
 
         /// <summary>
@@ -461,7 +463,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'AddAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicAddAssignChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicAddAssignChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.AddAssignChecked, left, right, binderFlags, context);
 
         /// <summary>
@@ -502,7 +504,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'MultiplyAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicMultiplyAssignChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicMultiplyAssignChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.MultiplyAssignChecked, left, right, binderFlags, context);
 
         /// <summary>
@@ -543,7 +545,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary 'SubtractAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignBinaryDynamicCSharpExpression DynamicSubtractAssignChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignBinaryDynamicCSharpExpression DynamicSubtractAssignChecked(DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicBinaryAssign(CSharpExpressionType.SubtractAssignChecked, left, right, binderFlags, context);
 
         /// <summary>
@@ -580,7 +582,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PreIncrementAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementAssign, operand, binderFlags, context);
 
         /// <summary>
@@ -617,7 +619,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PreDecrementAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementAssign, operand, binderFlags, context);
 
         /// <summary>
@@ -654,7 +656,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PostIncrementAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementAssign, operand, binderFlags, context);
 
         /// <summary>
@@ -691,7 +693,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PostDecrementAssign' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssign(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementAssign, operand, binderFlags, context);
 
         /// <summary>
@@ -728,7 +730,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PreIncrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PreIncrementAssignChecked, operand, binderFlags, context);
 
         /// <summary>
@@ -765,7 +767,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PreDecrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPreDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PreDecrementAssignChecked, operand, binderFlags, context);
 
         /// <summary>
@@ -802,7 +804,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PostIncrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostIncrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PostIncrementAssignChecked, operand, binderFlags, context);
 
         /// <summary>
@@ -839,7 +841,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound unary 'PostDecrementAssignChecked' operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Inherited from the type name.")]
-        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type context) =>
+        public static AssignUnaryDynamicCSharpExpression DynamicPostDecrementAssignChecked(DynamicCSharpArgument operand, CSharpBinderFlags binderFlags, Type? context) =>
             MakeDynamicUnaryAssign(CSharpExpressionType.PostDecrementAssignChecked, operand, binderFlags, context);
 
         private static void CheckBinaryAssign(CSharpExpressionType binaryType)

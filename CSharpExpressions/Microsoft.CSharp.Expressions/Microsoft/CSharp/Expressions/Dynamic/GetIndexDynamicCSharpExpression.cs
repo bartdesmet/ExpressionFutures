@@ -2,6 +2,8 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +26,7 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class GetIndexDynamicCSharpExpression : DynamicCSharpExpression
     {
-        internal GetIndexDynamicCSharpExpression(Type context, CSharpBinderFlags binderFlags, Expression @object, ReadOnlyCollection<DynamicCSharpArgument> arguments)
+        internal GetIndexDynamicCSharpExpression(Type? context, CSharpBinderFlags binderFlags, Expression @object, ReadOnlyCollection<DynamicCSharpArgument> arguments)
             : base(context, binderFlags)
         {
             Object = @object;
@@ -53,7 +55,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binder">The binder used to perform the dynamic operation.</param>
         /// <param name="arguments">The arguments to apply the dynamic operation to.</param>
         /// <param name="argumentTypes">The types of the arguments to use for the dynamic call site. Return null to infer types.</param>
-        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
+        protected override void ReduceDynamic(out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes)
         {
             var n = Arguments.Count;
 
@@ -86,7 +88,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The <see cref="Object" /> property of the result.</param>
         /// <param name="arguments">The <see cref="Arguments" /> property of the result.</param>
         /// <returns>This expression if no children changed, or an expression with the updated children.</returns>
-        public GetIndexDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument> arguments)
+        public GetIndexDynamicCSharpExpression Update(Expression @object, IEnumerable<DynamicCSharpArgument>? arguments)
         {
             if (@object == Object && SameElements(ref arguments, Arguments))
             {
@@ -131,12 +133,12 @@ namespace Microsoft.CSharp.Expressions
 
         internal Expression ReduceAssignment(Expression value, CSharpBinderFlags flags, CSharpArgumentInfoFlags leftFlags = CSharpArgumentInfoFlags.None, CSharpArgumentInfoFlags rightFlags = CSharpArgumentInfoFlags.None)
         {
-            ReduceAssignment(value, flags, leftFlags, rightFlags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes);
+            ReduceAssignment(value, flags, leftFlags, rightFlags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes);
 
             return DynamicHelpers.MakeDynamic(Type, binder, arguments, argumentTypes);
         }
 
-        private void ReduceAssignment(Expression value, CSharpBinderFlags flags, CSharpArgumentInfoFlags leftFlags, CSharpArgumentInfoFlags rightFlags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[] argumentTypes)
+        private void ReduceAssignment(Expression value, CSharpBinderFlags flags, CSharpArgumentInfoFlags leftFlags, CSharpArgumentInfoFlags rightFlags, out CallSiteBinder binder, out IEnumerable<Expression> arguments, out Type[]? argumentTypes)
         {
             var n = Arguments.Count;
 
@@ -175,7 +177,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An array of expressions representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, params Expression[] arguments) =>
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, params Expression[]? arguments) =>
             DynamicGetIndex(@object, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -184,7 +186,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An enumerable sequence of expressions representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<Expression> arguments) =>
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<Expression>? arguments) =>
             DynamicGetIndex(@object, GetDynamicArguments(arguments), CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -193,7 +195,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An array of dynamic arguments representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, DynamicCSharpArgument[] arguments) =>
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, DynamicCSharpArgument[]? arguments) =>
             DynamicGetIndex(@object, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -202,7 +204,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="object">The expression representing the object to index into.</param>
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the indexing operaton.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments) =>
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument>? arguments) =>
             DynamicGetIndex(@object, arguments, CSharpBinderFlags.None, context: null);
 
         /// <summary>
@@ -212,7 +214,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="arguments">An enumerable sequence of dynamic arguments representing the arguments passed to the indexing operaton.</param>
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags) =>
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument>? arguments, CSharpBinderFlags binderFlags) =>
             DynamicGetIndex(@object, arguments, binderFlags, context: null);
 
         /// <summary>
@@ -223,7 +225,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound indexing operation.</returns>
-        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument> arguments, CSharpBinderFlags binderFlags, Type context)
+        public static GetIndexDynamicCSharpExpression DynamicGetIndex(Expression @object, IEnumerable<DynamicCSharpArgument>? arguments, CSharpBinderFlags binderFlags, Type? context)
         {
             RequiresCanRead(@object, nameof(@object));
 
