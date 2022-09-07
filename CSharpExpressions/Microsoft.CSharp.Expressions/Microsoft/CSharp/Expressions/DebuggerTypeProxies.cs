@@ -2,6 +2,8 @@
 //
 // bartde - November 2015
 
+#nullable disable
+
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
