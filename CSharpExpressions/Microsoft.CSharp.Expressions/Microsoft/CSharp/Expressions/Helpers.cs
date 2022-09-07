@@ -289,25 +289,6 @@ namespace Microsoft.CSharp.Expressions
             return Expression.Invoke(lambda, argument);
         }
 
-        public static MethodInfo FindDisposeMethod(this Type type, bool isAsync)
-        {
-            var disposableInterface = isAsync ? typeof(IAsyncDisposable) : typeof(IDisposable);
-
-            if (type.IsInterface)
-            {
-                if (disposableInterface.IsAssignableFrom(type))
-                {
-                    var disposeMethodName = isAsync ? nameof(IAsyncDisposable.DisposeAsync) : nameof(IDisposable.Dispose);
-
-                    return disposableInterface.GetMethod(disposeMethodName);
-                }
-            }
-
-            // REVIEW: This may pose challenges on .NET Native
-            var map = type.GetInterfaceMap(disposableInterface);
-            return map.TargetMethods.Single(); // NB: I[Async]Disposable has only one method
-        }
-
         public static Expression BindArguments(Func<Expression, Expression[], Expression> create, Expression instance, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> bindings, bool needTemps = false)
         {
             var res = default(Expression);
@@ -779,52 +760,6 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        public static void RequiresCanWrite(Expression expression, string paramName)
-        {
-            // NB: This does not account for dynamic member and index nodes; to make dynamically bound assignments,
-            //     one should use the appropriate methods on DynamicCSharpExpression, which require the use of
-            //     dynamic arguments and also allow to separate the dynamic API from the rest of the nodes without
-            //     having a strange circular dependency.
-
-            switch (expression)
-            {
-                case DiscardCSharpExpression _:
-                    return;
-                case IndexCSharpExpression index:
-                    EnsureCanWrite(index, paramName);
-                    break;
-                case ArrayAccessCSharpExpression arrayAccess:
-                    EnsureCanWrite(arrayAccess, paramName);
-                    break;
-                case IndexerAccessCSharpExpression indexerAccess:
-                    EnsureCanWrite(indexerAccess, paramName);
-                    break;
-                default:
-                    {
-                        // NB: Our current modification of the Roslyn compiler can emit these nodes as the LHS of an
-                        //     assignment. We can deal with this in reduction steps by rewriting it to ArrayAccess
-                        //     using MakeWriteable below.
-
-                        if (expression.NodeType == ExpressionType.ArrayIndex)
-                        {
-                            return;
-                        }
-
-                        if (expression.NodeType == ExpressionType.Call)
-                        {
-                            var call = (MethodCallExpression)expression;
-                            if (IsArrayAssignment(call))
-                            {
-                                return;
-                            }
-                        }
-
-                        ExpressionUtils.RequiresCanWrite(expression, paramName);
-                        break;
-                    }
-            }
-        }
-
         public static Expression MakeWriteable(Expression lhs)
         {
             if (lhs is DiscardCSharpExpression)
@@ -848,39 +783,6 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return lhs;
-        }
-
-        private static void EnsureCanWrite(IndexCSharpExpression index, string paramName)
-        {
-            if (!index.Indexer.CanWrite)
-            {
-                throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
-            }
-        }
-
-        private static void EnsureCanWrite(ArrayAccessCSharpExpression arrayAccess, string paramName)
-        {
-            if (arrayAccess.Indexes[0].Type == typeof(Range))
-            {
-                throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
-            }
-        }
-
-        private static void EnsureCanWrite(IndexerAccessCSharpExpression indexerAccess, string paramName)
-        {
-            if (indexerAccess.Type == typeof(Range))
-            {
-                throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
-            }
-            else
-            {
-                var indexer = (PropertyInfo)indexerAccess.IndexOrSlice;
-
-                if (!indexer.CanWrite)
-                {
-                    throw new ArgumentException(ErrorStrings.ExpressionMustBeWriteable, paramName);
-                }
-            }
         }
 
         private static bool IsArrayAssignment(MethodCallExpression call)
@@ -1226,40 +1128,6 @@ namespace Microsoft.CSharp.Expressions
             }
 
             return expression;
-        }
-
-        public static Expression Apply(LambdaExpression lambda, Expression expression)
-        {
-            // TODO: We can beta reduce the lambda explicitly here, iff the specified expression is pure
-            //       or is used exactly once in the lambda before any other observable side-effect (i.e.
-            //       don't cause re-evalation or out-of-order evaluation of e.g. an indexer or member).
-            //
-            //       The code below does a basic version of this, well-suited for the conversions that
-            //       get generated by the compound assignment factories. See a DESIGN note in BinaryAssign
-            //       for considerations on not using a lambda for that case.
-            //
-            //       Note that the LINQ expression compiler also inlines Invoke(Lambda, args) expressions
-            //       so this optimization is mostly to make Reduce return a nicer form.
-
-            if (lambda.Parameters.Count == 1)
-            {
-                var parameter = lambda.Parameters[0];
-                var body = lambda.Body;
-
-                switch (body.NodeType)
-                {
-                    case ExpressionType.Convert:
-                    case ExpressionType.ConvertChecked:
-                        var convert = (UnaryExpression)body;
-                        if (convert.Operand == parameter)
-                        {
-                            return convert.Update(expression);
-                        }
-                        break;
-                }
-            }
-
-            return Expression.Invoke(lambda, expression);
         }
     }
 }

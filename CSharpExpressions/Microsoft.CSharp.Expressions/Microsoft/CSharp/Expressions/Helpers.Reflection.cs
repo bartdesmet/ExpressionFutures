@@ -82,5 +82,24 @@ namespace Microsoft.CSharp.Expressions
             // DESIGN: Should we reject non-nullable value types here?
             return type.GetNonNullableType();
         }
+
+        public static MethodInfo FindDisposeMethod(this Type type, bool isAsync)
+        {
+            var disposableInterface = isAsync ? typeof(IAsyncDisposable) : typeof(IDisposable);
+
+            if (type.IsInterface)
+            {
+                if (disposableInterface.IsAssignableFrom(type))
+                {
+                    var disposeMethodName = isAsync ? nameof(IAsyncDisposable.DisposeAsync) : nameof(IDisposable.Dispose);
+
+                    return disposableInterface.GetMethod(disposeMethodName)!;
+                }
+            }
+
+            // REVIEW: This may pose challenges on .NET Native
+            var map = type.GetInterfaceMap(disposableInterface);
+            return map.TargetMethods.Single(); // NB: I[Async]Disposable has only one method
+        }
     }
 }
