@@ -2,8 +2,11 @@
 //
 // bartde - October 2015
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -98,9 +101,16 @@ namespace Microsoft.CSharp.Expressions
                 var n = index.Arguments.Count;
                 var args = new Expression[n];
 
-                var obj = Expression.Parameter(index.Object.Type, "__object");
-                temps.Add(obj);
-                stmts.Add(Expression.Assign(obj, index.Object));
+                var obj = index.Object;
+
+                if (obj != null)
+                {
+                    var temp = Expression.Parameter(obj.Type, "__object");
+                    temps.Add(temp);
+                    stmts.Add(Expression.Assign(temp, obj));
+
+                    obj = temp;
+                }
 
                 for (var j = 0; j < n; j++)
                 {
@@ -120,11 +130,11 @@ namespace Microsoft.CSharp.Expressions
                     }
                 }
 
-                return index.Update(obj, args.ToReadOnlyUnsafe());
+                return index.Update(obj!, args.ToReadOnlyUnsafe());
             }
         }
 
-        public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression leftConversion = null)
+        public static Expression ReduceAssignment(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix = true, LambdaExpression? leftConversion = null)
         {
             return lhs.NodeType switch
             {
@@ -141,7 +151,7 @@ namespace Microsoft.CSharp.Expressions
             };
         }
 
-        private static Expression ReduceMember(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        private static Expression ReduceMember(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression? leftConversion)
         {
             var res = default(Expression);
 
@@ -160,7 +170,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var lhsTemp = Expression.Parameter(member.Type, "__lhs");
                     var op = functionalOp(WithLeftConversion(lhsTemp, leftConversion));
-                    var method = typeof(RuntimeOpsEx).GetMethod(prefix ? nameof(RuntimeOpsEx.PreAssignByRef) : nameof(RuntimeOpsEx.PostAssignByRef));
+                    var method = typeof(RuntimeOpsEx).GetMethod(prefix ? nameof(RuntimeOpsEx.PreAssignByRef) : nameof(RuntimeOpsEx.PostAssignByRef))!; // TODO: well-known members
                     method = method.MakeGenericMethod(member.Type);
                     res = Expression.Call(method, member, Expression.Lambda(op, lhsTemp));
                 }
@@ -198,7 +208,7 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private static Expression ReduceIndex(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        private static Expression ReduceIndex(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression? leftConversion)
         {
             var index = (IndexExpression)lhs;
 
@@ -224,20 +234,24 @@ namespace Microsoft.CSharp.Expressions
             var block = new List<Expression>();
             var temps = new List<ParameterExpression>();
 
-            var receiver = index.Object;
+            Expression? receiver = null;
+            ParameterExpression? obj = null;
 
-            ParameterExpression obj;
-
-            if (!isByRef)
+            if (index.Object != null)
             {
-                obj = Expression.Parameter(index.Object.Type, "__object");
-                temps.Add(obj);
+                receiver = index.Object;
 
-                block.Add(Expression.Assign(obj, index.Object));
-            }
-            else
-            {
-                obj = Expression.Parameter(index.Object.Type.MakeByRefType(), "__object");
+                if (!isByRef)
+                {
+                    obj = Expression.Parameter(receiver.Type, "__object");
+                    temps.Add(obj);
+
+                    block.Add(Expression.Assign(obj, receiver));
+                }
+                else
+                {
+                    obj = Expression.Parameter(receiver.Type.MakeByRefType(), "__object");
+                }
             }
 
             for (var j = 0; j < n; j++)
@@ -258,7 +272,10 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            index = index.Update(obj, args.ToReadOnlyUnsafe());
+            // NB: LINQ has some inconsistencies with null support for object on a static indexer. The factory
+            //     for Property supports null, but Update doesn't (though passing null would work).
+
+            index = index.Update(obj!, args.ToReadOnlyUnsafe());
 
             if (prefix)
             {
@@ -278,7 +295,10 @@ namespace Microsoft.CSharp.Expressions
 
             if (isByRef)
             {
-                var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef));
+                Debug.Assert(obj != null);
+                Debug.Assert(receiver != null);
+
+                var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef))!; // TODO: well-known members
                 method = method.MakeGenericMethod(obj.Type, res.Type);
                 var delegateType = typeof(FuncByRef<,>).MakeGenericType(obj.Type, res.Type);
 
@@ -292,12 +312,12 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private static bool NeedByRefAssign(Expression lhs)
+        private static bool NeedByRefAssign(Expression? lhs)
         {
             // NB: Block doesn't support by-ref locals, so we have to use a helper method to perform the assignment
             //     to the target without causing repeated re-evaluation of the LHS.
 
-            if (lhs.Type.IsValueType && !lhs.Type.IsNullableType())
+            if (lhs != null && lhs.Type.IsValueType && !lhs.Type.IsNullableType())
             {
                 return true;
             }
@@ -305,7 +325,7 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        private static Expression ReduceVariable(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        private static Expression ReduceVariable(Expression lhs, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression? leftConversion)
         {
             Expression res;
 
@@ -328,22 +348,22 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private static Expression ReduceIndexCSharp(IndexCSharpExpression index, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        private static Expression ReduceIndexCSharp(IndexCSharpExpression index, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression? leftConversion)
         {
             return index.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
         }
 
-        private static Expression ReduceArrayAccessCSharp(ArrayAccessCSharpExpression arrayAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        private static Expression ReduceArrayAccessCSharp(ArrayAccessCSharpExpression arrayAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression? leftConversion)
         {
             return arrayAccess.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
         }
 
-        private static Expression ReduceIndexerAccessCSharp(IndexerAccessCSharpExpression indexerAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression leftConversion)
+        private static Expression ReduceIndexerAccessCSharp(IndexerAccessCSharpExpression indexerAccess, Func<Expression, Expression> functionalOp, bool prefix, LambdaExpression? leftConversion)
         {
             return indexerAccess.ReduceAssign(x => ReduceVariable(x, functionalOp, prefix, leftConversion));
         }
 
-        private static Expression WithLeftConversion(Expression expression, LambdaExpression leftConversion)
+        private static Expression WithLeftConversion(Expression expression, LambdaExpression? leftConversion)
         {
             if (leftConversion != null)
             {
