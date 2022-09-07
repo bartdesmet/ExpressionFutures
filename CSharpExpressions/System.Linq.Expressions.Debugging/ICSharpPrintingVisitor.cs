@@ -2,6 +2,7 @@
 //
 // bartde - December 2015
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace System.Linq.Expressions
@@ -42,7 +43,7 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="value">The value to emit.</param>
         /// <param name="type">The type to emit the value as.</param>
-        void Literal(object value, Type type);
+        void Literal(object? value, Type type);
 
         /// <summary>
         /// Emits syntax for a static method call.
@@ -63,7 +64,8 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="node">The expression tree node to visit.</param>
         /// <returns>The original expression.</returns>
-        Expression Visit(Expression node);
+        [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+        Expression? Visit(Expression? node);
 
         /// <summary>
         /// Visits the specified expression tree node, treating it as an expression, and emits it to the printer.
@@ -106,13 +108,13 @@ namespace System.Linq.Expressions
         /// Pushes a break label onto the break label stack used for Goto statement analysis.
         /// </summary>
         /// <param name="target">The break label to push.</param>
-        void PushBreak(LabelTarget target);
+        void PushBreak(LabelTarget? target);
 
         /// <summary>
         /// Pushes a continue label onto the continue label stack used for Goto statement analysis.
         /// </summary>
         /// <param name="target">The continue label to push.</param>
-        void PushContinue(LabelTarget target);
+        void PushContinue(LabelTarget? target);
 
         /// <summary>
         /// Pops the last break label from the break label stack used for Goto statement analysis.

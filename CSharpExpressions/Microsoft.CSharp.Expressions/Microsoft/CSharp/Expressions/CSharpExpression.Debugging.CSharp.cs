@@ -2,10 +2,14 @@
 //
 // bartde - December 2015
 
+#nullable enable
+
 using Microsoft.CSharp.Expressions.Compiler;
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic.Utils;
 using System.Globalization;
 using System.Linq;
@@ -119,7 +123,7 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("new ");
-            visitor.Out(visitor.ToCSharp(Type.GetElementType()));
+            visitor.Out(visitor.ToCSharp(Type.GetElementType()!));
 
             visitor.Out("[");
             visitor.Out(string.Join(", ", Bounds));
@@ -187,13 +191,17 @@ namespace Microsoft.CSharp.Expressions
             if (Object != null)
             {
                 visitor.ParenthesizedVisit(this, Object);
+                visitor.Out(".");
             }
             else
             {
-                visitor.Out(visitor.ToCSharp(Method.DeclaringType));
+                if (Method.DeclaringType is Type dt)
+                {
+                    visitor.Out(visitor.ToCSharp(dt));
+                    visitor.Out(".");
+                }
             }
 
-            visitor.Out(".");
             visitor.Out(Method.Name);
 
             if (Method.IsGenericMethod && !CSharpLanguageHelpers.CanInferGenericArguments(Method))
@@ -308,7 +316,7 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("while (");
-            visitor.VisitExpression(Test);
+            visitor.VisitExpression(Test!);
             visitor.Out(")");
 
             visitor.VisitLoopBody(this);
@@ -333,7 +341,7 @@ namespace Microsoft.CSharp.Expressions
 
             visitor.NewLine();
             visitor.Out("while (");
-            visitor.VisitExpression(Test);
+            visitor.VisitExpression(Test!);
             visitor.Out(");");
         }
     }
@@ -688,7 +696,7 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Indent();
                 visitor.NewLine();
 
-                if (caseToVariables.TryGetValue(@case, out List<ParameterExpression> locals))
+                if (caseToVariables.TryGetValue(@case, out List<ParameterExpression>? locals))
                 {
                     var vars = locals.ToLookup(v => v.Type, v => v);
                     foreach (var kv in vars)
@@ -952,6 +960,8 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
+                Debug.Assert(Declarations != null);
+
                 visitor.Out(visitor.ToCSharp(Declarations[0].Variable.Type));
                 visitor.Out(" ");
 
@@ -1018,7 +1028,7 @@ namespace Microsoft.CSharp.Expressions
                     break;
                 case CSharpGotoKind.GotoLabel:
                     var gotoLabel = (GotoLabelCSharpStatement)this;
-                    visitor.Out(FormattableString.Invariant($"goto {visitor.GetLabelName(gotoLabel.Target)};"));
+                    visitor.Out(FormattableString.Invariant($"goto {visitor.GetLabelName(gotoLabel.Target!)};"));
                     break;
             }
         }
@@ -1346,7 +1356,7 @@ namespace Microsoft.CSharp.Expressions
                     visitor.Out(" = ");
                 }
 
-                visitor.StaticMethodCall(Method, Operand);
+                visitor.StaticMethodCall(Method!, Operand);
                 return;
             }
 
@@ -1484,7 +1494,7 @@ namespace Microsoft.CSharp.Expressions
                 // NB: Not preserving evaluation semantics for indexers etc.
                 visitor.Visit(Left);
                 visitor.Out(" = ");
-                visitor.StaticMethodCall(Method, Left, Right);
+                visitor.StaticMethodCall(Method!, Left, Right);
                 return;
             }
 
@@ -1556,13 +1566,17 @@ namespace Microsoft.CSharp.Expressions
             if (Object != null)
             {
                 visitor.ParenthesizedVisit(this, Object);
+                visitor.Out(".");
             }
             else
             {
-                visitor.Out(Event.DeclaringType.ToCSharp());
+                if (Event.DeclaringType is Type dt)
+                {
+                    visitor.Out(dt.ToCSharp());
+                    visitor.Out(".");
+                }
             }
 
-            visitor.Out(".");
             visitor.Out(Event.Name);
 
             visitor.Out(" ");
@@ -1887,7 +1901,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (Object == null)
             {
-                visitor.Out(visitor.ToCSharp(Target));
+                visitor.Out(visitor.ToCSharp(Target!));
             }
             else
             {
@@ -2763,9 +2777,9 @@ namespace Microsoft.CSharp.Expressions
 
         class CSharpVisitor : CSharpExpressionVisitor
         {
-            private readonly Func<Expression, Expression> _visit;
+            private readonly Func<Expression?, Expression?> _visit;
 
-            public CSharpVisitor(Func<Expression, Expression> visit)
+            public CSharpVisitor(Func<Expression?, Expression?> visit)
             {
                 _visit = visit;
             }
@@ -2776,7 +2790,8 @@ namespace Microsoft.CSharp.Expressions
                 base.Visit(node);
             }
 
-            public override Expression Visit(Expression node)
+            [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
+            public override Expression? Visit(Expression? node)
             {
                 _visit(node);
 
