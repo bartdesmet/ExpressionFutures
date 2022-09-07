@@ -247,7 +247,7 @@ namespace Microsoft.CSharp.Expressions
                     var disposeMethod =
                         variableType.IsSealed
                             ? variableType.FindDisposeMethod(IsAsync)
-                            : (IsAsync ? DisposeAsyncMethod : DisposeMethod);
+                            : (IsAsync ? WellKnownMembers.DisposeAsyncMethod : WellKnownMembers.DisposeMethod);
 
                     cleanup = Expression.Call(variable, disposeMethod);
                 }
@@ -440,10 +440,6 @@ namespace Microsoft.CSharp.Expressions
                 return expr;
             }
         }
-
-        private static MethodInfo? s_disposeMethod, s_disposeAsyncMethod;
-        internal static MethodInfo DisposeMethod => s_disposeMethod ??= typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose))!; // TODO: well-known members
-        internal static MethodInfo DisposeAsyncMethod => s_disposeAsyncMethod ??= typeof(IAsyncDisposable).GetMethod(nameof(IAsyncDisposable.DisposeAsync))!; // TODO: well-known members
     }
 
     partial class CSharpExpression

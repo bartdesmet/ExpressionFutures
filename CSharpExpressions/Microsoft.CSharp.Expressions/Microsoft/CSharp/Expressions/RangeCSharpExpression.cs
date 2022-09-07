@@ -188,30 +188,22 @@ namespace Microsoft.CSharp.Expressions
 
                 if (Left == null && Right == null)
                 {
-                    return All;
+                    return WellKnownMembers.RangeAll;
                 }
                 else if (Left == null)
                 {
-                    return EndAt;
+                    return WellKnownMembers.RangeEndAt;
                 }
                 else if (Right == null)
                 {
-                    return StartAt;
+                    return WellKnownMembers.RangeStartAt;
                 }
                 else
                 {
-                    return Ctor;
+                    return WellKnownMembers.RangeCtor;
                 }
             }
         }
-
-        private static MethodInfo? s_all, s_end_at, s_start_at;
-        private static ConstructorInfo? s_ctor;
-
-        private static MethodInfo All => s_all ??= typeof(Range).GetProperty(nameof(System.Range.All))!.GetGetMethod()!; // TODO: well-known members
-        private static MethodInfo EndAt => s_end_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.EndAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) })!; // TODO: well-known members
-        private static MethodInfo StartAt => s_start_at ??= typeof(Range).GetNonGenericMethod(nameof(System.Range.StartAt), BindingFlags.Public | BindingFlags.Static, new[] { typeof(Index) })!; // TODO: well-known members
-        private static ConstructorInfo Ctor => s_ctor ??= typeof(Range).GetConstructor(new[] { typeof(System.Index), typeof(System.Index) })!; // TODO: well-known members
     }
 
     partial class CSharpExpression

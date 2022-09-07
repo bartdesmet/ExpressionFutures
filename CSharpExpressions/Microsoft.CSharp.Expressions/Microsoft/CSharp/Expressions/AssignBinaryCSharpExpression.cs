@@ -470,11 +470,11 @@ namespace Microsoft.CSharp.Expressions
                         {
                             if (rightType == typeof(string))
                             {
-                                method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) })!; // TODO: well-known members
+                                method = WellKnownMembers.ConcatStringString;
                             }
                             else
                             {
-                                method = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(object) })!; // TODO: well-known members
+                                method = WellKnownMembers.ConcatStringObject;
 
                                 if (!AreReferenceAssignable(typeof(object), rightType))
                                 {
@@ -507,11 +507,11 @@ namespace Microsoft.CSharp.Expressions
                     {
                         if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
                         {
-                            method = typeof(Delegate).GetMethod(nameof(Delegate.Combine), new[] { typeof(Delegate), typeof(Delegate) })!; // TODO: well-known members
+                            method = WellKnownMembers.DelegateCombine;
                         }
                         else if (binaryType == CSharpExpressionType.SubtractAssign || binaryType == CSharpExpressionType.SubtractAssignChecked)
                         {
-                            method = typeof(Delegate).GetMethod(nameof(Delegate.Remove), new[] { typeof(Delegate), typeof(Delegate) })!; // TODO: well-known members
+                            method = WellKnownMembers.DelegateRemove;
                         }
                         else
                         {

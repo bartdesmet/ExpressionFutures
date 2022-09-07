@@ -332,8 +332,6 @@ namespace Microsoft.CSharp.Expressions
                 var check = Expression.Label("__check");
                 var iterate = Expression.Label("__iterate");
 
-                var indexer = typeof(string).GetProperty("Chars");
-
                 exprs[i++] =
                     Expression.Assign(collection, Collection);
                 exprs[i++] =
@@ -343,7 +341,7 @@ namespace Microsoft.CSharp.Expressions
                 exprs[i++] =
                     Expression.Label(iterate);
                 exprs[i++] =
-                    Expression.Assign(variable, Expression.MakeIndex(collection, indexer, new[] { index }));
+                    Expression.Assign(variable, Expression.MakeIndex(collection, WellKnownMembers.StringChars, new[] { index }));
                 exprs[i++] =
                     Body;
 
@@ -532,14 +530,14 @@ namespace Microsoft.CSharp.Expressions
                 {
                     var upperBound = Expression.Parameter(typeof(int), "__u" + i);
                     temps.Add(upperBound);
-                    stmts.Add(Expression.Assign(upperBound, Expression.Call(array, GetUpperBound, CreateConstantInt32(i))));
+                    stmts.Add(Expression.Assign(upperBound, Expression.Call(array, WellKnownMembers.ArrayGetUpperBound, CreateConstantInt32(i))));
 
                     var rangeVariable = Expression.Parameter(typeof(int), "__i" + i);
                     rangeVariables.Add(rangeVariable);
 
                     var loopInfo = new LoopInfo(
                         variable: rangeVariable,
-                        initializer: Expression.Assign(rangeVariable, Expression.Call(array, GetLowerBound, CreateConstantInt32(i))),
+                        initializer: Expression.Assign(rangeVariable, Expression.Call(array, WellKnownMembers.ArrayGetLowerBound, CreateConstantInt32(i))),
                         condition: Expression.LessThanOrEqual(rangeVariable, upperBound),
                         increment: Expression.Assign(rangeVariable, Expression.Add(rangeVariable, CreateConstantInt32(1)))
                     );
@@ -599,11 +597,6 @@ namespace Microsoft.CSharp.Expressions
 
                 return Expression.Block(typeof(void), temps, stmts);
             }
-
-            private static MethodInfo? s_getUpperBound, s_getLowerBound;
-
-            private static MethodInfo GetUpperBound => s_getUpperBound ??= typeof(Array).GetMethod(nameof(Array.GetUpperBound))!; // TODO: well-known members
-            private static MethodInfo GetLowerBound => s_getLowerBound ??= typeof(Array).GetMethod(nameof(Array.GetLowerBound))!; // TODO: well-known members
 
             private sealed class LoopInfo
             {
@@ -725,8 +718,8 @@ namespace Microsoft.CSharp.Expressions
                         else if (!enumeratorType.IsSealed)
                         {
                             var disposeMethod = EnumeratorInfo.IsAsync
-                                ? UsingCSharpStatement.DisposeAsyncMethod
-                                : UsingCSharpStatement.DisposeMethod;
+                                ? WellKnownMembers.DisposeAsyncMethod
+                                : WellKnownMembers.DisposeMethod;
 
                             var d = Expression.Parameter(disposableInterface, "__disposable");
                             cleanup =

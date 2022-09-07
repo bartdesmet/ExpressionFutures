@@ -168,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
 
                     var lhsTemp = Expression.Parameter(member.Type, "__lhs");
                     var op = functionalOp(WithLeftConversion(lhsTemp, leftConversion));
-                    var method = typeof(RuntimeOpsEx).GetMethod(prefix ? nameof(RuntimeOpsEx.PreAssignByRef) : nameof(RuntimeOpsEx.PostAssignByRef))!; // TODO: well-known members
+                    var method = prefix ? WellKnownMembers.PreAssignByRef : WellKnownMembers.PostAssignByRef;
                     method = method.MakeGenericMethod(member.Type);
                     res = Expression.Call(method, member, Expression.Lambda(op, lhsTemp));
                 }
@@ -296,8 +296,7 @@ namespace Microsoft.CSharp.Expressions
                 Debug.Assert(obj != null);
                 Debug.Assert(receiver != null);
 
-                var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef))!; // TODO: well-known members
-                method = method.MakeGenericMethod(obj.Type, res.Type);
+                var method = WellKnownMembers.WithByRef.MakeGenericMethod(obj.Type, res.Type);
                 var delegateType = typeof(FuncByRef<,>).MakeGenericType(obj.Type, res.Type);
 
                 // NB: The introduction of a lambda to lift the computation to the WithByRef helper method can be

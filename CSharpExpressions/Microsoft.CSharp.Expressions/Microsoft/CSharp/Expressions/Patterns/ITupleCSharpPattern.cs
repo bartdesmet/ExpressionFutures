@@ -177,7 +177,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                getLengthMethod = ITupleGetLength;
+                getLengthMethod = WellKnownMembers.ITupleGetLength;
             }
 
             if (getItemMethod != null)
@@ -192,7 +192,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                getItemMethod = ITupleGetItem;
+                getItemMethod = WellKnownMembers.ITupleGetItem;
             }
 
             var deconstructionCollection = deconstruction.ToReadOnly();
@@ -219,11 +219,6 @@ namespace Microsoft.CSharp.Expressions
 
             return new ITupleCSharpPattern(info, getLengthMethod, getItemMethod, deconstructionCollection);
         }
-
-        private static MethodInfo? s_itupleGetLength, s_itupleGetItem;
-
-        private static MethodInfo ITupleGetLength => s_itupleGetLength ??= typeof(ITuple).GetProperty(nameof(System.Runtime.CompilerServices.ITuple.Length))!.GetGetMethod()!; // TODO: well-known members
-        private static MethodInfo ITupleGetItem => s_itupleGetItem ??= typeof(ITuple).GetProperty("Item")!.GetGetMethod()!; // TODO: well-known members
     }
 
     partial class CSharpExpressionVisitor

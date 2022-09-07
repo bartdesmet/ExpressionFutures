@@ -19,8 +19,6 @@ namespace Microsoft.CSharp.Expressions
     /// </summary>
     public sealed partial class LockCSharpStatement : CSharpStatement
     {
-        private static MethodInfo? s_enterMethod, s_exitMethod;
-
         internal LockCSharpStatement(Expression expression, Expression body)
         {
             Expression = expression;
@@ -73,13 +71,10 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The reduced expression.</returns>
         protected override Expression ReduceCore()
         {
-            var enterMethod = s_enterMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Enter), new[] { typeof(object), typeof(bool).MakeByRefType() })!; // TODO: well-known members
-            var exitMethod = s_exitMethod ??= typeof(Monitor).GetMethod(nameof(Monitor.Exit), new[] { typeof(object) })!; // TODO: well-known members
-
             var temp = Expression.Parameter(Expression.Type, "__lock");
             var lockTaken = Expression.Parameter(typeof(bool), "__lockWasTaken");
 
-            var enterExpr = Expression.Call(enterMethod, temp, lockTaken);
+            var enterExpr = Expression.Call(WellKnownMembers.MonitorEnter, temp, lockTaken);
             var body = Body is BlockExpression block
                 ? block.Update(block.Variables, block.Expressions.AddFirst(enterExpr))
                 : Expression.Block(enterExpr, Body);
@@ -96,7 +91,7 @@ namespace Microsoft.CSharp.Expressions
                     Expression.TryFinally(
                         body,
                         Expression.IfThen(lockTaken,
-                            Expression.Call(exitMethod, temp)
+                            Expression.Call(WellKnownMembers.MonitorExit, temp)
                         )
                     )
                 );

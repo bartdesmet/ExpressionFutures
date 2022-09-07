@@ -125,7 +125,7 @@ namespace Microsoft.CSharp.Expressions
                 // System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray(array, Range)
 
                 var elemType = Array.Type.GetElementType()!; // REVIEW
-                var getSubArrayMethod = GetSubArrayMethod.MakeGenericMethod(elemType);
+                var getSubArrayMethod = WellKnownMembers.GetSubArray.MakeGenericMethod(elemType);
 
                 return Expression.Call(getSubArrayMethod, Array, Indexes[0]);
             }
@@ -286,9 +286,6 @@ namespace Microsoft.CSharp.Expressions
 
             return IndexerAccessCSharpExpression.GetIndexOffset(index, length, out _);
         }
-
-        private static MethodInfo? s_getSubArray;
-        private static MethodInfo GetSubArrayMethod => s_getSubArray ??= typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.GetSubArray), BindingFlags.Public | BindingFlags.Static)!;
 
         //
         // BUG: This node can't be passed to a ref parameter. E.g. Interlocked.Exchange(ref xs[^i], val)

@@ -44,10 +44,10 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     Expression.Throw(exception), // NB: The C# compiler doesn't emit code to null out the hoisted local; maybe we should?
                     Expression.Call(
                         Expression.Call(
-                            ExceptionDispatchInfoCapture,
+                            WellKnownMembers.ExceptionDispatchInfoCapture,
                             exStronglyTyped
                         ),
-                        ExceptionDispatchInfoThrow
+                        WellKnownMembers.ExceptionDispatchInfoThrow
                     )
                 );
 
@@ -61,9 +61,5 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     exprs
                 );
         }
-
-        private static MethodInfo? s_ediCapture, s_ediThrow;
-        private static MethodInfo ExceptionDispatchInfoCapture => s_ediCapture ??= typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Capture), BindingFlags.Public | BindingFlags.Static)!; // TODO: well-known members
-        private static MethodInfo ExceptionDispatchInfoThrow => s_ediThrow ??= typeof(ExceptionDispatchInfo).GetMethod(nameof(ExceptionDispatchInfo.Throw), BindingFlags.Public | BindingFlags.Instance)!; // TODO: well-known members
     }
 }

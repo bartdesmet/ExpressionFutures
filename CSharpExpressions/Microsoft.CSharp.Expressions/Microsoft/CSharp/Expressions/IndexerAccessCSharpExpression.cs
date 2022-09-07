@@ -155,8 +155,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (isByRef)
                 {
-                    var method = typeof(RuntimeOpsEx).GetMethod(nameof(RuntimeOpsEx.WithByRef))!;
-                    method = method.MakeGenericMethod(Object.Type, Type);
+                    var method = WellKnownMembers.WithByRef.MakeGenericMethod(Object.Type, Type);
                     var delegateType = typeof(FuncByRef<,>).MakeGenericType(Object.Type, Type);
 
                     // NB: The introduction of a lambda to lift the computation to the WithByRef helper method can be
@@ -334,7 +333,7 @@ namespace Microsoft.CSharp.Expressions
                     // int start = range.Start.GetOffset(length)
 
                     var start = Expression.Parameter(typeof(int), "__start");
-                    var startExpr = Expression.Call(Expression.Property(rng, StartProperty), GetOffsetMethod, length);
+                    var startExpr = Expression.Call(Expression.Property(rng, WellKnownMembers.RangeStart), WellKnownMembers.IndexGetOffset, length);
 
                     temps.Add(start);
                     stmts.Add(Expression.Assign(start, startExpr));
@@ -343,7 +342,7 @@ namespace Microsoft.CSharp.Expressions
 
                     sliceStartArg = start;
 
-                    var endExpr = Expression.Call(Expression.Property(rng, EndProperty), GetOffsetMethod, length);
+                    var endExpr = Expression.Call(Expression.Property(rng, WellKnownMembers.RangeEnd), WellKnownMembers.IndexGetOffset, length);
                     sliceSizeArg = MakeSubtract(endExpr, start);
 
                     // NB: The Roslyn compiler generates a local for the size argument. It's unclear why that's needed.
@@ -421,7 +420,7 @@ namespace Microsoft.CSharp.Expressions
                     return MakeSubtract(length, fe.Operand);
                 default:
                     useLength = true;
-                    return Expression.Call(index, GetOffsetMethod, length);
+                    return Expression.Call(index, WellKnownMembers.IndexGetOffset, length);
             }
         }
 
@@ -473,15 +472,6 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private static Expression MakeConstantIfDefault(Expression e) => e is DefaultExpression ? CreateConstantInt32(0) : e;
-
-        private static MethodInfo? s_getOffset;
-        private static MethodInfo GetOffsetMethod => s_getOffset ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.GetOffset), BindingFlags.Public | BindingFlags.Instance, new[] { typeof(int) })!;
-
-        private static PropertyInfo? s_start;
-        private static PropertyInfo StartProperty => s_start ??= typeof(Range).GetProperty(nameof(System.Range.Start), BindingFlags.Public | BindingFlags.Instance)!;
-
-        private static PropertyInfo? s_end;
-        private static PropertyInfo EndProperty => s_end ??= typeof(Range).GetProperty(nameof(System.Range.End), BindingFlags.Public | BindingFlags.Instance)!;
     }
 
     partial class CSharpExpression

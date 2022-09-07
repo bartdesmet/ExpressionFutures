@@ -228,8 +228,6 @@ namespace Microsoft.CSharp.Expressions
 
     internal sealed class FormattableInterpolatedStringCSharpExpression : InterpolatedStringCSharpExpression
     {
-        private static MethodInfo? s_create;
-
         internal FormattableInterpolatedStringCSharpExpression(Type type, ReadOnlyCollection<Interpolation> interpolations)
             : base(interpolations)
         {
@@ -240,9 +238,7 @@ namespace Microsoft.CSharp.Expressions
 
         protected override Expression MakeStringFormat(string format, List<Expression> args)
         {
-            s_create ??= typeof(FormattableStringFactory).GetNonGenericMethod(nameof(FormattableStringFactory.Create), BindingFlags.Public | BindingFlags.Static, new[] { typeof(string), typeof(object[]) })!; // TODO: well-known members
-
-            var call = Expression.Call(s_create, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
+            var call = Expression.Call(WellKnownMembers.FormattableStringFactoryCreate, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
 
             if (Type != call.Type)
             {

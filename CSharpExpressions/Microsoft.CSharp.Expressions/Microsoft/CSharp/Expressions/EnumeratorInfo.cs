@@ -460,11 +460,11 @@ namespace Microsoft.CSharp.Expressions
         }
 
         private static EnumeratorInfo? s_stringEnumeratorInfo;
-        private static EnumeratorInfo StringEnumeratorInfo => s_stringEnumeratorInfo ??= CreateStringEnumeratorInfo(); // TODO: well-known members
+        private static EnumeratorInfo StringEnumeratorInfo => s_stringEnumeratorInfo ??= CreateStringEnumeratorInfo();
 
         private static EnumeratorInfo CreateStringEnumeratorInfo()
         {
-            var getEnumeratorMethod = typeof(string).GetMethod(nameof(string.GetEnumerator))!; // TODO: well-known members
+            var getEnumeratorMethod = WellKnownMembers.StringGetEnumerator;
 
             // NB: See remarks on array. We'll lower using a For loop but populate info nonetheless.
 
@@ -499,15 +499,6 @@ namespace Microsoft.CSharp.Expressions
                 patternDispose: null);
         }
 
-        private static MethodInfo? s_IEnumerable_GetEnumerator;
-        private static MethodInfo IEnumerable_GetEnumerator => s_IEnumerable_GetEnumerator ??= typeof(IEnumerable).GetMethod(nameof(IEnumerable.GetEnumerator))!; // TODO: well-known members
-
-        private static MethodInfo? s_IEnumerator_MoveNext;
-        private static MethodInfo IEnumerator_MoveNext => s_IEnumerator_MoveNext ??= typeof(IEnumerator).GetMethod(nameof(IEnumerator.MoveNext))!; // TODO: well-known members
-
-        private static PropertyInfo? s_IEnumerator_Current;
-        private static PropertyInfo IEnumerator_Current => s_IEnumerator_Current ??= typeof(IEnumerator).GetProperty(nameof(IEnumerator.Current))!; // TODO: well-known members
-
         private static EnumeratorInfo CreateArrayEnumeratorInfo(Type arrayType)
         {
             var elementType = arrayType.GetElementType()!;
@@ -517,10 +508,10 @@ namespace Microsoft.CSharp.Expressions
             //     and be consistent with the enumerator info emitted by Roslyn.
 
             var arrayParameter = Expression.Parameter(arrayType, "arr");
-            var getEnumerator = Expression.Lambda(Expression.Call(arrayParameter, IEnumerable_GetEnumerator), arrayParameter);
+            var getEnumerator = Expression.Lambda(Expression.Call(arrayParameter, WellKnownMembers.IEnumerable_GetEnumerator), arrayParameter);
 
             var enumeratorVariable = Expression.Parameter(typeof(IEnumerator), "e");
-            var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, IEnumerator_MoveNext), enumeratorVariable);
+            var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, WellKnownMembers.IEnumerator_MoveNext), enumeratorVariable);
 
             var currentVariable = Expression.Parameter(typeof(object), "c");
             var currentConversion = Expression.Lambda(CreateConvert(currentVariable, elementType), currentVariable);
@@ -530,7 +521,7 @@ namespace Microsoft.CSharp.Expressions
                 collectionType: arrayType,
                 getEnumerator,
                 moveNext,
-                IEnumerator_Current,
+                WellKnownMembers.IEnumerator_Current,
                 currentConversion,
                 elementType,
                 needsDisposal: true,
@@ -544,15 +535,15 @@ namespace Microsoft.CSharp.Expressions
         private static EnumeratorInfo CreateNonGenericEnumeratorInfo()
         {
             var collectionParameter = Expression.Parameter(typeof(IEnumerable), "c");
-            var getEnumeratorBody = Expression.Call(collectionParameter, IEnumerable_GetEnumerator);
+            var getEnumeratorBody = Expression.Call(collectionParameter, WellKnownMembers.IEnumerable_GetEnumerator);
             var getEnumerator = Expression.Lambda(getEnumeratorBody, collectionParameter);
 
             var enumeratorType = getEnumeratorBody.Type;
             var enumeratorVariable = Expression.Variable(enumeratorType, "e");
 
-            var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, IEnumerator_MoveNext), enumeratorVariable);
+            var moveNext = Expression.Lambda(Expression.Call(enumeratorVariable, WellKnownMembers.IEnumerator_MoveNext), enumeratorVariable);
 
-            var currentProperty = IEnumerator_Current;
+            var currentProperty = WellKnownMembers.IEnumerator_Current;
 
             var currentVariable = Expression.Parameter(typeof(object), "o");
             var currentConversion = Expression.Lambda(currentVariable, currentVariable);
@@ -599,7 +590,7 @@ namespace Microsoft.CSharp.Expressions
 
             var moveNextMethod = isAsync
                 ? enumerableType.GetNonGenericMethod(nameof(IAsyncEnumerator<object>.MoveNextAsync), BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes)
-                : IEnumerator_MoveNext;
+                : WellKnownMembers.IEnumerator_MoveNext;
 
             Debug.Assert(moveNextMethod != null);
 

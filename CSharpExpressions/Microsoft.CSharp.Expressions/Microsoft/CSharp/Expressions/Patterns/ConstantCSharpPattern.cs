@@ -91,8 +91,8 @@ namespace Microsoft.CSharp.Expressions
             {
                 MethodInfo? CheckNaN() => Value.Value switch
                 {
-                    float f when float.IsNaN(f) => FloatIsNaN,
-                    double d when double.IsNaN(d) => DoubleIsNaN,
+                    float f when float.IsNaN(f) => WellKnownMembers.FloatIsNaN,
+                    double d when double.IsNaN(d) => WellKnownMembers.DoubleIsNaN,
                     _ => null
                 };
 
@@ -106,12 +106,6 @@ namespace Microsoft.CSharp.Expressions
                 return RelationalCSharpPattern.MakeTest(this, @object, ExpressionType.Equal, Value);
             }
         }
-
-        private static MethodInfo? _floatIsNaN;
-        private static MethodInfo FloatIsNaN => _floatIsNaN ??= typeof(float).GetMethod(nameof(float.IsNaN), new[] { typeof(float) })!; // TODO: well-known members
-
-        private static MethodInfo? _doubleIsNaN;
-        private static MethodInfo DoubleIsNaN => _doubleIsNaN ??= typeof(double).GetMethod(nameof(double.IsNaN), new[] { typeof(double) })!; // TODO: well-known members
     }
 
     partial class CSharpPattern

@@ -131,7 +131,7 @@ namespace Microsoft.CSharp.Expressions
 
             Expression MakeFromEnd(Expression operand)
             {
-                var method = Method ?? FromEnd;
+                var method = Method ?? WellKnownMembers.IndexFromEnd;
 
                 switch (method)
                 {
@@ -158,10 +158,6 @@ namespace Microsoft.CSharp.Expressions
                 throw ContractUtils.Unreachable;
             }
         }
-
-        private static MethodInfo? s_from_end;
-
-        private static MethodInfo? FromEnd => s_from_end ??= typeof(Index).GetNonGenericMethod(nameof(System.Index.FromEnd), BindingFlags.Public | BindingFlags.Static, new[] { typeof(int) }); // TODO: well-known members
     }
 
     partial class CSharpExpression

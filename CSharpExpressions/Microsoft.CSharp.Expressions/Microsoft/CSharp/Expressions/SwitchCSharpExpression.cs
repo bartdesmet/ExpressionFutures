@@ -139,7 +139,7 @@ namespace Microsoft.CSharp.Expressions
             var throwExpr =
                 Expression.Throw(
                     Expression.New(
-                        SwitchExpressionExceptionCtor,
+                        WellKnownMembers.SwitchExpressionExceptionCtor,
                         Expression.Convert(obj, typeof(object))
                     ),
                     Type
@@ -149,11 +149,6 @@ namespace Microsoft.CSharp.Expressions
 
             return Expression.Block(Type, new[] { obj }, stmts);
         }
-
-        private static ConstructorInfo? s_switchExpressionExceptionCtor;
-
-        private static ConstructorInfo SwitchExpressionExceptionCtor =>
-            s_switchExpressionExceptionCtor ??= typeof(SwitchExpressionException).GetConstructor(new[] { typeof(object) })!; // TODO: well-known members
     }
 
     partial class CSharpExpression
