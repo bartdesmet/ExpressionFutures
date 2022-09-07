@@ -153,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(pattern, nameof(pattern));
             RequiresNotNull(parameter, nameof(parameter));
 
-            if (!(parameter.Member is MethodInfo))
+            if (parameter.Member is not MethodInfo)
                 throw Error.PositionalPatternParameterMustBeOnMethod(parameter);
 
             if (!parameter.IsOut)

@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private sealed class Impl : CSharpExpressionVisitor
         {
-            private readonly Stack<string> _forbidden = new Stack<string>();
+            private readonly Stack<string> _forbidden = new();
 
             protected override Expression VisitLambda<T>(Expression<T> node)
             {

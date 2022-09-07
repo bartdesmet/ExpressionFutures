@@ -103,47 +103,20 @@ namespace Microsoft.CSharp.Expressions
         {
             var functionalOp = new Func<Expression, Expression>(lhs =>
             {
-                var operation = default(ExpressionType);
-
-                switch (OperationNodeType)
+                var operation = OperationNodeType switch
                 {
-                    case CSharpExpressionType.AddAssign:
-                    case CSharpExpressionType.AddAssignChecked:
-                        operation = ExpressionType.AddAssign;
-                        break;
-                    case CSharpExpressionType.SubtractAssign:
-                    case CSharpExpressionType.SubtractAssignChecked:
-                        operation = ExpressionType.SubtractAssign;
-                        break;
-                    case CSharpExpressionType.MultiplyAssign:
-                    case CSharpExpressionType.MultiplyAssignChecked:
-                        operation = ExpressionType.MultiplyAssign;
-                        break;
-                    case CSharpExpressionType.DivideAssign:
-                        operation = ExpressionType.DivideAssign;
-                        break;
-                    case CSharpExpressionType.ModuloAssign:
-                        operation = ExpressionType.ModuloAssign;
-                        break;
-                    case CSharpExpressionType.AndAssign:
-                        operation = ExpressionType.AndAssign;
-                        break;
-                    case CSharpExpressionType.OrAssign:
-                        operation = ExpressionType.OrAssign;
-                        break;
-                    case CSharpExpressionType.ExclusiveOrAssign:
-                        operation = ExpressionType.ExclusiveOrAssign;
-                        break;
-                    case CSharpExpressionType.LeftShiftAssign:
-                        operation = ExpressionType.LeftShiftAssign;
-                        break;
-                    case CSharpExpressionType.RightShiftAssign:
-                        operation = ExpressionType.RightShiftAssign;
-                        break;
-
-                    default:
-                        throw Unreachable;
-                }
+                    CSharpExpressionType.AddAssign or CSharpExpressionType.AddAssignChecked => ExpressionType.AddAssign,
+                    CSharpExpressionType.SubtractAssign or CSharpExpressionType.SubtractAssignChecked => ExpressionType.SubtractAssign,
+                    CSharpExpressionType.MultiplyAssign or CSharpExpressionType.MultiplyAssignChecked => ExpressionType.MultiplyAssign,
+                    CSharpExpressionType.DivideAssign => ExpressionType.DivideAssign,
+                    CSharpExpressionType.ModuloAssign => ExpressionType.ModuloAssign,
+                    CSharpExpressionType.AndAssign => ExpressionType.AndAssign,
+                    CSharpExpressionType.OrAssign => ExpressionType.OrAssign,
+                    CSharpExpressionType.ExclusiveOrAssign => ExpressionType.ExclusiveOrAssign,
+                    CSharpExpressionType.LeftShiftAssign => ExpressionType.LeftShiftAssign,
+                    CSharpExpressionType.RightShiftAssign => ExpressionType.RightShiftAssign,
+                    _ => throw Unreachable,
+                };
 
                 var args = new[]
                 {

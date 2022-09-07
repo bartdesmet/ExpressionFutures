@@ -28,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the type to check for.
         /// </summary>
-        public new Type Type { get; set; }
+        public new Type Type { get; }
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.

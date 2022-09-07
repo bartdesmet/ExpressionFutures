@@ -45,20 +45,11 @@ namespace Microsoft.CSharp.Expressions
         /// Gets the static type of the expression that this <see cref="System.Linq.Expressions.Expression" /> represents. (Inherited from <see cref="System.Linq.Expressions.Expression"/>.)
         /// </summary>
         /// <returns>The <see cref="Type"/> that represents the static type of the expression.</returns>
-        public override Type Type
+        public override Type Type => OperationNodeType switch
         {
-            get
-            {
-                switch (OperationNodeType)
-                {
-                    case ExpressionType.IsTrue:
-                    case ExpressionType.IsFalse:
-                        return typeof(bool);
-                }
-
-                return typeof(object);
-            }
-        }
+            ExpressionType.IsTrue or ExpressionType.IsFalse => typeof(bool),
+            _ => typeof(object),
+        };
 
         /// <summary>
         /// Reduces the dynamic expression to a binder and a set of arguments to apply the operation to.

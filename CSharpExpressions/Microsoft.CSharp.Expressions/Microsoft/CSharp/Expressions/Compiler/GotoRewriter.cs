@@ -36,7 +36,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         private sealed class LabelScanner : ShallowVisitor
         {
-            public readonly HashSet<LabelTarget> Labels = new HashSet<LabelTarget>();
+            public readonly HashSet<LabelTarget> Labels = new();
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
             protected override Expression VisitLabel(LabelExpression node)

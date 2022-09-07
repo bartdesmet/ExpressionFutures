@@ -19,7 +19,7 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class Impl : ShallowVisitor
         {
-            private readonly Stack<Dictionary<ParameterExpression, ReplacementInfo>> _refLocalHolders = new Stack<Dictionary<ParameterExpression, ReplacementInfo>>();
+            private readonly Stack<Dictionary<ParameterExpression, ReplacementInfo>> _refLocalHolders = new();
 
             protected internal override Expression VisitAwait(AwaitCSharpExpression node)
             {

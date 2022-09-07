@@ -30,8 +30,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
         private readonly ParameterExpression _stateVariable;
         private readonly Func<Expression, Expression> _onCompletedFactory;
         private readonly LabelTarget _exit;
-        private readonly Stack<StrongBox<bool>> _awaitInBlock = new Stack<StrongBox<bool>>();
-        private readonly Stack<IList<SwitchCase>> _jumpTables = new Stack<IList<SwitchCase>>();
+        private readonly Stack<StrongBox<bool>> _awaitInBlock = new();
+        private readonly Stack<IList<SwitchCase>> _jumpTables = new();
         private int _labelIndex;
 
         public AwaitRewriter(ParameterExpression localStateVariable, ParameterExpression stateVariable, Func<Type, string, ParameterExpression> variableFactory, Func<Expression, Expression> onCompletedFactory, LabelTarget exit)

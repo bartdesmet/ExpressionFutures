@@ -4,7 +4,6 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.ExceptionServices;
 
 namespace Microsoft.CSharp.Expressions.Compiler

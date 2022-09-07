@@ -14,7 +14,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal abstract class AwaitTrackingVisitor : ShallowVisitor
     {
-        private readonly Stack<StrongBox<bool>> _hasAwait = new Stack<StrongBox<bool>>();
+        private readonly Stack<StrongBox<bool>> _hasAwait = new();
 
         protected internal override Expression VisitAwait(AwaitCSharpExpression node)
         {

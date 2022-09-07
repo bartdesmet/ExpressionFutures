@@ -12,7 +12,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// </summary>
     internal abstract class ParameterSubstitutionVisitor : ScopeTrackingVisitor
     {
-        protected readonly Stack<IDictionary<ParameterExpression, Expression>> _subst = new Stack<IDictionary<ParameterExpression, Expression>>();
+        protected readonly Stack<IDictionary<ParameterExpression, Expression>> _subst = new();
 
         protected override Expression VisitParameter(ParameterExpression node)
         {

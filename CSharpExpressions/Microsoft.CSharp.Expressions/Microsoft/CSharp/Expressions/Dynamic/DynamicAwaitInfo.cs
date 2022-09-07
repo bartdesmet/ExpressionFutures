@@ -112,7 +112,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing binding information for await operations.</returns>
         public static DynamicAwaitInfo DynamicAwaitInfo(Type? context, bool resultDiscarded) =>
             // NB: This is the overload the C# compiler binds to.
-            new DynamicAwaitInfo(context, resultDiscarded);
+            new(context, resultDiscarded);
     }
 
     partial class CSharpExpressionVisitor

@@ -32,7 +32,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         // NB: Only have to deal with jumps to labels defined in outer blocks; cf. LabelInfo.ValidateJump.
         // TODO: Check cases where we have shadowing, e.g. with Loop.
 
-        private readonly Stack<IDictionary<LabelTarget, LabelInfo>> _labels = new Stack<IDictionary<LabelTarget, LabelInfo>>();
+        private readonly Stack<IDictionary<LabelTarget, LabelInfo>> _labels = new();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitBlock(BlockExpression node)

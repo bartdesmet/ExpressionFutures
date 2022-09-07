@@ -57,26 +57,12 @@ namespace Microsoft.CSharp.Expressions
         {
             var functionalOp = new Func<Expression, Expression>(lhs =>
             {
-                var operation = default(ExpressionType);
-
-                switch (OperationNodeType)
+                var operation = OperationNodeType switch
                 {
-                    case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                        operation = ExpressionType.Increment;
-                        break;
-                    case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                    case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                        operation = ExpressionType.Decrement;
-                        break;
-
-                    default:
-                        throw Unreachable;
-                }
+                    CSharpExpressionType.PreIncrementAssign or CSharpExpressionType.PreIncrementAssignChecked or CSharpExpressionType.PostIncrementAssign or CSharpExpressionType.PostIncrementAssignChecked => ExpressionType.Increment,
+                    CSharpExpressionType.PreDecrementAssign or CSharpExpressionType.PreDecrementAssignChecked or CSharpExpressionType.PostDecrementAssign or CSharpExpressionType.PostDecrementAssignChecked => ExpressionType.Decrement,
+                    _ => throw Unreachable,
+                };
 
                 var args = new[]
                 {
@@ -98,22 +84,11 @@ namespace Microsoft.CSharp.Expressions
             return res;
         }
 
-        private bool IsPrefix
-        {
-            get
-            {
-                switch (OperationNodeType)
-                {
-                    case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                        return true;
-                }
-
-                return false;
-            }
-        }
+        private bool IsPrefix => OperationNodeType is
+            CSharpExpressionType.PreIncrementAssign or
+            CSharpExpressionType.PreDecrementAssign or
+            CSharpExpressionType.PreIncrementAssignChecked or
+            CSharpExpressionType.PreDecrementAssignChecked;
 
         /// <summary>
         /// Reduces the dynamic expression to a binder and a set of arguments to apply the operation to.

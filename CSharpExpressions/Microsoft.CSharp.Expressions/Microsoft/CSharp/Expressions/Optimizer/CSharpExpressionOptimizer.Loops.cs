@@ -26,7 +26,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         //     exception thrown from the Compile method changes from "invalid branch" to "jump
         //     to undefined label" because we took away the label definition from the loop.
 
-        private readonly Stack<LoopLabelInfo> _loopLabels = new Stack<LoopLabelInfo>();
+        private readonly Stack<LoopLabelInfo> _loopLabels = new();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)

@@ -554,7 +554,7 @@ namespace System.Dynamic.Utils
         {
             Debug.Assert(!definition.IsInterface);
 
-            while (!(type is null) && type != typeof(object))
+            while (type is not null && type != typeof(object))
             {
                 if (type.IsConstructedGenericType && AreEquivalent(type.GetGenericTypeDefinition(), definition))
                 {

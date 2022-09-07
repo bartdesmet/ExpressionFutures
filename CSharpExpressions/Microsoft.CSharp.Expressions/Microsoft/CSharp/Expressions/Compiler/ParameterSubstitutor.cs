@@ -29,7 +29,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
         private sealed class Impl : ParameterSubstitutionVisitor
         {
             private readonly IDictionary<ParameterExpression, Expression> _substitutions;
-            private readonly Stack<HashSet<ParameterExpression>> _env = new Stack<HashSet<ParameterExpression>>();
+            private readonly Stack<HashSet<ParameterExpression>> _env = new();
 
             public Impl(IDictionary<ParameterExpression, Expression> substitutions)
             {

@@ -28,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
                 var types = new Type[argumentTypes.Length + 2];
                 types[0] = typeof(CallSite);
                 Array.Copy(argumentTypes, 0, types, 1, argumentTypes.Length);
-                types[types.Length - 1] = type;
+                types[^1] = type;
 
                 var delegateType = Expression.GetDelegateType(types);
                 

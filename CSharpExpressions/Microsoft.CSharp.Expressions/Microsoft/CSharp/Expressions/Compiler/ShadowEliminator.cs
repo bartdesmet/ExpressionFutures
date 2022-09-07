@@ -31,7 +31,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private sealed class Impl : ParameterSubstitutionVisitor
         {
-            private readonly Stack<HashSet<ParameterExpression>> _env = new Stack<HashSet<ParameterExpression>>();
+            private readonly Stack<HashSet<ParameterExpression>> _env = new();
 
             protected override void Push(IEnumerable<ParameterExpression> variables)
             {
