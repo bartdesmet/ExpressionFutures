@@ -181,13 +181,16 @@ namespace Microsoft.CSharp.Expressions
 
             if (node.Field != null)
             {
-                nodes.Add(
-                    new XElement(
-                        nameof(node.Field),
-                        new XAttribute(nameof(node.Field.Name), node.Field.Name),
-                        new XAttribute(nameof(node.Field.Index), node.Field.Index)
-                    )
-                );
+                var attrs = new List<object>();
+
+                if (node.Field.Name != null)
+                {
+                    attrs.Add(new XAttribute(nameof(node.Field.Name), node.Field.Name));
+                }
+
+                attrs.Add(new XAttribute(nameof(node.Field.Index), node.Field.Index));
+
+                nodes.Add(new XElement(nameof(node.Field), attrs));
             }
             else if (node.Parameter != null)
             {
@@ -224,7 +227,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                nodes.Add(new XAttribute(nameof(node.TupleField), node.TupleField));
+                nodes.Add(new XAttribute(nameof(node.TupleField), node.TupleField!));
             }
 
             if (node.Receiver != null)

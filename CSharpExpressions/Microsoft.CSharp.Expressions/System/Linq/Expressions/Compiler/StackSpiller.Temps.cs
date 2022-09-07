@@ -27,12 +27,12 @@ namespace System.Linq.Expressions.Compiler
             /// <summary>
             /// List of free temporary variables. These can be recycled for new temps.
             /// </summary>
-            private List<ParameterExpression> _freeTemps;
+            private List<ParameterExpression>? _freeTemps;
 
             /// <summary>
             /// Stack of currently active temporary variables.
             /// </summary>
-            private Stack<ParameterExpression> _usedTemps;
+            private Stack<ParameterExpression>? _usedTemps;
 
             /// <summary>
             /// List of all temps created by stackspiller for this rule/lambda
@@ -135,9 +135,9 @@ namespace System.Linq.Expressions.Compiler
         private class ChildRewriter
         {
             private readonly StackSpiller _self;
-            private readonly Expression[] _expressions;
+            private readonly Expression?[] _expressions;
             private int _expressionsCount;
-            private List<Expression> _comma;
+            private List<Expression>? _comma;
             private RewriteAction _action;
             private Stack _stack;
             private bool _done;
@@ -146,10 +146,10 @@ namespace System.Linq.Expressions.Compiler
             {
                 _self = self;
                 _stack = stack;
-                _expressions = new Expression[count];
+                _expressions = new Expression?[count];
             }
 
-            internal void Add(Expression node)
+            internal void Add(Expression? node)
             {
                 Debug.Assert(!_done);
 
@@ -192,7 +192,7 @@ namespace System.Linq.Expressions.Compiler
 
                     if (_action == RewriteAction.SpillStack)
                     {
-                        Expression[] clone = _expressions;
+                        Expression?[] clone = _expressions;
                         int count = clone.Length;
                         List<Expression> comma = new List<Expression>(count + 1);
                         for (int i = 0; i < count; i++)
@@ -202,13 +202,12 @@ namespace System.Linq.Expressions.Compiler
 #if !LINQ
                                 if (_byRef != null && _byRef[i])
                                 {
-                                    clone[i] = SpillByRef(comma, clone[i]);
+                                    clone[i] = SpillByRef(comma, clone[i]!);
                                 }
                                 else
                                 {
-
 #endif
-                                    clone[i] = _self.ToTemp(clone[i], out Expression temp);
+                                    clone[i] = _self.ToTemp(clone[i]!, out Expression temp);
                                     comma.Add(temp);
 #if !LINQ
                                 }
@@ -224,7 +223,7 @@ namespace System.Linq.Expressions.Compiler
 #if !LINQ
             private Expression SpillByRef(List<Expression> comma, Expression expression)
             {
-                List<Expression> writebacks = null;
+                List<Expression>? writebacks = null;
                 RewriteByRefArgument(null, ref expression, (type, name) => _self.MakeTemp(type), comma, ref writebacks);
 
                 if (writebacks != null)
@@ -240,7 +239,7 @@ namespace System.Linq.Expressions.Compiler
             // NB: This means of tracking by-ref positions may seem adhoc because it really is an adhoc
             //     bolt-on approach in order to mimize the number of changes to the LINQ stack spiller.
 
-            private bool[] _byRef;
+            private bool[]? _byRef;
 
             internal void MarkByRef(int index)
             {
@@ -270,7 +269,7 @@ namespace System.Linq.Expressions.Compiler
 
                 if (_action == RewriteAction.SpillStack)
                 {
-                    Debug.Assert(_comma.Capacity == _comma.Count + 1);
+                    Debug.Assert(_comma != null && _comma.Capacity == _comma.Count + 1);
                     _comma.Add(expr);
                     expr = MakeBlock(_comma);
                 }
@@ -287,7 +286,7 @@ namespace System.Linq.Expressions.Compiler
                     {
                         index += _expressions.Length;
                     }
-                    return _expressions[index];
+                    return _expressions[index]!;
                 }
             }
 
@@ -307,7 +306,7 @@ namespace System.Linq.Expressions.Compiler
                     {
                         Debug.Assert(first == 0);
                         // if the entire array is requested just return it so we don't make a new array
-                        return _expressions;
+                        return _expressions!;
                     }
 
                     Expression[] clone = new Expression[count];

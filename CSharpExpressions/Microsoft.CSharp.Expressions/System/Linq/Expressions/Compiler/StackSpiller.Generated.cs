@@ -4,6 +4,8 @@
 // NB: This is a port of the LINQ stack spiller but with a number of changes. See Spiller.cs for some design notes.
 //     Changes are clearly marked with #if LINQ conditions in order to make it possible to reuse across codebases.
 
+#nullable enable
+
 using System.Dynamic.Utils;
 
 namespace System.Linq.Expressions.Compiler
@@ -19,11 +21,11 @@ namespace System.Linq.Expressions.Compiler
         /// <returns>Rewritten expression.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private Result RewriteExpression(Expression node, Stack stack)
+        private Result RewriteExpression(Expression? node, Stack stack)
         {
             if (node == null)
             {
-                return new Result(RewriteAction.None, null);
+                return new Result(RewriteAction.None, null!); // NB: Let users check for None to guard against null.
             }
 
             Result result;

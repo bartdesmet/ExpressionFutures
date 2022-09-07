@@ -292,7 +292,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                if (member.TupleField.Name != null)
+                if (member.TupleField!.Name != null)
                 {
                     visitor.Out(member.TupleField.Name);
                 }

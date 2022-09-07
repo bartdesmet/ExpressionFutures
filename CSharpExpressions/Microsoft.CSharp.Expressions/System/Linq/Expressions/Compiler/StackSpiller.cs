@@ -163,7 +163,7 @@ namespace System.Linq.Expressions.Compiler
             );
         }
 
-        private Result RewriteExpressionFreeTemps(Expression expression, Stack stack)
+        private Result RewriteExpressionFreeTemps(Expression? expression, Stack stack)
         {
             int mark = Mark();
             Result result = RewriteExpression(expression, stack);
@@ -183,9 +183,9 @@ namespace System.Linq.Expressions.Compiler
             if (cr.Action == RewriteAction.SpillStack)
             {
 #if LINQ
-                RequireNoRefArgs(node.DelegateType.GetMethod("Invoke"));
+                RequireNoRefArgs(node.DelegateType.GetMethod("Invoke")!);
 #else
-                MarkRefArgs(cr, node.DelegateType.GetMethod("Invoke"), 0);
+                MarkRefArgs(cr, node.DelegateType.GetMethod("Invoke")!, 0);
 #endif
             }
             return cr.Finish(cr.Rewrite ? node.Rewrite(cr[0, -1]) : expr);
@@ -569,7 +569,7 @@ namespace System.Linq.Expressions.Compiler
 
             if (cr.Rewrite)
             {
-                Type element = node.Type.GetElementType();
+                Type element = node.Type.GetElementType()!;
                 if (node.NodeType == ExpressionType.NewArrayInit)
                 {
                     expr = Expression.NewArrayInit(element, cr[0, -1]);
@@ -657,7 +657,10 @@ namespace System.Linq.Expressions.Compiler
 #endif
             }
 
-            return cr.Finish(cr.Rewrite ? CreateNewExpression(node.Constructor, cr[0, -1], node.Members) : expr);
+            // NB: If rewrite occurs, there's at least one argument, which rules out
+            //     the case where Constructor can be null (i.e. New for a struct's
+            //     default constructor).
+            return cr.Finish(cr.Rewrite ? CreateNewExpression(node.Constructor!, cr[0, -1], node.Members) : expr);
         }
 
         // TypeBinaryExpression
@@ -918,7 +921,7 @@ namespace System.Linq.Expressions.Compiler
 
             int count = node.Expressions.Count;
             RewriteAction action = RewriteAction.None;
-            Expression[] clone = null;
+            Expression[]? clone = null;
             for (int i = 0; i < count; i++)
             {
                 Expression expression = node.Expressions[i];
@@ -941,7 +944,7 @@ namespace System.Linq.Expressions.Compiler
             if (action != RewriteAction.None)
             {
                 // okay to wrap since we know no one can mutate the clone array
-                expr = node.Update(node.Variables, clone);
+                expr = node.Update(node.Variables, clone!);
             }
             return new Result(action, expr);
         }
@@ -1022,12 +1025,12 @@ namespace System.Linq.Expressions.Compiler
 
             RewriteAction action = switchValue.Action;
             ReadOnlyCollection<SwitchCase> cases = node.Cases;
-            SwitchCase[] clone = null;
+            SwitchCase[]? clone = null;
             for (int i = 0; i < cases.Count; i++)
             {
                 SwitchCase @case = cases[i];
 
-                Expression[] cloneTests = null;
+                Expression[]? cloneTests = null;
                 ReadOnlyCollection<Expression> testValues = @case.TestValues;
                 for (int j = 0; j < testValues.Count; j++)
                 {
@@ -1098,7 +1101,7 @@ namespace System.Linq.Expressions.Compiler
             // child nodes execute at empty stack.
             Result body = RewriteExpression(node.Body, Stack.Empty);
             ReadOnlyCollection<CatchBlock> handlers = node.Handlers;
-            CatchBlock[] clone = null;
+            CatchBlock[]? clone = null;
 
             RewriteAction action = body.Action;
             if (handlers != null)
@@ -1109,7 +1112,7 @@ namespace System.Linq.Expressions.Compiler
 
                     CatchBlock handler = handlers[i];
 
-                    Expression filter = handler.Filter;
+                    Expression? filter = handler.Filter;
                     if (handler.Filter != null)
                     {
                         // our code gen saves the incoming filter value and provides it as a variable so the stack is empty
@@ -1260,7 +1263,7 @@ namespace System.Linq.Expressions.Compiler
             }
         }
 #else
-        private static void MarkRefArgs(ChildRewriter cr, MethodBase method, int firstIndex)
+        private static void MarkRefArgs(ChildRewriter cr, MethodBase? method, int firstIndex)
         {
             if (method != null)
             {
@@ -1276,7 +1279,7 @@ namespace System.Linq.Expressions.Compiler
             }
         }
 
-        private static void MarkRefInstance(ChildRewriter cr, Expression instance)
+        private static void MarkRefInstance(ChildRewriter cr, Expression? instance)
         {
             // Primitive value types are okay because they are all readonly,
             // but we can't rely on this for non-primitive types. For those

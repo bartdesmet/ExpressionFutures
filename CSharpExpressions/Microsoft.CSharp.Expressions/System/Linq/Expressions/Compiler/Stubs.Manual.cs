@@ -45,7 +45,7 @@ namespace System.Linq.Expressions
             return Expression.Lambda<T>(body, name, tailCall, parameters);
         }
 
-        public static IndexExpression CreateIndexExpression(Expression instance, PropertyInfo indexer, IList<Expression> arguments)
+        public static IndexExpression CreateIndexExpression(Expression instance, PropertyInfo? indexer, IList<Expression> arguments)
         {
             return Expression.MakeIndex(instance, indexer, arguments);
         }
@@ -55,7 +55,7 @@ namespace System.Linq.Expressions
             return Expression.Assign(left, right);
         }
 
-        public static NewExpression CreateNewExpression(ConstructorInfo constructor, IList<Expression> arguments, ReadOnlyCollection<MemberInfo> members)
+        public static NewExpression CreateNewExpression(ConstructorInfo constructor, IList<Expression> arguments, ReadOnlyCollection<MemberInfo>? members)
         {
             if (members == null)
             {
@@ -67,12 +67,12 @@ namespace System.Linq.Expressions
             }
         }
 
-        public static UnaryExpression CreateUnaryExpression(ExpressionType nodeType, Expression expression, Type type, MethodInfo method)
+        public static UnaryExpression CreateUnaryExpression(ExpressionType nodeType, Expression expression, Type type, MethodInfo? method)
         {
             return Expression.MakeUnary(nodeType, expression, type, method);
         }
 
-        public static LoopExpression CreateLoopExpression(Expression body, LabelTarget @break, LabelTarget @continue)
+        public static LoopExpression CreateLoopExpression(Expression body, LabelTarget? @break, LabelTarget? @continue)
         {
             return Expression.Loop(body, @break, @continue);
         }
@@ -82,12 +82,12 @@ namespace System.Linq.Expressions
             return Expression.SwitchCase(body, testValues);
         }
 
-        public static SwitchExpression CreateSwitchExpression(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, ReadOnlyCollection<SwitchCase> cases)
+        public static SwitchExpression CreateSwitchExpression(Type? type, Expression switchValue, Expression? defaultBody, MethodInfo? comparison, ReadOnlyCollection<SwitchCase>? cases)
         {
             return Expression.Switch(type, switchValue, defaultBody, comparison, cases);
         }
 
-        public static TryExpression CreateTryExpression(Type type, Expression body, Expression @finally, Expression fault, ReadOnlyCollection<CatchBlock> handlers)
+        public static TryExpression CreateTryExpression(Type type, Expression body, Expression? @finally, Expression? fault, ReadOnlyCollection<CatchBlock>? handlers)
         {
             return Expression.MakeTry(type, body, @finally, fault, handlers);
         }
