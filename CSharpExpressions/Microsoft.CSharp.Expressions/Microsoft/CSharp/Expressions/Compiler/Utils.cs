@@ -2,8 +2,6 @@
 //
 // bartde - October 2015
 
-#nullable enable
-
 using System;
 using System.Linq.Expressions;
 using System.Reflection;

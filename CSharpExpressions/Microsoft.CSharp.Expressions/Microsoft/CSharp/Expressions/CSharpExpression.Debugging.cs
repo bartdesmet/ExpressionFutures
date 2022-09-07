@@ -2,8 +2,6 @@
 //
 // bartde - November 2015
 
-#nullable enable
-
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;

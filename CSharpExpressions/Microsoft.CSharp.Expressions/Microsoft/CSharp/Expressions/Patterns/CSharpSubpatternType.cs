@@ -2,8 +2,6 @@
 //
 // bartde - December 2021
 
-#nullable enable
-
 namespace Microsoft.CSharp.Expressions
 {
     /// <summary>

@@ -3,8 +3,6 @@
 
 #if !NET7_0_OR_GREATER
 
-#nullable enable
-
 namespace System.Diagnostics
 {
     /// <summary>

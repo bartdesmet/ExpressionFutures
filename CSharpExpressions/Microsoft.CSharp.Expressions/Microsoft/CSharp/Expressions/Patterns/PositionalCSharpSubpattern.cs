@@ -2,8 +2,6 @@
 //
 // bartde - December 2021
 
-#nullable enable
-
 using System.Dynamic.Utils;
 using System.Reflection;
 

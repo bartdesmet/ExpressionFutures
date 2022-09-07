@@ -2,8 +2,6 @@
 //
 // bartde - December 2015
 
-#nullable enable
-
 using Microsoft.CSharp.Expressions.Compiler;
 
 namespace System.Linq.Expressions

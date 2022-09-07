@@ -2,8 +2,6 @@
 //
 // bartde - December 2021
 
-#nullable enable
-
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
@@ -40,7 +38,7 @@ for (int j = 1; j <= i; j++)
 #>
     internal static class DeconstructActionDelegateHelpers
     {
-        internal static Type GetDeconstructActionType(Type[] types) =>
+        internal static Type? GetDeconstructActionType(Type[] types) =>
             types.Length switch
             {
 <#

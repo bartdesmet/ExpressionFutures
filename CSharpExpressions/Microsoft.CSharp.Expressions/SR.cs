@@ -2,8 +2,6 @@
 //
 // bartde - October 2015
 
-#nullable enable
-
 #pragma warning disable CA1305 // Specify IFormatProvider. (Stub file.)
 
 namespace System

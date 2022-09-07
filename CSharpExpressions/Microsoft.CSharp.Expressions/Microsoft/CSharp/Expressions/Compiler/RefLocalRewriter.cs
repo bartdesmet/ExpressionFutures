@@ -2,8 +2,6 @@
 //
 // bartde - January 2022
 
-#nullable enable
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;

@@ -2,8 +2,6 @@
 //
 // bartde - November 2015
 
-#nullable enable
-
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 

@@ -2,8 +2,6 @@
 //
 // bartde - December 2021
 
-#nullable enable
-
 using System;
 
 using static System.Dynamic.Utils.ContractUtils;

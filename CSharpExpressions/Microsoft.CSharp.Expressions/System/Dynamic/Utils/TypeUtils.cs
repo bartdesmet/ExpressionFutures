@@ -3,8 +3,6 @@
 
 // NB: This is a pruned copy of https://github.com/dotnet/runtime/blob/main/src/libraries/System.Linq.Expressions/src/System/Dynamic/Utils/TypeUtils.cs.
 
-#nullable enable
-
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;

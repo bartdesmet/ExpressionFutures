@@ -2,8 +2,6 @@
 //
 // bartde - October 2015
 
-#nullable enable
-
 namespace Microsoft.CSharp.Expressions
 {
     internal static partial class Helpers

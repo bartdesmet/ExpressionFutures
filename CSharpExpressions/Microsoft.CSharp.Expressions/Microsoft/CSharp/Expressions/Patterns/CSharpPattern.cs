@@ -2,8 +2,6 @@
 //
 // bartde - December 2021
 
-#nullable enable
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;

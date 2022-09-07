@@ -2,8 +2,6 @@
 //
 // bartde - Decmeber 2021
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

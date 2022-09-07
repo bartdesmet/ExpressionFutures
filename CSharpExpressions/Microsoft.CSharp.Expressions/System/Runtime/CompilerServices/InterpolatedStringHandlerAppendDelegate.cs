@@ -2,8 +2,6 @@
 //
 // bartde - January 2022
 
-#nullable enable
-
 namespace System.Runtime.CompilerServices
 {
     /// <summary>

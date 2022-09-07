@@ -2,8 +2,6 @@
 //
 // bartde - June 2018
 
-#nullable enable
-
 using System;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;

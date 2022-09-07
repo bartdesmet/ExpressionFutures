@@ -2,8 +2,6 @@
 //
 // bartde - December 2015
 
-#nullable enable
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
