@@ -779,18 +779,6 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        public static string ToDebugString(this object o)
-        {
-            return o == null ? "null" : o.ToString();
-        }
-
-        private static readonly object s_null = new object();
-
-        public static object OrNullSentinel(this object o)
-        {
-            return o ?? s_null;
-        }
-
         public static void RequiresCanWrite(Expression expression, string paramName)
         {
             // NB: This does not account for dynamic member and index nodes; to make dynamically bound assignments,
