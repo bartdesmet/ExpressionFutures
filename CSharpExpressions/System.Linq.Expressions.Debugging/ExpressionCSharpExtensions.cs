@@ -1877,7 +1877,7 @@ namespace System.Linq.Expressions
                 return childOpPrec < parentOpPrec;
             }
 
-            public void Out(string s)
+            public void Out(string? s)
             {
                 _writer.Write(s);
             }

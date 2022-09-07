@@ -2,9 +2,12 @@
 //
 // bartde - November 2015
 
+#nullable enable
+
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
@@ -574,7 +577,7 @@ namespace Microsoft.CSharp.Expressions
                 Visit(nameof(node.Variables), node.Variables)
             };
 
-            if (node.IsAsync)
+            if (node.AwaitInfo != null)
             {
                 args.Add(new XElement(nameof(node.AwaitInfo), Visit(node.AwaitInfo)));
             }
@@ -705,7 +708,7 @@ namespace Microsoft.CSharp.Expressions
 
         protected internal override Interpolation VisitInterpolationStringInsert(InterpolationStringInsert node)
         {
-            var args = new List<object>();
+            var args = new List<object?>();
 
             if (node.Format != null)
             {
@@ -895,13 +898,13 @@ namespace Microsoft.CSharp.Expressions
             return node;
         }
 
-        private static string EscapeToString(object obj)
+        private static string EscapeToString(object? obj)
         {
             return obj switch
             {
                 null => "null",
                 string s => "\"" + s.Replace("\"", "\\\"", StringComparison.Ordinal) + "\"",
-                _ => obj.ToString(),
+                _ => obj.ToString() ?? "null",
             };
         }
 
@@ -995,7 +998,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var args = new List<object>();
 
-            if (node.IsAsync)
+            if (node.AwaitInfo != null)
             {
                 args.Add(new XElement(nameof(node.AwaitInfo), Visit(node.AwaitInfo)));
             }
@@ -1011,7 +1014,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                args.Add(Visit(nameof(node.Declarations), node.Declarations, Visit));
+                args.Add(Visit(nameof(node.Declarations), node.Declarations!, Visit));
             }
 
             if (node.PatternDispose != null)
@@ -1417,7 +1420,8 @@ namespace Microsoft.CSharp.Expressions
             return _nodes.Pop();
         }
 
-        protected new XNode Visit(Expression expression)
+        [return: NotNullIfNotNull("expression")] // TODO: C# 11.0 nameof
+        protected new XNode? Visit(Expression? expression)
         {
             return _parent.GetDebugView(expression);
         }

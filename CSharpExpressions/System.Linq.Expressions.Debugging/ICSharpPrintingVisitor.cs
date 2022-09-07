@@ -36,7 +36,7 @@ namespace System.Linq.Expressions
         /// Emits the specified string to the printer.
         /// </summary>
         /// <param name="value">The string to emit.</param>
-        void Out(string value);
+        void Out(string? value);
 
         /// <summary>
         /// Emits the specified value to the printer.
