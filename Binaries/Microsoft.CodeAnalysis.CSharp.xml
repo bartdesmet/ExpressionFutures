@@ -1505,6 +1505,23 @@
             not fixed as moveable and specifies the expressions which are fixed.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.GetIsOperatorConstantResult(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.ConversionKind,Microsoft.CodeAnalysis.ConstantValue,System.Boolean)">
+            <summary>
+            Possible return values:
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.False"/>
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.True"/>
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.Bad"/> - compiler doesn't support the type check, i.e. cannot perform it, even at runtime
+             - 'null' value - result is not known at compile time    
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.GetAsOperatorConstantResult(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,Microsoft.CodeAnalysis.CSharp.ConversionKind,Microsoft.CodeAnalysis.ConstantValue)">
+            <summary>
+            Possible return values:
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.Null"/>
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.Bad"/> - compiler doesn't support the type check, i.e. cannot perform it, even at runtime
+             - 'null' value - result is not known at compile time    
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.BindConditionalOperator(Microsoft.CodeAnalysis.CSharp.Syntax.ConditionalExpressionSyntax,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)">
              <remarks>
              From ExpressionBinder::EnsureQMarkTypesCompatible:
@@ -1572,8 +1589,10 @@
             <summary>
             Does an expression of type <paramref name="expressionType"/> "match" a pattern that looks for
             type <paramref name="patternType"/>?
-            'true' if the matched type catches all of them, 'false' if it catches none of them, and
-            'null' if it might catch some of them.
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.True"/> if the matched type catches all of them
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.False"/> if it catches none of them
+             - <see cref="P:Microsoft.CodeAnalysis.ConstantValue.Bad"/> - compiler doesn't support the type check, i.e. cannot perform it, even at runtime
+             - 'null' if it might catch some of them.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.GetValEscape(Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol,System.UInt32)">
@@ -2156,13 +2175,14 @@
             A binder that knows no symbols and will not delegate further.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.BuckStopsHereBinder.AssociatedSyntaxTree">
+        <member name="F:Microsoft.CodeAnalysis.CSharp.BuckStopsHereBinder.AssociatedFileIdentifier">
             <summary>
-            In non-speculative scenarios, the syntax tree being bound.
-            In speculative scenarios, the syntax tree from the original compilation used as the speculation context.
+            * In non-speculative scenarios, the identifier for the file being bound.
+            * In speculative scenarios, the identifier for the file from the original compilation used as the speculation context.
+            * In EE scenarios, the identifier for the file from the original compilation used as the evaluation context.
+            
             This is <see langword="null"/> in some scenarios, such as the binder used for <see cref="P:Microsoft.CodeAnalysis.CSharp.CSharpCompilation.Conversions" />
             or the binder used to bind usings in <see cref="T:Microsoft.CodeAnalysis.CSharp.CSharpCompilation.UsingsFromOptionsAndDiagnostics"/>.
-            https://github.com/dotnet/roslyn/issues/62332: what about in EE scenarios?
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.BuckStopsHereBinder.QuickAttributeChecker">
@@ -10057,9 +10077,9 @@
             Return the name including the metadata arity suffix.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol.AssociatedSyntaxTree">
+        <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol.AssociatedFileIdentifier">
             <summary>
-            If this type is a file-local type, returns the syntax tree where this type is visible. Otherwise, returns null.
+            If this type is a file-local type, returns an identifier for the file this type was declared in. Otherwise, returns null.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol.MangleName">
@@ -16718,7 +16738,7 @@
             Parses generated local function name out of a generated method name.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.GeneratedNameParser.TryParseFileTypeName(System.String,System.String@,System.Int32@,System.String@)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.GeneratedNameParser.TryParseFileTypeName(System.String,System.String@,System.Byte[]@,System.String@)">
             <remarks>
             This method will work with either unmangled or mangled type names as input, but it does not remove any arity suffix if present.
             </remarks>
@@ -43867,11 +43887,17 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_FileTypeNested">
             <summary>File-local type '{0}' must be defined in a top level type; '{0}' is a nested type.</summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_FilePathCannotBeConvertedToUtf8">
+            <summary>File-local type '{0}' cannot be used because the containing file path cannot be converted into the equivalent UTF-8 byte representation. {1}</summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_GlobalUsingStaticFileType">
             <summary>File-local type '{0}' cannot be used in a 'global using static' directive.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_FileTypeNameDisallowed">
             <summary>Types and aliases cannot be named 'file'.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_FileTypeNonUniquePath">
+            <summary>File-local type '{0}' must be declared in a file with a unique path. Path '{1}' is used in multiple files.</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.IDS_FeatureUnsignedRightShift">
             <summary>unsigned right shift</summary>
@@ -43933,8 +43959,17 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_ExplicitScopedRef">
             <summary>Do not use 'System.Runtime.CompilerServices.ScopedRefAttribute'. Use the 'scoped' keyword instead.</summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_DuplicateAnalyzerReference">
+            <summary>Analyzer reference '{0}' specified multiple times</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.WRN_DuplicateAnalyzerReference_Title">
+            <summary>Analyzer reference specified multiple times</summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_UnscopedScoped">
             <summary>UnscopedRefAttribute cannot be applied to parameters that have a 'scoped' modifier.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpResources.ERR_ReadOnlyNotSuppAsParamModDidYouMeanIn">
+            <summary>'readonly' is not supported as a parameter modifier. Did you mean 'in'?</summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.Diagnostics.CSharp.CSharpCompilerDiagnosticAnalyzer">
             <summary>

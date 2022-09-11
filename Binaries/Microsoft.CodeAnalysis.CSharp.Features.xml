@@ -1062,6 +1062,24 @@
             such as 'record Student(int Id) : Person($$"first", "last");`.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Snippets.CSharpForEachLoopSnippetProvider.CreateForEachLoopStatementSyntaxAsync(Microsoft.CodeAnalysis.Document,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Creates the foreach statement syntax.
+            Must be done in language specific file since there is no generic way to generate the syntax.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Snippets.CSharpForEachLoopSnippetProvider.GetPlaceHolderLocationsList(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.LanguageService.ISyntaxFacts,System.Threading.CancellationToken)">
+            <summary>
+            Goes through each piece of the foreach statement and extracts the identifiers
+            as well as their locations to create SnippetPlaceholder's of each.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Snippets.CSharpForEachLoopSnippetProvider.GetTargetCaretPosition(Microsoft.CodeAnalysis.LanguageService.ISyntaxFactsService,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Text.SourceText)">
+            <summary>
+            Gets the start of the BlockSyntax of the for statement
+            to be able to insert the caret position at that location.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.UseExpressionBodyForLambda.UseExpressionBodyForLambdaHelpers.GetOptionSeverity(Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption2{Microsoft.CodeAnalysis.CodeStyle.ExpressionBodyPreference})">
             <summary>
             Helper to get the true ReportDiagnostic severity for a given option.  Importantly, this
@@ -2088,6 +2106,9 @@
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpFeaturesResources.Global_using_directives">
             <summary>Global 'using' directives</summary>
         </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpFeaturesResources.Apply_readonly_struct_preferences">
+            <summary>Apply 'readonly struct' preferences</summary>
+        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpAnalyzersResources.Convert_switch_statement_to_expression">
             <summary>Convert switch statement to expression</summary>
         </member>
@@ -2348,6 +2369,12 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpAnalyzersResources.Use_block_body_for_lambda_expressions">
             <summary>Use block body for lambda expressions</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpAnalyzersResources.Make_struct_readonly">
+            <summary>Make struct 'readonly'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpAnalyzersResources.Struct_can_be_made_readonly">
+            <summary>Struct can be made 'readonly'</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.CSharpCodeFixesResources.Remove_Unnecessary_Usings">
             <summary>Remove Unnecessary Usings</summary>

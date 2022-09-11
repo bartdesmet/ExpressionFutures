@@ -5259,6 +5259,29 @@
             </summary>
             <remarks>This overload is for backwards compatibility. Do not remove.</remarks>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Compilation.CreateBuiltinOperator(System.String,Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol)">
+            <summary>
+            Creates an <see cref="T:Microsoft.CodeAnalysis.IMethodSymbol"/> whose <see cref="P:Microsoft.CodeAnalysis.IMethodSymbol.MethodKind"/> is <see
+            cref="F:Microsoft.CodeAnalysis.MethodKind.BuiltinOperator"/> for a binary operator. Built-in operators are commonly created for
+            symbols like <c>bool int.operator ==(int v1, int v2)</c> which the language implicitly supports, even if such
+            a symbol is not explicitly defined for that type in either source or metadata.
+            </summary>
+            <param name="name">The binary operator name.  Should be one of the names from <see cref="T:Microsoft.CodeAnalysis.WellKnownMemberNames"/>.</param>
+            <param name="returnType">The return type of the binary operator.</param>
+            <param name="leftType">The type of the left operand of the binary operator.</param>
+            <param name="rightType">The type of the right operand of the binary operator.</param>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Compilation.CreateBuiltinOperator(System.String,Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol)">
+            <summary>
+            Creates an <see cref="T:Microsoft.CodeAnalysis.IMethodSymbol"/> whose <see cref="P:Microsoft.CodeAnalysis.IMethodSymbol.MethodKind"/> is <see
+            cref="F:Microsoft.CodeAnalysis.MethodKind.BuiltinOperator"/> for a unary operator. Built-in operators are commonly created for
+            symbols like <c>bool int.operator -(int value)</c> which the language implicitly supports, even if such a
+            symbol is not explicitly defined for that type in either source or metadata.
+            </summary>
+            <param name="name">The unary operator name.  Should be one of the names from <see cref="T:Microsoft.CodeAnalysis.WellKnownMemberNames"/>.</param>
+            <param name="returnType">The return type of the unary operator.</param>
+            <param name="operandType">The type the operator applies to.</param>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.Compilation.ClassifyCommonConversion(Microsoft.CodeAnalysis.ITypeSymbol,Microsoft.CodeAnalysis.ITypeSymbol)">
             <summary>
             Classifies a conversion from <paramref name="source"/> to <paramref name="destination"/> according
@@ -13952,6 +13975,14 @@
             <summary>
             Driver to execute diagnostic analyzers for a given compilation.
             It uses a <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AsyncQueue`1"/> of <see cref="T:Microsoft.CodeAnalysis.Diagnostics.CompilationEvent"/>s to drive its analysis.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver.CompilationData">
+            <summary>
+            Stores <see cref="T:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver.DeclarationAnalysisData"/> for symbols declared in the compilation.
+            This allows us to avoid recomputing this data across analyzer execution for different analyzers
+            on the same symbols. This cached compilation data is strongly held by the associated
+            <see cref="T:Microsoft.CodeAnalysis.Diagnostics.CompilationWithAnalyzers"/> object.
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.Diagnostics.AnalyzerDriver._programmaticSuppressions">
@@ -24454,6 +24485,11 @@
         <member name="F:Microsoft.CodeAnalysis.GeneratorDriverState.DisabledOutputs">
             <summary>
             A bit field containing the output kinds that should not be produced by this generator driver.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.GeneratorDriverState.ParseOptionsChanged">
+            <summary>
+            Tracks if the <see cref="F:Microsoft.CodeAnalysis.GeneratorDriverState.ParseOptions"/> have been changed meaning post init trees will need to be re-parsed.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.GeneratorExtensions.GetGeneratorType(Microsoft.CodeAnalysis.ISourceGenerator)">
@@ -35252,6 +35288,15 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.GeneratorTotalExecutionTime">
             <summary>Total generator execution time: {0} seconds.</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.BadBuiltInOps1">
+            <summary>Illegal built-in operator name '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.BadBuiltInOps2">
+            <summary>Unsupported built-in operator: {0}</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.CodeAnalysisResources.BadBuiltInOps3">
+            <summary>'{0}' was not a valid built-in operator name</summary>
         </member>
         <member name="M:Microsoft.DiaSymReader.IMetadataImport.ResolveTypeRef(System.Int32,System.Guid@,System.Object@,System.Int32@)">
             <summary>

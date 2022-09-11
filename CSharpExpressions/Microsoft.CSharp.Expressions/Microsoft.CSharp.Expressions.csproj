@@ -9,6 +9,7 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <Nullable>enable</Nullable>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\System.Linq.Expressions.Debugging\System.Linq.Expressions.Debugging.csproj" />

@@ -1511,11 +1511,6 @@
             Otherwise, you can return any of the well known fix all providers from <see cref="T:Microsoft.CodeAnalysis.CodeFixes.WellKnownFixAllProviders"/> or implement your own fix all provider.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeFixes.CodeFixContextExtensions.CanApplyChange(Microsoft.CodeAnalysis.CodeFixes.CodeFixContext,Microsoft.CodeAnalysis.ApplyChangesKind)">
-            <summary>
-            Remove once https://github.com/dotnet/roslyn/issues/63457 is approved
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CodeFixes.SyntaxEditorBasedCodeFixProvider.FixAllAsync(Microsoft.CodeAnalysis.Document,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Diagnostic},Microsoft.CodeAnalysis.Editing.SyntaxEditor,Microsoft.CodeAnalysis.CodeActions.CodeActionOptionsProvider,System.Threading.CancellationToken)">
             <summary>
             Fixes all <paramref name="diagnostics"/> in the specified <paramref name="editor"/>.
@@ -2342,11 +2337,6 @@
             <summary>
             Gets the spans to fix by document for the <see cref="T:Microsoft.CodeAnalysis.CodeFixes.FixAllScope"/> for this fix all occurences fix.
             If no spans are specified, it indicates the entire document needs to be fixed.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CodeRefactorings.CodeFixContextExtensions.CanApplyChange(Microsoft.CodeAnalysis.CodeRefactorings.CodeRefactoringContext,Microsoft.CodeAnalysis.ApplyChangesKind)">
-            <summary>
-            Remove once https://github.com/dotnet/roslyn/issues/63457 is approved
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CodeStyle.CodeStyleOption`1">
@@ -9217,6 +9207,11 @@
             normally correspond to the name node of the symbol.
             </summary>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.Internal.Log.AbstractLogAggregator`2">
+            <summary>
+            helper class to aggregate some numeric value log in client side
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.Internal.Log.AggregateLogger">
             <summary>
             a logger that aggregate multiple loggers
@@ -9575,11 +9570,6 @@
         <member name="M:Microsoft.CodeAnalysis.Internal.Log.LogMessage.FreeCore">
             <summary>
             Logger will call this to return LogMessage to its pool
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.Internal.Log.AbstractLogAggregator`2">
-            <summary>
-            helper class to aggregate some numeric value log in client side
             </summary>
         </member>
         <member name="E:Microsoft.CodeAnalysis.Notification.IGlobalOperationNotificationService.Started">
@@ -11446,6 +11436,11 @@
             parameter inherits from or equals <see cref="T:System.EventArgs"/> type.
             </summary>
         </member>
+        <member name="M:Microsoft.CodeAnalysis.Shared.Extensions.IMethodSymbolExtensions.IsAsyncReturningVoidTask(Microsoft.CodeAnalysis.IMethodSymbol,Microsoft.CodeAnalysis.Compilation)">
+            <summary>
+            Tells if an async method returns a task-like type, awaiting for which produces <see langword="void"/> result
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.Shared.Extensions.INamedTypeSymbolExtensions.GetOverridableMembers(Microsoft.CodeAnalysis.INamedTypeSymbol,System.Threading.CancellationToken)">
             <summary>
             Gets the set of members in the inheritance chain of <paramref name="containingType"/> that
@@ -13037,6 +13032,12 @@
             its impact in this layer.
             </summary>
         </member>
+        <member name="F:Microsoft.CodeAnalysis.SourceGeneratorTelemetry.SourceGeneratorTelemetryCollectorWorkspaceService._generatorTelemetryKeys">
+            <summary>
+            Cache of the <see cref="T:Microsoft.CodeAnalysis.SourceGeneratorTelemetry.SourceGeneratorTelemetryCollectorWorkspaceService.GeneratorTelemetryKey"/> for a generator to avoid repeatedly reading version information from disk;
+            this is a ConditionalWeakTable so having telemetry for older runs doesn't keep the generator itself alive.
+            </summary>
+        </member>
         <member name="T:Microsoft.CodeAnalysis.Storage.AbstractPersistentStorageService">
             <summary>
             A service that enables storing and retrieving of information associated with solutions,
@@ -13744,6 +13745,20 @@
             </summary>
             <exception cref="T:System.IO.IOException"></exception>
             <exception cref="T:System.IO.InvalidDataException"></exception>
+        </member>
+        <member name="T:Microsoft.CodeAnalysis.ISupportedChangesService">
+            <summary>
+            Can be acquired from <see cref="P:Microsoft.CodeAnalysis.Solution.Services"/>, with <see cref="M:Microsoft.CodeAnalysis.Host.SolutionServices.GetService``1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ISupportedChangesService.CanApplyChange(Microsoft.CodeAnalysis.ApplyChangesKind)">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Workspace.CanApplyChange(Microsoft.CodeAnalysis.ApplyChangesKind)"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ISupportedChangesService.CanApplyCompilationOptionChange(Microsoft.CodeAnalysis.CompilationOptions,Microsoft.CodeAnalysis.CompilationOptions,Microsoft.CodeAnalysis.Project)">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Workspace.CanApplyCompilationOptionChange(Microsoft.CodeAnalysis.CompilationOptions,Microsoft.CodeAnalysis.CompilationOptions,Microsoft.CodeAnalysis.Project)"/>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.ISupportedChangesService.CanApplyParseOptionChange(Microsoft.CodeAnalysis.ParseOptions,Microsoft.CodeAnalysis.ParseOptions,Microsoft.CodeAnalysis.Project)">
+            <inheritdoc cref="M:Microsoft.CodeAnalysis.Workspace.CanApplyParseOptionChange(Microsoft.CodeAnalysis.ParseOptions,Microsoft.CodeAnalysis.ParseOptions,Microsoft.CodeAnalysis.Project)"/>
         </member>
         <member name="T:Microsoft.CodeAnalysis.AdditionalDocument">
             <summary>

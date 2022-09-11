@@ -9157,7 +9157,7 @@
             incomplete or inaccurate and that they can try again later if necessary.
             </remarks>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchService.SearchProjectAsync(Microsoft.CodeAnalysis.Project,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Document},System.String,System.Collections.Immutable.IImmutableSet{System.String},System.Func{Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchResult,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchService.SearchProjectAsync(Microsoft.CodeAnalysis.Project,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Document},System.String,System.Collections.Immutable.IImmutableSet{System.String},Microsoft.CodeAnalysis.Document,System.Func{Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchResult,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
             <summary>
             Searches the documents inside <paramref name="project"/> for symbols that matches <paramref name="searchPattern"/>.
             <paramref name="priorityDocuments"/> is an optional subset of the documents from <paramref name="project"/> that can
@@ -9165,14 +9165,14 @@
             document contents for the requested project.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchService.SearchCachedDocumentsAsync(Microsoft.CodeAnalysis.Project,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Document},System.String,System.Collections.Immutable.IImmutableSet{System.String},System.Func{Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchResult,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchService.SearchCachedDocumentsAsync(Microsoft.CodeAnalysis.Project,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.Document},System.String,System.Collections.Immutable.IImmutableSet{System.String},Microsoft.CodeAnalysis.Document,System.Func{Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchResult,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
             <summary>
             Searches the documents inside <paramref name="project"/> for symbols that matches <paramref name="searchPattern"/>.
             Results should be reported from a previous computed cache (even if that cache is out of date) to produce results as
             quickly as possible.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchService.SearchGeneratedDocumentsAsync(Microsoft.CodeAnalysis.Project,System.String,System.Collections.Immutable.IImmutableSet{System.String},System.Func{Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchResult,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+        <member name="M:Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchService.SearchGeneratedDocumentsAsync(Microsoft.CodeAnalysis.Project,System.String,System.Collections.Immutable.IImmutableSet{System.String},Microsoft.CodeAnalysis.Document,System.Func{Microsoft.CodeAnalysis.NavigateTo.INavigateToSearchResult,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
             <summary>
             Searches the generated documents inside <paramref name="project"/> for symbols that matches <paramref name="searchPattern"/>.
             </summary>
@@ -9214,6 +9214,16 @@
         <member name="F:Microsoft.CodeAnalysis.NavigateTo.RoslynNavigateToItem.Kind">
             <summary>
             Will be one of the values from <see cref="T:Microsoft.CodeAnalysis.NavigateTo.NavigateToItemKind"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.NavigateTo.RoslynNavigateToItem.NavigateToSearchResult._itemDocument">
+            <summary>
+            The <see cref="T:Microsoft.CodeAnalysis.Document"/> that <see cref="F:Microsoft.CodeAnalysis.NavigateTo.RoslynNavigateToItem.NavigateToSearchResult._item"/> is contained within.
+            </summary>
+        </member>
+        <member name="F:Microsoft.CodeAnalysis.NavigateTo.RoslynNavigateToItem.NavigateToSearchResult._activeDocument">
+            <summary>
+            The document the user was editing when they invoked the navigate-to operation.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.NavigateTo.RoslynNavigateToItem.NavigateToSearchResult.Microsoft#CodeAnalysis#Navigation#INavigableItem#IsImplicitlyDeclared">
@@ -10121,17 +10131,22 @@
         </member>
         <member name="M:Microsoft.CodeAnalysis.Snippets.AbstractSnippetProvider.GenerateSnippetTextChangesAsync(Microsoft.CodeAnalysis.Document,System.Int32,System.Threading.CancellationToken)">
             <summary>
-            Generates the new snippet's TextChanges that are being inserted into the document
+            Generates the new snippet's TextChanges that are being inserted into the document.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Snippets.AbstractSnippetProvider.AnnotateNodesToReformatAsync(Microsoft.CodeAnalysis.Document,Microsoft.CodeAnalysis.SyntaxAnnotation,Microsoft.CodeAnalysis.SyntaxAnnotation,System.Int32,System.Threading.CancellationToken)">
             <summary>
-            Method for each snippet to locate the inserted SyntaxNode to reformat
+            Method for each snippet to locate the inserted SyntaxNode to reformat.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.Snippets.AbstractSnippetProvider.FindAddedSnippetSyntaxNode(Microsoft.CodeAnalysis.SyntaxNode,System.Int32,Microsoft.CodeAnalysis.LanguageService.ISyntaxFacts)">
+        <member name="M:Microsoft.CodeAnalysis.Snippets.AbstractSnippetProvider.GetTargetCaretPosition(Microsoft.CodeAnalysis.LanguageService.ISyntaxFactsService,Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.Text.SourceText)">
             <summary>
-            Every SnippetProvider will need a method to retrieve the "main" snippet syntax once it has been inserted as a TextChange.
+            Gets the position that we want the caret to be at after all of the indentation/formatting has been done.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.Snippets.AbstractSnippetProvider.GetSnippetContainerFunction(Microsoft.CodeAnalysis.LanguageService.ISyntaxFacts)">
+            <summary>
+            Helper function to retrieve the specific type of snippet syntax when it needs to be searched for again.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.Snippets.AbstractSnippetProvider.GetPlaceHolderLocationsList(Microsoft.CodeAnalysis.SyntaxNode,Microsoft.CodeAnalysis.LanguageService.ISyntaxFacts,System.Threading.CancellationToken)">
@@ -14876,6 +14891,9 @@
         </member>
         <member name="P:Microsoft.CodeAnalysis.FeaturesResources.Required">
             <summary>required</summary>
+        </member>
+        <member name="P:Microsoft.CodeAnalysis.FeaturesResources.foreach_loop">
+            <summary>foreach loop</summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.FeaturesResources.Deleting_0_requires_restarting_the_application_because_is_not_supported_by_the_runtime">
             <summary>Deleting {0} requires restarting the application because is not supported by the runtime.</summary>
