@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
@@ -672,7 +673,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static void ValidateAsyncLambdaArgs(Type delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
+        private static void ValidateAsyncLambdaArgs([NotNull] Type? delegateType, ref Expression body, ReadOnlyCollection<ParameterExpression> parameters)
         {
             ContractUtils.RequiresNotNull(delegateType, nameof(delegateType));
             RequiresCanRead(body, nameof(body));

@@ -62,7 +62,7 @@ namespace System.Dynamic.Utils
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="value"/> is <c>null</c>.
         /// </exception>
-        public static void RequiresNotNull(object? value, string paramName, int index = -1)
+        public static void RequiresNotNull([NotNull] object? value, string paramName, int index = -1)
         {
             Debug.Assert(!string.IsNullOrEmpty(paramName));
 
@@ -84,7 +84,7 @@ namespace System.Dynamic.Utils
         /// <exception cref="ArgumentException">
         /// Thrown if the <paramref name="collection"/> is empty.
         /// </exception>
-        public static void RequiresNotEmpty<T>(ICollection<T>? collection, string paramName)
+        public static void RequiresNotEmpty<T>([NotNull] ICollection<T>? collection, string paramName)
         {
             if (collection == null)
             {
@@ -109,7 +109,7 @@ namespace System.Dynamic.Utils
         /// <exception cref="ArgumentNullException">
         /// Thrown if the <paramref name="array"/> or any of its items is <c>null</c>.
         /// </exception>
-        public static void RequiresNotNullItems<T>(IList<T> array, string arrayName)
+        public static void RequiresNotNullItems<T>([NotNull] IList<T> array, string arrayName)
         {
             Debug.Assert(!string.IsNullOrEmpty(arrayName));
 
@@ -134,7 +134,7 @@ namespace System.Dynamic.Utils
         /// </summary>
         /// <exception cref="ArgumentNullException">Array is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Offset or count are out of range.</exception>
-        public static void RequiresArrayRange<T>(IList<T> array, int offset, int count, string offsetName, string countName)
+        public static void RequiresArrayRange<T>([NotNull] IList<T> array, int offset, int count, string offsetName, string countName)
         {
             Debug.Assert(!string.IsNullOrEmpty(offsetName));
             Debug.Assert(!string.IsNullOrEmpty(countName));

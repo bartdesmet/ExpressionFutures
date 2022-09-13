@@ -629,8 +629,6 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.InvalidSliceParameters(slice);
             }
 
-            Debug.Assert(indexOrSlice is not null);
-
             return new IndexerAccessCSharpExpression(@object, argument, lengthOrCount, indexOrSlice);
         }
     }

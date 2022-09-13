@@ -3,6 +3,7 @@
 // bartde - November 2015
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 
@@ -350,7 +351,7 @@ namespace Microsoft.CSharp.Expressions
             return new ConditionalAccessCSharpExpression(receiver, nonNullReceiver, whenNotNull);
         }
 
-        internal static void CheckConditionalAccess(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull)
+        internal static void CheckConditionalAccess([NotNull] Expression receiver, [NotNull] ConditionalReceiver nonNullReceiver, [NotNull] Expression whenNotNull)
         {
             RequiresCanRead(receiver, nameof(receiver));
             RequiresNotNull(nonNullReceiver, nameof(nonNullReceiver));

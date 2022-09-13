@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -18,7 +19,7 @@ namespace System.Dynamic.Utils
     {
         public static void ValidateArgumentTypes(MethodBase method, ExpressionType nodeKind, ref ReadOnlyCollection<Expression> arguments, string? methodParamName)
         {
-            Debug.Assert(nodeKind == ExpressionType.Invoke || nodeKind == ExpressionType.Call || nodeKind == ExpressionType.Dynamic || nodeKind == ExpressionType.New);
+            Debug.Assert(nodeKind is ExpressionType.Invoke or ExpressionType.Call or ExpressionType.Dynamic or ExpressionType.New);
 
             ParameterInfo[] pis = GetParametersForValidation(method, nodeKind);
 
@@ -55,18 +56,13 @@ namespace System.Dynamic.Utils
             if (pis.Length != count)
             {
                 // Throw the right error for the node we were given
-                switch (nodeKind)
+                throw nodeKind switch
                 {
-                    case ExpressionType.New:
-                        throw IncorrectNumberOfConstructorArguments();
-                    case ExpressionType.Invoke:
-                        throw IncorrectNumberOfLambdaArguments();
-                    case ExpressionType.Dynamic:
-                    case ExpressionType.Call:
-                        throw IncorrectNumberOfMethodCallArguments(method, nameof(method));
-                    default:
-                        throw ContractUtils.Unreachable;
-                }
+                    ExpressionType.New => IncorrectNumberOfConstructorArguments(),
+                    ExpressionType.Invoke => IncorrectNumberOfLambdaArguments(),
+                    ExpressionType.Dynamic or ExpressionType.Call => IncorrectNumberOfMethodCallArguments(method, nameof(method)),
+                    _ => ContractUtils.Unreachable,
+                };
             }
         }
 
@@ -85,29 +81,24 @@ namespace System.Dynamic.Utils
                 if (!TryQuote(pType, ref arguments))
                 {
                     // Throw the right error for the node we were given
-                    switch (nodeKind)
+                    throw nodeKind switch
                     {
-                        case ExpressionType.New:
-                            throw ExpressionTypeDoesNotMatchConstructorParameter(arguments.Type, pType, argumentParamName, index);
-                        case ExpressionType.Invoke:
-                            throw ExpressionTypeDoesNotMatchParameter(arguments.Type, pType, argumentParamName, index);
-                        case ExpressionType.Dynamic:
-                        case ExpressionType.Call:
-                            throw ExpressionTypeDoesNotMatchMethodParameter(arguments.Type, pType, method, argumentParamName, index);
-                        default:
-                            throw ContractUtils.Unreachable;
-                    }
+                        ExpressionType.New => ExpressionTypeDoesNotMatchConstructorParameter(arguments.Type, pType, argumentParamName, index),
+                        ExpressionType.Invoke => ExpressionTypeDoesNotMatchParameter(arguments.Type, pType, argumentParamName, index),
+                        ExpressionType.Dynamic or ExpressionType.Call => ExpressionTypeDoesNotMatchMethodParameter(arguments.Type, pType, method, argumentParamName, index),
+                        _ => ContractUtils.Unreachable,
+                    };
                 }
             }
             return arguments;
         }
 
-        public static void RequiresCanRead(Expression expression, string paramName)
+        public static void RequiresCanRead([NotNull] Expression? expression, string paramName)
         {
             RequiresCanRead(expression, paramName, -1);
         }
 
-        public static void RequiresCanRead(Expression expression, string paramName, int idx)
+        public static void RequiresCanRead([NotNull] Expression? expression, string paramName, int idx)
         {
             ContractUtils.RequiresNotNull(expression, paramName, idx);
 
