@@ -34,7 +34,7 @@ namespace System.Dynamic.Utils
 
         public static MethodInfo? GetBooleanOperator(Type type, string name)
         {
-            Debug.Assert(name == "op_False" || name == "op_True");
+            Debug.Assert(name is "op_False" or "op_True");
 
             do
             {
