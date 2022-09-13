@@ -864,7 +864,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(), a => a.InnerException is DivideByZeroException);
         }
 
-        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
+        [Fact]
         public void CrossCheck_Async_TryCatchWhen_AwaitInTry()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -895,10 +895,10 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
     });
 }");
             f(true);
-            AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
+            f(false);
         }
 
-        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
+        [Fact]
         public void CrossCheck_Async_TryCatchWhen_AwaitInTry_Throws()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -932,7 +932,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
-        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
+        [Fact]
         public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -962,7 +962,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             f(false);
         }
 
-        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
+        [Fact]
         public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen_Throws()
         {
             var f = Compile<Func<bool, int>>(@"b =>
@@ -994,7 +994,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<AggregateException>(() => f(false), a => a.InnerException is DivideByZeroException);
         }
 
-        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
+        [Fact]
         public void CrossCheck_Async_TryCatchWhen_AwaitInCatchWhen_Rethrow()
         {
             var f = Compile<Func<bool, int>>(@"b =>
