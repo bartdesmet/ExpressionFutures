@@ -1347,7 +1347,7 @@ namespace Microsoft.CSharp.Expressions
             if (asMethod)
             {
                 // NB: Not preserving evaluation semantics for indexers etc.
-                if (op.Contains("++") || op.Contains("--"))
+                if (op.Contains("++", StringComparison.Ordinal) || op.Contains("--", StringComparison.Ordinal))
                 {
                     // TODO: doesn't deal with post/pre logic yet
                     visitor.Visit(Operand);
@@ -2286,7 +2286,7 @@ namespace Microsoft.CSharp.Expressions
                 switch (interpolation)
                 {
                     case InterpolationStringLiteral literal:
-                        var s = literal.Value.Replace("{", "{{").Replace("}", "}}"); // Escape {} characters
+                        var s = literal.Value.Replace("{", "{{", StringComparison.Ordinal).Replace("}", "}}", StringComparison.Ordinal); // Escape {} characters
                         visitor.Out(s);
                         break;
                     case InterpolationStringInsert insert:
