@@ -236,6 +236,9 @@ namespace Microsoft.CSharp.Expressions
             if (currentType == typeof(void))
                 throw Error.PropertyShouldNotReturnVoid(current);
 
+            RequiresNotNull(elementType, nameof(elementType));
+            ValidateType(elementType, nameof(elementType));
+
             if (currentConversion != null)
             {
                 RequiresCanRead(currentConversion, nameof(currentConversion));

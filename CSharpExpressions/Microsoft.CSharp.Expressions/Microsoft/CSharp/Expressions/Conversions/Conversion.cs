@@ -36,6 +36,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The conversion to visit.</param>
         /// <returns>The modified conversion, if it or any subexpression was modified; otherwise, returns the original conversion.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Conversion VisitConversion(Conversion node) => node.Accept(this);
     }
 }

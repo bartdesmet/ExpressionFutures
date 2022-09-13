@@ -68,6 +68,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Assigns a value to the referenced object.
         /// </summary>
+#pragma warning disable CA1044 // Properties should not be write only. By design for RefHolder<T>.
         public TObject Value
         {
 #if NETCORE
@@ -76,6 +77,7 @@ namespace System.Runtime.CompilerServices
             set => throw NotSupported;
 #endif
         }
+#pragma warning restore CA1044
 
         /// <summary>
         /// Invokes an action that accepts a reference to the object.

@@ -65,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
                 return;
             }
 
-            if (value.Type.IsNullableType() && value.Value != null)
+            if (value.Type.IsNullableType())
                 throw Error.InvalidPatternConstantType(value.Type);
 
             if (value.Type == typeof(IntPtr) || value.Type == typeof(UIntPtr))
@@ -85,11 +85,11 @@ namespace Microsoft.CSharp.Expressions
                 case TypeCode.Decimal:
                     break;
                 case TypeCode.Single:
-                    if (isRelational && float.IsNaN((float)value.Value!))
+                    if (isRelational && float.IsNaN((float)value.Value))
                         throw Error.CannotUsePatternConstantNaN();
                     break;
                 case TypeCode.Double:
-                    if (isRelational && double.IsNaN((double)value.Value!))
+                    if (isRelational && double.IsNaN((double)value.Value))
                         throw Error.CannotUsePatternConstantNaN();
                     break;
                 case TypeCode.Boolean:

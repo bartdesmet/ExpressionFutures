@@ -319,7 +319,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="array">The array to access.</param>
         /// <param name="indexes">The indexes used to access the array.</param>
         /// <returns>A new <see cref="ArrayAccessCSharpExpression"/> instance representing the array access operation.</returns>
-        public static new ArrayAccessCSharpExpression ArrayAccess(Expression array, IEnumerable<Expression> indexes)
+        public static new ArrayAccessCSharpExpression ArrayAccess(Expression array, IEnumerable<Expression>? indexes)
         {
             RequiresCanRead(array, nameof(array));
 

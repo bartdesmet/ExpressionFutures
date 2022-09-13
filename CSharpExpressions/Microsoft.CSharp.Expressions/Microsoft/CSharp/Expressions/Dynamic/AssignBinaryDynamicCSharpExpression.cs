@@ -70,7 +70,7 @@ namespace Microsoft.CSharp.Expressions
                     return ReduceNullCoalescingAssign();
             }
 
-            var candidateAccessor = default(string);
+            var candidateAccessor = default(string?);
 
             switch (OperationNodeType)
             {

@@ -79,7 +79,7 @@ namespace Microsoft.CSharp.Expressions
 
             var sb = new StringBuilder();
 
-            var values = new List<Expression>();
+            var values = new ReadOnlyCollectionBuilder<Expression>();
             int pos = 0;
 
             foreach (var interpolation in Interpolations)
@@ -118,7 +118,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            return MakeStringFormat(sb.ToString(), values);
+            return MakeStringFormat(sb.ToString(), values.ToReadOnlyCollection());
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="format">The format string.</param>
         /// <param name="args">The formatting arguments to pass.</param>
         /// <returns>An expression with a call to string.Format.</returns>
-        protected virtual Expression MakeStringFormat(string format, List<Expression> args)
+        private protected virtual Expression MakeStringFormat(string format, ReadOnlyCollection<Expression> args)
         {
             //
             // NB: Roslyn has strange behavior for e.g. $"foo", where it leaks optimization logic in the expression tree, causing it to produce
@@ -236,7 +236,7 @@ namespace Microsoft.CSharp.Expressions
 
         public override Type Type { get; }
 
-        protected override Expression MakeStringFormat(string format, List<Expression> args)
+        private protected override Expression MakeStringFormat(string format, ReadOnlyCollection<Expression> args)
         {
             var call = Expression.Call(WellKnownMembers.FormattableStringFactoryCreate, Expression.Constant(format), Expression.NewArrayInit(typeof(object), args));
 

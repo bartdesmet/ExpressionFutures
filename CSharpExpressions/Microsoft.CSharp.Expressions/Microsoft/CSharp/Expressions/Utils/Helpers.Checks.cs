@@ -3,6 +3,7 @@
 // bartde - October 2015
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,8 +12,10 @@ namespace Microsoft.CSharp.Expressions
 {
     internal static partial class Helpers
     {
-        public static void RequiresCanWrite(Expression expression, string paramName)
+        public static void RequiresCanWrite([NotNull] Expression expression, string paramName)
         {
+            ContractUtils.RequiresNotNull(expression, paramName);
+
             // NB: This does not account for dynamic member and index nodes; to make dynamically bound assignments,
             //     one should use the appropriate methods on DynamicCSharpExpression, which require the use of
             //     dynamic arguments and also allow to separate the dynamic API from the rest of the nodes without

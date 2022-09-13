@@ -486,7 +486,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (rightConversion is DeconstructionConversion deconstruct)
                 {
-                    if (!(left is TupleLiteralCSharpExpression tuple))
+                    if (left is not TupleLiteralCSharpExpression tuple)
                         throw Error.DeconstructingAssignmentStructureMismatch(depth, component);
 
                     var rightConversions = deconstruct.Conversions;
