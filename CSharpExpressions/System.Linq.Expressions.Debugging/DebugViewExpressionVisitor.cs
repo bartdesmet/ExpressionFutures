@@ -85,6 +85,7 @@ namespace System.Linq.Expressions
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CA1062 // Validate arguments of public methods
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
@@ -720,5 +721,6 @@ namespace System.Linq.Expressions
         }
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore CA1062 // Validate arguments of public methods
     }
 }

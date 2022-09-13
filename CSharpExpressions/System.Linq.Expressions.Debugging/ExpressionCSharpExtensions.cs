@@ -103,7 +103,7 @@ namespace System.Linq.Expressions
                 {
                     var name = type.Namespace is string ns && namespaces.Contains(ns) ? type.Name : type.FullName!;
 
-                    var tick = name.IndexOf('`');
+                    var tick = name.IndexOf('`', StringComparison.Ordinal);
                     if (tick >= 0)
                     {
                         name = name.Substring(0, tick);
@@ -161,7 +161,7 @@ namespace System.Linq.Expressions
                     {
                         var name = def.Namespace is string ns && namespaces.Contains(ns) ? def.Name : def.FullName!;
 
-                        var tick = name.IndexOf('`');
+                        var tick = name.IndexOf('`', StringComparison.Ordinal);
                         if (tick >= 0)
                         {
                             name = name.Substring(0, tick);
@@ -702,7 +702,7 @@ namespace System.Linq.Expressions
                 if (asMethod)
                 {
                     // NB: Not preserving evaluation semantics for indexers etc.
-                    if (op.Contains("++") || op.Contains("--"))
+                    if (op.Contains("++", StringComparison.Ordinal) || op.Contains("--", StringComparison.Ordinal))
                     {
                         // TODO: doesn't deal with post/pre logic yet
                         Visit(node.Operand);
