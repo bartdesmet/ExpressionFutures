@@ -213,15 +213,13 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<IndexOutOfRangeException>(() => f4("ba"));
         }
 
-        [Fact(Skip = "TODO: Address `error CS0656: Missing compiler required member 'System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray'` by moving tests to run on .NET Core.")]
+        [Fact]
         public void CrossCheck_IndexerAccess_Array_Slice()
         {
             var xs = Enumerable.Range(7, 50).ToArray();
 
-            var f1 = Compile<Func<int[], Range, int[]>>("(xs, i) => xs[i]");
+            var f1 = Compile<Func<int[], Range, string>>("(xs, i) => string.Join(',', xs[i])");
             f1(xs, new Range(9, 16));
-
-            // TODO: The test above won't succeed because EqualityComparer<int[]>.Default won't do the right thing.
         }
 
         [Fact]

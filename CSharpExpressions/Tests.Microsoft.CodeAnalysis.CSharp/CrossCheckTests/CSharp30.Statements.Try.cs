@@ -304,7 +304,7 @@ namespace Tests.Microsoft.CodeAnalysis.CSharp
             AssertEx.Throws<DivideByZeroException>(() => f(true));
         }
 
-        [Fact(Skip = "See https://github.com/dotnet/coreclr/issues/1764 for restriction in CLR.")]
+        [Fact]
         public void CrossCheck_TryCatchWhen()
         {
             var f = Compile<Action<bool, bool>>(@"(b, c) =>
