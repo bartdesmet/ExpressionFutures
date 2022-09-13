@@ -110,7 +110,7 @@ namespace Tests
             Assert.Equal(42, e.Compile()().Result().Result);
         }
 
-        [Fact(Skip = "Used to be NotSupportedException but may be fixed now. Review https://github.com/dotnet/coreclr/issues/1764.")]
+        [Fact]
         public void AsyncLambda_Compilation_NotInFilter_NoFalsePositive()
         {
             var p = Expression.Parameter(typeof(Exception));
@@ -126,8 +126,7 @@ namespace Tests
 
             var e = CSharpExpression.AsyncLambda<Func<Task>>(expr);
 
-            // DynamicMethod does not support BeginExceptFilterBlock (see https://github.com/dotnet/coreclr/issues/1764)
-            Assert.Throws<NotSupportedException>(() => e.Compile());
+            e.Compile()().Wait();
         }
 
         [Fact]
