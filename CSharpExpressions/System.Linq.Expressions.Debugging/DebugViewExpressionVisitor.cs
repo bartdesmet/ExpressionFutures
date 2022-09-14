@@ -15,8 +15,8 @@ namespace System.Linq.Expressions
     /// </summary>
     public class DebugViewExpressionVisitor : ExpressionVisitor, IDebugViewExpressionVisitor
     {
-        private readonly Stack<XNode> _nodes = new Stack<XNode>();
-        private readonly IDictionary<object, int> _instanceIds = new Dictionary<object, int>();
+        private readonly Stack<XNode> _nodes = new();
+        private readonly Dictionary<object, int> _instanceIds = new();
 
         /// <summary>
         /// Gets the debug view for the specified expression.
@@ -539,7 +539,7 @@ namespace System.Linq.Expressions
                     var lastPart = name.LastIndexOf('.');
                     if (lastPart >= 0)
                     {
-                        name = name.Substring(lastPart + 1);
+                        name = name[(lastPart + 1)..];
                     }
 
                     var value = default(object);
@@ -547,7 +547,7 @@ namespace System.Linq.Expressions
                     {
                         value = prop.GetValue(node.Binder);
                     }
-                    catch { }
+                    catch (TargetInvocationException) { }
 
                     if (value != null)
                     {
