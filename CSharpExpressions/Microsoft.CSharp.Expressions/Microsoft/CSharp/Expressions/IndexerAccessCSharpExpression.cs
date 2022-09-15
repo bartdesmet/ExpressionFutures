@@ -571,7 +571,9 @@ namespace Microsoft.CSharp.Expressions
 
                 RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
+#pragma warning disable CA1508 // Avoid dead conditional code (https://github.com/dotnet/roslyn-analyzers/issues/6165)
                 var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice), nameof(indexOrSlice));
+#pragma warning restore CA1508 // Avoid dead conditional code
 
                 indexOrSlice = index; // NB: Store the property rather than a method.
 

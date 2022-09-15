@@ -608,11 +608,13 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
         public static AsyncLambdaCSharpExpression AsyncLambda(Type delegateType, Expression body, IEnumerable<ParameterExpression>? parameters)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var parameterList = parameters.ToReadOnly();
 
             ValidateAsyncLambdaArgs(delegateType, ref body, parameterList);
 
             return CreateAsyncLambda(delegateType, body, parameterList);
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         /// <summary>
@@ -631,11 +633,13 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An <see cref="AsyncLambdaCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to AsyncLambda and the <see cref="AsyncLambdaCSharpExpression.Body" /> and <see cref="AsyncLambdaCSharpExpression.Parameters" /> properties set to the specified values.</returns>
         public static AsyncCSharpExpression<TDelegate> AsyncLambda<TDelegate>(Expression body, IEnumerable<ParameterExpression>? parameters)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var parameterList = parameters.ToReadOnly();
 
             ValidateAsyncLambdaArgs(typeof(TDelegate), ref body, parameterList);
 
             return new AsyncCSharpExpression<TDelegate>(body, parameterList);
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         /// <summary>

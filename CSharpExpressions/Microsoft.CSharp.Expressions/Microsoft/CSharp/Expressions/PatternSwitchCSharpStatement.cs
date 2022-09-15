@@ -243,6 +243,7 @@ namespace Microsoft.CSharp.Expressions
             if (breakLabel.Type != typeof(void))
                 throw Error.SwitchBreakLabelShouldBeVoid();
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var sectionsList = sections.ToReadOnly();
 
             if (sectionsList.Count > 0)
@@ -276,6 +277,7 @@ namespace Microsoft.CSharp.Expressions
                         throw Error.SwitchValueTypeDoesNotMatchPatternInputType(inputType, switchValue.Type);
                 }
             }
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             var variableList = CheckUniqueVariables(variables, nameof(variables));
 

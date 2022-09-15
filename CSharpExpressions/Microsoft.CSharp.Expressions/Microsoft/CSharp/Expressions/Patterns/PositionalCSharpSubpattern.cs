@@ -39,6 +39,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal override CSharpSubpattern Accept(CSharpExpressionVisitor visitor) => visitor.VisitPositionalSubpattern(this);
 
         /// <summary>

@@ -153,8 +153,11 @@ namespace Microsoft.CSharp.Expressions
             Type elementType,
             bool needsDisposal,
             AwaitInfo? disposeAwaitInfo,
-            LambdaExpression? patternDispose) =>
-            EnumeratorInfo(
+            LambdaExpression? patternDispose)
+        {
+            RequiresNotNull(currentPropertyGetMethod, nameof(currentPropertyGetMethod));
+
+            return EnumeratorInfo(
                 isAsync,
                 collectionType,
                 getEnumerator,
@@ -166,6 +169,7 @@ namespace Microsoft.CSharp.Expressions
                 disposeAwaitInfo,
                 patternDispose
             );
+        }
 
         /// <summary>
         /// Creates a new <see cref="Microsoft.CSharp.Expressions.EnumeratorInfo"/> object providing binding information for foreach operations.

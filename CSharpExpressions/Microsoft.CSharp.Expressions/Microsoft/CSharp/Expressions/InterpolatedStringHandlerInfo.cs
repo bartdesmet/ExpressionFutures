@@ -132,6 +132,7 @@ namespace Microsoft.CSharp.Expressions
             if (!AreReferenceAssignable(type, builderType)) // REVIEW: Equivalent or assignable?
                 throw Error.InterpolatedStringHandlerTypeNotAssignable(builderType, type);
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var argumentIndicesCollection = argumentIndices.ToReadOnly();
 
             foreach (var i in argumentIndicesCollection)
@@ -139,6 +140,7 @@ namespace Microsoft.CSharp.Expressions
                 if (i < -1)
                     throw Error.InvalidInterpolatedStringHandlerArgumentIndex(i);
             }
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             var n = construction.Parameters.Count;
 

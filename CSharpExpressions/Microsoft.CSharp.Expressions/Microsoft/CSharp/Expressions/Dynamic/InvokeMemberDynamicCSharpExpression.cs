@@ -281,6 +281,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(@object, nameof(@object));
             RequiresNotNull(name, nameof(name));
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var typeArgList = typeArguments.ToReadOnly();
 
             int i = 0;
@@ -289,6 +290,7 @@ namespace Microsoft.CSharp.Expressions
                 ValidateType(type, nameof(typeArguments), i);
                 i++;
             }
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             var argList = arguments.ToReadOnly();
 
@@ -408,6 +410,7 @@ namespace Microsoft.CSharp.Expressions
 
             ValidateType(type, nameof(type));
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var typeArgList = typeArguments.ToReadOnly();
 
             int i = 0;
@@ -416,6 +419,7 @@ namespace Microsoft.CSharp.Expressions
                 ValidateType(typeArg, nameof(typeArguments), i);
                 i++;
             }
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             var argList = arguments.ToReadOnly();
 

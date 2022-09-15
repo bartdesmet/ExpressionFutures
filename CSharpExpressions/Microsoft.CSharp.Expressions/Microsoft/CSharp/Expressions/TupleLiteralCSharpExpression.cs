@@ -278,9 +278,11 @@ namespace Microsoft.CSharp.Expressions
                 return res;
             }
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var args = arguments.ToReadOnly();
 
             var n = args.Count;
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             var parameters = GetTupleConstructorParameters(type, n);
 

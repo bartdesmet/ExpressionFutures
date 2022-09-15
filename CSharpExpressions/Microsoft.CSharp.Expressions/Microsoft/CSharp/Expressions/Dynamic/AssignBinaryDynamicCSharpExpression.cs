@@ -70,19 +70,12 @@ namespace Microsoft.CSharp.Expressions
                     return ReduceNullCoalescingAssign();
             }
 
-            var candidateAccessor = default(string?);
-
-            switch (OperationNodeType)
+            var candidateAccessor = OperationNodeType switch
             {
-                case CSharpExpressionType.AddAssign:
-                case CSharpExpressionType.AddAssignChecked:
-                    candidateAccessor = "add_";
-                    break;
-                case CSharpExpressionType.SubtractAssign:
-                case CSharpExpressionType.SubtractAssignChecked:
-                    candidateAccessor = "remove_";
-                    break;
-            }
+                CSharpExpressionType.AddAssign or CSharpExpressionType.AddAssignChecked => "add_",
+                CSharpExpressionType.SubtractAssign or CSharpExpressionType.SubtractAssignChecked => "remove_",
+                _ => null
+            };
 
             if (candidateAccessor != null)
             {

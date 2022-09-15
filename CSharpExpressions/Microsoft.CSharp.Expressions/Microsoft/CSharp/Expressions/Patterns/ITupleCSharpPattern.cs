@@ -195,6 +195,7 @@ namespace Microsoft.CSharp.Expressions
                 getItemMethod = WellKnownMembers.ITupleGetItem;
             }
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var deconstructionCollection = deconstruction.ToReadOnly();
 
             for (int i = 0, n = deconstructionCollection.Count; i < n; i++)
@@ -216,6 +217,7 @@ namespace Microsoft.CSharp.Expressions
                 if (positionalPattern.Pattern.InputType != typeof(object))
                     throw Error.ITuplePositionalPatternInvalidInputType(i, positionalPattern.Pattern.InputType);
             }
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             return new ITupleCSharpPattern(info, getLengthMethod, getItemMethod, deconstructionCollection);
         }

@@ -328,10 +328,12 @@ namespace Microsoft.CSharp.Expressions
             if (!arrayType.IsArray)
                 throw ArgumentMustBeArray(nameof(array));
 
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var indexesList = indexes.ToReadOnly();
 
             if (arrayType.GetArrayRank() != indexesList.Count)
                 throw IncorrectNumberOfIndexes();
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             foreach (var index in indexesList)
             {

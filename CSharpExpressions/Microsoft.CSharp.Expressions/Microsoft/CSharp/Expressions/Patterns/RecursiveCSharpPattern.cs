@@ -382,6 +382,8 @@ namespace Microsoft.CSharp.Expressions
             }
 
             var narrowedType = info.Info.NarrowedType;
+
+#pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var deconstructionCollection = deconstruction.ToReadOnly();
             var propertiesCollection = properties.ToReadOnly();
 
@@ -596,6 +598,7 @@ namespace Microsoft.CSharp.Expressions
                     return findTopMostMember(member.Receiver);
                 }
             }
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
     }
 

@@ -172,7 +172,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the using statement.</param>
         /// <param name="declaredVariables">The set that will be updated to contain all declared variables.</param>
         /// <returns>The reduced expression.</returns>
-        protected Expression ReduceSingle(ParameterExpression? variable, Expression resource, Expression body, HashSet<ParameterExpression> declaredVariables)
+        private protected Expression ReduceSingle(ParameterExpression? variable, Expression resource, Expression body, HashSet<ParameterExpression> declaredVariables)
         {
             var madeTempVariable = false;
 
