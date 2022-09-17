@@ -1326,7 +1326,6 @@ namespace Microsoft.CSharp.Expressions
                     // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
                     //     to emit valid C# in this case, at the expense of losing the tree shape.
                     op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
-                    isChecked = false;
                 }
 
                 // NB: Could produce invalid C# if assign node is used as a statement; need to keep
@@ -1397,7 +1396,6 @@ namespace Microsoft.CSharp.Expressions
             var nodeType = ConvertNodeType(CSharpNodeType);
             var op = CSharpNodeType == CSharpExpressionType.NullCoalescingAssign ? "??=" : CSharpLanguageHelpers.GetOperatorSyntax(nodeType);
             var mtd = CSharpLanguageHelpers.GetClsMethodName(nodeType);
-            var isChecked = IsChecked;
             var asMethod = false;
 
             if (mtd != null && Method != null)
@@ -1419,7 +1417,7 @@ namespace Microsoft.CSharp.Expressions
 
             var hasEnteredChecked = false;
 
-            if (!visitor.InCheckedContext && isChecked)
+            if (!visitor.InCheckedContext && IsChecked)
             {
                 var scan = new CSharpCheckedOpScanner();
 
@@ -1442,7 +1440,6 @@ namespace Microsoft.CSharp.Expressions
                     // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
                     //     to emit valid C# in this case, at the expense of losing the tree shape.
                     op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
-                    isChecked = false;
                 }
 
                 // NB: Could produce invalid C# if assign node is used as a statement; need to keep
@@ -1536,11 +1533,10 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(OperationNodeType);
-            var isChecked = IsChecked;
 
             var hasEnteredChecked = false;
 
-            if (!visitor.InCheckedContext && isChecked)
+            if (!visitor.InCheckedContext && IsChecked)
             {
                 var scan = new CSharpCheckedOpScanner();
 
@@ -1563,7 +1559,6 @@ namespace Microsoft.CSharp.Expressions
                     // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
                     //     to emit valid C# in this case, at the expense of losing the tree shape.
                     op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
-                    isChecked = false;
                 }
             }
 
@@ -1669,7 +1664,6 @@ namespace Microsoft.CSharp.Expressions
                     // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
                     //     to emit valid C# in this case, at the expense of losing the tree shape.
                     op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
-                    isChecked = false;
                 }
 
                 // NB: Could produce invalid C# if assign node is used as a statement; need to keep
@@ -1888,11 +1882,10 @@ namespace Microsoft.CSharp.Expressions
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
-            var isChecked = IsChecked;
 
             var hasEnteredChecked = false;
 
-            if (!visitor.InCheckedContext && isChecked)
+            if (!visitor.InCheckedContext && IsChecked)
             {
                 var scan = new CSharpCheckedOpScanner();
 
@@ -1915,7 +1908,6 @@ namespace Microsoft.CSharp.Expressions
                     // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
                     //     to emit valid C# in this case, at the expense of losing the tree shape.
                     op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
-                    isChecked = false;
                 }
             }
 
