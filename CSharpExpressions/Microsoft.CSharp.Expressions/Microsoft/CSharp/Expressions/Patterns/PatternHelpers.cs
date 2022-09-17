@@ -111,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             // NB: Peephole optimization for var pattern.
-            if (test is BlockExpression b && b.Variables.Count == 0 && b.Expressions.Count == 2 && b.Result is ConstantExpression { Value: true })
+            if (test is BlockExpression { Variables.Count: 0, Expressions.Count: 2, Result: ConstantExpression { Value: true } } b)
             {
                 stmts.Add(b.Expressions[0]);
                 return;

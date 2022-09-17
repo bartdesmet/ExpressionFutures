@@ -92,14 +92,13 @@ namespace Microsoft.CSharp.Expressions
         {
         }
 
-        internal static AsyncCSharpExpression<TDelegate> Create(Expression body, ReadOnlyCollection<ParameterExpression> parameters) => new AsyncCSharpExpression<TDelegate>(body, parameters);
+        internal static AsyncCSharpExpression<TDelegate> Create(Expression body, ReadOnlyCollection<ParameterExpression> parameters) => new(body, parameters);
 
         /// <summary>
         /// Dispatches to the specific visit method for this node type.
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitAsyncLambda(this);
 
         /// <summary>

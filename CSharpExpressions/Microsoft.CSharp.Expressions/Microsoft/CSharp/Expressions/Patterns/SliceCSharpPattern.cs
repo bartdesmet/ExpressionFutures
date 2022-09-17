@@ -123,11 +123,11 @@ namespace Microsoft.CSharp.Expressions
 
             return PatternHelpers.Reduce(@object, obj =>
             {
-                if (IndexerAccess != null && Pattern != null && Pattern.PatternType != CSharpPatternType.Discard)
+                if (IndexerAccess != null && Pattern is { PatternType: not CSharpPatternType.Discard } pattern)
                 {
                     var slice = GetSlice(obj);
 
-                    return Pattern.Reduce(slice);
+                    return pattern.Reduce(slice);
                 }
 
                 return ConstantTrue;

@@ -177,7 +177,7 @@ namespace Microsoft.CSharp.Expressions
         {
             ContractUtils.RequiresNotNull(expression, paramName);
 
-            if (expression is GetIndexDynamicCSharpExpression || expression is GetMemberDynamicCSharpExpression)
+            if (expression is GetIndexDynamicCSharpExpression or GetMemberDynamicCSharpExpression)
             {
                 return;
             }

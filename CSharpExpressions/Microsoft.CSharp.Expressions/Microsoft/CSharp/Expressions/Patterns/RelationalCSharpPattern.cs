@@ -210,19 +210,14 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="type">The type of the pattern.</param>
         /// <param name="value">The value to compare with.</param>
         /// <returns>A <see cref="RelationalCSharpPattern" /> representing a relational pattern.</returns>
-        public static RelationalCSharpPattern Relational(CSharpPatternInfo info, CSharpPatternType type, ConstantExpression value)
+        public static RelationalCSharpPattern Relational(CSharpPatternInfo info, CSharpPatternType type, ConstantExpression value) => type switch
         {
-            switch (type)
-            {
-                case CSharpPatternType.LessThan:
-                case CSharpPatternType.LessThanOrEqual:
-                case CSharpPatternType.GreaterThan:
-                case CSharpPatternType.GreaterThanOrEqual:
-                    return RelationalCSharpPattern.Make(info, type, value);
-                default:
-                    throw Error.InvalidRelationalPatternType(type, nameof(type));
-            }
-        }
+            CSharpPatternType.LessThan or
+            CSharpPatternType.LessThanOrEqual or
+            CSharpPatternType.GreaterThan or
+            CSharpPatternType.GreaterThanOrEqual => RelationalCSharpPattern.Make(info, type, value),
+            _ => throw Error.InvalidRelationalPatternType(type, nameof(type)),
+        };
     }
 
     partial class CSharpExpressionVisitor
