@@ -254,7 +254,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="binderFlags">The binder flags to use for the dynamic operation.</param>
         /// <param name="context">The type representing the context in which the dynamic operation is bound.</param>
         /// <returns>A new expression representing a dynamically bound binary operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AssignBinaryDynamicCSharpExpression MakeDynamicBinaryAssign(CSharpExpressionType binaryType, DynamicCSharpArgument left, DynamicCSharpArgument right, CSharpBinderFlags binderFlags, Type? context)
         {
             RequiresNotNull(left, nameof(left));

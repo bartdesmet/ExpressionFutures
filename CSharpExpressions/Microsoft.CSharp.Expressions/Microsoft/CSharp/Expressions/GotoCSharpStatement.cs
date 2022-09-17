@@ -195,7 +195,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="target">The label to jump to.</param>
         /// <returns>The created <see cref="GotoLabelCSharpStatement"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static GotoLabelCSharpStatement GotoLabel(LabelTarget target)
         {
             RequiresNotNull(target, nameof(target));

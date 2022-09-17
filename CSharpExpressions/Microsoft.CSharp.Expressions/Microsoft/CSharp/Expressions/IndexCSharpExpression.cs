@@ -182,7 +182,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexer">The <see cref="MethodInfo" /> representing an accessor of the property to index.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="IndexCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, MethodInfo indexer, IEnumerable<ParameterAssignment> arguments)
         {
             RequiresNotNull(indexer, nameof(indexer));
@@ -208,7 +207,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexer">The <see cref="PropertyInfo" /> representing the property to index.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="IndexCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, IEnumerable<ParameterAssignment> arguments) =>
             IndexCore(instance, indexer, method: null, parameters: null, arguments);
 
@@ -230,7 +228,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexer">The <see cref="MethodInfo" /> representing an accessor of the property to index.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="IndexCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, MethodInfo indexer, IEnumerable<Expression> arguments)
         {
             RequiresNotNull(indexer, nameof(indexer));
@@ -257,7 +254,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="indexer">The <see cref="PropertyInfo" /> representing the property to index.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="IndexCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="IndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Index" /> and the <see cref="IndexCSharpExpression.Object" />, <see cref="IndexCSharpExpression.Indexer" />, and <see cref="IndexCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static IndexCSharpExpression Index(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments) =>
             IndexCore(instance, indexer, method: null, parameters: null, arguments);
 

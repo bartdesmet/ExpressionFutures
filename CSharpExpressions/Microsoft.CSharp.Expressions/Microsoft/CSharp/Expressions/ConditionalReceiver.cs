@@ -64,7 +64,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="type">The type of the non-null receiver.</param>
         /// <returns>A <see cref="Expressions.ConditionalReceiver"/> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalReceiver" /> and the <see cref="Expression.Type" /> property equal to the specified type.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalReceiver ConditionalReceiver(Type type)
         {
             RequiresNotNull(type, nameof(type));

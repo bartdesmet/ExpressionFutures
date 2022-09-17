@@ -105,7 +105,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="InvocationCSharpExpression.Arguments" /> collection.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static InvocationCSharpExpression Invoke(Expression expression, IEnumerable<ParameterAssignment>? arguments)
         {
             RequiresCanRead(expression, nameof(expression));
@@ -131,7 +130,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="expression">An <see cref="Expression" /> that represents the delegate or lambda expression to be applied.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="InvocationCSharpExpression.Arguments" /> collection.</param>
         /// <returns>An <see cref="InvocationCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Invoke" /> and the <see cref="InvocationCSharpExpression.Expression" /> and <see cref="InvocationCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static new InvocationCSharpExpression Invoke(Expression expression, IEnumerable<Expression>? arguments)
         {
             RequiresCanRead(expression, nameof(expression));

@@ -57,7 +57,7 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="indexes">The indexes of the element to retrieve.</param>
         /// <returns>An <see cref="Expression" /> representing the element of the array the specified <paramref name="indexes"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
+        // [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public Expression GetExpression(params int[] indexes)
         {
             RequiresNotNull(indexes, nameof(indexes));
@@ -206,11 +206,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="bounds">The bounds of the array.</param>
         /// <param name="initializers">An array that contains Expression objects that represent the elements in the array.</param>
         /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, params Expression[] initializers)
-        {
-            return NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
-        }
+        public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, params Expression[] initializers) =>
+            NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
 
         /// <summary>
         /// Creates a <see cref="NewMultidimensionalArrayInitCSharpExpression"/> that represents creating a multi-dimensional array that has the specified bounds and elements. 
@@ -219,7 +216,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="bounds">The bounds of the array.</param>
         /// <param name="initializers">An IEnumerable{T} that contains Expression objects that represent the elements in the array.</param>
         /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, int[] bounds, IEnumerable<Expression> initializers) =>
             NewMultidimensionalArrayInit(type, (IEnumerable<int>)bounds, initializers);
 
@@ -230,7 +226,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="bounds">An IEnumerable{T} that contains the bounds of the array.</param>
         /// <param name="initializers">An IEnumerable{T} that contains Expression objects that represent the elements in the array.</param>
         /// <returns>An instance of the <see cref="NewMultidimensionalArrayInitCSharpExpression"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static NewMultidimensionalArrayInitCSharpExpression NewMultidimensionalArrayInit(Type type, IEnumerable<int> bounds, IEnumerable<Expression> initializers)
         {
             RequiresNotNull(type, nameof(type));

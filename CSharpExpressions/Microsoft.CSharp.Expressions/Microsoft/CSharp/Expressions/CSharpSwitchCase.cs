@@ -89,7 +89,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="testValues">The collection of values to test for.</param>
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase<T>(IEnumerable<T> testValues, IEnumerable<Expression> statements)
         {
             RequiresNotNull(testValues, nameof(testValues));
@@ -125,7 +124,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="testValues">The collection of values to test for.</param>
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase(IEnumerable<object?> testValues, params Expression[] statements) =>
             SwitchCase(testValues, (IEnumerable<Expression>)statements);
 
@@ -135,7 +133,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="testValues">The collection of values to test for.</param>
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCase(IEnumerable<object?> testValues, IEnumerable<Expression> statements)
         {
             RequiresNotNull(testValues, nameof(testValues));
@@ -183,18 +180,14 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
-        public static CSharpSwitchCase SwitchCaseDefault(params Expression[] statements)
-        {
-            return SwitchCaseDefault((IEnumerable<Expression>)statements);
-        }
+        public static CSharpSwitchCase SwitchCaseDefault(params Expression[] statements) =>
+            SwitchCaseDefault((IEnumerable<Expression>)statements);
 
         /// <summary>
         /// Creates a <see cref="CSharpSwitchCase"/> that represents a default switch case.
         /// </summary>
         /// <param name="statements">The statements in the body of the case.</param>
         /// <returns>The created <see cref="CSharpSwitchCase"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static CSharpSwitchCase SwitchCaseDefault(IEnumerable<Expression> statements)
         {
             var testValues = s_default ??= new[] { s_SwitchCaseDefaultValue }.ToReadOnlyUnsafe();

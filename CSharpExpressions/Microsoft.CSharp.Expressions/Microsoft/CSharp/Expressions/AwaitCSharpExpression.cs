@@ -98,8 +98,6 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
         public static AwaitCSharpExpression Await(Expression operand)
         {
-            RequiresNotNull(operand, nameof(operand));
-
             RequiresCanRead(operand, nameof(operand));
 
             return Await(operand, AwaitInfo(operand.Type));
@@ -111,12 +109,8 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="operand">An <see cref="Expression" /> that specifies the asynchronous operation to await.</param>
         /// <param name="getAwaiterMethod">The GetAwaiter method used to await the asynchronous operation.</param>
         /// <returns>An instance of the <see cref="AwaitCSharpExpression"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter", Justification = "Get a waiter :-)")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static AwaitCSharpExpression Await(Expression operand, MethodInfo getAwaiterMethod)
         {
-            RequiresNotNull(operand, nameof(operand));
-
             RequiresCanRead(operand, nameof(operand));
 
             return Await(operand, AwaitInfo(operand.Type, getAwaiterMethod));
@@ -132,10 +126,8 @@ namespace Microsoft.CSharp.Expressions
         {
             // NB: This is the overload the C# compiler binds to.
 
-            RequiresNotNull(operand, nameof(operand));
-            RequiresNotNull(info, nameof(info));
-
             RequiresCanRead(operand, nameof(operand));
+            RequiresNotNull(info, nameof(info));
 
             info.RequiresCanBind(operand);
 

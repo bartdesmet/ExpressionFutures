@@ -132,7 +132,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="ParameterAssignment" /> objects to use to populate the <see cref="MethodCallCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static MethodCallCSharpExpression Call(Expression? instance, MethodInfo method, IEnumerable<ParameterAssignment>? arguments)
         {
             RequiresNotNull(method, nameof(method));
@@ -179,7 +178,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="method">The <see cref="MethodInfo" /> that represents the target method.</param>
         /// <param name="arguments">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="MethodCallCSharpExpression.Arguments" /> collection.</param>
         /// <returns>A <see cref="MethodCallCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.Call" /> and the <see cref="MethodCallCSharpExpression.Object" />, <see cref="MethodCallCSharpExpression.Method" />, and <see cref="MethodCallCSharpExpression.Arguments" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static new MethodCallCSharpExpression Call(Expression? instance, MethodInfo method, IEnumerable<Expression>? arguments)
         {
             RequiresNotNull(method, nameof(method));

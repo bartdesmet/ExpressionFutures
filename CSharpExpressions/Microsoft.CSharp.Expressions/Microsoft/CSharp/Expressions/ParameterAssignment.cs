@@ -72,7 +72,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="parameter">The name of the parameter on <paramref name="method"/> which is being assigned to.</param>
         /// <param name="expression">The value to be assigned to <paramref name="parameter"/>.</param>
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ParameterAssignment Bind(MethodBase method, string parameter, Expression expression)
         {
             RequiresNotNull(method, nameof(method));
@@ -104,7 +103,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="index">The index of the parameter on <paramref name="method"/> which is being assigned to.</param>
         /// <param name="expression">The value to be assigned to the parameter.</param>
         /// <returns>The created <see cref="ParameterAssignment"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ParameterAssignment Bind(MethodBase method, int index, Expression expression)
         {
             // NB: This overload is needed for the compiler to emit factory calls;

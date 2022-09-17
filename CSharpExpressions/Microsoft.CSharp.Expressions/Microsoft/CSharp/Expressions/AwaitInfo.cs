@@ -44,7 +44,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The object to visit.</param>
         /// <returns>The modified object, if it or any subexpression was modified; otherwise, returns the original object.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         [return: NotNullIfNotNull("node")] // TODO: C# 11.0 nameof
         protected internal virtual AwaitInfo? VisitAwaitInfo(AwaitInfo? node)
         {

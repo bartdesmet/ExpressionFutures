@@ -462,7 +462,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static UsingCSharpStatement Using(ParameterExpression variable, Expression resource, Expression body)
         {
             RequiresNotNull(variable, nameof(variable));
@@ -491,7 +490,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="resource">The resource managed by the statement.</param>
         /// <param name="body">The body of the statement.</param>
         /// <returns>The created <see cref="UsingCSharpStatement"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static UsingCSharpStatement AwaitUsing(AwaitInfo awaitInfo, ParameterExpression variable, Expression resource, Expression body)
         {
             RequiresNotNull(variable, nameof(variable));

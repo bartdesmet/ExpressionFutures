@@ -89,7 +89,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="array">An <see cref="Expression" /> that specifies the array to index.</param>
         /// <param name="indexes">An <see cref="IEnumerable{T}" /> that contains <see cref="Expression" /> objects to use to populate the <see cref="ConditionalArrayIndexCSharpExpression.Indexes" /> collection.</param>
         /// <returns>A <see cref="ConditionalArrayIndexCSharpExpression" /> that has the <see cref="CSharpNodeType" /> property equal to <see cref="CSharpExpressionType.ConditionalAccess" /> and the <see cref="ConditionalArrayIndexCSharpExpression.Array" /> and <see cref="ConditionalArrayIndexCSharpExpression.Indexes" /> properties set to the specified values.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Done by helper method.")]
         public static ConditionalArrayIndexCSharpExpression ConditionalArrayIndex(Expression array, IEnumerable<Expression> indexes)
         {
             RequiresCanRead(array, nameof(array));
