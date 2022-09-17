@@ -30,7 +30,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return ReduceAndCheck(node);
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override Expression VisitBinary(BinaryExpression node)
             {
                 // NB: This reduces assignment operators so that the stack spiller doesn't have to worry about it.

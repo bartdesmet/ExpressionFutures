@@ -207,7 +207,7 @@ namespace Microsoft.CSharp.Expressions
 
             private Expression Rewrite(Expression expression, bool isByRef, List<ParameterExpression> temps, List<Expression> stmts, ref bool shouldEvalExpressionForSideEffects)
             {
-                if (expression is MemberExpression m && m.Member is FieldInfo f)
+                if (expression is MemberExpression { Member: FieldInfo f } m)
                 {
                     if (f.IsStatic)
                     {
@@ -254,7 +254,7 @@ namespace Microsoft.CSharp.Expressions
                         expression = Expression.ArrayAccess(arrayIndex.Left, arrayIndex.Right);
                     }
 
-                    if (expression is IndexExpression i && i.Indexer == null)
+                    if (expression is IndexExpression { Indexer: null } i)
                     {
                         Debug.Assert(i.Object != null, "Array-based indexer should always have object.");
 

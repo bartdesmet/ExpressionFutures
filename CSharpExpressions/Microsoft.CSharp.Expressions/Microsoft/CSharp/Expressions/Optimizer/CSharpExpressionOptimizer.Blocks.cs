@@ -29,7 +29,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         //     `if` or `while` statements. This effect will be obvious when inspecting the
         //     resulting tree using ToCSharp.
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitBlock(BlockCSharpExpression node)
         {
             if (CanOptimize(node))
@@ -44,7 +43,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(variables, statements, returnLabel);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
             if (CanOptimize(node))
@@ -58,7 +56,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(variables, expressions);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override CSharpSwitchCase VisitSwitchCase(CSharpSwitchCase node)
         {
             var statements = VisitSequence(node.Statements);

@@ -23,7 +23,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// - Emission of jump tables in Try expressions in order to reenter upon resumption
     /// - Building a jump table for the caller to embed in the top-level rewritten lambda body
     /// </remarks>
-    internal class AwaitRewriter : ShallowVisitor
+    internal sealed class AwaitRewriter : ShallowVisitor
     {
         private readonly Func<Type, string, ParameterExpression> _variableFactory;
         private readonly ParameterExpression _localStateVariable;
@@ -55,7 +55,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         // NB: We don't have to deal with Using, For, and ForEach blocks because the AwaitRewriter runs after the
         //     reduction step.
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
             _awaitInBlock.Push(new StrongBox<bool>());
@@ -135,7 +134,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitAwait(AwaitCSharpExpression node)
         {
             var exprCount = 1 /* GetAwaiter */ + 1 /* IsCompleted */ + 1 /* Label */ + 1 /* GetResult */ + 2 /* Cleanup */;

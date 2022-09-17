@@ -34,7 +34,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private readonly Stack<IDictionary<LabelTarget, LabelInfo>> _labels = new();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
             var map = default(IDictionary<LabelTarget, LabelInfo>);
@@ -81,7 +80,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return res;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitLabel(LabelExpression node)
         {
             if (TryGetLabelInfo(node.Target, out LabelInfo info))
@@ -104,7 +102,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return base.VisitLabel(node);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitGoto(GotoExpression node)
         {
             if (TryGetLabelInfo(node.Target, out LabelInfo info))

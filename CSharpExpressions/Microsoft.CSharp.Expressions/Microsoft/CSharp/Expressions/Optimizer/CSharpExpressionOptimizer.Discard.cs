@@ -10,7 +10,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
     {
         // NB: This optimization removes unnecessary discards.
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitBinaryAssign(AssignBinaryCSharpExpression node)
         {
             if (node.CSharpNodeType == CSharpExpressionType.Assign)

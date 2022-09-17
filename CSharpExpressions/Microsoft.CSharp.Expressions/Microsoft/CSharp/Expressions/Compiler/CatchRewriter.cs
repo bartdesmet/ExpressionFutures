@@ -11,9 +11,8 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// <summary>
     /// Utility to rewrite catch handlers that contain asynchronous operations.
     /// </summary>
-    internal class CatchRewriter : AwaitTrackingVisitor
+    internal sealed class CatchRewriter : AwaitTrackingVisitor
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitTry(TryExpression node)
         {
             var type = node.Type;
@@ -38,7 +37,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     {
                         if (newHandlers.Count > 0)
                         {
-                            res = Expression.MakeTry(type, res, null, null, newHandlers.ToArray());
+                            res = Expression.MakeTry(type, res, @finally: null, fault: null, newHandlers.ToArray());
                             newHandlers.Clear();
                         }
 
@@ -62,7 +61,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                         newBody = RethrowRewriter.Rewrite(newBody, rethrow);
 
                         var newHandler = handler.Update(catchExceptionVariable, newFilter, handlerBody);
-                        var newTry = Expression.MakeTry(type, res, null, null, new[] { newHandler });
+                        var newTry = Expression.MakeTry(type, res, @finally: null, fault: null, new[] { newHandler });
 
                         if (newTry.Type != typeof(void))
                         {
@@ -110,12 +109,12 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                 if (newHandlers.Count > 0)
                 {
-                    res = Expression.MakeTry(type, res, null, null, newHandlers.ToArray());
+                    res = Expression.MakeTry(type, res, @finally: null, fault: null, newHandlers.ToArray());
                 }
 
                 if (node.Finally != null)
                 {
-                    res = Expression.MakeTry(type, res, Visit(node.Finally), null, null);
+                    res = Expression.MakeTry(type, res, Visit(node.Finally), fault: null, handlers: null);
                 }
 
                 Debug.Assert(node.Fault == null); // NB: Factories in LINQ prevent the combo of handlers with fault

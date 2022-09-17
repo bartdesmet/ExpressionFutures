@@ -17,7 +17,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitBlock(BlockExpression node)
         {
             PushScope(node.Variables);
@@ -34,7 +33,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The node to visit.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override CatchBlock VisitCatchBlock(CatchBlock node)
         {
             PushScope(node.Variable);
@@ -51,7 +49,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The node to visit.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override CSharpCatchBlock VisitCatchBlock(CSharpCatchBlock node)
         {
             PushScope(node.Variables);
@@ -69,7 +66,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// <typeparam name="T">The type of the delegate represented by the lambda expression.</typeparam>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
             PushScope(node.Parameters);
@@ -91,7 +87,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitBlock(BlockCSharpExpression node)
         {
             PushScope(node.Variables);
@@ -108,7 +103,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitUsing(UsingCSharpStatement node)
         {
             if (node.Declarations != null)
@@ -221,7 +215,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
             // NB: The variable is not in scope of the collection. In a LINQ expression tree, the ParameterExpression
@@ -255,7 +248,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {
             // NB: See notes in ForCSharpStatement.ReduceCore for the scoping rules applied here.
@@ -287,7 +279,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDo(DoCSharpStatement node)
         {
             PushScope(node.Locals);
@@ -304,7 +295,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
             PushScope(node.Locals);
@@ -321,7 +311,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitSwitch(SwitchCSharpStatement node)
         {
             // NB: The variables are not in scope of the switch value. In a LINQ expression tree, the ParameterExpressions
@@ -366,7 +355,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The result of visiting the expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitSwitch(PatternSwitchCSharpStatement node)
         {
             // NB: The variables are not in scope of the switch value. In a LINQ expression tree, the ParameterExpressions

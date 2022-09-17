@@ -28,7 +28,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private readonly Stack<LoopLabelInfo> _loopLabels = new();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitWhile(WhileCSharpStatement node)
         {
             // NB: If we do optimizations involving variables, we'll need to track scopes here.
@@ -45,7 +44,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(@break, @continue, test, body, variables);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitDo(DoCSharpStatement node)
         {
             // NB: If we do optimizations involving variables, we'll need to track scopes here.
@@ -62,7 +60,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(@break, @continue, body, test, variables);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitFor(ForCSharpStatement node)
         {
             // NB: If we do optimizations involving variables, we'll need to track scopes here.
@@ -81,7 +78,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(@break, @continue, variables, initializers, test, iterators, body, locals);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitForEach(ForEachCSharpStatement node)
         {
             // NB: If we do optimizations involving variables, we'll need to track scopes here.
@@ -101,7 +97,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(enumeratorInfo, @break, @continue, variables, collection, conversion, body, deconstruction, awaitInfo);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitLoop(LoopExpression node)
         {
             PushLabelInfo(node);
@@ -112,7 +107,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return node.Update(@break, @continue, body);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected override Expression VisitGoto(GotoExpression node)
         {
             // NB: We ignore classifying by Kind to distinguish Break from Continue;
@@ -124,7 +118,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
             return base.VisitGoto(node);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
         protected internal override Expression VisitGotoLabel(GotoLabelCSharpStatement node)
         {
             MarkLoopLabel(node.Target!); // REVIEW: Can the derived GotoLabel type assert non-null?

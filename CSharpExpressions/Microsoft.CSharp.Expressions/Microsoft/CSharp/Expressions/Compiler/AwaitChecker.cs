@@ -33,7 +33,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             protected internal override Expression VisitAsyncLambda<T>(AsyncCSharpExpression<T> node) => node;
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override CatchBlock VisitCatchBlock(CatchBlock node)
             {
                 if (node.Filter != null)
@@ -52,7 +51,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return base.VisitCatchBlock(node);
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitLock(LockCSharpStatement node)
             {
                 Visit(node.Expression);
@@ -66,7 +64,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return node;
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected override SwitchCase VisitSwitchCase(SwitchCase node)
             {
                 // NB: This restriction makes stack spilling for switch cases easier. C# doesn't allow

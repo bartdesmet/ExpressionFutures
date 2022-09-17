@@ -12,7 +12,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
     /// <summary>
     /// Utility to rewrite finally and fault handlers that contain asynchronous operations.
     /// </summary>
-    internal class FinallyAndFaultRewriter : AwaitTrackingVisitor
+    internal sealed class FinallyAndFaultRewriter : AwaitTrackingVisitor
     {
         // NB: C# doesn't have fault handlers, so we should likely reject that in the Checker.
         //
@@ -24,7 +24,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
         private int _n;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override Expression VisitTry(TryExpression node)
         {
             var res = default(Expression);
@@ -49,7 +48,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     }
                     else
                     {
-                        res = node.Update(body, handlers, @finally, null);
+                        res = node.Update(body, handlers, @finally, fault: null);
                     }
                 }
                 else
@@ -64,7 +63,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                     }
                     else
                     {
-                        res = node.Update(body, handlers, null, fault);
+                        res = node.Update(body, handlers, @finally: null, fault);
                     }
                 }
             }

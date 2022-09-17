@@ -38,7 +38,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
         {
             public readonly HashSet<LabelTarget> Labels = new();
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
             protected override Expression VisitLabel(LabelExpression node)
             {
                 Labels.Add(node.Target);
@@ -46,7 +45,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return base.VisitLabel(node);
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
             protected override Expression VisitLoop(LoopExpression node)
             {
                 if (node.BreakLabel != null)
@@ -83,7 +81,6 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 _pendingBranch = pendingBranch;
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
             protected override Expression VisitGoto(GotoExpression node)
             {
                 var target = node.Target;
