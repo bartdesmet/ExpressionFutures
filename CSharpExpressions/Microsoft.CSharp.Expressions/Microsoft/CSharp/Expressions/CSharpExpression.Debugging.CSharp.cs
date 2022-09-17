@@ -380,7 +380,7 @@ namespace Microsoft.CSharp.Expressions
                         }
                     }
 
-                    if (!(lhs is ParameterExpression variable) || !variables.Remove(variable))
+                    if (lhs is not ParameterExpression variable || !variables.Remove(variable))
                     {
                         hasUniformVariables = false;
                         break;
@@ -753,9 +753,9 @@ namespace Microsoft.CSharp.Expressions
 
         class ScopeTracker : ScopeTrackingVisitor
         {
-            private readonly Stack<IEnumerable<ParameterExpression>> _variables = new Stack<IEnumerable<ParameterExpression>>();
+            private readonly Stack<IEnumerable<ParameterExpression>> _variables = new();
 
-            public readonly HashSet<ParameterExpression> Unbound = new HashSet<ParameterExpression>();
+            public readonly HashSet<ParameterExpression> Unbound = new();
 
             protected override void Pop()
             {
@@ -1240,69 +1240,29 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedMode
-        {
-            get
-            {
-                var res = false;
-
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                    case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                    case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                        res = true;
-                        break;
-                }
-
-                return res;
-            }
-        }
+        protected override bool HasCheckedMode => CSharpNodeType is
+            CSharpExpressionType.PostIncrementAssign or
+            CSharpExpressionType.PostIncrementAssignChecked or
+            CSharpExpressionType.PostDecrementAssign or
+            CSharpExpressionType.PostDecrementAssignChecked or
+            CSharpExpressionType.PreIncrementAssign or
+            CSharpExpressionType.PreIncrementAssignChecked or
+            CSharpExpressionType.PreDecrementAssign or
+            CSharpExpressionType.PreDecrementAssignChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected override bool IsChecked
-        {
-            get
-            {
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                        return true;
-                }
-
-                return false;
-            }
-        }
+        protected override bool IsChecked => CSharpNodeType is
+            CSharpExpressionType.PostIncrementAssignChecked or
+            CSharpExpressionType.PostDecrementAssignChecked or
+            CSharpExpressionType.PreIncrementAssignChecked or
+            CSharpExpressionType.PreDecrementAssignChecked;
 
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int Precedence
-        {
-            get
-            {
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                    case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                        return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PostDecrementAssign);
-                }
-
-                return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PreDecrementAssign);
-            }
-        }
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(IsSuffix ? ExpressionType.PostDecrementAssign : ExpressionType.PreDecrementAssign);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -1403,6 +1363,13 @@ namespace Microsoft.CSharp.Expressions
                 visitor.Out(")");
             }
         }
+
+        private bool IsSuffix => CSharpNodeType is
+            CSharpExpressionType.PostDecrementAssign or
+            CSharpExpressionType.PostDecrementAssignChecked or
+            CSharpExpressionType.PostIncrementAssign or
+            CSharpExpressionType.PostIncrementAssignChecked;
+
     }
 
     partial class AssignBinaryCSharpExpression
@@ -1410,46 +1377,21 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedMode
-        {
-            get
-            {
-                var res = false;
-
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.AddAssign:
-                    case CSharpExpressionType.AddAssignChecked:
-                    case CSharpExpressionType.SubtractAssign:
-                    case CSharpExpressionType.SubtractAssignChecked:
-                    case CSharpExpressionType.MultiplyAssign:
-                    case CSharpExpressionType.MultiplyAssignChecked:
-                        res = true;
-                        break;
-                }
-
-                return res;
-            }
-        }
+        protected override bool HasCheckedMode => CSharpNodeType is
+            CSharpExpressionType.AddAssign or
+            CSharpExpressionType.AddAssignChecked or
+            CSharpExpressionType.SubtractAssign or
+            CSharpExpressionType.SubtractAssignChecked or
+            CSharpExpressionType.MultiplyAssign or
+            CSharpExpressionType.MultiplyAssignChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
         /// </summary>
-        protected override bool IsChecked
-        {
-            get
-            {
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.AddAssignChecked:
-                    case CSharpExpressionType.SubtractAssignChecked:
-                    case CSharpExpressionType.MultiplyAssignChecked:
-                        return true;
-                }
-
-                return false;
-            }
-        }
+        protected override bool IsChecked => CSharpNodeType is
+            CSharpExpressionType.AddAssignChecked or
+            CSharpExpressionType.SubtractAssignChecked or
+            CSharpExpressionType.MultiplyAssignChecked;
 
         /// <summary>
         /// Gets the precedence level of the expression.
@@ -1467,17 +1409,8 @@ namespace Microsoft.CSharp.Expressions
             var nodeType = ConvertNodeType(CSharpNodeType);
             var op = CSharpNodeType == CSharpExpressionType.NullCoalescingAssign ? "??=" : CSharpLanguageHelpers.GetOperatorSyntax(nodeType);
             var mtd = CSharpLanguageHelpers.GetClsMethodName(nodeType);
-            var isChecked = false;
+            var isChecked = IsChecked;
             var asMethod = false;
-
-            switch (CSharpNodeType)
-            {
-                case CSharpExpressionType.AddAssignChecked:
-                case CSharpExpressionType.MultiplyAssignChecked:
-                case CSharpExpressionType.SubtractAssignChecked:
-                    isChecked = true;
-                    break;
-            }
 
             if (mtd != null && Method != null)
             {
@@ -1590,27 +1523,13 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedMode
-        {
-            get
-            {
-                var res = false;
-
-                switch (OperationNodeType)
-                {
-                    case ExpressionType.Add:
-                    case ExpressionType.AddChecked:
-                    case ExpressionType.Subtract:
-                    case ExpressionType.SubtractChecked:
-                    case ExpressionType.Multiply:
-                    case ExpressionType.MultiplyChecked:
-                        res = true;
-                        break;
-                }
-
-                return res;
-            }
-        }
+        protected override bool HasCheckedMode => OperationNodeType is
+            ExpressionType.Add or
+            ExpressionType.AddChecked or
+            ExpressionType.Subtract or
+            ExpressionType.SubtractChecked or
+            ExpressionType.Multiply or
+            ExpressionType.MultiplyChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
@@ -1688,23 +1607,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedMode
-        {
-            get
-            {
-                var res = false;
-
-                switch (OperationNodeType)
-                {
-                    case ExpressionType.Negate:
-                    case ExpressionType.NegateChecked:
-                        res = true;
-                        break;
-                }
-
-                return res;
-            }
-        }
+        protected override bool HasCheckedMode => OperationNodeType is ExpressionType.Negate or ExpressionType.NegateChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
@@ -1979,27 +1882,13 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedMode
-        {
-            get
-            {
-                var res = false;
-
-                switch (OperationNodeType)
-                {
-                    case CSharpExpressionType.AddAssign:
-                    case CSharpExpressionType.AddAssignChecked:
-                    case CSharpExpressionType.SubtractAssign:
-                    case CSharpExpressionType.SubtractAssignChecked:
-                    case CSharpExpressionType.MultiplyAssign:
-                    case CSharpExpressionType.MultiplyAssignChecked:
-                        res = true;
-                        break;
-                }
-
-                return res;
-            }
-        }
+        protected override bool HasCheckedMode => OperationNodeType is
+            CSharpExpressionType.AddAssign or
+            CSharpExpressionType.AddAssignChecked or
+            CSharpExpressionType.SubtractAssign or
+            CSharpExpressionType.SubtractAssignChecked or
+            CSharpExpressionType.MultiplyAssign or
+            CSharpExpressionType.MultiplyAssignChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
@@ -2071,28 +1960,25 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static ExpressionType ToExpressionType(CSharpExpressionType type)
+        private static ExpressionType ToExpressionType(CSharpExpressionType type) => type switch
         {
-            return type switch
-            {
-                CSharpExpressionType.Assign => ExpressionType.Assign,
-                CSharpExpressionType.AddAssign => ExpressionType.AddAssign,
-                CSharpExpressionType.AndAssign => ExpressionType.AndAssign,
-                CSharpExpressionType.DivideAssign => ExpressionType.DivideAssign,
-                CSharpExpressionType.ExclusiveOrAssign => ExpressionType.ExclusiveOrAssign,
-                CSharpExpressionType.LeftShiftAssign => ExpressionType.LeftShiftAssign,
-                CSharpExpressionType.ModuloAssign => ExpressionType.ModuloAssign,
-                CSharpExpressionType.MultiplyAssign => ExpressionType.MultiplyAssign,
-                CSharpExpressionType.OrAssign => ExpressionType.OrAssign,
-                CSharpExpressionType.RightShiftAssign => ExpressionType.RightShiftAssign,
-                CSharpExpressionType.SubtractAssign => ExpressionType.SubtractAssign,
-                CSharpExpressionType.AddAssignChecked => ExpressionType.AddAssignChecked,
-                CSharpExpressionType.MultiplyAssignChecked => ExpressionType.MultiplyAssignChecked,
-                CSharpExpressionType.SubtractAssignChecked => ExpressionType.SubtractAssignChecked,
-                CSharpExpressionType.NullCoalescingAssign => ExpressionType.Coalesce,
-                _ => throw new InvalidOperationException(),
-            };
-        }
+            CSharpExpressionType.Assign => ExpressionType.Assign,
+            CSharpExpressionType.AddAssign => ExpressionType.AddAssign,
+            CSharpExpressionType.AndAssign => ExpressionType.AndAssign,
+            CSharpExpressionType.DivideAssign => ExpressionType.DivideAssign,
+            CSharpExpressionType.ExclusiveOrAssign => ExpressionType.ExclusiveOrAssign,
+            CSharpExpressionType.LeftShiftAssign => ExpressionType.LeftShiftAssign,
+            CSharpExpressionType.ModuloAssign => ExpressionType.ModuloAssign,
+            CSharpExpressionType.MultiplyAssign => ExpressionType.MultiplyAssign,
+            CSharpExpressionType.OrAssign => ExpressionType.OrAssign,
+            CSharpExpressionType.RightShiftAssign => ExpressionType.RightShiftAssign,
+            CSharpExpressionType.SubtractAssign => ExpressionType.SubtractAssign,
+            CSharpExpressionType.AddAssignChecked => ExpressionType.AddAssignChecked,
+            CSharpExpressionType.MultiplyAssignChecked => ExpressionType.MultiplyAssignChecked,
+            CSharpExpressionType.SubtractAssignChecked => ExpressionType.SubtractAssignChecked,
+            CSharpExpressionType.NullCoalescingAssign => ExpressionType.Coalesce,
+            _ => throw new InvalidOperationException(),
+        };
     }
 
     partial class AssignUnaryDynamicCSharpExpression
@@ -2100,29 +1986,15 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets a value indicating whether the node represents an operation that supports overflow checking.
         /// </summary>
-        protected override bool HasCheckedMode
-        {
-            get
-            {
-                var res = false;
-
-                switch (OperationNodeType)
-                {
-                    case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                    case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                    case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                        res = true;
-                        break;
-                }
-
-                return res;
-            }
-        }
+        protected override bool HasCheckedMode => OperationNodeType is
+            CSharpExpressionType.PreIncrementAssign or
+            CSharpExpressionType.PreIncrementAssignChecked or
+            CSharpExpressionType.PreDecrementAssign or
+            CSharpExpressionType.PreDecrementAssignChecked or
+            CSharpExpressionType.PostIncrementAssign or
+            CSharpExpressionType.PostIncrementAssignChecked or
+            CSharpExpressionType.PostDecrementAssign or
+            CSharpExpressionType.PostDecrementAssignChecked;
 
         /// <summary>
         /// Gets a value indicating whether the node performs overflow checking.
@@ -2132,22 +2004,7 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// Gets the precedence level of the expression.
         /// </summary>
-        protected override int Precedence
-        {
-            get
-            {
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PostDecrementAssign:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                    case CSharpExpressionType.PostIncrementAssign:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                        return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PostDecrementAssign);
-                }
-
-                return CSharpLanguageHelpers.GetOperatorPrecedence(ExpressionType.PreDecrementAssign);
-            }
-        }
+        protected override int Precedence => CSharpLanguageHelpers.GetOperatorPrecedence(IsSuffix ? ExpressionType.PostDecrementAssign : ExpressionType.PreDecrementAssign);
 
         /// <summary>
         /// Dispatches the current node to the specified visitor.
@@ -2159,17 +2016,7 @@ namespace Microsoft.CSharp.Expressions
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
             var isChecked = IsChecked;
-            var isSuffix = false;
-
-            switch (OperationNodeType)
-            {
-                case CSharpExpressionType.PostDecrementAssign:
-                case CSharpExpressionType.PostIncrementAssign:
-                case CSharpExpressionType.PostDecrementAssignChecked:
-                case CSharpExpressionType.PostIncrementAssignChecked:
-                    isSuffix = true;
-                    break;
-            }
+            var isSuffix = IsSuffix;
 
             // NB: Using a comment as a visual clue for the dynamic operation; variables involved in the
             //     dynamic operation won't be rendered as `dynamic` due to lack of reflection info. We'd
@@ -2223,26 +2070,20 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private static ExpressionType ToExpressionType(CSharpExpressionType type)
+        private static ExpressionType ToExpressionType(CSharpExpressionType type) => type switch
         {
-            switch (type)
-            {
-                case CSharpExpressionType.PreIncrementAssign:
-                case CSharpExpressionType.PreIncrementAssignChecked:
-                    return ExpressionType.PreIncrementAssign;
-                case CSharpExpressionType.PreDecrementAssign:
-                case CSharpExpressionType.PreDecrementAssignChecked:
-                    return ExpressionType.PreDecrementAssign;
-                case CSharpExpressionType.PostIncrementAssign:
-                case CSharpExpressionType.PostIncrementAssignChecked:
-                    return ExpressionType.PostIncrementAssign;
-                case CSharpExpressionType.PostDecrementAssign:
-                case CSharpExpressionType.PostDecrementAssignChecked:
-                    return ExpressionType.PostDecrementAssign;
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+            CSharpExpressionType.PreIncrementAssign or CSharpExpressionType.PreIncrementAssignChecked => ExpressionType.PreIncrementAssign,
+            CSharpExpressionType.PreDecrementAssign or CSharpExpressionType.PreDecrementAssignChecked => ExpressionType.PreDecrementAssign,
+            CSharpExpressionType.PostIncrementAssign or CSharpExpressionType.PostIncrementAssignChecked => ExpressionType.PostIncrementAssign,
+            CSharpExpressionType.PostDecrementAssign or CSharpExpressionType.PostDecrementAssignChecked => ExpressionType.PostDecrementAssign,
+            _ => throw new InvalidOperationException(),
+        };
+
+        private bool IsSuffix => OperationNodeType is
+            CSharpExpressionType.PostDecrementAssign or
+            CSharpExpressionType.PostDecrementAssignChecked or
+            CSharpExpressionType.PostIncrementAssign or
+            CSharpExpressionType.PostIncrementAssignChecked;
     }
 
     partial class DiscardCSharpExpression
