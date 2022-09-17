@@ -125,7 +125,7 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCompatiblePatternTypes(type, variableType);
 
                 if (variableType != info.Info.NarrowedType)
-                    throw Error.CannotAssignPatternResultToVariable(variableType, info.Info.NarrowedType);
+                    throw Error.CannotAssignPatternResultToVariable(variableType, info.Info.NarrowedType, nameof(info));
             }
 
             return new DeclarationCSharpPattern(info, type);

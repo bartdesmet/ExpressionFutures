@@ -189,7 +189,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 CSharpPatternType.And => And(info, left, right),
                 CSharpPatternType.Or => Or(info, left, right),
-                _ => throw Error.InvalidBinaryPatternType(type)
+                _ => throw Error.InvalidBinaryPatternType(type, nameof(type))
             };
 
         private static Type FindLeastSpecificType(Type inputType, CSharpPattern left, CSharpPattern right)

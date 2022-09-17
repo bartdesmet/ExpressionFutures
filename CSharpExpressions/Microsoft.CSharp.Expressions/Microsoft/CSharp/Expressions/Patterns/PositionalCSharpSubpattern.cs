@@ -138,7 +138,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(field, nameof(field));
 
             if (field.Index < 0)
-                throw Error.TupleFieldIndexMustBePositive();
+                throw Error.TupleFieldIndexMustBePositive(nameof(field));
 
             return new PositionalCSharpSubpattern.WithField(pattern, field);
         }
@@ -155,10 +155,10 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(parameter, nameof(parameter));
 
             if (parameter.Member is not MethodInfo)
-                throw Error.PositionalPatternParameterMustBeOnMethod(parameter);
+                throw Error.PositionalPatternParameterMustBeOnMethod(parameter, nameof(parameter));
 
             if (!parameter.IsOut)
-                throw Error.PositionalPatternParameterMustBeOut(parameter);
+                throw Error.PositionalPatternParameterMustBeOut(parameter, nameof(parameter));
 
             return new PositionalCSharpSubpattern.WithParameter(pattern, parameter);
         }
@@ -178,7 +178,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (parameterIndex < 0 || parameterIndex >= parameters.Length)
             {
-                throw Error.ParameterIndexOutOfBounds(parameterIndex, method.Name);
+                throw Error.ParameterIndexOutOfBounds(parameterIndex, method.Name, nameof(parameterIndex));
             }
 
             return PositionalSubpattern(pattern, parameters[parameterIndex]);

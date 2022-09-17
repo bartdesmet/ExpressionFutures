@@ -253,17 +253,38 @@ foreach (var error in errors)
 {
     var pars = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "object? p" + i));
     var args = string.Join(", ", Enumerable.Range(0, error.Args).Select(i => "p" + i));
-    var strArgs = error.Args > 0 ? "(" + args + ")" : "";
+    var strArgs = "Strings." + error.Name + (error.Args > 0 ? "(" + args + ")" : "");
+
+    if (error.ExceptionType == "ArgumentException" || error.ExceptionType == "ArgumentOutOfRangeException")
+    {
+        if (error.ExceptionType == "ArgumentOutOfRangeException")
+        {
+            strArgs = "GetParamName(paramName, index), " + strArgs; // Well-known wrong order of cosntructor arguments.
+        }
+        else
+        {
+            strArgs += ", GetParamName(paramName, index)";
+        }
+
+        if (error.Args > 0)
+        {
+            pars += ", ";
+        }
+
+        pars += "string? paramName = null, int index = -1";
+    }
+
     var msg = escape(error.Message);
 #>
         /// <summary>
         /// <#=error.ExceptionType#> with message like "<#=msg#>"
         /// </summary>
-        internal static Exception <#=error.Name#>(<#=pars#>) => new <#=error.ExceptionType#>(Strings.<#=error.Name#><#=strArgs#>);
+        internal static Exception <#=error.Name#>(<#=pars#>) => new <#=error.ExceptionType#>(<#=strArgs#>);
 
 <#
 }
 #>
+        private static string? GetParamName(string? paramName, int index) => index >= 0 ? $"{paramName}[{index}]" : paramName;
     }
 
     /// <summary>

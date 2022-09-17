@@ -105,9 +105,9 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(info, nameof(info));
 
             if (info.Info.InputType != info.Info.NarrowedType)
-                throw Error.PatternInputAndNarrowedTypeShouldMatch(nameof(CSharpPatternType.Var));
+                throw Error.PatternInputAndNarrowedTypeShouldMatch(nameof(CSharpPatternType.Var), nameof(info));
             if (info.Variable != null && info.Variable.Type != info.Info.NarrowedType)
-                throw Error.CannotAssignPatternResultToVariable(info.Variable.Type, info.Info.NarrowedType);
+                throw Error.CannotAssignPatternResultToVariable(info.Variable.Type, info.Info.NarrowedType, nameof(info));
 
             return new VarCSharpPattern(info);
         }

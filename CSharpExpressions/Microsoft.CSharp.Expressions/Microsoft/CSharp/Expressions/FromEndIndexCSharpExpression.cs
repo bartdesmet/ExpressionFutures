@@ -181,15 +181,15 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(operand, nameof(operand));
 
             if (operand.Type != typeof(int) && operand.Type != typeof(int?))
-                throw Error.InvalidFromEndIndexOperandType(operand.Type);
+                throw Error.InvalidFromEndIndexOperandType(operand.Type, nameof(operand));
 
             if (method != null)
             {
                 if (method.IsGenericMethodDefinition || method.GetReturnType() != typeof(Index))
-                    throw Error.InvalidFromEndIndexMethod();
+                    throw Error.InvalidFromEndIndexMethod(nameof(method));
 
                 if (method.MemberType == MemberTypes.Method && !method.IsStatic)
-                    throw Error.InvalidFromEndIndexMethod();
+                    throw Error.InvalidFromEndIndexMethod(nameof(method));
 
                 var parameters = method.GetParametersCached();
 
@@ -197,14 +197,14 @@ namespace Microsoft.CSharp.Expressions
                 {
                     case 1:
                         if (parameters[0].ParameterType != typeof(int))
-                            throw Error.InvalidFromEndIndexMethod();
+                            throw Error.InvalidFromEndIndexMethod(nameof(method));
                         break;
                     case 2:
                         if (parameters[0].ParameterType != typeof(int) || parameters[1].ParameterType != typeof(bool))
-                            throw Error.InvalidFromEndIndexMethod();
+                            throw Error.InvalidFromEndIndexMethod(nameof(method));
                         break;
                     default:
-                        throw Error.InvalidFromEndIndexMethod();
+                        throw Error.InvalidFromEndIndexMethod(nameof(method));
                 }
             }
 
@@ -213,16 +213,16 @@ namespace Microsoft.CSharp.Expressions
                 if (type == typeof(Index))
                 {
                     if (operand.Type != typeof(int))
-                        throw Error.InvalidIndexType(type);
+                        throw Error.InvalidIndexType(type, nameof(type));
                 }
                 else if (type == typeof(Index?))
                 {
                     if (operand.Type != typeof(int?))
-                        throw Error.InvalidIndexType(type);
+                        throw Error.InvalidIndexType(type, nameof(type));
                 }
                 else
                 {
-                    throw Error.InvalidIndexType(type);
+                    throw Error.InvalidIndexType(type, nameof(type));
                 }
             }
 

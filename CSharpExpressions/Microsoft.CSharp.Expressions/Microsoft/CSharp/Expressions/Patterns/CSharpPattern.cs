@@ -104,9 +104,9 @@ namespace Microsoft.CSharp.Expressions
             ValidateType(type, nameof(type));
 
             if (type.IsByRef)
-                throw Error.TypeMustNotBeByRef();
+                throw Error.TypeMustNotBeByRef(nameof(type));
             if (type.IsPointer)
-                throw Error.TypeMustNotBePointer();
+                throw Error.TypeMustNotBePointer(nameof(type));
             if (type == typeof(void))
                 throw ArgumentCannotBeOfTypeVoid(nameof(type));
         }

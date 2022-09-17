@@ -258,29 +258,29 @@ namespace Microsoft.CSharp.Expressions
             if (@object.Type.IsValueType)
             {
                 if (clone != null)
-                    throw Error.WithExpressionCannotHaveCloneForValueType(@object.Type);
+                    throw Error.WithExpressionCannotHaveCloneForValueType(@object.Type, nameof(clone));
             }
             else
             {
                 clone ??= @object.Type.GetNonGenericMethod("Clone", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes);
 
                 if (clone == null)
-                    throw Error.WithExpressionShouldHaveClone(@object.Type);
+                    throw Error.WithExpressionShouldHaveClone(@object.Type, nameof(clone));
 
                 ValidateMethodInfo(clone, nameof(clone));
 
                 if (clone.IsStatic)
-                    throw Error.CloneMethodMustNotBeStatic(clone.Name);
+                    throw Error.CloneMethodMustNotBeStatic(clone.Name, nameof(clone));
 
                 var declaringType = clone.DeclaringType;
                 if (declaringType == null || !declaringType.IsAssignableFrom(@object.Type))
                     throw NotAMemberOfType(clone.Name, @object.Type, nameof(clone));
 
                 if (clone.GetParametersCached().Length != 0)
-                    throw Error.CloneMethodShouldHaveNoParameters(clone.Name);
+                    throw Error.CloneMethodShouldHaveNoParameters(clone.Name, nameof(clone));
 
                 if (!clone.ReturnType.HasReferenceConversionTo(@object.Type))
-                    throw Error.CloneMethodShouldReturnCompatibleType(clone.Name, @object.Type);
+                    throw Error.CloneMethodShouldReturnCompatibleType(clone.Name, @object.Type, nameof(clone));
             }
 
             return new WithCSharpExpression(@object, initializersCollection, clone, members: null);
@@ -338,7 +338,7 @@ namespace Microsoft.CSharp.Expressions
             var ctor = @object.Type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, memberTypes, modifiers: null);
 
             if (ctor == null)
-                throw Error.NoAnonymousTypeConstructorFound(@object.Type);
+                throw Error.NoAnonymousTypeConstructorFound(@object.Type, nameof(@object));
 
             return new WithCSharpExpression(@object, initializersCollection, clone: null, membersCollection);
         }
@@ -357,7 +357,7 @@ namespace Microsoft.CSharp.Expressions
 
                 var declaringType = member.DeclaringType;
                 if (declaringType == null || !declaringType.IsAssignableFrom(@object.Type))
-                    throw NotAMemberOfType(member.Name, @object.Type, nameof(initializers));
+                    throw NotAMemberOfType(member.Name, @object.Type, nameof(initializers), i);
 
                 if (requiresCanAssign)
                 {
@@ -365,12 +365,12 @@ namespace Microsoft.CSharp.Expressions
                     {
                         case FieldInfo f:
                             if (f.IsInitOnly || f.IsLiteral)
-                                throw Error.MemberInitializerMemberMustBeWriteable(member.Name);
+                                throw Error.MemberInitializerMemberMustBeWriteable(member.Name, nameof(initializers), i);
 
                             break;
                         case PropertyInfo p:
                             if (!p.CanWrite)
-                                throw Error.MemberInitializerMemberMustBeWriteable(member.Name);
+                                throw Error.MemberInitializerMemberMustBeWriteable(member.Name, nameof(initializers), i);
 
                             break;
                     }

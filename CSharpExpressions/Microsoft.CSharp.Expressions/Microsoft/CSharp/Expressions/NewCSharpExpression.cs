@@ -148,7 +148,7 @@ namespace Microsoft.CSharp.Expressions
         private static void ValidateConstructor(ConstructorInfo constructor)
         {
             if (constructor.IsStatic)
-                throw Error.NonStaticConstructorRequired();
+                throw Error.NonStaticConstructorRequired(nameof(constructor));
         }
     }
 

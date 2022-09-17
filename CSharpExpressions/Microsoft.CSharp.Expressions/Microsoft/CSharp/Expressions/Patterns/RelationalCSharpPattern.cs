@@ -220,7 +220,7 @@ namespace Microsoft.CSharp.Expressions
                 case CSharpPatternType.GreaterThanOrEqual:
                     return RelationalCSharpPattern.Make(info, type, value);
                 default:
-                    throw Error.InvalidRelationalPatternType(type);
+                    throw Error.InvalidRelationalPatternType(type, nameof(type));
             }
         }
     }

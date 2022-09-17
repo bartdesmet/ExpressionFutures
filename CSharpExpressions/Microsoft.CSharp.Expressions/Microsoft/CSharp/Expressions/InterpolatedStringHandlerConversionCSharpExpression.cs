@@ -423,7 +423,7 @@ namespace Microsoft.CSharp.Expressions
 
                     if (interpolation is InterpolationStringLiteral literal)
                     {
-                        CheckAppendLiteralLambda(append.Body, append.Parameters);
+                        CheckAppendLiteralLambda(append.Body, append.Parameters, nameof(append), i);
                     }
                     else
                     {
@@ -438,12 +438,12 @@ namespace Microsoft.CSharp.Expressions
                             expectedCount++;
 
                         if (append.Parameters.Count != expectedCount)
-                            throw Error.InvalidAppendFormattedParameterCount(append.Parameters.Count, expectedCount);
+                            throw Error.InvalidAppendFormattedParameterCount(append.Parameters.Count, expectedCount, nameof(append), i);
 
                         var value = append.Parameters[1];
 
                         if (!AreReferenceAssignable(value.Type, insert.Value.Type))
-                            throw Error.InvalidAppendFormattedValueType(value.Type, insert.Value.Type);
+                            throw Error.InvalidAppendFormattedValueType(value.Type, insert.Value.Type, nameof(append), i);
 
                         var j = 2;
 
@@ -452,7 +452,7 @@ namespace Microsoft.CSharp.Expressions
                             var alignment = append.Parameters[j];
 
                             if (alignment.Type != typeof(int))
-                                throw Error.InvalidAlignmentParameterType(alignment.Type);
+                                throw Error.InvalidAlignmentParameterType(alignment.Type, nameof(alignment), i);
 
                             j++;
                         }
@@ -462,7 +462,7 @@ namespace Microsoft.CSharp.Expressions
                             var format = append.Parameters[j];
 
                             if (format.Type != typeof(string))
-                                throw Error.InvalidFormatParameterType(format.Type);
+                                throw Error.InvalidFormatParameterType(format.Type, nameof(insert), i);
                         }
                     }
 
@@ -471,7 +471,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             if (i != appendCount)
-                throw Error.IncorrectNumberOfAppendsForInterpolatedString(appendCount, i);
+                throw Error.IncorrectNumberOfAppendsForInterpolatedString(appendCount, i, nameof(expression));
 
             return new InterpolatedStringHandlerConversionCSharpExpression(info, expression);
         }
@@ -507,7 +507,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(body, nameof(body));
             RequiresNotNullItems(parameters, nameof(parameters));
 
-            CheckAppendLiteralLambda(body, parameters);
+            CheckAppendLiteralLambda(body, parameters, nameof(parameters));
 
             var handlerType = parameters[0].Type;
 
@@ -517,15 +517,15 @@ namespace Microsoft.CSharp.Expressions
             return Lambda(delegateType, body, parameters);
         }
 
-        private static void CheckAppendLiteralLambda(Expression body, IList<ParameterExpression> parameters)
+        private static void CheckAppendLiteralLambda(Expression body, IList<ParameterExpression> parameters, string paramName, int i = -1)
         {
             if (parameters.Count != 2)
-                throw Error.AppendLiteralLambdaShouldHaveTwoParameters();
+                throw Error.AppendLiteralLambdaShouldHaveTwoParameters(paramName, i);
 
-            CheckAppendLambdaHandlerParameter(parameters[0]);
+            CheckAppendLambdaHandlerParameter(parameters[0], paramName, i);
 
             if (parameters[1].Type != typeof(string))
-                throw Error.AppendLiteralLambdaShouldTakeStringParameter(parameters[1].Type);
+                throw Error.AppendLiteralLambdaShouldTakeStringParameter(parameters[1].Type, paramName, i);
         }
 
         /// <summary>
@@ -578,7 +578,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(body, nameof(body));
             RequiresNotNullItems(parameters, nameof(parameters));
 
-            CheckAppendFormattedLambda(body, parameters);
+            CheckAppendFormattedLambda(body, parameters, nameof(parameters));
 
             var returnType = useBoolReturn ? typeof(bool) : typeof(void);
             var handlerType = parameters[0].Type;
@@ -614,41 +614,41 @@ namespace Microsoft.CSharp.Expressions
             { (typeof(bool), typeof(int), typeof(string)), typeof(TryAppendFormattedAlignmentFormat<,>) },
         };
 
-        private static void CheckAppendFormattedLambda(Expression body, IList<ParameterExpression> parameters)
+        private static void CheckAppendFormattedLambda(Expression body, IList<ParameterExpression> parameters, string paramName)
         {
-            if (parameters.Count < 2 || parameters.Count > 4)
-                throw Error.AppendFormattedLambdaInvalidParameterCount();
+            if (parameters.Count is < 2 or > 4)
+                throw Error.AppendFormattedLambdaInvalidParameterCount(paramName);
 
-            CheckAppendLambdaHandlerParameter(parameters[0]);
+            CheckAppendLambdaHandlerParameter(parameters[0], paramName);
 
             if (parameters[1].Type == typeof(void))
-                throw Error.AppendFormattedLambdaSecondParameterShouldBeNonVoid();
+                throw Error.AppendFormattedLambdaSecondParameterShouldBeNonVoid(paramName);
 
             if (parameters.Count == 3)
             {
                 var type = parameters[2].Type;
 
                 if (type != typeof(int) && type != typeof(string))
-                    throw Error.AppendFormattedLambdaThirdParameterShouldBeIntOrString(type);
+                    throw Error.AppendFormattedLambdaThirdParameterShouldBeIntOrString(type, paramName);
             }
             else if (parameters.Count == 4)
             {
                 if (parameters[2].Type != typeof(int))
-                    throw Error.AppendFormattedLambdaThirdParameterShouldBeInt(parameters[2].Type);
+                    throw Error.AppendFormattedLambdaThirdParameterShouldBeInt(parameters[2].Type, paramName);
 
                 if (parameters[3].Type != typeof(string))
-                    throw Error.AppendFormattedLambdaFourthParameterShouldBeString(parameters[3].Type);
+                    throw Error.AppendFormattedLambdaFourthParameterShouldBeString(parameters[3].Type, paramName);
             }
         }
 
-        private static void CheckAppendLambdaHandlerParameter(ParameterExpression parameter)
+        private static void CheckAppendLambdaHandlerParameter(ParameterExpression parameter, string paramName, int i = -1)
         {
             // REVIEW: For now, we always require the first parameter to be by ref. While not needed for reference types,
             //         it simplifies the logic a bit. We can add more flexibility later.
 
             if (!parameter.IsByRef)
             {
-                throw Error.AppendLambdaShouldHaveFirstByRefParameter(parameter);
+                throw Error.AppendLambdaShouldHaveFirstByRefParameter(parameter, paramName, i);
             }
         }
 
@@ -671,7 +671,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     res.Add(s);
                 }
-                else if (node is BinaryExpression b && b.NodeType == ExpressionType.Add)
+                else if (node is BinaryExpression { NodeType: ExpressionType.Add } b)
                 {
                     Visit(b.Left);
                     Visit(b.Right);

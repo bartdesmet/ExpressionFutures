@@ -28,7 +28,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (n > parameters.Length)
             {
-                throw Error.TooManyArguments();
+                throw Error.TooManyArguments(nameof(expressions));
             }
 
             var bindings = new ParameterAssignment[n];
@@ -46,7 +46,7 @@ namespace Microsoft.CSharp.Expressions
             ValidateParameterBindings(method, method.GetParametersCached(), argList, extensionMethod);
         }
 
-        public static void ValidateParameterBindings(MethodBase method, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList, bool extensionMethod = false)
+        public static void ValidateParameterBindings(MethodBase method, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> arguments, bool extensionMethod = false)
         {
             var boundParameters = new HashSet<ParameterInfo>();
 
@@ -55,8 +55,10 @@ namespace Microsoft.CSharp.Expressions
                 boundParameters.Add(parameters[0]);
             }
 
-            foreach (var arg in argList)
+            for (int i = 0, n = arguments.Count; i < n; i++)
             {
+                var arg = arguments[i];
+
                 var parameter = arg.Parameter;
 
                 var member = parameter.Member;
@@ -65,25 +67,27 @@ namespace Microsoft.CSharp.Expressions
                 if (property != null)
                 {
                     // NB: This supports get access via indexers.
-                    member = property.GetGetMethod(true);
+                    member = property.GetGetMethod(nonPublic: true);
                 }
 
                 if (member != method)
                 {
-                    throw Error.ParameterNotDefinedForMethod(parameter.Name, method.Name);
+                    throw Error.ParameterNotDefinedForMethod(parameter.Name, method.Name, nameof(arguments), i);
                 }
 
                 if (!boundParameters.Add(parameter))
                 {
-                    throw Error.DuplicateParameterBinding(parameter.Name);
+                    throw Error.DuplicateParameterBinding(parameter.Name, nameof(arguments), i);
                 }
             }
 
-            foreach (var parameter in parameters)
+            for (int i = 0, n = parameters.Length; i < n; i++)
             {
+                var parameter = parameters[i];
+
                 if (!boundParameters.Contains(parameter) && (!parameter.IsOptional || !parameter.HasDefaultValue))
                 {
-                    throw Error.UnboundParameter(parameter.Name);
+                    throw Error.UnboundParameter(parameter.Name, nameof(parameters), i);
                 }
             }
         }

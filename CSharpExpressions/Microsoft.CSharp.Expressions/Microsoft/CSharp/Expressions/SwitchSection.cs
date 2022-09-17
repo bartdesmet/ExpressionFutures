@@ -126,10 +126,14 @@ namespace Microsoft.CSharp.Expressions
             var allLabels = new HashSet<LabelTarget>();
             var patternInputType = default(Type);
 
-            foreach (var label in labelsList)
+            var n = labelsList.Count;
+
+            for (var i = 0; i < n; i++)
             {
+                var label = labelsList[i];
+
                 if (label.Label != null && !allLabels.Add(label.Label))
-                    throw Error.DuplicateLabelInSwitchSection(label.Label);
+                    throw Error.DuplicateLabelInSwitchSection(label.Label, nameof(labels), i);
 
                 if (patternInputType == null)
                 {
@@ -137,7 +141,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else if (patternInputType != label.Pattern.InputType)
                 {
-                    throw Error.InconsistentPatternInputType(label.Pattern.InputType, patternInputType);
+                    throw Error.InconsistentPatternInputType(label.Pattern.InputType, patternInputType, nameof(labels), i);
                 }
             }
 

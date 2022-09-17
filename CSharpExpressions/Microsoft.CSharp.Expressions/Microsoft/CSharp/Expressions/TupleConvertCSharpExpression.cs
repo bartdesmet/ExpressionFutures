@@ -283,7 +283,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             if (!IsTupleType(sourceType))
-                throw Error.InvalidTupleType(operand.Type);
+                throw Error.InvalidTupleType(operand.Type, nameof(operand));
 
             RequiresNotNull(type, nameof(type));
 
@@ -295,7 +295,7 @@ namespace Microsoft.CSharp.Expressions
             }
 
             if (!IsTupleType(destinationType))
-                throw Error.InvalidTupleType(type);
+                throw Error.InvalidTupleType(type, nameof(type));
 
             var arityFrom = GetTupleArity(sourceType);
             var arityTo = GetTupleArity(destinationType);
@@ -334,7 +334,7 @@ namespace Microsoft.CSharp.Expressions
                 conversions = elementConversions.ToReadOnly();
 
                 if (conversions.Count != arityFrom)
-                    throw Error.InvalidElementConversionCount(arityFrom);
+                    throw Error.InvalidElementConversionCount(arityFrom, nameof(elementConversions));
 
                 RequiresNotNullItems(conversions, nameof(elementConversions));
 

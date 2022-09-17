@@ -115,12 +115,12 @@ namespace Microsoft.CSharp.Expressions
         internal static ForEachCSharpStatement Make(EnumeratorInfo enumeratorInfo, AwaitInfo? awaitInfo, ReadOnlyCollection<ParameterExpression> variables, Expression collection, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, LambdaExpression? conversion, LambdaExpression? deconstruction)
         {
             if (variables.Count == 0)
-                throw Error.ForEachNeedsOneOrMoreVariables();
+                throw Error.ForEachNeedsOneOrMoreVariables(nameof(variables));
 
             RequiresNotNullItems(variables, nameof(variables));
 
             if (!AreReferenceAssignable(enumeratorInfo.CollectionType, collection.Type))
-                throw Error.ForEachCollectionTypeNotCompatibleWithCollectionExpression(enumeratorInfo.CollectionType, collection.Type);
+                throw Error.ForEachCollectionTypeNotCompatibleWithCollectionExpression(enumeratorInfo.CollectionType, collection.Type, nameof(enumeratorInfo));
 
             RequiresCanRead(body, nameof(body));
 
@@ -132,14 +132,14 @@ namespace Microsoft.CSharp.Expressions
             if (variables.Count == 1)
             {
                 if (deconstruction != null)
-                    throw Error.ForEachDeconstructionNotSupportedWithOneVariable();
+                    throw Error.ForEachDeconstructionNotSupportedWithOneVariable(nameof(deconstruction));
 
                 ValidateConversion(firstVariableType, enumeratorInfo.ElementType, ref conversion);
             }
             else
             {
                 if (deconstruction == null)
-                    throw Error.ForEachDeconstructionRequiredForMultipleVariables();
+                    throw Error.ForEachDeconstructionRequiredForMultipleVariables(nameof(deconstruction));
 
                 ValidateDeconstruction(enumeratorInfo.ElementType, ref conversion, deconstruction, variables);
             }
@@ -182,16 +182,16 @@ namespace Microsoft.CSharp.Expressions
             if (conversion != null)
             {
                 if (conversion.Parameters.Count != 1)
-                    throw Error.ConversionNeedsOneParameter();
+                    throw Error.ConversionNeedsOneParameter(nameof(conversion));
 
                 var convertParameterType = conversion.Parameters[0].Type;
                 var convertResultType = conversion.Body.Type;
 
                 if (!AreReferenceAssignable(convertParameterType, elementType))
-                    throw Error.ConversionInvalidArgument(elementType, convertParameterType);
+                    throw Error.ConversionInvalidArgument(elementType, convertParameterType, nameof(conversion));
 
                 if (!AreReferenceAssignable(variableType, convertResultType))
-                    throw Error.ConversionInvalidResult(convertResultType, variableType);
+                    throw Error.ConversionInvalidResult(convertResultType, variableType, nameof(conversion));
             }
             else if (!AreReferenceAssignable(variableType, elementType))
             {
@@ -208,24 +208,24 @@ namespace Microsoft.CSharp.Expressions
         private static void ValidateDeconstruction(Type elementType, ref LambdaExpression? conversion, LambdaExpression deconstruction, ReadOnlyCollection<ParameterExpression> variables)
         {
             if (deconstruction.Parameters.Count != 1)
-                throw Error.ForEachDeconstructionShouldHaveOneParameter();
+                throw Error.ForEachDeconstructionShouldHaveOneParameter(nameof(deconstruction));
 
             var variableType = deconstruction.Parameters[0].Type;
 
             ValidateConversion(variableType, elementType, ref conversion);
 
             if (!IsTupleType(deconstruction.ReturnType))
-                throw Error.ForEachDeconstructionShouldReturnTuple(deconstruction.ReturnType);
+                throw Error.ForEachDeconstructionShouldReturnTuple(deconstruction.ReturnType, nameof(deconstruction));
 
             var componentTypes = GetTupleComponentTypes(deconstruction.ReturnType).ToArray();
 
             if (componentTypes.Length != variables.Count)
-                throw Error.ForEachDeconstructionComponentMismatch(deconstruction.ReturnType, componentTypes.Length);
+                throw Error.ForEachDeconstructionComponentMismatch(deconstruction.ReturnType, componentTypes.Length, nameof(deconstruction));
 
             for (var i = 0; i < componentTypes.Length; i++)
             {
                 if (!AreReferenceAssignable(variables[i].Type, componentTypes[i]))
-                    throw Error.ForEachDeconstructionComponentNotAssignableToVariable(componentTypes[i], i, variables[i], variables[i].Type);
+                    throw Error.ForEachDeconstructionComponentNotAssignableToVariable(componentTypes[i], i, variables[i], variables[i].Type, nameof(deconstruction), i);
             }
         }
 

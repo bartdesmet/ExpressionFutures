@@ -170,12 +170,12 @@ namespace Microsoft.CSharp.Expressions
 
             if (deconstruct != null)
             {
-                CheckDeconstructLambda(deconstruct.Body, deconstruct.Parameters);
+                CheckDeconstructLambda(deconstruct.Body, nameof(deconstruct), deconstruct.Parameters, nameof(deconstruct));
 
                 var n = deconstruct.Parameters.Count;
 
                 if (n - 1 != conversionsList.Count)
-                    throw Error.DeconstructionParameterCountShouldMatchConversionCount();
+                    throw Error.DeconstructionParameterCountShouldMatchConversionCount(nameof(deconstruct));
 
                 for (var i = 1; i < n; i++)
                 {
@@ -183,7 +183,7 @@ namespace Microsoft.CSharp.Expressions
                     var conversion = conversionsList[i - 1];
 
                     if (!TypeUtils.AreReferenceAssignable(conversion.InputType, parameter.Type))
-                        throw Error.DeconstructionParameterNotAssignableToConversion(i, parameter.Type, conversion.InputType);
+                        throw Error.DeconstructionParameterNotAssignableToConversion(i, parameter.Type, conversion.InputType, nameof(deconstruct), i);
                 }
             }
 
@@ -204,7 +204,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(body, nameof(body));
             RequiresNotNullItems(parameters, nameof(parameters));
 
-            CheckDeconstructLambda(body, parameters);
+            CheckDeconstructLambda(body, nameof(body), parameters, nameof(parameters));
 
             var types = new Type[parameters.Length];
 
@@ -220,18 +220,18 @@ namespace Microsoft.CSharp.Expressions
             return delegateType != null ? Lambda(delegateType, body, parameters) : Lambda(body, parameters);
         }
 
-        private static void CheckDeconstructLambda(Expression body, IList<ParameterExpression> parameters)
+        private static void CheckDeconstructLambda(Expression body, string bodyParamName, IList<ParameterExpression> parameters, string parametersParamName)
         {
             if (body.Type != typeof(void))
-                throw Error.DeconstructionShouldReturnVoid();
+                throw Error.DeconstructionShouldReturnVoid(bodyParamName);
 
             if (parameters.Count < 3)
-                throw Error.DeconstructionShouldHaveThreeOrMoreParameters();
+                throw Error.DeconstructionShouldHaveThreeOrMoreParameters(parametersParamName);
 
             for (int i = 1, n = parameters.Count; i < n; i++)
             {
                 if (!parameters[i].IsByRef)
-                    throw Error.DeconstructionParameterShouldBeByRef(i);
+                    throw Error.DeconstructionParameterShouldBeByRef(i, parametersParamName, i);
             }
         }
     }

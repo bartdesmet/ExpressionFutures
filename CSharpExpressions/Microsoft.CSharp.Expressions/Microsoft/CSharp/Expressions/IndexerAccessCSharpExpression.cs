@@ -519,7 +519,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(argument, nameof(argument));
 
             if (argument.Type != typeof(Index) && argument.Type != typeof(Range))
-                throw Error.InvalidIndexerAccessArgumentType(argument.Type);
+                throw Error.InvalidIndexerAccessArgumentType(argument.Type, nameof(argument));
 
             //
             // A type is Countable if it has a property named Length or Count with an accessible getter and a return type of int.
@@ -537,7 +537,7 @@ namespace Microsoft.CSharp.Expressions
                 throw PropertyDoesNotHaveAccessor(lengthOrCount, nameof(lengthOrCount));
 
             if (lengthOrCountGetMethod.IsStatic)
-                throw Error.AccessorCannotBeStatic(lengthOrCountGetMethod);
+                throw Error.AccessorCannotBeStatic(lengthOrCountGetMethod, nameof(lengthOrCount));
 
             if (lengthOrCountGetMethod.GetParametersCached().Length != 0)
                 throw IncorrectNumberOfMethodCallArguments(lengthOrCountGetMethod, nameof(lengthOrCount));
@@ -546,7 +546,7 @@ namespace Microsoft.CSharp.Expressions
                 throw PropertyNotDefinedForType(lengthOrCount, @object.Type, nameof(lengthOrCount));
 
             if (lengthOrCount.PropertyType != typeof(int))
-                throw Error.InvalidLengthOrCountPropertyType(lengthOrCount);
+                throw Error.InvalidLengthOrCountPropertyType(lengthOrCount, nameof(lengthOrCount));
 
             ValidateMethodInfo(lengthOrCountGetMethod, nameof(lengthOrCount));
 
@@ -572,7 +572,7 @@ namespace Microsoft.CSharp.Expressions
                 RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
 #pragma warning disable CA1508 // Avoid dead conditional code (https://github.com/dotnet/roslyn-analyzers/issues/6165)
-                var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice), nameof(indexOrSlice));
+                var index = indexOrSlice as PropertyInfo ?? GetProperty(indexOrSlice as MethodInfo ?? throw Error.InvalidIndexMember(indexOrSlice, nameof(indexOrSlice)), nameof(indexOrSlice));
 #pragma warning restore CA1508 // Avoid dead conditional code
 
                 indexOrSlice = index; // NB: Store the property rather than a method.
@@ -592,13 +592,13 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 if (indexAccessor.IsStatic)
-                    throw Error.AccessorCannotBeStatic(indexAccessor);
+                    throw Error.AccessorCannotBeStatic(indexAccessor, nameof(indexOrSlice));
 
                 if (!IsValidInstanceType(indexAccessor, @object.Type))
                     throw PropertyNotDefinedForType(indexAccessor, @object.Type, nameof(indexOrSlice));
 
                 if (indexAccessor.GetParametersCached()[0].ParameterType != typeof(int))
-                    throw Error.InvalidIndexerParameterType(indexOrSlice);
+                    throw Error.InvalidIndexerParameterType(indexOrSlice, nameof(indexOrSlice));
 
                 ValidateMethodInfo(indexAccessor, nameof(indexOrSlice));
             }
@@ -616,19 +616,19 @@ namespace Microsoft.CSharp.Expressions
 
                 RequiresNotNull(indexOrSlice, nameof(indexOrSlice));
 
-                var slice = indexOrSlice as MethodInfo ?? throw Error.InvalidSliceMember(indexOrSlice);
+                var slice = indexOrSlice as MethodInfo ?? throw Error.InvalidSliceMember(indexOrSlice, nameof(indexOrSlice));
 
                 ValidateMethodInfo(slice, nameof(indexOrSlice));
 
                 if (slice.IsStatic)
-                    throw Error.SliceMethodMustNotBeStatic(slice);
+                    throw Error.SliceMethodMustNotBeStatic(slice, nameof(indexOrSlice));
 
                 ValidateCallInstanceType(@object.Type, slice);
 
                 var sliceParams = slice.GetParametersCached();
 
                 if (sliceParams.Length != 2 || sliceParams[0].ParameterType != typeof(int) || sliceParams[1].ParameterType != typeof(int))
-                    throw Error.InvalidSliceParameters(slice);
+                    throw Error.InvalidSliceParameters(slice, nameof(indexOrSlice));
             }
 
             return new IndexerAccessCSharpExpression(@object, argument, lengthOrCount, indexOrSlice);

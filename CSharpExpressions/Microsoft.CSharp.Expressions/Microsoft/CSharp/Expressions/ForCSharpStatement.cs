@@ -269,7 +269,7 @@ namespace Microsoft.CSharp.Expressions
                 var initializer = (BinaryExpression)initializerList[i];
 
                 if (initializer.NodeType != ExpressionType.Assign || initializer.Left.NodeType != ExpressionType.Parameter)
-                    throw Error.InvalidInitializer();
+                    throw Error.InvalidInitializer(nameof(initializers), i);
 
                 var variable = (ParameterExpression)initializer.Left;
 

@@ -173,7 +173,7 @@ namespace Microsoft.CSharp.Expressions
                 var checkCallGetLength = Expression.Call(Expression.Default(info.NarrowedType), getLengthMethod);
 
                 if (checkCallGetLength.Type != typeof(int))
-                    throw Error.ITupleGetLengthShouldReturnInt32();
+                    throw Error.ITupleGetLengthShouldReturnInt32(nameof(getLengthMethod));
             }
             else
             {
@@ -188,7 +188,7 @@ namespace Microsoft.CSharp.Expressions
                 var checkCallGetItem = Expression.Call(Expression.Default(info.NarrowedType), getItemMethod, Expression.Default(typeof(int)));
 
                 if (checkCallGetItem.Type != typeof(object))
-                    throw Error.ITupleGetItemShouldReturnObject();
+                    throw Error.ITupleGetItemShouldReturnObject(nameof(getItemMethod));
             }
             else
             {
@@ -202,12 +202,12 @@ namespace Microsoft.CSharp.Expressions
             {
                 var positionalPattern = deconstructionCollection[i];
 
-                RequiresNotNull(positionalPattern, nameof(deconstruction));
+                RequiresNotNull(positionalPattern, nameof(deconstruction), i);
 
                 if (positionalPattern.Field != null)
-                    throw Error.ITuplePositionalPatternCannotHaveField(i);
+                    throw Error.ITuplePositionalPatternCannotHaveField(i, nameof(deconstruction), i);
                 if (positionalPattern.Parameter != null)
-                    throw Error.ITuplePositionalPatternCannotHaveParameter(i);
+                    throw Error.ITuplePositionalPatternCannotHaveParameter(i, nameof(deconstruction), i);
 
                 //
                 // CONSIDER: If the input type does not match, we could trigger ChangeType (which would do the opposite of narrowing,
@@ -215,7 +215,7 @@ namespace Microsoft.CSharp.Expressions
                 //
 
                 if (positionalPattern.Pattern.InputType != typeof(object))
-                    throw Error.ITuplePositionalPatternInvalidInputType(i, positionalPattern.Pattern.InputType);
+                    throw Error.ITuplePositionalPatternInvalidInputType(i, positionalPattern.Pattern.InputType, nameof(deconstruction), i);
             }
 #pragma warning restore CA1062 // Validate arguments of public methods
 

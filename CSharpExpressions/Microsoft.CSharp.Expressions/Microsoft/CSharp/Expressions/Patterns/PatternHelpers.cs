@@ -60,13 +60,13 @@ namespace Microsoft.CSharp.Expressions
             if (value.Value == null)
             {
                 if (isRelational)
-                    throw Error.CannotUseNullValueInRelationalPattern();
+                    throw Error.CannotUseNullValueInRelationalPattern(nameof(value));
 
                 return;
             }
 
             if (value.Type.IsNullableType())
-                throw Error.InvalidPatternConstantType(value.Type);
+                throw Error.InvalidPatternConstantType(value.Type, nameof(value));
 
             if (value.Type == typeof(IntPtr) || value.Type == typeof(UIntPtr))
                 return;
@@ -86,19 +86,19 @@ namespace Microsoft.CSharp.Expressions
                     break;
                 case TypeCode.Single:
                     if (isRelational && float.IsNaN((float)value.Value))
-                        throw Error.CannotUsePatternConstantNaN();
+                        throw Error.CannotUsePatternConstantNaN(nameof(value));
                     break;
                 case TypeCode.Double:
                     if (isRelational && double.IsNaN((double)value.Value))
-                        throw Error.CannotUsePatternConstantNaN();
+                        throw Error.CannotUsePatternConstantNaN(nameof(value));
                     break;
                 case TypeCode.Boolean:
                 case TypeCode.String:
                     if (isRelational)
-                        throw Error.InvalidRelationalPatternConstantType(value.Type);
+                        throw Error.InvalidRelationalPatternConstantType(value.Type, nameof(value));
                     break;
                 default:
-                    throw Error.InvalidPatternConstantType(value.Type);
+                    throw Error.InvalidPatternConstantType(value.Type, nameof(value));
             }
         }
 

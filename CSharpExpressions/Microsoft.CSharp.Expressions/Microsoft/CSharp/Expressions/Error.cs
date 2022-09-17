@@ -14,147 +14,147 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' is not defined for method '{1}'."
         /// </summary>
-        internal static Exception ParameterNotDefinedForMethod(object? p0, object? p1) => new ArgumentException(Strings.ParameterNotDefinedForMethod(p0, p1));
+        internal static Exception ParameterNotDefinedForMethod(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ParameterNotDefinedForMethod(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Parameter index '{0}' is out of bounds for method '{1}'."
         /// </summary>
-        internal static Exception ParameterIndexOutOfBounds(object? p0, object? p1) => new ArgumentException(Strings.ParameterIndexOutOfBounds(p0, p1));
+        internal static Exception ParameterIndexOutOfBounds(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ParameterIndexOutOfBounds(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Expression of type '{0}' cannot be used for parameter of type '{1}'."
         /// </summary>
-        internal static Exception ExpressionTypeDoesNotMatchParameter(object? p0, object? p1) => new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1));
+        internal static Exception ExpressionTypeDoesNotMatchParameter(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ExpressionTypeDoesNotMatchParameter(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' has multiple bindings."
         /// </summary>
-        internal static Exception DuplicateParameterBinding(object? p0) => new ArgumentException(Strings.DuplicateParameterBinding(p0));
+        internal static Exception DuplicateParameterBinding(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DuplicateParameterBinding(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Non-optional parameter '{0}' has no binding."
         /// </summary>
-        internal static Exception UnboundParameter(object? p0) => new ArgumentException(Strings.UnboundParameter(p0));
+        internal static Exception UnboundParameter(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.UnboundParameter(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A non-static constructor is required."
         /// </summary>
-        internal static Exception NonStaticConstructorRequired() => new ArgumentException(Strings.NonStaticConstructorRequired);
+        internal static Exception NonStaticConstructorRequired(string? paramName = null, int index = -1) => new ArgumentException(Strings.NonStaticConstructorRequired, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The property '{0}' has no 'get' accessor."
         /// </summary>
-        internal static Exception PropertyDoesNotHaveGetAccessor(object? p0) => new ArgumentException(Strings.PropertyDoesNotHaveGetAccessor(p0));
+        internal static Exception PropertyDoesNotHaveGetAccessor(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyDoesNotHaveGetAccessor(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The property '{0}' has no 'set' accessor."
         /// </summary>
-        internal static Exception PropertyDoesNotHaveSetAccessor(object? p0) => new ArgumentException(Strings.PropertyDoesNotHaveSetAccessor(p0));
+        internal static Exception PropertyDoesNotHaveSetAccessor(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyDoesNotHaveSetAccessor(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A non-static 'get' accessor is required for property '{0}'."
         /// </summary>
-        internal static Exception AccessorCannotBeStatic(object? p0) => new ArgumentException(Strings.AccessorCannotBeStatic(p0));
+        internal static Exception AccessorCannotBeStatic(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AccessorCannotBeStatic(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of indexes specified does not match the array rank."
         /// </summary>
-        internal static Exception RankMismatch() => new ArgumentException(Strings.RankMismatch);
+        internal static Exception RankMismatch(string? paramName = null, int index = -1) => new ArgumentException(Strings.RankMismatch, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentOutOfRangeException with message like "The specified index is out of range."
         /// </summary>
-        internal static Exception IndexOutOfRange() => new ArgumentOutOfRangeException(Strings.IndexOutOfRange);
+        internal static Exception IndexOutOfRange(string? paramName = null, int index = -1) => new ArgumentOutOfRangeException(GetParamName(paramName, index), Strings.IndexOutOfRange);
 
         /// <summary>
         /// ArgumentException with message like "An array dimension cannot be less than 0."
         /// </summary>
-        internal static Exception BoundCannotBeLessThanZero() => new ArgumentException(Strings.BoundCannotBeLessThanZero);
+        internal static Exception BoundCannotBeLessThanZero(string? paramName = null, int index = -1) => new ArgumentException(Strings.BoundCannotBeLessThanZero, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of elements does not match the length of the array."
         /// </summary>
-        internal static Exception ArrayBoundsElementCountMismatch() => new ArgumentException(Strings.ArrayBoundsElementCountMismatch);
+        internal static Exception ArrayBoundsElementCountMismatch(string? paramName = null, int index = -1) => new ArgumentException(Strings.ArrayBoundsElementCountMismatch, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method should take zero parameters."
         /// </summary>
-        internal static Exception GetAwaiterShouldTakeZeroParameters() => new ArgumentException(Strings.GetAwaiterShouldTakeZeroParameters);
+        internal static Exception GetAwaiterShouldTakeZeroParameters(string? paramName = null, int index = -1) => new ArgumentException(Strings.GetAwaiterShouldTakeZeroParameters, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method should not be generic."
         /// </summary>
-        internal static Exception GetAwaiterShouldNotBeGeneric() => new ArgumentException(Strings.GetAwaiterShouldNotBeGeneric);
+        internal static Exception GetAwaiterShouldNotBeGeneric(string? paramName = null, int index = -1) => new ArgumentException(Strings.GetAwaiterShouldNotBeGeneric, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' method has an unsupported return type."
         /// </summary>
-        internal static Exception GetAwaiterShouldReturnAwaiterType() => new ArgumentException(Strings.GetAwaiterShouldReturnAwaiterType);
+        internal static Exception GetAwaiterShouldReturnAwaiterType(string? paramName = null, int index = -1) => new ArgumentException(Strings.GetAwaiterShouldReturnAwaiterType, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Awaitable type '{0}' should have a 'GetAwaiter' method."
         /// </summary>
-        internal static Exception AwaitableTypeShouldHaveGetAwaiterMethod(object? p0) => new ArgumentException(Strings.AwaitableTypeShouldHaveGetAwaiterMethod(p0));
+        internal static Exception AwaitableTypeShouldHaveGetAwaiterMethod(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaitableTypeShouldHaveGetAwaiterMethod(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should implement 'INotifyCompletion'."
         /// </summary>
-        internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object? p0) => new ArgumentException(Strings.AwaiterTypeShouldImplementINotifyCompletion(p0));
+        internal static Exception AwaiterTypeShouldImplementINotifyCompletion(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaiterTypeShouldImplementINotifyCompletion(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should have an 'IsCompleted' property with a 'get' accessor."
         /// </summary>
-        internal static Exception AwaiterTypeShouldHaveIsCompletedProperty(object? p0) => new ArgumentException(Strings.AwaiterTypeShouldHaveIsCompletedProperty(p0));
+        internal static Exception AwaiterTypeShouldHaveIsCompletedProperty(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaiterTypeShouldHaveIsCompletedProperty(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should return 'Boolean'."
         /// </summary>
-        internal static Exception AwaiterIsCompletedShouldReturnBool(object? p0) => new ArgumentException(Strings.AwaiterIsCompletedShouldReturnBool(p0));
+        internal static Exception AwaiterIsCompletedShouldReturnBool(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaiterIsCompletedShouldReturnBool(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'IsCompleted' property on awaiter type '{0}' should not have indexer parameters."
         /// </summary>
-        internal static Exception AwaiterIsCompletedShouldNotBeIndexer(object? p0) => new ArgumentException(Strings.AwaiterIsCompletedShouldNotBeIndexer(p0));
+        internal static Exception AwaiterIsCompletedShouldNotBeIndexer(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaiterIsCompletedShouldNotBeIndexer(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Awaiter type '{0}' should have a 'GetResult' method."
         /// </summary>
-        internal static Exception AwaiterTypeShouldHaveGetResultMethod(object? p0) => new ArgumentException(Strings.AwaiterTypeShouldHaveGetResultMethod(p0));
+        internal static Exception AwaiterTypeShouldHaveGetResultMethod(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaiterTypeShouldHaveGetResultMethod(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetResult' method on awaiter type '{0}' has an unsupported return type."
         /// </summary>
-        internal static Exception AwaiterGetResultTypeInvalid(object? p0) => new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0));
+        internal static Exception AwaiterGetResultTypeInvalid(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AwaiterGetResultTypeInvalid(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Dynamically bound await operations cannot have a 'GetAwaiter' expression."
         /// </summary>
-        internal static Exception DynamicAwaitNoGetAwaiter() => new ArgumentException(Strings.DynamicAwaitNoGetAwaiter);
+        internal static Exception DynamicAwaitNoGetAwaiter(string? paramName = null, int index = -1) => new ArgumentException(Strings.DynamicAwaitNoGetAwaiter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Dynamically bound await operations cannot have an 'IsCompleted' property."
         /// </summary>
-        internal static Exception DynamicAwaitNoIsCompleted() => new ArgumentException(Strings.DynamicAwaitNoIsCompleted);
+        internal static Exception DynamicAwaitNoIsCompleted(string? paramName = null, int index = -1) => new ArgumentException(Strings.DynamicAwaitNoIsCompleted, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Dynamically bound await operations cannot have a 'GetResult' method."
         /// </summary>
-        internal static Exception DynamicAwaitNoGetResult() => new ArgumentException(Strings.DynamicAwaitNoGetResult);
+        internal static Exception DynamicAwaitNoGetResult(string? paramName = null, int index = -1) => new ArgumentException(Strings.DynamicAwaitNoGetResult, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetAwaiter' expression should have one parameter."
         /// </summary>
-        internal static Exception GetAwaiterExpressionOneParameter() => new ArgumentException(Strings.GetAwaiterExpressionOneParameter);
+        internal static Exception GetAwaiterExpressionOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.GetAwaiterExpressionOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' is passed by reference which is not supported in asynchronous lambda expressions."
         /// </summary>
-        internal static Exception AsyncLambdaCantHaveByRefParameter(object? p0) => new ArgumentException(Strings.AsyncLambdaCantHaveByRefParameter(p0));
+        internal static Exception AsyncLambdaCantHaveByRefParameter(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AsyncLambdaCantHaveByRefParameter(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Return type '{0}' is not valid for an asynchronous lambda expression."
         /// </summary>
-        internal static Exception AsyncLambdaInvalidReturnType(object? p0) => new ArgumentException(Strings.AsyncLambdaInvalidReturnType(p0));
+        internal static Exception AsyncLambdaInvalidReturnType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AsyncLambdaInvalidReturnType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// InvalidOperationException with message like "Await expression cannot occur in '{0}'."
@@ -164,107 +164,107 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// ArgumentException with message like "An expression of type '{0}' can't be used as a lock."
         /// </summary>
-        internal static Exception LockNeedsReferenceType(object? p0) => new ArgumentException(Strings.LockNeedsReferenceType(p0));
+        internal static Exception LockNeedsReferenceType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.LockNeedsReferenceType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The conversion lambda should have one parameter."
         /// </summary>
-        internal static Exception ConversionNeedsOneParameter() => new ArgumentException(Strings.ConversionNeedsOneParameter);
+        internal static Exception ConversionNeedsOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.ConversionNeedsOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A collection element of type '{0}' cannot be assigned to the conversion lambda parameter of type '{1}'."
         /// </summary>
-        internal static Exception ConversionInvalidArgument(object? p0, object? p1) => new ArgumentException(Strings.ConversionInvalidArgument(p0, p1));
+        internal static Exception ConversionInvalidArgument(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ConversionInvalidArgument(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The conversion lambda result type '{0}' cannot be assigned to loop iteration variable type '{1}'."
         /// </summary>
-        internal static Exception ConversionInvalidResult(object? p0, object? p1) => new ArgumentException(Strings.ConversionInvalidResult(p0, p1));
+        internal static Exception ConversionInvalidResult(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ConversionInvalidResult(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Enumerator type '{0}' should have a 'Current' property with a 'get' accessor."
         /// </summary>
-        internal static Exception EnumeratorShouldHaveCurrentProperty(object? p0) => new ArgumentException(Strings.EnumeratorShouldHaveCurrentProperty(p0));
+        internal static Exception EnumeratorShouldHaveCurrentProperty(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.EnumeratorShouldHaveCurrentProperty(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Enumerator type '{0}' should have a 'MoveNext' method with a 'Boolean' return type."
         /// </summary>
-        internal static Exception EnumeratorShouldHaveMoveNextMethod(object? p0) => new ArgumentException(Strings.EnumeratorShouldHaveMoveNextMethod(p0));
+        internal static Exception EnumeratorShouldHaveMoveNextMethod(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.EnumeratorShouldHaveMoveNextMethod(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Collection type '{0}' has multiple implementations of 'IEnumerable&lt;T&gt;'."
         /// </summary>
-        internal static Exception MoreThanOneIEnumerableFound(object? p0) => new ArgumentException(Strings.MoreThanOneIEnumerableFound(p0));
+        internal static Exception MoreThanOneIEnumerableFound(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.MoreThanOneIEnumerableFound(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Collection type '{0}' has no valid enumerable pattern."
         /// </summary>
-        internal static Exception NoEnumerablePattern(object? p0) => new ArgumentException(Strings.NoEnumerablePattern(p0));
+        internal static Exception NoEnumerablePattern(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.NoEnumerablePattern(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Initializers should be assignments to variables."
         /// </summary>
-        internal static Exception InvalidInitializer() => new ArgumentException(Strings.InvalidInitializer);
+        internal static Exception InvalidInitializer(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInitializer, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Break and continue lables should be different."
         /// </summary>
-        internal static Exception DuplicateLabels() => new ArgumentException(Strings.DuplicateLabels);
+        internal static Exception DuplicateLabels(string? paramName = null, int index = -1) => new ArgumentException(Strings.DuplicateLabels, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Conditional access expressions require non-static members or extension methods."
         /// </summary>
-        internal static Exception ConditionalAccessRequiresNonStaticMember() => new ArgumentException(Strings.ConditionalAccessRequiresNonStaticMember);
+        internal static Exception ConditionalAccessRequiresNonStaticMember(string? paramName = null, int index = -1) => new ArgumentException(Strings.ConditionalAccessRequiresNonStaticMember, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Conditional access expressions require readable properties."
         /// </summary>
-        internal static Exception ConditionalAccessRequiresReadableProperty() => new ArgumentException(Strings.ConditionalAccessRequiresReadableProperty);
+        internal static Exception ConditionalAccessRequiresReadableProperty(string? paramName = null, int index = -1) => new ArgumentException(Strings.ConditionalAccessRequiresReadableProperty, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Too many arguments have been specified."
         /// </summary>
-        internal static Exception TooManyArguments() => new ArgumentException(Strings.TooManyArguments);
+        internal static Exception TooManyArguments(string? paramName = null, int index = -1) => new ArgumentException(Strings.TooManyArguments, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Conditional call expressions for extensions methods should specify an instance expression."
         /// </summary>
-        internal static Exception ExtensionMethodRequiresInstance() => new ArgumentException(Strings.ExtensionMethodRequiresInstance);
+        internal static Exception ExtensionMethodRequiresInstance(string? paramName = null, int index = -1) => new ArgumentException(Strings.ExtensionMethodRequiresInstance, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid governing type for a switch statement."
         /// </summary>
-        internal static Exception InvalidSwitchType(object? p0) => new ArgumentException(Strings.InvalidSwitchType(p0));
+        internal static Exception InvalidSwitchType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidSwitchType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The test value '{0}' occurs more than once."
         /// </summary>
-        internal static Exception DuplicateTestValue(object? p0) => new ArgumentException(Strings.DuplicateTestValue(p0));
+        internal static Exception DuplicateTestValue(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DuplicateTestValue(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A 'null' test value cannot be used in a switch statement with governing type '{0}'."
         /// </summary>
-        internal static Exception SwitchCantHaveNullCase(object? p0) => new ArgumentException(Strings.SwitchCantHaveNullCase(p0));
+        internal static Exception SwitchCantHaveNullCase(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchCantHaveNullCase(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A test value with type '{0}' cannot be used in a swich statement with governing type '{1}'."
         /// </summary>
-        internal static Exception SwitchCaseHasIncompatibleType(object? p0, object? p1) => new ArgumentException(Strings.SwitchCaseHasIncompatibleType(p0, p1));
+        internal static Exception SwitchCaseHasIncompatibleType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchCaseHasIncompatibleType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "All specified test values should have the same type."
         /// </summary>
-        internal static Exception TestValuesShouldHaveConsistentType() => new ArgumentException(Strings.TestValuesShouldHaveConsistentType);
+        internal static Exception TestValuesShouldHaveConsistentType(string? paramName = null, int index = -1) => new ArgumentException(Strings.TestValuesShouldHaveConsistentType, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The break label of a switch statement should be of type 'void'."
         /// </summary>
-        internal static Exception SwitchBreakLabelShouldBeVoid() => new ArgumentException(Strings.SwitchBreakLabelShouldBeVoid);
+        internal static Exception SwitchBreakLabelShouldBeVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchBreakLabelShouldBeVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The label of a switch case should be of type 'void'."
         /// </summary>
-        internal static Exception SwitchLabelTargetShouldBeVoid() => new ArgumentException(Strings.SwitchLabelTargetShouldBeVoid);
+        internal static Exception SwitchLabelTargetShouldBeVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchLabelTargetShouldBeVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// InvalidOperationException with message like "A 'goto case {0}' statement was found but the containing switch statement has no such label."
@@ -284,853 +284,854 @@ namespace Microsoft.CSharp.Expressions
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for a conditional receiver."
         /// </summary>
-        internal static Exception InvalidConditionalReceiverType(object? p0) => new ArgumentException(Strings.InvalidConditionalReceiverType(p0));
+        internal static Exception InvalidConditionalReceiverType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidConditionalReceiverType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for a receiver in a conditional access expression."
         /// </summary>
-        internal static Exception InvalidConditionalReceiverExpressionType(object? p0) => new ArgumentException(Strings.InvalidConditionalReceiverExpressionType(p0));
+        internal static Exception InvalidConditionalReceiverExpressionType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidConditionalReceiverExpressionType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' of the receiver expression is not compatible with non-null type '{1}' of the conditional receiver."
         /// </summary>
-        internal static Exception ConditionalReceiverTypeMismatch(object? p0, object? p1) => new ArgumentException(Strings.ConditionalReceiverTypeMismatch(p0, p1));
+        internal static Exception ConditionalReceiverTypeMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ConditionalReceiverTypeMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Compound assignment operation '{0}' is not supported for type '{1}'."
         /// </summary>
-        internal static Exception InvalidCompoundAssignment(object? p0, object? p1) => new ArgumentException(Strings.InvalidCompoundAssignment(p0, p1));
+        internal static Exception InvalidCompoundAssignment(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidCompoundAssignment(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Compound assignment operation '{0}' is not supported for operands of type '{1}' and '{2}'."
         /// </summary>
-        internal static Exception InvalidCompoundAssignmentWithOperands(object? p0, object? p1, object? p2) => new ArgumentException(Strings.InvalidCompoundAssignmentWithOperands(p0, p1, p2));
+        internal static Exception InvalidCompoundAssignmentWithOperands(object? p0, object? p1, object? p2, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidCompoundAssignmentWithOperands(p0, p1, p2), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Unary assignment operation '{0}' is not supported for an operand of type '{1}'."
         /// </summary>
-        internal static Exception InvalidUnaryAssignmentWithOperands(object? p0, object? p1) => new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1));
+        internal static Exception InvalidUnaryAssignmentWithOperands(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidUnaryAssignmentWithOperands(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type must not be ByRef."
         /// </summary>
-        internal static Exception TypeMustNotBeByRef() => new ArgumentException(Strings.TypeMustNotBeByRef);
+        internal static Exception TypeMustNotBeByRef(string? paramName = null, int index = -1) => new ArgumentException(Strings.TypeMustNotBeByRef, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type must not be a pointer type."
         /// </summary>
-        internal static Exception TypeMustNotBePointer() => new ArgumentException(Strings.TypeMustNotBePointer);
+        internal static Exception TypeMustNotBePointer(string? paramName = null, int index = -1) => new ArgumentException(Strings.TypeMustNotBePointer, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Compound assignment operation of type 'NullCoalescingAssign' does not support custom methods or conversion operations."
         /// </summary>
-        internal static Exception InvalidNullCoalescingAssignmentArguments() => new ArgumentException(Strings.InvalidNullCoalescingAssignmentArguments);
+        internal static Exception InvalidNullCoalescingAssignmentArguments(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidNullCoalescingAssignmentArguments, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for an interpolated string. Supported types are string, FormattableString, or IFormattable."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringType(object? p0) => new ArgumentException(Strings.InvalidInterpolatedStringType(p0));
+        internal static Exception InvalidInterpolatedStringType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for an index operand. Supported types are int or int?."
         /// </summary>
-        internal static Exception InvalidFromEndIndexOperandType(object? p0) => new ArgumentException(Strings.InvalidFromEndIndexOperandType(p0));
+        internal static Exception InvalidFromEndIndexOperandType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidFromEndIndexOperandType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The specified method is not valid to construct an object of type Index."
         /// </summary>
-        internal static Exception InvalidFromEndIndexMethod() => new ArgumentException(Strings.InvalidFromEndIndexMethod);
+        internal static Exception InvalidFromEndIndexMethod(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidFromEndIndexMethod, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid index type. Supported types are Index or Index?."
         /// </summary>
-        internal static Exception InvalidIndexType(object? p0) => new ArgumentException(Strings.InvalidIndexType(p0));
+        internal static Exception InvalidIndexType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidIndexType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for a range operand. Supported types are Index or Index?."
         /// </summary>
-        internal static Exception InvalidRangeOperandType(object? p0) => new ArgumentException(Strings.InvalidRangeOperandType(p0));
+        internal static Exception InvalidRangeOperandType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidRangeOperandType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The specified method is not valid to construct an object of type Range."
         /// </summary>
-        internal static Exception InvalidRangeMethod() => new ArgumentException(Strings.InvalidRangeMethod);
+        internal static Exception InvalidRangeMethod(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidRangeMethod, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid range type. Supported types are Range or Range?."
         /// </summary>
-        internal static Exception InvalidRangeType(object? p0) => new ArgumentException(Strings.InvalidRangeType(p0));
+        internal static Exception InvalidRangeType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidRangeType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid type for an 'IndexerAccess' argument. Supported types are Index or Range."
         /// </summary>
-        internal static Exception InvalidIndexerAccessArgumentType(object? p0) => new ArgumentException(Strings.InvalidIndexerAccessArgumentType(p0));
+        internal static Exception InvalidIndexerAccessArgumentType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidIndexerAccessArgumentType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Property '{0}' should be of type int."
         /// </summary>
-        internal static Exception InvalidLengthOrCountPropertyType(object? p0) => new ArgumentException(Strings.InvalidLengthOrCountPropertyType(p0));
+        internal static Exception InvalidLengthOrCountPropertyType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidLengthOrCountPropertyType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' is not a valid member for an indexer. Supported member types are MethodInfo or PropertyInfo."
         /// </summary>
-        internal static Exception InvalidIndexMember(object? p0) => new ArgumentException(Strings.InvalidIndexMember(p0));
+        internal static Exception InvalidIndexMember(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidIndexMember(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' is not a valid member for a slice method."
         /// </summary>
-        internal static Exception InvalidSliceMember(object? p0) => new ArgumentException(Strings.InvalidSliceMember(p0));
+        internal static Exception InvalidSliceMember(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidSliceMember(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Indexer '{0}' does not have an 'int' parameter type."
         /// </summary>
-        internal static Exception InvalidIndexerParameterType(object? p0) => new ArgumentException(Strings.InvalidIndexerParameterType(p0));
+        internal static Exception InvalidIndexerParameterType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidIndexerParameterType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Slice method '{0}' should be an instance method."
         /// </summary>
-        internal static Exception SliceMethodMustNotBeStatic(object? p0) => new ArgumentException(Strings.SliceMethodMustNotBeStatic(p0));
+        internal static Exception SliceMethodMustNotBeStatic(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.SliceMethodMustNotBeStatic(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Slice method '{0}' should be have exactly two parameters of type 'int'."
         /// </summary>
-        internal static Exception InvalidSliceParameters(object? p0) => new ArgumentException(Strings.InvalidSliceParameters(p0));
+        internal static Exception InvalidSliceParameters(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidSliceParameters(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Type '{0}' is not a valid tuple type."
         /// </summary>
-        internal static Exception InvalidTupleType(object? p0) => new ArgumentException(Strings.InvalidTupleType(p0));
+        internal static Exception InvalidTupleType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidTupleType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of arguments does not match the number of components of tuple type '{0}'."
         /// </summary>
-        internal static Exception InvalidTupleArgumentCount(object? p0) => new ArgumentException(Strings.InvalidTupleArgumentCount(p0));
+        internal static Exception InvalidTupleArgumentCount(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidTupleArgumentCount(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of argument names does not match the number of components of tuple type '{0}'."
         /// </summary>
-        internal static Exception InvalidTupleArgumentNamesCount(object? p0) => new ArgumentException(Strings.InvalidTupleArgumentNamesCount(p0));
+        internal static Exception InvalidTupleArgumentNamesCount(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidTupleArgumentNamesCount(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type of a tuple component cannot be void."
         /// </summary>
-        internal static Exception TupleComponentCannotBeVoid() => new ArgumentException(Strings.TupleComponentCannotBeVoid);
+        internal static Exception TupleComponentCannotBeVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.TupleComponentCannotBeVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The arity of tuple type '{0}' does not match the arity of tuple type '{1}'."
         /// </summary>
-        internal static Exception TupleComponentCountMismatch(object? p0, object? p1) => new ArgumentException(Strings.TupleComponentCountMismatch(p0, p1));
+        internal static Exception TupleComponentCountMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.TupleComponentCountMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of element conversion expressions does not match tuple arity '{0}'."
         /// </summary>
-        internal static Exception InvalidElementConversionCount(object? p0) => new ArgumentException(Strings.InvalidElementConversionCount(p0));
+        internal static Exception InvalidElementConversionCount(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidElementConversionCount(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of equality check expressions does not match tuple arity '{0}'."
         /// </summary>
-        internal static Exception InvalidEqualityCheckCount(object? p0) => new ArgumentException(Strings.InvalidEqualityCheckCount(p0));
+        internal static Exception InvalidEqualityCheckCount(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidEqualityCheckCount(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "'{0}' is not a member of any type."
         /// </summary>
-        internal static Exception NotAMemberOfAnyType(object? p0) => new ArgumentException(Strings.NotAMemberOfAnyType(p0));
+        internal static Exception NotAMemberOfAnyType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.NotAMemberOfAnyType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A 'with' expression for value type '{0}' cannot specify a 'Clone' method."
         /// </summary>
-        internal static Exception WithExpressionCannotHaveCloneForValueType(object? p0) => new ArgumentException(Strings.WithExpressionCannotHaveCloneForValueType(p0));
+        internal static Exception WithExpressionCannotHaveCloneForValueType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.WithExpressionCannotHaveCloneForValueType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A 'with' expression for type '{0}' should specify a 'Clone' method."
         /// </summary>
-        internal static Exception WithExpressionShouldHaveClone(object? p0) => new ArgumentException(Strings.WithExpressionShouldHaveClone(p0));
+        internal static Exception WithExpressionShouldHaveClone(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.WithExpressionShouldHaveClone(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Clone method '{0}' should have no parameters."
         /// </summary>
-        internal static Exception CloneMethodShouldHaveNoParameters(object? p0) => new ArgumentException(Strings.CloneMethodShouldHaveNoParameters(p0));
+        internal static Exception CloneMethodShouldHaveNoParameters(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.CloneMethodShouldHaveNoParameters(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Clone method '{0}' should be an instance method."
         /// </summary>
-        internal static Exception CloneMethodMustNotBeStatic(object? p0) => new ArgumentException(Strings.CloneMethodMustNotBeStatic(p0));
+        internal static Exception CloneMethodMustNotBeStatic(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.CloneMethodMustNotBeStatic(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Clone method '{0}' should return a type that can be converted to '{1}'."
         /// </summary>
-        internal static Exception CloneMethodShouldReturnCompatibleType(object? p0, object? p1) => new ArgumentException(Strings.CloneMethodShouldReturnCompatibleType(p0, p1));
+        internal static Exception CloneMethodShouldReturnCompatibleType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.CloneMethodShouldReturnCompatibleType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' cannot be static."
         /// </summary>
-        internal static Exception MemberInitializerMemberMustNotBeStatic(object? p0) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeStatic(p0));
+        internal static Exception MemberInitializerMemberMustNotBeStatic(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeStatic(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' cannot be an indexer."
         /// </summary>
-        internal static Exception MemberInitializerMemberMustNotBeIndexer(object? p0) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeIndexer(p0));
+        internal static Exception MemberInitializerMemberMustNotBeIndexer(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.MemberInitializerMemberMustNotBeIndexer(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Member '{0}' used in a 'MemberInitializer' must be writeable."
         /// </summary>
-        internal static Exception MemberInitializerMemberMustBeWriteable(object? p0) => new ArgumentException(Strings.MemberInitializerMemberMustBeWriteable(p0));
+        internal static Exception MemberInitializerMemberMustBeWriteable(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.MemberInitializerMemberMustBeWriteable(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "No suitable constructor found for type '{0}' using the specified members."
         /// </summary>
-        internal static Exception NoAnonymousTypeConstructorFound(object? p0) => new ArgumentException(Strings.NoAnonymousTypeConstructorFound(p0));
+        internal static Exception NoAnonymousTypeConstructorFound(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.NoAnonymousTypeConstructorFound(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A pattern can never produce a value of a nullable type."
         /// </summary>
-        internal static Exception CannotHaveNullablePatternType() => new ArgumentException(Strings.CannotHaveNullablePatternType);
+        internal static Exception CannotHaveNullablePatternType(string? paramName = null, int index = -1) => new ArgumentException(Strings.CannotHaveNullablePatternType, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The input and narrowed type for a pattern of type '{0}' should be equal."
         /// </summary>
-        internal static Exception PatternInputAndNarrowedTypeShouldMatch(object? p0) => new ArgumentException(Strings.PatternInputAndNarrowedTypeShouldMatch(p0));
+        internal static Exception PatternInputAndNarrowedTypeShouldMatch(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PatternInputAndNarrowedTypeShouldMatch(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The variable type '{0}' should be equal to the pattern result type '{1}'."
         /// </summary>
-        internal static Exception CannotAssignPatternResultToVariable(object? p0, object? p1) => new ArgumentException(Strings.CannotAssignPatternResultToVariable(p0, p1));
+        internal static Exception CannotAssignPatternResultToVariable(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.CannotAssignPatternResultToVariable(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The pattern type '{0}' is not compatible with a subpattern type '{1}'."
         /// </summary>
-        internal static Exception PatternTypeMismatch(object? p0, object? p1) => new ArgumentException(Strings.PatternTypeMismatch(p0, p1));
+        internal static Exception PatternTypeMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.PatternTypeMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The pattern type '{0}' is not a valid binary pattern type."
         /// </summary>
-        internal static Exception InvalidBinaryPatternType(object? p0) => new ArgumentException(Strings.InvalidBinaryPatternType(p0));
+        internal static Exception InvalidBinaryPatternType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidBinaryPatternType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The pattern type '{0}' is not a valid relational pattern type."
         /// </summary>
-        internal static Exception InvalidRelationalPatternType(object? p0) => new ArgumentException(Strings.InvalidRelationalPatternType(p0));
+        internal static Exception InvalidRelationalPatternType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidRelationalPatternType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' cannot be used for a constant in a pattern."
         /// </summary>
-        internal static Exception InvalidPatternConstantType(object? p0) => new ArgumentException(Strings.InvalidPatternConstantType(p0));
+        internal static Exception InvalidPatternConstantType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidPatternConstantType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' cannot be used for a constant in a relational pattern."
         /// </summary>
-        internal static Exception InvalidRelationalPatternConstantType(object? p0) => new ArgumentException(Strings.InvalidRelationalPatternConstantType(p0));
+        internal static Exception InvalidRelationalPatternConstantType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidRelationalPatternConstantType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The value NaN cannot be used for a constant in a relational pattern."
         /// </summary>
-        internal static Exception CannotUsePatternConstantNaN() => new ArgumentException(Strings.CannotUsePatternConstantNaN);
+        internal static Exception CannotUsePatternConstantNaN(string? paramName = null, int index = -1) => new ArgumentException(Strings.CannotUsePatternConstantNaN, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A null pattern should use a constant of type object."
         /// </summary>
-        internal static Exception NullValueShouldUseObjectType() => new ArgumentException(Strings.NullValueShouldUseObjectType);
+        internal static Exception NullValueShouldUseObjectType(string? paramName = null, int index = -1) => new ArgumentException(Strings.NullValueShouldUseObjectType, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A null value cannot be used in a relational pattern."
         /// </summary>
-        internal static Exception CannotUseNullValueInRelationalPattern() => new ArgumentException(Strings.CannotUseNullValueInRelationalPattern);
+        internal static Exception CannotUseNullValueInRelationalPattern(string? paramName = null, int index = -1) => new ArgumentException(Strings.CannotUseNullValueInRelationalPattern, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetLengthMethod' of an 'ITuple' pattern should return an integer value."
         /// </summary>
-        internal static Exception ITupleGetLengthShouldReturnInt32() => new ArgumentException(Strings.ITupleGetLengthShouldReturnInt32);
+        internal static Exception ITupleGetLengthShouldReturnInt32(string? paramName = null, int index = -1) => new ArgumentException(Strings.ITupleGetLengthShouldReturnInt32, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'GetItemMethod' of an 'ITuple' pattern should return an object of type Object."
         /// </summary>
-        internal static Exception ITupleGetItemShouldReturnObject() => new ArgumentException(Strings.ITupleGetItemShouldReturnObject);
+        internal static Exception ITupleGetItemShouldReturnObject(string? paramName = null, int index = -1) => new ArgumentException(Strings.ITupleGetItemShouldReturnObject, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' cannot have a field specified."
         /// </summary>
-        internal static Exception ITuplePositionalPatternCannotHaveField(object? p0) => new ArgumentException(Strings.ITuplePositionalPatternCannotHaveField(p0));
+        internal static Exception ITuplePositionalPatternCannotHaveField(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.ITuplePositionalPatternCannotHaveField(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' cannot have a parameter specified."
         /// </summary>
-        internal static Exception ITuplePositionalPatternCannotHaveParameter(object? p0) => new ArgumentException(Strings.ITuplePositionalPatternCannotHaveParameter(p0));
+        internal static Exception ITuplePositionalPatternCannotHaveParameter(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.ITuplePositionalPatternCannotHaveParameter(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'ITuple' positional subpattern with index '{0}' has type '{1}'. Only type Object is supported."
         /// </summary>
-        internal static Exception ITuplePositionalPatternInvalidInputType(object? p0, object? p1) => new ArgumentException(Strings.ITuplePositionalPatternInvalidInputType(p0, p1));
+        internal static Exception ITuplePositionalPatternInvalidInputType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ITuplePositionalPatternInvalidInputType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A positional pattern should either be applied to a tuple type or provide a Deconstruct method."
         /// </summary>
-        internal static Exception InvalidPositionalPattern() => new ArgumentException(Strings.InvalidPositionalPattern);
+        internal static Exception InvalidPositionalPattern(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidPositionalPattern, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of positional subpatterns does not match the number of components in input type '{0}'."
         /// </summary>
-        internal static Exception InvalidPositionalPatternCount(object? p0) => new ArgumentException(Strings.InvalidPositionalPatternCount(p0));
+        internal static Exception InvalidPositionalPatternCount(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidPositionalPatternCount(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Deconstruct method '{0}' should return void."
         /// </summary>
-        internal static Exception DeconstructShouldReturnVoid(object? p0) => new ArgumentException(Strings.DeconstructShouldReturnVoid(p0));
+        internal static Exception DeconstructShouldReturnVoid(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructShouldReturnVoid(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Parameter '{0}' on Deconstruct method '{1}' should be an out parameter."
         /// </summary>
-        internal static Exception DeconstructParameterShouldBeOut(object? p0, object? p1) => new ArgumentException(Strings.DeconstructParameterShouldBeOut(p0, p1));
+        internal static Exception DeconstructParameterShouldBeOut(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructParameterShouldBeOut(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Deconstruct method '{0}' should have at least one parameter."
         /// </summary>
-        internal static Exception DeconstructExtensionMethodMissingThis(object? p0) => new ArgumentException(Strings.DeconstructExtensionMethodMissingThis(p0));
+        internal static Exception DeconstructExtensionMethodMissingThis(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructExtensionMethodMissingThis(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A tuple field index must be positive."
         /// </summary>
-        internal static Exception TupleFieldIndexMustBePositive() => new ArgumentException(Strings.TupleFieldIndexMustBePositive);
+        internal static Exception TupleFieldIndexMustBePositive(string? paramName = null, int index = -1) => new ArgumentException(Strings.TupleFieldIndexMustBePositive, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter must be declared on a method used for deconstruction."
         /// </summary>
-        internal static Exception PositionalPatternParameterMustBeOnMethod(object? p0) => new ArgumentException(Strings.PositionalPatternParameterMustBeOnMethod(p0));
+        internal static Exception PositionalPatternParameterMustBeOnMethod(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternParameterMustBeOnMethod(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter must be an out parameter used for deconstruction."
         /// </summary>
-        internal static Exception PositionalPatternParameterMustBeOut(object? p0) => new ArgumentException(Strings.PositionalPatternParameterMustBeOut(p0));
+        internal static Exception PositionalPatternParameterMustBeOut(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternParameterMustBeOut(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' should not be static."
         /// </summary>
-        internal static Exception PropertyPatternMemberShouldNotBeStatic(object? p0) => new ArgumentException(Strings.PropertyPatternMemberShouldNotBeStatic(p0));
+        internal static Exception PropertyPatternMemberShouldNotBeStatic(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyPatternMemberShouldNotBeStatic(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' should be readable."
         /// </summary>
-        internal static Exception PropertyPatternMemberShouldBeReadable(object? p0) => new ArgumentException(Strings.PropertyPatternMemberShouldBeReadable(p0));
+        internal static Exception PropertyPatternMemberShouldBeReadable(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyPatternMemberShouldBeReadable(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' should not be an indexer property."
         /// </summary>
-        internal static Exception PropertyPatternMemberShouldNotBeIndexer(object? p0) => new ArgumentException(Strings.PropertyPatternMemberShouldNotBeIndexer(p0));
+        internal static Exception PropertyPatternMemberShouldNotBeIndexer(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyPatternMemberShouldNotBeIndexer(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The property pattern member '{0}' is not compatible with a receiver of type '{1}'."
         /// </summary>
-        internal static Exception PropertyPatternMemberIsNotCompatibleWithReceiver(object? p0, object? p1) => new ArgumentException(Strings.PropertyPatternMemberIsNotCompatibleWithReceiver(p0, p1));
+        internal static Exception PropertyPatternMemberIsNotCompatibleWithReceiver(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyPatternMemberIsNotCompatibleWithReceiver(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A positional pattern using a Deconstruct method cannot specify a tuple field."
         /// </summary>
-        internal static Exception PositionalPatternWithDeconstructMethodCannotSpecifyField() => new ArgumentException(Strings.PositionalPatternWithDeconstructMethodCannotSpecifyField);
+        internal static Exception PositionalPatternWithDeconstructMethodCannotSpecifyField(string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternWithDeconstructMethodCannotSpecifyField, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter is not declared on the '{1}' method."
         /// </summary>
-        internal static Exception PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object? p0, object? p1) => new ArgumentException(Strings.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(p0, p1));
+        internal static Exception PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter is used more than once."
         /// </summary>
-        internal static Exception PositionalPatternParameterShouldOnlyBeUsedOnce(object? p0) => new ArgumentException(Strings.PositionalPatternParameterShouldOnlyBeUsedOnce(p0));
+        internal static Exception PositionalPatternParameterShouldOnlyBeUsedOnce(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternParameterShouldOnlyBeUsedOnce(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Either all or none of the Deconstruct method parameters should be specified."
         /// </summary>
-        internal static Exception PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters() => new ArgumentException(Strings.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters);
+        internal static Exception PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters(string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A positional pattern for a tuple type cannot specify a Deconstruct method parameter."
         /// </summary>
-        internal static Exception PositionalPatternWithTupleCannotSpecifyParameter() => new ArgumentException(Strings.PositionalPatternWithTupleCannotSpecifyParameter);
+        internal static Exception PositionalPatternWithTupleCannotSpecifyParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternWithTupleCannotSpecifyParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The tuple field index '{0}' is out of range for a tuple of cardinality '{1}'."
         /// </summary>
-        internal static Exception PositionalPatternTupleIndexOutOfRange(object? p0, object? p1) => new ArgumentException(Strings.PositionalPatternTupleIndexOutOfRange(p0, p1));
+        internal static Exception PositionalPatternTupleIndexOutOfRange(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternTupleIndexOutOfRange(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The tuple field index '{0}' is used more than once."
         /// </summary>
-        internal static Exception PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object? p0) => new ArgumentException(Strings.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(p0));
+        internal static Exception PositionalPatternTupleIndexShouldOnlyBeUsedOnce(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Either all or none of the tuple fields should be specified."
         /// </summary>
-        internal static Exception PositionalPatternWithTupleShouldSpecifyAllIndices() => new ArgumentException(Strings.PositionalPatternWithTupleShouldSpecifyAllIndices);
+        internal static Exception PositionalPatternWithTupleShouldSpecifyAllIndices(string? paramName = null, int index = -1) => new ArgumentException(Strings.PositionalPatternWithTupleShouldSpecifyAllIndices, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type of a switch expression should not be void."
         /// </summary>
-        internal static Exception SwitchExpressionTypeShouldNotBeVoid() => new ArgumentException(Strings.SwitchExpressionTypeShouldNotBeVoid);
+        internal static Exception SwitchExpressionTypeShouldNotBeVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchExpressionTypeShouldNotBeVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The switch expression arm at index '{0}' has a pattern input type '{1}' which is not compatible with the switch expression input type '{2}'."
         /// </summary>
-        internal static Exception SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object? p0, object? p1, object? p2) => new ArgumentException(Strings.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(p0, p1, p2));
+        internal static Exception SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(object? p0, object? p1, object? p2, string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(p0, p1, p2), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The switch expression arm at index '{0}' has a value of type '{1}' which is not compatible with the switch expression result type '{2}'."
         /// </summary>
-        internal static Exception SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object? p0, object? p1, object? p2) => new ArgumentException(Strings.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(p0, p1, p2));
+        internal static Exception SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(object? p0, object? p1, object? p2, string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(p0, p1, p2), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type of a when clause should be Boolean."
         /// </summary>
-        internal static Exception WhenClauseShouldBeBoolean() => new ArgumentException(Strings.WhenClauseShouldBeBoolean);
+        internal static Exception WhenClauseShouldBeBoolean(string? paramName = null, int index = -1) => new ArgumentException(Strings.WhenClauseShouldBeBoolean, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The value of a switch expression arm should not be void."
         /// </summary>
-        internal static Exception SwitchExpressionArmValueShouldNotBeVoid() => new ArgumentException(Strings.SwitchExpressionArmValueShouldNotBeVoid);
+        internal static Exception SwitchExpressionArmValueShouldNotBeVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchExpressionArmValueShouldNotBeVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A conversion cannot return void."
         /// </summary>
-        internal static Exception ConversionCannotReturnVoid() => new ArgumentException(Strings.ConversionCannotReturnVoid);
+        internal static Exception ConversionCannotReturnVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.ConversionCannotReturnVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A conversion lambda expression should have a single parameter."
         /// </summary>
-        internal static Exception ConversionShouldHaveOneParameter() => new ArgumentException(Strings.ConversionShouldHaveOneParameter);
+        internal static Exception ConversionShouldHaveOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.ConversionShouldHaveOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A deconstruction lambda expression should return void."
         /// </summary>
-        internal static Exception DeconstructionShouldReturnVoid() => new ArgumentException(Strings.DeconstructionShouldReturnVoid);
+        internal static Exception DeconstructionShouldReturnVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructionShouldReturnVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A deconstruction lambda expression should have at least three parameters, i.e. one for the input, and at least two for components returned by the deconstruction."
         /// </summary>
-        internal static Exception DeconstructionShouldHaveThreeOrMoreParameters() => new ArgumentException(Strings.DeconstructionShouldHaveThreeOrMoreParameters);
+        internal static Exception DeconstructionShouldHaveThreeOrMoreParameters(string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructionShouldHaveThreeOrMoreParameters, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The deconstruction lambda expression parameter at position '{0}' represents an output of the deconstruction and should be passed by reference."
         /// </summary>
-        internal static Exception DeconstructionParameterShouldBeByRef(object? p0) => new ArgumentException(Strings.DeconstructionParameterShouldBeByRef(p0));
+        internal static Exception DeconstructionParameterShouldBeByRef(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructionParameterShouldBeByRef(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of deconstruction output parameter should match the number of elements conversions."
         /// </summary>
-        internal static Exception DeconstructionParameterCountShouldMatchConversionCount() => new ArgumentException(Strings.DeconstructionParameterCountShouldMatchConversionCount);
+        internal static Exception DeconstructionParameterCountShouldMatchConversionCount(string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructionParameterCountShouldMatchConversionCount, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The deconstruction output parameter at index '{0}' of type '{1}' is not assignable to the corresponding element conversion's input type '{2}'."
         /// </summary>
-        internal static Exception DeconstructionParameterNotAssignableToConversion(object? p0, object? p1, object? p2) => new ArgumentException(Strings.DeconstructionParameterNotAssignableToConversion(p0, p1, p2));
+        internal static Exception DeconstructionParameterNotAssignableToConversion(object? p0, object? p1, object? p2, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructionParameterNotAssignableToConversion(p0, p1, p2), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The left hand side and the deconstructing conversion of the assignment do not match structurally at depth '{0}' and component '{1}'."
         /// </summary>
-        internal static Exception DeconstructingAssignmentStructureMismatch(object? p0, object? p1) => new ArgumentException(Strings.DeconstructingAssignmentStructureMismatch(p0, p1));
+        internal static Exception DeconstructingAssignmentStructureMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructingAssignmentStructureMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The computed result tuple type '{0}' does not match the specified expression type '{1}'."
         /// </summary>
-        internal static Exception DeconstructingAssignmentTypeMismatch(object? p0, object? p1) => new ArgumentException(Strings.DeconstructingAssignmentTypeMismatch(p0, p1));
+        internal static Exception DeconstructingAssignmentTypeMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructingAssignmentTypeMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The left hand side of type '{0}' and the right hand side of type '{1}' are not assignment compatible in the deconstruction assignment at depth '{2}' and component '{3}'."
         /// </summary>
-        internal static Exception DeconstructingComponentAndConversionIncompatible(object? p0, object? p1, object? p2, object? p3) => new ArgumentException(Strings.DeconstructingComponentAndConversionIncompatible(p0, p1, p2, p3));
+        internal static Exception DeconstructingComponentAndConversionIncompatible(object? p0, object? p1, object? p2, object? p3, string? paramName = null, int index = -1) => new ArgumentException(Strings.DeconstructingComponentAndConversionIncompatible(p0, p1, p2, p3), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A using statement should either have a single expression or a declaration list."
         /// </summary>
-        internal static Exception InvalidUsingStatement() => new ArgumentException(Strings.InvalidUsingStatement);
+        internal static Exception InvalidUsingStatement(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidUsingStatement, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "All variables declared in a using statement should have the same type."
         /// </summary>
-        internal static Exception UsingVariableDeclarationsShouldBeConsistentlyTyped() => new ArgumentException(Strings.UsingVariableDeclarationsShouldBeConsistentlyTyped);
+        internal static Exception UsingVariableDeclarationsShouldBeConsistentlyTyped(string? paramName = null, int index = -1) => new ArgumentException(Strings.UsingVariableDeclarationsShouldBeConsistentlyTyped, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The variable '{0}' specified in the local declaration should be explicitly included in the variables of the using statement."
         /// </summary>
-        internal static Exception UsingVariableNotInScope(object? p0) => new ArgumentException(Strings.UsingVariableNotInScope(p0));
+        internal static Exception UsingVariableNotInScope(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.UsingVariableNotInScope(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The Dispose method of a using statement should return void."
         /// </summary>
-        internal static Exception UsingDisposeShouldReturnVoid() => new ArgumentException(Strings.UsingDisposeShouldReturnVoid);
+        internal static Exception UsingDisposeShouldReturnVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.UsingDisposeShouldReturnVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A pattern dispose lambda for a using statement should have one parameter."
         /// </summary>
-        internal static Exception UsingPatternDisposeShouldHaveOneParameter() => new ArgumentException(Strings.UsingPatternDisposeShouldHaveOneParameter);
+        internal static Exception UsingPatternDisposeShouldHaveOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.UsingPatternDisposeShouldHaveOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The input type '{0}' of the pattern dispose lambda is not compatible with the resource type '{1}' of the using statement."
         /// </summary>
-        internal static Exception UsingPatternDisposeInputNotCompatibleWithResource(object? p0, object? p1) => new ArgumentException(Strings.UsingPatternDisposeInputNotCompatibleWithResource(p0, p1));
+        internal static Exception UsingPatternDisposeInputNotCompatibleWithResource(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.UsingPatternDisposeInputNotCompatibleWithResource(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The variable '{0}' specified in the catch block should be explicitly included in the variables of the catch block."
         /// </summary>
-        internal static Exception CatchVariableNotInScope(object? p0) => new ArgumentException(Strings.CatchVariableNotInScope(p0));
+        internal static Exception CatchVariableNotInScope(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.CatchVariableNotInScope(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The catch block exception type '{0}' is not equivalent to the variable type '{1}'."
         /// </summary>
-        internal static Exception CatchTypeNotEquivalentWithVariableType(object? p0, object? p1) => new ArgumentException(Strings.CatchTypeNotEquivalentWithVariableType(p0, p1));
+        internal static Exception CatchTypeNotEquivalentWithVariableType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.CatchTypeNotEquivalentWithVariableType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The label '{0}' is used in multiple switch sections."
         /// </summary>
-        internal static Exception DuplicateLabelInSwitchStatement(object? p0) => new ArgumentException(Strings.DuplicateLabelInSwitchStatement(p0));
+        internal static Exception DuplicateLabelInSwitchStatement(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DuplicateLabelInSwitchStatement(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The label '{0}' is used more than once in the switch section."
         /// </summary>
-        internal static Exception DuplicateLabelInSwitchSection(object? p0) => new ArgumentException(Strings.DuplicateLabelInSwitchSection(p0));
+        internal static Exception DuplicateLabelInSwitchSection(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.DuplicateLabelInSwitchSection(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The pattern input type '{0}' is not compatible with the switch value type '{1}'."
         /// </summary>
-        internal static Exception SwitchValueTypeDoesNotMatchPatternInputType(object? p0, object? p1) => new ArgumentException(Strings.SwitchValueTypeDoesNotMatchPatternInputType(p0, p1));
+        internal static Exception SwitchValueTypeDoesNotMatchPatternInputType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.SwitchValueTypeDoesNotMatchPatternInputType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The pattern input type '{0}' is not consistent with other pattern input types '{1}' in the same switch section."
         /// </summary>
-        internal static Exception InconsistentPatternInputType(object? p0, object? p1) => new ArgumentException(Strings.InconsistentPatternInputType(p0, p1));
+        internal static Exception InconsistentPatternInputType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InconsistentPatternInputType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A switch statement should contain at most one default case."
         /// </summary>
-        internal static Exception FoundMoreThanOneDefaultLabel() => new ArgumentException(Strings.FoundMoreThanOneDefaultLabel);
+        internal static Exception FoundMoreThanOneDefaultLabel(string? paramName = null, int index = -1) => new ArgumentException(Strings.FoundMoreThanOneDefaultLabel, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A string interpolation format string cannot be empty."
         /// </summary>
-        internal static Exception EmptyFormatSpecifier() => new ArgumentException(Strings.EmptyFormatSpecifier);
+        internal static Exception EmptyFormatSpecifier(string? paramName = null, int index = -1) => new ArgumentException(Strings.EmptyFormatSpecifier, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A list pattern can have at most one slice subpattern."
         /// </summary>
-        internal static Exception MoreThanOneSlicePattern() => new ArgumentException(Strings.MoreThanOneSlicePattern);
+        internal static Exception MoreThanOneSlicePattern(string? paramName = null, int index = -1) => new ArgumentException(Strings.MoreThanOneSlicePattern, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type returned by the index access expression cannot be void."
         /// </summary>
-        internal static Exception ElementTypeCannotBeVoid() => new ArgumentException(Strings.ElementTypeCannotBeVoid);
+        internal static Exception ElementTypeCannotBeVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.ElementTypeCannotBeVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The length access lambda expression should have a single parameter."
         /// </summary>
-        internal static Exception LengthAccessShouldHaveOneParameter() => new ArgumentException(Strings.LengthAccessShouldHaveOneParameter);
+        internal static Exception LengthAccessShouldHaveOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.LengthAccessShouldHaveOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The length access lambda expression should have an 'Int32' return type."
         /// </summary>
-        internal static Exception LengthAccessShouldReturnInt32() => new ArgumentException(Strings.LengthAccessShouldReturnInt32);
+        internal static Exception LengthAccessShouldReturnInt32(string? paramName = null, int index = -1) => new ArgumentException(Strings.LengthAccessShouldReturnInt32, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The indexer access lambda expression should have two parameters."
         /// </summary>
-        internal static Exception IndexerAccessShouldHaveTwoParameters() => new ArgumentException(Strings.IndexerAccessShouldHaveTwoParameters);
+        internal static Exception IndexerAccessShouldHaveTwoParameters(string? paramName = null, int index = -1) => new ArgumentException(Strings.IndexerAccessShouldHaveTwoParameters, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The parameter of the length access lambda expression should match the collection type '{0}'."
         /// </summary>
-        internal static Exception LengthAccessParameterShouldHaveCollectionType(object? p0) => new ArgumentException(Strings.LengthAccessParameterShouldHaveCollectionType(p0));
+        internal static Exception LengthAccessParameterShouldHaveCollectionType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.LengthAccessParameterShouldHaveCollectionType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The first parameter of the indexer access lambda expression should match the collection type '{0}'."
         /// </summary>
-        internal static Exception IndexerAccessFirstParameterShouldHaveCollectionType(object? p0) => new ArgumentException(Strings.IndexerAccessFirstParameterShouldHaveCollectionType(p0));
+        internal static Exception IndexerAccessFirstParameterShouldHaveCollectionType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.IndexerAccessFirstParameterShouldHaveCollectionType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The second parameter of the indexer access lambda expression should be of type '{0}'."
         /// </summary>
-        internal static Exception IndexerAccessSecondParameterInvalidType(object? p0) => new ArgumentException(Strings.IndexerAccessSecondParameterInvalidType(p0));
+        internal static Exception IndexerAccessSecondParameterInvalidType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.IndexerAccessSecondParameterInvalidType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The non-nullable list pattern input type '{0}' should match collection type '{1}'."
         /// </summary>
-        internal static Exception ListPatternInputTypeInvalid(object? p0, object? p1) => new ArgumentException(Strings.ListPatternInputTypeInvalid(p0, p1));
+        internal static Exception ListPatternInputTypeInvalid(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ListPatternInputTypeInvalid(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A foreach statement requires at least one iteration variable."
         /// </summary>
-        internal static Exception ForEachNeedsOneOrMoreVariables() => new ArgumentException(Strings.ForEachNeedsOneOrMoreVariables);
+        internal static Exception ForEachNeedsOneOrMoreVariables(string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachNeedsOneOrMoreVariables, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The collection type '{0}' is not compatible with the type '{1}' of the collection expression."
         /// </summary>
-        internal static Exception ForEachCollectionTypeNotCompatibleWithCollectionExpression(object? p0, object? p1) => new ArgumentException(Strings.ForEachCollectionTypeNotCompatibleWithCollectionExpression(p0, p1));
+        internal static Exception ForEachCollectionTypeNotCompatibleWithCollectionExpression(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachCollectionTypeNotCompatibleWithCollectionExpression(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A foreach statement with a deconstruction step requires more than one iteration variable."
         /// </summary>
-        internal static Exception ForEachDeconstructionNotSupportedWithOneVariable() => new ArgumentException(Strings.ForEachDeconstructionNotSupportedWithOneVariable);
+        internal static Exception ForEachDeconstructionNotSupportedWithOneVariable(string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachDeconstructionNotSupportedWithOneVariable, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "A foreach statement with more than one iteration variables requires a deconstruction step."
         /// </summary>
-        internal static Exception ForEachDeconstructionRequiredForMultipleVariables() => new ArgumentException(Strings.ForEachDeconstructionRequiredForMultipleVariables);
+        internal static Exception ForEachDeconstructionRequiredForMultipleVariables(string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachDeconstructionRequiredForMultipleVariables, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The deconstruction lambda expression for a foreach statement should have one parameter."
         /// </summary>
-        internal static Exception ForEachDeconstructionShouldHaveOneParameter() => new ArgumentException(Strings.ForEachDeconstructionShouldHaveOneParameter);
+        internal static Exception ForEachDeconstructionShouldHaveOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachDeconstructionShouldHaveOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' returned by the deconstruction lambda expression is not a tuple type."
         /// </summary>
-        internal static Exception ForEachDeconstructionShouldReturnTuple(object? p0) => new ArgumentException(Strings.ForEachDeconstructionShouldReturnTuple(p0));
+        internal static Exception ForEachDeconstructionShouldReturnTuple(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachDeconstructionShouldReturnTuple(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The tuple type '{0}' returned by the deconstruction lambda expression has an arity '{1}' that does not match the number of iteration variables."
         /// </summary>
-        internal static Exception ForEachDeconstructionComponentMismatch(object? p0, object? p1) => new ArgumentException(Strings.ForEachDeconstructionComponentMismatch(p0, p1));
+        internal static Exception ForEachDeconstructionComponentMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachDeconstructionComponentMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' of the tuple component at index '{1}' returned by the deconstruction lambda cannot be assigned to variable '{2}' of type '{3}'."
         /// </summary>
-        internal static Exception ForEachDeconstructionComponentNotAssignableToVariable(object? p0, object? p1, object? p2, object? p3) => new ArgumentException(Strings.ForEachDeconstructionComponentNotAssignableToVariable(p0, p1, p2, p3));
+        internal static Exception ForEachDeconstructionComponentNotAssignableToVariable(object? p0, object? p1, object? p2, object? p3, string? paramName = null, int index = -1) => new ArgumentException(Strings.ForEachDeconstructionComponentNotAssignableToVariable(p0, p1, p2, p3), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The method '{1}' on type '{0}' is not an event accessor."
         /// </summary>
-        internal static Exception MethodNotEventAccessor(object? p0, object? p1) => new ArgumentException(Strings.MethodNotEventAccessor(p0, p1));
+        internal static Exception MethodNotEventAccessor(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.MethodNotEventAccessor(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The event '{0}' does not have an accessor."
         /// </summary>
-        internal static Exception EventDoesNotHaveAccessor(object? p0) => new ArgumentException(Strings.EventDoesNotHaveAccessor(p0));
+        internal static Exception EventDoesNotHaveAccessor(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.EventDoesNotHaveAccessor(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Only static events have an object expression."
         /// </summary>
-        internal static Exception OnlyStaticEventsHaveNullInstance() => new ArgumentException(Strings.OnlyStaticEventsHaveNullInstance);
+        internal static Exception OnlyStaticEventsHaveNullInstance(string? paramName = null, int index = -1) => new ArgumentException(Strings.OnlyStaticEventsHaveNullInstance, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The event '{0}' is not declared on type '{1}'."
         /// </summary>
-        internal static Exception EventNotDefinedForType(object? p0, object? p1) => new ArgumentException(Strings.EventNotDefinedForType(p0, p1));
+        internal static Exception EventNotDefinedForType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.EventNotDefinedForType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "An event accessor method should return void."
         /// </summary>
-        internal static Exception EventAccessorShouldReturnVoid() => new ArgumentException(Strings.EventAccessorShouldReturnVoid);
+        internal static Exception EventAccessorShouldReturnVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.EventAccessorShouldReturnVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "An event accessor method should have one parameter."
         /// </summary>
-        internal static Exception EventAccessorShouldHaveOneParameter() => new ArgumentException(Strings.EventAccessorShouldHaveOneParameter);
+        internal static Exception EventAccessorShouldHaveOneParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.EventAccessorShouldHaveOneParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The handler expression type '{0}' is not assignable to the event accessor parameter of type '{1}'."
         /// </summary>
-        internal static Exception EventAccessorParameterTypeMismatch(object? p0, object? p1) => new ArgumentException(Strings.EventAccessorParameterTypeMismatch(p0, p1));
+        internal static Exception EventAccessorParameterTypeMismatch(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.EventAccessorParameterTypeMismatch(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' is not a valid interpolated string handler type."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerType(object? p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerType(p0));
+        internal static Exception InvalidInterpolatedStringHandlerType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The construction lambda return type '{0}' is not assignable to interpolated string handler type '{1}'."
         /// </summary>
-        internal static Exception InterpolatedStringHandlerTypeNotAssignable(object? p0, object? p1) => new ArgumentException(Strings.InterpolatedStringHandlerTypeNotAssignable(p0, p1));
+        internal static Exception InterpolatedStringHandlerTypeNotAssignable(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InterpolatedStringHandlerTypeNotAssignable(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "An interpolated string handler construction should have at least two parameters for 'literalLength' and 'formattedCount'."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerConstructionArgCount() => new ArgumentException(Strings.InvalidInterpolatedStringHandlerConstructionArgCount);
+        internal static Exception InvalidInterpolatedStringHandlerConstructionArgCount(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerConstructionArgCount, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' parameter representing '{1}' should be of type Int32."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerInt32ParameterType(object? p0, object? p1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerInt32ParameterType(p0, p1));
+        internal static Exception InvalidInterpolatedStringHandlerInt32ParameterType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerInt32ParameterType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' is not a valid return type for an append call. Only 'void' and 'bool' are supported."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerAppendReturnType(object? p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendReturnType(p0));
+        internal static Exception InvalidInterpolatedStringHandlerAppendReturnType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendReturnType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The return types of the append calls is inconsistent."
         /// </summary>
-        internal static Exception InconsistentInterpolatedStringHandlerAppendReturnType() => new ArgumentException(Strings.InconsistentInterpolatedStringHandlerAppendReturnType);
+        internal static Exception InconsistentInterpolatedStringHandlerAppendReturnType(string? paramName = null, int index = -1) => new ArgumentException(Strings.InconsistentInterpolatedStringHandlerAppendReturnType, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "An interpolated string handler append call should have at least one parameter for the handler instance."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerAppendArgCount() => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendArgCount);
+        internal static Exception InvalidInterpolatedStringHandlerAppendArgCount(string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendArgCount, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' of the first parameter of the interpolated string handler append call is not compatible with the interpolated string handler type '{1}'."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerAppendFirstArgType(object? p0, object? p1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendFirstArgType(p0, p1));
+        internal static Exception InvalidInterpolatedStringHandlerAppendFirstArgType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerAppendFirstArgType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' is not valid for an interpolated string handler conversion."
         /// </summary>
-        internal static Exception InvalidStringHandlerConversionOperandType(object? p0) => new ArgumentException(Strings.InvalidStringHandlerConversionOperandType(p0));
+        internal static Exception InvalidStringHandlerConversionOperandType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidStringHandlerConversionOperandType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The node of type '{0}' is not valid as the operand for an interpolated string handler conversion."
         /// </summary>
-        internal static Exception InvalidStringHandlerConversionOperandNodeType(object? p0) => new ArgumentException(Strings.InvalidStringHandlerConversionOperandNodeType(p0));
+        internal static Exception InvalidStringHandlerConversionOperandNodeType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidStringHandlerConversionOperandNodeType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The argument index '{0}' is not valid."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerArgumentIndex(object? p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerArgumentIndex(p0));
+        internal static Exception InvalidInterpolatedStringHandlerArgumentIndex(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerArgumentIndex(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of parameters '{0}' for the interpolated string handler construction is insufficient for an argument count of '{1}' (need at least 'literalLength' and 'formattedCount')."
         /// </summary>
-        internal static Exception NotEnoughInterpolatedStringHandlerConstructionParameters(object? p0, object? p1) => new ArgumentException(Strings.NotEnoughInterpolatedStringHandlerConstructionParameters(p0, p1));
+        internal static Exception NotEnoughInterpolatedStringHandlerConstructionParameters(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.NotEnoughInterpolatedStringHandlerConstructionParameters(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of parameters '{0}' for the interpolated string handler construction is too large for an argument count of '{1}' (can have at most one extra 'out bool' parameter)."
         /// </summary>
-        internal static Exception TooManyInterpolatedStringHandlerConstructionParameters(object? p0, object? p1) => new ArgumentException(Strings.TooManyInterpolatedStringHandlerConstructionParameters(p0, p1));
+        internal static Exception TooManyInterpolatedStringHandlerConstructionParameters(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.TooManyInterpolatedStringHandlerConstructionParameters(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The last parameter of type '{0}' for the interpolated string handler construction is not valid for an 'out bool shouldAppend' trailing parameter."
         /// </summary>
-        internal static Exception InvalidInterpolatedStringHandlerConstructionOutBoolParameter(object? p0) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerConstructionOutBoolParameter(p0));
+        internal static Exception InvalidInterpolatedStringHandlerConstructionOutBoolParameter(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidInterpolatedStringHandlerConstructionOutBoolParameter(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The append lambda expression's first parameter '{0}' denoting the interpolated string handler should be passed by reference."
         /// </summary>
-        internal static Exception AppendLambdaShouldHaveFirstByRefParameter(object? p0) => new ArgumentException(Strings.AppendLambdaShouldHaveFirstByRefParameter(p0));
+        internal static Exception AppendLambdaShouldHaveFirstByRefParameter(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendLambdaShouldHaveFirstByRefParameter(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendLiteral' operation should take 2 parameters."
         /// </summary>
-        internal static Exception AppendLiteralLambdaShouldHaveTwoParameters() => new ArgumentException(Strings.AppendLiteralLambdaShouldHaveTwoParameters);
+        internal static Exception AppendLiteralLambdaShouldHaveTwoParameters(string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendLiteralLambdaShouldHaveTwoParameters, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendLiteral' operation has a second parameter of type '{0}' which is invalid and should be 'string'."
         /// </summary>
-        internal static Exception AppendLiteralLambdaShouldTakeStringParameter(object? p0) => new ArgumentException(Strings.AppendLiteralLambdaShouldTakeStringParameter(p0));
+        internal static Exception AppendLiteralLambdaShouldTakeStringParameter(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendLiteralLambdaShouldTakeStringParameter(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation should take 2, 3, or 4 parameters."
         /// </summary>
-        internal static Exception AppendFormattedLambdaInvalidParameterCount() => new ArgumentException(Strings.AppendFormattedLambdaInvalidParameterCount);
+        internal static Exception AppendFormattedLambdaInvalidParameterCount(string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendFormattedLambdaInvalidParameterCount, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation should have a second parameter denoting a non-void value."
         /// </summary>
-        internal static Exception AppendFormattedLambdaSecondParameterShouldBeNonVoid() => new ArgumentException(Strings.AppendFormattedLambdaSecondParameterShouldBeNonVoid);
+        internal static Exception AppendFormattedLambdaSecondParameterShouldBeNonVoid(string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendFormattedLambdaSecondParameterShouldBeNonVoid, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment or 'string' to denote a format."
         /// </summary>
-        internal static Exception AppendFormattedLambdaThirdParameterShouldBeIntOrString(object? p0) => new ArgumentException(Strings.AppendFormattedLambdaThirdParameterShouldBeIntOrString(p0));
+        internal static Exception AppendFormattedLambdaThirdParameterShouldBeIntOrString(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendFormattedLambdaThirdParameterShouldBeIntOrString(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation has a third parameter of type '{0}' and should be 'int' to denote an alignment."
         /// </summary>
-        internal static Exception AppendFormattedLambdaThirdParameterShouldBeInt(object? p0) => new ArgumentException(Strings.AppendFormattedLambdaThirdParameterShouldBeInt(p0));
+        internal static Exception AppendFormattedLambdaThirdParameterShouldBeInt(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendFormattedLambdaThirdParameterShouldBeInt(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The lambda expression representing the 'AppendFormatted' operation has a fourth parameter of type '{0}' and should be 'string' to denote a format."
         /// </summary>
-        internal static Exception AppendFormattedLambdaFourthParameterShouldBeString(object? p0) => new ArgumentException(Strings.AppendFormattedLambdaFourthParameterShouldBeString(p0));
+        internal static Exception AppendFormattedLambdaFourthParameterShouldBeString(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.AppendFormattedLambdaFourthParameterShouldBeString(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of append operations '{0}' does not match the number of interpolations '{1}' in the interpolated string operand."
         /// </summary>
-        internal static Exception IncorrectNumberOfAppendsForInterpolatedString(object? p0, object? p1) => new ArgumentException(Strings.IncorrectNumberOfAppendsForInterpolatedString(p0, p1));
+        internal static Exception IncorrectNumberOfAppendsForInterpolatedString(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.IncorrectNumberOfAppendsForInterpolatedString(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The number of parameters '{0}' for the 'AppendFormatted' operation does not match the expected number '{1}' for the interpolated string's interpolation."
         /// </summary>
-        internal static Exception InvalidAppendFormattedParameterCount(object? p0, object? p1) => new ArgumentException(Strings.InvalidAppendFormattedParameterCount(p0, p1));
+        internal static Exception InvalidAppendFormattedParameterCount(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidAppendFormattedParameterCount(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' of the 'value' parameter for the 'AppendFormatted' operation is not compatible with the expected type '{1}' for the interpolated string's interpolation value."
         /// </summary>
-        internal static Exception InvalidAppendFormattedValueType(object? p0, object? p1) => new ArgumentException(Strings.InvalidAppendFormattedValueType(p0, p1));
+        internal static Exception InvalidAppendFormattedValueType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidAppendFormattedValueType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' is invalid for the alignment parameter and should be 'int'."
         /// </summary>
-        internal static Exception InvalidAlignmentParameterType(object? p0) => new ArgumentException(Strings.InvalidAlignmentParameterType(p0));
+        internal static Exception InvalidAlignmentParameterType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidAlignmentParameterType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' is invalid for the format parameter and should be 'string'."
         /// </summary>
-        internal static Exception InvalidFormatParameterType(object? p0) => new ArgumentException(Strings.InvalidFormatParameterType(p0));
+        internal static Exception InvalidFormatParameterType(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidFormatParameterType(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'getEnumerator' lambda should have a single parameter."
         /// </summary>
-        internal static Exception GetEnumeratorShouldHaveSingleParameter() => new ArgumentException(Strings.GetEnumeratorShouldHaveSingleParameter);
+        internal static Exception GetEnumeratorShouldHaveSingleParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.GetEnumeratorShouldHaveSingleParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' of the first parameter of the 'getEnumerator' lambda is not compatible with the collection type '{1}'."
         /// </summary>
-        internal static Exception InvalidGetEnumeratorFirstArgType(object? p0, object? p1) => new ArgumentException(Strings.InvalidGetEnumeratorFirstArgType(p0, p1));
+        internal static Exception InvalidGetEnumeratorFirstArgType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidGetEnumeratorFirstArgType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'moveNext' lambda should have a single parameter."
         /// </summary>
-        internal static Exception MoveNextShouldHaveSingleParameter() => new ArgumentException(Strings.MoveNextShouldHaveSingleParameter);
+        internal static Exception MoveNextShouldHaveSingleParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.MoveNextShouldHaveSingleParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' of the first parameter of the 'moveNext' lambda is not compatible with the enumerator type '{1}'."
         /// </summary>
-        internal static Exception InvalidMoveNextFirstArgType(object? p0, object? p1) => new ArgumentException(Strings.InvalidMoveNextFirstArgType(p0, p1));
+        internal static Exception InvalidMoveNextFirstArgType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidMoveNextFirstArgType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'moveNext' lambda should return 'bool'."
         /// </summary>
-        internal static Exception MoveNextShouldHaveBooleanReturnType() => new ArgumentException(Strings.MoveNextShouldHaveBooleanReturnType);
+        internal static Exception MoveNextShouldHaveBooleanReturnType(string? paramName = null, int index = -1) => new ArgumentException(Strings.MoveNextShouldHaveBooleanReturnType, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' property should not have indexer parameters."
         /// </summary>
-        internal static Exception PropertyShouldNotBeIndexer(object? p0) => new ArgumentException(Strings.PropertyShouldNotBeIndexer(p0));
+        internal static Exception PropertyShouldNotBeIndexer(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyShouldNotBeIndexer(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}' property should not have a 'void' type."
         /// </summary>
-        internal static Exception PropertyShouldNotReturnVoid(object? p0) => new ArgumentException(Strings.PropertyShouldNotReturnVoid(p0));
+        internal static Exception PropertyShouldNotReturnVoid(object? p0, string? paramName = null, int index = -1) => new ArgumentException(Strings.PropertyShouldNotReturnVoid(p0), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The 'currentConversion' lambda should have a single parameter."
         /// </summary>
-        internal static Exception CurrentConversionShouldHaveSingleParameter() => new ArgumentException(Strings.CurrentConversionShouldHaveSingleParameter);
+        internal static Exception CurrentConversionShouldHaveSingleParameter(string? paramName = null, int index = -1) => new ArgumentException(Strings.CurrentConversionShouldHaveSingleParameter, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The type '{0}' of the first parameter of the 'currentConversion' lambda is not compatible with the collection type '{1}'."
         /// </summary>
-        internal static Exception InvalidCurrentConversionFirstArgType(object? p0, object? p1) => new ArgumentException(Strings.InvalidCurrentConversionFirstArgType(p0, p1));
+        internal static Exception InvalidCurrentConversionFirstArgType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidCurrentConversionFirstArgType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The element type '{0}' is not compatible with the type '{1}' returned by the 'Current' property."
         /// </summary>
-        internal static Exception InvalidCurrentReturnType(object? p0, object? p1) => new ArgumentException(Strings.InvalidCurrentReturnType(p0, p1));
+        internal static Exception InvalidCurrentReturnType(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.InvalidCurrentReturnType(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Asynchronous enumeration is not supported for array types."
         /// </summary>
-        internal static Exception AsyncEnumerationNotSupportedForArray() => new ArgumentException(Strings.AsyncEnumerationNotSupportedForArray);
+        internal static Exception AsyncEnumerationNotSupportedForArray(string? paramName = null, int index = -1) => new ArgumentException(Strings.AsyncEnumerationNotSupportedForArray, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "Asynchronous enumeration is not supported on type 'String'."
         /// </summary>
-        internal static Exception AsyncEnumerationNotSupportedForString() => new ArgumentException(Strings.AsyncEnumerationNotSupportedForString);
+        internal static Exception AsyncEnumerationNotSupportedForString(string? paramName = null, int index = -1) => new ArgumentException(Strings.AsyncEnumerationNotSupportedForString, GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "The '{0}.{1}' method is ambiguous."
         /// </summary>
-        internal static Exception AmbiguousEnumeratorMethod(object? p0, object? p1) => new ArgumentException(Strings.AmbiguousEnumeratorMethod(p0, p1));
+        internal static Exception AmbiguousEnumeratorMethod(object? p0, object? p1, string? paramName = null, int index = -1) => new ArgumentException(Strings.AmbiguousEnumeratorMethod(p0, p1), GetParamName(paramName, index));
 
         /// <summary>
         /// ArgumentException with message like "List pattern should have a collection type or a variable."
         /// </summary>
-        internal static Exception ListPatternShouldHaveCollectionTypeOrVariable() => new ArgumentException(Strings.ListPatternShouldHaveCollectionTypeOrVariable);
+        internal static Exception ListPatternShouldHaveCollectionTypeOrVariable(string? paramName = null, int index = -1) => new ArgumentException(Strings.ListPatternShouldHaveCollectionTypeOrVariable, GetParamName(paramName, index));
 
+        private static string? GetParamName(string? paramName, int index) => index >= 0 ? $"{paramName}[{index}]" : paramName;
     }
 
     /// <summary>

@@ -225,7 +225,7 @@ namespace Microsoft.CSharp.Expressions
         {
             if (value != null)
             {
-                CheckValidSwitchType(value.GetType());
+                CheckValidSwitchType(value.GetType(), nameof(value));
             }
 
             return new GotoCaseCSharpStatement(value, target);

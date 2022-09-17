@@ -202,7 +202,7 @@ namespace Microsoft.CSharp.Expressions
                 ValidateType(type, nameof(type));
 
                 if (type == typeof(void))
-                    throw Error.SwitchExpressionTypeShouldNotBeVoid();
+                    throw Error.SwitchExpressionTypeShouldNotBeVoid(nameof(type));
 
                 customType = true;
             }
@@ -218,12 +218,12 @@ namespace Microsoft.CSharp.Expressions
                 var arm = armsCollection[i];
 
                 if (!AreReferenceAssignable(arm.Pattern.InputType, expression.Type))
-                    throw Error.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(i, arm.Pattern.InputType, expression.Type);
+                    throw Error.SwitchExpressionArmPatternInputNotCompatibleWithSwitchExpressionInput(i, arm.Pattern.InputType, expression.Type, nameof(arms), i);
 
                 if (customType)
                 {
                     if (!AreReferenceAssignable(type, arm.Value.Type))
-                        throw Error.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(i, arm.Value.Type, type);
+                        throw Error.SwitchExpressionArmValueNotCompatibleWithSwitchExpressionResult(i, arm.Value.Type, type, nameof(arms), i);
                 }
                 else
                 {

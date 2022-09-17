@@ -63,7 +63,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(indexes, nameof(indexes));
 
             if (indexes.Length != Bounds.Count)
-                throw Error.RankMismatch();
+                throw Error.RankMismatch(nameof(indexes));
 
             var index = 0;
             for (var i = 0; i < indexes.Length; i++)
@@ -72,7 +72,7 @@ namespace Microsoft.CSharp.Expressions
                 var bound = Bounds[i];
 
                 if (idx < 0 || idx >= bound)
-                    throw Error.IndexOutOfRange();
+                    throw Error.IndexOutOfRange(nameof(indexes), i);
 
                 index = index * bound + idx;
             }
@@ -248,10 +248,12 @@ namespace Microsoft.CSharp.Expressions
 
             var length = 1;
 
-            foreach (var bound in boundsList)
+            for (int i = 0, n = boundsList.Count; i < n; i++)
             {
+                var bound = boundsList[i];
+
                 if (bound < 0)
-                    throw Error.BoundCannotBeLessThanZero();
+                    throw Error.BoundCannotBeLessThanZero(nameof(bounds), i);
 
                 checked
                 {
@@ -262,7 +264,7 @@ namespace Microsoft.CSharp.Expressions
             var initializerList = initializers.ToReadOnly();
 
             if (initializerList.Count != length)
-                throw Error.ArrayBoundsElementCountMismatch();
+                throw Error.ArrayBoundsElementCountMismatch(nameof(initializers));
 
             var newList = default(Expression[]);
             for (int i = 0, n = initializerList.Count; i < n; i++)

@@ -49,7 +49,7 @@ namespace Microsoft.CSharp.Expressions
         public static TupleFieldInfo TupleFieldInfo(string? fieldName, int fieldIndex, Type type)
         {
             if (fieldIndex < 0)
-                throw Error.TupleFieldIndexMustBePositive();
+                throw Error.TupleFieldIndexMustBePositive(nameof(fieldIndex));
 
             RequiresNotNull(type, nameof(type));
             ValidateType(type, nameof(type));

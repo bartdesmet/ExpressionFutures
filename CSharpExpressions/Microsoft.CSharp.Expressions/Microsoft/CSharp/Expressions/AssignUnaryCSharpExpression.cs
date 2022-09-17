@@ -115,65 +115,30 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        private bool IsPrefix
-        {
-            get
-            {
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PreIncrementAssign:
-                    case CSharpExpressionType.PreDecrementAssign:
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                        return true;
-                }
+        private bool IsPrefix => CSharpNodeType is
+            CSharpExpressionType.PreIncrementAssign or
+            CSharpExpressionType.PreDecrementAssign or
+            CSharpExpressionType.PreIncrementAssignChecked or
+            CSharpExpressionType.PreDecrementAssignChecked;
 
-                return false;
-            }
-        }
-
-        private bool IsCheckedUnary
-        {
-            get
-            {
-                switch (CSharpNodeType)
-                {
-                    case CSharpExpressionType.PreIncrementAssignChecked:
-                    case CSharpExpressionType.PreDecrementAssignChecked:
-                    case CSharpExpressionType.PostIncrementAssignChecked:
-                    case CSharpExpressionType.PostDecrementAssignChecked:
-                        return true;
-                }
-
-                return false;
-            }
-        }
+        private bool IsCheckedUnary => CSharpNodeType is
+            CSharpExpressionType.PreIncrementAssignChecked or
+            CSharpExpressionType.PreDecrementAssignChecked or
+            CSharpExpressionType.PostIncrementAssignChecked or
+            CSharpExpressionType.PostDecrementAssignChecked;
 
         private Expression FunctionalOp(Expression operand)
         {
             var one = GetConstantOne(operand.Type);
 
-            switch (CSharpNodeType)
+            return CSharpNodeType switch
             {
-                case CSharpExpressionType.PreIncrementAssignChecked:
-                case CSharpExpressionType.PostIncrementAssignChecked:
-                    return Expression.AddChecked(operand, one);
-
-                case CSharpExpressionType.PreDecrementAssignChecked:
-                case CSharpExpressionType.PostDecrementAssignChecked:
-                    return Expression.SubtractChecked(operand, one);
-
-                case CSharpExpressionType.PreIncrementAssign:
-                case CSharpExpressionType.PostIncrementAssign:
-                    return Expression.Add(operand, one);
-
-                case CSharpExpressionType.PreDecrementAssign:
-                case CSharpExpressionType.PostDecrementAssign:
-                    return Expression.Subtract(operand, one);
-
-                default:
-                    throw ContractUtils.Unreachable;
-            }
+                CSharpExpressionType.PreIncrementAssignChecked or CSharpExpressionType.PostIncrementAssignChecked => Expression.AddChecked(operand, one),
+                CSharpExpressionType.PreDecrementAssignChecked or CSharpExpressionType.PostDecrementAssignChecked => Expression.SubtractChecked(operand, one),
+                CSharpExpressionType.PreIncrementAssign or CSharpExpressionType.PostIncrementAssign => Expression.Add(operand, one),
+                CSharpExpressionType.PreDecrementAssign or CSharpExpressionType.PostDecrementAssign => Expression.Subtract(operand, one),
+                _ => throw ContractUtils.Unreachable,
+            };
         }
 
         private static Expression GetConstantOne(Type type) =>
@@ -222,26 +187,14 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.InvalidUnaryAssignmentWithOperands(unaryType, operand.Type);
         }
 
-        private static UnaryExpression FunctionalOp(CSharpExpressionType unaryType, Expression operand, MethodInfo? method)
+        private static UnaryExpression FunctionalOp(CSharpExpressionType unaryType, Expression operand, MethodInfo? method) => unaryType switch
         {
-            switch (unaryType)
-            {
-                case CSharpExpressionType.PreDecrementAssign:
-                case CSharpExpressionType.PreDecrementAssignChecked:
-                    return Expression.PreDecrementAssign(operand, method);
-                case CSharpExpressionType.PreIncrementAssign:
-                case CSharpExpressionType.PreIncrementAssignChecked:
-                    return Expression.PreIncrementAssign(operand, method);
-                case CSharpExpressionType.PostDecrementAssign:
-                case CSharpExpressionType.PostDecrementAssignChecked:
-                    return Expression.PostDecrementAssign(operand, method);
-                case CSharpExpressionType.PostIncrementAssign:
-                case CSharpExpressionType.PostIncrementAssignChecked:
-                    return Expression.PostIncrementAssign(operand, method);
-            }
-
-            throw UnhandledUnary(unaryType);
-        }
+            CSharpExpressionType.PreDecrementAssign or CSharpExpressionType.PreDecrementAssignChecked => Expression.PreDecrementAssign(operand, method),
+            CSharpExpressionType.PreIncrementAssign or CSharpExpressionType.PreIncrementAssignChecked => Expression.PreIncrementAssign(operand, method),
+            CSharpExpressionType.PostDecrementAssign or CSharpExpressionType.PostDecrementAssignChecked => Expression.PostDecrementAssign(operand, method),
+            CSharpExpressionType.PostIncrementAssign or CSharpExpressionType.PostIncrementAssignChecked => Expression.PostIncrementAssign(operand, method),
+            _ => throw UnhandledUnary(unaryType),
+        };
 
         internal sealed class Custom : AssignUnaryCSharpExpression
         {

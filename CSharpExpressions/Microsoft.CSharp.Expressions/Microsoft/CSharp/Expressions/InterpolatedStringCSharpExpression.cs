@@ -296,7 +296,7 @@ namespace Microsoft.CSharp.Expressions
                 return InterpolatedString(interpolations);
 
             if (type != typeof(FormattableString) && type != typeof(IFormattable))
-                throw Error.InvalidInterpolatedStringType(type);
+                throw Error.InvalidInterpolatedStringType(type, nameof(type));
 
             var interpolationsList = interpolations.ToReadOnly();
             

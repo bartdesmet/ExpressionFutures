@@ -241,29 +241,33 @@ namespace Microsoft.CSharp.Expressions
                 throw ArgumentCannotBeOfTypeVoid(nameof(switchValue));
 
             if (breakLabel.Type != typeof(void))
-                throw Error.SwitchBreakLabelShouldBeVoid();
+                throw Error.SwitchBreakLabelShouldBeVoid(nameof(breakLabel));
 
 #pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var sectionsList = sections.ToReadOnly();
 
-            if (sectionsList.Count > 0)
+            var n = sectionsList.Count;
+
+            if (n > 0)
             {
                 var foundDefaultLabel = false;
                 var allLabels = new HashSet<LabelTarget>();
 
-                foreach (var section in sectionsList)
+                for (var i = 0; i < n; i++)
                 {
+                    var section = sectionsList[i];
+
                     RequiresNotNull(section, nameof(sections));
 
                     foreach (var label in section.Labels)
                     {
                         if (label.Label != null && !allLabels.Add(label.Label))
-                            throw Error.DuplicateLabelInSwitchStatement(label.Label);
+                            throw Error.DuplicateLabelInSwitchStatement(label.Label, nameof(sections), i);
 
                         if (label.IsDefault)
                         {
                             if (foundDefaultLabel)
-                                throw Error.FoundMoreThanOneDefaultLabel();
+                                throw Error.FoundMoreThanOneDefaultLabel(nameof(sections), i);
 
                             foundDefaultLabel = true;
                         }
@@ -274,7 +278,7 @@ namespace Microsoft.CSharp.Expressions
                     var inputType = section.Labels[0].Pattern.InputType;
 
                     if (!AreReferenceAssignable(inputType, switchValue.Type))
-                        throw Error.SwitchValueTypeDoesNotMatchPatternInputType(inputType, switchValue.Type);
+                        throw Error.SwitchValueTypeDoesNotMatchPatternInputType(inputType, switchValue.Type, nameof(sections), i);
                 }
             }
 #pragma warning restore CA1062 // Validate arguments of public methods

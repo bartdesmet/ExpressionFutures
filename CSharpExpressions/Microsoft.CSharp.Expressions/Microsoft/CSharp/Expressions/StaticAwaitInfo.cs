@@ -103,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
             var getAwaiterMethod = GetGetAwaiter(awaitableType);
 
             if (getAwaiterMethod == null)
-                throw Error.AwaitableTypeShouldHaveGetAwaiterMethod(awaitableType);
+                throw Error.AwaitableTypeShouldHaveGetAwaiterMethod(awaitableType, nameof(awaitableType));
 
             return AwaitInfo(awaitableType, getAwaiterMethod);
         }
@@ -155,7 +155,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(getAwaiter, nameof(getAwaiter));
 
             if (getAwaiter.Parameters.Count != 1)
-                throw Error.GetAwaiterExpressionOneParameter();
+                throw Error.GetAwaiterExpressionOneParameter(nameof(getAwaiter));
 
             //
             // Resolve awaiter members if not specified.
@@ -165,7 +165,7 @@ namespace Microsoft.CSharp.Expressions
 
             ResolveAwaiterInfo(awaiterType, ref isCompleted, ref getResult);
 
-            ValidateAwaiterType(awaiterType, isCompleted, getResult);
+            ValidateAwaiterType(awaiterType, isCompleted, getResult, nameof(getAwaiter));
 
             //
             // Validate we can construct the IsCompleted and GetResult nodes.
@@ -205,49 +205,49 @@ namespace Microsoft.CSharp.Expressions
             if (getAwaiterMethod.IsStatic)
             {
                 if (getAwaiterParams.Length != 1)
-                    throw Error.GetAwaiterShouldTakeZeroParameters();
+                    throw Error.GetAwaiterShouldTakeZeroParameters(nameof(getAwaiterMethod));
 
                 var firstParam = getAwaiterParams[0];
 
                 if (!TypeUtils.AreReferenceAssignable(firstParam.ParameterType, operandType))
-                    throw Error.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType);
+                    throw Error.ExpressionTypeDoesNotMatchParameter(operandType, firstParam.ParameterType, nameof(getAwaiterMethod));
             }
             else
             {
                 if (getAwaiterParams.Length != 0)
-                    throw Error.GetAwaiterShouldTakeZeroParameters();
+                    throw Error.GetAwaiterShouldTakeZeroParameters(nameof(getAwaiterMethod));
 
                 if (getAwaiterMethod.IsGenericMethod)
-                    throw Error.GetAwaiterShouldNotBeGeneric();
+                    throw Error.GetAwaiterShouldNotBeGeneric(nameof(getAwaiterMethod));
             }
 
             var returnType = getAwaiterMethod.ReturnType;
 
             if (returnType == typeof(void) || returnType.IsByRef || returnType.IsPointer)
-                throw Error.GetAwaiterShouldReturnAwaiterType();
+                throw Error.GetAwaiterShouldReturnAwaiterType(nameof(getAwaiterMethod));
         }
 
-        private static void ValidateAwaiterType(Type awaiterType, PropertyInfo? isCompleted, MethodInfo? getResult)
+        private static void ValidateAwaiterType(Type awaiterType, PropertyInfo? isCompleted, MethodInfo? getResult, string paramName)
         {
             if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
-                throw Error.AwaiterTypeShouldImplementINotifyCompletion(awaiterType);
+                throw Error.AwaiterTypeShouldImplementINotifyCompletion(awaiterType, paramName);
 
             if (isCompleted == null || isCompleted.GetMethod == null)
-                throw Error.AwaiterTypeShouldHaveIsCompletedProperty(awaiterType);
+                throw Error.AwaiterTypeShouldHaveIsCompletedProperty(awaiterType, paramName);
 
             if (isCompleted.PropertyType != typeof(bool))
-                throw Error.AwaiterIsCompletedShouldReturnBool(awaiterType);
+                throw Error.AwaiterIsCompletedShouldReturnBool(awaiterType, paramName);
 
             if (isCompleted.GetIndexParameters().Length != 0)
-                throw Error.AwaiterIsCompletedShouldNotBeIndexer(awaiterType);
+                throw Error.AwaiterIsCompletedShouldNotBeIndexer(awaiterType, paramName);
 
             if (getResult == null || getResult.IsGenericMethodDefinition)
-                throw Error.AwaiterTypeShouldHaveGetResultMethod(awaiterType);
+                throw Error.AwaiterTypeShouldHaveGetResultMethod(awaiterType, paramName);
 
             var returnType = getResult.ReturnType;
 
             if (returnType.IsByRef || returnType.IsPointer)
-                throw Error.AwaiterGetResultTypeInvalid(awaiterType);
+                throw Error.AwaiterGetResultTypeInvalid(awaiterType, paramName);
         }
 
         private static LambdaExpression GetGetAwaiterExpression(Type awaitableType, MethodInfo getAwaiterMethod)

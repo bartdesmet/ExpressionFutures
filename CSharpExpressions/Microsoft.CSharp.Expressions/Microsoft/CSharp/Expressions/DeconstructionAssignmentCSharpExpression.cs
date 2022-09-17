@@ -206,7 +206,7 @@ namespace Microsoft.CSharp.Expressions
                     {
                         effects.assignments.Add(refLocal.Assign(resultPart));
                     }
-                    else if (!(leftTarget is DiscardCSharpExpression))
+                    else if (leftTarget is not DiscardCSharpExpression)
                     {
                         effects.assignments.Add(Expression.Assign(leftTarget, resultPart));
                     }
@@ -473,7 +473,7 @@ namespace Microsoft.CSharp.Expressions
                 ValidateType(type, nameof(type));
 
                 if (!AreEquivalent(type, resultType))
-                    throw Error.DeconstructingAssignmentTypeMismatch(resultType, type);
+                    throw Error.DeconstructingAssignmentTypeMismatch(resultType, type, nameof(type));
             }
             else
             {

@@ -115,13 +115,13 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCanRead(whenClause, nameof(whenClause));
 
                 if (whenClause.Type != typeof(bool))
-                    throw Error.WhenClauseShouldBeBoolean();
+                    throw Error.WhenClauseShouldBeBoolean(nameof(whenClause));
             }
 
             RequiresCanRead(value, nameof(value));
 
             if (value.Type == typeof(void))
-                throw Error.SwitchExpressionArmValueShouldNotBeVoid();
+                throw Error.SwitchExpressionArmValueShouldNotBeVoid(nameof(value));
 
             return new SwitchExpressionArm(variablesList, pattern, whenClause, value);
         }

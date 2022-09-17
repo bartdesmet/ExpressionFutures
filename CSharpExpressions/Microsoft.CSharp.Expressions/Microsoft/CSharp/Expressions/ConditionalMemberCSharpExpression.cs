@@ -105,7 +105,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(field, nameof(field));
 
             if (field.IsStatic)
-                throw Error.ConditionalAccessRequiresNonStaticMember();
+                throw Error.ConditionalAccessRequiresNonStaticMember(nameof(field));
 
             var type = expression.Type.GetNonNullReceiverType();
 
@@ -152,14 +152,14 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(property, nameof(property));
 
             if (!property.CanRead)
-                throw Error.ConditionalAccessRequiresReadableProperty();
+                throw Error.ConditionalAccessRequiresReadableProperty(nameof(property));
 
             if (property.GetIndexParameters().Length != 0)
-                throw Error.ConditionalAccessRequiresReadableProperty();
+                throw Error.ConditionalAccessRequiresReadableProperty(nameof(property));
 
             var getMethod = property.GetGetMethod(nonPublic: true)!; // NB: CanRead is true.
             if (getMethod.IsStatic)
-                throw Error.ConditionalAccessRequiresNonStaticMember();
+                throw Error.ConditionalAccessRequiresNonStaticMember(nameof(property));
 
             var type = expression.Type.GetNonNullReceiverType();
 

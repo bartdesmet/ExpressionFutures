@@ -70,7 +70,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(type, nameof(type));
 
             if (type == typeof(void) || type.IsByRef || type.IsNullableType())
-                throw Error.InvalidConditionalReceiverType(type);
+                throw Error.InvalidConditionalReceiverType(type, nameof(type));
 
             return new ConditionalReceiver(type);
         }

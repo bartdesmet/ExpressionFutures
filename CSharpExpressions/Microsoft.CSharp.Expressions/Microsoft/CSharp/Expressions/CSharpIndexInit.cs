@@ -86,7 +86,7 @@ namespace Microsoft.CSharp.Expressions
             var setter = indexer.GetSetMethod(nonPublic: true);
 
             if (setter == null)
-                throw Error.PropertyDoesNotHaveSetAccessor(indexer);
+                throw Error.PropertyDoesNotHaveSetAccessor(indexer, nameof(indexer));
 
             var declaringType = indexer.DeclaringType;
             RequiresNotNull(declaringType, nameof(indexer));

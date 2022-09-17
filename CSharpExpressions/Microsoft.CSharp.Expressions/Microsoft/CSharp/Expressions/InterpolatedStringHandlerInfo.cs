@@ -121,16 +121,16 @@ namespace Microsoft.CSharp.Expressions
             ValidateType(type, nameof(type));
 
             if (!type.IsDefined(typeof(InterpolatedStringHandlerAttribute), inherit: false))
-                throw Error.InvalidInterpolatedStringHandlerType(type);
+                throw Error.InvalidInterpolatedStringHandlerType(type, nameof(type));
 
             RequiresCanRead(construction, nameof(construction));
 
-            CheckConstructionLambda(construction.Body, construction.Parameters);
+            CheckConstructionLambda(construction.Body, nameof(construction), construction.Parameters, nameof(construction));
 
             var builderType = construction.ReturnType;
 
             if (!AreReferenceAssignable(type, builderType)) // REVIEW: Equivalent or assignable?
-                throw Error.InterpolatedStringHandlerTypeNotAssignable(builderType, type);
+                throw Error.InterpolatedStringHandlerTypeNotAssignable(builderType, type, nameof(type));
 
 #pragma warning disable CA1062 // Validate arguments of public methods. (See bug https://github.com/dotnet/roslyn-analyzers/issues/6163)
             var argumentIndicesCollection = argumentIndices.ToReadOnly();
@@ -138,7 +138,7 @@ namespace Microsoft.CSharp.Expressions
             foreach (var i in argumentIndicesCollection)
             {
                 if (i < -1)
-                    throw Error.InvalidInterpolatedStringHandlerArgumentIndex(i);
+                    throw Error.InvalidInterpolatedStringHandlerArgumentIndex(i, nameof(argumentIndices));
             }
 #pragma warning restore CA1062 // Validate arguments of public methods
 
@@ -146,17 +146,17 @@ namespace Microsoft.CSharp.Expressions
 
             if (n < argumentIndicesCollection.Count + 2)
             {
-                throw Error.NotEnoughInterpolatedStringHandlerConstructionParameters(n, argumentIndicesCollection.Count);
+                throw Error.NotEnoughInterpolatedStringHandlerConstructionParameters(n, argumentIndicesCollection.Count, nameof(argumentIndices));
             }
             else if (n == argumentIndicesCollection.Count + 3)
             {
                 var lastParam = construction.Parameters[n - 1];
                 if (lastParam.Type != typeof(bool) || !lastParam.IsByRef)
-                    throw Error.InvalidInterpolatedStringHandlerConstructionOutBoolParameter(lastParam.Type);
+                    throw Error.InvalidInterpolatedStringHandlerConstructionOutBoolParameter(lastParam.Type, nameof(construction));
             }
             else if (n > argumentIndicesCollection.Count + 3)
             {
-                throw Error.TooManyInterpolatedStringHandlerConstructionParameters(n, argumentIndicesCollection.Count);
+                throw Error.TooManyInterpolatedStringHandlerConstructionParameters(n, argumentIndicesCollection.Count, nameof(argumentIndices));
             }
 
             var appendCollection = append.ToReadOnly();
@@ -167,25 +167,29 @@ namespace Microsoft.CSharp.Expressions
             var appendReturnType = GetAppendType(appendCollection[0]);
 
             if (appendReturnType != typeof(bool) && appendReturnType != typeof(void))
-                throw Error.InvalidInterpolatedStringHandlerAppendReturnType(appendReturnType);
+                throw Error.InvalidInterpolatedStringHandlerAppendReturnType(appendReturnType, nameof(append));
 
-            foreach (var appendLambda in appendCollection)
+            var appendCount = appendCollection.Count;
+
+            for (var i = 0; i < appendCount; i++)
             {
+                var appendLambda = appendCollection[i];
+
                 if (GetAppendType(appendLambda) != appendReturnType)
-                    throw Error.InconsistentInterpolatedStringHandlerAppendReturnType();
+                    throw Error.InconsistentInterpolatedStringHandlerAppendReturnType(nameof(append), i);
 
                 var m = appendLambda.Parameters.Count;
 
                 if (m == 0)
                 {
-                    throw Error.InvalidInterpolatedStringHandlerAppendArgCount();
+                    throw Error.InvalidInterpolatedStringHandlerAppendArgCount(nameof(append), i);
                 }
                 else
                 {
                     var firstParam = appendLambda.Parameters[0];
 
                     if (firstParam.Type != builderType)
-                        throw Error.InvalidInterpolatedStringHandlerAppendFirstArgType(firstParam.Type, builderType);
+                        throw Error.InvalidInterpolatedStringHandlerAppendFirstArgType(firstParam.Type, builderType, nameof(append), i);
 
                     // NB: Other checks such as alignment, format, etc. types are deferred until Convert has harvested all parts of
                     //     the interpolated string being converted.
@@ -219,7 +223,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(body, nameof(body));
             RequiresNotNullItems(parameters, nameof(parameters));
 
-            CheckConstructionLambda(body, parameters);
+            CheckConstructionLambda(body, nameof(body), parameters, nameof(parameters));
 
             var handlerType = body.Type;
             var n = parameters.Length;
@@ -263,19 +267,19 @@ namespace Microsoft.CSharp.Expressions
             return Lambda(body, parameters);
         }
 
-        private static void CheckConstructionLambda(Expression body, IList<ParameterExpression> parameters)
+        private static void CheckConstructionLambda(Expression body, string bodyParamName, IList<ParameterExpression> parameters, string parametersParamName)
         {
             if (parameters.Count < 2)
-                throw Error.InvalidInterpolatedStringHandlerConstructionArgCount();
+                throw Error.InvalidInterpolatedStringHandlerConstructionArgCount(parametersParamName);
 
             if (parameters[0].Type != typeof(int))
-                throw Error.InvalidInterpolatedStringHandlerInt32ParameterType(parameters[0], "literalLength");
+                throw Error.InvalidInterpolatedStringHandlerInt32ParameterType(parameters[0], "literalLength", parametersParamName, 0);
 
             if (parameters[1].Type != typeof(int))
-                throw Error.InvalidInterpolatedStringHandlerInt32ParameterType(parameters[1], "formattedCount");
+                throw Error.InvalidInterpolatedStringHandlerInt32ParameterType(parameters[1], "formattedCount", parametersParamName, 1);
 
             if (!body.Type.IsDefined(typeof(InterpolatedStringHandlerAttribute), inherit: false))
-                throw Error.InvalidInterpolatedStringHandlerType(body.Type);
+                throw Error.InvalidInterpolatedStringHandlerType(body.Type, bodyParamName);
         }
 
         internal static bool ParameterListHasTrailingShouldAppend(IList<ParameterExpression> parameters)

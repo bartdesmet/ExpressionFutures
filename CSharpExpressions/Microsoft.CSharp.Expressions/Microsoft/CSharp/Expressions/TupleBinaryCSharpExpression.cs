@@ -300,7 +300,7 @@ namespace Microsoft.CSharp.Expressions
 
                     Expression GetEqualityCheck(Expression lhs, Expression rhs, LambdaExpression equalityCheck)
                     {
-                        static bool IsBinaryEquality(BinaryExpression b) => b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual;
+                        static bool IsBinaryEquality(BinaryExpression b) => b.NodeType is ExpressionType.Equal or ExpressionType.NotEqual;
                         static bool IsBinaryAppliedToParameters(BinaryExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
                         static bool IsTupleBinaryAppliedToParameters(TupleBinaryCSharpExpression b, LambdaExpression c) => b.Left == c.Parameters[0] && b.Right == c.Parameters[1];
 
@@ -369,7 +369,7 @@ namespace Microsoft.CSharp.Expressions
 
         internal static TupleBinaryCSharpExpression Make(CSharpExpressionType kind, Expression left, Expression right, IEnumerable<LambdaExpression>? equalityChecks)
         {
-            Debug.Assert(kind == CSharpExpressionType.TupleEqual || kind == CSharpExpressionType.TupleNotEqual);
+            Debug.Assert(kind is CSharpExpressionType.TupleEqual or CSharpExpressionType.TupleNotEqual);
 
             var leftType = CheckOperandAndGetNonNullableTupleType(left, nameof(left));
             var rightType = CheckOperandAndGetNonNullableTupleType(right, nameof(right));
@@ -414,7 +414,7 @@ namespace Microsoft.CSharp.Expressions
                 checks = equalityChecks.ToReadOnly();
 
                 if (checks.Count != arityLeft)
-                    throw Error.InvalidEqualityCheckCount(arityLeft);
+                    throw Error.InvalidEqualityCheckCount(arityLeft, nameof(equalityChecks));
 
                 RequiresNotNullItems(checks, nameof(equalityChecks));
 
@@ -440,7 +440,7 @@ namespace Microsoft.CSharp.Expressions
                 var operandType = operand.Type.GetNonNullableType();
 
                 if (!IsTupleType(operandType))
-                    throw Error.InvalidTupleType(operand.Type);
+                    throw Error.InvalidTupleType(operand.Type, name);
 
                 return operandType;
             }

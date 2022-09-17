@@ -345,34 +345,34 @@ namespace Microsoft.CSharp.Expressions
             var collectionType = info.Info.NarrowedType;
 
             if (!AreEquivalent(nonNullInputType, collectionType))
-                throw Error.ListPatternInputTypeInvalid(nonNullInputType, collectionType);
+                throw Error.ListPatternInputTypeInvalid(nonNullInputType, collectionType, nameof(info));
 
             RequiresCanRead(lengthAccess, nameof(lengthAccess));
 
             if (lengthAccess.Parameters.Count != 1)
-                throw Error.LengthAccessShouldHaveOneParameter();
+                throw Error.LengthAccessShouldHaveOneParameter(nameof(lengthAccess));
 
             if (!AreEquivalent(lengthAccess.Parameters[0].Type, collectionType))
-                throw Error.LengthAccessParameterShouldHaveCollectionType(collectionType);
+                throw Error.LengthAccessParameterShouldHaveCollectionType(collectionType, nameof(lengthAccess));
 
             if (lengthAccess.ReturnType != typeof(int))
-                throw Error.LengthAccessShouldReturnInt32();
+                throw Error.LengthAccessShouldReturnInt32(nameof(lengthAccess));
 
             RequiresCanRead(indexerAccess, nameof(indexerAccess));
 
             if (indexerAccess.Parameters.Count != 2)
-                throw Error.IndexerAccessShouldHaveTwoParameters();
+                throw Error.IndexerAccessShouldHaveTwoParameters(nameof(indexerAccess));
 
             if (!AreEquivalent(indexerAccess.Parameters[0].Type, collectionType))
-                throw Error.IndexerAccessFirstParameterShouldHaveCollectionType(collectionType);
+                throw Error.IndexerAccessFirstParameterShouldHaveCollectionType(collectionType, nameof(indexerAccess));
 
             if (indexerAccess.Parameters[1].Type != typeof(Index))
-                throw Error.IndexerAccessSecondParameterInvalidType(typeof(Index));
+                throw Error.IndexerAccessSecondParameterInvalidType(typeof(Index), nameof(indexerAccess));
 
             var elementType = indexerAccess.ReturnType;
 
             if (elementType == typeof(void))
-                throw Error.ElementTypeCannotBeVoid();
+                throw Error.ElementTypeCannotBeVoid(nameof(indexerAccess));
 
             var patternsList = patterns.ToArray();
 
@@ -387,7 +387,7 @@ namespace Microsoft.CSharp.Expressions
                 if (pattern.PatternType == CSharpPatternType.Slice)
                 {
                     if (hasSlice)
-                        throw Error.MoreThanOneSlicePattern();
+                        throw Error.MoreThanOneSlicePattern(nameof(patterns), i);
 
                     hasSlice = true;
 

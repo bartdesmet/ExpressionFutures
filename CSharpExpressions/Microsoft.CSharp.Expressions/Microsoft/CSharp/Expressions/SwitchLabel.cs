@@ -94,7 +94,7 @@ namespace Microsoft.CSharp.Expressions
         public static SwitchLabel SwitchLabel(LabelTarget? label, CSharpPattern pattern, Expression? whenClause)
         {
             if (label != null && label.Type != typeof(void))
-                throw Error.SwitchLabelTargetShouldBeVoid();
+                throw Error.SwitchLabelTargetShouldBeVoid(nameof(label));
 
             RequiresNotNull(pattern, nameof(pattern));
 
@@ -103,7 +103,7 @@ namespace Microsoft.CSharp.Expressions
                 RequiresCanRead(whenClause, nameof(whenClause));
 
                 if (whenClause.Type != typeof(bool))
-                    throw Error.WhenClauseShouldBeBoolean();
+                    throw Error.WhenClauseShouldBeBoolean(nameof(whenClause));
             }
 
             return new SwitchLabel(label, pattern, whenClause);

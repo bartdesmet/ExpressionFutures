@@ -360,12 +360,12 @@ namespace Microsoft.CSharp.Expressions
             var receiverType = receiver.Type;
 
             if (receiverType == typeof(void) || receiverType.IsByRef || (receiverType.IsValueType && !receiverType.IsNullableType()))
-                throw Error.InvalidConditionalReceiverExpressionType(receiverType);
+                throw Error.InvalidConditionalReceiverExpressionType(receiverType, nameof(receiver));
 
             var nonNullReceiverType = receiverType.GetNonNullReceiverType();
 
             if (nonNullReceiverType != nonNullReceiver.Type)
-                throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType);
+                throw Error.ConditionalReceiverTypeMismatch(receiverType, nonNullReceiverType, nameof(nonNullReceiver));
         }
     }
 }

@@ -84,10 +84,10 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(conversion, nameof(conversion));
 
             if (conversion.Parameters.Count != 1)
-                throw Error.ConversionShouldHaveOneParameter();
+                throw Error.ConversionShouldHaveOneParameter(nameof(conversion));
 
             if (conversion.ReturnType == typeof(void))
-                throw Error.ConversionCannotReturnVoid();
+                throw Error.ConversionCannotReturnVoid(nameof(conversion));
 
             return new SimpleConversion(conversion);
         }

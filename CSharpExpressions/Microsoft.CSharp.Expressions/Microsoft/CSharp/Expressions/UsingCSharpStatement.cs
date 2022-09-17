@@ -111,7 +111,7 @@ namespace Microsoft.CSharp.Expressions
             if (patternDispose != null)
             {
                 if (patternDispose.Parameters.Count != 1)
-                    throw Error.UsingPatternDisposeShouldHaveOneParameter();
+                    throw Error.UsingPatternDisposeShouldHaveOneParameter(nameof(patternDispose));
             }
 
             var variablesList = CheckUniqueVariables(variables, nameof(variables));
@@ -390,8 +390,10 @@ namespace Microsoft.CSharp.Expressions
 
                 var resourceType = default(Type);
 
-                foreach (var declaration in resources)
+                for (int i = 0, n = resources.Count; i < n; i++)
                 {
+                    var declaration = resources[i];
+
                     var declType = declaration.Variable.Type;
 
                     ValidateType(declType, nameof(resources));
@@ -403,7 +405,7 @@ namespace Microsoft.CSharp.Expressions
                     else if (resourceType != declType)
                     {
                         // NB: `using (ResourceType r1 = e1, r2 = e2, ...)`.
-                        throw Error.UsingVariableDeclarationsShouldBeConsistentlyTyped();
+                        throw Error.UsingVariableDeclarationsShouldBeConsistentlyTyped(nameof(resources), i);
                     }
 
                     //
@@ -415,7 +417,7 @@ namespace Microsoft.CSharp.Expressions
                     //
                     if (!variables.Contains(declaration.Variable))
                     {
-                        throw Error.UsingVariableNotInScope(declaration.Variable);
+                        throw Error.UsingVariableNotInScope(declaration.Variable, nameof(resources), i);
                     }
                 }
 
@@ -652,9 +654,12 @@ namespace Microsoft.CSharp.Expressions
                 var patternDisposeInputType = patternDispose.Parameters[0].Type;
 
                 if (!AreReferenceAssignable(patternDisposeInputType, resourceTypeNonNull))
-                    throw Error.UsingPatternDisposeInputNotCompatibleWithResource(patternDisposeInputType, resourceTypeNonNull);
+                    throw Error.UsingPatternDisposeInputNotCompatibleWithResource(patternDisposeInputType, resourceTypeNonNull, nameof(patternDispose));
 
                 disposeReturnType = patternDispose.ReturnType;
+
+                if (disposeReturnType != typeof(void))
+                    throw Error.UsingDisposeShouldReturnVoid(nameof(patternDispose));
             }
             else
             {
@@ -692,11 +697,6 @@ namespace Microsoft.CSharp.Expressions
             if (awaitInfo != null)
             {
                 awaitInfo.RequiresCanBind(Expression.Parameter(disposeReturnType));
-            }
-            else
-            {
-                if (disposeReturnType != typeof(void))
-                    throw Error.UsingDisposeShouldReturnVoid();
             }
         }
     }

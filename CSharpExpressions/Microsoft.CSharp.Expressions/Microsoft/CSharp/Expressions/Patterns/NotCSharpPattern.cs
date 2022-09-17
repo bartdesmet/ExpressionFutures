@@ -98,7 +98,7 @@ namespace Microsoft.CSharp.Expressions
             if (info != null)
             {
                 if (info.InputType != info.NarrowedType)
-                    throw Error.PatternInputAndNarrowedTypeShouldMatch(nameof(CSharpPatternType.Not));
+                    throw Error.PatternInputAndNarrowedTypeShouldMatch(nameof(CSharpPatternType.Not), nameof(info));
 
                 RequiresCompatiblePatternTypes(info.InputType, ref negated);
             }

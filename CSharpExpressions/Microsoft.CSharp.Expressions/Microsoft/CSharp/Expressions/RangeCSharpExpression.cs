@@ -235,20 +235,20 @@ namespace Microsoft.CSharp.Expressions
             if (method != null)
             {
                 if (method.IsGenericMethodDefinition || method.GetReturnType() != typeof(Range))
-                    throw Error.InvalidRangeMethod();
+                    throw Error.InvalidRangeMethod(nameof(method));
 
                 if (method.MemberType == MemberTypes.Method && !method.IsStatic)
-                    throw Error.InvalidRangeMethod();
+                    throw Error.InvalidRangeMethod(nameof(method));
 
                 var parameters = method.GetParametersCached();
 
                 if (parameters.Length != operandCount)
-                    throw Error.InvalidRangeMethod();
+                    throw Error.InvalidRangeMethod(nameof(method));
 
                 for (int i = 0; i < operandCount; i++)
                 {
                     if (parameters[i].ParameterType != typeof(Index))
-                        throw Error.InvalidRangeMethod();
+                        throw Error.InvalidRangeMethod(nameof(method));
                 }
             }
 
@@ -257,16 +257,16 @@ namespace Microsoft.CSharp.Expressions
                 if (type == typeof(Range))
                 {
                     if (lifted)
-                        throw Error.InvalidRangeType(type);
+                        throw Error.InvalidRangeType(type, nameof(type));
                 }
                 else if (type == typeof(Range?))
                 {
                     if (!lifted)
-                        throw Error.InvalidRangeType(type);
+                        throw Error.InvalidRangeType(type, nameof(type));
                 }
                 else
                 {
-                    throw Error.InvalidRangeType(type);
+                    throw Error.InvalidRangeType(type, nameof(type));
                 }
             }
 
@@ -295,7 +295,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                     else
                     {
-                        throw Error.InvalidRangeOperandType(operand.Type);
+                        throw Error.InvalidRangeOperandType(operand.Type, nameof(operand));
                     }
                 }
 

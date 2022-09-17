@@ -71,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 // NB: Same logic as LINQ's BinaryExpression, modulo the absence of the Coalesce case.
 
-                if (CSharpNodeType == CSharpExpressionType.Assign || CSharpNodeType == CSharpExpressionType.NullCoalescingAssign)
+                if (CSharpNodeType is CSharpExpressionType.Assign or CSharpExpressionType.NullCoalescingAssign)
                 {
                     return false;
                 }
@@ -457,7 +457,7 @@ namespace Microsoft.CSharp.Expressions
             //     underneath it. This said, a specialized layout for the case where the custom node trivially wraps
             //     a LINQ node could be useful (just make Left virtual).
 
-            if (binaryType != CSharpExpressionType.Assign && binaryType != CSharpExpressionType.NullCoalescingAssign)
+            if (binaryType is not CSharpExpressionType.Assign and not CSharpExpressionType.NullCoalescingAssign)
             {
                 var leftType = left.Type;
                 var rightType = right.Type;
@@ -466,7 +466,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (method == null)
                     {
-                        if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
+                        if (binaryType is CSharpExpressionType.AddAssign or CSharpExpressionType.AddAssignChecked)
                         {
                             if (rightType == typeof(string))
                             {
@@ -485,7 +485,7 @@ namespace Microsoft.CSharp.Expressions
                         }
                         else
                         {
-                            throw Error.InvalidCompoundAssignment(binaryType, typeof(string));
+                            throw Error.InvalidCompoundAssignment(binaryType, typeof(string), nameof(binaryType));
                         }
                     }
                 }
@@ -505,11 +505,11 @@ namespace Microsoft.CSharp.Expressions
 
                     if (method == null)
                     {
-                        if (binaryType == CSharpExpressionType.AddAssign || binaryType == CSharpExpressionType.AddAssignChecked)
+                        if (binaryType is CSharpExpressionType.AddAssign or CSharpExpressionType.AddAssignChecked)
                         {
                             method = WellKnownMembers.DelegateCombine;
                         }
-                        else if (binaryType == CSharpExpressionType.SubtractAssign || binaryType == CSharpExpressionType.SubtractAssignChecked)
+                        else if (binaryType is CSharpExpressionType.SubtractAssign or CSharpExpressionType.SubtractAssignChecked)
                         {
                             method = WellKnownMembers.DelegateRemove;
                         }
@@ -594,18 +594,10 @@ namespace Microsoft.CSharp.Expressions
             return false;
         }
 
-        private static bool IsCheckedBinary(CSharpExpressionType type)
-        {
-            switch (type)
-            {
-                case CSharpExpressionType.AddAssignChecked:
-                case CSharpExpressionType.MultiplyAssignChecked:
-                case CSharpExpressionType.SubtractAssignChecked:
-                    return true;
-            }
-
-            return false;
-        }
+        private static bool IsCheckedBinary(CSharpExpressionType type) => type is
+            CSharpExpressionType.AddAssignChecked or
+            CSharpExpressionType.MultiplyAssignChecked or
+            CSharpExpressionType.SubtractAssignChecked;
     }
 
     partial class CSharpExpressionVisitor

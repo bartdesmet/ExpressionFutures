@@ -725,7 +725,7 @@ namespace Microsoft.CSharp.Expressions
             }
             else
             {
-                throw Error.AsyncLambdaInvalidReturnType(method.ReturnType);
+                throw Error.AsyncLambdaInvalidReturnType(method.ReturnType, nameof(delegateType));
             }
         }
 
@@ -741,7 +741,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresCanRead(parameter, paramName, index);
 
             if (parameter.IsByRef)
-                throw Error.AsyncLambdaCantHaveByRefParameter(parameter);
+                throw Error.AsyncLambdaCantHaveByRefParameter(parameter, paramName, index);
         }
     }
 

@@ -98,7 +98,7 @@ namespace Microsoft.CSharp.Expressions
             // NB: We don't check the body for Break statements; worst case we'll insert one at the end during Reduce.
             //     Note that the semantics are nonetheless consistent with C#, i.e. no implicit fall-through.
 
-            CheckValidSwitchType(typeof(T));
+            CheckValidSwitchType(typeof(T), nameof(T));
 
             var testValuesList = testValues.Select(value => (object?)value).ToReadOnly();
 
@@ -110,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (!uniqueTestValues.Add(value))
                 {
-                    throw Error.DuplicateTestValue(value.ToDebugString());
+                    throw Error.DuplicateTestValue(value.ToDebugString(), nameof(testValues));
                 }
             }
 
@@ -154,7 +154,7 @@ namespace Microsoft.CSharp.Expressions
             foreach (var testValue in testValuesList)
             {
                 if (!uniqueTestValues.Add(testValue))
-                    throw Error.DuplicateTestValue(testValue);
+                    throw Error.DuplicateTestValue(testValue, nameof(testValues));
 
                 // NB: Null is fine; every valid governing type in C# has a nullable variant (trivial for string).
 
@@ -168,7 +168,7 @@ namespace Microsoft.CSharp.Expressions
                     else
                     {
                         if (testType != testValueType)
-                            throw Error.TestValuesShouldHaveConsistentType();
+                            throw Error.TestValuesShouldHaveConsistentType(nameof(testValues));
                     }
                 }
             }

@@ -660,12 +660,12 @@ namespace Microsoft.CSharp.Expressions
 
             if (breakLabel.Type != typeof(void))
             {
-                throw Error.SwitchBreakLabelShouldBeVoid();
+                throw Error.SwitchBreakLabelShouldBeVoid(nameof(breakLabel));
             }
 
             var type = switchValue.Type;
 
-            CheckValidSwitchType(type);
+            CheckValidSwitchType(type, nameof(switchValue));
 
             var isNullable = type == typeof(string) || type.IsNullableType();
             var nonNullType = type.GetNonNullableType();
@@ -673,26 +673,31 @@ namespace Microsoft.CSharp.Expressions
             // NB: Switch in C# can be empty, so less checks than LINQ here. Also no custom comparison method.
 
             var casesList = cases.ToReadOnly();
-            if (casesList.Count > 0)
+
+            var n = casesList.Count;
+
+            if (n > 0)
             {
                 var testValues = new HashSet<object?>();
 
-                foreach (var @case in casesList)
+                for (var i = 0; i < n; i++)
                 {
+                    var @case = casesList[i];
+
                     RequiresNotNull(@case, nameof(cases));
 
                     foreach (var value in @case.TestValues)
                     {
                         if (!testValues.Add(value))
                         {
-                            throw Error.DuplicateTestValue(value.ToDebugString());
+                            throw Error.DuplicateTestValue(value.ToDebugString(), nameof(cases), i);
                         }
 
                         if (value == null)
                         {
                             if (!isNullable)
                             {
-                                throw Error.SwitchCantHaveNullCase(type);
+                                throw Error.SwitchCantHaveNullCase(type, nameof(cases), i);
                             }
                         }
                         else if (value != SwitchCaseDefaultValue)
@@ -701,7 +706,7 @@ namespace Microsoft.CSharp.Expressions
 
                             if (valueType != nonNullType)
                             {
-                                throw Error.SwitchCaseHasIncompatibleType(value.GetType(), type);
+                                throw Error.SwitchCaseHasIncompatibleType(value.GetType(), type, nameof(cases), i);
                             }
                         }
                     }
@@ -754,34 +759,22 @@ namespace Microsoft.CSharp.Expressions
             return Switch(switchValue, breakLabel, default(IEnumerable<ParameterExpression>), cases);
         }
 
-        private static void CheckValidSwitchType(Type type)
+        private static void CheckValidSwitchType(Type type, string paramName)
         {
             if (!IsValidSwitchType(type))
             {
-                throw Error.InvalidSwitchType(type);
+                throw Error.InvalidSwitchType(type, paramName);
             }
         }
 
-        private static bool IsValidSwitchType(Type type)
-        {
-            switch (type.GetNonNullableType().GetTypeCode())
-            {
-                case TypeCode.Boolean:
-                case TypeCode.Char:
-                case TypeCode.SByte:
-                case TypeCode.Byte:
-                case TypeCode.Int16:
-                case TypeCode.UInt16:
-                case TypeCode.Int32:
-                case TypeCode.UInt32:
-                case TypeCode.Int64:
-                case TypeCode.UInt64:
-                case TypeCode.String:
-                    return true;
-            }
-
-            return false;
-        }
+        private static bool IsValidSwitchType(Type type) => type.GetNonNullableType().GetTypeCode() is
+            TypeCode.Boolean or
+            TypeCode.Char or
+            TypeCode.SByte or TypeCode.Byte or
+            TypeCode.Int16 or TypeCode.UInt16 or
+            TypeCode.Int32 or TypeCode.UInt32 or
+            TypeCode.Int64 or TypeCode.UInt64 or
+            TypeCode.String;
     }
 
     partial class CSharpExpressionVisitor

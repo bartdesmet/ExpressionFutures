@@ -122,7 +122,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>A new <see cref="EventAssignCSharpExpression"/> instance representing the event assignment.</returns>
         public static EventAssignCSharpExpression EventAddAssign(Expression? @object, EventInfo @event, Expression handler) =>
-            EventAssign(@object, @event, handler, isAddition: true);
+            EventAssign(@object, @event, handler, isAddition: true, nameof(@event));
 
         /// <summary>
         /// Creates an expression representing an event removal operation.
@@ -132,7 +132,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="handler">The handler to remove from the event.</param>
         /// <returns>A new <see cref="EventAssignCSharpExpression"/> instance representing the event assignment.</returns>
         public static EventAssignCSharpExpression EventSubtractAssign(Expression? @object, EventInfo @event, Expression handler) =>
-            EventAssign(@object, @event, handler, isAddition: false);
+            EventAssign(@object, @event, handler, isAddition: false, nameof(@event));
 
         /// <summary>
         /// Creates an expression representing an event addition operation.
@@ -142,7 +142,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>A new <see cref="EventAssignCSharpExpression"/> instance representing the event assignment.</returns>
         public static EventAssignCSharpExpression EventAddAssign(Expression? @object, MethodInfo eventAccessor, Expression handler) =>
-            EventAssign(@object, eventAccessor, handler, isAddition: true);
+            EventAssign(@object, eventAccessor, handler, isAddition: true, nameof(eventAccessor));
 
         /// <summary>
         /// Creates an expression representing an event removal operation.
@@ -152,39 +152,39 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="handler">The handler to remove from the event.</param>
         /// <returns>A new <see cref="EventAssignCSharpExpression"/> instance representing the event assignment.</returns>
         public static EventAssignCSharpExpression EventSubtractAssign(Expression? @object, MethodInfo eventAccessor, Expression handler) =>
-            EventAssign(@object, eventAccessor, handler, isAddition: false);
+            EventAssign(@object, eventAccessor, handler, isAddition: false, nameof(eventAccessor));
 
-        private static EventAssignCSharpExpression EventAssign(Expression? @object, MethodInfo eventAccessor, Expression handler, bool isAddition)
+        private static EventAssignCSharpExpression EventAssign(Expression? @object, MethodInfo eventAccessor, Expression handler, bool isAddition, string accessorParamName)
         {
-            RequiresNotNull(eventAccessor, nameof(eventAccessor));
-            ValidateMethodInfo(eventAccessor, nameof(eventAccessor));
+            RequiresNotNull(eventAccessor, accessorParamName);
+            ValidateMethodInfo(eventAccessor, accessorParamName);
 
-            return EventAssign(@object, GetEvent(eventAccessor), handler, isAddition);
+            return EventAssign(@object, GetEvent(eventAccessor, accessorParamName), handler, isAddition, accessorParamName);
         }
 
-        private static EventAssignCSharpExpression EventAssign(Expression? @object, EventInfo @event, Expression handler, bool isAddition)
+        private static EventAssignCSharpExpression EventAssign(Expression? @object, EventInfo @event, Expression handler, bool isAddition, string accessorParamName)
         {
-            RequiresNotNull(@event, nameof(@event));
+            RequiresNotNull(@event, accessorParamName);
 
             var accessor = isAddition ? @event.GetAddMethod(nonPublic: true) : @event.GetRemoveMethod(nonPublic: true);
 
             if (accessor == null)
-                throw Error.EventDoesNotHaveAccessor(@event);
+                throw Error.EventDoesNotHaveAccessor(@event, accessorParamName);
 
             if (accessor.IsStatic)
             {
                 if (@object != null)
-                    throw Error.OnlyStaticEventsHaveNullInstance();
+                    throw Error.OnlyStaticEventsHaveNullInstance(nameof(@object));
             }
             else
             {
                 if (@object == null)
-                    throw Error.OnlyStaticEventsHaveNullInstance();
+                    throw Error.OnlyStaticEventsHaveNullInstance(nameof(@object));
 
                 RequiresCanRead(@object, nameof(@object));
 
                 if (!IsValidInstanceType(@event, @object.Type))
-                    throw Error.EventNotDefinedForType(@event, @object.Type);
+                    throw Error.EventNotDefinedForType(@event, @object.Type, nameof(@object));
             }
 
             RequiresCanRead(handler, nameof(handler));
@@ -193,20 +193,20 @@ namespace Microsoft.CSharp.Expressions
             //     of event add/remove calls is not available on future .NET platforms.
 
             if (accessor.ReturnType != typeof(void))
-                throw Error.EventAccessorShouldReturnVoid();
+                throw Error.EventAccessorShouldReturnVoid(accessorParamName);
 
             var parameters = accessor.GetParametersCached();
 
             if (parameters.Length != 1)
-                throw Error.EventAccessorShouldHaveOneParameter();
+                throw Error.EventAccessorShouldHaveOneParameter(accessorParamName);
 
             if (!AreReferenceAssignable(parameters[0].ParameterType, handler.Type))
-                throw Error.EventAccessorParameterTypeMismatch(handler.Type, parameters[0].ParameterType);
+                throw Error.EventAccessorParameterTypeMismatch(handler.Type, parameters[0].ParameterType, accessorParamName);
 
             return new EventAssignCSharpExpression(isAddition ? CSharpExpressionType.EventAddAssign : CSharpExpressionType.EventSubtractAssign, @object, @event, handler);
         }
 
-        private static EventInfo GetEvent(MethodInfo method)
+        private static EventInfo GetEvent(MethodInfo method, string accessorParamName)
         {
             var declaringType = method.DeclaringType;
 
@@ -229,7 +229,7 @@ namespace Microsoft.CSharp.Expressions
                 }
             }
 
-            throw Error.MethodNotEventAccessor(declaringType, method.Name);
+            throw Error.MethodNotEventAccessor(declaringType, method.Name, accessorParamName);
         }
 
     }

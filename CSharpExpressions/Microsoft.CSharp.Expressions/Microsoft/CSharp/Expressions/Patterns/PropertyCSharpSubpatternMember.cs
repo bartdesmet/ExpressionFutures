@@ -110,7 +110,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     if (_member is PropertyInfo p && p.PropertyType == typeof(int))
                     {
-                        if (p.Name == nameof(ICollection.Count) || p.Name == nameof(Array.Length))
+                        if (p.Name is nameof(ICollection.Count) or nameof(Array.Length))
                         {
                             return true;
                         }
@@ -186,15 +186,15 @@ namespace Microsoft.CSharp.Expressions
             {
                 case PropertyInfo p:
                     if (!p.CanRead)
-                        throw Error.PropertyPatternMemberShouldBeReadable(p);
+                        throw Error.PropertyPatternMemberShouldBeReadable(p, nameof(member));
                     if (p.GetGetMethod()!.IsStatic)
-                        throw Error.PropertyPatternMemberShouldNotBeStatic(p);
+                        throw Error.PropertyPatternMemberShouldNotBeStatic(p, nameof(member));
                     if (p.GetIndexParameters().Length > 0)
-                        throw Error.PropertyPatternMemberShouldNotBeIndexer(p);
+                        throw Error.PropertyPatternMemberShouldNotBeIndexer(p, nameof(member));
                     break;
                 case FieldInfo f:
                     if (f.IsStatic)
-                        throw Error.PropertyPatternMemberShouldNotBeStatic(f);
+                        throw Error.PropertyPatternMemberShouldNotBeStatic(f, nameof(member));
                     break;
                 default:
                     throw MemberNotFieldOrProperty(member, nameof(member));
@@ -206,7 +206,7 @@ namespace Microsoft.CSharp.Expressions
 
                 if (!TypeUtils.IsValidInstanceType(member, nonNullReceiverType))
                 {
-                    throw Error.PropertyPatternMemberIsNotCompatibleWithReceiver(member, nonNullReceiverType);
+                    throw Error.PropertyPatternMemberIsNotCompatibleWithReceiver(member, nonNullReceiverType, nameof(receiver));
                 }
             }
 

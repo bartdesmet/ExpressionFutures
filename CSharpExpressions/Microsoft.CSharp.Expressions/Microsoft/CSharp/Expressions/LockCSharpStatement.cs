@@ -117,7 +117,7 @@ namespace Microsoft.CSharp.Expressions
             ValidateType(expression.Type, nameof(expression));
 
             if (expression.Type.IsValueType)
-                throw Error.LockNeedsReferenceType(expression.Type);
+                throw Error.LockNeedsReferenceType(expression.Type, nameof(expression));
 
             return new LockCSharpStatement(expression, body);
         }

@@ -87,7 +87,7 @@ namespace Microsoft.CSharp.Expressions
                     memberType = f.FieldType;
 
                     if (f.IsStatic)
-                        throw Error.MemberInitializerMemberMustNotBeStatic(member.Name);
+                        throw Error.MemberInitializerMemberMustNotBeStatic(member.Name, nameof(member));
 
                     break;
 
@@ -99,10 +99,10 @@ namespace Microsoft.CSharp.Expressions
                         throw PropertyDoesNotHaveAccessor(p, nameof(member));
                     
                     if (accessor.IsStatic)
-                        throw Error.MemberInitializerMemberMustNotBeStatic(member.Name);
+                        throw Error.MemberInitializerMemberMustNotBeStatic(member.Name, nameof(member));
 
                     if (p.GetIndexParameters().Length > 0)
-                        throw Error.MemberInitializerMemberMustNotBeIndexer(member.Name);
+                        throw Error.MemberInitializerMemberMustNotBeIndexer(member.Name, nameof(member));
 
                     break;
 
@@ -121,7 +121,7 @@ namespace Microsoft.CSharp.Expressions
                 throw ArgumentTypesMustMatch(nameof(expression));
 
             if (member.DeclaringType == null)
-                throw Error.NotAMemberOfAnyType(member);
+                throw Error.NotAMemberOfAnyType(member, nameof(member));
 
             ValidateType(member.DeclaringType, nameof(member));
 

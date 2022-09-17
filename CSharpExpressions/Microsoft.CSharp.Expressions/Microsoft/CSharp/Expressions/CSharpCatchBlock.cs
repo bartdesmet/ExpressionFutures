@@ -293,7 +293,7 @@ namespace Microsoft.CSharp.Expressions
                 // REVIEW: See UsingCSharpStatement for a similar situation.
 
                 if (!variablesList.Contains(variable))
-                    throw Error.CatchVariableNotInScope(variable);
+                    throw Error.CatchVariableNotInScope(variable, nameof(variable));
 
                 if (type == null)
                 {
@@ -301,7 +301,7 @@ namespace Microsoft.CSharp.Expressions
                 }
                 else if (!AreEquivalent(type, variable.Type))
                 {
-                    throw Error.CatchTypeNotEquivalentWithVariableType(type, variable.Type);
+                    throw Error.CatchTypeNotEquivalentWithVariableType(type, variable.Type, nameof(type));
                 }
             }
             else if (type != null)

@@ -91,7 +91,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (parameterInfo == null)
             {
-                throw Error.ParameterNotDefinedForMethod(parameter, method.Name);
+                throw Error.ParameterNotDefinedForMethod(parameter, method.Name, nameof(parameter));
             }
 
             return Bind(parameterInfo, expression);
@@ -115,7 +115,7 @@ namespace Microsoft.CSharp.Expressions
             var parameters = method.GetParametersCached();
 
             if (index < 0 || index >= parameters.Length)
-                throw Error.ParameterIndexOutOfBounds(index, method.Name);
+                throw Error.ParameterIndexOutOfBounds(index, method.Name, nameof(index));
 
             return Bind(parameters[index], expression);
         }
@@ -137,7 +137,7 @@ namespace Microsoft.CSharp.Expressions
             TypeUtils.ValidateType(pType, parameter.Name);
 
             if (!TypeUtils.AreReferenceAssignable(pType, expression.Type) && !TryQuote(pType, ref expression))
-                throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType);
+                throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType, nameof(expression));
             
             return expression;
         }

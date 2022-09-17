@@ -185,10 +185,10 @@ namespace Microsoft.CSharp.Expressions
                 var parameters = method.GetParametersCached();
 
                 if (!method.IsDefined(typeof(ExtensionAttribute), false) || parameters.Length == 0 /* NB: someone could craft a method with [ExtensionAttribute] in IL */)
-                    throw Error.ConditionalAccessRequiresNonStaticMember();
+                    throw Error.ConditionalAccessRequiresNonStaticMember(nameof(method));
 
                 if (instance == null)
-                    throw Error.ExtensionMethodRequiresInstance();
+                    throw Error.ExtensionMethodRequiresInstance(nameof(instance));
 
                 instance = ValidateOneArgument(parameters[0], instance);
             }

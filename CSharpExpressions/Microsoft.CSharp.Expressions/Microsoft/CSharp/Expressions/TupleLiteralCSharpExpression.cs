@@ -203,7 +203,7 @@ namespace Microsoft.CSharp.Expressions
                 RequiresNotNull(arg, nameof(arguments));
 
                 if (arg.Type == typeof(void))
-                    throw Error.TupleComponentCannotBeVoid();
+                    throw Error.TupleComponentCannotBeVoid(nameof(arguments), i);
 
                 types[i] = arg.Type;
             }
@@ -213,7 +213,7 @@ namespace Microsoft.CSharp.Expressions
             var argNames = argumentNames?.ToReadOnly();
 
             if (argNames != null && argNames.Count != n)
-                throw Error.InvalidTupleArgumentNamesCount(type);
+                throw Error.InvalidTupleArgumentNamesCount(type, nameof(argumentNames));
 
             return new TupleLiteralCSharpExpression(type, args, argNames);
         }
@@ -246,7 +246,7 @@ namespace Microsoft.CSharp.Expressions
             RequiresNotNull(type, nameof(type));
 
             if (!IsTupleType(type))
-                throw Error.InvalidTupleType(type);
+                throw Error.InvalidTupleType(type, nameof(type));
 
             static List<ParameterInfo> GetTupleConstructorParameters(Type type, int n)
             {
@@ -287,7 +287,7 @@ namespace Microsoft.CSharp.Expressions
             var parameters = GetTupleConstructorParameters(type, n);
 
             if (parameters.Count != n)
-                throw Error.InvalidTupleArgumentCount(type);
+                throw Error.InvalidTupleArgumentCount(type, nameof(type));
 
             for (int i = 0; i < n; i++)
             {
@@ -301,15 +301,16 @@ namespace Microsoft.CSharp.Expressions
                 var parameterType = parameters[i].ParameterType;
                 var argumentType = args[i].Type;
 
-                ValidateType(type, nameof(type), i);
+                ValidateType(parameterType, nameof(type), i);
+
                 if (!AreReferenceAssignable(parameterType, argumentType))
-                    throw Error.ExpressionTypeDoesNotMatchParameter(argumentType, parameterType);
+                    throw Error.ExpressionTypeDoesNotMatchParameter(argumentType, parameterType, nameof(type), i);
             }
 
             var argNames = argumentNames?.ToReadOnly();
 
             if (argNames != null && argNames.Count != n)
-                throw Error.InvalidTupleArgumentNamesCount(type);
+                throw Error.InvalidTupleArgumentNamesCount(type, nameof(argumentNames));
 
             return new TupleLiteralCSharpExpression(type, args, argNames);
         }

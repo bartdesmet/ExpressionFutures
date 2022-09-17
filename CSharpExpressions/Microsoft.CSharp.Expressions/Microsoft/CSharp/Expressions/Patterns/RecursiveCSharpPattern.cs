@@ -410,7 +410,7 @@ namespace Microsoft.CSharp.Expressions
                         RequiresCompatiblePatternTypes(type, variableType);
 
                         if (variableType != narrowedType)
-                            throw Error.CannotAssignPatternResultToVariable(variableType, narrowedType);
+                            throw Error.CannotAssignPatternResultToVariable(variableType, narrowedType, nameof(type));
                     }
                 }
             }
@@ -419,10 +419,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 if (deconstructionCollection.Count > 0)
                 {
-                    foreach (var positionalPattern in deconstructionCollection)
-                    {
-                        RequiresNotNull(positionalPattern, nameof(deconstruction));
-                    }
+                    RequiresNotNullItems(deconstructionCollection, nameof(deconstruction));
 
                     if (deconstructMethod != null)
                     {
@@ -434,7 +431,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                     else
                     {
-                        throw Error.InvalidPositionalPattern();
+                        throw Error.InvalidPositionalPattern(nameof(deconstruction));
                     }
 
                     void validateWithDeconstructMethod()
@@ -442,14 +439,14 @@ namespace Microsoft.CSharp.Expressions
                         ValidateMethodInfo(deconstructMethod, nameof(deconstructMethod));
 
                         if (deconstructMethod.ReturnType != typeof(void))
-                            throw Error.DeconstructShouldReturnVoid(deconstructMethod);
+                            throw Error.DeconstructShouldReturnVoid(deconstructMethod, nameof(deconstructMethod));
 
                         var parameters = deconstructMethod.GetParametersCached();
 
                         if (deconstructMethod.IsStatic)
                         {
                             if (parameters.Length == 0)
-                                throw Error.DeconstructExtensionMethodMissingThis(deconstructMethod);
+                                throw Error.DeconstructExtensionMethodMissingThis(deconstructMethod, nameof(deconstructMethod));
 
                             ValidateOneArgument(deconstructMethod, ExpressionType.Call, objParam, parameters[0], nameof(deconstructMethod), "this");
 
@@ -466,20 +463,24 @@ namespace Microsoft.CSharp.Expressions
 
                         var parameterToPattern = new Dictionary<ParameterInfo, PositionalCSharpSubpattern>();
 
-                        foreach (var positionalPattern in deconstructionCollection)
+                        var n = deconstructionCollection.Count;
+
+                        for (int i = 0; i < n; i++)
                         {
+                            var positionalPattern = deconstructionCollection[i];
+
                             if (positionalPattern.Field != null)
-                                throw Error.PositionalPatternWithDeconstructMethodCannotSpecifyField();
+                                throw Error.PositionalPatternWithDeconstructMethodCannotSpecifyField(nameof(deconstruction), i);
 
                             var parameter = positionalPattern.Parameter;
 
                             if (parameter != null)
                             {
                                 if (parameter.Member != deconstructMethod)
-                                    throw Error.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(parameter, deconstructMethod);
+                                    throw Error.PositionalPatternParameterIsNotDeclaredOnDeconstructMethod(parameter, deconstructMethod, nameof(deconstruction), i);
 
                                 if (parameterToPattern.ContainsKey(parameter))
-                                    throw Error.PositionalPatternParameterShouldOnlyBeUsedOnce(parameter);
+                                    throw Error.PositionalPatternParameterShouldOnlyBeUsedOnce(parameter, nameof(deconstruction), i);
 
                                 parameterToPattern.Add(parameter, positionalPattern);
                             }
@@ -488,7 +489,7 @@ namespace Microsoft.CSharp.Expressions
                         var bindByParameter = parameterToPattern.Count > 0;
 
                         if (bindByParameter && parameterToPattern.Count != arity)
-                            throw Error.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters();
+                            throw Error.PositionalPatternWithDeconstructMethodShouldSpecifyAllParameters(nameof(deconstructMethod));
 
                         PositionalCSharpSubpattern getPositionalPattern(ParameterInfo parameter, int index) => bindByParameter
                             ? parameterToPattern[parameter]
@@ -499,7 +500,7 @@ namespace Microsoft.CSharp.Expressions
                             var parameter = parameters[i];
 
                             if (!parameter.IsOut)
-                                throw Error.DeconstructParameterShouldBeOut(parameter, deconstructMethod);
+                                throw Error.DeconstructParameterShouldBeOut(parameter, deconstructMethod, nameof(deconstructMethod), i);
 
                             var pattern = getPositionalPattern(parameter, i).Pattern;
                             var parameterType = parameter.ParameterType.GetElementType()!;
@@ -518,20 +519,24 @@ namespace Microsoft.CSharp.Expressions
                         var byIndexCount = 0;
                         var indexToPattern = new PositionalCSharpSubpattern[arity];
 
-                        foreach (var positionalPattern in deconstructionCollection)
+                        var n = deconstructionCollection.Count;
+
+                        for (int i = 0; i < n; i++)
                         {
+                            var positionalPattern = deconstructionCollection[i];
+
                             if (positionalPattern.Parameter != null)
-                                throw Error.PositionalPatternWithTupleCannotSpecifyParameter();
+                                throw Error.PositionalPatternWithTupleCannotSpecifyParameter(nameof(deconstruction), i);
 
                             if (positionalPattern.Field != null)
                             {
                                 var index = positionalPattern.Field.Index;
 
                                 if (index < 0 || index >= arity)
-                                    throw Error.PositionalPatternTupleIndexOutOfRange(index, arity);
+                                    throw Error.PositionalPatternTupleIndexOutOfRange(index, arity, nameof(deconstruction), i);
 
                                 if (indexToPattern[index] != null)
-                                    throw Error.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(index);
+                                    throw Error.PositionalPatternTupleIndexShouldOnlyBeUsedOnce(index, nameof(deconstruction), i);
 
                                 indexToPattern[index] = positionalPattern;
                                 byIndexCount++;
@@ -541,7 +546,7 @@ namespace Microsoft.CSharp.Expressions
                         var bindByIndex = byIndexCount > 0;
 
                         if (bindByIndex && byIndexCount != arity)
-                            throw Error.PositionalPatternWithTupleShouldSpecifyAllIndices();
+                            throw Error.PositionalPatternWithTupleShouldSpecifyAllIndices(nameof(deconstruction));
 
                         PositionalCSharpSubpattern getPositionalPattern(int index) => bindByIndex
                             ? indexToPattern[index]
@@ -563,7 +568,7 @@ namespace Microsoft.CSharp.Expressions
                     void checkArity(int arity)
                     {
                         if (arity != deconstructionCollection.Count)
-                            throw Error.InvalidPositionalPatternCount(narrowedType);
+                            throw Error.InvalidPositionalPatternCount(narrowedType, nameof(deconstruction));
                     }
                 }
             }

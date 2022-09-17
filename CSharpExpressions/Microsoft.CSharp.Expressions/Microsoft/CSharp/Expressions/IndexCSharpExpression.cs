@@ -306,7 +306,7 @@ namespace Microsoft.CSharp.Expressions
             return parameters ?? indexer.GetIndexParameters();
         }
 
-        private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> argList)
+        private static void ValidateIndexer(Type instanceType, PropertyInfo indexer, ParameterInfo[] parameters, ReadOnlyCollection<ParameterAssignment> arguments)
         {
             ValidateIndexer(instanceType, indexer);
 
@@ -321,10 +321,10 @@ namespace Microsoft.CSharp.Expressions
             var getter = indexer.GetGetMethod(true);
             if (getter == null)
             {
-                throw Error.PropertyDoesNotHaveGetAccessor(indexer);
+                throw Error.PropertyDoesNotHaveGetAccessor(indexer, nameof(indexer));
             }
 
-            ValidateParameterBindings(getter, parameters, argList);
+            ValidateParameterBindings(getter, parameters, arguments);
         }
 
         private static void ValidateIndexer(Type instanceType, PropertyInfo indexer)
