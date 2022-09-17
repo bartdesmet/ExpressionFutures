@@ -23,7 +23,7 @@ namespace Microsoft.CSharp.Expressions
 
             switch (expression)
             {
-                case DiscardCSharpExpression _:
+                case DiscardCSharpExpression:
                     return;
                 case IndexCSharpExpression index:
                     EnsureCanWrite(index, paramName);

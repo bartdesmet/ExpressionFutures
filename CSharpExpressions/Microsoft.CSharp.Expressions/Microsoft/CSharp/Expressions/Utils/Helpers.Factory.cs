@@ -20,7 +20,7 @@ namespace Microsoft.CSharp.Expressions
 
         public static ConstantExpression CreateConstantInt32(int value)
         {
-            if (value >= MinConstInt32 && value <= MaxConstInt32)
+            if (value is >= MinConstInt32 and <= MaxConstInt32)
             {
                 var index = value - MinConstInt32;
                 var consts = s_constInt32 ??= new ConstantExpression[MaxConstInt32 - MinConstInt32 + 1];
