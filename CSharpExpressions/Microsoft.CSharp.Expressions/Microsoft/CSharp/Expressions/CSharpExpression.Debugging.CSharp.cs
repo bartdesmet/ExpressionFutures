@@ -117,7 +117,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("new ");
@@ -183,7 +182,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             if (Object != null)
@@ -228,7 +226,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("new ");
@@ -279,7 +276,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Expression);
@@ -310,7 +306,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("while (");
@@ -328,7 +323,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             // TODO: break/continue label analysis?
@@ -352,7 +346,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var hasUniformVariables = true;
@@ -583,7 +576,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var caseToVariables = new Dictionary<CSharpSwitchCase, List<ParameterExpression>>();
@@ -797,7 +789,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("switch (");
@@ -890,7 +881,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("try");
@@ -991,7 +981,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("lock (");
@@ -1054,7 +1043,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("{");
@@ -1489,7 +1477,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpNodeType == CSharpExpressionType.EventAddAssign ? "+=" : "-=";
@@ -1546,7 +1533,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(OperationNodeType);
@@ -1624,7 +1610,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(OperationNodeType);
@@ -1723,7 +1708,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             if ((Flags & CSharpBinderFlags.ConvertExplicit) != 0)
@@ -1750,7 +1734,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Object);
@@ -1774,7 +1757,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Object);
@@ -1839,7 +1821,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Expression);
@@ -1863,7 +1844,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("/*dynamic*/");
@@ -1905,7 +1885,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
@@ -2011,7 +1990,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             var op = CSharpLanguageHelpers.GetOperatorSyntax(ToExpressionType(OperationNodeType));
@@ -2098,7 +2076,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("_");
@@ -2188,7 +2165,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("^");
@@ -2208,7 +2184,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Visit(Left);
@@ -2229,7 +2204,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Visit(Object);
@@ -2251,7 +2225,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Visit(Expression);
@@ -2272,7 +2245,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Visit(Array);
@@ -2294,7 +2266,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Visit(Object);
@@ -2316,7 +2287,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("(");
@@ -2354,7 +2324,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.Out("(");
@@ -2397,7 +2366,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             Expression visitLeft(Expression expr)
@@ -2435,7 +2403,6 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="visitor">Visitor to dispatch to.</param>
         /// <returns>The result of visiting the node.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class doesn't pass null.")]
         protected override void Accept(ICSharpPrintingVisitor visitor)
         {
             visitor.ParenthesizedVisit(this, Expression);
