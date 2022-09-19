@@ -655,9 +655,6 @@ namespace Microsoft.CSharp.Expressions
                     throw Error.UsingPatternDisposeInputNotCompatibleWithResource(patternDisposeInputType, resourceTypeNonNull, nameof(patternDispose));
 
                 disposeReturnType = patternDispose.ReturnType;
-
-                if (disposeReturnType != typeof(void))
-                    throw Error.UsingDisposeShouldReturnVoid(nameof(patternDispose));
             }
             else
             {
@@ -695,6 +692,11 @@ namespace Microsoft.CSharp.Expressions
             if (awaitInfo != null)
             {
                 awaitInfo.RequiresCanBind(Expression.Parameter(disposeReturnType));
+            }
+            else
+            {
+                if (disposeReturnType != typeof(void))
+                    throw Error.UsingDisposeShouldReturnVoid(nameof(patternDispose));
             }
         }
     }
