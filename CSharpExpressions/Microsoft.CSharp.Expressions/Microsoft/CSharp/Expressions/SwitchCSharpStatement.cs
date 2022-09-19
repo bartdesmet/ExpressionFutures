@@ -40,7 +40,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitSwitch(this);
 
         /// <summary>
@@ -458,23 +457,16 @@ namespace Microsoft.CSharp.Expressions
                     Visit(stmt);
                 }
 
-                if (_info.GotoCases == null)
-                {
-                    _info.GotoCases = (s_empty ??= new HashSet<object?>());
-                }
+                _info.GotoCases ??= (s_empty ??= new HashSet<object?>());
 
                 SwitchCaseInfos.Add(@case, _info);
 
                 _info = default;
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
             {
-                if (_info.GotoCases == null)
-                {
-                    _info.GotoCases = new HashSet<object?>();
-                }
+                _info.GotoCases ??= new HashSet<object?>();
 
                 _info.GotoCases.Add(node.Value);
 
@@ -500,7 +492,6 @@ namespace Microsoft.CSharp.Expressions
                 _gotoDefaultLabel = gotoDefaultLabel;
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null reference.")]
             protected internal override Expression VisitGotoCase(GotoCaseCSharpStatement node)
             {
                 return Expression.Goto(_getGotoCaseLabel(node.Value));
@@ -572,7 +563,7 @@ namespace Microsoft.CSharp.Expressions
             public bool IsNullLonely;
             public CSharpSwitchCase? NullCase;
 
-            public readonly List<CSharpSwitchCase> OtherCases = new List<CSharpSwitchCase>();
+            public readonly List<CSharpSwitchCase> OtherCases = new();
 
             public void EnsureLonelyDefault()
             {

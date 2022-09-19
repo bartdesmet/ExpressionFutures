@@ -42,7 +42,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitConditionalReceiver(this);
     }
 
@@ -53,7 +52,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="node">The expression to visit.</param>
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal virtual Expression VisitConditionalReceiver(ConditionalReceiver node) => node;
     }
 

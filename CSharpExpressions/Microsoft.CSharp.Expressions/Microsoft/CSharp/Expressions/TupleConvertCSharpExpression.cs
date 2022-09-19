@@ -65,7 +65,6 @@ namespace Microsoft.CSharp.Expressions
         /// </summary>
         /// <param name="visitor">The visitor to visit this node with.</param>
         /// <returns>The result of visiting this node.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         protected internal override Expression Accept(CSharpExpressionVisitor visitor) => visitor.VisitTupleConvert(this);
 
         /// <summary>
@@ -233,10 +232,7 @@ namespace Microsoft.CSharp.Expressions
                         args.Add(Expression.Invoke(conversion, item));
                     }
 
-                    static bool IsConvert(ExpressionType nodeType) =>
-                        nodeType == ExpressionType.Convert ||
-                        nodeType == ExpressionType.ConvertChecked ||
-                        nodeType == ExpressionType.Unbox;
+                    static bool IsConvert(ExpressionType nodeType) => nodeType is ExpressionType.Convert or ExpressionType.ConvertChecked or ExpressionType.Unbox;
                 }
 
                 return args;

@@ -36,7 +36,7 @@ namespace Microsoft.CSharp.Expressions
             Expression.MakeMemberAccess(receiver, member); // TODO: call ctor directly
 
         internal static ConditionalMemberCSharpExpression Make(Expression expression, MemberInfo member) =>
-            new ConditionalMemberCSharpExpression(expression, member); // TODO: remove layer of indirection if not needed
+            new(expression, member); // TODO: remove layer of indirection if not needed
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the instance whose member is accessed.
@@ -63,7 +63,6 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.MakeConditionalMemberAccess(expression, Member);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalMember(this);
 
         internal override ConditionalAccessCSharpExpression<MemberExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MemberExpression whenNotNull) =>

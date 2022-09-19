@@ -103,7 +103,6 @@ namespace Microsoft.CSharp.Expressions
             return CSharpExpression.ConditionalCall(expression, Method, arguments);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalMethodCall(this);
 
         internal override ConditionalAccessCSharpExpression<MethodCallCSharpExpression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, MethodCallCSharpExpression whenNotNull) =>

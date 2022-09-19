@@ -24,7 +24,6 @@ namespace Microsoft.CSharp.Expressions
         {
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Following the visitor pattern from System.Linq.Expressions.")]
         internal override Expression AcceptConditionalAccess(CSharpExpressionVisitor visitor) => visitor.VisitConditionalAccess(this);
 
         internal override ConditionalAccessCSharpExpression<Expression> Rewrite(Expression receiver, ConditionalReceiver nonNullReceiver, Expression whenNotNull) =>
@@ -220,7 +219,6 @@ namespace Microsoft.CSharp.Expressions
                 return base.VisitConditionalReceiver(node);
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Base class never passes null.")]
             protected internal override Expression VisitConditionalAccess<TWhenNotNull>(ConditionalAccessCSharpExpression<TWhenNotNull> node)
             {
                 if (node.NonNullReceiver == _receiver)

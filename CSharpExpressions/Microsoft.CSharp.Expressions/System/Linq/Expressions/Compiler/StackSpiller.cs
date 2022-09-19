@@ -69,7 +69,7 @@ namespace System.Linq.Expressions.Compiler
         /// <summary>
         /// The source of temporary variables
         /// </summary>
-        private readonly TempMaker _tm = new TempMaker();
+        private readonly TempMaker _tm = new();
 
         /// <summary>
         /// Initial stack state. Normally empty, but when inlining the lambda
@@ -178,7 +178,7 @@ namespace System.Linq.Expressions.Compiler
             var node = (IDynamicExpression)expr;
 
             // CallSite is on the stack
-            ChildRewriter cr = new ChildRewriter(this, Stack.NonEmpty, node.ArgumentCount);
+            ChildRewriter cr = new(this, Stack.NonEmpty, node.ArgumentCount);
             cr.AddArguments(node);
             if (cr.Action == RewriteAction.SpillStack)
             {
@@ -195,7 +195,7 @@ namespace System.Linq.Expressions.Compiler
         {
             IndexExpression index = (IndexExpression)node.Left;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 2 + index.Arguments.Count);
+            ChildRewriter cr = new(this, stack, 2 + index.Arguments.Count);
 
             cr.Add(index.Object);
             cr.Add(index.Arguments);
@@ -287,7 +287,7 @@ namespace System.Linq.Expressions.Compiler
         {
             BinaryExpression node = (BinaryExpression)expr;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 3);
+            ChildRewriter cr = new(this, stack, 3);
             // Left expression executes on the stack as left by parent
             cr.Add(node.Left);
             // Right expression always has non-empty stack (left is on it)
@@ -406,7 +406,7 @@ namespace System.Linq.Expressions.Compiler
         {
             MemberExpression lvalue = (MemberExpression)node.Left;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 2);
+            ChildRewriter cr = new(this, stack, 2);
 
             // If there's an instance, it executes on the stack in current state
             // and rest is executed on non-empty stack.
@@ -462,7 +462,7 @@ namespace System.Linq.Expressions.Compiler
         {
             MemberExpression node = (MemberExpression)expr;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+            ChildRewriter cr = new(this, stack, 1);
 
             cr.Add(node.Expression);
 
@@ -491,7 +491,7 @@ namespace System.Linq.Expressions.Compiler
         {
             IndexExpression node = (IndexExpression)expr;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, node.Arguments.Count + 1);
+            ChildRewriter cr = new(this, stack, node.Arguments.Count + 1);
 
             // For instance methods, the instance executes on the
             // stack as is, but stays on the stack, making it non-empty.
@@ -524,7 +524,7 @@ namespace System.Linq.Expressions.Compiler
         {
             MethodCallExpression node = (MethodCallExpression)expr;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, node.Arguments.Count + 1);
+            ChildRewriter cr = new(this, stack, node.Arguments.Count + 1);
 
             // For instance methods, the instance executes on the
             // stack as is, but stays on the stack, making it non-empty.
@@ -564,7 +564,7 @@ namespace System.Linq.Expressions.Compiler
                 // before emitting bounds expressions.
             }
 
-            ChildRewriter cr = new ChildRewriter(this, stack, node.Expressions.Count);
+            ChildRewriter cr = new(this, stack, node.Expressions.Count);
             cr.Add(node.Expressions);
 
             if (cr.Rewrite)
@@ -645,7 +645,7 @@ namespace System.Linq.Expressions.Compiler
 
             // The first expression starts on a stack as provided by parent,
             // rest are definitely non-empty (which ChildRewriter guarantees)
-            ChildRewriter cr = new ChildRewriter(this, stack, node.Arguments.Count);
+            ChildRewriter cr = new(this, stack, node.Arguments.Count);
             cr.AddArguments(node);
 
             if (cr.Action == RewriteAction.SpillStack)
@@ -688,7 +688,7 @@ namespace System.Linq.Expressions.Compiler
         {
             TypeBinaryExpression node = (TypeBinaryExpression)expr;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+            ChildRewriter cr = new(this, stack, 1);
 
             cr.Add(node.Expression);
 
@@ -764,7 +764,7 @@ namespace System.Linq.Expressions.Compiler
             Debug.Assert(node.NodeType != ExpressionType.Quote, "unexpected Quote");
             Debug.Assert(node.NodeType != ExpressionType.Throw, "unexpected Throw");
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+            ChildRewriter cr = new(this, stack, 1);
 
             cr.Add(node.Operand);
 
@@ -800,7 +800,7 @@ namespace System.Linq.Expressions.Compiler
                 ElementInit init = inits[i];
 
                 //initializers all run on nonempty stack
-                ChildRewriter cr = new ChildRewriter(this, Stack.NonEmpty, init.Arguments.Count);
+                ChildRewriter cr = new(this, Stack.NonEmpty, init.Arguments.Count);
                 cr.Add(init.Arguments);
 
                 action |= cr.Action;
@@ -1062,10 +1062,7 @@ namespace System.Linq.Expressions.Compiler
                     }
                     @case = CreateSwitchCase(body.Node, testValues);
 
-                    if (clone == null)
-                    {
-                        clone = Clone(cases, i);
-                    }
+                    clone ??= Clone(cases, i);
                 }
 
                 if (clone != null)
@@ -1131,10 +1128,7 @@ namespace System.Linq.Expressions.Compiler
                     {
                         handler = Expression.MakeCatchBlock(handler.Test, handler.Variable, rbody.Node, filter);
 
-                        if (clone == null)
-                        {
-                            clone = Clone(handlers, i);
-                        }
+                        clone ??= Clone(handlers, i);
                     }
 
                     if (clone != null)

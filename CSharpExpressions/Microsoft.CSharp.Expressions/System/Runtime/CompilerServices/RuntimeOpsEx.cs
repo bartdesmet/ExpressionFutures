@@ -20,7 +20,6 @@ namespace System.Runtime.CompilerServices
         /// <param name="lhs">The LHS to mutate.</param>
         /// <param name="functionalOp">The functional operation to carry out.</param>
         /// <returns>The value of LHS prior to assignment.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", Justification = "Required for functionality.")]
         [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Called by generated code with non-null reference.")]
         public static TObject PreAssignByRef<TObject>(ref TObject lhs, Func<TObject, TObject> functionalOp)
         {
@@ -34,7 +33,6 @@ namespace System.Runtime.CompilerServices
         /// <param name="lhs">The LHS to mutate.</param>
         /// <param name="functionalOp">The functional operation to carry out.</param>
         /// <returns>The value of LHS after assignment.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", Justification = "Required for functionality.")]
         [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Called by generated code with non-null reference.")]
         public static TObject PostAssignByRef<TObject>(ref TObject lhs, Func<TObject, TObject> functionalOp)
         {
@@ -51,7 +49,6 @@ namespace System.Runtime.CompilerServices
         /// <param name="obj">The receiver to apply the operation to.</param>
         /// <param name="functionalOp">The functional operation to carry out.</param>
         /// <returns>The result of the operation applied to the receiver.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", Justification = "Required for functionality.")]
         [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Called by generated code with non-null reference.")]
         public static TResult WithByRef<TReceiver, TResult>(ref TReceiver obj, FuncByRef<TReceiver, TResult> functionalOp)
         {
