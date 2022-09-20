@@ -11,7 +11,7 @@ namespace Microsoft.CSharp.Expressions
             return o?.ToString() ?? "null";
         }
 
-        private static readonly object s_null = new object();
+        private static readonly object s_null = new();
 
         public static object OrNullSentinel(this object? o)
         {

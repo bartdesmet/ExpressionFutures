@@ -43,7 +43,7 @@ namespace System.Dynamic.Utils
         public static ArgumentException LambdaTypeMustBeDerivedFromSystemDelegate(string? paramName) => new("Lambda type parameter must be derived from System.MulticastDelegate.", paramName);
         public static ArgumentException MemberNotFieldOrProperty(object? p0, string? paramName) => new($"Member '{p0}' not field or property.", paramName);
         public static ArgumentException NotAMemberOfType(object? p0, object? p1, string? paramName, int index = -1) => new($"'{p0}' is not a member of member of type '{p1}'.", GetParamName(paramName, index));
-        public static NotSupportedException NotSupported() => new NotSupportedException();
+        public static NotSupportedException NotSupported() => new();
         public static ArgumentException OnlyStaticMethodsHaveNullInstance() => new("Static method requires null instance, non-static method requires non-null instance.");
         public static ArgumentException OperandTypesDoNotMatchParameters(object? p0, object? p1, string? paramName, int index = -1) => new($"The operands for operator '{p0}' do not match the parameters of method '{p1}'.", GetParamName(paramName, index));
         public static ArgumentException ParameterExpressionNotValidAsDelegate(object? p0, object? p1, string? paramName, int index = -1) => new($"ParameterExpression of type '{p0}' cannot be used for delegate parameter of type '{p1}'.", GetParamName(paramName, index));

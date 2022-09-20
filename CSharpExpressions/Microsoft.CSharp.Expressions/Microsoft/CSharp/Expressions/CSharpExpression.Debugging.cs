@@ -102,7 +102,7 @@ namespace Microsoft.CSharp.Expressions
     partial class CSharpDebugViewExpressionVisitor : CSharpExpressionVisitor
     {
         private readonly IDebugViewExpressionVisitor _parent;
-        private readonly Stack<XNode> _nodes = new Stack<XNode>();
+        private readonly Stack<XNode> _nodes = new();
 
         public CSharpDebugViewExpressionVisitor()
             : this(new DebugViewExpressionVisitor())

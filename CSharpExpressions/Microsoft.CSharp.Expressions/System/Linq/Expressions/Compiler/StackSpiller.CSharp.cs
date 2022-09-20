@@ -12,7 +12,7 @@ namespace System.Linq.Expressions.Compiler
         {
             var node = (AwaitCSharpExpression)expr;
 
-            ChildRewriter cr = new ChildRewriter(this, stack, 1);
+            ChildRewriter cr = new(this, stack, 1);
 
             cr.Add(node.Operand);
 

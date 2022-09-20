@@ -2014,7 +2014,6 @@ namespace Microsoft.CSharp.Expressions
                     // NB: Produces invalid C#; we'd have to spill expressions into locals if we want
                     //     to emit valid C# in this case, at the expense of losing the tree shape.
                     op = FormattableString.Invariant($"/*checked(*/{op}/*)*/");
-                    isChecked = false;
                 }
 
                 // NB: Could produce invalid C# if assign node is used as a statement; need to keep

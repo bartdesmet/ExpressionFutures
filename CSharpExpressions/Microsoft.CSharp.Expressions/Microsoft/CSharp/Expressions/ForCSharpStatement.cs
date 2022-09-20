@@ -84,7 +84,7 @@ namespace Microsoft.CSharp.Expressions
 
         internal static ForCSharpStatement Make(ReadOnlyCollection<ParameterExpression> variables, ReadOnlyCollection<Expression> initializers, Expression? test, ReadOnlyCollection<Expression> iterators, Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel, ReadOnlyCollection<ParameterExpression> innerLocals) =>
             // TODO: optimized nodes for for(;;) and loops with a single initializer and single iterator
-            new ForCSharpStatement(variables, initializers, test, iterators, body, breakLabel, continueLabel, innerLocals);
+            new(variables, initializers, test, iterators, body, breakLabel, continueLabel, innerLocals);
 
         /// <summary>
         /// Reduces the expression node to a simpler expression.

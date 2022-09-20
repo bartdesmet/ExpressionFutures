@@ -65,7 +65,7 @@ namespace Microsoft.CSharp.Expressions
         }
 
         internal static ConditionalMethodCallCSharpExpression Make(Expression expression, MethodInfo method, ReadOnlyCollection<ParameterAssignment> arguments) =>
-            new ConditionalMethodCallCSharpExpression(expression, method, arguments); // TODO: remove layer of indirection if not needed
+            new(expression, method, arguments); // TODO: remove layer of indirection if not needed
 
         /// <summary>
         /// Gets the <see cref="Expression" /> that represents the instance whose method is called.
