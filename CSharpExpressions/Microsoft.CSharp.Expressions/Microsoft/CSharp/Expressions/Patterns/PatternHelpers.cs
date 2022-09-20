@@ -164,7 +164,7 @@ namespace Microsoft.CSharp.Expressions
             stmts.Add(expr);
         }
 
-        public static Expression AddNullCheck(Expression obj, Type? typeCheck, LabelTarget exit, List<ParameterExpression>  vars, List<Expression> stmts)
+        public static Expression AddNullCheck(Expression obj, Type? typeCheck, LabelTarget exit, List<ParameterExpression> vars, List<Expression> stmts)
         {
             void emitTypeCheck(Type type)
             {

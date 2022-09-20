@@ -195,7 +195,7 @@ namespace Microsoft.CSharp.Expressions
         public static GotoLabelCSharpStatement GotoLabel(LabelTarget target)
         {
             RequiresNotNull(target, nameof(target));
-            
+
             if (target.Type != typeof(void))
             {
                 throw LabelTypeMustBeVoid(nameof(target));

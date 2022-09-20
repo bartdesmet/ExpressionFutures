@@ -153,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 var (ctor, members) = chain.Pop();
 
-                argIndex -= (members.Length - (res != null ? 1 : 0));
+                argIndex -= members.Length - (res != null ? 1 : 0);
 
                 res = CreateTuple(ctor, members, argIndex, rest: res);
             }

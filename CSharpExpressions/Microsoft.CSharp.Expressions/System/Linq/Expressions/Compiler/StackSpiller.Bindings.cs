@@ -5,9 +5,7 @@
 //     Changes are clearly marked with #if LINQ conditions in order to make it possible to reuse across codebases.
 
 using System.Collections.ObjectModel;
-using System.Dynamic.Utils;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace System.Linq.Expressions.Compiler
 {
@@ -144,7 +142,7 @@ namespace System.Linq.Expressions.Compiler
                 {
                     ElementInit init = _inits[i];
 
-                    ChildRewriter cr = new ChildRewriter(spiller, stack, init.Arguments.Count);
+                    ChildRewriter cr = new(spiller, stack, init.Arguments.Count);
                     cr.Add(init.Arguments);
 
                     _action |= cr.Action;

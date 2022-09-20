@@ -102,7 +102,7 @@ namespace Microsoft.CSharp.Expressions
 
                 RequiresCompatiblePatternTypes(info.InputType, ref negated);
             }
-            else 
+            else
             {
                 info = PatternInfo(negated.InputType, negated.InputType);
             }

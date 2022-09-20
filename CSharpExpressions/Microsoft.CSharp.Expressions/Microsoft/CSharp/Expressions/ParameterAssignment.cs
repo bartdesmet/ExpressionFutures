@@ -136,7 +136,7 @@ namespace Microsoft.CSharp.Expressions
 
             if (!TypeUtils.AreReferenceAssignable(pType, expression.Type) && !TryQuote(pType, ref expression))
                 throw Error.ExpressionTypeDoesNotMatchParameter(expression.Type, pType, nameof(expression));
-            
+
             return expression;
         }
     }

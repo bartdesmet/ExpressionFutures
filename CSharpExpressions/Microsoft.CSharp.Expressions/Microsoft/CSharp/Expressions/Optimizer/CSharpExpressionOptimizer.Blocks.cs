@@ -76,10 +76,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
                 if (TryGetStatements(rewritten, out IEnumerable<Expression>? statements))
                 {
-                    if (res == null)
-                    {
-                        res = Clone(expressions, i);
-                    }
+                    res ??= Clone(expressions, i);
 
                     res.AddRange(statements);
                 }

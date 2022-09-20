@@ -299,7 +299,7 @@ namespace Microsoft.CSharp.Expressions
                 throw Error.InvalidInterpolatedStringType(type, nameof(type));
 
             var interpolationsList = interpolations.ToReadOnly();
-            
+
             RequiresNotNullItems(interpolationsList, nameof(interpolations));
 
             return new FormattableInterpolatedStringCSharpExpression(type, interpolationsList);

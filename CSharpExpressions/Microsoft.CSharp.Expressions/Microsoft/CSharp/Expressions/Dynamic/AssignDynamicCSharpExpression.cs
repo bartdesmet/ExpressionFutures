@@ -71,7 +71,7 @@ namespace Microsoft.CSharp.Expressions
                     }
                     break;
             }
-            
+
             var coalesce = Expression.Coalesce(lhs, assign);
             stmts.Add(coalesce);
 

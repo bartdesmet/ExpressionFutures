@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-using static System.Dynamic.Utils.TypeUtils;
-
 namespace Microsoft.CSharp.Expressions
 {
     internal static partial class Helpers

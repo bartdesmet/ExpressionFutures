@@ -5,7 +5,6 @@
 //     Changes are clearly marked with #if LINQ conditions in order to make it possible to reuse across codebases.
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Dynamic.Utils;
 using static System.Linq.Expressions.ExpressionExtensions;
@@ -37,7 +36,7 @@ namespace System.Linq.Expressions.Compiler
             /// <summary>
             /// List of all temps created by stackspiller for this rule/lambda
             /// </summary>
-            private readonly List<ParameterExpression> _temps = new List<ParameterExpression>();
+            private readonly List<ParameterExpression> _temps = new();
 
             internal List<ParameterExpression> Temps
             {
@@ -71,10 +70,7 @@ namespace System.Linq.Expressions.Compiler
                 Debug.Assert(_freeTemps == null || !_freeTemps.Contains(temp));
                 Debug.Assert(_usedTemps == null || !_usedTemps.Contains(temp));
 
-                if (_usedTemps == null)
-                {
-                    _usedTemps = new Stack<ParameterExpression>();
-                }
+                _usedTemps ??= new Stack<ParameterExpression>();
                 _usedTemps.Push(temp);
                 return temp;
             }
@@ -82,10 +78,7 @@ namespace System.Linq.Expressions.Compiler
             private void FreeTemp(ParameterExpression temp)
             {
                 Debug.Assert(_freeTemps == null || !_freeTemps.Contains(temp));
-                if (_freeTemps == null)
-                {
-                    _freeTemps = new List<ParameterExpression>();
-                }
+                _freeTemps ??= new List<ParameterExpression>();
                 _freeTemps.Add(temp);
             }
 
@@ -113,7 +106,6 @@ namespace System.Linq.Expressions.Compiler
             }
 
             [Conditional("DEBUG")]
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
             internal void VerifyTemps()
             {
                 Debug.Assert(_usedTemps == null || _usedTemps.Count == 0);
@@ -194,7 +186,7 @@ namespace System.Linq.Expressions.Compiler
                     {
                         Expression?[] clone = _expressions;
                         int count = clone.Length;
-                        List<Expression> comma = new List<Expression>(count + 1);
+                        List<Expression> comma = new(count + 1);
                         for (int i = 0; i < count; i++)
                         {
                             if (clone[i] != null)
@@ -243,11 +235,8 @@ namespace System.Linq.Expressions.Compiler
 
             internal void MarkByRef(int index)
             {
-                if (_byRef == null)
-                {
-                    // NB: could use a bit vector if we want to optimize
-                    _byRef = new bool[_expressions.Length];
-                }
+                // NB: could use a bit vector if we want to optimize
+                _byRef ??= new bool[_expressions.Length];
 
                 _byRef[index] = true;
             }
@@ -333,7 +322,6 @@ namespace System.Linq.Expressions.Compiler
         }
 
         [Conditional("DEBUG")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         private void VerifyTemps()
         {
             _tm.VerifyTemps();

@@ -306,8 +306,8 @@ namespace Microsoft.CSharp.Expressions
 
                         var expr = equalityCheck.Body switch
                         {
-                            ConstantExpression c => (Expression)c, // NB: This is commonly emitted by the C# compiler for null == null and null != null checks that occur in tuple literals.
-                            DefaultExpression _ => ConstantFalse,
+                            ConstantExpression c => c, // NB: This is commonly emitted by the C# compiler for null == null and null != null checks that occur in tuple literals.
+                            DefaultExpression => ConstantFalse,
                             BinaryExpression binary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
                                 => binary.Update(lhs, null, rhs),
                             UnaryExpression { Operand: BinaryExpression binary, NodeType: ExpressionType.Convert } unary when IsBinaryEquality(binary) && IsBinaryAppliedToParameters(binary, equalityCheck)
@@ -347,7 +347,7 @@ namespace Microsoft.CSharp.Expressions
             }
         }
 
-        internal sealed new class TupleEqual : TupleBinaryCSharpExpression
+        internal new sealed class TupleEqual : TupleBinaryCSharpExpression
         {
             public TupleEqual(Expression left, Expression right, ReadOnlyCollection<LambdaExpression> equalityChecks)
                 : base(left, right, equalityChecks)
@@ -357,7 +357,7 @@ namespace Microsoft.CSharp.Expressions
             public sealed override CSharpExpressionType CSharpNodeType => CSharpExpressionType.TupleEqual;
         }
 
-        internal sealed new class TupleNotEqual : TupleBinaryCSharpExpression
+        internal new sealed class TupleNotEqual : TupleBinaryCSharpExpression
         {
             public TupleNotEqual(Expression left, Expression right, ReadOnlyCollection<LambdaExpression> equalityChecks)
                 : base(left, right, equalityChecks)

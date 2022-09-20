@@ -104,7 +104,7 @@ namespace Microsoft.CSharp.Expressions
 
                         if (label.WhenClause != null)
                         {
-                            test = IsAlwaysTrue(test) ? label.WhenClause :  Expression.AndAlso(test, label.WhenClause);
+                            test = IsAlwaysTrue(test) ? label.WhenClause : Expression.AndAlso(test, label.WhenClause);
                         }
 
                         tests = tests == null ? test : Expression.OrElse(tests, test);
@@ -136,7 +136,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     AppendSectionStatements(sectionStmts);
                 }
-                
+
                 if (sectionStmts.Count > 0)
                 {
                     var sectionStmtsBlocks = (Expression)Expression.Block(typeof(void), sectionStmts);
@@ -181,7 +181,7 @@ namespace Microsoft.CSharp.Expressions
                     new[] { obj },
                     Expression.Assign(obj, SwitchValue),
                     stmts.Count == 0
-                        ? (Expression)Expression.Empty()
+                        ? Expression.Empty()
                         : Expression.Block(typeof(void), Variables, stmts),
                     Expression.Label(BreakLabel)
                 );

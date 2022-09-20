@@ -4,8 +4,6 @@
 
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading;
 
 using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Dynamic.Utils.TypeUtils;
@@ -77,7 +75,7 @@ namespace Microsoft.CSharp.Expressions
             var body = Body is BlockExpression block
                 ? block.Update(block.Variables, block.Expressions.AddFirst(enterExpr))
                 : Expression.Block(enterExpr, Body);
-            
+
             var res =
                 Expression.Block(
                     new[] { lockTaken, temp },

@@ -236,7 +236,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     return call.Update(args[0], Substitute(call.Arguments, append.Parameters.Skip(1), args.Skip(1)));
                 }
-                
+
                 if (append.Body is MethodCallCSharpExpression callCSharp &&
                     append.Parameters.Count == callCSharp.Arguments.Count + 1 &&
                     callCSharp.Object == append.Parameters[0] &&

@@ -119,7 +119,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 return ReduceLogicalUnlifted(node);
             }
         }
-        
+
         internal static Expression ReduceCoalesce(BinaryExpression node)
         {
             if (TypeUtils.IsNullableType(node.Left.Type))

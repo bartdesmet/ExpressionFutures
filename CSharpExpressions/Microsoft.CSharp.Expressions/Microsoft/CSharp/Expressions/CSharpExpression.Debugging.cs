@@ -681,7 +681,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 args.Add(new XAttribute(nameof(node.Format), node.Format));
             }
-            
+
             if (node.Alignment != null)
             {
                 args.Add(new XAttribute(nameof(node.Alignment), node.Alignment.Value));

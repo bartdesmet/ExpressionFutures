@@ -2,7 +2,6 @@
 //
 // bartde - December 2021
 
-using System;
 using System.Collections.Generic;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
@@ -64,7 +63,7 @@ namespace Microsoft.CSharp.Expressions
         {
             visitor.VisitExpression(pattern.Value);
         }
-        
+
         private static void Visit(this ICSharpPrintingVisitor visitor, BinaryCSharpPattern pattern)
         {
             var op = pattern.PatternType switch
@@ -168,7 +167,7 @@ namespace Microsoft.CSharp.Expressions
             {
                 visitor.Out("{ }");
             }
-            
+
             visitor.VisitDesignation(pattern, noDiscard: true);
         }
 

@@ -225,7 +225,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
 
             PushScope(node.Variables);
 
-            var res = 
+            var res =
                 node.Update(
                     VisitEnumeratorInfo(node.EnumeratorInfo),
                     VisitLabelTarget(node.BreakLabel),
@@ -270,7 +270,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
             PopScope(node.Locals);
 
             PopScope(node.Variables);
-            
+
             return node.Update(breakLabel, continueLabel, variables, initializers, test, iterators, body, locals);
         }
 

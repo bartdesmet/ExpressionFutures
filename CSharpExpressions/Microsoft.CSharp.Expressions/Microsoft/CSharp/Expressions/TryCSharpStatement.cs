@@ -130,7 +130,7 @@ namespace Microsoft.CSharp.Expressions
         /// <param name="body">The body of the try block.</param>
         /// <param name="finally">The body of the finally block.</param>
         /// <returns>The created <see cref="TryCSharpStatement" />.</returns>
-        public new static TryCSharpStatement TryFinally(Expression body, Expression @finally) => Try(body, handlerBlocks: null, @finally);
+        public static new TryCSharpStatement TryFinally(Expression body, Expression @finally) => Try(body, handlerBlocks: null, @finally);
 
         /// <summary>
         /// Creates a <see cref="TryCSharpStatement" /> representing a try block with any number of catch blocks and a finally block.

@@ -91,13 +91,13 @@ namespace Microsoft.CSharp.Expressions
         {
             int tempCounter = 0;
 
-            ParameterExpression CreateTemporary(Type type) => Expression.Parameter(type, "__t" + (tempCounter++));
+            ParameterExpression CreateTemporary(Type type) => Expression.Parameter(type, "__t" + tempCounter++);
 
             var lhsTemps = new List<ParameterExpression>();
             var stmts = new List<Expression>();
 
             var lhsTargets = GetAssignmentTargetsAndSideEffects(Left, lhsTemps, stmts, CreateTemporary);
-            
+
             var result = RewriteDeconstruction(lhsTargets, Conversion, Left.Type, Right, CreateTemporary);
 
             //
@@ -142,8 +142,8 @@ namespace Microsoft.CSharp.Expressions
             {
                 switch (variable)
                 {
-                    case DiscardCSharpExpression _:
-                    case ParameterExpression _:
+                    case DiscardCSharpExpression:
+                    case ParameterExpression:
                         assignmentTargets.Add(new DeconstructionVariable(variable));
                         break;
 
@@ -406,10 +406,10 @@ namespace Microsoft.CSharp.Expressions
 
         private sealed class DeconstructionSideEffects
         {
-            internal readonly List<Expression> init = new List<Expression>();
-            internal readonly List<Expression> deconstructions = new List<Expression>();
-            internal readonly List<Expression> conversions = new List<Expression>();
-            internal readonly List<Expression> assignments = new List<Expression>();
+            internal readonly List<Expression> init = new();
+            internal readonly List<Expression> deconstructions = new();
+            internal readonly List<Expression> conversions = new();
+            internal readonly List<Expression> assignments = new();
 
             internal List<Expression> Consolidate()
             {

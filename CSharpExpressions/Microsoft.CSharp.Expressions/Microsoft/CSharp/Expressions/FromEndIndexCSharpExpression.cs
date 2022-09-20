@@ -85,7 +85,7 @@ namespace Microsoft.CSharp.Expressions
                 {
                     return Expression.Default(Type);
                 }
-                
+
                 if (IsNeverNull(Operand))
                 {
                     // CONSIDER: Peek into Operand and try to extract non-null value.
@@ -153,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
                         }
                         break;
                 }
-                
+
                 throw ContractUtils.Unreachable;
             }
         }

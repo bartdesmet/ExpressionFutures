@@ -213,7 +213,7 @@ namespace System.Dynamic.Utils
             if (type != null)
             {
                 BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic;
-                flags |= (mi.IsStatic) ? BindingFlags.Static : BindingFlags.Instance;
+                flags |= mi.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
                 PropertyInfo[] props = type.GetProperties(flags);
                 foreach (PropertyInfo pi in props)
                 {

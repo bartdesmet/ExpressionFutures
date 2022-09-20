@@ -11,8 +11,6 @@ using System.Runtime.CompilerServices;
 
 using Microsoft.CSharp.RuntimeBinder;
 
-using static System.Dynamic.Utils.ExpressionUtils;
-
 namespace Microsoft.CSharp.Expressions
 {
     using static DynamicHelpers;

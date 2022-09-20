@@ -17,8 +17,6 @@ using static System.Dynamic.Utils.TypeUtils;
 
 namespace Microsoft.CSharp.Expressions
 {
-    using static Helpers;
-
     /// <summary>
     /// Represents an event assignment operation.
     /// </summary>
@@ -212,7 +210,7 @@ namespace Microsoft.CSharp.Expressions
             if (declaringType != null)
             {
                 var flags = BindingFlags.Public | BindingFlags.NonPublic;
-                flags |= (method.IsStatic ? BindingFlags.Static : BindingFlags.Instance);
+                flags |= method.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
 
                 foreach (var eventInfo in declaringType.GetEvents(flags))
                 {

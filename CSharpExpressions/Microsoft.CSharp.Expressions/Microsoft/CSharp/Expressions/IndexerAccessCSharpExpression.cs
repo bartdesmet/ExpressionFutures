@@ -408,7 +408,7 @@ namespace Microsoft.CSharp.Expressions
                         useLength = false;
                         return CreateConstantInt32(indexValue.Value);
                     }
-                case DefaultExpression _:
+                case DefaultExpression:
                     useLength = false;
                     return CreateConstantInt32(0); // NB: This simplifies optimization.
                 case UnaryExpression ue when ue.NodeType == ExpressionType.Convert && ue.Operand.Type == typeof(int):

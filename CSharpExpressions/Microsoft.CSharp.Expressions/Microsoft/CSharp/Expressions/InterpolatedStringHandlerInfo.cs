@@ -105,7 +105,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>An object representing the binding information for an interpolated string handler conversion.</returns>
         public static InterpolatedStringHandlerInfo InterpolatedStringHandlerInfo(Type type, LambdaExpression construction, int[]? argumentIndices, params LambdaExpression[] append) =>
             // NB: The Roslyn compiler binds to this method.
-            InterpolatedStringHandlerInfo(type, construction, (IEnumerable<int>?)argumentIndices, (IEnumerable<LambdaExpression>)append);
+            InterpolatedStringHandlerInfo(type, construction, argumentIndices, (IEnumerable<LambdaExpression>)append);
 
         /// <summary>
         /// Creates an object representing the binding information for an interpolated string handler conversion.

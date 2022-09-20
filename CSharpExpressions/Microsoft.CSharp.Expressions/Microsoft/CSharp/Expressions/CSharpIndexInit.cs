@@ -18,7 +18,7 @@ namespace Microsoft.CSharp.Expressions
         // NB: We hijack ElementInit to achieve the effect of setting indexers. This is to work around the limitations
         //     imposed by the MemberInit family of LINQ expression nodes, which are not extensible. The initial goal
         //     is to have factory methods available for the compiler to bind to.
-        
+
         // NB: ElementInit does not derive from MemberBinding, so this temporary workaround only works in combination
         //     with ListInit expressions. Ideally, IndexInit (or another name) should be a fourth kind of MemberBinding
         //     so it can be used in MemberInit expressions. Maybe MemberBinding needs an Extension kind as well, so

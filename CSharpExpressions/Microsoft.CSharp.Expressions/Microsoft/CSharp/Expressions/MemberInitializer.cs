@@ -97,7 +97,7 @@ namespace Microsoft.CSharp.Expressions
                     var accessor = p.GetGetMethod(nonPublic: true) ?? p.GetSetMethod(nonPublic: true);
                     if (accessor == null)
                         throw PropertyDoesNotHaveAccessor(p, nameof(member));
-                    
+
                     if (accessor.IsStatic)
                         throw Error.MemberInitializerMemberMustNotBeStatic(member.Name, nameof(member));
 

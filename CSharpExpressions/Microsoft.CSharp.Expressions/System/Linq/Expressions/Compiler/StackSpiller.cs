@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Dynamic.Utils;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ExpressionUtils;
 using static System.Linq.Expressions.ExpressionExtensions;
@@ -131,7 +130,7 @@ namespace System.Linq.Expressions.Compiler
             return lambda;
         }
 
-#region Expressions
+        #region Expressions
 
         [Conditional("DEBUG")]
         private static void VerifyRewrite(Result result, Expression node)
@@ -910,9 +909,9 @@ namespace System.Linq.Expressions.Compiler
             return new Result(action, expr);
         }
 
-#endregion
+        #endregion
 
-#region Statements
+        #region Statements
 
         // Block
         private Result RewriteBlockExpression(Expression expr, Stack stack)
@@ -1180,9 +1179,9 @@ namespace System.Linq.Expressions.Compiler
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Cloning
+        #region Cloning
 
         /// <summary>
         /// Will clone an IList into an array of the same size, and copy

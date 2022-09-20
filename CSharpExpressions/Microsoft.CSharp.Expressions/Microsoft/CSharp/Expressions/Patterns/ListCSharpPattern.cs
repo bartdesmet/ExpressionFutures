@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 using static System.Dynamic.Utils.ContractUtils;
 using static System.Dynamic.Utils.ExpressionUtils;
@@ -125,7 +124,7 @@ namespace Microsoft.CSharp.Expressions
                     var arrayAccess = a.Update(obj, new[] { indexExpr });
                     return arrayAccess.Reduce(length);
                 }
-                
+
                 if (IndexerAccess.Body is IndexerAccessCSharpExpression i &&
                     i.Object == IndexerAccess.Parameters[0] &&
                     i.Argument == IndexerAccess.Parameters[1])

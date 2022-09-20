@@ -153,7 +153,7 @@ namespace Microsoft.CSharp.Expressions
         /// <returns>The created <see cref="DoCSharpStatement"/>.</returns>
         public static DoCSharpStatement Do(Expression body, Expression test, LabelTarget? @break, LabelTarget? @continue, IEnumerable<ParameterExpression>? locals)
         {
-            var localsList = CheckUniqueVariables(locals, nameof(locals)); 
+            var localsList = CheckUniqueVariables(locals, nameof(locals));
 
             ValidateLoop(test, body, @break, @continue);
 

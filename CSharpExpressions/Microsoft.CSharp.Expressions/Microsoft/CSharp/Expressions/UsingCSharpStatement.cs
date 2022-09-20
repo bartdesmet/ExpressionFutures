@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic.Utils;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 using Microsoft.CSharp.Expressions.Compiler;
@@ -123,7 +122,7 @@ namespace Microsoft.CSharp.Expressions
 
                 return WithResource.Make(variablesList, resource, body, awaitInfo, patternDispose);
             }
-            
+
             if (resources != null)
             {
                 var resourcesList = resources.ToReadOnly();

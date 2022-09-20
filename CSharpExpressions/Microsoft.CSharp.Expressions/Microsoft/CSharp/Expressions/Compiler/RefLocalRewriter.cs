@@ -201,7 +201,7 @@ namespace Microsoft.CSharp.Expressions
                         return Expression.Invoke(action, expr, argument);
                     }
                 }
-                
+
                 return base.VisitMethodCall(node);
             }
 
@@ -274,17 +274,17 @@ namespace Microsoft.CSharp.Expressions
                         return i.Update(newObj, newIndexes);
                     }
                 }
-                
+
                 if (Helpers.IsPure(expression))
                 {
                     return expression;
                 }
 
                 var temp = Expression.Parameter(expression.Type, "t");
-                
+
                 temps.Add(temp);
                 stmts.Add(Expression.Assign(temp, expression));
-                
+
                 return temp;
             }
 

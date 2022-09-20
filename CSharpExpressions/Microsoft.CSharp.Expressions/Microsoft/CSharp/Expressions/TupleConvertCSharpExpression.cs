@@ -105,7 +105,7 @@ namespace Microsoft.CSharp.Expressions
             if (!Helpers.IsPure(Operand))
             {
                 var operandVariable = Expression.Parameter(Operand.Type, "__t");
-                
+
                 temps.Add(operandVariable);
                 stmts.Add(Expression.Assign(operandVariable, Operand));
 

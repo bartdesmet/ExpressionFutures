@@ -42,7 +42,7 @@ namespace Microsoft.CSharp.Expressions
         internal static void ValidateLoop(Expression body, LabelTarget? @break, LabelTarget? @continue)
         {
             RequiresCanRead(body, nameof(body));
-            
+
             // DESIGN: C# statement behavior; can be revisited.
             if (@break != null && @break.Type != typeof(void))
                 throw LabelTypeMustBeVoid(nameof(@break));

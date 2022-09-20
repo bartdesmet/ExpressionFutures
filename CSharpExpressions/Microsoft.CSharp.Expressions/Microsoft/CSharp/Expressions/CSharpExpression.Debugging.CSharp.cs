@@ -2404,7 +2404,7 @@ namespace Microsoft.CSharp.Expressions
             visitor.Out("{");
 
             visitor.Indent();
-            
+
             foreach (var arm in Arms)
             {
                 visitor.NewLine();
@@ -2423,9 +2423,9 @@ namespace Microsoft.CSharp.Expressions
 
                 visitor.Out(",");
             }
-            
+
             visitor.Dedent();
-            
+
             visitor.NewLine();
             visitor.Out("}");
         }

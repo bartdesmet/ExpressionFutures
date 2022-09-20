@@ -358,7 +358,7 @@ namespace Microsoft.CSharp.Expressions
                         var tmp = Expression.Variable(Type, "__tmp");
                         temps.Add(tmp);
 
-                        var lhsVal = (Expression)lhs;
+                        var lhsVal = lhs;
 
                         if (!IsPure(lhs))
                         {

@@ -55,7 +55,7 @@ namespace Microsoft.CSharp.Expressions
                 }
 
                 var newArguments = newArgs.ToReadOnlyUnsafe();
-                
+
                 return CSharpExpression.Call(null, method, newArguments); // TODO: call ctor directly
             }
             else

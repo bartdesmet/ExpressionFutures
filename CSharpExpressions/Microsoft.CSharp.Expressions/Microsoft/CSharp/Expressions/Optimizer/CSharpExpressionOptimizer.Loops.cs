@@ -178,7 +178,7 @@ namespace Microsoft.CSharp.Expressions.Compiler
                 {
                     res = Clone(iterators, i);
                 }
-                
+
                 if (res != null)
                 {
                     res.Add(rewritten);

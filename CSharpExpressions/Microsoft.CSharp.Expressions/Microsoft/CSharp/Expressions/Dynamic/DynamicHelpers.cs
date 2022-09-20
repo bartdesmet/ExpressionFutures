@@ -31,7 +31,7 @@ namespace Microsoft.CSharp.Expressions
                 types[^1] = type;
 
                 var delegateType = Expression.GetDelegateType(types);
-                
+
                 return Expression.MakeDynamic(delegateType, binder, arguments);
             }
         }
